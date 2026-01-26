@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gallery — bhapstar</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Lightbox */
+    .lightbox{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.92);
+      z-index: 9999;
+      padding: 18px;
+    }
+    .lightbox.open{ display: flex; }
+
+    .lightbox-inner{
+      position: relative;
+      width: min(1200px, 100%);
+      height: min(82vh, 900px);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(0,0,0,.35);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+
+    .lightbox-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none; /* stops direct drag from the image */
+    }
+
+    /* Watermark overlay (bottom third) */
+    .lightbox-watermark.lightbox-watermark{
+  position: absolute;
+  inset: 0;                /* fills the entire image */
+  display: flex;
+  align-items: center;     /* vertical centre */
+  justify-content: center; /* horizontal centre */
+  pointer-events: none;
+}
+    .lightbox-watermark span{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      text-transform: lowercase;
+      letter-spacing: .12em;
+      font-weight: 700;
+      font-size: clamp(40px, 10vw, 120px);
+      opacity: .14;          /* <-- adjust watermark strength here */
+      color: #fff;
+      transform: rotate(-12deg);
+      text-shadow: 0 8px 22px rgba(0,0,0,.35);
+      mix-blend-mode: screen; /* keeps it light */
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* Close button */
+    .lightbox-close{
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
+
+    /* Small caption */
+    .lightbox-meta{
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .lightbox-meta .title{
+      font-weight: 650;
+      font-size: 14px;
+      opacity: .95;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 8px 22px rgba(0,0,0,.55);
+      max-width: 70%;
+      line-height: 1.25;
+    }
+    .lightbox-meta a{
+      pointer-events: auto;
+      font-size: 12px;
+      opacity: .9;
+      color: rgba(255,255,255,.92);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.35);
+    }
+    .lightbox-meta a:hover{ opacity: 1; border-bottom-color: rgba(255,255,255,.75); }
+
+    /* Prevent background scroll when lightbox open */
+    body.noscroll{ overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a class="active" href="gallery.html">Gallery</a>
+        <a href="prints.html">Prints</a>
+        <a href="gear.html">Gear</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Gallery</h2>
+        <p>Click any image to view fullscreen.</p>
+      </div>
+
+      <div id="galleryGrid" class="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</footer>
+<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+
+<script>
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+<!-- Embedded gallery data -->
+<script id="galleryData" type="application/json">
+[
+  {
+    "file": "images/RN.jpg",
+    "title": "Rosette Nebula, NGC 2244",
+    "desc": "An expanding spherical H II region consisting of ionized atomic hydrogen energized by the young open star cluster (NGC 2244) at its center.",
+    "alt": "Rosette Nebula"
+  },
+  {
+    "file": "images/JFN.jpg",
+    "title": "Jellyfish Nebula (IC 443)",
+    "desc": "Galactic supernova remnant characterized by the interaction between an expanding blast wave and surrounding molecular clouds.",
+    "alt": "Jellyfish Nebula"
+  },
+  {
+    "file": "images/Xmas.jpg",
+    "title": "Christmas Tree Nebula, NGC 2264",
+    "desc": "A massive star-forming complex containing both an emission nebula (Christmas Tree) and a dense dark absorption nebula (Cone). The Cone structure is a cold molecular pillar sculpted by ultraviolet radiation from nearby massive stars.",
+    "alt": "NGC 2264 (Cone Nebula & Christmas Tree)"
+  },
+  {
+    "file": "images/MHN.jpg",
+    "title": "Monkey Head Nebula (NGC 2174)",
+    "desc": "A vibrant star-forming region in the Orion constellation, famous for its 'monkey head' shape formed by dark dust lanes against glowing hydrogen gas, a result of massive young stars eroding the cloud with radiation and stellar winds.",
+    "alt": "Monkey Head Nebula"
+  },
+  {
+    "file": "images/Pleiades.jpeg",
+    "title": "Pleiades (M45)",
+    "desc": "A gravitationally bound open cluster of approximately 1,000 stars, dominated by young, hot B-type blue giants.",
+    "alt": "Pleiades star cluster"
+  },
+  {
+    "file": "images/Moon.jpeg",
+    "title": "The Moon",
+    "desc": "Earth's only natural satellite and the brightest object in our night sky. It is a rocky, cratered world located at an average distance of about 238,855 miles (384,400 km) away",
+    "alt": "The Moon"
+  }
+]
+</script>
+
+<!-- Lightbox markup -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
+    <img class="lightbox-img" id="lbImg" alt="" src="" />
+    <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
+    <div class="lightbox-meta" aria-hidden="false">
+      <div class="title" id="lbTitle"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const grid = document.getElementById('galleryGrid');
+  const dataEl = document.getElementById('galleryData');
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbClose = document.getElementById('lbClose');
+
+  if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
+
+  const items = JSON.parse(dataEl.textContent);
+
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function openLightbox(item){
+    lbImg.src = item.file;
+    lbImg.alt = item.alt || item.title || 'Astrophotography image';
+    lbTitle.textContent = item.title || '';
+    
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden','false');
+    document.body.classList.add('noscroll');
+  }
+
+  function closeLightbox(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    document.body.classList.remove('noscroll');
+
+    // stop image flashing old content during next open
+    lbImg.src = "";
+    lbImg.alt = "";
+    lbTitle.textContent = "";
+   }
+
+  grid.innerHTML = items.map((item, idx) => `
+    <a class="card" href="${esc(item.file)}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
+      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
+      <div class="cap">
+        <div class="t">${esc(item.title)}</div>
+        <div class="d">${esc(item.desc)}</div>
+      </div>
+    </a>
+  `).join('');
+
+  grid.addEventListener('click', (e) => {
+    const a = e.target.closest('a.card');
+    if(!a) return;
+    e.preventDefault();
+    const idx = Number(a.getAttribute('data-idx'));
+    const item = items[idx];
+    if(item) openLightbox(item);
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+
+  // click outside the inner box closes
+  lb.addEventListener('click', (e) => {
+    if(e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+  });
+})();
+</script>
+
+<script>
+/* Scroll reveal (adds "in" when elements enter viewport) */
+(function(){
+  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
+    .filter(el => !el.classList.contains('reveal'));
+
+  els.forEach(el => el.classList.add('reveal'));
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>

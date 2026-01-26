@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prints — bhapstar</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Prints page enhancements (enquiry-based, no checkout) */
+    .prints-hero{
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 6px;
+    }
+    @media (max-width: 860px){
+      .prints-hero{ grid-template-columns: 1fr; }
+    }
+    .steps{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 860px){
+      .steps{ grid-template-columns: 1fr; }
+    }
+    .step{
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+    }
+    .step .k{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.03);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step h4{ margin: 0 0 6px 0; font-size: 14px; }
+    .step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
+
+    .picker{
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+    }
+    .picker .row{
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+    @media (max-width: 520px){
+      .picker .row{ grid-template-columns: 1fr; }
+      .picker .row label{ margin-bottom: -2px; }
+    }
+    .picker label{
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.70);
+    }
+    .picker select, .picker input{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: rgba(255,255,255,0.92);
+      outline: none;
+    }
+    .picker select:focus, .picker input:focus{
+      border-color: rgba(124,200,255,0.38);
+      box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
+    }
+    .helper{
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .template-box{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.02);
+    }
+    .template-box pre{
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .faq{
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    details.faq-item{
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.02);
+      padding: 12px 14px;
+    }
+    details.faq-item summary{
+      cursor: pointer;
+      list-style: none;
+      font-weight: 650;
+      color: rgba(255,255,255,0.92);
+    }
+    details.faq-item summary::-webkit-details-marker{ display:none; }
+    details.faq-item p{
+      margin: 10px 0 0 0;
+      color: rgba(255,255,255,0.78);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      font-size: 12px;
+      color: rgba(255,255,255,0.82);
+      margin-top: 10px;
+    }
+    .badge b{ color: rgba(255,255,255,0.94); }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.72);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.92);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+      z-index: 99999;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+  
+    /* Framed preview tile (prints page) */
+    .framed-tile img{
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .framed-tile{
+      pointer-events: none; /* non-clickable */
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="active" href="prints.html">Prints</a>
+        <a href="gear.html">Gear</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head featured-head">
+        <h2>Print enquiries</h2>
+        <p>Enquiry-based only — no checkout or online payments on this site.</p>
+      </div>
+
+      <div class="prints-hero">
+        <div class="panel">
+          <h3>How it works</h3>
+          <div class="steps">
+            <div class="step">
+              <div class="k">1</div>
+              <h4>Choose an image</h4>
+              <p>Pick from the <a href="gallery.html">gallery</a> and note the filename (e.g. Rosette Nebula).</p>
+            </div>
+            <div class="step">
+              <div class="k">2</div>
+              <h4>Select a format</h4>
+              <p>A4 / A3 print, framed or unframed, or a high‑resolution digital file.</p>
+            </div>
+            <div class="step">
+              <div class="k">3</div>
+              <h4>Send an enquiry</h4>
+              <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
+            </div>
+          </div>
+
+          <div class="badge"><b>Note:</b> Prices and availability are confirmed by reply (case-by-case).</div>
+
+
+          <div class="hr"></div>
+
+          <h3>FAQ</h3>
+          <div class="faq">
+            <details class="faq-item">
+              <summary>What print sizes are available?</summary>
+              <p>Prints are available in A3 or A4 sizes.</p>
+            </details>
+            <details class="faq-item">
+              <summary>What paper is used for printing?</summary>
+              <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Can I have my print framed?</summary>
+              <p>Yes, a high quality black frame can be supplied. Other frame colours are available by request.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How will the prints be shipped?</summary>
+              <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
+                 Framed prints will be sent with a black frame with corner protectors.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How does the digital download work?</summary>
+              <p>The high resolution digital file will be emailed to you.</p>
+    </details>
+<details class="faq-item">
+              <summary>Do you ship internationally?</summary>
+              <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Can I request a specific crop or aspect ratio?</summary>
+              <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
+            </details>
+          </div>
+</div>
+
+        <div class="panel">
+          <h3>Build your enquiry</h3>
+          <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
+
+                    <form name="prints-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="printsEnquiryForm">
+            <input type="hidden" name="form-name" value="prints-enquiry" />
+            <p class="hidden">
+              <label>Don’t fill this out: <input name="bot-field" /></label>
+            </p>
+<div class="picker" id="enquiryPicker">
+            <div class="row">
+              <label for="pName">Name</label>
+              <input id="pName" name="name" type="text" placeholder="Your name" required />
+            </div>
+            <div class="row">
+              <label for="pPhone">Phone</label>
+              <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
+            </div>
+            <div class="row">
+              <label for="pEmail">Email</label>
+              <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
+            </div>
+            <div class="row">
+              <label for="pImage">Image</label>
+              <input id="pImage" name="image" type="text" placeholder="e.g. Rosette Nebula" />
+            </div>
+            <div class="row">
+              <label for="pSize">Size</label>
+              <select id="pSize" name="size">
+                <option value="A4">A4</option>
+                <option value="A3">A3</option>
+                <option value="Digital">Digital (high‑res)</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="pFrame">Framed</label>
+              <select id="pFrame" name="framed">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="pCity">Delivery location</label>
+              <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
+            </div>
+            <div class="row">
+              <label for="pNotes">Notes</label>
+              <input id="pNotes" name="notes" type="text" placeholder="Any further information about your enquiry" />
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="template-box">
+            <pre id="enquiryPreview">Image:
+Name:
+Phone:
+Email:
+Image:
+Size:
+Framed:
+Delivery location:
+Notes:</pre>
+          </div>
+
+          <div style="height:14px"></div>
+
+          <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
+            <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
+          </div>
+          </form>
+</div>
+      </div>
+      <div class="hr"></div>
+
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 14px;">
+        <div class="card framed-tile" aria-hidden="false">
+          <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
+          <div class="cap">
+            <div class="t">Framed mockup</div>
+           </div>
+        </div>
+      </div>
+
+      <!-- Edit this list to match the files you have in /images/framed -->
+      <script id="framedData" type="application/json">
+      [
+        "images/framed/1.jpg",
+        "images/framed/2.jpg",
+        "images/framed/3.jpg",
+	"images/framed/4.jpg",
+	"images/framed/1-1.jpg",
+	"images/framed/2-2.jpg",
+	"images/framed/3-3.jpg",
+	"images/framed/4-4.jpg"
+
+      ]
+      </script>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</footer>
+<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+
+<script>
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+<script>
+/* Scroll reveal (adds "in" when elements enter viewport) */
+(function(){
+  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
+    .filter(el => !el.classList.contains('reveal'));
+
+  els.forEach(el => el.classList.add('reveal'));
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+<script>
+(function(){
+  const el = (id) => document.getElementById(id);
+  const form = el('printsEnquiryForm');
+
+  const image = el('pImage');
+  const size = el('pSize');
+  const frame = el('pFrame');
+  const location = el('pCity');
+  const name = el('pName');
+  const phone = el('pPhone');
+  const email = el('pEmail');
+  const notes = el('pNotes');
+
+  const preview = el('enquiryPreview');
+  const toast = el('toast');
+
+  function build(){
+const lines = [
+  `Name: ${name?.value?.trim() || ''}`,
+  `Phone: ${phone?.value?.trim() || ''}`,
+  `Email: ${email?.value?.trim() || ''}`,
+  `Image: ${image?.value?.trim() || ''}`,
+  `Size: ${size?.value || ''}`,
+  `Framed: ${frame?.value || ''}`,
+  `Delivery location: ${location?.value?.trim() || ''}`,
+  `Notes: ${notes?.value?.trim() || ''}`
+];
+
+    if(preview) preview.textContent = lines.join('\n');
+    return lines.join('\n');
+  }
+
+  function showToast(msg){
+    if(!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    window.clearTimeout(showToast._t);
+    showToast._t = window.setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  [image, size, frame, location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
+  [size, frame].forEach(x => x && x.addEventListener('change', build));
+  build();
+
+  if(!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if(!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+
+    const formData = new FormData(form);
+    build();
+
+    const body = new URLSearchParams(formData).toString();
+
+    try{
+      const res = await fetch(window.location.pathname, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body
+      });
+      if(!res.ok) throw new Error('Bad response');
+      form.reset();
+      build();
+      showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+    }catch(err){
+      console.error(err);
+      // On local/offline preview the POST will fail; still show a friendly confirmation
+      showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+    }
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const img = document.getElementById('framedPreviewImg');
+  const desc = document.getElementById('framedPreviewDesc');
+  const dataEl = document.getElementById('framedData');
+  if(!img || !dataEl) return;
+
+  let list = [];
+  try{
+    list = JSON.parse(dataEl.textContent).filter(Boolean);
+  }catch(e){
+    console.error('Invalid JSON in #framedData', e);
+  }
+
+  if(!list.length){
+    img.style.display = 'none';
+    if(desc) desc.textContent = 'No framed preview images listed yet.';
+    return;
+  }
+
+  // Start with a random image, then rotate
+  let i = Math.floor(Math.random() * list.length);
+
+  function show(idx){
+    const src = list[idx];
+    img.src = src;
+  }
+
+  // If an image fails to load (wrong filename), skip to next
+  img.addEventListener('error', () => {
+    i = (i + 1) % list.length;
+    show(i);
+  });
+
+  show(i);
+  setInterval(() => {
+    i = (i + 1) % list.length;
+    show(i);
+  }, 5000);
+})();
+</script>
+
+</body>
+</html>

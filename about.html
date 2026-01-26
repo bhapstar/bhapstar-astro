@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About — bhapstar</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-about">
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="prints.html">Prints</a>
+        <a href="gear.html">Gear</a>
+        <a class="active" href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>About</h2>
+      </div>
+
+      <div class="cols">
+        <div class="panel">
+          <p class="lead-paragraph">
+Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on nebulae, star-forming regions, and distant galaxies — objects whose light has travelled for thousands or millions of years before reaching Earth.
+          </p>
+          <p>
+Astrophotography, for me, is not about spectacle or shortcuts. It demands patience, planning, and a willingness to work through long nights waiting for the moments when everything aligns and the universe allows itself to be seen. Progress is measured slowly, image by image.
+          </p>
+
+          <blockquote class="about-quote">
+            The goal is not perfection, but clarity.
+          </blockquote>
+
+          <p>
+I approach the craft with a disciplined, methodical mindset. Careful preparation and restrained processing are as important as creativity. My aim is to produce images that feel natural and grounded — revealing depth and detail without exaggeration, and preserving the sense of scale that makes the universe so compelling.
+          </p>
+          <p>
+This website documents that ongoing pursuit. Every image represents hours of setup, data collection, and careful refinement. Some nights succeed, some nights don’t. Both are part of the process.
+          </p>
+          <p>
+The goal is not perfection, but clarity — and the quiet satisfaction of drawing something ancient out of the dark.
+          </p>
+          <p>
+If you’ve seen my work at local astro events and want a print, get in touch. I’ll help you choose the right crop and size for your space.
+          </p>
+
+          <div class="astro-divider" aria-hidden="true">
+            <span>✦ ✦ ✦</span>
+          </div>
+        </div>
+      </div>
+    </div>
+<section class="section contact-section">
+  <div class="wrap">
+    <div class="section-head">
+      <h3>Contact</h3>
+<p class="contact-intro">
+  If you’d like to get in touch about my images, my gear, or anything else astro-related, feel free to drop me a message here.
+</p>
+    </div>
+
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
+      <input type="hidden" name="form-name" value="contact" />
+
+      <!-- Honeypot (spam protection) -->
+      <p class="hidden">
+        <label>Don’t fill this out: <input name="bot-field" /></label>
+      </p>
+
+      <label>
+        <span>Name</span>
+        <input type="text" name="name" required />
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" required />
+      </label>
+
+      <label>
+        <span>Message</span>
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+
+      <button type="submit" class="btn-primary">Send message</button>
+    </form>
+  </div>
+</section>
+
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</footer>
+<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+
+<script>
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+<script>
+/* Scroll reveal (adds "in" when elements enter viewport) */
+(function(){
+  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
+    .filter(el => !el.classList.contains('reveal'));
+
+  els.forEach(el => el.classList.add('reveal'));
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>

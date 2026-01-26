@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gear — bhapstar</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Lightbox */
+    .lightbox{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.92);
+      z-index: 9999;
+      padding: 18px;
+    }
+    .lightbox.open{ display: flex; }
+
+    .lightbox-inner{
+      position: relative;
+      width: min(1200px, 100%);
+      height: min(82vh, 900px);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(0,0,0,.35);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+
+    .lightbox-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none; /* stops direct drag from the image */
+    }
+
+    /* Watermark overlay (bottom third) */
+    .lightbox-watermark.lightbox-watermark{
+  position: absolute;
+  inset: 0;                /* fills the entire image */
+  display: flex;
+  align-items: center;     /* vertical centre */
+  justify-content: center; /* horizontal centre */
+  pointer-events: none;
+}
+    .lightbox-watermark span{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      text-transform: lowercase;
+      letter-spacing: .12em;
+      font-weight: 700;
+      font-size: clamp(40px, 10vw, 120px);
+      opacity: .14;          /* <-- adjust watermark strength here */
+      color: #fff;
+      transform: rotate(-12deg);
+      text-shadow: 0 8px 22px rgba(0,0,0,.35);
+      mix-blend-mode: screen; /* keeps it light */
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* Close button */
+    .lightbox-close{
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
+
+    /* Small caption */
+    .lightbox-meta{
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .lightbox-meta .title{
+      font-weight: 650;
+      font-size: 14px;
+      opacity: .95;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 8px 22px rgba(0,0,0,.55);
+      max-width: 70%;
+      line-height: 1.25;
+    }
+    .lightbox-meta a{
+      pointer-events: auto;
+      font-size: 12px;
+      opacity: .9;
+      color: rgba(255,255,255,.92);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.35);
+    }
+    .lightbox-meta a:hover{ opacity: 1; border-bottom-color: rgba(255,255,255,.75); }
+
+    /* Prevent background scroll when lightbox open */
+    body.noscroll{ overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="prints.html">Prints</a>
+        <a href="gear.html" class="active">Gear</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Gallery</h2>
+        <p>Click any image to view fullscreen.</p>
+      </div>
+
+      <div id="gearGrid" class="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</footer>
+<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+
+<script>
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+<!-- Embedded gallery data -->
+<script id="gearData" type="application/json">
+[
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Telescope / Optics",
+    "desc": "Placeholder \u2014 add your scope(s), reducers/extenders, and why you chose them.",
+    "alt": "Telescope placeholder"
+  },
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Mount",
+    "desc": "Placeholder \u2014 add mount model, payload notes, guiding performance, and tips.",
+    "alt": "Mount placeholder"
+  },
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Camera",
+    "desc": "Placeholder \u2014 add camera, key settings, and target suitability.",
+    "alt": "Camera placeholder"
+  },
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Filters",
+    "desc": "Placeholder \u2014 narrowband/dual-band filters, when you use each, and results.",
+    "alt": "Filter placeholder"
+  },
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Guiding & Control",
+    "desc": "Placeholder \u2014 guide scope/cam, controller, and workflow.",
+    "alt": "Guiding placeholder"
+  },
+  {
+    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='60'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Placeholder</text><text%20x='60'%20y='500'%20fill='%238a93a8'%20font-family='Arial'%20font-size='28'>Add%20your%20gear%20photo%20here</text></svg>",
+    "title": "Accessories",
+    "desc": "Placeholder \u2014 dew control, power, focus, adapters, and the small things.",
+    "alt": "Accessories placeholder"
+  }
+]
+</script>
+
+<!-- Lightbox markup -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
+
+    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
+
+    <img class="lightbox-img" id="lbImg" alt="" src="" />
+    <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
+
+    <div class="lightbox-meta" aria-hidden="false">
+      <div class="title-row">
+        <div class="ti" id="lbTitle"></div>
+        <div class="count" id="lbCount" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="lightbox-thumbs" id="lbThumbs" aria-label="Thumbnails"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const grid = document.getElementById('gearGrid');
+  const dataEl = document.getElementById('gearData');
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbCount = document.getElementById('lbCount');
+  const lbThumbs = document.getElementById('lbThumbs');
+  const lbClose = document.getElementById('lbClose');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+
+  if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
+
+  let items = [];
+  try {
+    items = JSON.parse(dataEl.textContent);
+  } catch(err) {
+    console.error('Invalid JSON in gearData:', err);
+    grid.innerHTML = `
+      <div class="panel" style="grid-column: 1 / -1;">
+        <h3>Gallery data error</h3>
+        <p class="note">The JSON inside <code>#gearData</code> is invalid, so no cards could be shown.</p>
+        <p class="note">Tip: each item must be an object like <code>{"title":"Rosette","files":["images/RN Split 1.jpg","images/RN Split 2.jpg"]}</code>.</p>
+      </div>
+    `;
+    return;
+  }
+
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  let activeItem = null;
+  let activeIndex = 0;
+
+  function getFiles(item){
+    // Supports:
+    // - item.file: "path.jpg"
+    // - item.files: ["path1.jpg","path2.jpg",...]
+    // - item.images: [{file,thumb,alt,label}, ...]
+    if(Array.isArray(item.images) && item.images.length){
+      return item.images.map(x => ({ file: x.file, thumb: x.thumb || x.file, alt: x.alt || item.alt || item.title, label: x.label || "" }));
+    }
+    if(Array.isArray(item.files) && item.files.length){
+      return item.files.map(f => ({ file: f, thumb: f, alt: item.alt || item.title, label: "" }));
+    }
+    return [{ file: item.file, thumb: item.file, alt: item.alt || item.title, label: "" }];
+  }
+
+  function setActive(idx){
+    const files = getFiles(activeItem);
+    activeIndex = Math.max(0, Math.min(idx, files.length - 1));
+    const cur = files[activeIndex];
+
+    lbImg.src = cur.file;
+    lbImg.alt = cur.alt || activeItem.title || 'Astrophotography image';
+
+    if(lbCount){
+      lbCount.textContent = files.length > 1 ? `${activeIndex+1} / ${files.length}` : "";
+    }
+
+    if(lbThumbs){
+      const thumbs = Array.from(lbThumbs.querySelectorAll('button'));
+      thumbs.forEach((b, i) => {
+        b.classList.toggle('active', i === activeIndex);
+        b.setAttribute('aria-current', i === activeIndex ? 'true' : 'false');
+      });
+    }
+
+    if(lbPrev) lbPrev.disabled = (activeIndex === 0);
+    if(lbNext) lbNext.disabled = (activeIndex === files.length - 1);
+  }
+
+  function renderThumbs(){
+    if(!lbThumbs) return;
+    const files = getFiles(activeItem);
+    if(files.length <= 1){
+      lbThumbs.innerHTML = "";
+      lbThumbs.classList.remove('show');
+      return;
+    }
+    lbThumbs.classList.add('show');
+    lbThumbs.innerHTML = files.map((x, i) => `
+      <button type="button" class="lb-thumb" data-i="${i}" aria-label="Open image ${i+1}">
+        <img src="${esc(x.thumb)}" alt="${esc(x.alt)}" loading="lazy" />
+      </button>
+    `).join('');
+
+    lbThumbs.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.lb-thumb');
+      if(!btn) return;
+      const i = Number(btn.getAttribute('data-i'));
+      setActive(i);
+    }, { once: true });
+  }
+
+  function openLightbox(item){
+    activeItem = item;
+    lbTitle.textContent = item.title || '';
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden','false');
+    document.body.classList.add('noscroll');
+
+    renderThumbs();
+    setActive(0);
+  }
+
+  function closeLightbox(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    document.body.classList.remove('noscroll');
+
+    lbImg.src = "";
+    lbImg.alt = "";
+    lbTitle.textContent = "";
+    if(lbCount) lbCount.textContent = "";
+    if(lbThumbs) lbThumbs.innerHTML = "";
+    activeItem = null;
+    activeIndex = 0;
+  }
+
+  function cardFirstFile(item){
+    if(item.file) return item.file;
+    if(Array.isArray(item.files) && item.files.length) return item.files[0];
+    if(Array.isArray(item.images) && item.images.length) return item.images[0].file;
+    return "";
+  }
+
+  grid.innerHTML = items.map((item, idx) => `
+    <a class="card" href="${esc(cardFirstFile(item))}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
+      <img src="${esc(cardFirstFile(item))}" alt="${esc(item.alt)}" loading="lazy">
+      <div class="cap">
+        <div class="t">${esc(item.title)}</div>
+        <div class="d">${esc(item.desc)}</div>
+      </div>
+    </a>
+  `).join('');
+
+  grid.addEventListener('click', (e) => {
+    const a = e.target.closest('a.card');
+    if(!a) return;
+    e.preventDefault();
+    const idx = Number(a.getAttribute('data-idx'));
+    const item = items[idx];
+    if(item) openLightbox(item);
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+
+  if(lbPrev) lbPrev.addEventListener('click', () => {
+    if(!activeItem) return;
+    setActive(activeIndex - 1);
+  });
+
+  if(lbNext) lbNext.addEventListener('click', () => {
+    if(!activeItem) return;
+    setActive(activeIndex + 1);
+  });
+
+  lb.addEventListener('click', (e) => {
+    if(e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') setActive(activeIndex - 1);
+    if(e.key === 'ArrowRight') setActive(activeIndex + 1);
+  });
+})();
+</script>
+
+<script>
+/* Scroll reveal (adds "in" when elements enter viewport) */
+(function(){
+  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
+    .filter(el => !el.classList.contains('reveal'));
+
+  els.forEach(el => el.classList.add('reveal'));
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>

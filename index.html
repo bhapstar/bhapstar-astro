@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>bhapstar astrophotography</title>
+  <link rel="stylesheet" href="styles.css" />
+<style>
+    /* Lightbox (watermarked) */
+    .lightbox{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.92);
+      z-index: 9999;
+      padding: 18px;
+    }
+    .lightbox.open{ display: flex; }
+
+    .lightbox-inner{
+      position: relative;
+      width: min(1200px, 100%);
+      height: min(82vh, 900px);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(0,0,0,.35);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+
+    .lightbox-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    /* Watermark overlay (center) */
+    .lightbox-watermark{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .lightbox-watermark span{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      text-transform: lowercase;
+      letter-spacing: .12em;
+      font-weight: 700;
+      font-size: clamp(44px, 9vw, 140px);
+      opacity: .12;
+      color: #fff;
+      transform: rotate(-12deg);
+      text-shadow: 0 8px 22px rgba(0,0,0,.35);
+      mix-blend-mode: screen;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .lightbox-close{
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      z-index: 2;
+    }
+    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
+
+    .lightbox-meta{
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .lightbox-meta .title{
+      font-weight: 650;
+      font-size: 14px;
+      opacity: .95;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 8px 22px rgba(0,0,0,.55);
+      max-width: 100%;
+      line-height: 1.25;
+    }
+
+    body.noscroll{ overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a class="active" href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="prints.html">Prints</a>
+        <a href="gear.html">Gear</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="hero">
+    <div class="content wrap">
+      <div class="kicker"></div>
+      <h1>Fragments of the Universe.</h1>
+      <p class="lead">
+Nebulae, galaxies, star clusters and deep-sky objects, captured slowly through patient hours of long exposure under dark skies - pulling colour, dust and structure from the edge of space.      </p>
+      <div class="actions">
+        <a class="btn primary" href="gallery.html">View the work</a>
+        <a class="btn" href="prints.html">Print enquiries</a>
+      </div>
+    </div>
+  </section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head featured-head">
+      <h2>Featured images</h2>
+    </div>
+
+    <div id="featuredSpot" class="grid"></div>
+
+    <div style="margin-top:14px;">
+      <a class="btn" href="gallery.html">View full gallery</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</footer>
+<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+
+<script>
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+
+
+
+<!-- Random hero image + safe preload -->
+<script>
+(function(){
+  const hero = document.querySelector('.hero');
+  if(!hero) return;
+
+  // Update this list to match your /images filenames exactly (case-sensitive on many hosts)
+const images = [
+  'images/featured.jpg',
+  'images/JFN.jpg',
+  'images/RN.jpg',
+  'images/Pleiades.jpeg',
+  'images/Xmas.jpg'
+];
+
+  function setHero(src){
+    hero.style.setProperty('--hero-image', `url('${src}')`);
+    hero.classList.add('has-hero');
+  }
+
+  function preload(src){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(src);
+      img.onerror = () => reject(src);
+      img.src = src;
+    });
+  }
+
+  const shuffled = images
+    .map(v => ({ v, r: Math.random() }))
+    .sort((a,b) => a.r - b.r)
+    .map(x => x.v);
+
+  (async () => {
+    for(const src of shuffled){
+      try{
+        const ok = await preload(src);
+        setHero(ok);
+        return;
+      }catch(e){}
+    }
+    setHero(images[0] || '');
+  })();
+})();
+</script>
+
+<!-- Scroll-based parallax zoom/drift (no jump) -->
+<script>
+(function(){
+  const hero = document.querySelector('.hero');
+  if(!hero) return;
+
+  function update(){
+    const rect = hero.getBoundingClientRect();
+    const vh = window.innerHeight;
+
+    const progress = Math.min(
+      Math.max((vh - rect.top) / (vh + rect.height), 0),
+      1
+    );
+
+    const scale = 1.05 + progress * 0.06;
+    const translateY = progress * 250;
+
+    hero.style.setProperty('--hero-scale', scale.toFixed(3));
+    hero.style.setProperty('--hero-y', `${translateY.toFixed(1)}px`);
+  }
+
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+})();
+</script>
+
+<!-- Embedded gallery list (used to pick the Featured image) -->
+<script id="galleryData" type="application/json">
+[
+  {
+    "file": "images/RN.jpg",
+    "title": "Rosette Nebula, NGC 2244",
+    "desc": "An expanding spherical H II region consisting of ionized atomic hydrogen energized by the young open star cluster (NGC 2244) at its center.",
+    "alt": "Rosette Nebula"
+  },
+  {
+    "file": "images/JFN.jpg",
+    "title": "Jellyfish Nebula (IC 443)",
+    "desc": "Galactic supernova remnant characterized by the interaction between an expanding blast wave and surrounding molecular clouds.",
+    "alt": "Jellyfish Nebula"
+  },
+  {
+    "file": "images/Xmas.jpg",
+    "title": "Christmas Tree Nebula, NGC 2264",
+    "desc": "A massive star-forming complex containing both an emission nebula (Christmas Tree) and a dense dark absorption nebula (Cone). The Cone structure is a cold molecular pillar sculpted by ultraviolet radiation from nearby massive stars.",
+    "alt": "NGC 2264 (Cone Nebula & Christmas Tree)"
+  },
+  {
+    "file": "images/Pleiades.jpeg",
+    "title": "Pleiades (M45)",
+    "desc": "A gravitationally bound open cluster of approximately 1,000 stars, dominated by young, hot B-type blue giants.",
+    "alt": "Pleiades star cluster"
+  }
+]
+</script>
+
+<!-- Featured images picker (2 images, centered) -->
+<script>
+(function(){
+  const spot = document.getElementById('featuredSpot');
+  const dataEl = document.getElementById('galleryData');
+  if(!spot || !dataEl) return;
+
+  let items = [];
+  try{
+    items = JSON.parse(dataEl.textContent) || [];
+  }catch(e){}
+
+  if(items.length < 1){
+    spot.innerHTML = '<p>No featured images available.</p>';
+    return;
+  }
+
+  // shuffle and take first 2
+  items = items.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  spot.style.display = 'flex';
+  spot.style.justifyContent = 'center';
+  spot.style.gap = '24px';
+
+  spot.innerHTML = items.map(item => `
+    <a class="card featured-card"
+       href="${esc(item.file)}"
+       data-file="${esc(item.file)}"
+       data-title="${esc(item.title)}"
+       data-alt="${esc(item.alt)}"
+       aria-label="${esc(item.title || item.alt)}"
+       style="max-width:420px;">
+      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
+      <div class="cap">
+        <div class="t">${esc(item.title)}</div>
+        <div class="d">${esc(item.desc)}</div>
+      </div>
+    </a>
+  `).join('');
+})();
+</script>
+
+<!-- Lightbox (watermarked) -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
+    <img class="lightbox-img" id="lbImg" alt="" src="" />
+    <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
+    <div class="lightbox-meta" aria-hidden="false">
+      <div class="title" id="lbTitle"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbClose = document.getElementById('lbClose');
+
+  if(!lb || !lbImg || !lbTitle || !lbClose) return;
+
+  function openLightbox(file, title, alt){
+    lbImg.src = file;
+    lbImg.alt = alt || title || 'Astrophotography image';
+    lbTitle.textContent = title || '';
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden','false');
+    document.body.classList.add('noscroll');
+  }
+
+  function closeLightbox(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    document.body.classList.remove('noscroll');
+    lbImg.src = '';
+    lbImg.alt = '';
+    lbTitle.textContent = '';
+  }
+
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('a.featured-card');
+    if(card){
+      e.preventDefault();
+      openLightbox(
+        card.getAttribute('data-file') || card.getAttribute('href'),
+        card.getAttribute('data-title') || '',
+        card.getAttribute('data-alt') || ''
+      );
+      return;
+    }
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+
+  lb.addEventListener('click', (e) => {
+    if(e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+  });
+})();
+</script>
+
+<script>
+/* Scroll reveal (adds "in" when elements enter viewport) */
+(function(){
+  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
+    .filter(el => !el.classList.contains('reveal'));
+
+  els.forEach(el => el.classList.add('reveal'));
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
