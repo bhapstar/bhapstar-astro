@@ -145,27 +145,6 @@
     }
     .badge b{ color: rgba(255,255,255,0.94); }
 
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.72);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.92);
-      padding: 10px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 200ms ease, transform 200ms ease;
-      z-index: 99999;
-    }
-    .toast.show{
-      opacity: 1;
-      transform: translateX(-50%) translateY(-4px);
-    }
-  
     /* Framed preview tile (prints page) */
     .framed-tile img{
       width: 100%;
@@ -284,7 +263,7 @@
                     <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
             <!-- Formspree: replace YOUR_PRINTS_FORM_ID with your actual Form ID -->
             <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
-            <input type="hidden" name="_redirect" value="thanks.html" />
+            
             <!-- Honeypot (leave empty) -->
             <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 

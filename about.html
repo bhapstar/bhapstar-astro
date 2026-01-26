@@ -34,6 +34,7 @@
 </header>
 
 <main>
+  <!-- ABOUT -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
@@ -43,10 +44,11 @@
       <div class="cols">
         <div class="panel">
           <p class="lead-paragraph">
-Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on nebulae, star-forming regions, and distant galaxies — objects whose light has travelled for thousands or millions of years before reaching Earth.
+            Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on nebulae, star-forming regions, and distant galaxies — objects whose light has travelled for thousands or millions of years before reaching Earth.
           </p>
+
           <p>
-Astrophotography, for me, is not about spectacle or shortcuts. It demands patience, planning, and a willingness to work through long nights waiting for the moments when everything aligns and the universe allows itself to be seen. Progress is measured slowly, image by image.
+            Astrophotography, for me, is not about spectacle or shortcuts. It demands patience, planning, and a willingness to work through long nights waiting for the moments when everything aligns and the universe allows itself to be seen. Progress is measured slowly, image by image.
           </p>
 
           <blockquote class="about-quote">
@@ -54,16 +56,19 @@ Astrophotography, for me, is not about spectacle or shortcuts. It demands patien
           </blockquote>
 
           <p>
-I approach the craft with a disciplined, methodical mindset. Careful preparation and restrained processing are as important as creativity. My aim is to produce images that feel natural and grounded — revealing depth and detail without exaggeration, and preserving the sense of scale that makes the universe so compelling.
+            I approach the craft with a disciplined, methodical mindset. Careful preparation and restrained processing are as important as creativity. My aim is to produce images that feel natural and grounded — revealing depth and detail without exaggeration, and preserving the sense of scale that makes the universe so compelling.
           </p>
+
           <p>
-This website documents that ongoing pursuit. Every image represents hours of setup, data collection, and careful refinement. Some nights succeed, some nights don’t. Both are part of the process.
+            This website documents that ongoing pursuit. Every image represents hours of setup, data collection, and careful refinement. Some nights succeed, some nights don’t. Both are part of the process.
           </p>
+
           <p>
-The goal is not perfection, but clarity — and the quiet satisfaction of drawing something ancient out of the dark.
+            The goal is not perfection, but clarity — and the quiet satisfaction of drawing something ancient out of the dark.
           </p>
+
           <p>
-If you’ve seen my work at local astro events and want a print, get in touch. I’ll help you choose the right crop and size for your space.
+            If you’ve seen my work at local astro events and want a print, get in touch. I’ll help you choose the right crop and size for your space.
           </p>
 
           <div class="astro-divider" aria-hidden="true">
@@ -72,42 +77,40 @@ If you’ve seen my work at local astro events and want a print, get in touch. I
         </div>
       </div>
     </div>
-<section class="section contact-section">
-  <div class="wrap">
-    <div class="section-head">
-      <h3>Contact</h3>
-<p class="contact-intro">
-  If you’d like to get in touch about my images, my gear, or anything else astro-related, feel free to drop me a message here.
-</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h3>Contact</h3>
+        <p class="contact-intro">
+          If you’d like to get in touch about my images, my gear, or anything else astro-related, feel free to drop me a message here.
+        </p>
+      </div>
+
+      <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
+        <input type="hidden" name="_subject" value="bhapstar — New website message" />
+        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" required />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required />
+        </label>
+
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+
+        <button type="submit" class="btn-primary">Send message</button>
+      </form>
     </div>
-
-    <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
-      <!-- Formspree: replace YOUR_CONTACT_FORM_ID with your actual Form ID -->
-      <input type="hidden" name="_subject" value="bhapstar — New website message" />
-      <input type="hidden" name="_redirect" value="thanks.html" />
-      <!-- Honeypot (leave empty) -->
-      <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-
-<label>
-        <span>Name</span>
-        <input type="text" name="name" required />
-      </label>
-
-      <label>
-        <span>Email</span>
-        <input type="email" name="email" required />
-      </label>
-
-      <label>
-        <span>Message</span>
-        <textarea name="message" rows="5" required></textarea>
-      </label>
-
-      <button type="submit" class="btn-primary">Send message</button>
-    </form>
-  </div>
-</section>
-
   </section>
 </main>
 
@@ -126,6 +129,9 @@ If you’ve seen my work at local astro events and want a print, get in touch. I
     </div>
   </div>
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
 <script>
@@ -156,7 +162,6 @@ If you’ve seen my work at local astro events and want a print, get in touch. I
 </script>
 
 <script>
-/* Scroll reveal (adds "in" when elements enter viewport) */
 (function(){
   const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
     .filter(el => !el.classList.contains('reveal'));
@@ -178,6 +183,48 @@ If you’ve seen my work at local astro events and want a print, get in touch. I
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
   els.forEach(el => io.observe(el));
+})();
+</script>
+
+<script>
+(function(){
+  const form = document.querySelector('form.contact-form');
+  const toast = document.getElementById('toast');
+  if(!form || !toast) return;
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if(!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    try{
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+
+      if(!res.ok) throw new Error('Bad response');
+
+      form.reset();
+      showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
+    }catch(err){
+      console.error(err);
+      showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
+    }
+  });
 })();
 </script>
 
