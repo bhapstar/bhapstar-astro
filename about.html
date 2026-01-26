@@ -81,15 +81,14 @@ If you’ve seen my work at local astro events and want a print, get in touch. I
 </p>
     </div>
 
-    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-      <input type="hidden" name="form-name" value="contact" />
+    <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
+      <!-- Formspree: replace YOUR_CONTACT_FORM_ID with your actual Form ID -->
+      <input type="hidden" name="_subject" value="bhapstar — New website message" />
+      <input type="hidden" name="_redirect" value="thanks.html" />
+      <!-- Honeypot (leave empty) -->
+      <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
-      <!-- Honeypot (spam protection) -->
-      <p class="hidden">
-        <label>Don’t fill this out: <input name="bot-field" /></label>
-      </p>
-
-      <label>
+<label>
         <span>Name</span>
         <input type="text" name="name" required />
       </label>
