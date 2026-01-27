@@ -137,7 +137,9 @@
   <section class="hero">
     <div class="content wrap">
       <div class="kicker"></div>
-      <h1>Fragments of the Universe.</h1>
+      <h1>Fragments of the Universe</h1>
+       <h1>by Bhapstar Astrophotography</h1>
+
       <p class="lead">
 Nebulae, galaxies, star clusters and deep-sky objects, captured slowly through patient hours of long exposure under dark skies - pulling colour, dust and structure from the edge of space.      </p>
       <div class="actions">
@@ -206,56 +208,6 @@ Nebulae, galaxies, star clusters and deep-sky objects, captured slowly through p
 })();
 </script>
 
-
-
-
-<!-- Random hero image + safe preload -->
-<script>
-(function(){
-  const hero = document.querySelector('.hero');
-  if(!hero) return;
-
-  // Update this list to match your /images filenames exactly (case-sensitive on many hosts)
-const images = [
-  'images/featured.jpg',
-  'images/JFN.jpg',
-  'images/RN.jpg',
-  'images/Pleiades.jpeg',
-  'images/Xmas.jpg'
-];
-
-  function setHero(src){
-    hero.style.setProperty('--hero-image', `url('${src}')`);
-    hero.classList.add('has-hero');
-  }
-
-  function preload(src){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = () => reject(src);
-      img.src = src;
-    });
-  }
-
-  const shuffled = images
-    .map(v => ({ v, r: Math.random() }))
-    .sort((a,b) => a.r - b.r)
-    .map(x => x.v);
-
-  (async () => {
-    for(const src of shuffled){
-      try{
-        const ok = await preload(src);
-        setHero(ok);
-        return;
-      }catch(e){}
-    }
-    setHero(images[0] || '');
-  })();
-})();
-</script>
-
 <!-- Scroll-based parallax zoom/drift (no jump) -->
 <script>
 (function(){
@@ -280,87 +232,6 @@ const images = [
 
   update();
   window.addEventListener('scroll', update, { passive: true });
-})();
-</script>
-
-<!-- Embedded gallery list (used to pick the Featured image) -->
-<script id="galleryData" type="application/json">
-[
-  {
-    "file": "images/RN.jpg",
-    "title": "Rosette Nebula, NGC 2244",
-    "desc": "An expanding spherical H II region consisting of ionized atomic hydrogen energized by the young open star cluster (NGC 2244) at its center.",
-    "alt": "Rosette Nebula"
-  },
-  {
-    "file": "images/JFN.jpg",
-    "title": "Jellyfish Nebula (IC 443)",
-    "desc": "Galactic supernova remnant characterized by the interaction between an expanding blast wave and surrounding molecular clouds.",
-    "alt": "Jellyfish Nebula"
-  },
-  {
-    "file": "images/Xmas.jpg",
-    "title": "Christmas Tree Nebula, NGC 2264",
-    "desc": "A massive star-forming complex containing both an emission nebula (Christmas Tree) and a dense dark absorption nebula (Cone). The Cone structure is a cold molecular pillar sculpted by ultraviolet radiation from nearby massive stars.",
-    "alt": "NGC 2264 (Cone Nebula & Christmas Tree)"
-  },
-  {
-    "file": "images/Pleiades.jpeg",
-    "title": "Pleiades (M45)",
-    "desc": "A gravitationally bound open cluster of approximately 1,000 stars, dominated by young, hot B-type blue giants.",
-    "alt": "Pleiades star cluster"
-  }
-]
-</script>
-
-<!-- Featured images picker (2 images, centered) -->
-<script>
-(function(){
-  const spot = document.getElementById('featuredSpot');
-  const dataEl = document.getElementById('galleryData');
-  if(!spot || !dataEl) return;
-
-  let items = [];
-  try{
-    items = JSON.parse(dataEl.textContent) || [];
-  }catch(e){}
-
-  if(items.length < 1){
-    spot.innerHTML = '<p>No featured images available.</p>';
-    return;
-  }
-
-  // shuffle and take first 2
-  items = items.sort(() => 0.5 - Math.random()).slice(0, 2);
-
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  spot.style.display = 'flex';
-  spot.style.justifyContent = 'center';
-  spot.style.gap = '24px';
-
-  spot.innerHTML = items.map(item => `
-    <a class="card featured-card"
-       href="${esc(item.file)}"
-       data-file="${esc(item.file)}"
-       data-title="${esc(item.title)}"
-       data-alt="${esc(item.alt)}"
-       aria-label="${esc(item.title || item.alt)}"
-       style="max-width:420px;">
-      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
-      <div class="cap">
-        <div class="t">${esc(item.title)}</div>
-        <div class="d">${esc(item.desc)}</div>
-      </div>
-    </a>
-  `).join('');
 })();
 </script>
 
@@ -453,6 +324,115 @@ const images = [
   els.forEach(el => io.observe(el));
 })();
 </script>
+
+<script>
+/*
+  Index page: pull images from gallery.html's embedded galleryData (single source of truth)
+  - Random hero image
+  - Random featured images (2)
+  - Featured excludes the hero image to avoid repetition
+*/
+(async function(){
+  const hero = document.querySelector('.hero');
+  const spot = document.getElementById('featuredSpot');
+  if(!hero || !spot) return;
+
+  // --- Helpers
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function preload(src){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(src);
+      img.onerror = () => reject(src);
+      img.src = src;
+    });
+  }
+
+   function shuffle(arr){
+    return arr
+      .map(v => ({ v, r: Math.random() }))
+      .sort((a,b) => a.r - b.r)
+      .map(x => x.v);
+  }
+
+  async function loadGalleryDataFromGalleryPage(){
+    // Fetch gallery.html and extract <script id="galleryData"> JSON from it
+    const res = await fetch('gallery.html', { cache: 'no-store' });
+    if(!res.ok) throw new Error('Failed to fetch gallery.html');
+    const html = await res.text();
+
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const dataEl = doc.getElementById('galleryData');
+    if(!dataEl) throw new Error('galleryData not found in gallery.html');
+
+    const items = JSON.parse(dataEl.textContent || '[]');
+    if(!Array.isArray(items) || items.length === 0) throw new Error('galleryData is empty');
+    return items;
+  }
+
+  let items = [];
+  try{
+    items = await loadGalleryDataFromGalleryPage();
+  }catch(e){
+    console.warn('Could not load gallery data from gallery.html:', e);
+    spot.innerHTML = '<p>Featured images unavailable.</p>';
+    return;
+  }
+
+  // --- HERO: pick one, but ensure it actually loads
+  const heroCandidates = shuffle(items);
+  let heroPick = heroCandidates[0];
+
+  for(const candidate of heroCandidates){
+    try{
+      await preload(candidate.file);
+      heroPick = candidate;
+      break;
+    }catch(err){}
+  }
+
+  hero.style.setProperty('--hero-image', `url('${heroPick.file}')`);
+  hero.classList.add('has-hero');
+
+  // --- FEATURED: pick 2 excluding the hero image
+  let featured = items.filter(i => i.file !== heroPick.file);
+
+  if(featured.length === 0){
+    featured = items.slice(); // fallback
+  }
+
+  featured = shuffle(featured).slice(0, 2);
+
+  spot.style.display = 'flex';
+  spot.style.justifyContent = 'center';
+  spot.style.gap = '24px';
+
+  spot.innerHTML = featured.map(item => `
+    <a class="card featured-card"
+       href="${esc(item.file)}"
+       data-file="${esc(item.file)}"
+       data-title="${esc(item.title)}"
+       data-alt="${esc(item.alt)}"
+       aria-label="${esc(item.title || item.alt)}"
+       style="max-width:420px;">
+      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
+      <div class="cap">
+        <div class="t">${esc(item.title)}</div>
+        <div class="d">${esc(item.desc)}</div>
+      </div>
+    </a>
+  `).join('');
+})();
+</script>
+
 
 </body>
 </html>
