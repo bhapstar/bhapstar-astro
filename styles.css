@@ -880,3 +880,14 @@ body::before{
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
+
+.footer-links .social-icon {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.footer-links .social-icon:hover {
+  opacity: 1;
+}
