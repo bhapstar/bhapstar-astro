@@ -891,3 +891,25 @@ body::before{
 .footer-links .social-icon:hover {
   opacity: 1;
 }
+
+/* --- Image protection speed bumps --- */
+img.protect,
+.gallery-grid img,
+.featured-grid img,
+.hero img {
+  -webkit-touch-callout: none; /* iOS: disables long-press menu */
+  -webkit-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;     /* Safari/Chrome: disable drag */
+  user-drag: none;
+
+  touch-action: manipulation;  /* reduces weird touch behaviors */
+}
+
+/* Optional: prevent highlighting captions too */
+.protect,
+.protect * {
+  -webkit-user-select: none;
+  user-select: none;
+}
