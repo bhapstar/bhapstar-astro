@@ -1193,3 +1193,31 @@ img.protect,
 .page-about .contact-panel .section-head{
   margin-bottom: 10px;
 }
+/* About page portrait */
+.about-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.6rem;
+}
+
+.about-photo {
+  width: 125px;
+  height: 125px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+  }
+
+.about-photo:hover {
+  opacity: 1;
+}
+
+/* Larger screens: float left for a more editorial feel */
+@media (min-width: 768px) {
+  .about-header {
+    float: left;
+    margin: 0 1.6rem 0.6rem 0;
+  }
+}
