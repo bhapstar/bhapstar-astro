@@ -42,7 +42,7 @@
       </div>
 
       <div class="cols">
-        <div class="panel">
+        <div class="panel about-panel">
           <p class="lead-paragraph">
             Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on nebulae, star-forming regions, and distant galaxies — objects whose light has travelled for thousands or millions of years before reaching Earth.
           </p>
@@ -79,39 +79,46 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="section contact-section">
-    <div class="wrap">
-      <div class="section-head">
-        <h3>Contact</h3>
+<!-- CONTACT -->
+<section class="section contact-section">
+  <div class="wrap">
+    <div class="cols">
+      <div class="panel contact-panel">
+        <div class="section-head">
+          <h3>Contact</h3>
+        </div>
+
         <p class="contact-intro">
-          If you’d like to get in touch about my images, my gear, or anything else astro-related, feel free to drop me a message here.
+          If you’d like to get in touch about my images, my gear, or anything else astro-related,
+          feel free to drop me a message here.
         </p>
+
+        <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
+          <input type="hidden" name="_subject" value="bhapstar — New website message" />
+          <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+          <label>
+            <span>Name</span>
+            <input type="text" name="name" required />
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" required />
+          </label>
+
+          <label>
+            <span>Message</span>
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+
+          <button type="submit" class="btn primary">Send message</button>
+        </form>
       </div>
-
-      <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
-        <input type="hidden" name="_subject" value="bhapstar — New website message" />
-        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-
-        <label>
-          <span>Name</span>
-          <input type="text" name="name" required />
-        </label>
-
-        <label>
-          <span>Email</span>
-          <input type="email" name="email" required />
-        </label>
-
-        <label>
-          <span>Message</span>
-          <textarea name="message" rows="5" required></textarea>
-        </label>
-
-        <button type="submit" class="btn-primary">Send message</button>
-      </form>
     </div>
-  </section>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -243,8 +250,5 @@
 })();
 </script>
 <script src="protect-images.js"></script>
-</body>
-</html>
-
 </body>
 </html>

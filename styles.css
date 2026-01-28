@@ -389,6 +389,39 @@ input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.45); }
 }
 
 /* =========================
+   ABOUT — CONTACT PANEL
+========================= */
+
+.contact-panel{
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 26px 28px;
+}
+
+/* softer accent line than About/Prints */
+.contact-panel::before{
+  content:"";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124,200,255,0.25),
+    rgba(124,200,255,0.45),
+    rgba(124,200,255,0.25),
+    transparent
+  );
+  opacity: 0.4;
+}
+
+/* No hover glow — contact should feel calm, not interactive */
+
+
+/* =========================
    Footer
 ========================= */
 footer{
@@ -583,9 +616,6 @@ body::before{
   opacity: 0.8;
 }
 
-.panel {
-  max-width: 720px;
-}
 
 .section {
   background:
@@ -912,4 +942,254 @@ img.protect,
 .protect * {
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* Support panel (matches site style) */
+.support-wrap{ padding-top: 10px; }
+
+.support-panel{
+  display: grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 14px;
+  align-items: center;
+}
+
+@media (max-width: 860px){
+  .support-panel{ grid-template-columns: 1fr; }
+  .support-right{ align-items: flex-start; }
+}
+
+.support-title{
+  margin: 0 0 6px 0;
+}
+
+.support-text{
+  margin: 0;
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.support-right{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.support-btn{
+  width: fit-content;
+}
+
+.support-mini{
+  font-size: 12px;
+  color: rgba(255,255,255,0.70);
+  line-height: 1.4;
+  text-align: right;
+}
+
+@media (max-width: 860px){
+  .support-mini{ text-align: left; }
+}
+/* Subtle cosmic accent for support panel */
+.support-panel{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Accent line */
+.support-panel::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124,200,255,0.45),
+    rgba(124,200,255,0.75),
+    rgba(124,200,255,0.45),
+    transparent
+  );
+  opacity: 0.65;
+}
+
+/* Soft glow on hover (desktop only) */
+@media (hover:hover){
+  .support-panel{
+    transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
+  }
+  .support-panel:hover{
+    border-color: rgba(124,200,255,0.35);
+    box-shadow:
+      0 0 0 1px rgba(124,200,255,0.12),
+      0 12px 40px rgba(0,0,0,0.45);
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================
+   PRINTS — SUPPORT PANEL FIXES
+   (keep at end of styles.css)
+========================= */
+
+/* Reduce the big gap between Support section and Print enquiries section */
+.support-wrap{
+  padding-bottom: 20px; /* overrides .section default padding */
+}
+.support-wrap + main .section{
+  padding-top: 20px;    /* overrides .section default padding */
+}
+
+/* Center ONLY the support panel container (not its text) */
+.support-panel{
+  max-width: 920px;
+  margin: 0 auto;                  /* centers the panel */
+  grid-template-columns: 1fr auto; /* tidy proportions */
+}
+
+/* Keep text left aligned */
+.support-left{
+  text-align: left;
+  max-width: none;
+  margin: 0;
+}
+
+/* Keep button column aligned neatly, but not centered */
+.support-right{
+  align-items: flex-end;
+  text-align: right;
+}
+.support-mini{
+  text-align: right;
+}
+
+/* Mobile: stacked, but still left aligned (cleaner) */
+@media (max-width: 860px){
+  .support-panel{
+    grid-template-columns: 1fr;
+  }
+  .support-right{
+    align-items: flex-start;
+    text-align: left;
+  }
+  .support-mini{
+    text-align: left;
+  }
+}
+/* Prints panels: same “glow” treatment as support */
+.prints-panel{
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle top accent line (matches support) */
+.prints-panel::before{
+  content:"";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124,200,255,0.40),
+    rgba(124,200,255,0.70),
+    rgba(124,200,255,0.40),
+    transparent
+  );
+  opacity: 0.55;
+}
+
+/* Soft glow on hover (desktop only) */
+@media (hover:hover){
+  .prints-panel{
+    transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
+  }
+  .prints-panel:hover{
+    border-color: rgba(124,200,255,0.30);
+    box-shadow:
+      0 0 0 1px rgba(124,200,255,0.10),
+      0 12px 40px rgba(0,0,0,0.45);
+    transform: translateY(-2px);
+  }
+}
+/* =========================
+   ABOUT — FEATURE PANEL GLOW
+========================= */
+
+.about-panel{
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle top accent line (same language as Prints/Support) */
+.about-panel::before{
+  content:"";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124,200,255,0.35),
+    rgba(124,200,255,0.65),
+    rgba(124,200,255,0.35),
+    transparent
+  );
+  opacity: 0.45;
+}
+
+/* Gentle hover glow (desktop only) */
+@media (hover:hover){
+  .about-panel{
+    transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
+  }
+  .about-panel:hover{
+    border-color: rgba(124,200,255,0.28);
+    box-shadow:
+      0 0 0 1px rgba(124,200,255,0.08),
+      0 12px 36px rgba(0,0,0,0.42);
+    transform: translateY(-2px);
+  }
+}
+@media (hover:hover){
+  .contact-panel{
+    transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
+  }
+  .contact-panel:hover{
+    border-color: rgba(124,200,255,0.22);
+    box-shadow:
+      0 0 0 1px rgba(124,200,255,0.06),
+      0 12px 36px rgba(0,0,0,0.40);
+    transform: translateY(-2px);
+  }
+}
+
+
+/* ABOUT: make Contact feel like a second panel, not a separate section */
+.page-about .contact-section{
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* reduce the big vertical gap between the two sections */
+.page-about .contact-section.section{
+  padding-top: 18px;     /* was 56px */
+  padding-bottom: 56px;  /* keep bottom spacing consistent */
+}
+
+/* Optional: tighten spacing under the "About" panel a touch */
+.page-about .about-panel{
+  margin-bottom: 0;
+}
+.page-about .contact-panel .section-head{
+  margin-bottom: 10px;
 }
