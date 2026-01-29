@@ -1318,3 +1318,76 @@ img.protect,
   min-height: 4.5em;   /* ~3 lines */
   resize: vertical;    /* allow user to expand if needed */
 }
+/* =========================
+   ABOUT — make text feel less blocky
+========================= */
+
+.page-about .about-panel p{
+  margin: 0 0 14px;
+  line-height: 1.75;
+}
+
+/* Give the first paragraph a touch more presence */
+.page-about .lead-paragraph{
+  font-size: 16px;
+  color: rgba(255,255,255,0.88);
+}
+
+/* A compact “process” strip so the eye gets a break */
+.about-stats{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 18px;
+}
+
+.about-stats .stat{
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+  border-radius: 14px;
+  padding: 12px 12px;
+}
+
+.about-stats .k{
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.60);
+}
+
+.about-stats .v{
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.86);
+}
+
+/* Make key words feel “inked in” without looking gimmicky */
+.ink{
+  position: relative;
+  display: inline-block;
+  padding: 0 2px;
+}
+
+.ink::after{
+  content:"";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 0.12em;
+  height: 0.55em;
+  background: linear-gradient(
+    90deg,
+    rgba(124,200,255,0.22),
+    rgba(184,140,255,0.16)
+  );
+  border-radius: 8px;
+  z-index: -1;
+  opacity: 0.9;
+}
+
+/* Mobile: stack the stats nicely */
+@media (max-width: 740px){
+  .about-stats{
+    grid-template-columns: 1fr;
+  }
+}
