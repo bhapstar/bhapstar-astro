@@ -158,25 +158,7 @@ header{
   display: grid;
   place-items: center;
   overflow: hidden;
-
-  --hero-scale: 1.05; /* avoid jump */
-  --hero-y: 0px;
 }
-
-.hero::before{
-  content:"";
-  position: absolute;
-  inset: 0;
-  background-image: var(--hero-image, none);
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.02) contrast(1.05);
-  transform: scale(var(--hero-scale)) translateY(var(--hero-y));
-  will-change: transform;
-  opacity: 0;
-  transition: opacity .35s ease, transform .06s linear;
-}
-.hero.has-hero::before{ opacity: 1; }
 
 .hero::after{
   content:"";
@@ -457,13 +439,6 @@ footer{
   *{ transition: none !important; }
 }
 
-/* Center the Featured images header block */
-.section-head.featured-head{
-  justify-content: center;   /* overrides space-between */
-  text-align: center;
-}
-
-
 /* =========================
    Subtle starfield / nebula backdrop
 ========================= */
@@ -498,7 +473,6 @@ body::before{
 }
 
 /* subtle film grain (CSS-only, no images) */
-.hero::marker{ content:""; } /* noop to keep some minifiers happy */
 .hero{
   --grain-opacity: .10;
 }
@@ -706,18 +680,6 @@ body::before{
   background:
     radial-gradient(900px 520px at 20% 10%, rgba(124,200,255,0.06), transparent 60%),
     radial-gradient(820px 560px at 85% 65%, rgba(184,140,255,0.05), transparent 62%);
-}
-
-/* Mobile: show only the title on Featured cards */
-@media (max-width: 640px){
-  .featured-card .cap .d{
-    display: none !important;
-  }
-
-  /* Optional: give the title a bit more breathing room */
-  .featured-card .cap{
-    padding-bottom: 10px;
-  }
 }
 
 /* Contact form */
@@ -1219,5 +1181,68 @@ img.protect,
   .about-header {
     float: left;
     margin: 0 1.6rem 0.6rem 0;
+  }
+}
+/* --- HERO drifting slideshow background --- */
+.hero{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Container for the 2 crossfading layers */
+.hero-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Each layer is a full-bleed background */
+.hero-bg-layer{
+  position: absolute;
+  inset: -6%;              /* overscan so drift doesn't show edges */
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.02) contrast(1.02);
+  transform: translate3d(0,0,0) scale(1.08);
+  opacity: 0;
+  transition: opacity 1600ms ease;
+  will-change: transform, opacity;
+}
+
+/* Turn on the active layer */
+.hero-bg-layer.is-on{
+  opacity: 1;
+}
+
+/* Gentle drift (slow pan + tiny zoom) */
+@keyframes heroDriftA{
+  0%   { transform: translate3d(-2.4%, -1.8%, 0) scale(1.14); }
+  50%  { transform: translate3d( 2.2%,  2.6%, 0) scale(1.20); }
+  100% { transform: translate3d(-2.4%, -1.8%, 0) scale(1.14); }
+}
+
+@keyframes heroDriftB{
+  0%   { transform: translate3d( 2.5%,  2.0%, 0) scale(1.15); }
+  50%  { transform: translate3d(-2.3%, -2.4%, 0) scale(1.21); }
+  100% { transform: translate3d( 2.5%,  2.0%, 0) scale(1.15); }
+}
+
+/* Apply drift animations */
+.layer-a{ animation: heroDriftA 42s ease-in-out infinite; }
+.layer-b{ animation: heroDriftB 46s ease-in-out infinite; }
+
+
+/* Make sure hero content sits above backgrounds */
+.hero .content{
+  position: relative;
+  z-index: 1;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .hero-bg-layer{
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }

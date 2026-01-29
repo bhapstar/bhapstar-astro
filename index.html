@@ -6,104 +6,7 @@
   <title>bhapstar astrophotography</title>
   <link rel="stylesheet" href="styles.css" />
 <style>
-    /* Lightbox (watermarked) */
-    .lightbox{
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.92);
-      z-index: 9999;
-      padding: 18px;
-    }
-    .lightbox.open{ display: flex; }
-
-    .lightbox-inner{
-      position: relative;
-      width: min(1200px, 100%);
-      height: min(82vh, 900px);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(0,0,0,.35);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-
-    .lightbox-img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none;
-    }
-
-    /* Watermark overlay (center) */
-    .lightbox-watermark{
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-    .lightbox-watermark span{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      text-transform: lowercase;
-      letter-spacing: .12em;
-      font-weight: 700;
-      font-size: clamp(44px, 9vw, 140px);
-      opacity: .12;
-      color: #fff;
-      transform: rotate(-12deg);
-      text-shadow: 0 8px 22px rgba(0,0,0,.35);
-      mix-blend-mode: screen;
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    .lightbox-close{
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      z-index: 2;
-    }
-    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
-
-    .lightbox-meta{
-      position: absolute;
-      left: 14px;
-      bottom: 14px;
-      right: 14px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      pointer-events: none;
-      z-index: 2;
-    }
-    .lightbox-meta .title{
-      font-weight: 650;
-      font-size: 14px;
-      opacity: .95;
-      color: rgba(255,255,255,.92);
-      text-shadow: 0 8px 22px rgba(0,0,0,.55);
-      max-width: 100%;
-      line-height: 1.25;
-    }
-
-    body.noscroll{ overflow: hidden; }
-  </style>
+</style>
 </head>
 <body>
 
@@ -134,8 +37,14 @@
 
 
 <main>
-  <section class="hero protect-zone">
-    <div class="content wrap">
+<section class="hero protect-zone">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-bg-layer layer-a"></div>
+    <div class="hero-bg-layer layer-b"></div>
+  </div>
+
+  <div class="content wrap">
+
       <div class="kicker"></div>
       <h1>Fragments of the Universe</h1>
        <h1>by Bhapstar Astrophotography</h1>
@@ -149,19 +58,6 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
     </div>
   </section>
 
-<section class="section">
-  <div class="wrap">
-    <div class="section-head featured-head">
-      <h2>Featured images</h2>
-    </div>
-
-    <div id="featuredSpot" class="grid"></div>
-
-<div style="margin-top:14px; display:flex; justify-content:center;">
-  <a class="btn" href="gallery.html">View full gallery</a>
-</div>
-  </div>
-</section>
 </main>
 
 <footer>
@@ -224,97 +120,6 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
 })();
 </script>
 
-<!-- Scroll-based parallax zoom/drift (no jump) -->
-<script>
-(function(){
-  const hero = document.querySelector('.hero');
-  if(!hero) return;
-
-  function update(){
-    const rect = hero.getBoundingClientRect();
-    const vh = window.innerHeight;
-
-    const progress = Math.min(
-      Math.max((vh - rect.top) / (vh + rect.height), 0),
-      1
-    );
-
-    const scale = 1.05 + progress * 0.06;
-    const translateY = progress * 250;
-
-    hero.style.setProperty('--hero-scale', scale.toFixed(3));
-    hero.style.setProperty('--hero-y', `${translateY.toFixed(1)}px`);
-  }
-
-  update();
-  window.addEventListener('scroll', update, { passive: true });
-})();
-</script>
-
-<!-- Lightbox (watermarked) -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
-  <div class="lightbox-inner">
-    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
-    <img class="lightbox-img" id="lbImg" alt="" src="" />
-    <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
-    <div class="lightbox-meta" aria-hidden="false">
-      <div class="title" id="lbTitle"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lbImg');
-  const lbTitle = document.getElementById('lbTitle');
-  const lbClose = document.getElementById('lbClose');
-
-  if(!lb || !lbImg || !lbTitle || !lbClose) return;
-
-  function openLightbox(file, title, alt){
-    lbImg.src = file;
-    lbImg.alt = alt || title || 'Astrophotography image';
-    lbTitle.textContent = title || '';
-    lb.classList.add('open');
-    lb.setAttribute('aria-hidden','false');
-    document.body.classList.add('noscroll');
-  }
-
-  function closeLightbox(){
-    lb.classList.remove('open');
-    lb.setAttribute('aria-hidden','true');
-    document.body.classList.remove('noscroll');
-    lbImg.src = '';
-    lbImg.alt = '';
-    lbTitle.textContent = '';
-  }
-
-  document.addEventListener('click', (e) => {
-    const card = e.target.closest('a.featured-card');
-    if(card){
-      e.preventDefault();
-      openLightbox(
-        card.getAttribute('data-file') || card.getAttribute('href'),
-        card.getAttribute('data-title') || '',
-        card.getAttribute('data-alt') || ''
-      );
-      return;
-    }
-  });
-
-  lbClose.addEventListener('click', closeLightbox);
-
-  lb.addEventListener('click', (e) => {
-    if(e.target === lb) closeLightbox();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
-  });
-})();
-</script>
-
 <script>
 /* Scroll reveal (adds "in" when elements enter viewport) */
 (function(){
@@ -343,25 +148,14 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
 
 <script>
 /*
-  Index page: pull images from gallery.html's embedded galleryData (single source of truth)
-  - Random hero image
-  - Random featured images (2)
-  - Featured excludes the hero image to avoid repetition
+  Index page:
+  - Pull images from gallery.html's embedded galleryData (single source of truth)
+  - Run the hero drifting slideshow (random order)
 */
 (async function(){
-  const hero = document.querySelector('.hero');
-  const spot = document.getElementById('featuredSpot');
-  if(!hero || !spot) return;
-
-  // --- Helpers
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
+  const layerA = document.querySelector('.hero-bg .layer-a');
+  const layerB = document.querySelector('.hero-bg .layer-b');
+  if(!layerA || !layerB) return;
 
   function preload(src){
     return new Promise((resolve, reject) => {
@@ -372,7 +166,7 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
     });
   }
 
-   function shuffle(arr){
+  function shuffle(arr){
     return arr
       .map(v => ({ v, r: Math.random() }))
       .sort((a,b) => a.r - b.r)
@@ -380,11 +174,10 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
   }
 
   async function loadGalleryDataFromGalleryPage(){
-    // Fetch gallery.html and extract <script id="galleryData"> JSON from it
     const res = await fetch('gallery.html', { cache: 'no-store' });
     if(!res.ok) throw new Error('Failed to fetch gallery.html');
-    const html = await res.text();
 
+    const html = await res.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const dataEl = doc.getElementById('galleryData');
     if(!dataEl) throw new Error('galleryData not found in gallery.html');
@@ -399,53 +192,57 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
     items = await loadGalleryDataFromGalleryPage();
   }catch(e){
     console.warn('Could not load gallery data from gallery.html:', e);
-    spot.innerHTML = '<p>Featured images unavailable.</p>';
     return;
   }
 
-  // --- HERO: pick one, but ensure it actually loads
-  const heroCandidates = shuffle(items);
-  let heroPick = heroCandidates[0];
+  let playlist = shuffle(items.slice());
+  let idx = 0;
 
-  for(const candidate of heroCandidates){
-    try{
-      await preload(candidate.file);
-      heroPick = candidate;
-      break;
-    }catch(err){}
+  const HOLD_MS = 6000;
+
+  function warmPreload(){
+    const ahead = [0,1,2]
+      .map(n => playlist[(idx + n) % playlist.length]?.file)
+      .filter(Boolean);
+    ahead.forEach(src => { const im = new Image(); im.src = src; });
   }
 
-  hero.style.setProperty('--hero-image', `url('${heroPick.file}')`);
-  hero.classList.add('has-hero');
-
-  // --- FEATURED: pick 2 excluding the hero image
-  let featured = items.filter(i => i.file !== heroPick.file);
-
-  if(featured.length === 0){
-    featured = items.slice(); // fallback
+  function setLayer(layer, src){
+    layer.style.backgroundImage = `url("${src}")`;
   }
 
-  featured = shuffle(featured).slice(0, 2);
+  setLayer(layerA, playlist[idx].file);
+  layerA.classList.add('is-on');
+  layerB.classList.remove('is-on');
+  warmPreload();
 
-  spot.style.display = 'flex';
-  spot.style.justifyContent = 'center';
-  spot.style.gap = '24px';
+  let onA = true;
 
-  spot.innerHTML = featured.map(item => `
-    <a class="card featured-card"
-       href="${esc(item.file)}"
-       data-file="${esc(item.file)}"
-       data-title="${esc(item.title)}"
-       data-alt="${esc(item.alt)}"
-       aria-label="${esc(item.title || item.alt)}"
-       style="max-width:420px;">
-      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
-      <div class="cap">
-        <div class="t">${esc(item.title)}</div>
-        <div class="d">${esc(item.desc)}</div>
-      </div>
-    </a>
-  `).join('');
+  async function nextSlide(){
+    idx++;
+    if(idx >= playlist.length){
+      playlist = shuffle(items.slice());
+      idx = 0;
+    }
+
+    const nextSrc = playlist[idx].file;
+    try { await preload(nextSrc); } catch(e){ return; }
+
+    const incoming = onA ? layerB : layerA;
+    const outgoing = onA ? layerA : layerB;
+
+    setLayer(incoming, nextSrc);
+    incoming.classList.add('is-on');
+    outgoing.classList.remove('is-on');
+
+    onA = !onA;
+    warmPreload();
+  }
+
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduceMotion && playlist.length > 1){
+    setInterval(nextSlide, HOLD_MS);
+  }
 })();
 </script>
 
