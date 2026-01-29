@@ -49,6 +49,19 @@ a:hover{ opacity: 0.85; }
   padding: 0 var(--pad);
 }
 
+/* --- Hero background: add subtle blur --- */
+.hero-bg-layer{
+  filter: saturate(1.02) contrast(1.02) blur(1.2px);
+}
+
+/* Optional: make blur a touch lighter on small screens */
+@media (max-width: 560px){
+  .hero-bg-layer{
+    filter: saturate(1.02) contrast(1.02) blur(0.9px);
+  }
+}
+
+
 /* =========================
    Header / Burger nav
 ========================= */
@@ -1199,10 +1212,10 @@ img.protect,
 /* Each layer is a full-bleed background */
 .hero-bg-layer{
   position: absolute;
-  inset: -6%;              /* overscan so drift doesn't show edges */
+  inset: -6%;
   background-size: cover;
   background-position: center;
-  filter: saturate(1.02) contrast(1.02);
+  filter: saturate(1.02) contrast(1.02) blur(3px); /* <-- add blur here */
   transform: translate3d(0,0,0) scale(1.08);
   opacity: 0;
   transition: opacity 1600ms ease;
