@@ -145,16 +145,28 @@
 </header>
 
 <main>
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Gallery</h2>
-        <p>Click any image to view fullscreen.</p>
-      </div>
+<section class="section">
+<div class="wrap">
 
-      <div id="galleryGrid" class="grid"></div>
-    </div>
-  </section>
+  <div class="section-head gallery-head">
+<div class="gallery-topline">
+  <h2>Gallery</h2>
+  <span class="gallery-hint">Click any image to view fullscreen.</span>
+</div>
+
+    <p class="gallery-intro">
+      All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
+    </p>
+  </div>
+
+  <!-- THIS must be outside the section-head -->
+  <div id="galleryGrid" class="grid"></div>
+
+</div>
+
+
+</section>
+
 </main>
 
 <footer>
@@ -263,7 +275,7 @@
   },
    {
    "file": "images/Flame&Horsehead.jpg",
-   "title": "The Flame (NGC 2024) and Horsedehead (B33) Nebulae",
+   "title": "Flame (NGC 2024) and Horsehead (B33) Nebulae",
    "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance",
    "alt": "Flame&Horsehead"
   },

@@ -1246,3 +1246,62 @@ img.protect,
     transform: none !important;
   }
 }
+/* =========================
+   GALLERY header layout
+========================= */
+
+.section-head.gallery-head{
+  display: block;
+  margin-bottom: 18px;
+}
+
+/* Title + hint inline, left aligned */
+.gallery-topline{
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start; /* LEFT aligned */
+  gap: 12px;
+}
+
+.gallery-topline h2{
+  margin: 0;
+}
+
+/* Normal sentence case, subtle but readable */
+.gallery-hint{
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+/* Intro paragraph spans full grid width */
+.gallery-intro{
+  margin: 16px 0 0;  /* increased from 10px */
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Mobile: allow wrap naturally */
+@media (max-width: 680px){
+  .gallery-topline{
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+/* Gallery spacing polish */
+.section-head + .gallery-intro{
+  margin-top: 22px;
+}
+/* Force a blank line between the topline and intro (works whether intro is inside or outside .section-head) */
+.section-head.gallery-head .gallery-intro,
+.section-head.gallery-head + .gallery-intro{
+  margin-top: 22px !important;
+}
+/* Prints enquiry – notes field */
+#pNotes{
+  min-height: 4.5em;   /* ~3 lines */
+  resize: vertical;    /* allow user to expand if needed */
+}
