@@ -652,11 +652,6 @@ body::before{
   padding: 30px 28px;
 }
 
-.page-about .lead-paragraph{
-  color: rgba(255,255,255,0.84);
-  font-size: 15.5px;
-  line-height: 1.7;
-}
 
 /* Pull quote */
 .page-about .about-quote{
@@ -1328,10 +1323,6 @@ img.protect,
 }
 
 /* Give the first paragraph a touch more presence */
-.page-about .lead-paragraph{
-  font-size: 16px;
-  color: rgba(255,255,255,0.88);
-}
 
 /* A compact “process” strip so the eye gets a break */
 .about-stats{
