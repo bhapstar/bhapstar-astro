@@ -8,13 +8,13 @@
 
   <style>
     /* Prints page enhancements (enquiry-based, no checkout) */
-    .prints-hero{
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      align-items: stretch;
-      margin-top: 6px;
-    }
+.prints-hero{
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 6px;
+}
     @media (max-width: 860px){
       .prints-hero{ grid-template-columns: 1fr; }
     }
@@ -72,7 +72,7 @@
       text-transform: uppercase;
       color: rgba(255,255,255,0.70);
     }
-    .picker select, .picker input{
+    .picker select, .picker input, .picker textarea{
       width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
@@ -81,10 +81,11 @@
       color: rgba(255,255,255,0.92);
       outline: none;
     }
-    .picker select:focus, .picker input:focus{
+    .picker select:focus, .picker input:focus, .picker textarea:focus{
       border-color: rgba(124,200,255,0.38);
       box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
     }
+
     .helper{
       font-size: 12px;
       color: rgba(255,255,255,0.72);
@@ -155,11 +156,87 @@
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .framed-tile{
-      pointer-events: none; /* non-clickable */
+      pointer-events: none;
     }
 
+    /* Multi-item enquiry rows */
+    .items-area{
+      display: grid;
+      gap: 10px;
+    }
+
+/* Items: readable layout in the narrow right panel */
+.item-row{
+  display: grid;
+  grid-template-columns: 1fr;          /* mobile: stacked */
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.16);
+}
+
+/* Desktop/tablet: image full width, then two columns, then actions */
+@media (min-width: 860px){
+  .item-row{
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  .item-row select:nth-child(1){       /* Image */
+    grid-column: 1 / -1;
+  }
+  .item-row select:nth-child(2){       /* Size/File */
+    grid-column: 1 / 2;
+  }
+  .item-row select:nth-child(3){       /* Frame */
+    grid-column: 2 / 3;
+  }
+  .item-row .item-actions{
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+    .item-row select{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: rgba(255,255,255,0.92);
+      outline: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-row select:focus{
+      border-color: rgba(124,200,255,0.38);
+      box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
+    }
+
+    .item-actions{
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .item-actions .btn{
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    .items-controls{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
   </style>
 </head>
+
 <body>
 
 <header>
@@ -211,28 +288,27 @@
   </div>
 </section>
 
-
 <main>
   <section class="section">
     <div class="wrap">
-      <div class="section-head featured-head">
-        <h2>Print enquiries</h2>
-        <p>Enquiry-based only — no checkout or online payments on this site.</p>
-      </div>
+<div class="section-head featured-head">
+  <h2>Print enquiries</h2>
+</div>
 
       <div class="prints-hero">
         <div class="panel prints-panel">
           <h3>How it works</h3>
+
           <div class="steps">
             <div class="step">
               <div class="k">1</div>
               <h4>Choose an image</h4>
-              <p>Pick from the <a href="gallery.html">gallery</a> and note the filename (e.g. Rosette Nebula).</p>
+              <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
             </div>
             <div class="step">
               <div class="k">2</div>
               <h4>Select a format</h4>
-              <p>A4 / A3 print, framed or unframed, or a high‑resolution digital file.</p>
+              <p>A4 / A3 print, framed or unframed, or a high-resolution digital file.</p>
             </div>
             <div class="step">
               <div class="k">3</div>
@@ -240,10 +316,6 @@
               <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
             </div>
           </div>
-
-          <div class="badge"><b>Note:</b> Prices and availability are confirmed by reply (case-by-case).</div>
-
-
           <div class="hr"></div>
 
           <h3>FAQ</h3>
@@ -268,8 +340,8 @@
             <details class="faq-item">
               <summary>How does the digital download work?</summary>
               <p>The high resolution digital file will be emailed to you.</p>
-           </details>
-             <details class="faq-item">
+            </details>
+            <details class="faq-item">
               <summary>Do you ship internationally?</summary>
               <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
             </details>
@@ -277,123 +349,118 @@
               <summary>Can I request a specific crop or aspect ratio?</summary>
               <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
             </details>
-			<details class="faq-item">
+            <details class="faq-item">
               <summary>Is there anything else I should know?</summary>
               <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you recieve may differ slightly from what you see here.</p>
-			  <p>The print/download will contain an imperceptible watermark.</p>
+              <p>The print/download will contain an imperceptible watermark.</p>
             </details>
           </div>
-</div>
+        </div>
 
         <div class="panel prints-panel">
           <h3>Build your enquiry</h3>
           <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
 
-                    <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
-            <!-- Formspree: replace YOUR_PRINTS_FORM_ID with your actual Form ID -->
+          <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
             <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
-            
+
             <!-- Honeypot (leave empty) -->
             <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
-<div class="picker" id="enquiryPicker">
-            <div class="row">
-              <label for="pName">Name</label>
-              <input id="pName" name="name" type="text" placeholder="Your name" required />
-            </div>
-            <div class="row">
-              <label for="pPhone">Phone</label>
-              <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
-            </div>
-            <div class="row">
-              <label for="pEmail">Email</label>
-              <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
-            </div>
-            <div class="row">
-              <label for="pImage">Image</label>
-              <input id="pImage" name="image" type="text" placeholder="e.g. Rosette Nebula" />
-            </div>
-            <div class="row">
-              <label for="pSize">Size</label>
-              <select id="pSize" name="size">
-                <option value="A4">A4</option>
-                <option value="A3">A3</option>
-                <option value="Digital">Digital (high‑res)</option>
-              </select>
-            </div>
-            <div class="row">
-              <label for="pFrame">Framed</label>
-              <select id="pFrame" name="framed">
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-              </select>
-            </div>
-            <div class="row">
-              <label for="pCity">Delivery location</label>
-              <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
-            </div>
-            <div class="row">
-              <label for="pNotes">Notes</label>
-              <textarea id="pNotes"
-          name="notes"
-          placeholder="Any further information about your enquiry"
-          rows="3"></textarea>
-            </div>
-          </div>
+            <div class="picker" id="enquiryPicker">
 
-          <div style="height:12px"></div>
+              <!-- CONTACT -->
+              <div class="row">
+                <label for="pName">Name</label>
+                <input id="pName" name="name" type="text" placeholder="Your name" required />
+              </div>
 
-          <div class="template-box">
-            <pre id="enquiryPreview">Image:
-Name:
-Phone:
-Email:
-Image:
-Size:
-Framed:
-Delivery location:
-Notes:</pre>
-          </div>
+              <div class="row">
+                <label for="pPhone">Phone</label>
+                <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
+              </div>
 
-          <div style="height:14px"></div>
+              <div class="row">
+                <label for="pEmail">Email</label>
+                <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
+              </div>
 
-          <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
-            <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
-          </div>
-          </form>
+              <!-- ITEMS -->
+              <div class="row" style="align-items:start;">
+                <label>Items</label>
+                <div>
+                  <div id="itemsWrap" class="items-area"></div>
+
+                  <div class="items-controls">
+                    <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
+                  </div>
+
+                  <input type="hidden" id="itemsSummary" name="items_summary" value="">
+                </div>
+              </div>
+
+              <!-- DELIVERY + NOTES -->
+              <div class="row">
+                <label for="pCity">Delivery location</label>
+                <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
+              </div>
+
+              <div class="row">
+                <label for="pNotes">Notes</label>
+                <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
+              </div>
+
+            </div>
+
+            <div style="height:12px"></div>
+
+            <div class="template-box">
+              <pre id="enquiryPreview"></pre>
+            </div>
+
+            <div style="height:14px"></div>
+
+<div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
+  <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
 </div>
+
+<p class="helper" style="margin-top:10px;">
+  Enquiry-based only — no checkout or online payments on this site.
+</p>
+
+          </form>
+        </div>
       </div>
+
       <div class="hr"></div>
 
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 14px;">
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 14px;">
         <div class="card framed-tile" aria-hidden="false">
           <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
           <div class="cap">
             <div class="t">Framed mockup</div>
-           </div>
+          </div>
         </div>
       </div>
 
-      <!-- Edit this list to match the files you have in /images/framed -->
       <script id="framedData" type="application/json">
       [
         "images/framed/1.jpg",
         "images/framed/2.jpg",
         "images/framed/3.jpg",
-	      "images/framed/4.jpg",
+        "images/framed/4.jpg",
         "images/framed/5.jpg",
-	      "images/framed/1-1.jpg",
-	      "images/framed/2-2.jpg",
-	      "images/framed/3-3.jpg",
-	      "images/framed/4-4.jpg",
-	      "images/framed/5-5.jpg"
+        "images/framed/1-1.jpg",
+        "images/framed/2-2.jpg",
+        "images/framed/3-3.jpg",
+        "images/framed/4-4.jpg",
+        "images/framed/5-5.jpg"
       ]
       </script>
 
     </div>
   </section>
 </main>
-
 
 <footer>
   <div class="wrap">
@@ -408,28 +475,23 @@ Notes:</pre>
       <span>·</span>
       <a href="about.html">About</a>
       <a href="https://www.instagram.com/bhapstar/"
-   target="_blank"
-   rel="noopener"
-   aria-label="Instagram"
-   class="social-icon">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-       xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="20" height="20" rx="5"
-          stroke="currentColor" stroke-width="2"/>
-    <circle cx="12" cy="12" r="5"
-            stroke="currentColor" stroke-width="2"/>
-    <circle cx="17.5" cy="6.5" r="1.2"
-            fill="currentColor"/>
-  </svg>
-</a>
+         target="_blank"
+         rel="noopener"
+         aria-label="Instagram"
+         class="social-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+        </svg>
+      </a>
     </div>
   </div>
 </footer>
+
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-
 
 <script>
 (function(){
@@ -489,9 +551,10 @@ Notes:</pre>
   const el = (id) => document.getElementById(id);
   const form = el('printsEnquiryForm');
 
-  const image = el('pImage');
-  const size = el('pSize');
-  const frame = el('pFrame');
+  const itemsWrap = el('itemsWrap');
+  const addItemBtn = el('addItemBtn');
+  const itemsSummary = el('itemsSummary');
+
   const location = el('pCity');
   const name = el('pName');
   const phone = el('pPhone');
@@ -501,21 +564,17 @@ Notes:</pre>
   const preview = el('enquiryPreview');
   const toast = el('toast');
 
-  function build(){
-const lines = [
-  `Name: ${name?.value?.trim() || ''}`,
-  `Phone: ${phone?.value?.trim() || ''}`,
-  `Email: ${email?.value?.trim() || ''}`,
-  `Image: ${image?.value?.trim() || ''}`,
-  `Size: ${size?.value || ''}`,
-  `Framed: ${frame?.value || ''}`,
-  `Delivery location: ${location?.value?.trim() || ''}`,
-  `Notes: ${notes?.value?.trim() || ''}`
-];
+  const TYPE_OPTIONS = [
+    { v: "A4", t: "A4" },
+    { v: "A3", t: "A3" },
+    { v: "Digital", t: "Digital (high-res)" }
+  ];
+  const FRAMED_OPTIONS = [
+    { v: "No", t: "No" },
+    { v: "Yes", t: "Yes" }
+  ];
 
-    if(preview) preview.textContent = lines.join('\n');
-    return lines.join('\n');
-  }
+  let GALLERY_TITLES = [];
 
   function showToast(msg){
     if(!toast) return;
@@ -525,43 +584,228 @@ const lines = [
     showToast._t = window.setTimeout(() => toast.classList.remove('show'), 2600);
   }
 
-  [image, size, frame, location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
-  [size, frame].forEach(x => x && x.addEventListener('change', build));
-  build();
+  async function loadGalleryTitles(){
+    try{
+      const res = await fetch('gallery.html', { cache: 'no-store' });
+      if(!res.ok) throw new Error('Failed to fetch gallery.html');
 
-  if(!form) return;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const dataEl = doc.getElementById('galleryData');
+      if(!dataEl) throw new Error('galleryData not found');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+      const items = JSON.parse(dataEl.textContent);
 
-    if(!form.checkValidity()){
-      form.reportValidity();
-      return;
-    }
+      GALLERY_TITLES = items
+        .map(x => x && x.title)
+        .filter(Boolean);
 
-    const formData = new FormData(form);
-    build();
-
-        try{
-      const endpoint = form.getAttribute('action') || '';
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      });
-      if(!res.ok) throw new Error('Bad response');
-form.reset();
-      build();
-      showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+      GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     }catch(err){
       console.error(err);
-      // On local/offline preview the POST will fail; still show a friendly confirmation
-      showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+      GALLERY_TITLES = [];
     }
-  });
+  }
+
+  function makeSelect(options, placeholder){
+    const s = document.createElement('select');
+
+    const ph = document.createElement('option');
+    ph.value = "";
+    ph.textContent = placeholder;
+    s.appendChild(ph);
+
+    options.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.v ?? o;
+      opt.textContent = o.t ?? o;
+      s.appendChild(opt);
+    });
+
+    return s;
+  }
+
+  function addItem(prefill){
+    if(!itemsWrap) return;
+
+    const row = document.createElement('div');
+    row.className = 'item-row';
+
+    const imgSel = makeSelect(
+      GALLERY_TITLES.map(t => ({ v: t, t })),
+      GALLERY_TITLES.length ? "Select an image" : "Gallery unavailable"
+    );
+    imgSel.name = "item_image[]";
+    imgSel.required = true;
+    if(!GALLERY_TITLES.length) imgSel.disabled = true;
+
+    const typeSel = makeSelect(TYPE_OPTIONS, "Image size/file");
+    typeSel.name = "item_type[]";
+
+    const frameSel = makeSelect(FRAMED_OPTIONS, "Frame required?");
+    frameSel.name = "item_framed[]";
+
+    // Default values (blank unless a prefill is explicitly passed)
+    imgSel.value = prefill?.image ?? "";
+    typeSel.value = prefill?.type ?? "";
+    frameSel.value = prefill?.framed ?? "";
+
+    // If Digital selected, force frame No and lock it
+    function syncFrameLock(){
+      const isDigital = typeSel.value === "Digital";
+      if(isDigital){
+        frameSel.value = "No";
+        frameSel.disabled = true;
+      }else{
+        frameSel.disabled = false;
+      }
+    }
+
+    // Initial sync + on change
+    syncFrameLock();
+    typeSel.addEventListener('change', () => {
+      syncFrameLock();
+      build();
+    });
+
+    const actions = document.createElement('div');
+    actions.className = 'item-actions';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      if(itemsWrap.querySelectorAll('.item-row').length === 0){
+        addItem();
+      }
+      build();
+    });
+
+    actions.appendChild(removeBtn);
+
+    // Build on image/frame changes
+    imgSel.addEventListener('change', build);
+    frameSel.addEventListener('change', build);
+
+    row.appendChild(imgSel);
+    row.appendChild(typeSel);
+    row.appendChild(frameSel);
+    row.appendChild(actions);
+
+    itemsWrap.appendChild(row);
+    build();
+  }
+
+  function getItems(){
+    const rows = Array.from(itemsWrap?.querySelectorAll('.item-row') || []);
+    return rows.map((r) => {
+      const selects = r.querySelectorAll('select');
+      return {
+        image: selects[0]?.value || "",
+        type: selects[1]?.value || "",
+        framed: selects[2]?.value || ""
+      };
+    });
+  }
+
+  function build(){
+    const items = getItems();
+
+    const lines = [
+      `Name: ${name?.value?.trim() || ''}`,
+      `Phone: ${phone?.value?.trim() || ''}`,
+      `Email: ${email?.value?.trim() || ''}`,
+      ``,
+      `Items:`
+    ];
+
+    if(items.length === 0){
+      lines.push(`- (none)`);
+    } else {
+      items.forEach((it, i) => {
+        const framedLabel = (it.type === "Digital") ? "No" : (it.framed || "");
+        lines.push(`${i+1}) ${it.image || '(select image)'} — ${it.type || ''} — Frame required: ${framedLabel}`);
+      });
+    }
+
+    lines.push(
+      ``,
+      `Delivery location: ${location?.value?.trim() || ''}`,
+      `Notes: ${notes?.value?.trim() || ''}`
+    );
+
+    const text = lines.join('\n');
+
+    if(preview) preview.textContent = text;
+    if(itemsSummary){
+      itemsSummary.value = items
+        .map((it, i) => {
+          const framedLabel = (it.type === "Digital") ? "No" : (it.framed || "");
+          return `${i+1}) ${it.image} — ${it.type} — Frame required: ${framedLabel}`;
+        })
+        .join('\n');
+    }
+
+    return text;
+  }
+
+  [location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
+
+  if(addItemBtn){
+    addItemBtn.addEventListener('click', () => addItem());
+  }
+
+  if(form){
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const items = getItems();
+      if(!items.length || !items.some(it => (it.image || '').trim())){
+        showToast('Please add at least one image to your enquiry.');
+        return;
+      }
+
+      if(!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+
+      build();
+      const formData = new FormData(form);
+
+      try{
+        const endpoint = form.getAttribute('action') || '';
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: formData
+        });
+        if(!res.ok) throw new Error('Bad response');
+
+        form.reset();
+        if(itemsWrap) itemsWrap.innerHTML = '';
+        addItem();
+        build();
+
+        showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+      }catch(err){
+        console.error(err);
+        showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+      }
+    });
+  }
+
+  (async function init(){
+    await loadGalleryTitles();
+    if(itemsWrap) itemsWrap.innerHTML = '';
+    addItem();  // start with 1 blank item
+    build();
+  })();
+
 })();
 </script>
-
 
 <script>
 (function(){
@@ -583,15 +827,12 @@ form.reset();
     return;
   }
 
-  // Start with a random image, then rotate
   let i = Math.floor(Math.random() * list.length);
 
   function show(idx){
-    const src = list[idx];
-    img.src = src;
+    img.src = list[idx];
   }
 
-  // If an image fails to load (wrong filename), skip to next
   img.addEventListener('error', () => {
     i = (i + 1) % list.length;
     show(i);
@@ -604,6 +845,7 @@ form.reset();
   }, 5000);
 })();
 </script>
+
 <script src="protect-images.js"></script>
 </body>
 </html>
