@@ -857,10 +857,11 @@ body::before{
 .gallery-filter{
   margin-top: 12px;
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;   /* stack label above controls */
+  align-items: stretch;     /* let the row take full width */
+  gap: 10px;
 }
+
 .gallery-filter-label{
   font-size: 13px;
   color: rgba(255,255,255,.72);
@@ -1288,4 +1289,94 @@ input, textarea,
     0 28px 80px rgba(0,0,0,0.66),
     0 0 0 1px rgba(255,255,255,0.06),
     0 0 28px rgba(181,140,255,0.22);
+}
+.gallery-hint{
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: .65;
+}
+/* Filter row: dropdown left, toggle button right */
+.gallery-filter-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;              /* important */
+}
+
+
+.gallery-filter-select{
+  max-width: 260px; /* keeps it tidy */
+}
+
+.gallery-filter-spacer{
+  flex: 1; /* pushes the toggle to the far right */
+}
+
+.view-toggle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 650;
+  letter-spacing: .02em;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.view-toggle:hover{
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.22);
+}
+
+.view-toggle:active{
+  transform: translateY(1px);
+}
+
+/* LIST VIEW: when enabled, convert cards to rows */
+#galleryGrid.list-view{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+#galleryGrid.list-view .card{
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  align-items: stretch;
+}
+
+#galleryGrid.list-view .card img{
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+#galleryGrid.list-view .cap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Mobile: stack list view nicely */
+@media (max-width: 720px){
+  #galleryGrid.list-view .card{
+    grid-template-columns: 1fr;
+  }
+  #galleryGrid.list-view .card img{
+    height: 200px;
+  }
+}
+.view-toggle[aria-pressed="true"]{
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.35);
+}
+@media (max-width: 720px){
+  #viewToggle{ display: none !important; }
 }

@@ -151,24 +151,33 @@
   <div class="section-head gallery-head">
 <div class="gallery-topline">
   <h2>Gallery</h2>
-  <span class="gallery-hint">Click any image to view fullscreen.</span>
 </div>
 
     <p class="gallery-intro">
       All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
     </p>
 
-    <div class="gallery-filter" role="group" aria-label="Gallery filter">
-      <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
-      <select id="typeFilter" class="gallery-filter-select">
-        <option value="all">All</option>
-        <option value="galaxies">Galaxies</option>
-        <option value="nebulae">Nebulae</option>
-        <option value="star-clusters">Star Clusters</option>
-        <option value="others">Others</option>
-      </select>
-    </div>
+<div class="gallery-filter" role="group" aria-label="Gallery filter">
+  <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
 
+  <div class="gallery-filter-row">
+    <select id="typeFilter" class="gallery-filter-select">
+      <option value="all">All</option>
+      <option value="galaxies">Galaxies</option>
+      <option value="nebulae">Nebulae</option>
+      <option value="star-clusters">Star Clusters</option>
+      <option value="others">Others</option>
+    </select>
+ <div class="gallery-filter-spacer"></div>
+    <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
+      List view
+    </button>
+  </div>
+</div>
+
+<p class="gallery-hint">
+  Click any image to view fullscreen.
+</p>
   </div>
 
 
@@ -359,7 +368,9 @@
   const lbTitle = document.getElementById('lbTitle');
   const lbClose = document.getElementById('lbClose');
   const typeFilter = document.getElementById('typeFilter');
+  const viewToggle = document.getElementById('viewToggle');
 
+  // ✅ do NOT touch grid until we've confirmed it exists
   if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
 
   const items = JSON.parse(dataEl.textContent);
@@ -377,7 +388,7 @@
     lbImg.src = item.file;
     lbImg.alt = item.alt || item.title || 'Astrophotography image';
     lbTitle.textContent = item.title || '';
-    
+
     lb.classList.add('open');
     lb.setAttribute('aria-hidden','false');
     document.body.classList.add('noscroll');
@@ -388,11 +399,10 @@
     lb.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
 
-    // stop image flashing old content during next open
     lbImg.src = "";
     lbImg.alt = "";
     lbTitle.textContent = "";
-   }
+  }
 
   function render(){
     const selected = (typeFilter && typeFilter.value) ? typeFilter.value : 'all';
@@ -400,9 +410,7 @@
       ? items
       : items.filter(it => (it.type || 'others') === selected);
 
-    // Render grid (same card HTML as you already had)
     grid.innerHTML = filtered.map((item) => {
-      // keep lightbox working by pointing back to original "items" index
       const idx = items.findIndex(x => x.file === item.file);
 
       return `
@@ -417,6 +425,35 @@
     }).join('');
   }
 
+// ✅ Mobile: always grid view (ignore saved preference)
+const isMobile = window.matchMedia('(max-width: 720px)').matches;
+
+if(isMobile){
+  grid.classList.remove('list-view');
+  localStorage.setItem('galleryView', 'grid'); // optional: keep it consistent
+  if(viewToggle){
+    viewToggle.textContent = 'List view';
+    viewToggle.setAttribute('aria-pressed','false');
+  }
+} else {
+  // Desktop/tablet: restore preference
+  const savedView = localStorage.getItem('galleryView');
+  if(savedView === 'list'){
+    grid.classList.add('list-view');
+    if(viewToggle){
+      viewToggle.textContent = 'Grid view';
+      viewToggle.setAttribute('aria-pressed','true');
+    }
+  } else {
+    grid.classList.remove('list-view');
+    if(viewToggle){
+      viewToggle.textContent = 'List view';
+      viewToggle.setAttribute('aria-pressed','false');
+    }
+  }
+}
+
+
   // initial render
   render();
 
@@ -425,7 +462,20 @@
     typeFilter.addEventListener('change', render);
   }
 
+  // list/grid toggle
+if(viewToggle){
+  viewToggle.addEventListener('click', () => {
+    if(window.matchMedia('(max-width: 720px)').matches) return; // do nothing on mobile
 
+    const isList = grid.classList.toggle('list-view');
+    viewToggle.textContent = isList ? 'Grid view' : 'List view';
+    viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
+    localStorage.setItem('galleryView', isList ? 'list' : 'grid');
+  });
+}
+
+
+  // click image => open lightbox
   grid.addEventListener('click', (e) => {
     const a = e.target.closest('a.card');
     if(!a) return;
@@ -437,7 +487,7 @@
 
   lbClose.addEventListener('click', closeLightbox);
 
-  // click outside the inner box closes
+  // click outside closes
   lb.addEventListener('click', (e) => {
     if(e.target === lb) closeLightbox();
   });
@@ -447,6 +497,7 @@
   });
 })();
 </script>
+
 
 <script>
 /* Scroll reveal (adds "in" when elements enter viewport) */
