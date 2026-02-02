@@ -157,7 +157,20 @@
     <p class="gallery-intro">
       All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
     </p>
+
+    <div class="gallery-filter" role="group" aria-label="Gallery filter">
+      <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
+      <select id="typeFilter" class="gallery-filter-select">
+        <option value="all">All</option>
+        <option value="galaxies">Galaxies</option>
+        <option value="nebulae">Nebulae</option>
+        <option value="star-clusters">Star Clusters</option>
+        <option value="others">Others</option>
+      </select>
+    </div>
+
   </div>
+
 
   <!-- THIS must be outside the section-head -->
   <div id="galleryGrid" class="grid"></div>
@@ -235,79 +248,92 @@
     "file": "images/RN.jpg",
     "title": "Rosette Nebula (NGC 2244)",
     "desc": "A vast, expanding cloud of ionised hydrogen surrounding a young open star cluster at its core. Intense radiation from newly formed stars carves cavities into the surrounding gas, revealing the fragile balance between stellar birth and destruction.",
-    "alt": "Rosette Nebula"
+    "alt": "Rosette Nebula",
+    "type": "nebulae"
   },
   {
     "file": "images/JFN.jpg",
     "title": "Jellyfish Nebula (IC 443)",
     "desc": "The remnants of a massive stellar explosion, where an expanding supernova shockwave collides with surrounding molecular clouds. Filamentary structures trace the violence of the event, frozen in motion thousands of years after the star’s death.",
-    "alt": "Jellyfish Nebula"
+    "alt": "Jellyfish Nebula",
+    "type": "nebulae"
   },
   {
     "file": "images/Xmas.jpg",
     "title": "Christmas Tree Nebula (NGC 2264)",
     "desc": "A rich and chaotic star-forming region where glowing emission nebulae intertwine with dense, cold dust. The Cone Nebula stands as a towering pillar of molecular gas, sculpted by ultraviolet radiation from nearby massive stars.",
-    "alt": "NGC 2264 (Cone Nebula & Christmas Tree)"
+    "alt": "NGC 2264 (Cone Nebula & Christmas Tree)",
+    "type": "nebulae"
   },
   {
     "file": "images/MHN.jpg",
     "title": "Monkey Head Nebula (NGC 2174)",
     "desc": "A luminous star-forming region shaped by powerful radiation and stellar winds from young, massive stars. Dark dust lanes cut through glowing hydrogen, giving rise to the nebula’s distinctive silhouette against the Orion constellation.",
-    "alt": "Monkey Head Nebula"
+    "alt": "Monkey Head Nebula",
+    "type": "nebulae"
   },
   {
     "file": "images/Pleiades.jpeg",
     "title": "Pleiades (M45)",
     "desc": "A young open star cluster dominated by hot, blue stars, drifting through faint interstellar dust that reflects their light. Often mistaken for a nebula, the delicate blue haze is a foreground veil rather than material born with the stars themselves.",
-    "alt": "Pleiades star cluster"
+    "alt": "Pleiades star cluster",
+    "type": "star-clusters"
   },
   {
    "file": "images/Orion Nebula.jpg",
    "title": "Orion Nebula (M42)",
    "desc": "The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems.",
-   "alt": "The Orion Nebula"
+   "alt": "The Orion Nebula",
+   "type": "nebulae"
   },
    {
    "file": "images/Andromeda.jpg",
    "title": "Andromeda Galaxy (M31)",
    "desc": "A vast spiral galaxy beyond our own, captured as its ancient light travels over two million years through intergalactic space. A reminder that the Milky Way is not alone, but one of countless island universes drifting through the dark.",
-   "alt": "Andromeda"
+   "alt": "Andromeda",
+   "type": "galaxies"
   },
    {
    "file": "images/Flame&Horsehead.jpg",
    "title": "Flame (NGC 2024) and Horsehead (B33) Nebulae",
    "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance",
-   "alt": "Flame&Horsehead"
+   "alt": "Flame&Horsehead",
+   "type": "nebulae"
   },
     {
    "file": "images/Eagle Nebula.jpeg",
    "title": "Eagle Nebula (M16)",
    "desc": "A vast stellar nursery where dense clouds of gas and dust give rise to new generations of stars. The iconic Pillars of Creation rise from the nebula’s core, slowly eroded by radiation from the young stars forming within",
-   "alt": "The Eagle Nebula"
+   "alt": "The Eagle Nebula",
+   "type": "nebulae"
   },
   {
     "file": "images/Moon.jpeg",
     "title": "The Moon",
     "desc": "Earth’s only natural satellite, its heavily cratered surface shaped by billions of years of impacts and geological change. Seen here in fine detail, it serves as both a familiar presence and a reminder of our planet’s place in space.",
-    "alt": "The Moon"
+    "alt": "The Moon",
+    "type": "others"
   },
   {
    "file": "images/Bodes & Cigar.jpeg",
    "title": "Bode's (M81) and Cigar (M82) Galaxies",
    "desc": "A closely interacting pair of galaxies in Ursa Major, their gravitational encounter leaving lasting marks on both systems. While M81 retains its elegant spiral structure, M82 shows intense starburst activity triggered by their past interaction.",
-   "alt": "Bodes & Cigar"
+   "alt": "Bodes & Cigar",
+   "type": "galaxies"
   },
    {
    "file": "images/Triangulum.jpg",
    "title": "Triangulum Galaxy (M33)",
    "desc": "A nearby spiral galaxy in the Local Group, smaller and more diffuse than the Milky Way. Its faint arms are rich with glowing star-forming regions, scattered across a delicate and expansive disk.",
-   "alt": "Triangulum"
+   "alt": "Triangulum",
+   "type": "galaxies"
   },
    {
    "file": "images/MilkyWay&Me.jpg",
    "title": "The Milky Way and Me",
    "desc": "A quiet moment for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
-   "alt": "MilkyWayMe"
+   "alt": "MilkyWayMe",
+   "type": "others"
   }
 ]
 </script>
@@ -332,6 +358,7 @@
   const lbImg = document.getElementById('lbImg');
   const lbTitle = document.getElementById('lbTitle');
   const lbClose = document.getElementById('lbClose');
+  const typeFilter = document.getElementById('typeFilter');
 
   if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
 
@@ -367,15 +394,37 @@
     lbTitle.textContent = "";
    }
 
-  grid.innerHTML = items.map((item, idx) => `
-    <a class="card" href="${esc(item.file)}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
-      <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
-      <div class="cap">
-        <div class="t">${esc(item.title)}</div>
-        <div class="d">${esc(item.desc)}</div>
-      </div>
-    </a>
-  `).join('');
+  function render(){
+    const selected = (typeFilter && typeFilter.value) ? typeFilter.value : 'all';
+    const filtered = (selected === 'all')
+      ? items
+      : items.filter(it => (it.type || 'others') === selected);
+
+    // Render grid (same card HTML as you already had)
+    grid.innerHTML = filtered.map((item) => {
+      // keep lightbox working by pointing back to original "items" index
+      const idx = items.findIndex(x => x.file === item.file);
+
+      return `
+        <a class="card" href="${esc(item.file)}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
+          <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
+          <div class="cap">
+            <div class="t">${esc(item.title)}</div>
+            <div class="d">${esc(item.desc)}</div>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  // initial render
+  render();
+
+  // dropdown filter
+  if(typeFilter){
+    typeFilter.addEventListener('change', render);
+  }
+
 
   grid.addEventListener('click', (e) => {
     const a = e.target.closest('a.card');
@@ -425,8 +474,5 @@
 })();
 </script>
 <script src="protect-images.js"></script>
-</body>
-</html>
-
 </body>
 </html>
