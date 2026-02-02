@@ -1380,3 +1380,11 @@ input, textarea,
 @media (max-width: 720px){
   #viewToggle{ display: none !important; }
 }
+@media (max-width: 720px){
+  .view-toggle,
+  #viewToggle{
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
