@@ -202,18 +202,26 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
 
   const HOLD_MS = 6000;
 
-  function warmPreload(){
-    const ahead = [0,1,2]
-      .map(n => playlist[(idx + n) % playlist.length]?.file)
-      .filter(Boolean);
-    ahead.forEach(src => { const im = new Image(); im.src = src; });
+function getCoverFile(item){
+  if(item && item.images && Array.isArray(item.images) && item.images.length){
+    return item.images[0].file;
   }
+  return item?.file;
+}
+
+function warmPreload(){
+  const ahead = [0,1,2]
+    .map(n => getCoverFile(playlist[(idx + n) % playlist.length]))
+    .filter(Boolean);
+  ahead.forEach(src => { const im = new Image(); im.src = src; });
+}
+
 
   function setLayer(layer, src){
     layer.style.backgroundImage = `url("${src}")`;
   }
 
-  setLayer(layerA, playlist[idx].file);
+setLayer(layerA, getCoverFile(playlist[idx]));
   layerA.classList.add('is-on');
   layerB.classList.remove('is-on');
   warmPreload();
@@ -227,7 +235,7 @@ Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through p
       idx = 0;
     }
 
-    const nextSrc = playlist[idx].file;
+    const nextSrc = getCoverFile(playlist[idx]);
     try { await preload(nextSrc); } catch(e){ return; }
 
     const incoming = onA ? layerB : layerA;

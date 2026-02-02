@@ -117,6 +117,35 @@
 
     /* Prevent background scroll when lightbox open */
     body.noscroll{ overflow: hidden; }
+    /* Lightbox nav buttons */
+.lightbox-nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  user-select: none;
+}
+.lightbox-nav:hover{ background: rgba(0,0,0,.55); }
+
+#lbPrev{ left: 12px; }
+#lbNext{ right: 12px; }
+
+.lightbox-count{
+  font-size: 12px;
+  opacity: .9;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 8px 22px rgba(0,0,0,.55);
+}
+
   </style>
 </head>
 <body>
@@ -339,13 +368,18 @@
    "alt": "Triangulum",
    "type": "galaxies"
   },
-   {
-   "file": "images/MilkyWay&Me.jpg",
-   "title": "The Milky Way and Me",
-   "desc": "A quiet moment for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
-   "alt": "MilkyWayMe",
-   "type": "others"
-  }
+{
+  "images": [
+    { "file": "images/MilkyWay&Me.jpg",  "alt": "Milky Way and me (1)" },
+    { "file": "images/MilkyWay&Me2.jpg", "alt": "Milky Way and me (2)" },
+    { "file": "images/MilkyWay&Me3.jpg", "alt": "Milky Way and me (3)" },
+    { "file": "images/MilkyWay&Me4.jpg", "alt": "Milky Way and me (4)" }
+  ],
+  "title": "The Milky Way and Me",
+  "desc": "A quiet moment for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
+  "type": "others"
+}
+
 ]
 </script>
 
@@ -353,26 +387,37 @@
 <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
+
+    <button class="lightbox-nav" id="lbPrev" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav" id="lbNext" aria-label="Next image">›</button>
+
     <img class="lightbox-img" id="lbImg" alt="" src="" />
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
+
     <div class="lightbox-meta" aria-hidden="false">
       <div class="title" id="lbTitle"></div>
+      <div class="lightbox-count" id="lbCount"></div>
     </div>
   </div>
 </div>
+
 
 <script>
 (function(){
   const grid = document.getElementById('galleryGrid');
   const dataEl = document.getElementById('galleryData');
+
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lbImg');
   const lbTitle = document.getElementById('lbTitle');
+  const lbCount = document.getElementById('lbCount');
   const lbClose = document.getElementById('lbClose');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+
   const typeFilter = document.getElementById('typeFilter');
   const viewToggle = document.getElementById('viewToggle');
 
-  // ✅ do NOT touch grid until we've confirmed it exists
   if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
 
   const items = JSON.parse(dataEl.textContent);
@@ -386,10 +431,44 @@
       .replaceAll("'","&#039;");
   }
 
+  function getList(item){
+    // Returns an array of {file, alt}
+    if(item.images && Array.isArray(item.images) && item.images.length){
+      return item.images.map(im => ({ file: im.file, alt: im.alt || item.alt || item.title || "" }));
+    }
+    return [{ file: item.file, alt: item.alt || item.title || "" }];
+  }
+
+  function getCover(item){
+    const list = getList(item);
+    return list[0];
+  }
+
+  let currentItem = null;
+  let lbList = [];
+  let lbIndex = 0;
+
+  function showLb(){
+    const cur = lbList[lbIndex];
+    lbImg.src = cur.file;
+    lbImg.alt = cur.alt || (currentItem?.title || "");
+
+    lbTitle.textContent = currentItem?.title || "";
+    if(lbCount){
+      lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
+    }
+
+    // hide arrows if only one image
+    const multi = lbList.length > 1;
+    if(lbPrev) lbPrev.style.display = multi ? "" : "none";
+    if(lbNext) lbNext.style.display = multi ? "" : "none";
+  }
+
   function openLightbox(item){
-    lbImg.src = item.file;
-    lbImg.alt = item.alt || item.title || 'Astrophotography image';
-    lbTitle.textContent = item.title || '';
+    currentItem = item;
+    lbList = getList(item);
+    lbIndex = 0;
+    showLb();
 
     lb.classList.add('open');
     lb.setAttribute('aria-hidden','false');
@@ -404,6 +483,10 @@
     lbImg.src = "";
     lbImg.alt = "";
     lbTitle.textContent = "";
+    if(lbCount) lbCount.textContent = "";
+    currentItem = null;
+    lbList = [];
+    lbIndex = 0;
   }
 
   function render(){
@@ -413,48 +496,47 @@
       : items.filter(it => (it.type || 'others') === selected);
 
     grid.innerHTML = filtered.map((item) => {
-      const idx = items.findIndex(x => x.file === item.file);
+      const idx = items.indexOf(item); // works for both file and images[]
+      const cover = getCover(item);
 
       return `
-        <a class="card" href="${esc(item.file)}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
-          <img src="${esc(item.file)}" alt="${esc(item.alt)}" loading="lazy">
+        <a class="card" href="${esc(cover.file)}" data-idx="${idx}" aria-label="${esc(item.title || cover.alt)}">
+          <img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">
           <div class="cap">
-            <div class="t">${esc(item.title)}</div>
-            <div class="d">${esc(item.desc)}</div>
+            <div class="t">${esc(item.title || "")}</div>
+            <div class="d">${esc(item.desc || "")}</div>
           </div>
         </a>
       `;
     }).join('');
   }
 
-// ✅ Mobile: always grid view (ignore saved preference)
-const isMobile = window.matchMedia('(max-width: 720px)').matches;
+  // ✅ Mobile: always grid view (ignore saved preference)
+  const isMobile = window.matchMedia('(max-width: 720px)').matches;
 
-if(isMobile){
-  grid.classList.remove('list-view');
-  localStorage.setItem('galleryView', 'grid'); // optional: keep it consistent
-  if(viewToggle){
-    viewToggle.textContent = 'List view';
-    viewToggle.setAttribute('aria-pressed','false');
-  }
-} else {
-  // Desktop/tablet: restore preference
-  const savedView = localStorage.getItem('galleryView');
-  if(savedView === 'list'){
-    grid.classList.add('list-view');
-    if(viewToggle){
-      viewToggle.textContent = 'Grid view';
-      viewToggle.setAttribute('aria-pressed','true');
-    }
-  } else {
+  if(isMobile){
     grid.classList.remove('list-view');
+    localStorage.setItem('galleryView', 'grid');
     if(viewToggle){
       viewToggle.textContent = 'List view';
       viewToggle.setAttribute('aria-pressed','false');
     }
+  } else {
+    const savedView = localStorage.getItem('galleryView');
+    if(savedView === 'list'){
+      grid.classList.add('list-view');
+      if(viewToggle){
+        viewToggle.textContent = 'Grid view';
+        viewToggle.setAttribute('aria-pressed','true');
+      }
+    } else {
+      grid.classList.remove('list-view');
+      if(viewToggle){
+        viewToggle.textContent = 'List view';
+        viewToggle.setAttribute('aria-pressed','false');
+      }
+    }
   }
-}
-
 
   // initial render
   render();
@@ -464,41 +546,72 @@ if(isMobile){
     typeFilter.addEventListener('change', render);
   }
 
-  // list/grid toggle
-if(viewToggle){
-  viewToggle.addEventListener('click', () => {
-    if(window.matchMedia('(max-width: 720px)').matches) return; // do nothing on mobile
+  // list/grid toggle (desktop only)
+  if(viewToggle){
+    viewToggle.addEventListener('click', () => {
+      if(window.matchMedia('(max-width: 720px)').matches) return;
 
-    const isList = grid.classList.toggle('list-view');
-    viewToggle.textContent = isList ? 'Grid view' : 'List view';
-    viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
-    localStorage.setItem('galleryView', isList ? 'list' : 'grid');
-  });
-}
+      const isList = grid.classList.toggle('list-view');
+      viewToggle.textContent = isList ? 'Grid view' : 'List view';
+      viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
+      localStorage.setItem('galleryView', isList ? 'list' : 'grid');
+    });
+  }
 
-
-  // click image => open lightbox
+  // click tile => open lightbox
   grid.addEventListener('click', (e) => {
     const a = e.target.closest('a.card');
     if(!a) return;
     e.preventDefault();
+
     const idx = Number(a.getAttribute('data-idx'));
     const item = items[idx];
     if(item) openLightbox(item);
   });
 
-  lbClose.addEventListener('click', closeLightbox);
+  // lightbox controls
+  if(lbClose) lbClose.addEventListener('click', closeLightbox);
+
+  if(lbPrev){
+    lbPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(lbList.length < 2) return;
+      lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
+      showLb();
+    });
+  }
+
+  if(lbNext){
+    lbNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(lbList.length < 2) return;
+      lbIndex = (lbIndex + 1) % lbList.length;
+      showLb();
+    });
+  }
 
   // click outside closes
   lb.addEventListener('click', (e) => {
     if(e.target === lb) closeLightbox();
   });
 
+  // keyboard
   document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+    if(!lb.classList.contains('open')) return;
+
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft' && lbList.length > 1){
+      lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
+      showLb();
+    }
+    if(e.key === 'ArrowRight' && lbList.length > 1){
+      lbIndex = (lbIndex + 1) % lbList.length;
+      showLb();
+    }
   });
 })();
 </script>
+
 
 
 <script>
