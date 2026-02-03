@@ -7,7 +7,6 @@
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
   <link rel="stylesheet" href="styles.css?v=7" />
 
-
   <style>
     /* Lightbox */
     .lightbox{
@@ -44,13 +43,13 @@
 
     /* Watermark overlay (bottom third) */
     .lightbox-watermark.lightbox-watermark{
-  position: absolute;
-  inset: 0;                /* fills the entire image */
-  display: flex;
-  align-items: center;     /* vertical centre */
-  justify-content: center; /* horizontal centre */
-  pointer-events: none;
-}
+      position: absolute;
+      inset: 0;                /* fills the entire image */
+      display: flex;
+      align-items: center;     /* vertical centre */
+      justify-content: center; /* horizontal centre */
+      pointer-events: none;
+    }
     .lightbox-watermark span{
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       text-transform: lowercase;
@@ -117,35 +116,68 @@
 
     /* Prevent background scroll when lightbox open */
     body.noscroll{ overflow: hidden; }
+
     /* Lightbox nav buttons */
-.lightbox-nav{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.35);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  user-select: none;
-}
-.lightbox-nav:hover{ background: rgba(0,0,0,.55); }
+    .lightbox-nav{
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      user-select: none;
+    }
+    .lightbox-nav:hover{ background: rgba(0,0,0,.55); }
 
-#lbPrev{ left: 12px; }
-#lbNext{ right: 12px; }
+    #lbPrev{ left: 12px; }
+    #lbNext{ right: 12px; }
 
-.lightbox-count{
-  font-size: 12px;
-  opacity: .9;
-  color: rgba(255,255,255,.92);
-  text-shadow: 0 8px 22px rgba(0,0,0,.55);
-}
+    .lightbox-count{
+      font-size: 12px;
+      opacity: .9;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 8px 22px rgba(0,0,0,.55);
+    }
 
+    /* ✅ Multi-image badge on gallery tiles */
+    .card{ position: relative; }
+
+    .multi-badge{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.45);
+      color: rgba(255,255,255,.92);
+      font-size: 12px;
+      line-height: 1;
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .multi-badge .stack{
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      border-radius: 3px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.28) inset,
+        3px 3px 0 0 rgba(255,255,255,.10);
+      opacity: .9;
+    }
   </style>
 </head>
 <body>
@@ -180,46 +212,42 @@
 <div class="wrap">
 
   <div class="section-head gallery-head">
-<div class="gallery-topline">
-  <h2>Gallery</h2>
-</div>
+    <div class="gallery-topline">
+      <h2>Gallery</h2>
+    </div>
 
     <p class="gallery-intro">
       All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
     </p>
 
-<div class="gallery-filter" role="group" aria-label="Gallery filter">
-  <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
+    <div class="gallery-filter" role="group" aria-label="Gallery filter">
+      <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
 
-  <div class="gallery-filter-row">
-    <select id="typeFilter" class="gallery-filter-select">
-      <option value="all">All</option>
-      <option value="galaxies">Galaxies</option>
-      <option value="nebulae">Nebulae</option>
-      <option value="star-clusters">Star Clusters</option>
-      <option value="others">Others</option>
-    </select>
- <div class="gallery-filter-spacer"></div>
-    <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
-      List view
-    </button>
+      <div class="gallery-filter-row">
+        <select id="typeFilter" class="gallery-filter-select">
+          <option value="all">All</option>
+          <option value="galaxies">Galaxies</option>
+          <option value="nebulae">Nebulae</option>
+          <option value="star-clusters">Star Clusters</option>
+          <option value="others">Others</option>
+        </select>
+        <div class="gallery-filter-spacer"></div>
+        <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
+          List view
+        </button>
+      </div>
+    </div>
+
+    <p class="gallery-hint">
+      Click any image to view fullscreen.
+    </p>
   </div>
-</div>
-
-<p class="gallery-hint">
-  Click any image to view fullscreen.
-</p>
-  </div>
-
 
   <!-- THIS must be outside the section-head -->
   <div id="galleryGrid" class="grid"></div>
 
 </div>
-
-
 </section>
-
 </main>
 
 <footer>
@@ -234,21 +262,22 @@
       <a href="gear.html">Gear</a>
       <span>·</span>
       <a href="about.html">About</a>
+
       <a href="https://www.instagram.com/bhapstar/"
-   target="_blank"
-   rel="noopener"
-   aria-label="Instagram"
-   class="social-icon">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-       xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="20" height="20" rx="5"
-          stroke="currentColor" stroke-width="2"/>
-    <circle cx="12" cy="12" r="5"
-            stroke="currentColor" stroke-width="2"/>
-    <circle cx="17.5" cy="6.5" r="1.2"
-            fill="currentColor"/>
-  </svg>
-</a>
+         target="_blank"
+         rel="noopener"
+         aria-label="Instagram"
+         class="social-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5"
+                stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="5"
+                  stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1.2"
+                  fill="currentColor"/>
+        </svg>
+      </a>
     </div>
   </div>
 </footer>
@@ -320,34 +349,48 @@
     "type": "star-clusters"
   },
   {
-   "file": "images/Orion Nebula.jpg",
-   "title": "Orion Nebula (M42)",
-   "desc": "The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems.",
-   "alt": "The Orion Nebula",
-   "type": "nebulae"
-  },
-   {
-   "file": "images/Andromeda.jpg",
-   "title": "Andromeda Galaxy (M31)",
-   "desc": "A vast spiral galaxy beyond our own, captured as its ancient light travels over two million years through intergalactic space. A reminder that the Milky Way is not alone, but one of countless island universes drifting through the dark.",
-   "alt": "Andromeda",
-   "type": "galaxies"
-  },
-   {
-   "file": "images/Flame&Horsehead.jpg",
-   "title": "Flame (NGC 2024) and Horsehead (B33) Nebulae",
-   "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance",
-   "alt": "Flame&Horsehead",
-   "type": "nebulae"
-  },
-    {
-   "file": "images/Eagle Nebula.jpeg",
-   "title": "Eagle Nebula (M16)",
-   "desc": "A vast stellar nursery where dense clouds of gas and dust give rise to new generations of stars. The iconic Pillars of Creation rise from the nebula’s core, slowly eroded by radiation from the young stars forming within",
-   "alt": "The Eagle Nebula",
-   "type": "nebulae"
+    "file": "images/Orion Nebula.jpg",
+    "title": "Orion Nebula (M42)",
+    "desc": "The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems.",
+    "alt": "The Orion Nebula",
+    "type": "nebulae"
   },
   {
+    "file": "images/Andromeda.jpg",
+    "title": "Andromeda Galaxy (M31)",
+    "desc": "A vast spiral galaxy beyond our own, captured as its ancient light travels over two million years through intergalactic space. A reminder that the Milky Way is not alone, but one of countless island universes drifting through the dark.",
+    "alt": "Andromeda",
+    "type": "galaxies"
+  },
+  {
+    "file": "images/Flame&Horsehead.jpg",
+    "title": "Flame (NGC 2024) and Horsehead (B33) Nebulae",
+    "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance",
+    "alt": "Flame&Horsehead",
+    "type": "nebulae"
+  },
+  {
+    "file": "images/Eagle Nebula.jpeg",
+    "title": "Eagle Nebula (M16)",
+    "desc": "A vast stellar nursery where dense clouds of gas and dust give rise to new generations of stars. The iconic Pillars of Creation rise from the nebula’s core, slowly eroded by radiation from the young stars forming within",
+    "alt": "The Eagle Nebula",
+    "type": "nebulae"
+  },
+  {
+    "file": "images/Bodes & Cigar.jpeg",
+    "title": "Bode's (M81) and Cigar (M82) Galaxies",
+    "desc": "A closely interacting pair of galaxies in Ursa Major, their gravitational encounter leaving lasting marks on both systems. While M81 retains its elegant spiral structure, M82 shows intense starburst activity triggered by their past interaction.",
+    "alt": "Bodes & Cigar",
+    "type": "galaxies"
+  },
+  {
+    "file": "images/Triangulum.jpg",
+    "title": "Triangulum Galaxy (M33)",
+    "desc": "A nearby spiral galaxy in the Local Group, smaller and more diffuse than the Milky Way. Its faint arms are rich with glowing star-forming regions, scattered across a delicate and expansive disk.",
+    "alt": "Triangulum",
+    "type": "galaxies"
+  },
+    {
     "file": "images/Moon.jpeg",
     "title": "The Moon",
     "desc": "Earth’s only natural satellite, its heavily cratered surface shaped by billions of years of impacts and geological change. Seen here in fine detail, it serves as both a familiar presence and a reminder of our planet’s place in space.",
@@ -355,31 +398,25 @@
     "type": "others"
   },
   {
-   "file": "images/Bodes & Cigar.jpeg",
-   "title": "Bode's (M81) and Cigar (M82) Galaxies",
-   "desc": "A closely interacting pair of galaxies in Ursa Major, their gravitational encounter leaving lasting marks on both systems. While M81 retains its elegant spiral structure, M82 shows intense starburst activity triggered by their past interaction.",
-   "alt": "Bodes & Cigar",
-   "type": "galaxies"
+    "images": [
+      { "file": "images/MilkyWay&Me.jpg",  "alt": "Milky Way and me (1)" },
+      { "file": "images/MilkyWay&Me2.jpg", "alt": "Milky Way and me (2)" },
+      { "file": "images/MilkyWay&Me3.jpg", "alt": "Milky Way and me (3)" },
+      { "file": "images/MilkyWay&Me4.jpg", "alt": "Milky Way and me (4)" }
+    ],
+    "title": "The Milky Way and Me",
+    "desc": "Some quiet moments for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
+    "type": "others"
   },
-   {
-   "file": "images/Triangulum.jpg",
-   "title": "Triangulum Galaxy (M33)",
-   "desc": "A nearby spiral galaxy in the Local Group, smaller and more diffuse than the Milky Way. Its faint arms are rich with glowing star-forming regions, scattered across a delicate and expansive disk.",
-   "alt": "Triangulum",
-   "type": "galaxies"
-  },
-{
-  "images": [
-    { "file": "images/MilkyWay&Me.jpg",  "alt": "Milky Way and me (1)" },
-    { "file": "images/MilkyWay&Me2.jpg", "alt": "Milky Way and me (2)" },
-    { "file": "images/MilkyWay&Me3.jpg", "alt": "Milky Way and me (3)" },
-    { "file": "images/MilkyWay&Me4.jpg", "alt": "Milky Way and me (4)" }
-  ],
-  "title": "The Milky Way and Me (4)",
-  "desc": "Some quiet moments for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
-  "type": "others"
-}
-
+  {
+    "images": [
+      { "file": "images/Geminids_Composite.jpg",  "alt": "Geminids Meteor Shower Composite" },
+      { "file": "images/Geminids_Composite_Labelled.jpg", "alt": "Geminids Meteor Shower Composite Labelled" }
+    ],
+    "title": "The Geminids Meteor Shower",
+    "desc": "An annual meteor shower caused by debris from asteroid 3200 Phaethon. This composite records multiple Geminid meteors over a single night, tracing their apparent paths back to the constellation Gemini as Earth passes through the stream.",
+    "type": "others"
+  }
 ]
 </script>
 
@@ -400,7 +437,6 @@
     </div>
   </div>
 </div>
-
 
 <script>
 (function(){
@@ -498,9 +534,14 @@
     grid.innerHTML = filtered.map((item) => {
       const idx = items.indexOf(item); // works for both file and images[]
       const cover = getCover(item);
+      const count = getList(item).length;
+      const badge = count > 1
+        ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
+        : '';
 
       return `
         <a class="card" href="${esc(cover.file)}" data-idx="${idx}" aria-label="${esc(item.title || cover.alt)}">
+          ${badge}
           <img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">
           <div class="cap">
             <div class="t">${esc(item.title || "")}</div>
@@ -612,8 +653,6 @@
 })();
 </script>
 
-
-
 <script>
 /* Scroll reveal (adds "in" when elements enter viewport) */
 (function(){
@@ -639,6 +678,7 @@
   els.forEach(el => io.observe(el));
 })();
 </script>
+
 <script src="protect-images.js"></script>
 </body>
 </html>
