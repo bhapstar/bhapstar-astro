@@ -1214,6 +1214,55 @@ img.protect,
   text-shadow: 0 8px 22px rgba(0,0,0,.55);
   pointer-events: none;
 }
+
+.calendar-modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.calendar-modal.open{
+  display: flex;
+}
+
+.calendar-modal-inner{
+  position: relative;
+  max-width: min(92vw, 720px);
+  max-height: 90vh;
+  background: rgba(12,7,18,0.95);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.8);
+}
+
+.calendar-modal-inner img{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.calendar-close{
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.calendar-close:hover{
+  opacity: 0.75;
+}
+
 /* =========================
    THEME OVERRIDE — DARK PURPLE
    Paste at END of styles.css
@@ -1387,4 +1436,93 @@ input, textarea,
     visibility: hidden !important;
     pointer-events: none !important;
   }
+}
+/* Inline checkbox text (used for calendar enquiry) */
+.checkline{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  cursor: pointer;
+  max-width: 100%;
+}
+
+.checkline input{
+  margin-top: 3px; /* aligns checkbox with first text line */
+  flex: 0 0 auto;
+}
+
+.checkline span{
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  line-height: 1.5;
+}
+/* IMPORTANT: allow grid children to shrink/wrap inside .picker rows */
+.picker .row > div{ 
+  min-width: 0;
+}
+
+/* Calendar checkbox line */
+.checkline{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 100%;
+}
+
+.checkline span{
+  white-space: normal;      /* allow wrapping */
+  overflow-wrap: anywhere;  /* prevent overflow on long words */
+  text-transform: none;     /* override your .picker label uppercase rule */
+  letter-spacing: normal;   /* override your .picker label spacing */
+}
+/* === Calendar checkbox fix: stop checkbox inheriting text-input styles === */
+.picker input[type="checkbox"]{
+  width: auto !important;
+  padding: 0 !important;
+  border-radius: 4px;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255,255,255,0.35);
+  accent-color: var(--accent);
+}
+
+/* keep checkbox + text on one line, wrapping nicely */
+.checkline{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: left;
+  max-width: 100%;
+  cursor: pointer;
+
+  /* stop inheriting uppercase styling from .picker label */
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.checkline span{
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* grid child shrink fix (prevents text escaping the panel) */
+.picker .row > div{
+  min-width: 0;
+}
+.faq-link{
+  margin-left: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.faq-link:hover{
+  opacity: 0.85;
 }

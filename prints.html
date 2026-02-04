@@ -9,41 +9,38 @@
 
   <style>
     /* Prints page enhancements (enquiry-based, no checkout) */
-/* Desktop layout: main + FAQ sidebar */
-.prints-layout{
-  display: grid;
-  grid-template-columns: 1fr;      /* mobile default */
-  gap: 18px;
-  align-items: start;
-}
+    /* Desktop layout: main + FAQ sidebar */
+    .prints-layout{
+      display: grid;
+      grid-template-columns: 1fr;      /* mobile default */
+      gap: 18px;
+      align-items: start;
+    }
 
-/* Left column: stacked panels */
-.prints-main{
-  display: grid;
-  gap: 18px;
-}
+    /* Left column: stacked panels */
+    .prints-main{
+      display: grid;
+      gap: 18px;
+    }
 
-/* Right column: FAQ sidebar */
-.prints-side{
-  display: grid;
-  gap: 18px;
-}
+    /* Right column: FAQ sidebar */
+    .prints-side{
+      display: grid;
+      gap: 18px;
+    }
 
-/* Desktop/tablet wide screens */
-@media (min-width: 980px){
-  .prints-layout{
-    grid-template-columns: 1fr 360px;
-    gap: 18px;
-    align-items: start;
-  }
-  .prints-side{
-    position: static;   /* default - no sticking */
-    top: auto;
-  }
-}
-
-
-
+    /* Desktop/tablet wide screens */
+    @media (min-width: 980px){
+      .prints-layout{
+        grid-template-columns: 1fr 360px;
+        gap: 18px;
+        align-items: start;
+      }
+      .prints-side{
+        position: static;   /* default - no sticking */
+        top: auto;
+      }
+    }
 
     .steps{
       display: grid;
@@ -74,11 +71,11 @@
     }
     .step h4{ margin: 0 0 6px 0; font-size: 14px; }
     .step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
-.step p.helper{
-  font-size: 12px;
-  color: rgba(255,255,255,0.65);
-  margin-top: 6px;
-}
+    .step p.helper{
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 6px;
+    }
 
     .picker{
       display: grid;
@@ -316,203 +313,228 @@
         <h2>Print enquiries</h2>
       </div>
 
-      <!-- STACKED ORDER:
-           1) How it works
-           2) Build your enquiry
-           3) FAQ
-           4) Framed mockup
-      -->
-<div class="prints-layout">
+      <div class="prints-layout">
 
-  <!-- LEFT: main content -->
-  <div class="prints-main">
+        <!-- LEFT: main content -->
+        <div class="prints-main">
 
-    <!-- 1) HOW IT WORKS -->
-    <div class="panel prints-panel">
-      <h3>How it works</h3>
+          <!-- 1) HOW IT WORKS -->
+          <div class="panel prints-panel">
+            <h3>How it works</h3>
 
-      <div class="steps">
-        <div class="step">
-          <div class="k">1</div>
-          <h4>Choose an image</h4>
-          <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
-        </div>
-        <div class="step">
-          <div class="k">2</div>
-          <h4>Select a format</h4>
-          <p>A4 / A3 print, framed or unframed, or a high-resolution digital file.</p>
-<p class="helper">Repeat steps 1 and 2 as many times as needed.</p>
-
-        </div>
-        <div class="step">
-          <div class="k">3</div>
-          <h4>Send an enquiry</h4>
-          <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2) BUILD YOUR ENQUIRY -->
-<div class="panel prints-panel">
-  <h3>Build your enquiry</h3>
-  <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
-
-  <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
-    <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
-
-    <!-- Honeypot (leave empty) -->
-    <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-
-    <div class="picker" id="enquiryPicker">
-
-      <!-- CONTACT -->
-      <div class="row">
-        <label for="pName">Name</label>
-        <input id="pName" name="name" type="text" placeholder="Your name" required />
-      </div>
-
-      <div class="row">
-        <label for="pPhone">Phone</label>
-        <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
-      </div>
-
-      <div class="row">
-        <label for="pEmail">Email</label>
-        <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
-      </div>
-
-      <!-- ITEMS -->
-      <div class="row" style="align-items:start;">
-        <label>Items</label>
-        <div>
-          <div id="itemsWrap" class="items-area"></div>
-
-          <div class="items-controls">
-            <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
+            <div class="steps">
+              <div class="step">
+                <div class="k">1</div>
+                <h4>Choose an image</h4>
+                <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
+              </div>
+              <div class="step">
+                <div class="k">2</div>
+                <h4>Select a format</h4>
+                <p>A4 / A3 print, framed or unframed, or a high-resolution digital file.</p>
+                <p class="helper">Repeat steps 1 and 2 as many times as needed.</p>
+              </div>
+              <div class="step">
+                <div class="k">3</div>
+                <h4>Send an enquiry</h4>
+                <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
+              </div>
+            </div>
           </div>
 
-          <input type="hidden" id="itemsSummary" name="items_summary" value="">
-        </div>
-      </div>
+          <!-- 2) BUILD YOUR ENQUIRY -->
+          <div class="panel prints-panel">
+            <h3>Build your enquiry</h3>
+            <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
 
-      <!-- DELIVERY + NOTES -->
-      <div class="row">
-        <label for="pCity">Delivery location</label>
-        <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
-      </div>
+            <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
+              <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
 
-      <div class="row">
-        <label for="pNotes">Notes</label>
-        <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
-      </div>
+              <!-- Honeypot (leave empty) -->
+              <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
-    </div>
+              <div class="picker" id="enquiryPicker">
 
-    <div style="height:12px"></div>
+                <!-- CONTACT -->
+                <div class="row">
+                  <label for="pName">Name</label>
+                  <input id="pName" name="name" type="text" placeholder="Your name" required />
+                </div>
 
-    <div class="template-box">
-      <pre id="enquiryPreview"></pre>
-    </div>
+                <div class="row">
+                  <label for="pPhone">Phone</label>
+                  <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
+                </div>
 
-    <div style="height:14px"></div>
+                <div class="row">
+                  <label for="pEmail">Email</label>
+                  <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
+                </div>
 
-    <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
-      <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
-    </div>
+                <!-- ITEMS -->
+                <div class="row" style="align-items:start;">
+                  <label>Items</label>
+                  <div>
+                    <div id="itemsWrap" class="items-area"></div>
 
-    <p class="helper" style="margin-top:10px;">
-      Enquiry-based only — no checkout or online payments on this site.
-    </p>
+                    <div class="items-controls">
+                      <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
+                    </div>
 
-  </form>
-</div>
+                    <input type="hidden" id="itemsSummary" name="items_summary" value="">
+                  </div>
+                </div>
+
+                <!-- DELIVERY + NOTES -->
+                <div class="row">
+                  <label for="pCity">Delivery location</label>
+                  <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
+                </div>
+
+                <div class="row">
+                  <label for="pNotes">Notes</label>
+                  <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
+                </div>
+
+<!-- Calendar interest -->
+<div class="row" style="align-items:start;">
+  <label for="pCalendar">Calendar</label>
+
+  <div>
+    <label class="checkline" for="pCalendar">
+      <input id="pCalendar" name="calendar_interest" type="checkbox" value="Yes">
+<span>
+  Please click here if you would also like to enquire about a custom astrophotography calendar made from any 12 of my images of your choosing.
+  <a href="#" class="faq-link" id="openCalendarExample">View example</a>
+</span>
 
 
-    <!-- 4) FRAMED MOCKUP -->
-    <div class="panel prints-panel">
-      <h3>Framed mockup</h3>
-      <p class="helper">A rotating preview of framed print styles.</p>
-
-      <div class="grid" style="grid-template-columns: 1fr; margin-top: 14px;">
-        <div class="card framed-tile" aria-hidden="false">
-          <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
-          <div class="cap">
-            <div class="t">Framed mockup</div>
-          </div>
-        </div>
-      </div>
-
-      <script id="framedData" type="application/json">
-      [
-        "images/framed/1.jpg",
-        "images/framed/2.jpg",
-        "images/framed/3.jpg",
-        "images/framed/4.jpg",
-        "images/framed/5.jpg",
-        "images/framed/1-1.jpg",
-        "images/framed/2-2.jpg",
-        "images/framed/3-3.jpg",
-        "images/framed/4-4.jpg",
-        "images/framed/5-5.jpg"
-      ]
-      </script>
-    </div>
-
+    </label>
   </div>
-
-  <!-- RIGHT: FAQ sidebar -->
-  <aside class="prints-side">
-    <div class="panel prints-panel">
-      <h3>FAQ</h3>
-
-<div class="faq">
-  <details class="faq-item">
-    <summary>What print sizes are available?</summary>
-    <p>Prints are available in A3 or A4 sizes.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>What paper is used for printing?</summary>
-    <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can I have my print framed?</summary>
-    <p>Yes, a high quality black frame can be supplied. Other frame colours are available by request.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>How will the prints be shipped?</summary>
-    <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
-       Framed prints will be sent with a black frame with corner protectors.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>How does the digital download work?</summary>
-    <p>The high resolution digital file will be emailed to you.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Do you ship internationally?</summary>
-    <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can I request a specific crop or aspect ratio?</summary>
-    <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Is there anything else I should know?</summary>
-    <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you recieve may differ slightly from what you see here.</p>
-    <p>The print/download will contain an imperceptible watermark.</p>
-  </details>
 </div>
 
-    </div>
-  </aside>
 
-</div>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="template-box">
+                <pre id="enquiryPreview"></pre>
+              </div>
+
+              <div style="height:14px"></div>
+
+              <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
+                <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
+              </div>
+
+              <p class="helper" style="margin-top:10px;">
+                Enquiry-based only — no checkout or online payments on this site.
+              </p>
+
+            </form>
+          </div>
+
+          <!-- 4) FRAMED MOCKUP -->
+          <div class="panel prints-panel">
+            <h3>Framed mockup</h3>
+            <p class="helper">A rotating preview of framed print styles.</p>
+
+            <div class="grid" style="grid-template-columns: 1fr; margin-top: 14px;">
+              <div class="card framed-tile" aria-hidden="false">
+                <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
+                <div class="cap">
+                  <div class="t">Framed mockup</div>
+                </div>
+              </div>
+            </div>
+
+            <script id="framedData" type="application/json">
+            [
+              "images/framed/1.jpg",
+              "images/framed/2.jpg",
+              "images/framed/3.jpg",
+              "images/framed/4.jpg",
+              "images/framed/5.jpg",
+              "images/framed/1-1.jpg",
+              "images/framed/2-2.jpg",
+              "images/framed/3-3.jpg",
+              "images/framed/4-4.jpg",
+              "images/framed/5-5.jpg"
+            ]
+            </script>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: FAQ sidebar -->
+        <aside class="prints-side">
+          <div class="panel prints-panel">
+            <h3>FAQ</h3>
+
+            <div class="faq">
+              <details class="faq-item">
+                <summary>What print sizes are available?</summary>
+                <p>Prints are available in A3 or A4 sizes.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>What paper is used for printing?</summary>
+                <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>Can I have my print framed?</summary>
+                <p>Yes, a high quality black frame can be supplied. Other frame colours are available by request.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>How will the prints be shipped?</summary>
+                <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
+                   Framed prints will be sent with a black frame with corner protectors.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>How does the digital download work?</summary>
+                <p>The high resolution digital file will be emailed to you.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>Do you ship internationally?</summary>
+                <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>Can I request a specific crop or aspect ratio?</summary>
+                <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
+              </details>
+<details class="faq-item" id="faq-calendar">
+
+  <summary>What will the calendar look like?</summary>
+  <p>
+    The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description of the target.
+    It will also be pre-populated with key astronomical events and key dates.
+  </p>
+  <p class="helper" style="margin-top:10px;">Example layout:</p>
+  <img
+    src="images/calendar-example.jpg"
+    alt="Example calendar layout"
+    style="width:100%; height:auto; border-radius:14px; border:1px solid rgba(255,255,255,0.10);"
+    loading="lazy"
+  />
+</details>
+
+              <details class="faq-item">
+                <summary>Is there anything else I should know?</summary>
+                <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you recieve may differ slightly from what you see here.</p>
+                <p>The print/download will contain an imperceptible watermark.</p>
+              </details>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
 
     </div>
   </section>
@@ -616,6 +638,9 @@
   const phone = el('pPhone');
   const email = el('pEmail');
   const notes = el('pNotes');
+
+  // NEW
+  const calendar = el('pCalendar');
 
   const preview = el('enquiryPreview');
   const toast = el('toast');
@@ -786,6 +811,10 @@
       });
     }
 
+    // NEW: calendar line in preview
+    lines.push(``);
+    lines.push(`Calendar interest: ${calendar?.checked ? 'Yes (custom calendar – 12 images)' : 'No'}`);
+
     lines.push(
       ``,
       `Delivery location: ${location?.value?.trim() || ''}`,
@@ -807,7 +836,9 @@
     return text;
   }
 
+  // NEW: include calendar in listeners
   [location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
+  calendar && calendar.addEventListener('change', build);
 
   if(addItemBtn){
     addItemBtn.addEventListener('click', () => addItem());
@@ -903,5 +934,53 @@
 </script>
 
 <script src="protect-images.js"></script>
+
+<div class="calendar-modal" id="calendarModal" aria-hidden="true">
+  <div class="calendar-modal-inner">
+    <button class="calendar-close" aria-label="Close">&times;</button>
+    <img
+      src="images/calendar-example.jpg"
+      alt="Example astrophotography calendar layout"
+      loading="lazy"
+    />
+  </div>
+</div>
+
+<script>
+(function(){
+  const openBtn = document.getElementById('openCalendarExample');
+  const modal = document.getElementById('calendarModal');
+  const closeBtn = modal?.querySelector('.calendar-close');
+
+  if(!openBtn || !modal) return;
+
+  openBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if(e.target === modal){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+})();
+</script>
+
+
 </body>
 </html>
