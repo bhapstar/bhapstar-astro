@@ -9,16 +9,42 @@
 
   <style>
     /* Prints page enhancements (enquiry-based, no checkout) */
-.prints-hero{
+/* Desktop layout: main + FAQ sidebar */
+.prints-layout{
   display: grid;
-  grid-template-columns: .9fr 1.1fr;
+  grid-template-columns: 1fr;      /* mobile default */
   gap: 18px;
-  align-items: stretch;
-  margin-top: 6px;
+  align-items: start;
 }
-    @media (max-width: 860px){
-      .prints-hero{ grid-template-columns: 1fr; }
-    }
+
+/* Left column: stacked panels */
+.prints-main{
+  display: grid;
+  gap: 18px;
+}
+
+/* Right column: FAQ sidebar */
+.prints-side{
+  display: grid;
+  gap: 18px;
+}
+
+/* Desktop/tablet wide screens */
+@media (min-width: 980px){
+  .prints-layout{
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+    align-items: start;
+  }
+  .prints-side{
+    position: static;   /* default - no sticking */
+    top: auto;
+  }
+}
+
+
+
+
     .steps{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -48,6 +74,11 @@
     }
     .step h4{ margin: 0 0 6px 0; font-size: 14px; }
     .step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
+.step p.helper{
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 6px;
+}
 
     .picker{
       display: grid;
@@ -133,19 +164,6 @@
       font-size: 13px;
       line-height: 1.55;
     }
-    .badge{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.03);
-      font-size: 12px;
-      color: rgba(255,255,255,0.82);
-      margin-top: 10px;
-    }
-    .badge b{ color: rgba(255,255,255,0.94); }
 
     /* Framed preview tile (prints page) */
     .framed-tile img{
@@ -166,38 +184,38 @@
       gap: 10px;
     }
 
-/* Items: readable layout in the narrow right panel */
-.item-row{
-  display: grid;
-  grid-template-columns: 1fr;          /* mobile: stacked */
-  gap: 10px;
-  padding: 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(0,0,0,0.16);
-}
+    /* Items: readable layout in the narrow right panel */
+    .item-row{
+      display: grid;
+      grid-template-columns: 1fr;          /* mobile: stacked */
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.16);
+    }
 
-/* Desktop/tablet: image full width, then two columns, then actions */
-@media (min-width: 860px){
-  .item-row{
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-  }
-  .item-row select:nth-child(1){       /* Image */
-    grid-column: 1 / -1;
-  }
-  .item-row select:nth-child(2){       /* Size/File */
-    grid-column: 1 / 2;
-  }
-  .item-row select:nth-child(3){       /* Frame */
-    grid-column: 2 / 3;
-  }
-  .item-row .item-actions{
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: flex-end;
-  }
-}
+    /* Desktop/tablet: image full width, then two columns, then actions */
+    @media (min-width: 860px){
+      .item-row{
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+      }
+      .item-row select:nth-child(1){       /* Image */
+        grid-column: 1 / -1;
+      }
+      .item-row select:nth-child(2){       /* Size/File */
+        grid-column: 1 / 2;
+      }
+      .item-row select:nth-child(3){       /* Frame */
+        grid-column: 2 / 3;
+      }
+      .item-row .item-actions{
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
 
     .item-row select{
       width: 100%;
@@ -265,6 +283,7 @@
   </div>
 </header>
 
+<!-- KEEP: Support my work stays where it is -->
 <section class="section support-wrap">
   <div class="wrap">
     <div class="panel support-panel">
@@ -292,150 +311,129 @@
 <main>
   <section class="section">
     <div class="wrap">
-<div class="section-head featured-head">
-  <h2>Print enquiries</h2>
-</div>
 
-      <div class="prints-hero">
-        <div class="panel prints-panel">
-          <h3>How it works</h3>
+      <div class="section-head featured-head">
+        <h2>Print enquiries</h2>
+      </div>
 
-          <div class="steps">
-            <div class="step">
-              <div class="k">1</div>
-              <h4>Choose an image</h4>
-              <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
-            </div>
-            <div class="step">
-              <div class="k">2</div>
-              <h4>Select a format</h4>
-              <p>A4 / A3 print, framed or unframed, or a high-resolution digital file.</p>
-            </div>
-            <div class="step">
-              <div class="k">3</div>
-              <h4>Send an enquiry</h4>
-              <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
-            </div>
-          </div>
-          <div class="hr"></div>
+      <!-- STACKED ORDER:
+           1) How it works
+           2) Build your enquiry
+           3) FAQ
+           4) Framed mockup
+      -->
+<div class="prints-layout">
 
-          <h3>FAQ</h3>
-          <div class="faq">
-            <details class="faq-item">
-              <summary>What print sizes are available?</summary>
-              <p>Prints are available in A3 or A4 sizes.</p>
-            </details>
-            <details class="faq-item">
-              <summary>What paper is used for printing?</summary>
-              <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
-            </details>
-            <details class="faq-item">
-              <summary>Can I have my print framed?</summary>
-              <p>Yes, a high quality black frame can be supplied. Other frame colours are available by request.</p>
-            </details>
-            <details class="faq-item">
-              <summary>How will the prints be shipped?</summary>
-              <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
-                 Framed prints will be sent with a black frame with corner protectors.</p>
-            </details>
-            <details class="faq-item">
-              <summary>How does the digital download work?</summary>
-              <p>The high resolution digital file will be emailed to you.</p>
-            </details>
-            <details class="faq-item">
-              <summary>Do you ship internationally?</summary>
-              <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
-            </details>
-            <details class="faq-item">
-              <summary>Can I request a specific crop or aspect ratio?</summary>
-              <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
-            </details>
-            <details class="faq-item">
-              <summary>Is there anything else I should know?</summary>
-              <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you recieve may differ slightly from what you see here.</p>
-              <p>The print/download will contain an imperceptible watermark.</p>
-            </details>
-          </div>
+  <!-- LEFT: main content -->
+  <div class="prints-main">
+
+    <!-- 1) HOW IT WORKS -->
+    <div class="panel prints-panel">
+      <h3>How it works</h3>
+
+      <div class="steps">
+        <div class="step">
+          <div class="k">1</div>
+          <h4>Choose an image</h4>
+          <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
         </div>
+        <div class="step">
+          <div class="k">2</div>
+          <h4>Select a format</h4>
+          <p>A4 / A3 print, framed or unframed, or a high-resolution digital file.</p>
+<p class="helper">Repeat steps 1 and 2 as many times as needed.</p>
 
-        <div class="panel prints-panel">
-          <h3>Build your enquiry</h3>
-          <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
+        </div>
+        <div class="step">
+          <div class="k">3</div>
+          <h4>Send an enquiry</h4>
+          <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
+        </div>
+      </div>
+    </div>
 
-          <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
-            <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
+    <!-- 2) BUILD YOUR ENQUIRY -->
+<div class="panel prints-panel">
+  <h3>Build your enquiry</h3>
+  <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
 
-            <!-- Honeypot (leave empty) -->
-            <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+  <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
+    <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
 
-            <div class="picker" id="enquiryPicker">
+    <!-- Honeypot (leave empty) -->
+    <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
-              <!-- CONTACT -->
-              <div class="row">
-                <label for="pName">Name</label>
-                <input id="pName" name="name" type="text" placeholder="Your name" required />
-              </div>
+    <div class="picker" id="enquiryPicker">
 
-              <div class="row">
-                <label for="pPhone">Phone</label>
-                <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
-              </div>
+      <!-- CONTACT -->
+      <div class="row">
+        <label for="pName">Name</label>
+        <input id="pName" name="name" type="text" placeholder="Your name" required />
+      </div>
 
-              <div class="row">
-                <label for="pEmail">Email</label>
-                <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
-              </div>
+      <div class="row">
+        <label for="pPhone">Phone</label>
+        <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
+      </div>
 
-              <!-- ITEMS -->
-              <div class="row" style="align-items:start;">
-                <label>Items</label>
-                <div>
-                  <div id="itemsWrap" class="items-area"></div>
+      <div class="row">
+        <label for="pEmail">Email</label>
+        <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
+      </div>
 
-                  <div class="items-controls">
-                    <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
-                  </div>
+      <!-- ITEMS -->
+      <div class="row" style="align-items:start;">
+        <label>Items</label>
+        <div>
+          <div id="itemsWrap" class="items-area"></div>
 
-                  <input type="hidden" id="itemsSummary" name="items_summary" value="">
-                </div>
-              </div>
+          <div class="items-controls">
+            <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
+          </div>
 
-              <!-- DELIVERY + NOTES -->
-              <div class="row">
-                <label for="pCity">Delivery location</label>
-                <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
-              </div>
-
-              <div class="row">
-                <label for="pNotes">Notes</label>
-                <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
-              </div>
-
-            </div>
-
-            <div style="height:12px"></div>
-
-            <div class="template-box">
-              <pre id="enquiryPreview"></pre>
-            </div>
-
-            <div style="height:14px"></div>
-
-<div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
-  <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
-</div>
-
-<p class="helper" style="margin-top:10px;">
-  Enquiry-based only — no checkout or online payments on this site.
-</p>
-
-          </form>
+          <input type="hidden" id="itemsSummary" name="items_summary" value="">
         </div>
       </div>
 
-      <div class="hr"></div>
+      <!-- DELIVERY + NOTES -->
+      <div class="row">
+        <label for="pCity">Delivery location</label>
+        <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
+      </div>
 
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 14px;">
+      <div class="row">
+        <label for="pNotes">Notes</label>
+        <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="template-box">
+      <pre id="enquiryPreview"></pre>
+    </div>
+
+    <div style="height:14px"></div>
+
+    <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
+      <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
+    </div>
+
+    <p class="helper" style="margin-top:10px;">
+      Enquiry-based only — no checkout or online payments on this site.
+    </p>
+
+  </form>
+</div>
+
+
+    <!-- 4) FRAMED MOCKUP -->
+    <div class="panel prints-panel">
+      <h3>Framed mockup</h3>
+      <p class="helper">A rotating preview of framed print styles.</p>
+
+      <div class="grid" style="grid-template-columns: 1fr; margin-top: 14px;">
         <div class="card framed-tile" aria-hidden="false">
           <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
           <div class="cap">
@@ -458,6 +456,63 @@
         "images/framed/5-5.jpg"
       ]
       </script>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: FAQ sidebar -->
+  <aside class="prints-side">
+    <div class="panel prints-panel">
+      <h3>FAQ</h3>
+
+<div class="faq">
+  <details class="faq-item">
+    <summary>What print sizes are available?</summary>
+    <p>Prints are available in A3 or A4 sizes.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>What paper is used for printing?</summary>
+    <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Can I have my print framed?</summary>
+    <p>Yes, a high quality black frame can be supplied. Other frame colours are available by request.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How will the prints be shipped?</summary>
+    <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
+       Framed prints will be sent with a black frame with corner protectors.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How does the digital download work?</summary>
+    <p>The high resolution digital file will be emailed to you.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Do you ship internationally?</summary>
+    <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Can I request a specific crop or aspect ratio?</summary>
+    <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Is there anything else I should know?</summary>
+    <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you recieve may differ slightly from what you see here.</p>
+    <p>The print/download will contain an imperceptible watermark.</p>
+  </details>
+</div>
+
+    </div>
+  </aside>
+
+</div>
 
     </div>
   </section>
