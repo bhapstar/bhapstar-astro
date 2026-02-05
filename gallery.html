@@ -184,6 +184,42 @@
   border-radius: 12px;
   object-fit: cover;
 }
+/* Mobile: keep tiles image-first (hide description text in tiles) */
+@media (max-width: 720px){
+  .card .cap .d{ display:none; }
+}
+/* Lightbox description */
+.lightbox-meta{
+  align-items: flex-end;
+}
+.lightbox-meta .meta-left{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  max-width: 75%;
+}
+.lightbox-meta .desc{
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: .85;
+  color: rgba(255,255,255,.88);
+  text-shadow: 0 8px 22px rgba(0,0,0,.55);
+}
+/* Mobile: nicer wrapping (max 2 lines, no ugly word breaks) */
+@media (max-width: 720px){
+  .lightbox-meta .title{
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: normal;   /* break at spaces */
+    word-break: keep-all;    /* don't split words */
+    hyphens: none;           /* avoid hyphenating names */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;   /* limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
 
   </style>
 </head>
@@ -465,10 +501,14 @@
 
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
-    <div class="lightbox-meta" aria-hidden="false">
-      <div class="title" id="lbTitle"></div>
-      <div class="count" id="lbCount"></div>
-    </div>
+<div class="lightbox-meta" aria-hidden="false">
+  <div class="meta-left">
+    <div class="title" id="lbTitle"></div>
+    <div class="desc" id="lbDesc"></div>
+  </div>
+  <div class="count" id="lbCount"></div>
+</div>
+
   </div>
 </div>
 
@@ -482,6 +522,7 @@
   const lbVid = document.getElementById('lbVid');   // ✅ missing in your version
   const lbTitle = document.getElementById('lbTitle');
   const lbCount = document.getElementById('lbCount');
+  const lbDesc = document.getElementById('lbDesc');
   const lbClose = document.getElementById('lbClose');
   const lbPrev = document.getElementById('lbPrev');
   const lbNext = document.getElementById('lbNext');
@@ -565,6 +606,7 @@ function showLb(){
   if(lbCount){
     lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
   }
+if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
 
   const multi = lbList.length > 1;
   if(lbPrev) lbPrev.style.display = multi ? "" : "none";
@@ -631,6 +673,7 @@ if(lbVid){
     lbImg.alt = "";
     lbImg.style.display = "block";
     lbTitle.textContent = "";
+    if(lbDesc) lbDesc.textContent = "";
     if(lbCount) lbCount.textContent = "";
 
     currentItem = null;
@@ -750,19 +793,22 @@ const media = isVideoFile(cover.file)
     if(e.target === lb) closeLightbox();
   });
 
-  document.addEventListener('keydown', (e) => {
-    if(!lb.classList.contains('open')) return;
+document.addEventListener('keydown', (e) => {
+  if(!lb.classList.contains('open')) return;
 
-    if(e.key === 'Escape') closeLightbox();
-    if(e.key === 'ArrowLeft' && lbList.length > 1){
-      lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
-      showLb();
-    }
-    if(e.key === 'ArrowRight' && lbList.length > 1){
-      lbIndex = (lbIndex + 1) % lbList.length;
-      showLb();
-    }
-  });
+  if(e.key === 'Escape') closeLightbox();
+
+  if(e.key === 'ArrowLeft' && lbList.length > 1){
+    lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
+    showLb();
+  }
+
+  if(e.key === 'ArrowRight' && lbList.length > 1){
+    lbIndex = (lbIndex + 1) % lbList.length;
+    showLb();
+  }
+});
+
 })();
 </script>
 
