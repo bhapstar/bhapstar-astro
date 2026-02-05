@@ -40,7 +40,6 @@
       -webkit-user-drag: none;
       pointer-events: none; /* stops direct drag from the image */
     }
-
     /* Watermark overlay (bottom third) */
     .lightbox-watermark.lightbox-watermark{
       position: absolute;
@@ -171,6 +170,21 @@
         3px 3px 0 0 rgba(255,255,255,.10);
       opacity: .9;
     }
+    .lightbox-vid{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* Video thumbnails in gallery tiles */
+.card video{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
   </style>
 </head>
 <body>
@@ -218,12 +232,13 @@
 
       <div class="gallery-filter-row">
         <select id="typeFilter" class="gallery-filter-select">
-          <option value="all">All</option>
-          <option value="galaxies">Galaxies</option>
-          <option value="nebulae">Nebulae</option>
-          <option value="star-clusters">Star Clusters</option>
-          <option value="others">Others</option>
-        </select>
+  <option value="all">All</option>
+  <option value="galaxies">Galaxies</option>
+  <option value="nebulae">Nebulae</option>
+  <option value="star-clusters">Star Clusters</option>
+  <option value="star-trails">Star Trails</option>
+  <option value="others">Others</option>
+</select>
         <div class="gallery-filter-spacer"></div>
         <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
           List view
@@ -409,7 +424,29 @@
     "title": "The Geminids Meteor Shower",
     "desc": "An annual meteor shower caused by debris from asteroid 3200 Phaethon. This composite records multiple Geminid meteors over a single night, tracing their apparent paths back to the constellation Gemini as Earth passes through the stream.",
     "type": "others"
-  }
+  },
+{
+  "images": [
+    { "file": "videos/1.mp4", "alt": "Star trails video 1" },
+    { "file": "videos/2.mp4", "alt": "Star trails video 2" },
+    { "file": "videos/3.mp4", "alt": "Star trails video 3" },
+    { "file": "videos/4.mp4", "alt": "Star trails video 4" }
+  ],
+  "title": "Star Trails (Videos)",
+  "desc": "Four short star-trails clips from a single session.",
+  "type": "star-trails"
+},
+{
+  "images": [
+    { "file": "images/startrails-1.jpg", "alt": "Star trails still 1" },
+    { "file": "images/startrails-2.jpg", "alt": "Star trails still 2" },
+    { "file": "images/startrails-3.jpg", "alt": "Star trails still 3" },
+    { "file": "images/startrails-4.jpg", "alt": "Star trails still 4" }
+  ],
+  "title": "Star Trails (Stills)",
+  "desc": "Four stills from star-trails sessions.",
+  "type": "star-trails"
+}
 ]
 </script>
 
@@ -422,6 +459,7 @@
     <button class="lightbox-nav" id="lbNext" aria-label="Next image">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
+    <video class="lightbox-vid" id="lbVid" controls playsinline style="display:none; width:100%; height:100%;"></video>
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
     <div class="lightbox-meta" aria-hidden="false">
@@ -438,6 +476,7 @@
 
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lbImg');
+  const lbVid = document.getElementById('lbVid');   // ✅ missing in your version
   const lbTitle = document.getElementById('lbTitle');
   const lbCount = document.getElementById('lbCount');
   const lbClose = document.getElementById('lbClose');
@@ -449,7 +488,14 @@
 
   if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
 
-  const items = JSON.parse(dataEl.textContent);
+  let items = [];
+  try{
+    items = JSON.parse(dataEl.textContent);
+  }catch(err){
+    console.error("Gallery JSON parse error:", err);
+    grid.innerHTML = `<div style="padding:18px;opacity:.8">Gallery data error (JSON). Check for stray commas.</div>`;
+    return;
+  }
 
   function esc(s){
     return String(s ?? "")
@@ -460,8 +506,11 @@
       .replaceAll("'","&#039;");
   }
 
+  function isVideoFile(path){
+    return /\.mp4(\?|#|$)/i.test(path || "");
+  }
+
   function getList(item){
-    // Returns an array of {file, alt}
     if(item.images && Array.isArray(item.images) && item.images.length){
       return item.images.map(im => ({ file: im.file, alt: im.alt || item.alt || item.title || "" }));
     }
@@ -479,18 +528,41 @@
 
   function showLb(){
     const cur = lbList[lbIndex];
-    lbImg.src = cur.file;
-    lbImg.alt = cur.alt || (currentItem?.title || "");
+    const src = cur.file;
 
     lbTitle.textContent = currentItem?.title || "";
     if(lbCount){
       lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
     }
 
-    // hide arrows if only one image
     const multi = lbList.length > 1;
     if(lbPrev) lbPrev.style.display = multi ? "" : "none";
     if(lbNext) lbNext.style.display = multi ? "" : "none";
+
+    if(isVideoFile(src)){
+      // show video
+      lbImg.style.display = "none";
+      lbImg.src = "";
+      lbImg.alt = "";
+
+      if(lbVid){
+        lbVid.style.display = "block";
+        lbVid.src = src;
+        lbVid.load();
+      }
+    } else {
+      // show image
+      if(lbVid){
+        lbVid.pause();
+        lbVid.removeAttribute("src");
+        lbVid.load();
+        lbVid.style.display = "none";
+      }
+
+      lbImg.style.display = "block";
+      lbImg.src = src;
+      lbImg.alt = cur.alt || (currentItem?.title || "");
+    }
   }
 
   function openLightbox(item){
@@ -509,10 +581,19 @@
     lb.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
 
+    if(lbVid){
+      lbVid.pause();
+      lbVid.removeAttribute("src");
+      lbVid.load();
+      lbVid.style.display = "none";
+    }
+
     lbImg.src = "";
     lbImg.alt = "";
+    lbImg.style.display = "block";
     lbTitle.textContent = "";
     if(lbCount) lbCount.textContent = "";
+
     currentItem = null;
     lbList = [];
     lbIndex = 0;
@@ -525,17 +606,24 @@
       : items.filter(it => (it.type || 'others') === selected);
 
     grid.innerHTML = filtered.map((item) => {
-      const idx = items.indexOf(item); // works for both file and images[]
+      const idx = items.indexOf(item);
       const cover = getCover(item);
-      const count = getList(item).length;
+      const list = getList(item);
+      const count = list.length;
+
       const badge = count > 1
         ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
         : '';
 
+const media = isVideoFile(cover.file)
+  ? `<video src="${esc(cover.file)}" muted playsinline preload="metadata"></video>`
+  : `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">`;
+
+
       return `
         <a class="card" href="${esc(cover.file)}" data-idx="${idx}" aria-label="${esc(item.title || cover.alt)}">
           ${badge}
-          <img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">
+          ${media}
           <div class="cap">
             <div class="t">${esc(item.title || "")}</div>
             <div class="d">${esc(item.desc || "")}</div>
@@ -545,7 +633,7 @@
     }).join('');
   }
 
-  // ✅ Mobile: always grid view (ignore saved preference)
+  // ✅ Mobile: always grid view
   const isMobile = window.matchMedia('(max-width: 720px)').matches;
 
   if(isMobile){
@@ -572,15 +660,12 @@
     }
   }
 
-  // initial render
   render();
 
-  // dropdown filter
   if(typeFilter){
     typeFilter.addEventListener('change', render);
   }
 
-  // list/grid toggle (desktop only)
   if(viewToggle){
     viewToggle.addEventListener('click', () => {
       if(window.matchMedia('(max-width: 720px)').matches) return;
@@ -592,7 +677,6 @@
     });
   }
 
-  // click tile => open lightbox
   grid.addEventListener('click', (e) => {
     const a = e.target.closest('a.card');
     if(!a) return;
@@ -603,7 +687,6 @@
     if(item) openLightbox(item);
   });
 
-  // lightbox controls
   if(lbClose) lbClose.addEventListener('click', closeLightbox);
 
   if(lbPrev){
@@ -624,12 +707,10 @@
     });
   }
 
-  // click outside closes
   lb.addEventListener('click', (e) => {
     if(e.target === lb) closeLightbox();
   });
 
-  // keyboard
   document.addEventListener('keydown', (e) => {
     if(!lb.classList.contains('open')) return;
 
@@ -645,6 +726,7 @@
   });
 })();
 </script>
+
 
 <script>
 /* Scroll reveal (adds "in" when elements enter viewport) */
