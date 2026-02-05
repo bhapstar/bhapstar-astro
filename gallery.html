@@ -435,7 +435,20 @@
   "title": "Star Trails (Stills)",
   "desc": "Four stills from star-trails sessions.",
   "type": "star-trails"
+},
+{
+  "videos": [
+    { "vimeoId": "1162067160", "poster": "images/startrails-1.jpg", "alt": "Star trails video 1" },
+    { "vimeoId": "1162067172", "poster": "images/startrails-2.jpg", "alt": "Star trails video 2" },
+    { "vimeoId": "1162067196", "poster": "images/startrails-3.jpg", "alt": "Star trails video 3" },
+    { "vimeoId": "1162067206", "poster": "images/startrails-4.jpg", "alt": "Star trails video 4" }
+  ],
+  "title": "Star Trails (Videos)",
+  "desc": "Four short star-trails clips from a single session.",
+  "type": "star-trails"
 }
+
+
 ]
 </script>
 
@@ -448,7 +461,8 @@
     <button class="lightbox-nav" id="lbNext" aria-label="Next image">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
-    <video class="lightbox-vid" id="lbVid" controls playsinline style="display:none; width:100%; height:100%;"></video>
+   <div class="lightbox-vid" id="lbVid" style="display:none; width:100%; height:100%;"></div>
+
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
     <div class="lightbox-meta" aria-hidden="false">
@@ -499,60 +513,97 @@
     return /\.mp4(\?|#|$)/i.test(path || "");
   }
 
-  function getList(item){
-    if(item.images && Array.isArray(item.images) && item.images.length){
-      return item.images.map(im => ({ file: im.file, alt: im.alt || item.alt || item.title || "" }));
-    }
-    return [{ file: item.file, alt: item.alt || item.title || "" }];
+function getList(item){
+  // Vimeo stack
+  if(item.videos && Array.isArray(item.videos) && item.videos.length){
+    return item.videos.map(v => ({
+      kind: "vimeo",
+      vimeoId: v.vimeoId,
+      poster: v.poster,
+      alt: v.alt || item.title || ""
+    }));
   }
 
-  function getCover(item){
-    const list = getList(item);
-    return list[0];
+  // Image stack
+  if(item.images && Array.isArray(item.images) && item.images.length){
+    return item.images.map(im => ({
+      kind: "image",
+      file: im.file,
+      alt: im.alt || item.alt || item.title || ""
+    }));
   }
+
+  // Single file (image)
+  return [{
+    kind: "image",
+    file: item.file,
+    alt: item.alt || item.title || ""
+  }];
+}
+
+
+function getCover(item){
+  const list = getList(item);
+  const first = list[0];
+
+  // For Vimeo tiles, use poster as cover
+  if(first && first.kind === "vimeo"){
+    return { file: first.poster, alt: first.alt || item.title || "" };
+  }
+  return { file: first.file, alt: first.alt || item.title || "" };
+}
+
 
   let currentItem = null;
   let lbList = [];
   let lbIndex = 0;
 
-  function showLb(){
-    const cur = lbList[lbIndex];
-    const src = cur.file;
+function showLb(){
+  const cur = lbList[lbIndex];
 
-    lbTitle.textContent = currentItem?.title || "";
-    if(lbCount){
-      lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
-    }
-
-    const multi = lbList.length > 1;
-    if(lbPrev) lbPrev.style.display = multi ? "" : "none";
-    if(lbNext) lbNext.style.display = multi ? "" : "none";
-
-    if(isVideoFile(src)){
-      // show video
-      lbImg.style.display = "none";
-      lbImg.src = "";
-      lbImg.alt = "";
-
-      if(lbVid){
-        lbVid.style.display = "block";
-        lbVid.src = src;
-        lbVid.load();
-      }
-    } else {
-      // show image
-      if(lbVid){
-        lbVid.pause();
-        lbVid.removeAttribute("src");
-        lbVid.load();
-        lbVid.style.display = "none";
-      }
-
-      lbImg.style.display = "block";
-      lbImg.src = src;
-      lbImg.alt = cur.alt || (currentItem?.title || "");
-    }
+  lbTitle.textContent = currentItem?.title || "";
+  if(lbCount){
+    lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
   }
+
+  const multi = lbList.length > 1;
+  if(lbPrev) lbPrev.style.display = multi ? "" : "none";
+  if(lbNext) lbNext.style.display = multi ? "" : "none";
+
+  // reset
+  lbImg.style.display = "none";
+  lbImg.src = "";
+  lbImg.alt = "";
+
+  if(lbVid){
+    lbVid.style.display = "none";
+    lbVid.innerHTML = "";
+  }
+
+  if(cur.kind === "vimeo"){
+    // Vimeo embed
+    if(lbVid){
+      lbVid.style.display = "block";
+      const id = encodeURIComponent(cur.vimeoId);
+      lbVid.innerHTML = `
+        <iframe
+          src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          style="width:100%;height:100%">
+        </iframe>
+      `;
+    }
+    return;
+  }
+
+  // Image
+  lbImg.style.display = "block";
+  lbImg.src = cur.file;
+  lbImg.alt = cur.alt || (currentItem?.title || "");
+}
+
 
   function openLightbox(item){
     currentItem = item;
@@ -570,12 +621,11 @@
     lb.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
 
-    if(lbVid){
-      lbVid.pause();
-      lbVid.removeAttribute("src");
-      lbVid.load();
-      lbVid.style.display = "none";
-    }
+if(lbVid){
+  lbVid.innerHTML = "";      // kills iframe playback
+  lbVid.style.display = "none";
+}
+
 
     lbImg.src = "";
     lbImg.alt = "";
