@@ -677,11 +677,15 @@
 
       const items = JSON.parse(dataEl.textContent);
 
-      GALLERY_TITLES = items
-        .map(x => x && x.title)
-        .filter(Boolean);
+GALLERY_TITLES = items
+  // ✅ keep only items that are printable images (not videos)
+  .filter(x => x && x.title && !x.videos)
+  .map(x => x.title)
+  .filter(Boolean);
 
-      GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
+// De-duplicate
+GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
+
     }catch(err){
       console.error(err);
       GALLERY_TITLES = [];
