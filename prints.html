@@ -2,13 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Prints — bhapstar</title>
+
+  <!-- Cloudflare Web Analytics (site traffic measurement) -->
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+
+  <!-- Shared site styling -->
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /* Prints page enhancements (enquiry-based, no checkout) */
+    /* =========================================================
+       Prints page enhancements (enquiry-based, no checkout)
+       - Layout uses a 2-column grid on wide screens:
+         left = enquiry + content, right = FAQ
+       - On mobile it collapses into a single column
+    ========================================================= */
+
     /* Desktop layout: main + FAQ sidebar */
     .prints-layout{
       display: grid;
@@ -32,7 +43,7 @@
     /* Desktop/tablet wide screens */
     @media (min-width: 980px){
       .prints-layout{
-        grid-template-columns: 1fr 360px;
+        grid-template-columns: 1fr 360px; /* main + sidebar */
         gap: 18px;
         align-items: start;
       }
@@ -42,6 +53,7 @@
       }
     }
 
+    /* "How it works" steps layout */
     .steps{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -49,14 +61,17 @@
       margin-top: 14px;
     }
     @media (max-width: 860px){
-      .steps{ grid-template-columns: 1fr; }
+      .steps{ grid-template-columns: 1fr; } /* stack steps on small screens */
     }
+
     .step{
       padding: 14px;
       border: 1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.02);
       border-radius: 16px;
     }
+
+    /* Number badge in each step */
     .step .k{
       display: inline-flex;
       align-items: center;
@@ -69,6 +84,7 @@
       font-weight: 700;
       margin-bottom: 10px;
     }
+
     .step h4{ margin: 0 0 6px 0; font-size: 14px; }
     .step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
     .step p.helper{
@@ -77,6 +93,11 @@
       margin-top: 6px;
     }
 
+    /* =========================================================
+       Form "picker" styling
+       - Two-column label + input on desktop
+       - Collapses to single column on small screens
+    ========================================================= */
     .picker{
       display: grid;
       gap: 12px;
@@ -85,22 +106,27 @@
       border: 1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.02);
     }
+
     .picker .row{
       display: grid;
       grid-template-columns: 110px 1fr;
       gap: 10px;
       align-items: center;
     }
+
     @media (max-width: 520px){
       .picker .row{ grid-template-columns: 1fr; }
       .picker .row label{ margin-bottom: -2px; }
     }
+
     .picker label{
       font-size: 12px;
       letter-spacing: .04em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.70);
     }
+
+    /* Input styling (select, input, textarea share the same look) */
     .picker select, .picker input, .picker textarea{
       width: 100%;
       padding: 10px 12px;
@@ -110,6 +136,8 @@
       color: rgba(255,255,255,0.92);
       outline: none;
     }
+
+    /* Focus ring (subtle accent glow) */
     .picker select:focus, .picker input:focus, .picker textarea:focus{
       border-color: rgba(124,200,255,0.38);
       box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
@@ -122,6 +150,9 @@
       margin-top: 6px;
     }
 
+    /* =========================================================
+       Enquiry preview box (plain-text template shown live)
+    ========================================================= */
     .template-box{
       padding: 14px;
       border-radius: 16px;
@@ -137,6 +168,9 @@
       color: rgba(255,255,255,0.86);
     }
 
+    /* =========================================================
+       FAQ (accordion via <details>/<summary>)
+    ========================================================= */
     .faq{
       margin-top: 18px;
       display: grid;
@@ -162,7 +196,10 @@
       line-height: 1.55;
     }
 
-    /* Framed preview tile (prints page) */
+    /* =========================================================
+       Framed preview tile (prints page)
+       - Rotates through framed mockup images
+    ========================================================= */
     .framed-tile img{
       width: 100%;
       height: auto;
@@ -172,16 +209,18 @@
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .framed-tile{
-      pointer-events: none;
+      pointer-events: none; /* this tile is informational, not clickable */
     }
 
-    /* Multi-item enquiry rows */
+    /* =========================================================
+       Multi-item enquiry rows (for adding multiple images)
+    ========================================================= */
     .items-area{
       display: grid;
       gap: 10px;
     }
 
-    /* Items: readable layout in the narrow right panel */
+    /* Item row default: stacked controls (mobile-first) */
     .item-row{
       display: grid;
       grid-template-columns: 1fr;          /* mobile: stacked */
@@ -214,6 +253,7 @@
       }
     }
 
+    /* Item select controls */
     .item-row select{
       width: 100%;
       padding: 10px 12px;
@@ -232,6 +272,7 @@
       box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
     }
 
+    /* Right-aligned action buttons per item */
     .item-actions{
       display: flex;
       gap: 10px;
@@ -244,6 +285,7 @@
       border-radius: 999px;
     }
 
+    /* "+ Add another image" controls */
     .items-controls{
       display: flex;
       gap: 10px;
@@ -255,6 +297,7 @@
 
 <body>
 
+<!-- Header/nav (same burger behaviour as other pages) -->
 <header>
   <div class="wrap">
     <div class="navbar">
@@ -280,6 +323,7 @@
   </div>
 </header>
 
+<!-- Support panel (kept near top so it’s visible before the enquiry builder) -->
 <!-- KEEP: Support my work stays where it is -->
 <section class="section support-wrap">
   <div class="wrap">
@@ -292,6 +336,7 @@
       </div>
 
       <div class="support-right">
+        <!-- External link: opens in a new tab -->
         <a
           href="https://www.buymeacoffee.com/bhapstar_astro"
           target="_blank"
@@ -313,12 +358,13 @@
         <h2>Print enquiries</h2>
       </div>
 
+      <!-- Main 1-col (mobile) / 2-col (desktop) prints layout wrapper -->
       <div class="prints-layout">
 
-        <!-- LEFT: main content -->
+        <!-- LEFT: main content (how it works + enquiry form + framed mockup) -->
         <div class="prints-main">
 
-          <!-- 1) HOW IT WORKS -->
+          <!-- 1) HOW IT WORKS (quick steps) -->
           <div class="panel prints-panel">
             <h3>How it works</h3>
 
@@ -342,15 +388,17 @@
             </div>
           </div>
 
-          <!-- 2) BUILD YOUR ENQUIRY -->
+          <!-- 2) BUILD YOUR ENQUIRY (Formspree form + live preview builder) -->
           <div class="panel prints-panel">
             <h3>Build your enquiry</h3>
             <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
 
+            <!-- Form submits to Formspree endpoint (AJAX submit handled in JS below) -->
             <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
+              <!-- Email subject line for inbound enquiries -->
               <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
 
-              <!-- Honeypot (leave empty) -->
+              <!-- Honeypot spam trap (humans never fill this; bots often do) -->
               <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
               <div class="picker" id="enquiryPicker">
@@ -371,16 +419,19 @@
                   <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
                 </div>
 
-                <!-- ITEMS -->
+                <!-- ITEMS (multi-item builder) -->
                 <div class="row" style="align-items:start;">
                   <label>Items</label>
                   <div>
+                    <!-- JS injects one or more .item-row blocks here -->
                     <div id="itemsWrap" class="items-area"></div>
 
                     <div class="items-controls">
+                      <!-- Adds another item row (image + size + frame) -->
                       <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
                     </div>
 
+                    <!-- Hidden field included in form submission: plain-text summary of all items -->
                     <input type="hidden" id="itemsSummary" name="items_summary" value="">
                   </div>
                 </div>
@@ -396,28 +447,29 @@
                   <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
                 </div>
 
+                <!-- Calendar interest (optional add-on enquiry) -->
 <!-- Calendar interest -->
 <div class="row" style="align-items:start;">
   <label for="pCalendar">Calendar</label>
 
   <div>
+    <!-- Checkbox is captured in live preview + submitted via Formspree -->
     <label class="checkline" for="pCalendar">
       <input id="pCalendar" name="calendar_interest" type="checkbox" value="Yes">
 <span>
   Please click here if you would also like to enquire about a custom astrophotography calendar made from any 12 of my images of your choosing.
+  <!-- Opens a modal preview (handled at end of file) -->
   <a href="#" class="faq-link" id="openCalendarExample">View example</a>
 </span>
-
-
     </label>
   </div>
 </div>
-
 
               </div>
 
               <div style="height:12px"></div>
 
+              <!-- Live preview of the enquiry that will be sent (updated by build()) -->
               <div class="template-box">
                 <pre id="enquiryPreview"></pre>
               </div>
@@ -435,7 +487,7 @@
             </form>
           </div>
 
-          <!-- 4) FRAMED MOCKUP -->
+          <!-- 4) FRAMED MOCKUP (rotating preview tile) -->
           <div class="panel prints-panel">
             <h3>Framed mockup</h3>
             <p class="helper">A rotating preview of framed print styles.</p>
@@ -449,6 +501,7 @@
               </div>
             </div>
 
+            <!-- JSON list of framed mockup image paths -->
             <script id="framedData" type="application/json">
             [
               "images/framed/1.jpg",
@@ -508,6 +561,8 @@
                 <summary>Can I request a specific crop or aspect ratio?</summary>
                 <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
               </details>
+
+              <!-- Calendar FAQ entry includes an inline example image -->
 <details class="faq-item" id="faq-calendar">
 
   <summary>What will the calendar look like?</summary>
@@ -540,6 +595,7 @@
   </section>
 </main>
 
+<!-- Footer (same as other pages) -->
 <footer>
   <div class="wrap">
     <div class="footer-links">
@@ -552,6 +608,7 @@
       <a href="gear.html">Gear</a>
       <span>·</span>
       <a href="about.html">About</a>
+      <!-- Instagram icon link -->
       <a href="https://www.instagram.com/bhapstar/"
          target="_blank"
          rel="noopener"
@@ -567,11 +624,14 @@
   </div>
 </footer>
 
+<!-- Dynamic year -->
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
+<!-- Toast notification container (pop-up messages after submit/errors) -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+/* Burger menu controller (same behaviour as index/gallery) */
 (function(){
   const burger = document.querySelector('.burger');
   const menu = document.querySelector('.nav-menu');
@@ -625,6 +685,14 @@
 </script>
 
 <script>
+/* =========================================================
+   PRINT ENQUIRY BUILDER (multi-item + live preview + submit)
+   ---------------------------------------------------------
+   - Pulls printable titles from gallery.html (galleryData)
+   - Allows user to add multiple items (image + size + frame)
+   - Builds a readable text preview and hidden summary field
+   - Submits via fetch() to Formspree, shows toast on success/fail
+========================================================= */
 (function(){
   const el = (id) => document.getElementById(id);
   const form = el('printsEnquiryForm');
@@ -639,12 +707,13 @@
   const email = el('pEmail');
   const notes = el('pNotes');
 
-  // NEW
+  // Calendar checkbox (optional add-on enquiry)
   const calendar = el('pCalendar');
 
   const preview = el('enquiryPreview');
   const toast = el('toast');
 
+  /* Allowed choices for size/type and framing */
   const TYPE_OPTIONS = [
     { v: "A4", t: "A4" },
     { v: "A3", t: "A3" },
@@ -657,6 +726,7 @@
 
   let GALLERY_TITLES = [];
 
+  /* Toast helper (small message bar) */
   function showToast(msg){
     if(!toast) return;
     toast.textContent = msg;
@@ -665,6 +735,8 @@
     showToast._t = window.setTimeout(() => toast.classList.remove('show'), 2600);
   }
 
+  /* Load printable image titles from gallery.html’s embedded JSON
+     - Filters out video-only entries (x.videos) so the dropdown stays “printable only” */
   async function loadGalleryTitles(){
     try{
       const res = await fetch('gallery.html', { cache: 'no-store' });
@@ -692,6 +764,7 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     }
   }
 
+  /* Build a <select> from either [{v,t}] objects or plain strings */
   function makeSelect(options, placeholder){
     const s = document.createElement('select');
 
@@ -710,12 +783,14 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     return s;
   }
 
+  /* Adds a new enquiry line item (image + type + frame + remove button) */
   function addItem(prefill){
     if(!itemsWrap) return;
 
     const row = document.createElement('div');
     row.className = 'item-row';
 
+    /* Image selector is built from gallery titles */
     const imgSel = makeSelect(
       GALLERY_TITLES.map(t => ({ v: t, t })),
       GALLERY_TITLES.length ? "Select an image" : "Gallery unavailable"
@@ -735,7 +810,7 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     typeSel.value = prefill?.type ?? "";
     frameSel.value = prefill?.framed ?? "";
 
-    // If Digital selected, force frame No and lock it
+    /* Rule: if "Digital" is selected, frame is forced to "No" and locked */
     function syncFrameLock(){
       const isDigital = typeSel.value === "Digital";
       if(isDigital){
@@ -756,6 +831,7 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     const actions = document.createElement('div');
     actions.className = 'item-actions';
 
+    /* Remove button deletes this item row; ensures at least 1 row exists */
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
     removeBtn.className = 'btn';
@@ -783,6 +859,7 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     build();
   }
 
+  /* Read all current item rows into a structured array */
   function getItems(){
     const rows = Array.from(itemsWrap?.querySelectorAll('.item-row') || []);
     return rows.map((r) => {
@@ -795,6 +872,9 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     });
   }
 
+  /* Builds:
+     - the visible enquiry preview text
+     - the hidden itemsSummary form field */
   function build(){
     const items = getItems();
 
@@ -815,7 +895,7 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
       });
     }
 
-    // NEW: calendar line in preview
+    // Calendar line in preview
     lines.push(``);
     lines.push(`Calendar interest: ${calendar?.checked ? 'Yes (custom calendar – 12 images)' : 'No'}`);
 
@@ -828,6 +908,8 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     const text = lines.join('\n');
 
     if(preview) preview.textContent = text;
+
+    /* items_summary is used as a single plain-text field in the form submission */
     if(itemsSummary){
       itemsSummary.value = items
         .map((it, i) => {
@@ -840,14 +922,20 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
     return text;
   }
 
-  // NEW: include calendar in listeners
+  // Keep preview in sync with user input
   [location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
   calendar && calendar.addEventListener('change', build);
 
+  // Add new item row
   if(addItemBtn){
     addItemBtn.addEventListener('click', () => addItem());
   }
 
+  /* Form submit:
+     - prevents default browser POST
+     - validates items + HTML required fields
+     - sends via fetch() to Formspree
+     - resets UI + shows toast */
   if(form){
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -883,11 +971,16 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
         showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
       }catch(err){
         console.error(err);
+        // Same message on failure: avoids exposing tech details to the user
         showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
       }
     });
   }
 
+  /* Initialise:
+     - load titles from gallery
+     - start with one empty item row
+     - build initial preview */
   (async function init(){
     await loadGalleryTitles();
     if(itemsWrap) itemsWrap.innerHTML = '';
@@ -899,6 +992,13 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
 </script>
 
 <script>
+/* =========================================================
+   Framed mockup rotator
+   - Reads image list from #framedData
+   - Picks a random starting image
+   - Rotates every 5s
+   - If an image fails to load, it skips to the next
+========================================================= */
 (function(){
   const img = document.getElementById('framedPreviewImg');
   const desc = document.getElementById('framedPreviewDesc');
@@ -937,8 +1037,10 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
 })();
 </script>
 
+<!-- Image protection “speed bumps” -->
 <script src="protect-images.js"></script>
 
+<!-- Calendar example modal (opened by “View example” link) -->
 <div class="calendar-modal" id="calendarModal" aria-hidden="true">
   <div class="calendar-modal-inner">
     <button class="calendar-close" aria-label="Close">&times;</button>
@@ -951,6 +1053,9 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
 </div>
 
 <script>
+/* Calendar modal controller:
+   - opens when clicking the “View example” link
+   - closes on X button, clicking backdrop, or Escape */
 (function(){
   const openBtn = document.getElementById('openCalendarExample');
   const modal = document.getElementById('calendarModal');
@@ -984,7 +1089,6 @@ GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
   });
 })();
 </script>
-
 
 </body>
 </html>

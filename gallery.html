@@ -7,7 +7,16 @@
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
   <link rel="stylesheet" href="styles.css?v=7" />
 
+  <!-- Page-specific CSS for the gallery + lightbox (kept inline so this file is self-contained) -->
+
   <style>
+    /* =========================================================
+       GALLERY PAGE: inline styles
+       - Lightbox layout + controls
+       - Multi-image badge
+       - Mobile-only tweaks (hide long descriptions in tiles)
+       Note: site-wide styling lives in styles.css
+    ========================================================= */
     /* Lightbox */
     .lightbox{
       position: fixed;
@@ -225,6 +234,7 @@
 </head>
 <body>
 
+<!-- Header + burger menu: same component as other pages -->
 <header>
   <div class="wrap">
     <div class="navbar">
@@ -287,7 +297,8 @@
     </p>
   </div>
 
-  <!-- THIS must be outside the section-head -->
+  <!-- Gallery tiles are injected here by JS (render() below)
+       NOTE: keep this outside .section-head so the grid layout behaves correctly -->
   <div id="galleryGrid" class="grid"></div>
 
 </div>
@@ -328,6 +339,10 @@
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
 <script>
+/* Burger menu controller:
+   - toggles .nav-menu.open
+   - updates aria-expanded
+   - closes on outside click + Escape */
 (function(){
   const burger = document.querySelector('.burger');
   const menu = document.querySelector('.nav-menu');
@@ -354,7 +369,9 @@
 })();
 </script>
 
-<!-- Embedded gallery data -->
+<!-- Embedded gallery data (single source of truth)
+     JS reads this JSON and renders tiles + lightbox content.
+     Add/edit gallery items here rather than editing the JS. -->
 <script id="galleryData" type="application/json">
 [
   {
@@ -483,12 +500,11 @@
   "desc": "Short time-lapse sequences capturing the gradual motion of the night sky as the Earth rotates. What appears static to the eye is revealed as continuous movement when observed over time.",
   "type": "star-trails"
 }
-
-
 ]
 </script>
 
-<!-- Lightbox markup -->
+<!-- Lightbox markup (hidden until .open is added)
+     JS swaps between image mode (#lbImg) and Vimeo mode (#lbVid). -->
 <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
@@ -513,6 +529,15 @@
 </div>
 
 <script>
+/* =========================================================
+   GALLERY ENGINE (render + lightbox)
+   Responsibilities:
+   - Parse #galleryData JSON
+   - Render gallery tiles (filter + list/grid view)
+   - Open/close lightbox
+   - Support multi-image stacks + Vimeo video stacks
+   - Keyboard navigation (Esc / Arrow keys)
+========================================================= */
 (function(){
   const grid = document.getElementById('galleryGrid');
   const dataEl = document.getElementById('galleryData');
@@ -541,6 +566,7 @@
     return;
   }
 
+  /* HTML-escape helper for safe string injection into template literals */
   function esc(s){
     return String(s ?? "")
       .replaceAll("&","&amp;")
@@ -554,6 +580,11 @@
     return /\.mp4(\?|#|$)/i.test(path || "");
   }
 
+/* Normalise each gallery item into a flat list for the lightbox:
+   - item.videos[] -> {kind:"vimeo", vimeoId, poster}
+   - item.images[] -> {kind:"image", file}
+   - item.file     -> single image entry
+*/
 function getList(item){
   // Vimeo stack
   if(item.videos && Array.isArray(item.videos) && item.videos.length){
@@ -583,6 +614,10 @@ function getList(item){
 }
 
 
+/* Choose the “cover” shown on the gallery tile:
+   - For Vimeo stacks: use the poster image
+   - For image stacks: use first image
+*/
 function getCover(item){
   const list = getList(item);
   const first = list[0];
@@ -599,6 +634,7 @@ function getCover(item){
   let lbList = [];
   let lbIndex = 0;
 
+/* Render the current lightbox slide (image OR Vimeo iframe) */
 function showLb(){
   const cur = lbList[lbIndex];
 
@@ -647,6 +683,7 @@ if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
 }
 
 
+  /* Open lightbox for the clicked gallery item */
   function openLightbox(item){
     currentItem = item;
     lbList = getList(item);
@@ -658,6 +695,7 @@ if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
     document.body.classList.add('noscroll');
   }
 
+  /* Close lightbox + fully reset state (also stops Vimeo playback) */
   function closeLightbox(){
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden','true');
@@ -681,6 +719,7 @@ if(lbVid){
     lbIndex = 0;
   }
 
+  /* Render gallery tiles based on current filter + view mode */
   function render(){
     const selected = (typeFilter && typeFilter.value) ? typeFilter.value : 'all';
     const filtered = (selected === 'all')
@@ -814,7 +853,10 @@ document.addEventListener('keydown', (e) => {
 
 
 <script>
-/* Scroll reveal (adds "in" when elements enter viewport) */
+/* Scroll reveal (adds "in" when elements enter viewport)
+   - adds .reveal to targets
+   - adds .in when they enter the viewport
+   - respects prefers-reduced-motion */
 (function(){
   const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
     .filter(el => !el.classList.contains('reveal'));

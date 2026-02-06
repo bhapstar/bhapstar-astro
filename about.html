@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- Mobile scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>About — bhapstar</title>
+
+  <!-- Cloudflare Web Analytics (traffic measurement) -->
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+
+  <!-- Shared site CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
+
+<!-- page-about class allows page-specific styling in styles.css -->
 <body class="page-about">
 
+<!-- Shared header/nav -->
 <header>
   <div class="wrap">
     <div class="navbar">
@@ -19,6 +27,7 @@
         <span class="sub">astrophotography</span>
       </a>
 
+      <!-- Burger toggles .nav-menu.open via JS -->
       <button class="burger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -35,15 +44,18 @@
 </header>
 
 <main>
-  <!-- ABOUT -->
+  <!-- ABOUT section (bio + portrait + support panel) -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <h2>About</h2>
       </div>
 
+      <!-- cols wrapper aligns content to your site’s standard column layout -->
       <div class="cols">
         <div class="panel about-panel">
+
+          <!-- About header: portrait image block -->
           <div class="about-header">
   <img
     src="images/me/bobby.jpg"
@@ -52,6 +64,8 @@
     loading="lazy"
   />
 </div>
+
+          <!-- Main about text (paragraphs) -->
           <p>
   Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on imaging nebulae, star-forming regions, and distant galaxies - objects whose light has travelled for thousands or millions of years before reaching Earth. I also image the Moon, star trails and our Milky Way. 
 </p>
@@ -69,11 +83,13 @@
   showing up, collecting clean signal, and letting the object reveal itself on its own terms. This site is a record of that process - image by image.
 </p>
 
+<!-- Decorative divider (purely visual) -->
 <div class="astro-divider" aria-hidden="true">
   <span>✦ ✦ ✦</span>
 </div>
 
-
+<!-- Support my work panel (inline on About page)
+     NOTE: uses inline margin style for spacing on this page -->
 <!-- Support my work (About page) -->
 <div class="support-panel" style="margin: 26px 0;">
   <div class="support-left">
@@ -84,6 +100,7 @@
   </div>
 
   <div class="support-right">
+    <!-- External link opens in a new tab -->
     <a
       href="https://www.buymeacoffee.com/bhapstar_astro"
       target="_blank"
@@ -95,53 +112,60 @@
 
   </div>
 </div>
+
         </div>
       </div>
     </div>
   </section>
 
-<!-- CONTACT -->
-<section class="section contact-section">
-  <div class="wrap">
-    <div class="cols">
-      <div class="panel contact-panel">
-        <div class="section-head">
-          <h3>Contact</h3>
+  <!-- CONTACT section (Formspree contact form) -->
+  <section class="section contact-section">
+    <div class="wrap">
+      <div class="cols">
+        <div class="panel contact-panel">
+          <div class="section-head">
+            <h3>Contact</h3>
+          </div>
+
+          <p class="contact-intro">
+            If you’d like to get in touch about my images, my gear, or anything else astro-related,
+            feel free to drop me a message here.
+          </p>
+
+          <!-- Formspree endpoint (AJAX submit handled in JS below) -->
+          <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
+            <!-- Email subject line for inbound messages -->
+            <input type="hidden" name="_subject" value="bhapstar — New website message" />
+
+            <!-- Honeypot spam trap (humans leave empty; bots often fill it) -->
+            <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+            <!-- Form fields (labels wrap inputs for easy click/tap) -->
+            <label>
+              <span>Name</span>
+              <input type="text" name="name" required />
+            </label>
+
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" required />
+            </label>
+
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+
+            <button type="submit" class="btn primary">Send message</button>
+          </form>
         </div>
-
-        <p class="contact-intro">
-          If you’d like to get in touch about my images, my gear, or anything else astro-related,
-          feel free to drop me a message here.
-        </p>
-
-        <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
-          <input type="hidden" name="_subject" value="bhapstar — New website message" />
-          <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-
-          <label>
-            <span>Name</span>
-            <input type="text" name="name" required />
-          </label>
-
-          <label>
-            <span>Email</span>
-            <input type="email" name="email" required />
-          </label>
-
-          <label>
-            <span>Message</span>
-            <textarea name="message" rows="5" required></textarea>
-          </label>
-
-          <button type="submit" class="btn primary">Send message</button>
-        </form>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 </main>
 
+<!-- Footer (same site-wide pattern) -->
 <footer>
   <div class="wrap">
     <div class="footer-links">
@@ -154,6 +178,8 @@
       <a href="gear.html">Gear</a>
       <span>·</span>
       <a href="about.html">About</a>
+
+      <!-- Instagram icon link -->
       <a href="https://www.instagram.com/bhapstar/"
    target="_blank"
    rel="noopener"
@@ -173,11 +199,17 @@
   </div>
 </footer>
 
+<!-- Toast notification container (used by the contact form JS) -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Dynamic year -->
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
 <script>
+/* Burger menu controller:
+   - toggles .nav-menu.open
+   - updates aria-expanded
+   - closes on outside click + Escape */
 (function(){
   const burger = document.querySelector('.burger');
   const menu = document.querySelector('.nav-menu');
@@ -205,6 +237,10 @@
 </script>
 
 <script>
+/* Scroll reveal (adds "in" when elements enter viewport)
+   - Adds .reveal to targets
+   - Adds .in when visible
+   - Respects prefers-reduced-motion */
 (function(){
   const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
     .filter(el => !el.classList.contains('reveal'));
@@ -230,6 +266,14 @@
 </script>
 
 <script>
+/* =========================================================
+   Contact form handler (AJAX submit + toast message)
+   ---------------------------------------------------------
+   - Prevents full page redirect on submit
+   - Uses HTML5 validation
+   - Submits to Formspree via fetch()
+   - Shows the same friendly toast on success/failure
+========================================================= */
 (function(){
   const form = document.querySelector('form.contact-form');
   const toast = document.getElementById('toast');
@@ -265,11 +309,14 @@
       showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
     }catch(err){
       console.error(err);
+      // Same message on failure: avoids exposing tech details to the user
       showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
     }
   });
 })();
 </script>
+
+<!-- Image protection “speed bumps” (disable right-click / dragging etc.) -->
 <script src="protect-images.js"></script>
 </body>
 </html>
