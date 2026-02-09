@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="styles.css?v=7" />
 
   <!-- Page-specific CSS for the gallery + lightbox (kept inline so this file is self-contained) -->
-
   <style>
     /* =========================================================
        GALLERY PAGE: inline styles
@@ -180,61 +179,58 @@
       opacity: .9;
     }
     .lightbox-vid{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-/* Video thumbnails in gallery tiles */
-.card video{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
-  object-fit: cover;
-}
-/* Mobile: keep tiles image-first (hide description text in tiles) */
-@media (max-width: 720px){
-  .card .cap .d{ display:none; }
-}
-/* Lightbox description */
-.lightbox-meta{
-  align-items: flex-end;
-}
-.lightbox-meta .meta-left{
-  display:flex;
-  flex-direction:column;
-  gap: 6px;
-  max-width: 75%;
-}
-.lightbox-meta .desc{
-  font-size: 12px;
-  line-height: 1.35;
-  opacity: .85;
-  color: rgba(255,255,255,.88);
-  text-shadow: 0 8px 22px rgba(0,0,0,.55);
-}
-/* Mobile: nicer wrapping (max 2 lines, no ugly word breaks) */
-@media (max-width: 720px){
-  .lightbox-meta .title{
-    max-width: 100%;
-    white-space: normal;
-    overflow-wrap: normal;   /* break at spaces */
-    word-break: keep-all;    /* don't split words */
-    hyphens: none;           /* avoid hyphenating names */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;   /* limit to 2 lines */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-
-
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* Video thumbnails in gallery tiles */
+    .card video{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    /* Mobile: keep tiles image-first (hide description text in tiles) */
+    @media (max-width: 720px){
+      .card .cap .d{ display:none; }
+    }
+    /* Lightbox description */
+    .lightbox-meta{
+      align-items: flex-end;
+    }
+    .lightbox-meta .meta-left{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      max-width: 75%;
+    }
+    .lightbox-meta .desc{
+      font-size: 12px;
+      line-height: 1.35;
+      opacity: .85;
+      color: rgba(255,255,255,.88);
+      text-shadow: 0 8px 22px rgba(0,0,0,.55);
+    }
+    /* Mobile: nicer wrapping (max 2 lines, no ugly word breaks) */
+    @media (max-width: 720px){
+      .lightbox-meta .title{
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: normal;   /* break at spaces */
+        word-break: keep-all;    /* don't split words */
+        hyphens: none;           /* avoid hyphenating names */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;   /* limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- Header + burger menu: same component as other pages -->
 <header>
   <div class="wrap">
     <div class="navbar">
@@ -278,13 +274,13 @@
 
       <div class="gallery-filter-row">
         <select id="typeFilter" class="gallery-filter-select">
-  <option value="all">All</option>
-  <option value="galaxies">Galaxies</option>
-  <option value="nebulae">Nebulae</option>
-  <option value="star-clusters">Star Clusters</option>
-  <option value="star-trails">Star Trails</option>
-  <option value="others">Others</option>
-</select>
+          <option value="all">All</option>
+          <option value="galaxies">Galaxies</option>
+          <option value="nebulae">Nebulae</option>
+          <option value="star-clusters">Star Clusters</option>
+          <option value="star-trails">Star Trails</option>
+          <option value="others">Others</option>
+        </select>
         <div class="gallery-filter-spacer"></div>
         <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
           List view
@@ -297,8 +293,6 @@
     </p>
   </div>
 
-  <!-- Gallery tiles are injected here by JS (render() below)
-       NOTE: keep this outside .section-head so the grid layout behaves correctly -->
   <div id="galleryGrid" class="grid"></div>
 
 </div>
@@ -313,8 +307,6 @@
       <a href="gallery.html">Gallery</a>
       <span>·</span>
       <a href="prints.html">Prints</a>
-      <span>·</span>
-      <a href="gear.html">Gear</a>
       <span>·</span>
       <a href="about.html">About</a>
 
@@ -339,10 +331,7 @@
 <script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
 <script>
-/* Burger menu controller:
-   - toggles .nav-menu.open
-   - updates aria-expanded
-   - closes on outside click + Escape */
+/* Burger menu controller */
 (function(){
   const burger = document.querySelector('.burger');
   const menu = document.querySelector('.nav-menu');
@@ -369,9 +358,7 @@
 })();
 </script>
 
-<!-- Embedded gallery data (single source of truth)
-     JS reads this JSON and renders tiles + lightbox content.
-     Add/edit gallery items here rather than editing the JS. -->
+<!-- Embedded gallery data -->
 <script id="galleryData" type="application/json">
 [
   {
@@ -451,13 +438,6 @@
     "alt": "Triangulum",
     "type": "galaxies"
   },
-    {
-    "file": "images/Moon.jpeg",
-    "title": "The Moon",
-    "desc": "Earth’s only natural satellite, its heavily cratered surface shaped by billions of years of impacts and geological change. Seen here in fine detail, it serves as both a familiar presence and a reminder of our planet’s place in space.",
-    "alt": "The Moon",
-    "type": "others"
-  },
   {
     "images": [
       { "file": "images/MilkyWay&Me.jpg",  "alt": "Milky Way and me (1)" },
@@ -478,65 +458,58 @@
     "desc": "An annual meteor shower caused by debris from asteroid 3200 Phaethon. This composite records multiple Geminid meteors over a single night, tracing their apparent paths back to the constellation Gemini as Earth passes through the stream.",
     "type": "others"
   },
-{
-  "images": [
-    { "file": "images/startrails-1.jpg", "alt": "Star trails still 1" },
-    { "file": "images/startrails-2.jpg", "alt": "Star trails still 2" },
-    { "file": "images/startrails-3.jpg", "alt": "Star trails still 3" },
-    { "file": "images/startrails-4.jpg", "alt": "Star trails still 4" }
-  ],
-  "title": "Star Trails (Stills)",
-  "desc": "Long exposures combined over time reveal the apparent motion of stars across the night sky. Each arc traces the steady rotation of the Earth, turning a fixed celestial background into a record of time passing.",
-  "type": "star-trails"
-},
-{
-  "videos": [
-    { "vimeoId": "1162067160", "poster": "images/startrails-1.jpg", "alt": "Star trails video 1" },
-    { "vimeoId": "1162067172", "poster": "images/startrails-2.jpg", "alt": "Star trails video 2" },
-    { "vimeoId": "1162067196", "poster": "images/startrails-3.jpg", "alt": "Star trails video 3" },
-    { "vimeoId": "1162067206", "poster": "images/startrails-4.jpg", "alt": "Star trails video 4" }
-  ],
-  "title": "Star Trails (Videos)",
-  "desc": "Short time-lapse sequences capturing the gradual motion of the night sky as the Earth rotates. What appears static to the eye is revealed as continuous movement when observed over time.",
-  "type": "star-trails"
-}
+  {
+    "images": [
+      { "file": "images/startrails-1.jpg", "alt": "Star trails still 1" },
+      { "file": "images/startrails-2.jpg", "alt": "Star trails still 2" },
+      { "file": "images/startrails-3.jpg", "alt": "Star trails still 3" },
+      { "file": "images/startrails-4.jpg", "alt": "Star trails still 4" }
+    ],
+    "title": "Star Trails (Stills)",
+    "desc": "Long exposures combined over time reveal the apparent motion of stars across the night sky. Each arc traces the steady rotation of the Earth, turning a fixed celestial background into a record of time passing.",
+    "type": "star-trails"
+  },
+  {
+    "videos": [
+      { "vimeoId": "1162067160", "poster": "images/startrails-1.jpg", "alt": "Star trails video 1" },
+      { "vimeoId": "1162067172", "poster": "images/startrails-2.jpg", "alt": "Star trails video 2" },
+      { "vimeoId": "1162067196", "poster": "images/startrails-3.jpg", "alt": "Star trails video 3" },
+      { "vimeoId": "1162067206", "poster": "images/startrails-4.jpg", "alt": "Star trails video 4" }
+    ],
+    "title": "Star Trails (Videos)",
+    "desc": "Short time-lapse sequences capturing the gradual motion of the night sky as the Earth rotates. What appears static to the eye is revealed as continuous movement when observed over time.",
+    "type": "star-trails"
+  }
 ]
 </script>
 
-<!-- Lightbox markup (hidden until .open is added)
-     JS swaps between image mode (#lbImg) and Vimeo mode (#lbVid). -->
+<!-- Lightbox -->
 <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
 
-    <button class="lightbox-nav" id="lbPrev" aria-label="Previous image">‹</button>
-    <button class="lightbox-nav" id="lbNext" aria-label="Next image">›</button>
+    <button class="lightbox-nav" id="lbPrev" aria-label="Previous">‹</button>
+    <button class="lightbox-nav" id="lbNext" aria-label="Next">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
-   <div class="lightbox-vid" id="lbVid" style="display:none; width:100%; height:100%;"></div>
+    <div class="lightbox-vid" id="lbVid" style="display:none; width:100%; height:100%;"></div>
 
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
-<div class="lightbox-meta" aria-hidden="false">
-  <div class="meta-left">
-    <div class="title" id="lbTitle"></div>
-    <div class="desc" id="lbDesc"></div>
-  </div>
-  <div class="count" id="lbCount"></div>
-</div>
+    <div class="lightbox-meta" aria-hidden="false">
+      <div class="meta-left">
+        <div class="title" id="lbTitle"></div>
+        <div class="desc" id="lbDesc"></div>
+      </div>
 
+      <div class="count" id="lbCount"></div>
+    </div>
   </div>
 </div>
 
 <script>
 /* =========================================================
    GALLERY ENGINE (render + lightbox)
-   Responsibilities:
-   - Parse #galleryData JSON
-   - Render gallery tiles (filter + list/grid view)
-   - Open/close lightbox
-   - Support multi-image stacks + Vimeo video stacks
-   - Keyboard navigation (Esc / Arrow keys)
 ========================================================= */
 (function(){
   const grid = document.getElementById('galleryGrid');
@@ -544,7 +517,7 @@
 
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lbImg');
-  const lbVid = document.getElementById('lbVid');   // ✅ missing in your version
+  const lbVid = document.getElementById('lbVid');
   const lbTitle = document.getElementById('lbTitle');
   const lbCount = document.getElementById('lbCount');
   const lbDesc = document.getElementById('lbDesc');
@@ -566,7 +539,6 @@
     return;
   }
 
-  /* HTML-escape helper for safe string injection into template literals */
   function esc(s){
     return String(s ?? "")
       .replaceAll("&","&amp;")
@@ -580,112 +552,106 @@
     return /\.mp4(\?|#|$)/i.test(path || "");
   }
 
-/* Normalise each gallery item into a flat list for the lightbox:
-   - item.videos[] -> {kind:"vimeo", vimeoId, poster}
-   - item.images[] -> {kind:"image", file}
-   - item.file     -> single image entry
-*/
-function getList(item){
-  // Vimeo stack
-  if(item.videos && Array.isArray(item.videos) && item.videos.length){
-    return item.videos.map(v => ({
-      kind: "vimeo",
-      vimeoId: v.vimeoId,
-      poster: v.poster,
-      alt: v.alt || item.title || ""
-    }));
-  }
-
-  // Image stack
-  if(item.images && Array.isArray(item.images) && item.images.length){
-    return item.images.map(im => ({
+  function getList(item){
+    if(item.videos && Array.isArray(item.videos) && item.videos.length){
+      return item.videos.map(v => ({
+        kind: "vimeo",
+        vimeoId: v.vimeoId,
+        poster: v.poster,
+        alt: v.alt || item.title || ""
+      }));
+    }
+    if(item.images && Array.isArray(item.images) && item.images.length){
+      return item.images.map(im => ({
+        kind: "image",
+        file: im.file,
+        alt: im.alt || item.alt || item.title || ""
+      }));
+    }
+    return [{
       kind: "image",
-      file: im.file,
-      alt: im.alt || item.alt || item.title || ""
-    }));
+      file: item.file,
+      alt: item.alt || item.title || ""
+    }];
   }
 
-  // Single file (image)
-  return [{
-    kind: "image",
-    file: item.file,
-    alt: item.alt || item.title || ""
-  }];
-}
-
-
-/* Choose the “cover” shown on the gallery tile:
-   - For Vimeo stacks: use the poster image
-   - For image stacks: use first image
-*/
-function getCover(item){
-  const list = getList(item);
-  const first = list[0];
-
-  // For Vimeo tiles, use poster as cover
-  if(first && first.kind === "vimeo"){
-    return { file: first.poster, alt: first.alt || item.title || "" };
+  function getCover(item){
+    const list = getList(item);
+    const first = list[0];
+    if(first && first.kind === "vimeo"){
+      return { file: first.poster, alt: first.alt || item.title || "" };
+    }
+    return { file: first.file, alt: first.alt || item.title || "" };
   }
-  return { file: first.file, alt: first.alt || item.title || "" };
-}
-
 
   let currentItem = null;
   let lbList = [];
   let lbIndex = 0;
 
-/* Render the current lightbox slide (image OR Vimeo iframe) */
-function showLb(){
-  const cur = lbList[lbIndex];
+  // the currently rendered (filtered) list + which tile we're on
+  let activeSet = [];
+  let activeItemIndex = 0;
 
-  lbTitle.textContent = currentItem?.title || "";
-  if(lbCount){
-    lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
-  }
-if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
+  function showLb(){
+    const cur = lbList[lbIndex];
 
-  const multi = lbList.length > 1;
-  if(lbPrev) lbPrev.style.display = multi ? "" : "none";
-  if(lbNext) lbNext.style.display = multi ? "" : "none";
-
-  // reset
-  lbImg.style.display = "none";
-  lbImg.src = "";
-  lbImg.alt = "";
-
-  if(lbVid){
-    lbVid.style.display = "none";
-    lbVid.innerHTML = "";
-  }
-
-  if(cur.kind === "vimeo"){
-    // Vimeo embed
-    if(lbVid){
-      lbVid.style.display = "block";
-      const id = encodeURIComponent(cur.vimeoId);
-      lbVid.innerHTML = `
-        <iframe
-          src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen
-          style="width:100%;height:100%">
-        </iframe>
-      `;
+    lbTitle.textContent = currentItem?.title || "";
+    if(lbCount){
+      lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
     }
-    return;
+    if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
+
+    const canNav = (lbList.length > 1) || (activeSet && activeSet.length > 1);
+    if(lbPrev) lbPrev.style.display = canNav ? "" : "none";
+    if(lbNext) lbNext.style.display = canNav ? "" : "none";
+
+    // reset media
+    lbImg.style.display = "none";
+    lbImg.src = "";
+    lbImg.alt = "";
+
+    if(lbVid){
+      lbVid.style.display = "none";
+      lbVid.innerHTML = "";
+    }
+
+    if(cur.kind === "vimeo"){
+      if(lbVid){
+        lbVid.style.display = "block";
+        const id = encodeURIComponent(cur.vimeoId);
+        lbVid.innerHTML = `
+          <iframe
+            src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            style="width:100%;height:100%">
+          </iframe>
+        `;
+      }
+      return;
+    }
+
+    lbImg.style.display = "block";
+    lbImg.src = cur.file;
+    lbImg.alt = cur.alt || (currentItem?.title || "");
   }
 
-  // Image
-  lbImg.style.display = "block";
-  lbImg.src = cur.file;
-  lbImg.alt = cur.alt || (currentItem?.title || "");
-}
+  // jump between gallery tiles while staying in the lightbox
+  function goToItem(delta){
+    if(!activeSet || activeSet.length < 2) return;
 
+    activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
+    currentItem = activeSet[activeItemIndex];
+    lbList = getList(currentItem);
+    lbIndex = 0;
+    showLb();
+  }
 
-  /* Open lightbox for the clicked gallery item */
-  function openLightbox(item){
+  function openLightbox(item, indexInActiveSet){
     currentItem = item;
+    activeItemIndex = Number(indexInActiveSet) || 0;
+
     lbList = getList(item);
     lbIndex = 0;
     showLb();
@@ -695,17 +661,15 @@ if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
     document.body.classList.add('noscroll');
   }
 
-  /* Close lightbox + fully reset state (also stops Vimeo playback) */
   function closeLightbox(){
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
 
-if(lbVid){
-  lbVid.innerHTML = "";      // kills iframe playback
-  lbVid.style.display = "none";
-}
-
+    if(lbVid){
+      lbVid.innerHTML = "";
+      lbVid.style.display = "none";
+    }
 
     lbImg.src = "";
     lbImg.alt = "";
@@ -717,17 +681,22 @@ if(lbVid){
     currentItem = null;
     lbList = [];
     lbIndex = 0;
+    activeItemIndex = 0;
   }
 
-  /* Render gallery tiles based on current filter + view mode */
   function render(){
     const selected = (typeFilter && typeFilter.value) ? typeFilter.value : 'all';
     const filtered = (selected === 'all')
       ? items
       : items.filter(it => (it.type || 'others') === selected);
 
+    // store current filtered set so lightbox can traverse tiles
+    activeSet = filtered;
+
     grid.innerHTML = filtered.map((item) => {
       const idx = items.indexOf(item);
+      const activeIdx = filtered.indexOf(item);
+
       const cover = getCover(item);
       const list = getList(item);
       const count = list.length;
@@ -736,13 +705,16 @@ if(lbVid){
         ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
         : '';
 
-const media = isVideoFile(cover.file)
-  ? `<video src="${esc(cover.file)}" muted playsinline preload="metadata"></video>`
-  : `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">`;
-
+      const media = isVideoFile(cover.file)
+        ? `<video src="${esc(cover.file)}" muted playsinline preload="metadata"></video>`
+        : `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">`;
 
       return `
-        <a class="card" href="${esc(cover.file)}" data-idx="${idx}" aria-label="${esc(item.title || cover.alt)}">
+        <a class="card"
+           href="${esc(cover.file)}"
+           data-idx="${idx}"
+           data-active-idx="${activeIdx}"
+           aria-label="${esc(item.title || cover.alt)}">
           ${badge}
           ${media}
           <div class="cap">
@@ -754,7 +726,7 @@ const media = isVideoFile(cover.file)
     }).join('');
   }
 
-  // ✅ Mobile: always grid view
+  // Mobile: always grid view
   const isMobile = window.matchMedia('(max-width: 720px)').matches;
 
   if(isMobile){
@@ -804,8 +776,9 @@ const media = isVideoFile(cover.file)
     e.preventDefault();
 
     const idx = Number(a.getAttribute('data-idx'));
+    const activeIdx = Number(a.getAttribute('data-active-idx'));
     const item = items[idx];
-    if(item) openLightbox(item);
+    if(item) openLightbox(item, activeIdx);
   });
 
   if(lbClose) lbClose.addEventListener('click', closeLightbox);
@@ -813,18 +786,34 @@ const media = isVideoFile(cover.file)
   if(lbPrev){
     lbPrev.addEventListener('click', (e) => {
       e.stopPropagation();
-      if(lbList.length < 2) return;
-      lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
-      showLb();
+
+      if(lbList.length > 1){
+        if(lbIndex > 0){
+          lbIndex -= 1;
+          showLb();
+        } else {
+          goToItem(-1);
+        }
+      } else {
+        goToItem(-1);
+      }
     });
   }
 
   if(lbNext){
     lbNext.addEventListener('click', (e) => {
       e.stopPropagation();
-      if(lbList.length < 2) return;
-      lbIndex = (lbIndex + 1) % lbList.length;
-      showLb();
+
+      if(lbList.length > 1){
+        if(lbIndex < lbList.length - 1){
+          lbIndex += 1;
+          showLb();
+        } else {
+          goToItem(+1);
+        }
+      } else {
+        goToItem(+1);
+      }
     });
   }
 
@@ -832,31 +821,43 @@ const media = isVideoFile(cover.file)
     if(e.target === lb) closeLightbox();
   });
 
-document.addEventListener('keydown', (e) => {
-  if(!lb.classList.contains('open')) return;
+  document.addEventListener('keydown', (e) => {
+    if(!lb.classList.contains('open')) return;
 
-  if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'Escape') closeLightbox();
 
-  if(e.key === 'ArrowLeft' && lbList.length > 1){
-    lbIndex = (lbIndex - 1 + lbList.length) % lbList.length;
-    showLb();
-  }
+    if(e.key === 'ArrowLeft'){
+      if(lbList.length > 1){
+        if(lbIndex > 0){
+          lbIndex -= 1;
+          showLb();
+        } else {
+          goToItem(-1);
+        }
+      } else {
+        goToItem(-1);
+      }
+    }
 
-  if(e.key === 'ArrowRight' && lbList.length > 1){
-    lbIndex = (lbIndex + 1) % lbList.length;
-    showLb();
-  }
-});
+    if(e.key === 'ArrowRight'){
+      if(lbList.length > 1){
+        if(lbIndex < lbList.length - 1){
+          lbIndex += 1;
+          showLb();
+        } else {
+          goToItem(+1);
+        }
+      } else {
+        goToItem(+1);
+      }
+    }
+  });
 
 })();
 </script>
 
-
 <script>
-/* Scroll reveal (adds "in" when elements enter viewport)
-   - adds .reveal to targets
-   - adds .in when they enter the viewport
-   - respects prefers-reduced-motion */
+/* Scroll reveal */
 (function(){
   const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
     .filter(el => !el.classList.contains('reveal'));
