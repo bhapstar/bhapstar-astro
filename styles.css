@@ -22,8 +22,8 @@
 ========================= */
 :root{
   /* Accent colours (store RGB so we can use rgba() everywhere) */
-  --accent: #c3b3ff;                 /* pastel lavender */
-  --accent2: #e6c8ff;                /* soft lilac */
+  --accent: #c3b3ff;                 
+  --accent2: #e6c8ff;                
   --accent-rgb: 195,179,255;
   --accent2-rgb: 230,200,255;
 
@@ -123,13 +123,14 @@ header{
   right: 12px;
   bottom: 2px;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(var(--accent-rgb),0.55),
-    rgba(var(--accent2-rgb),0.45),
-    transparent
-  );
+background: linear-gradient(
+  90deg,
+  transparent,
+  color-mix(in srgb, var(--accent) 85%, transparent),
+  color-mix(in srgb, var(--accent) 65%, var(--accent2)),
+  transparent
+);
+
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 220ms ease, transform 220ms ease;
@@ -344,12 +345,12 @@ h1{
   inset: -1px;
   border-radius: 999px;
   padding: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(var(--accent-rgb),0.35),
-    rgba(var(--accent2-rgb),0.28),
-    rgba(var(--accent-rgb),0.35)
-  );
+ background: linear-gradient(90deg,
+  color-mix(in srgb, var(--accent) 55%, transparent),
+  color-mix(in srgb, var(--accent2) 45%, transparent),
+  color-mix(in srgb, var(--accent) 55%, transparent)
+);
+
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
