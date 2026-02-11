@@ -240,24 +240,20 @@
       .map(x => x.v);
   }
 
-  /* Pull the gallery JSON from gallery.html (so you don’t maintain image lists twice) */
-  async function loadGalleryDataFromGalleryPage(){
-    const res = await fetch('gallery.html', { cache: 'no-store' });
-    if(!res.ok) throw new Error('Failed to fetch gallery.html');
+  /* Pull the gallery JSON from gallery-data.json (so you don’t maintain image lists twice) */
+async function loadGalleryData(){
+  const res = await fetch('gallery-data.json', { cache: 'no-store' });
+  if(!res.ok) throw new Error('Failed to fetch gallery-data.json (HTTP ' + res.status + ')');
 
-    const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const dataEl = doc.getElementById('galleryData');
-    if(!dataEl) throw new Error('galleryData not found in gallery.html');
+  const items = await res.json();
+  if(!Array.isArray(items) || items.length === 0) throw new Error('gallery-data.json is empty');
+  return items;
+}
 
-    const items = JSON.parse(dataEl.textContent || '[]');
-    if(!Array.isArray(items) || items.length === 0) throw new Error('galleryData is empty');
-    return items;
-  }
 
   let items = [];
   try{
-    items = await loadGalleryDataFromGalleryPage();
+    items = await loadGalleryData();
   }catch(e){
     // If this fails (offline / fetch blocked / missing file), hero just stays blank
     console.warn('Could not load gallery data from gallery.html:', e);

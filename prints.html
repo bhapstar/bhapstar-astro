@@ -754,32 +754,25 @@
 
   /* Load printable image titles from gallery.html’s embedded JSON
      - Filters out video-only entries (x.videos) so the dropdown stays “printable only” */
-  async function loadGalleryTitles(){
-    try{
-      const res = await fetch('gallery.html', { cache: 'no-store' });
-      if(!res.ok) throw new Error('Failed to fetch gallery.html');
+async function loadGalleryTitles(){
+  try{
+    const res = await fetch('gallery-data.json', { cache: 'no-store' });
+    if(!res.ok) throw new Error('Failed to fetch gallery-data.json (HTTP ' + res.status + ')');
 
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const dataEl = doc.getElementById('galleryData');
-      if(!dataEl) throw new Error('galleryData not found');
+    const items = await res.json();
 
-      const items = JSON.parse(dataEl.textContent);
+    GALLERY_TITLES = items
+      .filter(x => x && x.title && !x.videos) // exclude video-only entries
+      .map(x => x.title)
+      .filter(Boolean);
 
-GALLERY_TITLES = items
-  // ✅ keep only items that are printable images (not videos)
-  .filter(x => x && x.title && !x.videos)
-  .map(x => x.title)
-  .filter(Boolean);
-
-// De-duplicate
-GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES));
-
-    }catch(err){
-      console.error(err);
-      GALLERY_TITLES = [];
-    }
+    GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES)); // de-dupe
+  }catch(err){
+    console.error(err);
+    GALLERY_TITLES = [];
   }
+}
+
 
   /* Build a <select> from either [{v,t}] objects or plain strings */
   function makeSelect(options, placeholder){
