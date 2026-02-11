@@ -103,23 +103,21 @@
     }
 
     /* Prominent completion message */
-.puzzle-msg.win{
-  font-size: 18px;
-  font-weight: 700;
-  text-align: center;
-  padding: 16px 18px;
-  background: linear-gradient(135deg, rgba(124,200,255,.18), rgba(255,255,255,.07));
-  border: 1px solid rgba(124,200,255,.45);
-  box-shadow: 0 0 26px rgba(124,200,255,.22);
-  animation: pulseWin 1.6s ease-in-out infinite alternate;
-}
+    .puzzle-msg.win{
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(124,200,255,.18), rgba(255,255,255,.07));
+      border: 1px solid rgba(124,200,255,.45);
+      box-shadow: 0 0 26px rgba(124,200,255,.22);
+      animation: pulseWin 1.6s ease-in-out infinite alternate;
+    }
 
-
-@keyframes pulseWin{
-  from{ transform: scale(1); }
-  to{ transform: scale(1.03); }
-}
-
+    @keyframes pulseWin{
+      from{ transform: scale(1); }
+      to{ transform: scale(1.03); }
+    }
   </style>
 </head>
 
@@ -244,6 +242,9 @@
   let peek = false;
 
   let candidates = [];
+
+  // ✅ NEW: stores the current image title for win message
+  let currentImageTitle = "";
 
   function setMsg(text){ msg.textContent = text; }
 
@@ -607,7 +608,6 @@
     return hits; // [topmost, ..., bottommost]
   }
 
-
   function bringToFront(piece){
     const idx = pieces.indexOf(piece);
     if(idx >= 0){ pieces.splice(idx,1); pieces.push(piece); }
@@ -647,7 +647,6 @@
 
     // If user taps same spot quickly, cycle to the next piece underneath
     if(close && quick && lastPick.stack && lastPick.stack.length){
-      // If the set of pieces under the pointer changed, reset
       const sameSet =
         lastPick.stack.length === stack.length &&
         lastPick.stack.every((p, i) => p === stack[i]);
@@ -662,12 +661,11 @@
     lastPick.t = now;
     lastPick.stack = stack;
 
-    const p = stack[lastPick.idx]; // pick selected from overlap stack
+    const p = stack[lastPick.idx];
     bringToFront(p);
     dragging = { piece:p, dx:x-p.x, dy:y-p.y };
     draw();
   });
-
 
   canvas.addEventListener('pointermove', (ev) => {
     if(!dragging) return;
@@ -689,12 +687,14 @@
     const snapped = maybeSnap(p);
     draw();
 
-  if(snapped && checkWin()){
-  msg.classList.add('win');
-  setMsg("Completed! Nice one 🎉. Tap “New random image” to go again. 🔭✨");
-  showWin();
-}
+    if(snapped && checkWin()){
+      msg.classList.add('win');
 
+      // ✅ UPDATED WIN MESSAGE (includes current image title)
+      setMsg(`${currentImageTitle} reconstructed. Nicely done 🌌 Tap “New random image” to explore another fragment of the universe. 🔭`);
+
+      showWin();
+    }
   }
 
   canvas.addEventListener('pointerup', endDrag);
@@ -717,6 +717,10 @@
     }
 
     const pick = pickRandom(candidates);
+
+    // ✅ NEW: remember title for win message
+    currentImageTitle = pick.title || "Untitled";
+
     setMsg(`Loading: ${pick.title}`);
 
     img = new Image();
