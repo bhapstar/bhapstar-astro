@@ -297,32 +297,10 @@
 
 <body>
 
-<!-- Header/nav (same burger behaviour as other pages) -->
-<header>
-  <div class="wrap">
-    <div class="navbar">
-      <div></div>
-
-      <a class="brand" href="index.html" aria-label="bhapstar home">
-        <span class="mark">bhapstar</span>
-        <span class="sub">astrophotography</span>
-      </a>
-
-      <button class="burger" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-
-      <nav class="nav-menu" aria-label="Site">
-        <a href="index.html">Home</a>
-        <a href="gallery.html">Gallery</a>
-        <a class="active" href="prints.html">Prints</a>
-        <a href="gear.html">Gear</a>
-        <a href="puzzle.html">Puzzle</a>
-        <a href="about.html">About</a>
-      </nav>
-    </div>
-  </div>
-</header>
+<!-- =========================
+     Header / navigation
+========================= -->
+<div id="siteHeader"></div>
 
 <!-- Support panel (kept near top so it’s visible before the enquiry builder) -->
 <!-- KEEP: Support my work stays where it is -->
@@ -598,51 +576,8 @@
 
 <!-- =========================
      Footer
-     - Includes dynamic year (set by tiny JS below)
 ========================= -->
-<footer>
-  <div class="wrap">
-    <div class="footer-links">
-      <span>© <span id="y"></span> bhapstar astrophotography</span>
-      <span>·</span>
-      <a href="gallery.html">Gallery</a>
-      <span>·</span>
-      <a href="prints.html">Prints</a>
-      <span>·</span>
-      <a href="gear.html">Gear</a>
-      <span>·</span>
-      <a href="puzzle.html">Puzzle</a>
-      <span>·</span>
-      <a href="about.html">About</a>
-      <span>·</span>
-
-      <!-- Instagram icon link (inline SVG so you don’t rely on an icon library) -->
-      <a href="https://www.instagram.com/bhapstar/"
-         target="_blank"
-         rel="noopener"
-         aria-label="Instagram"
-         class="social-icon">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-             xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="20" height="20" rx="5"
-                stroke="currentColor" stroke-width="2"/>
-          <circle cx="12" cy="12" r="5"
-                  stroke="currentColor" stroke-width="2"/>
-          <circle cx="17.5" cy="6.5" r="1.2"
-                  fill="currentColor"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-</footer>
-
-<!-- Footer year: keeps copyright current without manual edits -->
-<script>
-(function(){
-  var y = document.getElementById('y');
-  if(y) y.textContent = new Date().getFullYear();
-})();
-</script>
+<div id="siteFooter"></div>
 
 <!-- Toast notification container (pop-up messages after submit/errors) -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1099,6 +1034,7 @@ async function loadGalleryTitles(){
   });
 })();
 </script>
+<script src="partials/partials.js"></script>
 
 </body>
 </html>
