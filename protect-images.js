@@ -6,6 +6,12 @@
 
   document.addEventListener("contextmenu", (e) => {
     const target = e.target;
+    
+    // Allow puzzle interactions (or block menu specifically on canvas)
+    if (target.closest?.("canvas")) {
+      e.preventDefault();
+      return;
+    }
 
     // Block inside open lightbox
     if (lightboxIsOpen() && target.closest?.(".lightbox")) {

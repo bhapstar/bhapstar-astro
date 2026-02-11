@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jigsaw — bhapstar</title>
+
+  <!-- Cloudflare Web Analytics (optional, see note below) -->
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Minimal page styling that fits your site */
+    .puzzle-wrap{ max-width:980px; margin:0 auto; padding:16px; }
+    .puzzle-top{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px 14px;
+      background:rgba(255,255,255,.04);
+      margin:18px 0 14px;
+    }
+    .puzzle-top h2{ margin:0; font-size:18px; }
+    .puzzle-top .sub{ font-size:12px; opacity:.8; margin-top:4px; }
+    .puzzle-controls{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .puzzle-controls select,
+    .puzzle-controls button{
+      appearance:none;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.28);
+      color:#fff;
+      padding:10px 12px;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .puzzle-board{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      padding:12px;
+      overflow:hidden;
+    }
+    canvas{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      background:#05050c;
+      touch-action:none; /* IMPORTANT for finger dragging */
+    }
+    .puzzle-msg{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);
+      font-size:13px;
+      opacity:.9;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <div></div>
+
+      <a class="brand" href="index.html" aria-label="bhapstar home">
+        <span class="mark">bhapstar</span>
+        <span class="sub">astrophotography</span>
+      </a>
+
+      <button class="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="prints.html">Prints</a>
+        <a href="gear.html">Gear</a>
+        <a class="active" href="puzzle.html">Puzzle</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="section">
+  <div class="puzzle-wrap">
+
+    <div class="puzzle-top">
+      <div>
+        <h2>Random Gallery Jigsaw Puzzle</h2>
+        <div class="sub">Drag the puzzle pieces into place. They snap when close. You can use Peek if you’re stuck.</div>
+      </div>
+
+      <div class="puzzle-controls">
+        <select id="difficulty" aria-label="Difficulty">
+          <option value="3">Easy (3×3)</option>
+          <option value="4" selected>Normal (4×4)</option>
+          <option value="5">Hard (5×5)</option>
+        </select>
+        <button id="newBtn" type="button">New random image</button>
+        <button id="peekBtn" type="button" title="Hold to peek">Peek</button>
+      </div>
+    </div>
+
+    <div class="puzzle-board">
+      <canvas id="c"></canvas>
+      <div class="puzzle-msg" id="msg">Loading…</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- =========================
+     Footer
+     - Includes dynamic year (set by tiny JS below)
+========================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-links">
+      <span>© <span id="y"></span> bhapstar astrophotography</span>
+      <span>·</span>
+      <a href="gallery.html">Gallery</a>
+      <span>·</span>
+      <a href="prints.html">Prints</a>
+      <span>·</span>
+      <a href="gear.html">Gear</a>
+      <span>·</span>
+      <a href="puzzle.html">Puzzle</a>
+      <span>·</span>
+      <a href="about.html">About</a>
+      <span>·</span>
+
+      <!-- Instagram icon link (inline SVG so you don’t rely on an icon library) -->
+      <a href="https://www.instagram.com/bhapstar/"
+         target="_blank"
+         rel="noopener"
+         aria-label="Instagram"
+         class="social-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5"
+                stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="5"
+                  stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1.2"
+                  fill="currentColor"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- Footer year: keeps copyright current without manual edits -->
+<script>
+(function(){
+  var y = document.getElementById('y');
+  if(y) y.textContent = new Date().getFullYear();
+})();
+</script>
+
+<script>
+/* Burger menu controller (same as your pages) */
+(function(){
+  const burger = document.querySelector('.burger');
+  const menu = document.querySelector('.nav-menu');
+  if(!burger || !menu) return;
+
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
+
+
+<script>
+(() => {
+  // ---------- Pull a random IMAGE file from your galleryData (skip vimeo) ----------
+async function loadGalleryData(){
+  const res = await fetch('gallery-data.json', { cache: 'no-store' });
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+
+  // Flatten to list of image candidates {file, title}
+  function flattenImages(items){
+    const out = [];
+    for(const item of items){
+      if(item && Array.isArray(item.videos) && item.videos.length){
+        // Skip videos entirely (you *can* include posters if you want; currently skipping)
+      }
+
+      if(item && Array.isArray(item.images) && item.images.length){
+        for(const im of item.images){
+          if(im && im.file) out.push({ file: im.file, title: item.title || im.alt || "Untitled" });
+        }
+        continue;
+      }
+
+      if(item && item.file && typeof item.file === 'string'){
+        out.push({ file: item.file, title: item.title || item.alt || "Untitled" });
+      }
+    }
+
+    // Optional: filter out “posters” you don’t want as puzzles
+    // e.g. if you *don’t* want Moon as a puzzle, you could filter by type etc.
+    return out;
+  }
+
+  function pickRandom(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // ---------- Canvas jigsaw ----------
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const msg = document.getElementById('msg');
+  const difficultyEl = document.getElementById('difficulty');
+  const newBtn = document.getElementById('newBtn');
+  const peekBtn = document.getElementById('peekBtn');
+
+  let img = new Image();
+  img.crossOrigin = "anonymous";
+
+  let grid = 4;
+  let pieces = [];
+  let board = { w: 0, h: 0 };
+  let dragging = null;
+  let peek = false;
+
+let candidates = [];
+
+async function boot(){
+  try{
+    const galleryItems = await loadGalleryData();
+    candidates = flattenImages(galleryItems);
+    startNewGame();
+  }catch(err){
+    console.error(err);
+    setMsg("Couldn’t load gallery-data.json");
+  }
+}
+
+boot();
+
+
+  function setMsg(text){ msg.textContent = text; }
+
+  function resizeCanvasToFit(){
+    const rect = canvas.getBoundingClientRect();
+    const cssW = Math.min(rect.width || 900, 980);
+    const aspect = (img && img.naturalWidth) ? (img.naturalHeight / img.naturalWidth) : (2/3);
+    const cssH = Math.max(320, Math.min(700, cssW * aspect));
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    board.w = cssW;
+    board.h = cssH;
+    draw();
+  }
+
+  function makePieces(){
+    pieces = [];
+    const pw = board.w / grid;
+    const ph = board.h / grid;
+
+    const starts = [];
+    for(let r=0; r<grid; r++){
+      for(let c=0; c<grid; c++){
+        starts.push({
+          targetX: c * pw,
+          targetY: r * ph,
+          sx: c * (img.naturalWidth / grid),
+          sy: r * (img.naturalHeight / grid)
+        });
+      }
+    }
+
+    const shuffled = starts.map(() => ({
+      x: Math.random() * (board.w - pw),
+      y: Math.random() * (board.h - ph)
+    }));
+
+    for(let i=0; i<starts.length; i++){
+      const s = starts[i];
+      const p = shuffled[i];
+      pieces.push({
+        x:p.x, y:p.y, w:pw, h:ph,
+        targetX:s.targetX, targetY:s.targetY,
+        sx:s.sx, sy:s.sy, sw:img.naturalWidth/grid, sh:img.naturalHeight/grid,
+        locked:false
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,board.w,board.h);
+
+    if(!img || !img.naturalWidth){
+      ctx.fillStyle = "rgba(255,255,255,.7)";
+      ctx.font = "14px system-ui";
+      ctx.fillText("No image loaded.", 16, 28);
+      return;
+    }
+
+    if(peek){
+      ctx.globalAlpha = 0.25;
+      ctx.drawImage(img, 0,0,img.naturalWidth,img.naturalHeight, 0,0,board.w,board.h);
+      ctx.globalAlpha = 1;
+    }
+
+    const ordered = [...pieces].sort((a,b)=> (a.locked - b.locked));
+    for(const p of ordered){
+      ctx.drawImage(img, p.sx, p.sy, p.sw, p.sh, p.x, p.y, p.w, p.h);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = p.locked ? "rgba(255,255,255,.18)" : "rgba(255,255,255,.35)";
+      ctx.strokeRect(p.x+0.5, p.y+0.5, p.w-1, p.h-1);
+    }
+  }
+
+  function hitTest(x,y){
+    for(let i=pieces.length-1; i>=0; i--){
+      const p = pieces[i];
+      if(p.locked) continue;
+      if(x>=p.x && x<=p.x+p.w && y>=p.y && y<=p.y+p.h) return p;
+    }
+    return null;
+  }
+
+  function bringToFront(piece){
+    const idx = pieces.indexOf(piece);
+    if(idx >= 0){ pieces.splice(idx,1); pieces.push(piece); }
+  }
+
+  function maybeSnap(p){
+    const dx = p.x - p.targetX;
+    const dy = p.y - p.targetY;
+    const dist = Math.hypot(dx,dy);
+    const thresh = Math.min(p.w,p.h) * 0.18;
+    if(dist < thresh){
+      p.x = p.targetX; p.y = p.targetY; p.locked = true;
+      return true;
+    }
+    return false;
+  }
+
+  function checkWin(){ return pieces.every(p=>p.locked); }
+
+  function pointerPos(ev){
+    const rect = canvas.getBoundingClientRect();
+    const x = (ev.clientX - rect.left) * (board.w / rect.width);
+    const y = (ev.clientY - rect.top) * (board.h / rect.height);
+    return {x,y};
+  }
+
+  canvas.addEventListener('pointerdown', (ev) => {
+    canvas.setPointerCapture(ev.pointerId);
+    const {x,y} = pointerPos(ev);
+    const p = hitTest(x,y);
+    if(!p) return;
+    bringToFront(p);
+    dragging = { piece:p, dx:x-p.x, dy:y-p.y };
+    draw();
+  });
+
+  canvas.addEventListener('pointermove', (ev) => {
+    if(!dragging) return;
+    const {x,y} = pointerPos(ev);
+    const p = dragging.piece;
+
+    p.x = x - dragging.dx;
+    p.y = y - dragging.dy;
+    p.x = Math.max(0, Math.min(board.w - p.w, p.x));
+    p.y = Math.max(0, Math.min(board.h - p.h, p.y));
+    draw();
+  });
+
+  function endDrag(){
+    if(!dragging) return;
+    const p = dragging.piece;
+    dragging = null;
+
+    const snapped = maybeSnap(p);
+    draw();
+
+    if(snapped && checkWin()){
+      setMsg("Completed. Nice one. Tap “New random image” to go again. 🔭✨");
+    }
+  }
+
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+
+  // Peek (hold)
+  const startPeek = () => { peek = true; draw(); };
+  const stopPeek  = () => { peek = false; draw(); };
+  peekBtn.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startPeek(); });
+  peekBtn.addEventListener('pointerup', stopPeek);
+  peekBtn.addEventListener('pointerleave', stopPeek);
+  peekBtn.addEventListener('pointercancel', stopPeek);
+
+  function startNewGame(){
+    grid = parseInt(difficultyEl.value, 10) || 4;
+
+    if(!candidates.length){
+      setMsg("No images found in galleryData.");
+      return;
+    }
+
+    const pick = pickRandom(candidates);
+    setMsg(`Loading: ${pick.title}`);
+
+    img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      resizeCanvasToFit();
+      makePieces();
+      draw();
+      setMsg("Drag pieces into place. They snap when close.");
+    };
+    img.onerror = () => setMsg("Couldn’t load that image file.");
+    img.src = pick.file;
+  }
+
+  newBtn.addEventListener('click', startNewGame);
+  difficultyEl.addEventListener('change', startNewGame);
+
+  window.addEventListener('resize', () => {
+    if(!img || !img.naturalWidth) return;
+    // simplest: restart on resize so piece sizes match
+    startNewGame();
+  });
+
+  })();
+</script>
+
+<script src="protect-images.js"></script>
+</body>
+</html>

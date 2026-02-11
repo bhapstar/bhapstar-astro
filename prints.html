@@ -317,6 +317,7 @@
         <a href="gallery.html">Gallery</a>
         <a class="active" href="prints.html">Prints</a>
         <a href="gear.html">Gear</a>
+        <a href="puzzle.html">Puzzle</a>
         <a href="about.html">About</a>
       </nav>
     </div>
@@ -595,7 +596,10 @@
   </section>
 </main>
 
-<!-- Footer (same as other pages) -->
+<!-- =========================
+     Footer
+     - Includes dynamic year (set by tiny JS below)
+========================= -->
 <footer>
   <div class="wrap">
     <div class="footer-links">
@@ -607,25 +611,38 @@
       <span>·</span>
       <a href="gear.html">Gear</a>
       <span>·</span>
+      <a href="puzzle.html">Puzzle</a>
+      <span>·</span>
       <a href="about.html">About</a>
-      <!-- Instagram icon link -->
+      <span>·</span>
+
+      <!-- Instagram icon link (inline SVG so you don’t rely on an icon library) -->
       <a href="https://www.instagram.com/bhapstar/"
          target="_blank"
          rel="noopener"
          aria-label="Instagram"
          class="social-icon">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
-          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
-          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5"
+                stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="5"
+                  stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1.2"
+                  fill="currentColor"/>
         </svg>
       </a>
     </div>
   </div>
 </footer>
 
-<!-- Dynamic year -->
-<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
+<!-- Footer year: keeps copyright current without manual edits -->
+<script>
+(function(){
+  var y = document.getElementById('y');
+  if(y) y.textContent = new Date().getFullYear();
+})();
+</script>
 
 <!-- Toast notification container (pop-up messages after submit/errors) -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
