@@ -11,134 +11,8 @@
 
   <!-- Shared site CSS -->
   <link rel="stylesheet" href="styles.css" />
-
-  <style>
-    /* =========================================================
-       Lightbox (fullscreen image viewer)
-       - Hidden by default
-       - Shown by adding .open to #lightbox
-       - Uses two layers: image + watermark + caption
-    ========================================================= */
-
-    /* Lightbox backdrop */
-    .lightbox{
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.92);
-      z-index: 9999;
-      padding: 18px;
-    }
-    .lightbox.open{ display: flex; }
-
-    /* Lightbox “frame” */
-    .lightbox-inner{
-      position: relative;
-      width: min(1200px, 100%);
-      height: min(82vh, 900px);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(0,0,0,.35);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-
-    /* Main image in lightbox */
-    .lightbox-img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none; /* stops direct drag from the image */
-    }
-
-    /* Watermark overlay (covers the image) */
-    .lightbox-watermark.lightbox-watermark{
-  position: absolute;
-  inset: 0;                /* fills the entire image */
-  display: flex;
-  align-items: center;     /* vertical centre */
-  justify-content: center; /* horizontal centre */
-  pointer-events: none;
-}
-
-    /* Watermark text styling */
-    .lightbox-watermark span{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      text-transform: lowercase;
-      letter-spacing: .12em;
-      font-weight: 700;
-      font-size: clamp(40px, 10vw, 120px);
-      opacity: .14;          /* <-- adjust watermark strength here */
-      color: #fff;
-      transform: rotate(-12deg);
-      text-shadow: 0 8px 22px rgba(0,0,0,.35);
-      mix-blend-mode: screen; /* keeps it light */
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    /* Close button (top-right) */
-    .lightbox-close{
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
-
-    /* Caption/footer row inside lightbox */
-    .lightbox-meta{
-      position: absolute;
-      left: 14px;
-      bottom: 14px;
-      right: 14px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-
-    /* Title text in caption */
-    .lightbox-meta .title{
-      font-weight: 650;
-      font-size: 14px;
-      opacity: .95;
-      color: rgba(255,255,255,.92);
-      text-shadow: 0 8px 22px rgba(0,0,0,.55);
-      max-width: 70%;
-      line-height: 1.25;
-    }
-
-    /* Links inside caption (if any) become clickable again */
-    .lightbox-meta a{
-      pointer-events: auto;
-      font-size: 12px;
-      opacity: .9;
-      color: rgba(255,255,255,.92);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,.35);
-    }
-    .lightbox-meta a:hover{ opacity: 1; border-bottom-color: rgba(255,255,255,.75); }
-
-    /* Prevent background scroll when lightbox is open */
-    body.noscroll{ overflow: hidden; }
-  </style>
 </head>
-<body>
+<body class="page-gear">
 
 <!-- =========================
      Header / navigation
@@ -305,7 +179,7 @@
     console.error('Invalid JSON in gearData:', err);
     /* If JSON fails, show a friendly inline error panel */
     grid.innerHTML = `
-      <div class="panel" style="grid-column: 1 / -1;">
+      <div class="panel grid-span-all">
         <h3>Gallery data error</h3>
         <p class="note">The JSON inside <code>#gearData</code> is invalid, so no cards could be shown.</p>
         <p class="note">Tip: each item must be an object like <code>{"title":"Rosette","files":["images/RN Split 1.jpg","images/RN Split 2.jpg"]}</code>.</p>

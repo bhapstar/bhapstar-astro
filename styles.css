@@ -732,6 +732,278 @@ input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.45); }
 }
 
 /* =========================
+   ABOUT: Support panel spacing on About page
+========================= */
+.support-panel--about{ margin: 26px 0; }
+
+/* =========================
+   GALLERY: tile badge + video thumbnails
+========================= */
+.multi-badge{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.45);
+  color: rgba(255,255,255,.92);
+  font-size: 12px;
+  line-height: 1;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+.multi-badge .stack{
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.28) inset,
+    3px 3px 0 0 rgba(255,255,255,.10);
+  opacity: .9;
+}
+.card video{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Mobile: keep tiles image-first (hide description text in tiles) */
+@media (max-width: 720px){
+  .card .cap .d{ display:none; }
+}
+
+/* Gallery load error panel */
+.gallery-error{
+  grid-column: 1 / -1;
+  opacity: .9;
+}
+
+/* =========================
+   PRINTS: page layout + enquiry builder
+========================= */
+.prints-layout{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.prints-main{ display: grid; gap: 18px; }
+.prints-side{ display: grid; gap: 18px; }
+
+@media (min-width: 980px){
+  .prints-layout{
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+    align-items: start;
+  }
+  .prints-side{ position: static; top: auto; }
+}
+
+/* "How it works" steps */
+.steps{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (max-width: 860px){
+  .steps{ grid-template-columns: 1fr; }
+}
+.step{
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+  border-radius: 16px;
+}
+.step .k{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.03);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.step h4{ margin: 0 0 6px 0; font-size: 14px; }
+.step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
+.step p.helper{ font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 6px; }
+
+/* Form picker */
+.picker{
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+}
+.picker .row{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+@media (max-width: 520px){
+  .picker .row{ grid-template-columns: 1fr; }
+  .picker .row label{ margin-bottom: -2px; }
+}
+.picker label{
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.70);
+}
+.picker select, .picker input, .picker textarea{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.25);
+  color: rgba(255,255,255,0.92);
+  outline: none;
+}
+.picker select:focus, .picker input:focus, .picker textarea:focus{
+  border-color: rgba(124,200,255,0.38);
+  box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
+}
+.helper{
+  font-size: 12px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+/* Enquiry preview */
+.template-box{
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.02);
+}
+.template-box pre{
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.86);
+}
+
+/* Prints FAQ */
+.faq{
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+details.faq-item{
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.02);
+  padding: 12px 14px;
+}
+details.faq-item summary{
+  cursor: pointer;
+  list-style: none;
+  font-weight: 650;
+  color: rgba(255,255,255,0.92);
+}
+details.faq-item summary::-webkit-details-marker{ display:none; }
+details.faq-item p{
+  margin: 10px 0 0 0;
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* Framed preview tile */
+.framed-tile{ pointer-events: none; }
+.framed-tile img{
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Multi-item enquiry rows */
+.items-area{ display: grid; gap: 10px; }
+
+.item-row{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.16);
+}
+@media (min-width: 860px){
+  .item-row{
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  .item-row select:nth-child(1){ grid-column: 1 / -1; }
+  .item-row select:nth-child(2){ grid-column: 1 / 2; }
+  .item-row select:nth-child(3){ grid-column: 2 / 3; }
+  .item-row .item-actions{
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+.item-row select{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.25);
+  color: rgba(255,255,255,0.92);
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-row select:focus{
+  border-color: rgba(124,200,255,0.38);
+  box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
+}
+.item-actions{
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.item-actions .btn{ padding: 10px 14px; border-radius: 999px; }
+
+.items-controls{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Prints: calendar example image in FAQ */
+.calendar-example-img{
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  display: block;
+}
+
+/* =========================
    Footer
 ========================= */
 footer{
@@ -774,6 +1046,20 @@ footer{
   *{ transition: none !important; }
   .reveal{ opacity: 1 !important; transform: none !important; }
 }
+
+/* =========================
+   Small layout utilities
+========================= */
+.grid-span-all{ grid-column: 1 / -1; }
+.spacer-12{ height: 12px; }
+.spacer-14{ height: 14px; }
+.mt-10{ margin-top: 10px !important; }
+.actions.actions-left{
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.row.row-start{ align-items: flex-start !important; }
+.grid.grid-single{ grid-template-columns: 1fr; margin-top: 14px; }
 
 /* =========================
    Subtle starfield / nebula backdrop
@@ -1017,10 +1303,6 @@ img.protect,
   position: relative;
   overflow: hidden;
 }
-@media (max-width: 860px){
-  .support-panel{ grid-template-columns: 1fr; }
-  .support-right{ align-items: flex-start; }
-}
 
 .support-title{ margin: 0 0 6px 0; }
 
@@ -1046,9 +1328,6 @@ img.protect,
   color: rgba(255,255,255,0.70);
   line-height: 1.4;
   text-align: right;
-}
-@media (max-width: 860px){
-  .support-mini{ text-align: left; }
 }
 
 .support-panel::before{
@@ -1082,30 +1361,6 @@ img.protect,
   }
 }
 
-/* =========================
-   PRINTS — SUPPORT PANEL FIXES
-========================= */
-.support-wrap{ padding-bottom: 20px; }
-.support-wrap + main .section{ padding-top: 20px; }
-
-.support-panel{
-  max-width: 920px;
-  margin: 0 auto;
-  grid-template-columns: 1fr auto;
-}
-
-.support-left{
-  text-align: left;
-  max-width: none;
-  margin: 0;
-}
-
-.support-right{
-  align-items: flex-end;
-  text-align: right;
-}
-.support-mini{ text-align: right; }
-
 @media (max-width: 860px){
   .support-panel{ grid-template-columns: 1fr; }
   .support-right{
@@ -1115,6 +1370,38 @@ img.protect,
   .support-mini{ text-align: left; }
 }
 
+/* =========================
+   PRINTS — SUPPORT PANEL FIXES
+========================= */
+.page-prints .support-wrap{ padding-bottom: 20px; }
+.page-prints .support-wrap + main .section{ padding-top: 20px; }
+
+.page-prints .support-panel{
+  max-width: 920px;
+  margin: 0 auto;
+  grid-template-columns: 1fr auto;
+}
+
+.page-prints .support-left{
+  text-align: left;
+  max-width: none;
+  margin: 0;
+}
+
+.page-prints .support-right{
+  align-items: flex-end;
+  text-align: right;
+}
+.page-prints .support-mini{ text-align: right; }
+
+@media (max-width: 860px){
+  .page-prints .support-panel{ grid-template-columns: 1fr; }
+  .page-prints .support-right{
+    align-items: flex-start;
+    text-align: left;
+  }
+  .page-prints .support-mini{ text-align: left; }
+}
 /* =========================
    Prints panels glow
 ========================= */
@@ -1190,8 +1477,159 @@ img.protect,
 }
 
 /* =========================
-   Lightbox filmstrip + description (if used)
+   Lightbox (shared: Gallery + Gear)
 ========================= */
+.lightbox{
+  /* page can override watermark opacity */
+  --wm-opacity: .08;
+
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.92);
+  z-index: 9999;
+  padding: 18px;
+}
+.lightbox.open{ display: flex; }
+
+.lightbox-inner{
+  position: relative;
+  width: min(1200px, 100%);
+  height: min(82vh, 900px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,.35);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+
+.lightbox-img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Vimeo container in Gallery lightbox */
+.lightbox-vid{
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.lightbox-vid iframe.lb-iframe{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Watermark overlay (centred) */
+.lightbox-watermark.lightbox-watermark{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.lightbox-watermark span{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  text-transform: lowercase;
+  letter-spacing: .12em;
+  font-weight: 700;
+  font-size: clamp(40px, 10vw, 120px);
+  opacity: var(--wm-opacity);
+  color: #fff;
+  transform: rotate(-12deg);
+  text-shadow: 0 8px 22px rgba(0,0,0,.35);
+  mix-blend-mode: screen;
+  user-select: none;
+  white-space: nowrap;
+}
+.page-gallery .lightbox{ --wm-opacity: .05; }
+.page-gear    .lightbox{ --wm-opacity: .14; }
+
+/* Close button */
+.lightbox-close{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  z-index: 6;
+}
+.lightbox-close:hover{ background: rgba(0,0,0,.55); }
+
+/* Prevent background scroll when lightbox open */
+body.noscroll{ overflow: hidden; }
+
+/* Caption / meta */
+.lightbox-meta{
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  right: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.lightbox-meta .title{
+  font-weight: 650;
+  font-size: 14px;
+  opacity: .95;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 8px 22px rgba(0,0,0,.55);
+  max-width: 70%;
+  line-height: 1.25;
+}
+
+/* Gallery meta block (title + desc) */
+.lightbox-meta .meta-left{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  max-width: 75%;
+}
+.lightbox-meta .desc{
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: .85;
+  color: rgba(255,255,255,.88);
+  text-shadow: 0 8px 22px rgba(0,0,0,.55);
+}
+
+/* Mobile: nicer title wrapping (max 2 lines) */
+@media (max-width: 720px){
+  .lightbox-meta .title{
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    hyphens: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Lightbox nav buttons + filmstrip */
 .lightbox-nav{
   position: absolute;
   top: 50%;
@@ -1207,7 +1645,8 @@ img.protect,
   display: grid;
   place-items: center;
   cursor: pointer;
-  z-index: 5;
+  z-index: 6;
+  user-select: none;
 }
 .lightbox-nav:hover{ background: rgba(10,12,18,0.7); }
 .lightbox-nav:disabled{ opacity: 0.35; cursor: default; }
@@ -1363,3 +1802,117 @@ img.protect,
   text-decoration: underline;
 }
 .faq-link:hover{ opacity: 0.85; }
+
+
+/* =========================
+   PUZZLE PAGE
+   - moved from puzzle.html inline CSS
+========================= */
+/* Minimal page styling that fits your site */
+.page-puzzle .puzzle-wrap{ max-width:980px; margin:0 auto; padding:16px; }
+.page-puzzle .puzzle-top{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px 14px;
+      background:rgba(255,255,255,.04);
+      margin:18px 0 14px;
+    }
+.page-puzzle .puzzle-top h2{ margin:0; font-size:18px; }
+.page-puzzle .puzzle-top .sub{ font-size:12px; opacity:.8; margin-top:4px; }
+.page-puzzle .puzzle-controls{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .puzzle-controls select,
+.page-puzzle .puzzle-controls button{
+      appearance:none;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.28);
+      color:#fff;
+      padding:10px 12px;
+      font-size:14px;
+      cursor:pointer;
+    }
+.page-puzzle .puzzle-board{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      padding:12px;
+      overflow:hidden;
+    }
+.page-puzzle canvas{
+  display:block;
+  margin:0 auto;          /* center if we reduce width for tall images */
+  border-radius:12px;
+  background:#05050c;
+  touch-action:none;
+  max-width:100%;         /* still responsive */
+}
+
+.page-puzzle .puzzle-msg{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);
+      font-size:13px;
+      opacity:.9;
+    }
+
+    /* =========================================================
+       WIN OVERLAY (popup message)
+    ========================================================= */
+.page-puzzle .win-overlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(3px);
+    }
+.page-puzzle .win-overlay.show{ display:flex; }
+
+.page-puzzle .win-card{
+      width: min(520px, calc(100% - 28px));
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(12,12,18,.92);
+      box-shadow: 0 18px 55px rgba(0,0,0,.55);
+      padding: 18px;
+      text-align: center;
+    }
+.page-puzzle .win-card h3{ margin: 0 0 8px 0; font-size: 18px; }
+.page-puzzle .win-card p{
+      margin: 0 0 14px 0;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+      line-height: 1.5;
+    }
+.page-puzzle .win-actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap: wrap;
+    }
+.page-puzzle .win-actions .btn{
+      border-radius: 999px;
+      padding: 10px 14px;
+    }
+
+    /* Prominent completion message */
+.page-puzzle .puzzle-msg.win{
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(124,200,255,.18), rgba(255,255,255,.07));
+      border: 1px solid rgba(124,200,255,.45);
+      box-shadow: 0 0 26px rgba(124,200,255,.22);
+      animation: pulseWin 1.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseWin{
+      from{ transform: scale(1); }
+      to{ transform: scale(1.03); }
+    }

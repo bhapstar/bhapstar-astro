@@ -127,9 +127,9 @@
   },
     {
     "images": [
-      { "file": "images/Comet-1.jpg", "alt": "Star trails still 1" },
-      { "file": "images/Comet-2.jpg", "alt": "Star trails still 2" },
-      { "file": "images/Comet-3.jpg", "alt": "Star trails still 3" }
+      { "file": "images/Comet-1.jpg", "alt": "Comet 1" },
+      { "file": "images/Comet-2.jpg", "alt": "Comet 2" },
+      { "file": "images/Comet-3.jpg", "alt": "Comet 3" }
           ],
     "title": "Comets",
     "desc": "Small bodies from the outer Solar System, visible only briefly as they pass close to the Sun. Heating releases gas and dust from the nucleus, forming a tail shaped by solar radiation and the solar wind, changing subtly from night to night.",

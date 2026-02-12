@@ -11,291 +11,9 @@
 
   <!-- Shared site styling -->
   <link rel="stylesheet" href="styles.css" />
-
-  <style>
-    /* =========================================================
-       Prints page enhancements (enquiry-based, no checkout)
-       - Layout uses a 2-column grid on wide screens:
-         left = enquiry + content, right = FAQ
-       - On mobile it collapses into a single column
-    ========================================================= */
-
-    /* Desktop layout: main + FAQ sidebar */
-    .prints-layout{
-      display: grid;
-      grid-template-columns: 1fr;      /* mobile default */
-      gap: 18px;
-      align-items: start;
-    }
-
-    /* Left column: stacked panels */
-    .prints-main{
-      display: grid;
-      gap: 18px;
-    }
-
-    /* Right column: FAQ sidebar */
-    .prints-side{
-      display: grid;
-      gap: 18px;
-    }
-
-    /* Desktop/tablet wide screens */
-    @media (min-width: 980px){
-      .prints-layout{
-        grid-template-columns: 1fr 360px; /* main + sidebar */
-        gap: 18px;
-        align-items: start;
-      }
-      .prints-side{
-        position: static;   /* default - no sticking */
-        top: auto;
-      }
-    }
-
-    /* "How it works" steps layout */
-    .steps{
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-    @media (max-width: 860px){
-      .steps{ grid-template-columns: 1fr; } /* stack steps on small screens */
-    }
-
-    .step{
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.02);
-      border-radius: 16px;
-    }
-
-    /* Number badge in each step */
-    .step .k{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.03);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .step h4{ margin: 0 0 6px 0; font-size: 14px; }
-    .step p{ margin: 0; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; }
-    .step p.helper{
-      font-size: 12px;
-      color: rgba(255,255,255,0.65);
-      margin-top: 6px;
-    }
-
-    /* =========================================================
-       Form "picker" styling
-       - Two-column label + input on desktop
-       - Collapses to single column on small screens
-    ========================================================= */
-    .picker{
-      display: grid;
-      gap: 12px;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .picker .row{
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 10px;
-      align-items: center;
-    }
-
-    @media (max-width: 520px){
-      .picker .row{ grid-template-columns: 1fr; }
-      .picker .row label{ margin-bottom: -2px; }
-    }
-
-    .picker label{
-      font-size: 12px;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.70);
-    }
-
-    /* Input styling (select, input, textarea share the same look) */
-    .picker select, .picker input, .picker textarea{
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.25);
-      color: rgba(255,255,255,0.92);
-      outline: none;
-    }
-
-    /* Focus ring (subtle accent glow) */
-    .picker select:focus, .picker input:focus, .picker textarea:focus{
-      border-color: rgba(124,200,255,0.38);
-      box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
-    }
-
-    .helper{
-      font-size: 12px;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.5;
-      margin-top: 6px;
-    }
-
-    /* =========================================================
-       Enquiry preview box (plain-text template shown live)
-    ========================================================= */
-    .template-box{
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.02);
-    }
-    .template-box pre{
-      margin: 0;
-      white-space: pre-wrap;
-      font-family: var(--mono);
-      font-size: 12.5px;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.86);
-    }
-
-    /* =========================================================
-       FAQ (accordion via <details>/<summary>)
-    ========================================================= */
-    .faq{
-      margin-top: 18px;
-      display: grid;
-      gap: 10px;
-    }
-    details.faq-item{
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.02);
-      padding: 12px 14px;
-    }
-    details.faq-item summary{
-      cursor: pointer;
-      list-style: none;
-      font-weight: 650;
-      color: rgba(255,255,255,0.92);
-    }
-    details.faq-item summary::-webkit-details-marker{ display:none; }
-    details.faq-item p{
-      margin: 10px 0 0 0;
-      color: rgba(255,255,255,0.78);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    /* =========================================================
-       Framed preview tile (prints page)
-       - Rotates through framed mockup images
-    ========================================================= */
-    .framed-tile img{
-      width: 100%;
-      height: auto;
-      display: block;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .framed-tile{
-      pointer-events: none; /* this tile is informational, not clickable */
-    }
-
-    /* =========================================================
-       Multi-item enquiry rows (for adding multiple images)
-    ========================================================= */
-    .items-area{
-      display: grid;
-      gap: 10px;
-    }
-
-    /* Item row default: stacked controls (mobile-first) */
-    .item-row{
-      display: grid;
-      grid-template-columns: 1fr;          /* mobile: stacked */
-      gap: 10px;
-      padding: 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.16);
-    }
-
-    /* Desktop/tablet: image full width, then two columns, then actions */
-    @media (min-width: 860px){
-      .item-row{
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-      }
-      .item-row select:nth-child(1){       /* Image */
-        grid-column: 1 / -1;
-      }
-      .item-row select:nth-child(2){       /* Size/File */
-        grid-column: 1 / 2;
-      }
-      .item-row select:nth-child(3){       /* Frame */
-        grid-column: 2 / 3;
-      }
-      .item-row .item-actions{
-        grid-column: 1 / -1;
-        display: flex;
-        justify-content: flex-end;
-      }
-    }
-
-    /* Item select controls */
-    .item-row select{
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.25);
-      color: rgba(255,255,255,0.92);
-      outline: none;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .item-row select:focus{
-      border-color: rgba(124,200,255,0.38);
-      box-shadow: 0 0 0 4px rgba(124,200,255,0.08);
-    }
-
-    /* Right-aligned action buttons per item */
-    .item-actions{
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .item-actions .btn{
-      padding: 10px 14px;
-      border-radius: 999px;
-    }
-
-    /* "+ Add another image" controls */
-    .items-controls{
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-  </style>
 </head>
 
-<body>
+<body class="page-prints">
 
 <!-- =========================
      Header / navigation
@@ -399,7 +117,7 @@
                 </div>
 
                 <!-- ITEMS (multi-item builder) -->
-                <div class="row" style="align-items:start;">
+                <div class="row row-start">
                   <label>Items</label>
                   <div>
                     <!-- JS injects one or more .item-row blocks here -->
@@ -428,7 +146,7 @@
 
                 <!-- Calendar interest (optional add-on enquiry) -->
 <!-- Calendar interest -->
-<div class="row" style="align-items:start;">
+<div class="row row-start">
   <label for="pCalendar">Calendar</label>
 
   <div>
@@ -446,20 +164,20 @@
 
               </div>
 
-              <div style="height:12px"></div>
+              <div class="spacer-12" aria-hidden="true"></div>
 
               <!-- Live preview of the enquiry that will be sent (updated by build()) -->
               <div class="template-box">
                 <pre id="enquiryPreview"></pre>
               </div>
 
-              <div style="height:14px"></div>
+              <div class="spacer-14" aria-hidden="true"></div>
 
-              <div class="actions" style="justify-content:flex-start; flex-wrap:wrap;">
+              <div class="actions actions-left">
                 <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
               </div>
 
-              <p class="helper" style="margin-top:10px;">
+              <p class="helper mt-10">
                 Enquiry-based only — no checkout or online payments on this site.
               </p>
 
@@ -471,7 +189,7 @@
             <h3>Framed mockup</h3>
             <p class="helper">A rotating preview of framed print styles.</p>
 
-            <div class="grid" style="grid-template-columns: 1fr; margin-top: 14px;">
+            <div class="grid grid-single framed-grid">
               <div class="card framed-tile" aria-hidden="false">
                 <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
                 <div class="cap">
@@ -549,12 +267,9 @@
     The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description of the target.
     It will also be pre-populated with key astronomical events and key dates.
   </p>
-  <p class="helper" style="margin-top:10px;">Example layout:</p>
-  <img
-    src="images/calendar-example.jpg"
-    alt="Example calendar layout"
-    style="width:100%; height:auto; border-radius:14px; border:1px solid rgba(255,255,255,0.10);"
-    loading="lazy"
+  <p class="helper mt-10">Example layout:</p>
+  <img src="images/calendar-example.jpg"
+    alt="Example calendar layout" class="calendar-example-img" loading="lazy"
   />
 </details>
 

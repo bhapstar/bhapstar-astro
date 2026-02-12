@@ -9,228 +9,8 @@
 
 
   <!-- Page-specific CSS for the gallery + lightbox (kept inline so this file is self-contained) -->
-  <style>
-    /* =========================================================
-       GALLERY PAGE: inline styles
-       - Lightbox layout + controls
-       - Multi-image badge
-       - Mobile-only tweaks (hide long descriptions in tiles)
-       Note: site-wide styling lives in styles.css
-    ========================================================= */
-    /* Lightbox */
-    .lightbox{
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.92);
-      z-index: 9999;
-      padding: 18px;
-    }
-    .lightbox.open{ display: flex; }
-
-    .lightbox-inner{
-      position: relative;
-      width: min(1200px, 100%);
-      height: min(82vh, 900px);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(0,0,0,.35);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-
-    .lightbox-img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none; /* stops direct drag from the image */
-    }
-    /* Watermark overlay (bottom third) */
-    .lightbox-watermark.lightbox-watermark{
-      position: absolute;
-      inset: 0;                /* fills the entire image */
-      display: flex;
-      align-items: center;     /* vertical centre */
-      justify-content: center; /* horizontal centre */
-      pointer-events: none;
-    }
-    .lightbox-watermark span{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      text-transform: lowercase;
-      letter-spacing: .12em;
-      font-weight: 700;
-      font-size: clamp(40px, 10vw, 120px);
-      opacity: .05;          /* <-- adjust watermark strength here */
-      color: #fff;
-      transform: rotate(-12deg);
-      text-shadow: 0 8px 22px rgba(0,0,0,.35);
-      mix-blend-mode: screen; /* keeps it light */
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    /* Close button */
-    .lightbox-close{
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-    .lightbox-close:hover{ background: rgba(0,0,0,.55); }
-
-    /* Small caption */
-    .lightbox-meta{
-      position: absolute;
-      left: 14px;
-      bottom: 14px;
-      right: 14px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-    .lightbox-meta .title{
-      font-weight: 650;
-      font-size: 14px;
-      opacity: .95;
-      color: rgba(255,255,255,.92);
-      text-shadow: 0 8px 22px rgba(0,0,0,.55);
-      max-width: 70%;
-      line-height: 1.25;
-    }
-    .lightbox-meta a{
-      pointer-events: auto;
-      font-size: 12px;
-      opacity: .9;
-      color: rgba(255,255,255,.92);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,.35);
-    }
-    .lightbox-meta a:hover{ opacity: 1; border-bottom-color: rgba(255,255,255,.75); }
-
-    /* Prevent background scroll when lightbox open */
-    body.noscroll{ overflow: hidden; }
-
-    /* Lightbox nav buttons */
-    .lightbox-nav{
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 46px;
-      height: 46px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      user-select: none;
-    }
-    .lightbox-nav:hover{ background: rgba(0,0,0,.55); }
-
-    #lbPrev{ left: 12px; }
-    #lbNext{ right: 12px; }
-
-    /* ✅ Multi-image badge on gallery tiles */
-    .card{ position: relative; }
-
-    .multi-badge{
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 3;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.45);
-      color: rgba(255,255,255,.92);
-      font-size: 12px;
-      line-height: 1;
-      backdrop-filter: blur(6px);
-      pointer-events: none;
-    }
-
-    .multi-badge .stack{
-      width: 12px;
-      height: 12px;
-      display: inline-block;
-      border-radius: 3px;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.28) inset,
-        3px 3px 0 0 rgba(255,255,255,.10);
-      opacity: .9;
-    }
-    .lightbox-vid{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    /* Video thumbnails in gallery tiles */
-    .card video{
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-    /* Mobile: keep tiles image-first (hide description text in tiles) */
-    @media (max-width: 720px){
-      .card .cap .d{ display:none; }
-    }
-    /* Lightbox description */
-    .lightbox-meta{
-      align-items: flex-end;
-    }
-    .lightbox-meta .meta-left{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      max-width: 75%;
-    }
-    .lightbox-meta .desc{
-      font-size: 12px;
-      line-height: 1.35;
-      opacity: .85;
-      color: rgba(255,255,255,.88);
-      text-shadow: 0 8px 22px rgba(0,0,0,.55);
-    }
-    /* Mobile: nicer wrapping (max 2 lines, no ugly word breaks) */
-    @media (max-width: 720px){
-      .lightbox-meta .title{
-        max-width: 100%;
-        white-space: normal;
-        overflow-wrap: normal;   /* break at spaces */
-        word-break: keep-all;    /* don't split words */
-        hyphens: none;           /* avoid hyphenating names */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;   /* limit to 2 lines */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-    }
-  </style>
 </head>
-<body>
+<body class="page-gallery">
 
 <!-- =========================
      Header / navigation
@@ -321,11 +101,11 @@
   <div class="lightbox-inner">
     <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
 
-    <button class="lightbox-nav" id="lbPrev" aria-label="Previous">‹</button>
-    <button class="lightbox-nav" id="lbNext" aria-label="Next">›</button>
+    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous">‹</button>
+    <button class="lightbox-nav next" id="lbNext" aria-label="Next">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
-    <div class="lightbox-vid" id="lbVid" style="display:none; width:100%; height:100%;"></div>
+    <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
 
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
@@ -369,7 +149,7 @@
       init(); // continue once items are loaded
     }catch(err){
       console.error('Gallery data load error:', err);
-      grid.innerHTML = `<div style="padding:18px;opacity:.8">Could not load gallery-data.json.</div>`;
+      grid.innerHTML = `<div class="panel gallery-error">Could not load gallery-data.json.</div>`;
     }
   }
 
@@ -460,7 +240,7 @@
               frameborder="0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowfullscreen
-              style="width:100%;height:100%">
+              class="lb-iframe">
             </iframe>
           `;
         }
