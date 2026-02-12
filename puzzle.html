@@ -774,10 +774,13 @@ function resizeCanvasToFit(){
   newBtn.addEventListener('click', startNewGame);
   difficultyEl.addEventListener('change', startNewGame);
 
-  window.addEventListener('resize', () => {
-    if(!img || !img.naturalWidth) return;
-    startNewGame();
-  });
+window.addEventListener('resize', () => {
+  if(!img || !img.naturalWidth) return;
+  resizeCanvasToFit();
+  makePieces();
+  draw();
+});
+
 
 })();
 </script>
