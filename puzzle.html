@@ -42,14 +42,15 @@
       padding:12px;
       overflow:hidden;
     }
-    canvas{
-      width:100%;
-      height:auto;
-      display:block;
-      border-radius:12px;
-      background:#05050c;
-      touch-action:none; /* IMPORTANT for finger dragging */
-    }
+canvas{
+  display:block;
+  margin:0 auto;          /* center if we reduce width for tall images */
+  border-radius:12px;
+  background:#05050c;
+  touch-action:none;
+  max-width:100%;         /* still responsive */
+}
+
     .puzzle-msg{
       margin-top:10px;
       padding:10px 12px;
@@ -389,21 +390,56 @@
 
   boot();
 
-  function resizeCanvasToFit(){
-    const rect = canvas.getBoundingClientRect();
-    const cssW = Math.min(rect.width || 900, 980);
-    const aspect = (img && img.naturalWidth) ? (img.naturalHeight / img.naturalWidth) : (2/3);
-    const cssH = Math.max(320, Math.min(700, cssW * aspect));
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+function resizeCanvasToFit(){
+  const rect = canvas.getBoundingClientRect();
 
-    canvas.width = Math.round(cssW * dpr);
-    canvas.height = Math.round(cssH * dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+  const maxW = Math.min(rect.width || 900, 980); // container cap
+  const maxH = 700;                               // visual cap
+  const minH = 320;                               // optional min height
 
-    board.w = cssW;
-    board.h = cssH;
-    draw();
+  const imgW = img?.naturalWidth || 1200;
+  const imgH = img?.naturalHeight || 800;
+
+  // Scale to fit within maxW x maxH while preserving aspect ratio
+  let scale = maxW / imgW;
+  let cssW = imgW * scale;
+  let cssH = imgH * scale;
+
+  // If too tall, shrink both width + height
+  if(cssH > maxH){
+    scale = maxH / imgH;
+    cssW = imgW * scale;
+    cssH = imgH * scale;
   }
+
+  // Optional: enforce a minimum height without distorting
+  // (only if it still fits within maxW)
+  if(cssH < minH){
+    const scaleUp = minH / imgH;
+    const wUp = imgW * scaleUp;
+    if(wUp <= maxW){
+      scale = scaleUp;
+      cssW = wUp;
+      cssH = minH;
+    }
+  }
+
+  // Apply CSS size (so layout + pointer math match)
+  canvas.style.width  = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
+
+  // Set backing store (device pixels)
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  canvas.width  = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  board.w = cssW;
+  board.h = cssH;
+
+  draw();
+}
+
 
   /* =========================================================
      JIGSAW SHAPE SUPPORT (tabs/slots)
