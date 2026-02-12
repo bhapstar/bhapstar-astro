@@ -774,11 +774,30 @@ function resizeCanvasToFit(){
   newBtn.addEventListener('click', startNewGame);
   difficultyEl.addEventListener('change', startNewGame);
 
+let lastW = window.innerWidth;
+
 window.addEventListener('resize', () => {
   if(!img || !img.naturalWidth) return;
+
+  // Ignore mobile "resize" caused by address bar show/hide while scrolling
+  const w = window.innerWidth;
+  if (Math.abs(w - lastW) < 2) return;   // width didn't really change
+
+  lastW = w;
+
+  // Real resize (rotation etc.) — you can choose what to do:
   resizeCanvasToFit();
-  makePieces();
+  makePieces(); // keep this if you're OK with reset on rotation
   draw();
+});
+
+window.addEventListener('orientationchange', () => {
+  if(!img || !img.naturalWidth) return;
+  setTimeout(() => {
+    resizeCanvasToFit();
+    makePieces();
+    draw();
+  }, 200);
 });
 
 
