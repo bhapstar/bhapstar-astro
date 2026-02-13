@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jigsaw — bhapstar</title>
+  <title>Puzzle — bhapstar</title>
 
   <!-- Cloudflare Web Analytics (optional, see note below) -->
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page-puzzle">>
+<body class="page-puzzle">
 
 <!-- =========================
      Header / navigation
@@ -151,10 +151,12 @@
   // Fullscreen FX canvas for fireworks/confetti
   const fx = document.createElement('canvas');
   const fxCtx = fx.getContext('2d');
+  fx.className = 'fx-canvas'; // Step 2: make sure this canvas stays transparent + easy to target with CSS
+  fx.style.background = 'transparent';
   fx.style.position = 'fixed';
   fx.style.inset = '0';
   fx.style.pointerEvents = 'none';
-  fx.style.zIndex = '9998';
+  fx.style.zIndex = '10050'; // above the win overlay
   fx.style.display = 'none';
   document.body.appendChild(fx);
 

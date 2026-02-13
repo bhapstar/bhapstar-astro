@@ -1839,13 +1839,13 @@ body.noscroll{ overflow: hidden; }
       padding:12px;
       overflow:hidden;
     }
-.page-puzzle canvas{
+.page-puzzle #c{
   display:block;
-  margin:0 auto;          /* center if we reduce width for tall images */
+  margin:0 auto;
   border-radius:12px;
   background:#05050c;
   touch-action:none;
-  max-width:100%;         /* still responsive */
+  max-width:100%;
 }
 
 .page-puzzle .puzzle-msg{
@@ -1868,8 +1868,9 @@ body.noscroll{ overflow: hidden; }
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      background: rgba(0,0,0,.45);
-      backdrop-filter: blur(3px);
+      background: rgba(0,0,0,.12);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
     }
 .page-puzzle .win-overlay.show{ display:flex; }
 
@@ -1916,3 +1917,7 @@ body.noscroll{ overflow: hidden; }
       from{ transform: scale(1); }
       to{ transform: scale(1.03); }
     }
+    
+.page-puzzle .fx-canvas{
+  background: transparent !important;
+}
