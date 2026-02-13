@@ -131,7 +131,7 @@
       { "file": "images/Comet-2.jpg", "alt": "Comet 2" },
       { "file": "images/Comet-3.jpg", "alt": "Comet 3" }
           ],
-    "title": "Comes",
+    "title": "Comets",
     "desc": "Small bodies from the outer Solar System, visible only briefly as they pass close to the Sun. Heating releases gas and dust from the nucleus, forming a tail shaped by solar radiation and the solar wind, changing subtly from night to night.",
     "type": "comets"
   }
