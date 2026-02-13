@@ -1921,3 +1921,12 @@ body.noscroll{ overflow: hidden; }
 .page-puzzle .fx-canvas{
   background: transparent !important;
 }
+.footer-brand{
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-brand:hover{
+  text-decoration: underline;
+}
