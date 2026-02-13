@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 (async function(){
   async function loadInto(id, url){
     const el = document.getElementById(id);
@@ -55,7 +55,7 @@
     console.error('[partials] failed:', err);
   }
 })();
-=======
+
 (async function(){
   async function loadInto(id, url){
     const el = document.getElementById(id);
@@ -112,4 +112,4 @@
     console.error('[partials] failed:', err);
   }
 })();
->>>>>>> df22d6c (Initial VS Code connection)
+
