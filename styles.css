@@ -384,8 +384,23 @@ h1.hero-byline{
   font-size: clamp(18px, 2.2vw, 32px);
   font-weight: 400;
   letter-spacing: 0.01em;
-  opacity: 0.82;
   margin-top: 4px;
+  /*
+   * SAFARI/WEBKIT FIX: never use opacity on an element that also has
+   * -webkit-background-clip:text — iOS Safari composites them incorrectly
+   * and renders the text fully transparent. Instead bake the reduced
+   * brightness directly into the gradient stop alpha values.
+   */
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.80) 0%,
+    rgba(200,195,235,0.78) 30%,
+    rgba(167,139,250,0.76) 60%,
+    rgba(96,165,250,0.72)  100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .lead{
