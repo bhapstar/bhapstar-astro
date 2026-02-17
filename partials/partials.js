@@ -154,8 +154,10 @@
     /* ─────────────────────────────────────────
        HERO STAR PARTICLE CANVAS
        - Only runs when .hero exists (index page)
-       - Draws 160 gently twinkling stars on a
+       - Draws 160 slowly fading stars on a
          <canvas> layered above the bg slideshow
+       - Each star gently breathes in and out
+         using a slow sine wave (3–9 s cycle)
        - Skipped if prefers-reduced-motion is set
     ───────────────────────────────────────── */
     (function initHeroStars() {
@@ -176,12 +178,15 @@
 
       function build() {
         stars = Array.from({ length: COUNT }, () => ({
-          x:     rand(0, W),
-          y:     rand(0, H),
-          r:     rand(0.3, 1.6),
-          alpha: rand(0.20, 0.88),
-          speed: rand(0.0004, 0.0015),
-          phase: rand(0, Math.PI * 2),
+          x:      rand(0, W),
+          y:      rand(0, H),
+          r:      rand(0.3, 1.6),
+          // Gentle peak brightness — soft and visible, never harsh
+          peak:   rand(0.25, 0.65),
+          // Glacially slow cycle: each star takes 30–90 seconds for one full breathe
+          speed:  rand(0.000003, 0.000009),
+          // Random start point in the sine cycle so stars aren't in sync
+          phase:  rand(0, Math.PI * 2),
         }));
       }
 
@@ -194,7 +199,10 @@
       function draw(t) {
         ctx.clearRect(0, 0, W, H);
         for (const s of stars) {
-          const a = s.alpha * (0.55 + 0.45 * Math.sin(t * s.speed * 1000 + s.phase));
+          // sin oscillates between -1 and 1; remap to 0–1 for a clean fade
+          const wave = 0.5 + 0.5 * Math.sin(t * s.speed * 1000 + s.phase);
+          // Fade from near-zero (0.04) up to each star's individual peak
+          const a = 0.04 + (s.peak - 0.04) * wave;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
