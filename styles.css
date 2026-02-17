@@ -263,9 +263,34 @@ header{
   color: var(--muted);
   transition: background 150ms ease, color 150ms ease;
 }
+.nav-menu a{
+  position: relative;
+}
 .nav-menu a:hover{
-  color: var(--text);
-  background: rgba(167,139,250,0.08);
+  background: transparent;
+}
+.nav-menu a::after{
+  content: "";
+  position: absolute;
+  left: 13px; right: 13px; bottom: 6px;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167,139,250,0.90),
+    rgba(96,165,250,0.80),
+    rgba(52,211,153,0.70),
+    transparent
+  );
+  opacity: 0;
+  transform: scaleX(0.3) translateY(3px);
+  transform-origin: center;
+  transition: opacity 240ms ease, transform 240ms var(--ease-out-expo);
+  pointer-events: none;
+}
+.nav-menu a:hover::after{
+  opacity: 1;
+  transform: scaleX(1) translateY(0);
 }
 .nav-menu a.active{
   color: var(--text);
@@ -1129,7 +1154,6 @@ footer{
   padding-bottom: 2px;
 }
 .footer-links a:hover{
-  color: var(--text);
   opacity: 1;
 }
 
