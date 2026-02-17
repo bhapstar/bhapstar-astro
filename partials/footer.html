@@ -1,34 +1,34 @@
 <!-- =========================
      Footer
-     - Includes dynamic year (set by JS in partials.js)
+     - Copyright year populated by partials.js (#y)
+     - Nav links mirror the header
+     - Instagram social icon
 ========================= -->
 <footer>
   <div class="wrap">
     <div class="footer-links">
-      <span>
-  © <span id="y"></span>
-  <a href="index.html" class="footer-brand">bhapstar astrophotography</a>
-</span>
 
-      <span>·</span>
+      <span>©&nbsp;<span id="y"></span>&nbsp;<a href="index.html" class="footer-brand">bhapstar astrophotography</a></span>
+
+      <span aria-hidden="true">·</span>
       <a href="gallery.html">Gallery</a>
-      <span>·</span>
+      <span aria-hidden="true">·</span>
       <a href="prints.html">Prints</a>
-      <span>·</span>
+      <span aria-hidden="true">·</span>
       <a href="gear.html">Gear</a>
-      <span>·</span>
+      <span aria-hidden="true">·</span>
       <a href="puzzle.html">Puzzle</a>
-      <span>·</span>
+      <span aria-hidden="true">·</span>
       <a href="about.html">About</a>
-      <span>·</span>
+      <span aria-hidden="true">·</span>
 
       <a href="https://www.instagram.com/bhapstar/"
          target="_blank"
-         rel="noopener"
-         aria-label="Instagram"
+         rel="noopener noreferrer"
+         aria-label="Bhapstar on Instagram"
          class="social-icon">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-             xmlns="http://www.w3.org/2000/svg">
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <rect x="2" y="2" width="20" height="20" rx="5"
                 stroke="currentColor" stroke-width="2"/>
           <circle cx="12" cy="12" r="5"
@@ -37,6 +37,7 @@
                   fill="currentColor"/>
         </svg>
       </a>
+
     </div>
   </div>
 </footer>

@@ -2,245 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Mobile-friendly scaling (prevents “desktop zoomed out” look on phones) -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Google Search Console verification tag -->
+  <!-- Primary SEO -->
+  <title>Bhapstar Astrophotography — Fragments of the Universe</title>
+  <meta name="description" content="Deep-sky astrophotography by Bhapinder (Bobby) Singh. Nebulae, galaxies, star clusters and more — captured through patient long-exposure imaging under dark skies." />
+  <meta name="author" content="Bhapinder Singh" />
+
+  <!-- Open Graph (social sharing) -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Bhapstar Astrophotography — Fragments of the Universe" />
+  <meta property="og:description" content="Nebulae, galaxies, star clusters and deep-sky objects — captured slowly through patient hours of long exposure under dark skies." />
+  <meta property="og:image"       content="images/RN.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Bhapstar Astrophotography" />
+  <meta name="twitter:description" content="Nebulae, galaxies and deep-sky objects captured through patient long-exposure imaging." />
+  <meta name="twitter:image"       content="images/RN.jpg" />
+
+  <!-- Google Search Console verification -->
   <meta name="google-site-verification" content="QnMwC-ycqBRx8M1hdYQCTaO02X3GASV9P1Kmmi6QOrI" />
 
-  <title>bhapstar astrophotography</title>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
-  <!-- Cloudflare Web Analytics: privacy-friendly page analytics beacon -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-    data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Site-wide styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- =========================
-     Header / navigation
-========================= -->
+<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
-
-
 <main>
-  <!-- =========================
-       Hero
-       - Full-viewport section
-       - Background slideshow uses two layered divs (.layer-a/.layer-b)
-       - protect-zone is used by protect-images.js (anti-save/drag “speed bumps”)
-  ========================= -->
-  <section class="hero protect-zone">
-    <!-- Background layers used for crossfading (JS swaps .is-on class) -->
+  <!-- ─────────────────────────────
+       HERO
+       Full-viewport section with
+       background slideshow + star canvas
+  ───────────────────────────────── -->
+  <section class="hero protect-zone" aria-label="Hero section">
+
+    <!-- Background crossfade layers (JS swaps .is-on class) -->
     <div class="hero-bg" aria-hidden="true">
       <div class="hero-bg-layer layer-a"></div>
       <div class="hero-bg-layer layer-b"></div>
     </div>
 
-    <!-- Foreground content sits above the background layers -->
+    <!-- Foreground content -->
     <div class="content wrap">
-      <div class="kicker"></div>
+      <p class="kicker">Deep-sky astrophotography</p>
 
-      <!-- Two H1s: intentionally large “title + byline” (SEO/structure choice) -->
       <h1>Fragments of the Universe</h1>
-      <h1>by Bhapstar Astrophotography</h1>
+      <h1 class="hero-byline">by Bhapstar Astrophotography</h1>
 
       <p class="lead">
-        Nebulae, Galaxies, Star Clusters and Deep-Sky Objects, captured slowly through patient hours of long exposure under dark skies - pulling colour, dust and structure from the edge of space.
+        Nebulae, galaxies, star clusters and deep-sky objects — captured slowly
+        through patient hours of long exposure under dark skies, pulling colour,
+        dust and structure from the edge of space.
       </p>
 
       <div class="actions">
         <a class="btn primary" href="gallery.html">View the gallery</a>
-        <a class="btn" href="prints.html">Print enquiries</a>
+        <a class="btn"         href="prints.html">Print enquiries</a>
       </div>
     </div>
+
   </section>
 </main>
 
-
-<!-- =========================
-     Footer
-========================= -->
+<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
 
+<!-- ─────────────────────────────────────────
+     HERO BACKGROUND SLIDESHOW
+     - Fetches gallery-data.json as single source of truth
+     - Randomises and cycles images every HOLD_MS
+     - Crossfades between two layers (A / B)
+     - Preloads upcoming images to avoid stutter
+───────────────────────────────────────── -->
 <script>
-/* Burger menu:
-   - toggles .open on the dropdown nav
-   - updates aria-expanded for accessibility
-   - closes when clicking outside, or pressing Escape */
-(function(){
-  const burger = document.querySelector('.burger');
-  const menu = document.querySelector('.nav-menu');
-  if(!burger || !menu) return;
-
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (e) => {
-    // If menu is open and the click is outside both menu and burger, close it
-    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    // Escape closes the menu (standard pattern)
-    if(e.key === 'Escape'){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-})();
-</script>
-
-<script>
-/* Scroll reveal:
-   Adds a subtle “rise in” animation as sections/cards enter the viewport.
-   - Elements start with .reveal (CSS sets opacity/transform)
-   - When visible, JS adds .in (CSS transitions to final state)
-   - Respects prefers-reduced-motion */
-(function(){
-  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
-    .filter(el => !el.classList.contains('reveal'));
-
-  // Mark elements as reveal targets
-  els.forEach(el => el.classList.add('reveal'));
-
-  // Accessibility: if user prefers reduced motion, show everything immediately
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    els.forEach(el => el.classList.add('in'));
-    return;
-  }
-
-  // IntersectionObserver triggers when element scrolls into view
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        io.unobserve(en.target); // one-and-done (no repeated toggling)
-      }
-    });
-  }, {
-    threshold: 0.12,                 // ~12% visible before triggering
-    rootMargin: '0px 0px -8% 0px'    // triggers slightly before reaching bottom
-  });
-
-  els.forEach(el => io.observe(el));
-})();
-</script>
-
-<script>
-/*
-  HERO BACKGROUND SLIDESHOW (Index page only)
-  ------------------------------------------------
-  Purpose:
-  - Uses gallery.html’s embedded JSON (#galleryData) as the single source of truth
-  - Randomises the order, then cycles backgrounds every HOLD_MS
-  - Crossfades between two layers (A/B) so transitions stay smooth
-  - Preloads upcoming images to reduce “flash”/stutter on slow connections
-*/
-(async function(){
+(async function () {
   const layerA = document.querySelector('.hero-bg .layer-a');
   const layerB = document.querySelector('.hero-bg .layer-b');
-  if(!layerA || !layerB) return;
+  if (!layerA || !layerB) return;
 
-  /* Preload helper: resolves once an image is loaded into the browser cache */
-  function preload(src){
-    return new Promise((resolve, reject) => {
+  function preload(src) {
+    return new Promise((res, rej) => {
       const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = () => reject(src);
+      img.onload  = () => res(src);
+      img.onerror = () => rej(src);
       img.src = src;
     });
   }
 
-  /* Shuffle helper: creates a new random ordering */
-  function shuffle(arr){
+  function shuffle(arr) {
     return arr
       .map(v => ({ v, r: Math.random() }))
-      .sort((a,b) => a.r - b.r)
+      .sort((a, b) => a.r - b.r)
       .map(x => x.v);
   }
 
-  /* Pull the gallery JSON from gallery-data.json (so you don’t maintain image lists twice) */
-async function loadGalleryData(){
-  const res = await fetch('gallery-data.json', { cache: 'no-store' });
-  if(!res.ok) throw new Error('Failed to fetch gallery-data.json (HTTP ' + res.status + ')');
-
-  const items = await res.json();
-  if(!Array.isArray(items) || items.length === 0) throw new Error('gallery-data.json is empty');
-  return items;
-}
-
-
-  let items = [];
-  try{
-    items = await loadGalleryData();
-  }catch(e){
-    // If this fails (offline / fetch blocked / missing file), hero just stays blank
-    console.warn('Could not load gallery data from gallery.html:', e);
-    return;
-  }
-
-  // Build a random playlist and start position
-  let playlist = shuffle(items.slice());
-  let idx = 0;
-
-  // How long each image stays before swapping (ms)
-  const HOLD_MS = 6000;
-
-  /* Choose a “cover image” for the hero:
-     - If item.images exists (multi-image entry), use the first one
-     - Else fallback to item.file (single image entry) */
-  function getCoverFile(item){
-    if(item && item.images && Array.isArray(item.images) && item.images.length){
-      return item.images[0].file;
-    }
+  function getCoverFile(item) {
+    if (item?.images?.length) return item.images[0].file;
     return item?.file;
   }
 
-  /* Preload the next few images so transitions are smooth */
-  function warmPreload(){
-    const ahead = [0,1,2]
-      .map(n => getCoverFile(playlist[(idx + n) % playlist.length]))
-      .filter(Boolean);
-    ahead.forEach(src => { const im = new Image(); im.src = src; });
+  let items = [];
+  try {
+    const res = await fetch('gallery-data.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    items = await res.json();
+    if (!Array.isArray(items) || !items.length) throw new Error('Empty');
+  } catch (e) {
+    console.warn('Hero slideshow: could not load gallery data', e);
+    return;
   }
 
-  /* Apply a background image to one layer */
-  function setLayer(layer, src){
+  let playlist = shuffle(items.slice());
+  let idx = 0;
+  const HOLD_MS = 6000;
+
+  function warmPreload() {
+    [0, 1, 2].forEach(n => {
+      const src = getCoverFile(playlist[(idx + n) % playlist.length]);
+      if (src) { const im = new Image(); im.src = src; }
+    });
+  }
+
+  function setLayer(layer, src) {
+    layer.style.backgroundImage = `url("${CSS.escape ? CSS.escape(src).replace(/^#/, '') : src}")`;
+    // Simpler, safer version:
     layer.style.backgroundImage = `url("${src}")`;
   }
 
-  // Initial state: set first image on layer A and turn it on
+  // Initial state
   setLayer(layerA, getCoverFile(playlist[idx]));
   layerA.classList.add('is-on');
-  layerB.classList.remove('is-on');
   warmPreload();
 
-  // Tracks which layer is currently “live”
   let onA = true;
 
-  /* Advance to next slide:
-     - advance index (and reshuffle when reaching the end)
-     - preload next image (wait for it)
-     - crossfade by turning incoming layer on and outgoing off */
-  async function nextSlide(){
-    idx++;
-    if(idx >= playlist.length){
-      playlist = shuffle(items.slice());
-      idx = 0;
-    }
+  const reduceMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || playlist.length <= 1) return;
+
+  async function nextSlide() {
+    idx = (idx + 1) >= playlist.length ? 0 : idx + 1;
+    if (idx === 0) playlist = shuffle(items.slice());
 
     const nextSrc = getCoverFile(playlist[idx]);
-    try { await preload(nextSrc); } catch(e){ return; }
+    try { await preload(nextSrc); } catch { return; }
 
     const incoming = onA ? layerB : layerA;
     const outgoing = onA ? layerA : layerB;
@@ -253,15 +170,10 @@ async function loadGalleryData(){
     warmPreload();
   }
 
-  // Respect reduced motion: disable timed transitions if user requests it
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reduceMotion && playlist.length > 1){
-    setInterval(nextSlide, HOLD_MS);
-  }
+  setInterval(nextSlide, HOLD_MS);
 })();
 </script>
 
-<!-- Image “speed bumps” (e.g., discourage drag/save/right-click on protected zones) -->
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 

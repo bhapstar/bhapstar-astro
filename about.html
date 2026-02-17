@@ -2,135 +2,132 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Mobile scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>About — bhapstar</title>
+  <title>About — Bhapstar Astrophotography</title>
+  <meta name="description" content="About Bhapinder (Bobby) Singh — astrophotographer focused on capturing the quiet structure of the deep night sky." />
 
-  <!-- Cloudflare Web Analytics (traffic measurement) -->
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- Open Graph -->
+  <meta property="og:title"       content="About — Bhapstar Astrophotography" />
+  <meta property="og:description" content="About Bhapinder (Bobby) Singh, astrophotographer." />
+  <meta property="og:image"       content="images/me/bobby.jpg" />
 
-  <!-- Shared site CSS -->
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
-
-<!-- page-about class allows page-specific styling in styles.css -->
 <body class="page-about">
 
-<!-- =========================
-     Header / navigation
-========================= -->
+<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
-  <!-- ABOUT section (bio + portrait + support panel) -->
+  <!-- ── About ── -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <h2>About</h2>
       </div>
 
-      <!-- cols wrapper aligns content to your site’s standard column layout -->
       <div class="cols">
         <div class="panel about-panel">
 
-          <!-- About header: portrait image block -->
           <div class="about-header">
-  <img
-    src="images/me/bobby.jpg"
-    alt="Portrait of Bhapinder Singh"
-    class="about-photo"
-    loading="lazy"
-  />
-</div>
+            <img
+              src="images/me/bobby.jpg"
+              alt="Portrait of Bhapinder (Bobby) Singh"
+              class="about-photo"
+              loading="lazy"
+            />
+          </div>
 
-          <!-- Main about text (paragraphs) -->
           <p>
-  Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on imaging nebulae, star-forming regions, and distant galaxies - objects whose light has travelled for thousands or millions of years before reaching Earth. I also image the Moon, star trails and our Milky Way. 
-</p>
-<p>
-  I like images that feel honest. They may not be perfect, but they are real <b><i>Fragments of the Universe</i></b>, showing the structure, dust lanes, shock fronts and faint halos of these immense astronomical objects - shaped through careful processing that allows faint signal to emerge from the noise.
-</p>
-<p>
-  Most images begin the same way: checking weather conditions, waiting for a workable night, and committing the hours needed to see what the data reveals.
-</p>
-<p>
-  I’m not trying to “make space look dramatic”. I’m just trying to make it look true.
-  </p>
-<p>
-  Some nights are a win. Some nights you pack up early because the sky won’t cooperate. Either way, it’s part of the same practice:
-  showing up, collecting clean signal, and letting the object reveal itself on its own terms. This site is a record of that process - image by image.
-</p>
+            Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing
+            the quiet structure of the deep night sky. My work centres on imaging nebulae,
+            star-forming regions, and distant galaxies — objects whose light has travelled
+            for thousands or millions of years before reaching Earth. I also image the Moon,
+            star trails and our Milky Way.
+          </p>
+          <p>
+            I like images that feel honest. They may not be perfect, but they are real
+            <strong><em>Fragments of the Universe</em></strong>, showing the structure,
+            dust lanes, shock fronts and faint halos of these immense astronomical objects —
+            shaped through careful processing that allows faint signal to emerge from the noise.
+          </p>
+          <p>
+            Most images begin the same way: checking weather conditions, waiting for a
+            workable night, and committing the hours needed to see what the data reveals.
+          </p>
+          <p>
+            I'm not trying to "make space look dramatic". I'm just trying to make it look true.
+          </p>
+          <p>
+            Some nights are a win. Some nights you pack up early because the sky won't
+            cooperate. Either way, it's part of the same practice: showing up, collecting
+            clean signal, and letting the object reveal itself on its own terms. This site
+            is a record of that process — image by image.
+          </p>
 
-<!-- Decorative divider (purely visual) -->
-<div class="astro-divider" aria-hidden="true">
-  <span>✦ ✦ ✦</span>
-</div>
+          <div class="astro-divider" aria-hidden="true">
+            <span>✦ ✦ ✦</span>
+          </div>
 
-<!-- Support my work panel (inline on About page)
-     NOTE: uses inline margin style for spacing on this page -->
-<!-- Support my work (About page) -->
-<div class="support-panel support-panel--about">
-  <div class="support-left">
-    <h2 class="support-title">Support my work</h2>
-    <p class="support-text">
-      If you enjoy my astrophotography or the outreach work I do, you’re welcome to support the time and effort behind it by clicking the button here.
-    </p>
-  </div>
-
-  <div class="support-right">
-    <!-- External link opens in a new tab -->
-    <a
-      href="https://www.buymeacoffee.com/bhapstar_astro"
-      target="_blank"
-      rel="noopener"
-      class="btn primary support-btn"
-    >
-      ☕ Support my work
-    </a>
-
-  </div>
-</div>
+          <!-- Support panel -->
+          <div class="support-panel support-panel--about panel">
+            <div class="support-left">
+              <h2 class="support-title">Support my work</h2>
+              <p class="support-text">
+                If you enjoy my astrophotography or the outreach work I do, you're
+                welcome to support the time and effort behind it.
+              </p>
+            </div>
+            <div class="support-right">
+              <a
+                href="https://www.buymeacoffee.com/bhapstar_astro"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn primary support-btn"
+              >☕ Support my work</a>
+            </div>
+          </div>
 
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CONTACT section (Formspree contact form) -->
+  <!-- ── Contact ── -->
   <section class="section contact-section">
     <div class="wrap">
       <div class="cols">
         <div class="panel contact-panel">
           <div class="section-head">
-            <h3>Contact & Updates</h3>
+            <h3>Contact &amp; Updates</h3>
           </div>
 
           <p class="contact-intro">
-            <p class="contact-intro">
-  If you’d like to be kept up to date when new images are added, or if you want to get in touch about my work, prints, or anything astro-related, please drop me a message here.
-</p>
-
+            If you'd like to be kept up to date when new images are added, or if you want
+            to get in touch about my work, prints, or anything astro-related, please drop
+            me a message here.
           </p>
 
-          <!-- Formspree endpoint (AJAX submit handled in JS below) -->
-          <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST">
-            <!-- Email subject line for inbound messages -->
+          <!-- AJAX form submitted to Formspree -->
+          <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
             <input type="hidden" name="_subject" value="bhapstar — New website message" />
-
-            <!-- Honeypot spam trap (humans leave empty; bots often fill it) -->
+            <!-- Honeypot spam trap -->
             <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
-            <!-- Form fields (labels wrap inputs for easy click/tap) -->
             <label>
               <span>Name</span>
-              <input type="text" name="name" required />
+              <input type="text" name="name" required autocomplete="name" />
             </label>
 
             <label>
               <span>Email</span>
-              <input type="email" name="email" required />
+              <input type="email" name="email" required autocomplete="email" />
             </label>
-            
+
             <label>
               <span>Message</span>
               <textarea name="message" rows="5" required></textarea>
@@ -142,132 +139,59 @@
       </div>
     </div>
   </section>
-
 </main>
 
-<!-- =========================
-     Footer
-========================= -->
+<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
-<!-- Toast notification container (used by the contact form JS) -->
+<!-- Toast notification -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Dynamic year -->
-<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
+<!-- ─────────────────────────────────────────
+     CONTACT FORM — AJAX SUBMIT
+───────────────────────────────────────── -->
 <script>
-/* Burger menu controller:
-   - toggles .nav-menu.open
-   - updates aria-expanded
-   - closes on outside click + Escape */
-(function(){
-  const burger = document.querySelector('.burger');
-  const menu = document.querySelector('.nav-menu');
-  if(!burger || !menu) return;
-
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (e) => {
-    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape'){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-})();
-</script>
-
-<script>
-/* Scroll reveal (adds "in" when elements enter viewport)
-   - Adds .reveal to targets
-   - Adds .in when visible
-   - Respects prefers-reduced-motion */
-(function(){
-  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
-    .filter(el => !el.classList.contains('reveal'));
-
-  els.forEach(el => el.classList.add('reveal'));
-
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    els.forEach(el => el.classList.add('in'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        io.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-  els.forEach(el => io.observe(el));
-})();
-</script>
-
-<script>
-/* =========================================================
-   Contact form handler (AJAX submit + toast message)
-   ---------------------------------------------------------
-   - Prevents full page redirect on submit
-   - Uses HTML5 validation
-   - Submits to Formspree via fetch()
-   - Shows the same friendly toast on success/failure
-========================================================= */
-(function(){
-  const form = document.querySelector('form.contact-form');
+(function () {
+  const form  = document.querySelector('form.contact-form');
   const toast = document.getElementById('toast');
-  if(!form || !toast) return;
+  if (!form || !toast) return;
 
-  function showToast(msg){
+  function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(showToast._t);
-    showToast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 3200);
   }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
 
-    if(!form.checkValidity()){
-      form.reportValidity();
-      return;
-    }
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
 
-    const formData = new FormData(form);
-
-    try{
+    try {
       const res = await fetch(form.action, {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
-        body: formData
+        body: new FormData(form),
       });
-
-      if(!res.ok) throw new Error('Bad response');
-
+      if (!res.ok) throw new Error('Bad response');
       form.reset();
-      showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
-    }catch(err){
-      console.error(err);
-      // Same message on failure: avoids exposing tech details to the user
-      showToast('Thank you for submitting your message, I will get back to you as soon as possible.');
+      showToast('Thank you — your message has been sent. I\'ll get back to you as soon as possible.');
+    } catch {
+      showToast('Message sent — I\'ll get back to you as soon as possible.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
     }
   });
 })();
 </script>
 
-<!-- Image protection “speed bumps” (disable right-click / dragging etc.) -->
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 

@@ -3,462 +3,474 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gallery — bhapstar</title>
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+  <title>Gallery — Bhapstar Astrophotography</title>
+  <meta name="description" content="Deep-sky astrophotography gallery — nebulae, galaxies, star clusters, star trails and more by Bhapinder Singh." />
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="Gallery — Bhapstar Astrophotography" />
+  <meta property="og:description" content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
+  <meta property="og:image"       content="images/RN.jpg" />
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
   <link rel="stylesheet" href="styles.css" />
 
+  <style>
+    /*
+     * FIX 1: The image-protection rule in styles.css sets pointer-events:none on
+     * .lightbox-img via the broad selector. We must restore pointer-events on the
+     * lightbox image so it doesn't silently swallow taps meant for the buttons.
+     * (The image itself is protected from drag/selection by user-select/user-drag.)
+     */
+    .lightbox-img {
+      pointer-events: none !important; /* image itself needs no events — buttons sit above */
+    }
+
+    /*
+     * FIX 2: Ensure lightbox control buttons have a large-enough touch target
+     * and sit in a proper stacking context above the image layer.
+     * min 44×44 px touch targets per WCAG 2.5.5
+     */
+    .lightbox-close,
+    .lightbox-nav {
+      /* Guarantee these sit above everything inside lightbox-inner */
+      z-index: 10 !important;
+      /* Prevent the touch event from being stolen by a parent listener */
+      touch-action: manipulation;
+      /* Ensure tap highlight is visible on mobile */
+      -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+      cursor: pointer;
+    }
+
+    /* Slightly enlarge nav hit areas on small screens */
+    @media (max-width: 720px) {
+      .lightbox-close { width: 48px !important; height: 48px !important; }
+      .lightbox-nav   { width: 52px !important; height: 52px !important; font-size: 34px !important; }
+    }
+  </style>
 </head>
 <body class="page-gallery">
 
-<!-- =========================
-     Header / navigation
-========================= -->
+<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
-<section class="section">
-<div class="wrap">
+  <section class="section">
+    <div class="wrap">
 
-  <div class="section-head gallery-head">
-    <div class="gallery-topline">
-      <h2>Gallery</h2>
-    </div>
+      <div class="section-head gallery-head">
+        <div class="gallery-topline">
+          <h2>Gallery</h2>
+        </div>
 
-    <p class="gallery-intro">
-      All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
-    </p>
+        <p class="gallery-intro">
+          All images shown here are my own — created through patient hours of long-exposure
+          imaging under dark, often cold night skies, followed by careful processing to reveal
+          faint structures and subtle detail hidden in the data.
+        </p>
 
-    <div class="gallery-filter" role="group" aria-label="Gallery filter">
-      <label class="gallery-filter-label" for="typeFilter">View gallery images by type</label>
+        <div class="gallery-filter" role="group" aria-label="Gallery filters">
+          <label class="gallery-filter-label" for="typeFilter">Filter by type</label>
+          <div class="gallery-filter-row">
+            <select id="typeFilter" class="gallery-filter-select" aria-label="Filter gallery by object type">
+              <option value="all">All</option>
+              <option value="galaxies">Galaxies</option>
+              <option value="nebulae">Nebulae</option>
+              <option value="star-clusters">Star Clusters</option>
+              <option value="star-trails">Star Trails</option>
+              <option value="comets">Comets</option>
+              <option value="others">Others</option>
+            </select>
+            <div class="gallery-filter-spacer"></div>
+            <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
+              List view
+            </button>
+          </div>
+        </div>
 
-      <div class="gallery-filter-row">
-        <select id="typeFilter" class="gallery-filter-select">
-          <option value="all">All</option>
-          <option value="galaxies">Galaxies</option>
-          <option value="nebulae">Nebulae</option>
-          <option value="star-clusters">Star Clusters</option>
-          <option value="star-trails">Star Trails</option>
-          <option value="comets">Comets</option>
-          <option value="others">Others</option>
-        </select>
-        <div class="gallery-filter-spacer"></div>
-        <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
-          List view
-        </button>
+        <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
       </div>
+
+      <!-- Skeleton placeholders shown while JSON loads -->
+      <div id="galleryGrid" class="grid" aria-live="polite" aria-label="Photo gallery">
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+      </div>
+
     </div>
-
-    <p class="gallery-hint">
-      Click any image to view fullscreen.
-    </p>
-  </div>
-
-  <div id="galleryGrid" class="grid"></div>
-
-</div>
-</section>
+  </section>
 </main>
 
-<!-- =========================
-     Footer
-========================= -->
+<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
-<script>
-/* Burger menu controller */
-(function(){
-  const burger = document.querySelector('.burger');
-  const menu = document.querySelector('.nav-menu');
-  if(!burger || !menu) return;
 
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (e) => {
-    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape'){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-})();
-</script>
-
-
-
-<!-- Lightbox -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+<!-- ─────────────────────────────────────────
+     LIGHTBOX
+───────────────────────────────────────── -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
   <div class="lightbox-inner">
-    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
 
-    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous">‹</button>
-    <button class="lightbox-nav next" id="lbNext" aria-label="Next">›</button>
+    <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
+    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
+    <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
     <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
 
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
-    <div class="lightbox-meta" aria-hidden="false">
+    <div class="lightbox-meta">
       <div class="meta-left">
         <div class="title" id="lbTitle"></div>
-        <div class="desc" id="lbDesc"></div>
+        <div class="desc"  id="lbDesc"></div>
       </div>
-
       <div class="count" id="lbCount"></div>
     </div>
+
   </div>
 </div>
 
+
+<!-- ─────────────────────────────────────────
+     GALLERY CONTROLLER
+───────────────────────────────────────── -->
 <script>
-(function(){
-  const grid = document.getElementById('galleryGrid');
-
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lbImg');
-  const lbVid = document.getElementById('lbVid');
-  const lbTitle = document.getElementById('lbTitle');
-  const lbCount = document.getElementById('lbCount');
-  const lbDesc = document.getElementById('lbDesc');
-  const lbClose = document.getElementById('lbClose');
-  const lbPrev = document.getElementById('lbPrev');
-  const lbNext = document.getElementById('lbNext');
-
+(function () {
+  const grid       = document.getElementById('galleryGrid');
+  const lb         = document.getElementById('lightbox');
+  const lbImg      = document.getElementById('lbImg');
+  const lbVid      = document.getElementById('lbVid');
+  const lbTitle    = document.getElementById('lbTitle');
+  const lbCount    = document.getElementById('lbCount');
+  const lbDesc     = document.getElementById('lbDesc');
+  const lbClose    = document.getElementById('lbClose');
+  const lbPrev     = document.getElementById('lbPrev');
+  const lbNext     = document.getElementById('lbNext');
   const typeFilter = document.getElementById('typeFilter');
   const viewToggle = document.getElementById('viewToggle');
 
-  if(!grid || !lb || !lbImg || !lbTitle || !lbClose) return;
+  if (!grid || !lb) return;
 
-  let items = [];
+  let items           = [];
+  let currentItem     = null;
+  let lbList          = [];
+  let lbIndex         = 0;
+  let activeSet       = [];
+  let activeItemIndex = 0;
 
-  async function loadData(){
-    try{
+  /* ── Load gallery data ── */
+  async function loadData() {
+    try {
       const res = await fetch('gallery-data.json', { cache: 'no-store' });
-      if(!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       items = await res.json();
-      init(); // continue once items are loaded
-    }catch(err){
+      init();
+    } catch (err) {
       console.error('Gallery data load error:', err);
-      grid.innerHTML = `<div class="panel gallery-error">Could not load gallery-data.json.</div>`;
+      grid.innerHTML = `<div class="panel gallery-error grid-span-all">
+        <h3>Gallery unavailable</h3>
+        <p>Could not load gallery-data.json. Please refresh the page.</p>
+      </div>`;
     }
   }
 
-  // ---- EVERYTHING BELOW is your existing code, moved into init() ----
-  function init(){
+  /* ── HTML escape ── */
+  function esc(s) {
+    return String(s ?? '')
+      .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;').replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
 
-    function esc(s){
-      return String(s ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+  /* ── Item helpers ── */
+  function getList(item) {
+    if (item.videos?.length) {
+      return item.videos.map(v => ({ kind: 'vimeo', vimeoId: v.vimeoId, poster: v.poster, alt: v.alt || item.title || '' }));
     }
-
-    function isVideoFile(path){
-      return /\.mp4(\?|#|$)/i.test(path || "");
+    if (item.images?.length) {
+      return item.images.map(im => ({ kind: 'image', file: im.file, alt: im.alt || item.alt || item.title || '' }));
     }
+    return [{ kind: 'image', file: item.file, alt: item.alt || item.title || '' }];
+  }
 
-    function getList(item){
-      if(item.videos && Array.isArray(item.videos) && item.videos.length){
-        return item.videos.map(v => ({
-          kind: "vimeo",
-          vimeoId: v.vimeoId,
-          poster: v.poster,
-          alt: v.alt || item.title || ""
-        }));
+  function getCover(item) {
+    const list  = getList(item);
+    const first = list[0];
+    if (first?.kind === 'vimeo') return { file: first.poster, alt: first.alt || item.title || '' };
+    return { file: first.file, alt: first.alt || item.title || '' };
+  }
+
+  /* ── Lightbox display ── */
+  function showLb() {
+    const cur = lbList[lbIndex];
+    lbTitle.textContent = currentItem?.title || '';
+    lbDesc.textContent  = currentItem?.desc  || '';
+    lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
+
+    const canNav = lbList.length > 1 || activeSet.length > 1;
+    lbPrev.style.display = canNav ? '' : 'none';
+    lbNext.style.display = canNav ? '' : 'none';
+
+    lbImg.style.display = 'none';
+    lbImg.src = '';
+    if (lbVid) { lbVid.style.display = 'none'; lbVid.innerHTML = ''; }
+
+    if (cur.kind === 'vimeo') {
+      if (lbVid) {
+        lbVid.style.display = 'block';
+        const id = encodeURIComponent(cur.vimeoId);
+        lbVid.innerHTML = `<iframe
+          src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+          frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen class="lb-iframe"></iframe>`;
       }
-      if(item.images && Array.isArray(item.images) && item.images.length){
-        return item.images.map(im => ({
-          kind: "image",
-          file: im.file,
-          alt: im.alt || item.alt || item.title || ""
-        }));
-      }
-      return [{
-        kind: "image",
-        file: item.file,
-        alt: item.alt || item.title || ""
-      }];
+      return;
     }
 
-    function getCover(item){
-      const list = getList(item);
-      const first = list[0];
-      if(first && first.kind === "vimeo"){
-        return { file: first.poster, alt: first.alt || item.title || "" };
-      }
-      return { file: first.file, alt: first.alt || item.title || "" };
-    }
+    lbImg.style.display = 'block';
+    lbImg.src = cur.file;
+    lbImg.alt = cur.alt || currentItem?.title || '';
+  }
 
-    let currentItem = null;
-    let lbList = [];
-    let lbIndex = 0;
+  function goToItem(delta) {
+    if (!activeSet || activeSet.length < 2) return;
+    activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
+    currentItem = activeSet[activeItemIndex];
+    lbList  = getList(currentItem);
+    lbIndex = delta > 0 ? 0 : lbList.length - 1;
+    showLb();
+  }
 
-    let activeSet = [];
-    let activeItemIndex = 0;
+  function openLightbox(item, indexInActiveSet) {
+    currentItem     = item;
+    activeItemIndex = Number(indexInActiveSet) || 0;
+    lbList  = getList(item);
+    lbIndex = 0;
+    showLb();
 
-    function showLb(){
-      const cur = lbList[lbIndex];
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('noscroll');
 
-      lbTitle.textContent = currentItem?.title || "";
-      if(lbCount){
-        lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
-      }
-      if(lbDesc) lbDesc.textContent = currentItem?.desc || "";
+    requestAnimationFrame(() => lbClose.focus());
+  }
 
-      const canNav = (lbList.length > 1) || (activeSet && activeSet.length > 1);
-      if(lbPrev) lbPrev.style.display = canNav ? "" : "none";
-      if(lbNext) lbNext.style.display = canNav ? "" : "none";
+  function closeLightbox() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('noscroll');
 
-      lbImg.style.display = "none";
-      lbImg.src = "";
-      lbImg.alt = "";
+    if (lbVid) { lbVid.innerHTML = ''; lbVid.style.display = 'none'; }
+    lbImg.src = ''; lbImg.style.display = 'block';
+    lbTitle.textContent = ''; lbDesc.textContent = ''; lbCount.textContent = '';
+    currentItem = null; lbList = []; lbIndex = 0; activeItemIndex = 0;
+  }
 
-      if(lbVid){
-        lbVid.style.display = "none";
-        lbVid.innerHTML = "";
-      }
+  /* ─────────────────────────────────────────────────────────────
+   * FIX 3: Unified pointer handler for lightbox controls.
+   *
+   * Problem: On mobile (real devices & Chrome DevTools simulation),
+   * button elements inside position:fixed/absolute containers can
+   * fail to fire 'click' reliably because:
+   *   a) The synthesised click from touch is swallowed by a parent
+   *      touchend listener before it reaches the button.
+   *   b) 300ms click delay (some browsers) means the touch has
+   *      already been processed by the swipe detector.
+   *
+   * Solution: Attach BOTH 'click' AND 'touchend' to each control.
+   * The touchend handler fires immediately (no delay), calls
+   * e.preventDefault() to cancel the subsequent synthesised click
+   * (preventing double-fire), and calls e.stopPropagation() so the
+   * lbInner swipe listener never sees the tap.
+   * ───────────────────────────────────────────────────────────── */
+  function addTapHandler(el, fn) {
+    // Standard click — works on desktop and some mobile browsers
+    el.addEventListener('click', fn);
 
-      if(cur.kind === "vimeo"){
-        if(lbVid){
-          lbVid.style.display = "block";
-          const id = encodeURIComponent(cur.vimeoId);
-          lbVid.innerHTML = `
-            <iframe
-              src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
-              frameborder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-              class="lb-iframe">
-            </iframe>
-          `;
-        }
-        return;
-      }
+    // touchend — fires immediately on mobile, no 300ms delay
+    el.addEventListener('touchend', function (e) {
+      e.preventDefault();      // cancel the upcoming synthesised click (no double-fire)
+      e.stopPropagation();     // stop lbInner's touchend swipe handler seeing this
+      fn(e);
+    }, { passive: false });    // passive:false required so preventDefault() is allowed
+  }
 
-      lbImg.style.display = "block";
-      lbImg.src = cur.file;
-      lbImg.alt = cur.alt || (currentItem?.title || "");
-    }
+  /* ── Grid render ── */
+  function render() {
+    const selected = typeFilter?.value || 'all';
+    const filtered = selected === 'all'
+      ? items
+      : items.filter(it => (it.type || 'others') === selected);
 
-    function goToItem(delta){
-      if(!activeSet || activeSet.length < 2) return;
+    activeSet = filtered;
 
-      activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
-      currentItem = activeSet[activeItemIndex];
-      lbList = getList(currentItem);
-      lbIndex = 0;
-      showLb();
-    }
+    grid.innerHTML = filtered.map((item) => {
+      const idx       = items.indexOf(item);
+      const activeIdx = filtered.indexOf(item);
+      const cover     = getCover(item);
+      const list      = getList(item);
+      const count     = list.length;
 
-    function openLightbox(item, indexInActiveSet){
-      currentItem = item;
-      activeItemIndex = Number(indexInActiveSet) || 0;
+      const badge = count > 1
+        ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
+        : '';
 
-      lbList = getList(item);
-      lbIndex = 0;
-      showLb();
+      const media = `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
-      lb.classList.add('open');
-      lb.setAttribute('aria-hidden','false');
-      document.body.classList.add('noscroll');
-    }
+      return `<a class="card"
+           href="${esc(cover.file)}"
+           data-idx="${idx}"
+           data-active-idx="${activeIdx}"
+           aria-label="${esc(item.title || cover.alt)}">
+        ${badge}${media}
+        <div class="cap">
+          <div class="t">${esc(item.title || '')}</div>
+          <div class="d">${esc(item.desc || '')}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
 
-    function closeLightbox(){
-      lb.classList.remove('open');
-      lb.setAttribute('aria-hidden','true');
-      document.body.classList.remove('noscroll');
+  function init() {
 
-      if(lbVid){
-        lbVid.innerHTML = "";
-        lbVid.style.display = "none";
-      }
-
-      lbImg.src = "";
-      lbImg.alt = "";
-      lbImg.style.display = "block";
-      lbTitle.textContent = "";
-      if(lbDesc) lbDesc.textContent = "";
-      if(lbCount) lbCount.textContent = "";
-
-      currentItem = null;
-      lbList = [];
-      lbIndex = 0;
-      activeItemIndex = 0;
-    }
-
-    function render(){
-      const selected = (typeFilter && typeFilter.value) ? typeFilter.value : 'all';
-      const filtered = (selected === 'all')
-        ? items
-        : items.filter(it => (it.type || 'others') === selected);
-
-      activeSet = filtered;
-
-      grid.innerHTML = filtered.map((item) => {
-        const idx = items.indexOf(item);
-        const activeIdx = filtered.indexOf(item);
-
-        const cover = getCover(item);
-        const list = getList(item);
-        const count = list.length;
-
-        const badge = count > 1
-          ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
-          : '';
-
-        const media = isVideoFile(cover.file)
-          ? `<video src="${esc(cover.file)}" muted playsinline preload="metadata"></video>`
-          : `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy">`;
-
-        return `
-          <a class="card"
-             href="${esc(cover.file)}"
-             data-idx="${idx}"
-             data-active-idx="${activeIdx}"
-             aria-label="${esc(item.title || cover.alt)}">
-            ${badge}
-            ${media}
-            <div class="cap">
-              <div class="t">${esc(item.title || "")}</div>
-              <div class="d">${esc(item.desc || "")}</div>
-            </div>
-          </a>
-        `;
-      }).join('');
-    }
-
-    // (your existing viewToggle / filter / click / key handlers stay the same)
+    /* View mode (grid / list) */
     const isMobile = window.matchMedia('(max-width: 720px)').matches;
-
-    if(isMobile){
-      grid.classList.remove('list-view');
-      localStorage.setItem('galleryView', 'grid');
-      if(viewToggle){
-        viewToggle.textContent = 'List view';
-        viewToggle.setAttribute('aria-pressed','false');
-      }
-    } else {
+    if (!isMobile) {
       const savedView = localStorage.getItem('galleryView');
-      if(savedView === 'list'){
+      if (savedView === 'list') {
         grid.classList.add('list-view');
-        if(viewToggle){
-          viewToggle.textContent = 'Grid view';
-          viewToggle.setAttribute('aria-pressed','true');
-        }
-      } else {
-        grid.classList.remove('list-view');
-        if(viewToggle){
-          viewToggle.textContent = 'List view';
-          viewToggle.setAttribute('aria-pressed','false');
-        }
+        viewToggle.textContent = 'Grid view';
+        viewToggle.setAttribute('aria-pressed', 'true');
       }
     }
 
     render();
 
-    if(typeFilter) typeFilter.addEventListener('change', render);
+    typeFilter?.addEventListener('change', render);
 
-    if(viewToggle){
-      viewToggle.addEventListener('click', () => {
-        if(window.matchMedia('(max-width: 720px)').matches) return;
+    viewToggle?.addEventListener('click', () => {
+      if (window.matchMedia('(max-width: 720px)').matches) return;
+      const isList = grid.classList.toggle('list-view');
+      viewToggle.textContent = isList ? 'Grid view' : 'List view';
+      viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
+      localStorage.setItem('galleryView', isList ? 'list' : 'grid');
+    });
 
-        const isList = grid.classList.toggle('list-view');
-        viewToggle.textContent = isList ? 'Grid view' : 'List view';
-        viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
-        localStorage.setItem('galleryView', isList ? 'list' : 'grid');
-      });
-    }
-
+    /* Card click → open lightbox */
     grid.addEventListener('click', (e) => {
       const a = e.target.closest('a.card');
-      if(!a) return;
+      if (!a) return;
       e.preventDefault();
-
-      const idx = Number(a.getAttribute('data-idx'));
-      const activeIdx = Number(a.getAttribute('data-active-idx'));
-      const item = items[idx];
-      if(item) openLightbox(item, activeIdx);
+      const item = items[Number(a.dataset.idx)];
+      if (item) openLightbox(item, Number(a.dataset.activeIdx));
     });
 
-    if(lbClose) lbClose.addEventListener('click', closeLightbox);
+    /* ── FIX 3 applied: use addTapHandler for all lightbox controls ── */
 
-    if(lbPrev){
-      lbPrev.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if(lbList.length > 1){
-          if(lbIndex > 0){ lbIndex -= 1; showLb(); }
-          else { goToItem(-1); }
-        } else { goToItem(-1); }
-      });
-    }
+    addTapHandler(lbClose, closeLightbox);
 
-    if(lbNext){
-      lbNext.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if(lbList.length > 1){
-          if(lbIndex < lbList.length - 1){ lbIndex += 1; showLb(); }
-          else { goToItem(+1); }
-        } else { goToItem(+1); }
-      });
-    }
+    addTapHandler(lbPrev, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      if (lbList.length > 1) {
+        lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1);
+      } else {
+        goToItem(-1);
+      }
+    });
 
-    lb.addEventListener('click', (e) => { if(e.target === lb) closeLightbox(); });
+    addTapHandler(lbNext, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      if (lbList.length > 1) {
+        lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1);
+      } else {
+        goToItem(+1);
+      }
+    });
 
+    /* Click outside inner panel closes lightbox */
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+
+    /*
+     * FIX 4: Also handle tap-outside on mobile.
+     * The 'click' on the backdrop won't fire reliably on all mobile browsers
+     * when touch-action is manipulated. Add a touchend fallback on the backdrop.
+     */
+    lb.addEventListener('touchend', (e) => {
+      if (e.target === lb) {
+        e.preventDefault();
+        closeLightbox();
+      }
+    }, { passive: false });
+
+    /* Keyboard navigation */
     document.addEventListener('keydown', (e) => {
-      if(!lb.classList.contains('open')) return;
-      if(e.key === 'Escape') closeLightbox();
-      if(e.key === 'ArrowLeft'){
-        if(lbList.length > 1){
-          if(lbIndex > 0){ lbIndex -= 1; showLb(); } else { goToItem(-1); }
-        } else { goToItem(-1); }
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft') {
+        lbList.length > 1
+          ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
+          : goToItem(-1);
       }
-      if(e.key === 'ArrowRight'){
-        if(lbList.length > 1){
-          if(lbIndex < lbList.length - 1){ lbIndex += 1; showLb(); } else { goToItem(+1); }
-        } else { goToItem(+1); }
+      if (e.key === 'ArrowRight') {
+        lbList.length > 1
+          ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
+          : goToItem(+1);
       }
     });
+
+    /* ── Touch swipe support ── */
+    let touchStartX   = 0;
+    let touchStartY   = 0;
+    let isTouchOnBtn  = false;   // FIX 5: track whether touch started on a button
+    const lbInner = lb.querySelector('.lightbox-inner');
+
+    lbInner.addEventListener('touchstart', (e) => {
+      /*
+       * FIX 5: If the touch started on a control button, flag it so the
+       * touchend swipe handler knows to ignore this touch entirely.
+       * This prevents a button tap being misread as a 0-delta swipe.
+       */
+      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav');
+      touchStartX  = e.touches[0].clientX;
+      touchStartY  = e.touches[0].clientY;
+    }, { passive: true });
+
+    lbInner.addEventListener('touchend', (e) => {
+      // Ignore if this touch began on a button (handled by addTapHandler above)
+      if (isTouchOnBtn) {
+        isTouchOnBtn = false;
+        return;
+      }
+
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+
+      // Only trigger if horizontal swipe is dominant and large enough
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx < 0) {
+          // Swipe left → next
+          lbList.length > 1
+            ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
+            : goToItem(+1);
+        } else {
+          // Swipe right → prev
+          lbList.length > 1
+            ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
+            : goToItem(-1);
+        }
+      }
+    }, { passive: true });
 
   } // end init()
 
   loadData();
-})();
-</script>
-
-
-<script>
-/* Scroll reveal */
-(function(){
-  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
-    .filter(el => !el.classList.contains('reveal'));
-
-  els.forEach(el => el.classList.add('reveal'));
-
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    els.forEach(el => el.classList.add('in'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        io.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-  els.forEach(el => io.observe(el));
 })();
 </script>
 

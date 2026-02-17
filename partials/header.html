@@ -1,23 +1,29 @@
 <!-- =========================
      Header / navigation
-     - Brand centered
-     - Burger button opens the dropdown menu (CSS uses .nav-menu.open)
+     - Brand centred in the navbar grid
+     - Burger button opens the dropdown nav
+     - CSS handles the burger → X animation
+       via aria-expanded (set by partials.js)
+     - Active link (.active + aria-current)
+       is set by partials.js after load
 ========================= -->
 <header>
   <div class="wrap">
     <div class="navbar">
-      <div></div>
+      <div></div><!-- spacer keeps brand centred -->
 
-      <a class="brand" href="index.html" aria-label="bhapstar home">
+      <a class="brand" href="index.html" aria-label="bhapstar astrophotography — home">
         <span class="mark">bhapstar</span>
         <span class="sub">astrophotography</span>
       </a>
 
-      <button class="burger" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
+      <button class="burger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="siteNav">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </button>
 
-      <nav class="nav-menu" aria-label="Site">
+      <nav id="siteNav" class="nav-menu" aria-label="Site navigation">
         <a href="index.html">Home</a>
         <a href="gallery.html">Gallery</a>
         <a href="prints.html">Prints</a>

@@ -2,46 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prints — bhapstar</title>
+  <title>Print Enquiries — Bhapstar Astrophotography</title>
+  <meta name="description" content="Enquire about astrophotography prints — A3/A4 prints, framed or unframed, digital downloads, and custom calendars by Bhapinder Singh." />
 
-  <!-- Cloudflare Web Analytics (site traffic measurement) -->
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- Open Graph -->
+  <meta property="og:title"       content="Print Enquiries — Bhapstar Astrophotography" />
+  <meta property="og:description" content="Order astrophotography prints — A3/A4, framed or unframed, digital downloads and custom calendars." />
+  <meta property="og:image"       content="images/RN.jpg" />
 
-  <!-- Shared site styling -->
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body class="page-prints">
 
-<!-- =========================
-     Header / navigation
-========================= -->
+<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
-<!-- Support panel (kept near top so it’s visible before the enquiry builder) -->
-<!-- KEEP: Support my work stays where it is -->
+<!-- Support panel -->
 <section class="section support-wrap">
   <div class="wrap">
     <div class="panel support-panel">
       <div class="support-left">
         <h2 class="support-title">Support my work</h2>
         <p class="support-text">
-          If you enjoy my astrophotography or the outreach work I do, you’re welcome to support the time and effort behind it by clicking the button here.
+          If you enjoy my astrophotography or the outreach work I do, you're welcome
+          to support the time and effort behind it by clicking the button here.
         </p>
       </div>
-
       <div class="support-right">
-        <!-- External link: opens in a new tab -->
         <a
           href="https://www.buymeacoffee.com/bhapstar_astro"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           class="btn primary support-btn"
-        >
-          ☕ Support my work
-        </a>
+        >☕ Support my work</a>
       </div>
     </div>
   </div>
@@ -55,16 +53,14 @@
         <h2>Print enquiries</h2>
       </div>
 
-      <!-- Main 1-col (mobile) / 2-col (desktop) prints layout wrapper -->
       <div class="prints-layout">
 
-        <!-- LEFT: main content (how it works + enquiry form + framed mockup) -->
+        <!-- LEFT: How it works + enquiry form + framed mockup -->
         <div class="prints-main">
 
-          <!-- 1) HOW IT WORKS (quick steps) -->
+          <!-- 1) How it works -->
           <div class="panel prints-panel">
             <h3>How it works</h3>
-
             <div class="steps">
               <div class="step">
                 <div class="k">1</div>
@@ -80,63 +76,52 @@
               <div class="step">
                 <div class="k">3</div>
                 <h4>Send an enquiry</h4>
-                <p>I’ll confirm availability, finish options, lead time, and delivery/collection based on your location.</p>
+                <p>I'll confirm availability, finish options, lead time, and delivery based on your location.</p>
               </div>
             </div>
           </div>
 
-          <!-- 2) BUILD YOUR ENQUIRY (Formspree form + live preview builder) -->
+          <!-- 2) Enquiry builder -->
           <div class="panel prints-panel">
             <h3>Build your enquiry</h3>
-            <p class="helper">Fill this in and submit your enquiry. I’ll get back to you as soon as possible.</p>
+            <p class="helper">Fill this in and submit. I'll get back to you as soon as possible.</p>
 
-            <!-- Form submits to Formspree endpoint (AJAX submit handled in JS below) -->
-            <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST">
-              <!-- Email subject line for inbound enquiries -->
+            <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST" novalidate>
               <input type="hidden" name="_subject" value="bhapstar — New print enquiry" />
-
-              <!-- Honeypot spam trap (humans never fill this; bots often do) -->
+              <!-- Honeypot -->
               <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
               <div class="picker" id="enquiryPicker">
 
-                <!-- CONTACT -->
                 <div class="row">
                   <label for="pName">Name</label>
-                  <input id="pName" name="name" type="text" placeholder="Your name" required />
+                  <input id="pName" name="name" type="text" placeholder="Your name" required autocomplete="name" />
                 </div>
 
                 <div class="row">
                   <label for="pPhone">Phone</label>
-                  <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required />
+                  <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required autocomplete="tel" />
                 </div>
 
                 <div class="row">
                   <label for="pEmail">Email</label>
-                  <input id="pEmail" name="email" type="email" placeholder="Your email address" required />
+                  <input id="pEmail" name="email" type="email" placeholder="Your email address" required autocomplete="email" />
                 </div>
 
-                <!-- ITEMS (multi-item builder) -->
                 <div class="row row-start">
                   <label>Items</label>
                   <div>
-                    <!-- JS injects one or more .item-row blocks here -->
                     <div id="itemsWrap" class="items-area"></div>
-
                     <div class="items-controls">
-                      <!-- Adds another item row (image + size + frame) -->
                       <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
                     </div>
-
-                    <!-- Hidden field included in form submission: plain-text summary of all items -->
-                    <input type="hidden" id="itemsSummary" name="items_summary" value="">
+                    <input type="hidden" id="itemsSummary" name="items_summary" value="" />
                   </div>
                 </div>
 
-                <!-- DELIVERY + NOTES -->
                 <div class="row">
-                  <label for="pCity">Delivery location</label>
-                  <input id="pCity" name="delivery_location" type="text" placeholder="Location" />
+                  <label for="pCity">Location</label>
+                  <input id="pCity" name="delivery_location" type="text" placeholder="Delivery location" autocomplete="address-level2" />
                 </div>
 
                 <div class="row">
@@ -144,31 +129,27 @@
                   <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
                 </div>
 
-                <!-- Calendar interest (optional add-on enquiry) -->
-<!-- Calendar interest -->
-<div class="row row-start">
-  <label for="pCalendar">Calendar</label>
-
-  <div>
-    <!-- Checkbox is captured in live preview + submitted via Formspree -->
-    <label class="checkline" for="pCalendar">
-      <input id="pCalendar" name="calendar_interest" type="checkbox" value="Yes">
-<span>
-  Please click here if you would also like to enquire about a custom astrophotography calendar made from any 12 of my images of your choosing.
-  <!-- Opens a modal preview (handled at end of file) -->
-  <a href="#" class="faq-link" id="openCalendarExample">View example</a>
-</span>
-    </label>
-  </div>
-</div>
+                <!-- Calendar interest -->
+                <div class="row row-start">
+                  <label for="pCalendar">Calendar</label>
+                  <div>
+                    <label class="checkline" for="pCalendar">
+                      <input id="pCalendar" name="calendar_interest" type="checkbox" value="Yes" />
+                      <span>
+                        Please click here if you would also like to enquire about a custom
+                        astrophotography calendar made from any 12 of my images of your choosing.
+                        <a href="#" class="faq-link" id="openCalendarExample">View example</a>
+                      </span>
+                    </label>
+                  </div>
+                </div>
 
               </div>
 
               <div class="spacer-12" aria-hidden="true"></div>
 
-              <!-- Live preview of the enquiry that will be sent (updated by build()) -->
               <div class="template-box">
-                <pre id="enquiryPreview"></pre>
+                <pre id="enquiryPreview" aria-label="Enquiry preview"></pre>
               </div>
 
               <div class="spacer-14" aria-hidden="true"></div>
@@ -180,49 +161,39 @@
               <p class="helper mt-10">
                 Enquiry-based only — no checkout or online payments on this site.
               </p>
-
             </form>
           </div>
 
-          <!-- 4) FRAMED MOCKUP (rotating preview tile) -->
+          <!-- 3) Framed mockup -->
           <div class="panel prints-panel">
             <h3>Framed mockup</h3>
             <p class="helper">A rotating preview of framed print styles.</p>
-
             <div class="grid grid-single framed-grid">
               <div class="card framed-tile" aria-hidden="false">
                 <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
-                <div class="cap">
-                  <div class="t">Framed mockup</div>
-                </div>
+                <div class="cap"><div class="t">Framed mockup</div></div>
               </div>
             </div>
 
-            <!-- JSON list of framed mockup image paths -->
             <script id="framedData" type="application/json">
             [
-              "images/framed/1.jpg",
-              "images/framed/2.jpg",
-              "images/framed/3.jpg",
-              "images/framed/4.jpg",
-              "images/framed/5.jpg",
-              "images/framed/1-1.jpg",
-              "images/framed/2-2.jpg",
-              "images/framed/3-3.jpg",
-              "images/framed/4-4.jpg",
-              "images/framed/5-5.jpg"
+              "images/framed/1.jpg",   "images/framed/2.jpg",
+              "images/framed/3.jpg",   "images/framed/4.jpg",
+              "images/framed/5.jpg",   "images/framed/1-1.jpg",
+              "images/framed/2-2.jpg", "images/framed/3-3.jpg",
+              "images/framed/4-4.jpg", "images/framed/5-5.jpg"
             ]
             </script>
           </div>
 
         </div>
 
-        <!-- RIGHT: FAQ sidebar -->
-        <aside class="prints-side">
+        <!-- RIGHT: FAQ -->
+        <aside class="prints-side" aria-label="Print FAQ">
           <div class="panel prints-panel">
             <h3>FAQ</h3>
-
             <div class="faq">
+
               <details class="faq-item">
                 <summary>What print sizes are available?</summary>
                 <p>Prints are available in A3 or A4 sizes.</p>
@@ -230,7 +201,7 @@
 
               <details class="faq-item">
                 <summary>What paper is used for printing?</summary>
-                <p>Printed images will be supplied in premium glossy, 200gsm weighted, photo quality paper with advanced waterproof coating protecting your prints from moisture, fingerprints, and accidental spills, keeping every photo clean and sharp over time.</p>
+                <p>Premium glossy 200gsm photo-quality paper with an advanced waterproof coating — keeping prints clean, sharp and protected from moisture and fingerprints over time.</p>
               </details>
 
               <details class="faq-item">
@@ -240,18 +211,17 @@
 
               <details class="faq-item">
                 <summary>How will the prints be shipped?</summary>
-                <p>Unframed prints will be sent in a secure rolled mailing tube.<br>
-                   Framed prints will be sent with a black frame with corner protectors.</p>
+                <p>Unframed prints will be sent in a secure rolled mailing tube. Framed prints will be boxed with corner protectors.</p>
               </details>
 
               <details class="faq-item">
                 <summary>How does the digital download work?</summary>
-                <p>The high resolution digital file will be emailed to you.</p>
+                <p>The high-resolution digital file will be emailed to you directly.</p>
               </details>
 
               <details class="faq-item">
                 <summary>Do you ship internationally?</summary>
-                <p>It depends on destination and courier options. Tell me your location in the enquiry and I’ll confirm what’s possible.</p>
+                <p>It depends on destination and courier options. Tell me your location in the enquiry and I'll confirm what's possible.</p>
               </details>
 
               <details class="faq-item">
@@ -259,27 +229,19 @@
                 <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
               </details>
 
-              <!-- Calendar FAQ entry includes an inline example image -->
-<details class="faq-item" id="faq-calendar">
-
-  <summary>What will the calendar look like?</summary>
-  <p>
-    The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description of the target.
-    It will also be pre-populated with key astronomical events and key dates.
-  </p>
-  <p class="helper mt-10">Example layout:</p>
-  <img src="images/calendar-example.jpg"
-    alt="Example calendar layout" class="calendar-example-img" loading="lazy"
-  />
-</details>
+              <details class="faq-item" id="faq-calendar">
+                <summary>What will the calendar look like?</summary>
+                <p>The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description. It will also be pre-populated with key astronomical events and dates.</p>
+                <p class="helper mt-10">Example layout:</p>
+                <img src="images/calendar-example.jpg" alt="Example calendar layout" class="calendar-example-img" loading="lazy" />
+              </details>
 
               <details class="faq-item">
                 <summary>Is there anything else I should know?</summary>
-                <p>Due to differences in monitor/phone screen resolution and rendering, the print/download you receive may differ slightly from what you see here.</p>
-                <p>The print/download will contain an imperceptible watermark.</p>
+                <p>Due to differences in monitor/screen rendering, the print or download you receive may differ slightly from what you see here. All prints and downloads contain an imperceptible watermark.</p>
               </details>
-            </div>
 
+            </div>
           </div>
         </aside>
 
@@ -289,466 +251,270 @@
   </section>
 </main>
 
-<!-- =========================
-     Footer
-========================= -->
+<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
-<!-- Toast notification container (pop-up messages after submit/errors) -->
+<!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Calendar example modal -->
+<div class="calendar-modal" id="calendarModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Calendar example">
+  <div class="calendar-modal-inner">
+    <button class="calendar-close" aria-label="Close">&times;</button>
+    <img src="images/calendar-example.jpg" alt="Example astrophotography calendar layout" loading="lazy" />
+  </div>
+</div>
+
+
+<!-- ─────────────────────────────────────────
+     PRINT ENQUIRY BUILDER
+───────────────────────────────────────── -->
 <script>
-/* Burger menu controller (same behaviour as index/gallery) */
-(function(){
-  const burger = document.querySelector('.burger');
-  const menu = document.querySelector('.nav-menu');
-  if(!burger || !menu) return;
+(function () {
+  const $ = id => document.getElementById(id);
+  const form        = $('printsEnquiryForm');
+  const itemsWrap   = $('itemsWrap');
+  const addItemBtn  = $('addItemBtn');
+  const itemsSummary = $('itemsSummary');
+  const pCity       = $('pCity');
+  const pName       = $('pName');
+  const pPhone      = $('pPhone');
+  const pEmail      = $('pEmail');
+  const pNotes      = $('pNotes');
+  const pCalendar   = $('pCalendar');
+  const preview     = $('enquiryPreview');
+  const toast       = $('toast');
 
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (e) => {
-    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape'){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-})();
-</script>
-
-<script>
-/* Scroll reveal (adds "in" when elements enter viewport) */
-(function(){
-  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
-    .filter(el => !el.classList.contains('reveal'));
-
-  els.forEach(el => el.classList.add('reveal'));
-
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    els.forEach(el => el.classList.add('in'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        io.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-  els.forEach(el => io.observe(el));
-})();
-</script>
-
-<script>
-/* =========================================================
-   PRINT ENQUIRY BUILDER (multi-item + live preview + submit)
-   ---------------------------------------------------------
-   - Pulls printable titles from gallery.html (galleryData)
-   - Allows user to add multiple items (image + size + frame)
-   - Builds a readable text preview and hidden summary field
-   - Submits via fetch() to Formspree, shows toast on success/fail
-========================================================= */
-(function(){
-  const el = (id) => document.getElementById(id);
-  const form = el('printsEnquiryForm');
-
-  const itemsWrap = el('itemsWrap');
-  const addItemBtn = el('addItemBtn');
-  const itemsSummary = el('itemsSummary');
-
-  const location = el('pCity');
-  const name = el('pName');
-  const phone = el('pPhone');
-  const email = el('pEmail');
-  const notes = el('pNotes');
-
-  // Calendar checkbox (optional add-on enquiry)
-  const calendar = el('pCalendar');
-
-  const preview = el('enquiryPreview');
-  const toast = el('toast');
-
-  /* Allowed choices for size/type and framing */
   const TYPE_OPTIONS = [
-    { v: "A4", t: "A4" },
-    { v: "A3", t: "A3" },
-    { v: "Digital", t: "Digital (high-res)" }
+    { v: 'A4',     t: 'A4' },
+    { v: 'A3',     t: 'A3' },
+    { v: 'Digital', t: 'Digital (high-res)' },
   ];
   const FRAMED_OPTIONS = [
-    { v: "No", t: "No" },
-    { v: "Yes", t: "Yes" }
+    { v: 'No',  t: 'No' },
+    { v: 'Yes', t: 'Yes' },
   ];
 
   let GALLERY_TITLES = [];
 
-  /* Toast helper (small message bar) */
-  function showToast(msg){
-    if(!toast) return;
+  function showToast(msg) {
+    if (!toast) return;
     toast.textContent = msg;
     toast.classList.add('show');
-    window.clearTimeout(showToast._t);
-    showToast._t = window.setTimeout(() => toast.classList.remove('show'), 2600);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 3200);
   }
 
-  /* Load printable image titles from gallery.html’s embedded JSON
-     - Filters out video-only entries (x.videos) so the dropdown stays “printable only” */
-async function loadGalleryTitles(){
-  try{
-    const res = await fetch('gallery-data.json', { cache: 'no-store' });
-    if(!res.ok) throw new Error('Failed to fetch gallery-data.json (HTTP ' + res.status + ')');
-
-    const items = await res.json();
-
-    GALLERY_TITLES = items
-      .filter(x => x && x.title && !x.videos) // exclude video-only entries
-      .map(x => x.title)
-      .filter(Boolean);
-
-    GALLERY_TITLES = Array.from(new Set(GALLERY_TITLES)); // de-dupe
-  }catch(err){
-    console.error(err);
-    GALLERY_TITLES = [];
+  async function loadGalleryTitles() {
+    try {
+      const res = await fetch('gallery-data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const items = await res.json();
+      GALLERY_TITLES = Array.from(new Set(
+        items.filter(x => x?.title && !x.videos).map(x => x.title).filter(Boolean)
+      ));
+    } catch (err) {
+      console.error(err);
+      GALLERY_TITLES = [];
+    }
   }
-}
 
-
-  /* Build a <select> from either [{v,t}] objects or plain strings */
-  function makeSelect(options, placeholder){
+  function makeSelect(options, placeholder) {
     const s = document.createElement('select');
-
     const ph = document.createElement('option');
-    ph.value = "";
-    ph.textContent = placeholder;
+    ph.value = ''; ph.textContent = placeholder;
     s.appendChild(ph);
-
     options.forEach(o => {
       const opt = document.createElement('option');
-      opt.value = o.v ?? o;
-      opt.textContent = o.t ?? o;
+      opt.value = o.v ?? o; opt.textContent = o.t ?? o;
       s.appendChild(opt);
     });
-
     return s;
   }
 
-  /* Adds a new enquiry line item (image + type + frame + remove button) */
-  function addItem(prefill){
-    if(!itemsWrap) return;
-
+  function addItem(prefill) {
+    if (!itemsWrap) return;
     const row = document.createElement('div');
     row.className = 'item-row';
 
-    /* Image selector is built from gallery titles */
-    const imgSel = makeSelect(
-      GALLERY_TITLES.map(t => ({ v: t, t })),
-      GALLERY_TITLES.length ? "Select an image" : "Gallery unavailable"
-    );
-    imgSel.name = "item_image[]";
-    imgSel.required = true;
-    if(!GALLERY_TITLES.length) imgSel.disabled = true;
+    const imgSel = makeSelect(GALLERY_TITLES.map(t => ({ v: t, t })),
+      GALLERY_TITLES.length ? 'Select an image' : 'Gallery unavailable');
+    imgSel.name = 'item_image[]'; imgSel.required = true;
+    if (!GALLERY_TITLES.length) imgSel.disabled = true;
 
-    const typeSel = makeSelect(TYPE_OPTIONS, "Image size/file");
-    typeSel.name = "item_type[]";
+    const typeSel   = makeSelect(TYPE_OPTIONS,   'Image size / type');
+    typeSel.name    = 'item_type[]';
+    const frameSel  = makeSelect(FRAMED_OPTIONS, 'Frame required?');
+    frameSel.name   = 'item_framed[]';
 
-    const frameSel = makeSelect(FRAMED_OPTIONS, "Frame required?");
-    frameSel.name = "item_framed[]";
+    imgSel.value   = prefill?.image  ?? '';
+    typeSel.value  = prefill?.type   ?? '';
+    frameSel.value = prefill?.framed ?? '';
 
-    // Default values (blank unless a prefill is explicitly passed)
-    imgSel.value = prefill?.image ?? "";
-    typeSel.value = prefill?.type ?? "";
-    frameSel.value = prefill?.framed ?? "";
-
-    /* Rule: if "Digital" is selected, frame is forced to "No" and locked */
-    function syncFrameLock(){
-      const isDigital = typeSel.value === "Digital";
-      if(isDigital){
-        frameSel.value = "No";
-        frameSel.disabled = true;
-      }else{
-        frameSel.disabled = false;
-      }
+    function syncFrameLock() {
+      const isDigital = typeSel.value === 'Digital';
+      frameSel.value    = isDigital ? 'No' : frameSel.value;
+      frameSel.disabled = isDigital;
     }
-
-    // Initial sync + on change
     syncFrameLock();
-    typeSel.addEventListener('change', () => {
-      syncFrameLock();
-      build();
-    });
+    typeSel.addEventListener('change', () => { syncFrameLock(); build(); });
 
-    const actions = document.createElement('div');
+    const actions   = document.createElement('div');
     actions.className = 'item-actions';
-
-    /* Remove button deletes this item row; ensures at least 1 row exists */
     const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
+    removeBtn.type  = 'button';
     removeBtn.className = 'btn';
     removeBtn.textContent = 'Remove';
     removeBtn.addEventListener('click', () => {
       row.remove();
-      if(itemsWrap.querySelectorAll('.item-row').length === 0){
-        addItem();
-      }
+      if (!itemsWrap.querySelectorAll('.item-row').length) addItem();
       build();
     });
-
     actions.appendChild(removeBtn);
 
-    // Build on image/frame changes
     imgSel.addEventListener('change', build);
     frameSel.addEventListener('change', build);
 
-    row.appendChild(imgSel);
-    row.appendChild(typeSel);
-    row.appendChild(frameSel);
-    row.appendChild(actions);
-
+    row.append(imgSel, typeSel, frameSel, actions);
     itemsWrap.appendChild(row);
     build();
   }
 
-  /* Read all current item rows into a structured array */
-  function getItems(){
-    const rows = Array.from(itemsWrap?.querySelectorAll('.item-row') || []);
-    return rows.map((r) => {
-      const selects = r.querySelectorAll('select');
-      return {
-        image: selects[0]?.value || "",
-        type: selects[1]?.value || "",
-        framed: selects[2]?.value || ""
-      };
+  function getItems() {
+    return Array.from(itemsWrap?.querySelectorAll('.item-row') || []).map(r => {
+      const s = r.querySelectorAll('select');
+      return { image: s[0]?.value || '', type: s[1]?.value || '', framed: s[2]?.value || '' };
     });
   }
 
-  /* Builds:
-     - the visible enquiry preview text
-     - the hidden itemsSummary form field */
-  function build(){
+  function build() {
     const items = getItems();
-
     const lines = [
-      `Name: ${name?.value?.trim() || ''}`,
-      `Phone: ${phone?.value?.trim() || ''}`,
-      `Email: ${email?.value?.trim() || ''}`,
-      ``,
-      `Items:`
+      `Name: ${pName?.value?.trim() || ''}`,
+      `Phone: ${pPhone?.value?.trim() || ''}`,
+      `Email: ${pEmail?.value?.trim() || ''}`,
+      '',
+      'Items:',
     ];
 
-    if(items.length === 0){
-      lines.push(`- (none)`);
+    if (!items.length) {
+      lines.push('- (none)');
     } else {
       items.forEach((it, i) => {
-        const framedLabel = (it.type === "Digital") ? "No" : (it.framed || "");
-        lines.push(`${i+1}) ${it.image || '(select image)'} — ${it.type || ''} — Frame required: ${framedLabel}`);
+        const f = it.type === 'Digital' ? 'No' : (it.framed || '');
+        lines.push(`${i + 1}) ${it.image || '(select image)'} — ${it.type || ''} — Frame: ${f}`);
       });
     }
 
-    // Calendar line in preview
-    lines.push(``);
-    lines.push(`Calendar interest: ${calendar?.checked ? 'Yes (custom calendar – 12 images)' : 'No'}`);
+    lines.push('', `Calendar interest: ${pCalendar?.checked ? 'Yes (custom calendar – 12 images)' : 'No'}`);
+    lines.push('', `Location: ${pCity?.value?.trim() || ''}`, `Notes: ${pNotes?.value?.trim() || ''}`);
 
-    lines.push(
-      ``,
-      `Delivery location: ${location?.value?.trim() || ''}`,
-      `Notes: ${notes?.value?.trim() || ''}`
-    );
-
-    const text = lines.join('\n');
-
-    if(preview) preview.textContent = text;
-
-    /* items_summary is used as a single plain-text field in the form submission */
-    if(itemsSummary){
-      itemsSummary.value = items
-        .map((it, i) => {
-          const framedLabel = (it.type === "Digital") ? "No" : (it.framed || "");
-          return `${i+1}) ${it.image} — ${it.type} — Frame required: ${framedLabel}`;
-        })
-        .join('\n');
+    if (preview) preview.textContent = lines.join('\n');
+    if (itemsSummary) {
+      itemsSummary.value = items.map((it, i) => {
+        const f = it.type === 'Digital' ? 'No' : (it.framed || '');
+        return `${i + 1}) ${it.image} — ${it.type} — Frame: ${f}`;
+      }).join('\n');
     }
-
-    return text;
   }
 
-  // Keep preview in sync with user input
-  [location, name, phone, email, notes].forEach(x => x && x.addEventListener('input', build));
-  calendar && calendar.addEventListener('change', build);
+  [pCity, pName, pPhone, pEmail, pNotes].forEach(x => x?.addEventListener('input', build));
+  pCalendar?.addEventListener('change', build);
+  addItemBtn?.addEventListener('click', () => addItem());
 
-  // Add new item row
-  if(addItemBtn){
-    addItemBtn.addEventListener('click', () => addItem());
-  }
-
-  /* Form submit:
-     - prevents default browser POST
-     - validates items + HTML required fields
-     - sends via fetch() to Formspree
-     - resets UI + shows toast */
-  if(form){
+  if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const items = getItems();
-      if(!items.length || !items.some(it => (it.image || '').trim())){
+      if (!items.length || !items.some(it => it.image.trim())) {
         showToast('Please add at least one image to your enquiry.');
         return;
       }
+      if (!form.checkValidity()) { form.reportValidity(); return; }
 
-      if(!form.checkValidity()){
-        form.reportValidity();
-        return;
-      }
+      const btn = form.querySelector('#submitEnquiry');
+      const originalText = btn.textContent;
+      btn.textContent = 'Sending…'; btn.disabled = true;
 
       build();
-      const formData = new FormData(form);
-
-      try{
-        const endpoint = form.getAttribute('action') || '';
-        const res = await fetch(endpoint, {
+      try {
+        const res = await fetch(form.action, {
           method: 'POST',
           headers: { 'Accept': 'application/json' },
-          body: formData
+          body: new FormData(form),
         });
-        if(!res.ok) throw new Error('Bad response');
-
+        if (!res.ok) throw new Error('Bad response');
         form.reset();
-        if(itemsWrap) itemsWrap.innerHTML = '';
+        itemsWrap.innerHTML = '';
         addItem();
         build();
-
-        showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
-      }catch(err){
-        console.error(err);
-        // Same message on failure: avoids exposing tech details to the user
-        showToast('Thank you for submitting your enquiry, I will get back to you as soon as possible with an update.');
+        showToast('Thank you — your enquiry has been submitted. I\'ll be in touch as soon as possible.');
+      } catch {
+        showToast('Thank you — your enquiry has been submitted. I\'ll be in touch as soon as possible.');
+      } finally {
+        btn.textContent = originalText; btn.disabled = false;
       }
     });
   }
 
-  /* Initialise:
-     - load titles from gallery
-     - start with one empty item row
-     - build initial preview */
-  (async function init(){
+  (async function init() {
     await loadGalleryTitles();
-    if(itemsWrap) itemsWrap.innerHTML = '';
-    addItem();  // start with 1 blank item
+    if (itemsWrap) itemsWrap.innerHTML = '';
+    addItem();
     build();
   })();
-
 })();
 </script>
 
+
+<!-- ─────────────────────────────────────────
+     FRAMED MOCKUP ROTATOR
+───────────────────────────────────────── -->
 <script>
-/* =========================================================
-   Framed mockup rotator
-   - Reads image list from #framedData
-   - Picks a random starting image
-   - Rotates every 5s
-   - If an image fails to load, it skips to the next
-========================================================= */
-(function(){
-  const img = document.getElementById('framedPreviewImg');
-  const desc = document.getElementById('framedPreviewDesc');
+(function () {
+  const img    = document.getElementById('framedPreviewImg');
   const dataEl = document.getElementById('framedData');
-  if(!img || !dataEl) return;
+  if (!img || !dataEl) return;
 
   let list = [];
-  try{
-    list = JSON.parse(dataEl.textContent).filter(Boolean);
-  }catch(e){
-    console.error('Invalid JSON in #framedData', e);
-  }
-
-  if(!list.length){
-    img.style.display = 'none';
-    if(desc) desc.textContent = 'No framed preview images listed yet.';
-    return;
-  }
+  try { list = JSON.parse(dataEl.textContent).filter(Boolean); }
+  catch { return; }
+  if (!list.length) { img.style.display = 'none'; return; }
 
   let i = Math.floor(Math.random() * list.length);
 
-  function show(idx){
-    img.src = list[idx];
-  }
+  function show(idx) { img.src = list[idx]; }
 
-  img.addEventListener('error', () => {
-    i = (i + 1) % list.length;
-    show(i);
-  });
+  img.addEventListener('error', () => { i = (i + 1) % list.length; show(i); });
 
   show(i);
-  setInterval(() => {
-    i = (i + 1) % list.length;
-    show(i);
-  }, 5000);
+  setInterval(() => { i = (i + 1) % list.length; show(i); }, 5000);
 })();
 </script>
 
-<!-- Image protection “speed bumps” -->
-<script src="protect-images.js"></script>
 
-<!-- Calendar example modal (opened by “View example” link) -->
-<div class="calendar-modal" id="calendarModal" aria-hidden="true">
-  <div class="calendar-modal-inner">
-    <button class="calendar-close" aria-label="Close">&times;</button>
-    <img
-      src="images/calendar-example.jpg"
-      alt="Example astrophotography calendar layout"
-      loading="lazy"
-    />
-  </div>
-</div>
-
+<!-- ─────────────────────────────────────────
+     CALENDAR MODAL
+───────────────────────────────────────── -->
 <script>
-/* Calendar modal controller:
-   - opens when clicking the “View example” link
-   - closes on X button, clicking backdrop, or Escape */
-(function(){
-  const openBtn = document.getElementById('openCalendarExample');
-  const modal = document.getElementById('calendarModal');
+(function () {
+  const openBtn  = document.getElementById('openCalendarExample');
+  const modal    = document.getElementById('calendarModal');
   const closeBtn = modal?.querySelector('.calendar-close');
+  if (!openBtn || !modal) return;
 
-  if(!openBtn || !modal) return;
+  function open()  { modal.classList.add('open');    modal.setAttribute('aria-hidden', 'false'); closeBtn?.focus(); }
+  function close() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); openBtn.focus(); }
 
-  openBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-  });
-
-  closeBtn?.addEventListener('click', () => {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-  });
-
-  modal.addEventListener('click', (e) => {
-    if(e.target === modal){
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden', 'true');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape'){
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden', 'true');
-    }
-  });
+  openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
+  closeBtn?.addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 })();
 </script>
+
+<script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 
 </body>
