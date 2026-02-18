@@ -154,26 +154,35 @@
   fx.className = 'fx-canvas'; // Step 2: make sure this canvas stays transparent + easy to target with CSS
   fx.style.background = 'transparent';
   fx.style.position = 'fixed';
-  fx.style.inset = '0';
+fx.style.top = '0';
+fx.style.left = '0';
+fx.style.right = '0';
+fx.style.bottom = '0';
+fx.style.width = '100%';
+fx.style.height = '100%';
   fx.style.pointerEvents = 'none';
   fx.style.zIndex = '10050'; // above the win overlay
   fx.style.display = 'none';
   document.body.appendChild(fx);
 
-  function resizeFx(){
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    fx.width = Math.floor(window.innerWidth * dpr);
-    fx.height = Math.floor(window.innerHeight * dpr);
-    fxCtx.setTransform(dpr,0,0,dpr,0,0);
-  }
+function resizeFx(){
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  fx.style.width  = vw + 'px';
+  fx.style.height = vh + 'px';
+  fx.width  = Math.floor(vw * dpr);
+  fx.height = Math.floor(vh * dpr);
+  fxCtx.setTransform(dpr,0,0,dpr,0,0);
+}
   window.addEventListener('resize', resizeFx);
 
   function fireworksBurst(){
     resizeFx();
     fx.style.display = 'block';
 
-    const W = window.innerWidth;
-    const H = window.innerHeight;
+     const W = window.innerWidth;
+     const H = window.innerHeight;
 
     const bursts = 10; // more bursts
     const particles = [];
@@ -513,10 +522,10 @@ function resizeCanvasToFit(){
       ctx.globalAlpha = 1;
     }
 
-    const ordered = [...pieces].sort((a,b)=> (a.locked - b.locked));
-    for(const p of ordered){
-      drawPiece(p);
-    }
+     const locked = pieces.filter(p => p.locked);
+     const free   = pieces.filter(p => !p.locked);
+     for(const p of locked) drawPiece(p);
+     for(const p of free)   drawPiece(p);
   }
 
   // Return ALL unlocked pieces under the pointer, top-to-bottom
