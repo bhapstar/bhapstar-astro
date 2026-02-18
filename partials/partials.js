@@ -5,8 +5,9 @@
    1. Dynamic year in footer
    2. Burger menu toggle (with double-bind + double-load guards)
    3. Active nav link highlighting
-   4. Scroll reveal (with MutationObserver for dynamic cards)
-   5. Hero star-particle canvas (index page only)
+   4. Puzzles submenu toggle + auto-open on active child
+   5. Scroll reveal (with MutationObserver for dynamic cards)
+   6. Hero star-particle canvas (index page only)
 ========================= */
 
 (async function () {
@@ -77,9 +78,21 @@
       });
 
       // Close when a nav link is tapped (mobile UX)
+      // Note: excludes the submenu toggle button so it doesn't close the menu
       menu.querySelectorAll('a').forEach(a => {
         a.addEventListener('click', menuClose);
       });
+
+      // ── Puzzles submenu toggle ──
+      const navGroupBtn = menu.querySelector('.nav-group-btn');
+      const navSubmenu  = menu.querySelector('.nav-submenu');
+      if (navGroupBtn && navSubmenu) {
+        navGroupBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const open = navSubmenu.classList.toggle('open');
+          navGroupBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
     }
 
 
@@ -89,7 +102,9 @@
        href of each nav link and adds .active
     ───────────────────────────────────────── */
     const path = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-menu a').forEach(a => {
+
+    // Check all links including submenu links
+    document.querySelectorAll('.nav-menu a, .nav-submenu a').forEach(a => {
       const href = (a.getAttribute('href') || '').split('/').pop();
       if (href === path) {
         a.classList.add('active');
@@ -99,6 +114,17 @@
         a.removeAttribute('aria-current');
       }
     });
+
+    // Auto-open the Puzzles submenu if a child link is the active page
+    const activeSubmenuLink = document.querySelector('.nav-submenu a.active');
+    if (activeSubmenuLink) {
+      const submenu = activeSubmenuLink.closest('.nav-submenu');
+      const btn     = submenu?.previousElementSibling;
+      if (submenu && btn) {
+        submenu.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
 
 
     /* ─────────────────────────────────────────

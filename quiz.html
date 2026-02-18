@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Space Quiz — bhapstar</title>
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ── Quiz page overrides ── */
+    .page-quiz .quiz-wrap{
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ── Top bar ── */
+    .quiz-top{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(167,139,250,0.12);
+      border-radius: 20px;
+      padding: 14px 18px;
+      background: rgba(167,139,250,0.03);
+      margin: 18px 0 20px;
+    }
+    .quiz-top h2{
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .quiz-top .sub{
+      font-size: 12px;
+      opacity: .74;
+      margin-top: 4px;
+    }
+    .quiz-meta{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .quiz-badge{
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(167,139,250,0.07);
+      color: rgba(200,195,235,0.88);
+      white-space: nowrap;
+    }
+    .quiz-badge.score-badge{
+      border-color: rgba(52,211,153,0.30);
+      background: rgba(52,211,153,0.07);
+      color: rgba(52,211,153,0.95);
+    }
+
+    /* ── Progress bar ── */
+    .quiz-progress-wrap{
+      margin-bottom: 22px;
+    }
+    .quiz-progress-labels{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(200,195,235,0.55);
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .quiz-progress-track{
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(167,139,250,0.10);
+      overflow: hidden;
+    }
+    .quiz-progress-fill{
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #7c3aed, #38bdf8);
+      transition: width 400ms cubic-bezier(0.16,1,0.3,1);
+      width: 0%;
+    }
+
+    /* ── Question card ── */
+    .quiz-card{
+      border: 1px solid rgba(167,139,250,0.14);
+      border-radius: 22px;
+      background: rgba(167,139,250,0.03);
+      padding: 28px 26px 22px;
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 320ms cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes cardIn{
+      from{ opacity:0; transform: translateY(14px) scale(0.98); }
+      to{   opacity:1; transform: translateY(0)    scale(1); }
+    }
+    .quiz-card::before{
+      content:"";
+      position:absolute; top:0; left:16px; right:16px; height:1.5px;
+      background: linear-gradient(90deg, transparent, rgba(167,139,250,0.60), rgba(96,165,250,0.70), transparent);
+      opacity:0.55;
+    }
+
+    .quiz-type-tag{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(200,195,235,0.55);
+      margin-bottom: 14px;
+    }
+    .quiz-type-dot{
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+    .quiz-type-dot.mc  { background: #a78bfa; }
+    .quiz-type-dot.tf  { background: #38bdf8; }
+    .quiz-type-dot.drag{ background: #34d399; }
+
+    .quiz-question{
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.50;
+      color: rgba(255,255,255,0.96);
+      margin: 0 0 22px;
+    }
+
+    /* ── Fun fact ── */
+    .quiz-fact{
+      margin-top: 16px;
+      padding: 12px 15px;
+      border-radius: 14px;
+      border: 1px solid rgba(96,165,250,0.18);
+      background: rgba(96,165,250,0.06);
+      font-size: 13px;
+      color: rgba(200,195,235,0.82);
+      line-height: 1.60;
+      display: none;
+    }
+    .quiz-fact.show{ display: block; animation: cardIn 280ms ease both; }
+    .quiz-fact strong{ color: rgba(96,165,250,0.95); }
+
+    /* ── Multiple choice ── */
+    .mc-options{
+      display: grid;
+      gap: 9px;
+    }
+    .mc-btn{
+      width: 100%;
+      text-align: left;
+      padding: 13px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(167,139,250,0.16);
+      background: rgba(167,139,250,0.04);
+      color: rgba(255,255,255,0.90);
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .mc-btn:hover:not(:disabled){
+      background: rgba(167,139,250,0.10);
+      border-color: rgba(167,139,250,0.34);
+      transform: translateX(3px);
+    }
+    .mc-btn .mc-letter{
+      flex: 0 0 auto;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(167,139,250,0.28);
+      background: rgba(167,139,250,0.08);
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 700;
+      color: rgba(200,195,235,0.80);
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+    .mc-btn.correct{
+      border-color: rgba(52,211,153,0.60);
+      background: rgba(52,211,153,0.10);
+      color: rgba(52,211,153,0.98);
+    }
+    .mc-btn.correct .mc-letter{
+      background: rgba(52,211,153,0.20);
+      border-color: rgba(52,211,153,0.50);
+      color: rgba(52,211,153,0.95);
+    }
+    .mc-btn.wrong{
+      border-color: rgba(244,114,182,0.50);
+      background: rgba(244,114,182,0.08);
+      color: rgba(244,114,182,0.90);
+    }
+    .mc-btn.wrong .mc-letter{
+      background: rgba(244,114,182,0.15);
+      border-color: rgba(244,114,182,0.40);
+      color: rgba(244,114,182,0.90);
+    }
+    .mc-btn:disabled{ cursor: default; transform: none; }
+
+    /* ── True / False ── */
+    .tf-options{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .tf-btn{
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(167,139,250,0.16);
+      background: rgba(167,139,250,0.04);
+      color: rgba(255,255,255,0.90);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+    .tf-btn:hover:not(:disabled){
+      background: rgba(167,139,250,0.10);
+      border-color: rgba(167,139,250,0.34);
+      transform: translateY(-2px);
+    }
+    .tf-btn:disabled{ cursor: default; transform: none; }
+    .tf-btn.correct{
+      border-color: rgba(52,211,153,0.60);
+      background: rgba(52,211,153,0.10);
+      color: rgba(52,211,153,0.98);
+    }
+    .tf-btn.wrong{
+      border-color: rgba(244,114,182,0.50);
+      background: rgba(244,114,182,0.08);
+      color: rgba(244,114,182,0.90);
+    }
+
+    /* ── Drag / fill-in-blank ── */
+    .drag-sentence{
+      font-size: 16px;
+      line-height: 2.2;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 18px;
+      min-height: 48px;
+    }
+    .drag-blank{
+      display: inline-block;
+      min-width: 110px;
+      padding: 2px 10px;
+      border-radius: 8px;
+      border: 2px dashed rgba(167,139,250,0.40);
+      background: rgba(167,139,250,0.06);
+      color: rgba(200,195,235,0.50);
+      font-style: italic;
+      font-size: 15px;
+      vertical-align: middle;
+      text-align: center;
+      transition: border-color 200ms ease, background 200ms ease;
+      cursor: default;
+    }
+    .drag-blank.over{
+      border-color: rgba(167,139,250,0.80);
+      background: rgba(167,139,250,0.14);
+    }
+    .drag-blank.filled{
+      border-style: solid;
+      border-color: rgba(167,139,250,0.50);
+      color: rgba(255,255,255,0.95);
+      font-style: normal;
+      background: rgba(167,139,250,0.10);
+    }
+    .drag-blank.correct-fill{
+      border-color: rgba(52,211,153,0.70);
+      background: rgba(52,211,153,0.12);
+      color: rgba(52,211,153,0.98);
+    }
+    .drag-blank.wrong-fill{
+      border-color: rgba(244,114,182,0.60);
+      background: rgba(244,114,182,0.10);
+      color: rgba(244,114,182,0.92);
+    }
+
+    .drag-words{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .drag-word{
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.28);
+      background: rgba(167,139,250,0.08);
+      color: rgba(255,255,255,0.92);
+      font-size: 13px;
+      cursor: grab;
+      user-select: none;
+      transition: background 150ms ease, border-color 150ms ease, transform 120ms ease, opacity 160ms ease;
+    }
+    .drag-word:hover{ background: rgba(167,139,250,0.16); border-color: rgba(167,139,250,0.50); transform: translateY(-2px); }
+    .drag-word.dragging{ opacity: 0.35; cursor: grabbing; }
+    .drag-word.used{ opacity: 0.28; cursor: default; pointer-events: none; }
+    .drag-word.tap-selected{
+      background: rgba(167,139,250,0.24);
+      border-color: rgba(167,139,250,0.70);
+      box-shadow: 0 0 0 3px rgba(167,139,250,0.18);
+    }
+
+    /* ── Next / submit row ── */
+    .quiz-actions{
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ── Score / end screen ── */
+    .quiz-end{
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      animation: cardIn 360ms cubic-bezier(0.16,1,0.3,1) both;
+    }
+    .quiz-end.show{ display: block; }
+
+    .score-ring-wrap{
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .score-ring{
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 3px solid rgba(167,139,250,0.14);
+      background: rgba(167,139,250,0.04);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .score-ring svg{
+      position: absolute; inset: -3px;
+      width: calc(100% + 6px); height: calc(100% + 6px);
+      transform: rotate(-90deg);
+    }
+    .score-ring-circle{
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke: url(#scoreGrad);
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    .score-number{
+      font-size: 38px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #7c3aed, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .score-denom{
+      font-size: 14px;
+      color: rgba(200,195,235,0.55);
+      margin-top: 3px;
+    }
+    .score-label{
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: rgba(255,255,255,0.96);
+    }
+    .score-sub{
+      font-size: 14px;
+      color: rgba(200,195,235,0.68);
+      max-width: 44ch;
+      margin: 0 auto 28px;
+      line-height: 1.65;
+    }
+
+    /* ── Set intro screen ── */
+    .quiz-intro{
+      text-align: center;
+      padding: 36px 20px;
+      animation: cardIn 320ms cubic-bezier(0.16,1,0.3,1) both;
+    }
+    .quiz-intro h3{
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      background: linear-gradient(90deg, #7c3aed, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .quiz-intro p{
+      color: rgba(200,195,235,0.72);
+      font-size: 14px;
+      line-height: 1.68;
+      max-width: 46ch;
+      margin: 0 auto 24px;
+    }
+    .set-dots{
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .set-dot{
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(167,139,250,0.18);
+      border: 1px solid rgba(167,139,250,0.25);
+      transition: background 200ms ease;
+    }
+    .set-dot.done{ background: rgba(52,211,153,0.60); border-color: rgba(52,211,153,0.40); }
+    .set-dot.active{ background: rgba(167,139,250,0.70); border-color: rgba(167,139,250,0.50); }
+
+    @media (max-width: 560px){
+      .tf-options{ grid-template-columns: 1fr; }
+      .quiz-card{ padding: 20px 16px 18px; }
+      .quiz-question{ font-size: 15px; }
+    }
+  </style>
+</head>
+
+<body class="page-quiz">
+
+<div id="siteHeader"></div>
+
+<main class="section">
+  <div class="quiz-wrap">
+
+    <!-- Top bar -->
+    <div class="quiz-top">
+      <div>
+        <h2>Space Trivia Quiz</h2>
+        <div class="sub">10 questions per set · Multiple formats · See how much you know about the universe</div>
+      </div>
+      <div class="quiz-meta">
+        <span class="quiz-badge" id="setBadge">Set 1 of 10</span>
+        <span class="quiz-badge score-badge" id="totalBadge">Total: 0 pts</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-labels">
+        <span id="progressLabel">Question 1 of 10</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="quiz-progress-track">
+        <div class="quiz-progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Set intro screen -->
+    <div class="quiz-card quiz-intro" id="introScreen">
+      <div class="set-dots" id="setDots"></div>
+      <h3 id="introTitle">Ready for Set 1?</h3>
+      <p id="introDesc">10 questions about the cosmos — multiple choice, true/false, and fill-in-the-blank. Good luck! 🚀</p>
+      <button class="btn primary" id="startSetBtn" type="button">Start Set</button>
+    </div>
+
+    <!-- Question area (hidden initially) -->
+    <div id="questionArea" style="display:none;"></div>
+
+    <!-- End / score screen -->
+    <div class="quiz-card quiz-end" id="endScreen">
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#7c3aed"/>
+            <stop offset="100%" stop-color="#38bdf8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg viewBox="0 0 146 146" xmlns="http://www.w3.org/2000/svg">
+            <circle class="score-ring-circle" id="scoreCircle" cx="73" cy="73" r="65"/>
+          </svg>
+          <div>
+            <div class="score-number" id="scoreNum">0</div>
+            <div class="score-denom" id="scoreDenom">/ 10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-label" id="scoreLabel">Brilliant!</div>
+      <div class="score-sub"  id="scoreSub">You answered 8 out of 10 correctly.</div>
+
+      <div class="set-dots" id="endSetDots"></div>
+
+      <div class="actions" style="justify-content:center; gap:10px; flex-wrap:wrap;">
+        <button class="btn primary" id="nextSetBtn" type="button">Next Set →</button>
+        <button class="btn" id="restartBtn" type="button">Start Over</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="siteFooter"></div>
+
+<script>
+(() => {
+
+/* ================================================================
+   QUESTION BANK — 100 space questions, 3 formats
+   mc  = multiple choice  (options[], answer index)
+   tf  = true / false     (answer: true|false)
+   drag= fill-in-blank    (sentence with ___, answer, distractors[])
+================================================================ */
+const ALL_QUESTIONS = [
+  // ── MULTIPLE CHOICE ──────────────────────────────────────
+  { type:'mc', q:"What is the closest star to Earth (other than the Sun)?", options:["Barnard's Star","Sirius","Proxima Centauri","Alpha Centauri A"], answer:2, fact:"Proxima Centauri is about 4.24 light-years away and is a small red dwarf star." },
+  { type:'mc', q:"Which planet has the most moons in our Solar System?", options:["Jupiter","Saturn","Uranus","Neptune"], answer:1, fact:"Saturn currently leads with over 140 confirmed moons, including the giant Titan." },
+  { type:'mc', q:"What is the name of the galaxy closest to the Milky Way?", options:["Triangulum Galaxy","Andromeda Galaxy","Large Magellanic Cloud","Whirlpool Galaxy"], answer:1, fact:"The Andromeda Galaxy (M31) is about 2.5 million light-years away and is on a collision course with the Milky Way." },
+  { type:'mc', q:"What causes a solar eclipse?", options:["Earth passes between the Sun and Moon","Moon passes between Earth and Sun","Sun passes between Earth and Moon","Earth's shadow falls on the Moon"], answer:1, fact:"A total solar eclipse occurs when the Moon perfectly covers the Sun's disc as seen from Earth — a cosmic coincidence of sizes and distances." },
+  { type:'mc', q:"What is a light-year a measure of?", options:["Time","Speed","Distance","Brightness"], answer:2, fact:"A light-year is the distance light travels in one year — about 9.46 trillion kilometres." },
+  { type:'mc', q:"Which space telescope was launched in 2021 to replace Hubble?", options:["Chandra X-ray Observatory","James Webb Space Telescope","Spitzer Space Telescope","Kepler Space Telescope"], answer:1, fact:"The James Webb Space Telescope launched on 25 December 2021 and observes in infrared, revealing the earliest galaxies." },
+  { type:'mc', q:"What is the Great Red Spot on Jupiter?", options:["A giant volcano","A crater from an asteroid","A persistent storm larger than Earth","A region of frozen methane"], answer:2, fact:"The Great Red Spot is a storm that has raged for at least 350 years, though it has been shrinking in recent decades." },
+  { type:'mc', q:"What type of object is a pulsar?", options:["A type of black hole","A rapidly rotating neutron star","A young star forming nebula","A white dwarf in a binary system"], answer:1, fact:"Pulsars are incredibly dense neutron stars that emit beams of radiation — they can rotate hundreds of times per second." },
+  { type:'mc', q:"Which planet rotates on its side with an axial tilt of about 98 degrees?", options:["Neptune","Venus","Uranus","Saturn"], answer:2, fact:"Uranus is thought to have been knocked onto its side by a massive collision early in the Solar System's history." },
+  { type:'mc', q:"What is the Chandrasekhar limit?", options:["Maximum mass of a neutron star","Maximum mass of a white dwarf (~1.4 solar masses)","Minimum mass needed to form a black hole","Speed at which stars leave the galaxy"], answer:1, fact:"Above the Chandrasekhar limit of ~1.4 solar masses, a white dwarf cannot support itself and will collapse or explode as a Type Ia supernova." },
+  { type:'mc', q:"What colour is the Sun when viewed from space?", options:["Yellow","Orange","White","Blue-white"], answer:2, fact:"The Sun emits white light — it only appears yellow/orange near the horizon on Earth due to atmospheric scattering." },
+  { type:'mc', q:"What is the term for a star in its final stages that has shed its outer layers?", options:["Red giant","White dwarf","Neutron star","Protostar"], answer:1, fact:"White dwarfs are the remnant cores of stars like our Sun — incredibly dense but slowly cooling over billions of years." },
+  { type:'mc', q:"Which mission first landed humans on the Moon?", options:["Apollo 10","Apollo 11","Gemini 12","Apollo 8"], answer:1, fact:"Apollo 11 landed on the Moon on 20 July 1969. Neil Armstrong and Buzz Aldrin walked the surface while Michael Collins orbited above." },
+  { type:'mc', q:"What is the Oort Cloud?", options:["A cloud of gas near the Sun","A distant spherical region of icy bodies surrounding the Solar System","A nebula in Orion","A cluster of young stars"], answer:1, fact:"The Oort Cloud is thought to be the source of long-period comets and extends up to 100,000 AU from the Sun." },
+  { type:'mc', q:"What does NASA's acronym stand for?", options:["National Aeronautics and Space Administration","National Astronomical Science Agency","North American Space Authority","National Aerospace and Satellite Administration"], answer:0, fact:"NASA was established in 1958, succeeding the earlier National Advisory Committee for Aeronautics (NACA)." },
+  { type:'mc', q:"What is the name of the boundary beyond which light cannot escape a black hole?", options:["Photon sphere","Accretion disc","Event horizon","Schwarzschild radius"], answer:2, fact:"The event horizon is the point of no return around a black hole — not a physical surface but a boundary in spacetime." },
+  { type:'mc', q:"Which element is most abundant in the universe?", options:["Helium","Carbon","Oxygen","Hydrogen"], answer:3, fact:"Hydrogen makes up about 75% of all normal matter in the universe — it's the fuel that powers stars through nuclear fusion." },
+  { type:'mc', q:"What is the Hubble constant used to measure?", options:["The brightness of stars","The rate of expansion of the universe","The distance to the Moon","The age of meteorites"], answer:1, fact:"The Hubble constant (H₀) describes how fast the universe is expanding — its precise value is still debated among cosmologists." },
+  { type:'mc', q:"On which planet is Olympus Mons, the tallest volcano in the Solar System?", options:["Venus","Earth","Mars","Io"], answer:2, fact:"Olympus Mons on Mars is about 21 km high — nearly 3 times the height of Mount Everest above sea level." },
+  { type:'mc', q:"What is a nebula?", options:["A type of galaxy","A cloud of gas and dust in space","A binary star system","A dark matter filament"], answer:1, fact:"Nebulae are stellar nurseries where new stars are born, as well as the remnants left behind when stars die." },
+  { type:'mc', q:"What force keeps planets in orbit around the Sun?", options:["Electromagnetism","Strong nuclear force","Gravity","Dark energy"], answer:2, fact:"Gravity is the attraction between masses — the Sun's immense gravity curves spacetime, keeping planets in their orbits." },
+  { type:'mc', q:"What is the main sequence?", options:["The order planets formed","A stage in a star's life where it fuses hydrogen in its core","The path a comet takes","A catalogue of galaxies"], answer:1, fact:"Our Sun has been on the main sequence for about 4.6 billion years and has another ~5 billion years to go." },
+  { type:'mc', q:"Which spacecraft made the first successful flyby of Pluto?", options:["Voyager 1","Cassini","New Horizons","Pioneer 10"], answer:2, fact:"New Horizons flew past Pluto in July 2015, revealing heart-shaped nitrogen ice plains and towering mountains of water ice." },
+  { type:'mc', q:"What is dark matter?", options:["Matter inside black holes","Matter that emits no light but has gravitational effects","Antimatter","Gas between galaxies"], answer:1, fact:"Dark matter makes up about 27% of the universe's content but has never been directly detected — we only see its gravitational influence." },
+  { type:'mc', q:"What is the Milky Way's galactic type?", options:["Elliptical","Irregular","Barred spiral","Ring galaxy"], answer:2, fact:"The Milky Way is a barred spiral galaxy about 100,000 light-years across, with a central bar-shaped region of stars." },
+  { type:'mc', q:"What happens during a supernova?", options:["A star is born","A planet is destroyed","A massive star violently explodes at the end of its life","Two galaxies merge"], answer:2, fact:"A core-collapse supernova can briefly outshine an entire galaxy, and the explosion forges heavy elements scattered into space." },
+  { type:'mc', q:"What is the cosmic microwave background (CMB)?", options:["Radiation from black holes","The afterglow of the Big Bang, filling all of space","Radiation from the Sun","X-rays from galaxy clusters"], answer:1, fact:"The CMB was discovered in 1965 and is the oldest light in the universe — a snapshot of the cosmos just 380,000 years after the Big Bang." },
+  { type:'mc', q:"Which moon of Saturn has a thick atmosphere and lakes of liquid methane?", options:["Enceladus","Rhea","Titan","Dione"], answer:2, fact:"Titan is the only moon in the Solar System with a dense atmosphere, and its methane lakes make it one of the most Earth-like alien worlds." },
+  { type:'mc', q:"What is the approximate age of the universe?", options:["4.6 billion years","13.8 billion years","100 billion years","1 billion years"], answer:1, fact:"The universe is estimated to be 13.8 billion years old, based on measurements of the CMB and the expansion rate." },
+  { type:'mc', q:"What is a quasar?", options:["A type of asteroid","An extremely luminous active galactic nucleus powered by a supermassive black hole","A rapidly spinning neutron star","A type of nebula"], answer:1, fact:"Quasars are the most luminous objects in the universe — some outshine entire galaxies by a factor of thousands." },
+
+  // ── TRUE / FALSE ──────────────────────────────────────────
+  { type:'tf', q:"The Sun is about halfway through its life on the main sequence.", answer:true, fact:"The Sun formed about 4.6 billion years ago and is expected to remain on the main sequence for another ~5 billion years." },
+  { type:'tf', q:"Venus is the hottest planet in the Solar System.", answer:true, fact:"Despite being farther from the Sun than Mercury, Venus's thick CO₂ atmosphere creates a runaway greenhouse effect — surface temperatures reach ~465 °C." },
+  { type:'tf', q:"A day on Mars is shorter than a day on Earth.", answer:false, fact:"A Martian day (sol) is 24 hours and 37 minutes — just slightly longer than an Earth day." },
+  { type:'tf', q:"Neutron stars can spin hundreds of times per second.", answer:true, fact:"The fastest known pulsar spins at 716 times per second — faster than a kitchen blender!" },
+  { type:'tf', q:"The Andromeda Galaxy will collide with the Milky Way in about 4.5 billion years.", answer:true, fact:"The two galaxies are approaching each other at about 110 km/s. The collision will be a slow merge — stars are so spread out that few will actually collide." },
+  { type:'tf', q:"Sound travels faster in space than in air.", answer:false, fact:"Sound cannot travel through the vacuum of space at all — it requires a medium like air or water to propagate." },
+  { type:'tf', q:"Pluto is larger than Earth's Moon.", answer:false, fact:"Pluto has a diameter of about 2,377 km, while Earth's Moon is about 3,475 km across." },
+  { type:'tf', q:"Black holes have infinite density according to classical physics.", answer:true, fact:"At the singularity of a black hole, our current physics breaks down. Quantum gravity theories aim to resolve this." },
+  { type:'tf', q:"The International Space Station orbits Earth approximately every 90 minutes.", answer:true, fact:"The ISS travels at about 7.7 km/s and completes roughly 15.5 orbits per day." },
+  { type:'tf', q:"Jupiter's moon Europa is thought to have a liquid water ocean beneath its icy surface.", answer:true, fact:"Europa's subsurface ocean may contain twice as much water as all of Earth's oceans combined, making it a prime candidate for extraterrestrial life." },
+  { type:'tf', q:"The Moon has no atmosphere whatsoever.", answer:false, fact:"The Moon has an extremely thin atmosphere called an exosphere — but it's so sparse it's essentially a vacuum compared to Earth's atmosphere." },
+  { type:'tf', q:"Light from the Sun takes about 8 minutes to reach Earth.", answer:true, fact:"Light travels at 299,792 km/s — the average Earth-Sun distance (1 AU) means we see the Sun as it was about 8 minutes 20 seconds ago." },
+  { type:'tf', q:"All stars eventually become black holes.", answer:false, fact:"Only the most massive stars (roughly more than 20–25 solar masses) end their lives as black holes. Smaller stars like our Sun become white dwarfs." },
+  { type:'tf', q:"Saturn's rings are mostly made of rock and iron.", answer:false, fact:"Saturn's rings are composed primarily of water ice particles, ranging in size from tiny grains to chunks as large as houses." },
+  { type:'tf', q:"The Voyager 1 spacecraft has left the Solar System and entered interstellar space.", answer:true, fact:"Voyager 1 crossed into interstellar space in 2012 — it launched in 1977 and is the most distant human-made object." },
+  { type:'tf', q:"There are more stars in the observable universe than grains of sand on all of Earth's beaches.", answer:true, fact:"Estimates suggest around 2 trillion galaxies in the observable universe, each containing hundreds of billions of stars." },
+  { type:'tf', q:"Mars has the largest canyon in the Solar System.", answer:true, fact:"Valles Marineris stretches about 4,000 km long and reaches depths of 7 km — it would span the entire United States." },
+  { type:'tf', q:"The speed of light is the same in all materials.", answer:false, fact:"Light slows down when passing through materials like water or glass. Only in a perfect vacuum does it travel at its maximum speed of ~299,792 km/s." },
+  { type:'tf', q:"Stars twinkle because of turbulence in Earth's atmosphere.", answer:true, fact:"The twinkling (scintillation) is caused by air pockets of varying temperature and density bending starlight as it passes through the atmosphere." },
+  { type:'tf', q:"The observable universe is about 93 billion light-years in diameter.", answer:true, fact:"Even though the universe is 13.8 billion years old, cosmic expansion means the most distant light we can see originated from regions now ~46 billion light-years away." },
+
+  // ── DRAG / FILL IN BLANK ──────────────────────────────────
+  { type:'drag', q:"Complete the sentence:", sentence:"The point of no return around a black hole is called the ___ horizon.", answer:"event", distractors:["photon","escape","gravity","dark"], fact:"Beyond the event horizon, nothing — not even light — has enough velocity to escape the black hole's gravitational pull." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The process that powers stars by combining hydrogen nuclei is called nuclear ___.", answer:"fusion", distractors:["fission","decay","ignition","collapse"], fact:"Nuclear fusion releases enormous energy — the Sun fuses about 600 million tonnes of hydrogen into helium every second." },
+  { type:'drag', q:"Complete the sentence:", sentence:"A ___ is a remnant of a low-mass star that has exhausted its nuclear fuel.", answer:"white dwarf", distractors:["red giant","neutron star","protostar","brown dwarf"], fact:"White dwarfs are incredibly dense — a teaspoon of white dwarf material would weigh about 5 tonnes on Earth." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The Milky Way's supermassive black hole is called Sagittarius ___.", answer:"A*", distractors:["B","C*","Zero","Prime"], fact:"Sagittarius A* has a mass of about 4 million solar masses and was imaged for the first time in 2022." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The study of the origin and evolution of the universe is called ___.", answer:"cosmology", distractors:["astronomy","astrology","geology","physics"], fact:"Cosmology combines observations, mathematics and physics to understand the universe on the largest scales." },
+  { type:'drag', q:"Complete the sentence:", sentence:"___ is the force that accelerates the expansion of the universe.", answer:"Dark energy", distractors:["Dark matter","Gravity","Radiation","Fusion"], fact:"Dark energy makes up about 68% of the universe's total energy content and causes the expansion of space to accelerate." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The Hertzsprung–Russell diagram plots stars by their ___ and luminosity.", answer:"temperature", distractors:["distance","age","mass","colour"], fact:"The H-R diagram is one of astronomy's most powerful tools, showing how stars evolve across their lifetimes." },
+  { type:'drag', q:"Complete the sentence:", sentence:"A shooting star is actually a ___ burning up in Earth's atmosphere.", answer:"meteor", distractors:["asteroid","comet","satellite","meteorite"], fact:"When a meteor survives the journey and lands on Earth, it's called a meteorite. Most burn up completely at high altitude." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The Big ___ theory describes the origin of the universe from an extremely hot, dense state.", answer:"Bang", distractors:["Crunch","Rip","Freeze","Flash"], fact:"The Big Bang occurred approximately 13.8 billion years ago. The term was ironically coined by astronomer Fred Hoyle, who actually opposed the theory." },
+  { type:'drag', q:"Complete the sentence:", sentence:"Jupiter's four largest moons — Io, Europa, Ganymede and Callisto — are called the ___ moons.", answer:"Galilean", distractors:["Cassini","Kepler","Hubble","Jovian"], fact:"Galileo Galilei discovered these four moons in 1610 — the first objects found to orbit a body other than Earth or the Sun." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The ___ Belt is a region between Mars and Jupiter containing many rocky bodies.", answer:"Asteroid", distractors:["Kuiper","Oort","Van Allen","Debris"], fact:"The Asteroid Belt contains millions of objects, but its total mass is less than 4% of Earth's Moon." },
+  { type:'drag', q:"Complete the sentence:", sentence:"A ___ year is the time it takes Earth to complete one orbit of the Sun.", answer:"solar", distractors:["lunar","sidereal","tropical","stellar"], fact:"An Earth year is about 365.25 days, which is why we add a leap day every four years." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The ___ shift describes how light from distant galaxies is stretched to longer wavelengths as the universe expands.", answer:"red", distractors:["blue","green","gamma","X-ray"], fact:"Redshift is direct evidence that the universe is expanding — the farther a galaxy is, the more its light is redshifted." },
+  { type:'drag', q:"Complete the sentence:", sentence:"A ___ dwarf is a star too small to sustain hydrogen fusion in its core.", answer:"brown", distractors:["red","white","yellow","black"], fact:"Brown dwarfs are sometimes called 'failed stars' — they are more massive than planets but not quite massive enough to ignite fusion." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The ___ Nebula in Orion is one of the closest regions of active star formation to Earth.", answer:"Orion", distractors:["Crab","Ring","Eagle","Helix"], fact:"The Orion Nebula (M42) is about 1,344 light-years away and is visible to the naked eye as a fuzzy patch below Orion's belt." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The ___ effect describes the change in frequency of waves from a moving source.", answer:"Doppler", distractors:["Hubble","Compton","Lense","Zeeman"], fact:"The Doppler effect applies to light as well as sound — astronomers use it to measure how fast stars and galaxies are moving toward or away from us." },
+  { type:'drag', q:"Complete the sentence:", sentence:"___ radiation is the most energetic part of the electromagnetic spectrum.", answer:"Gamma", distractors:["Radio","Infrared","Visible","X-ray"], fact:"Gamma rays have wavelengths shorter than 0.01 nanometres and are produced by nuclear explosions, supernovae and pulsars." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The ___ period of a celestial object is the time it takes to complete one rotation on its axis.", answer:"rotation", distractors:["orbital","synodic","sidereal","precession"], fact:"Earth's rotation period is about 23 hours 56 minutes (sidereal day) — the 24-hour day is the solar day relative to the Sun." },
+  { type:'drag', q:"Complete the sentence:", sentence:"Enceladus, a moon of Saturn, shoots plumes of water ___ into space from its south pole.", answer:"vapour", distractors:["methane","ammonia","carbon","nitrogen"], fact:"The Cassini spacecraft flew through Enceladus's plumes and detected organic molecules, raising the possibility of life in its subsurface ocean." },
+  { type:'drag', q:"Complete the sentence:", sentence:"The theoretical minimum temperature is known as ___ zero.", answer:"absolute", distractors:["quantum","cosmic","stellar","nuclear"], fact:"Absolute zero is −273.15 °C (0 Kelvin) — the point at which all thermal motion theoretically ceases. It is never fully reached in practice." },
+];
+
+/* ================================================================
+   QUIZ ENGINE
+================================================================ */
+const QUESTIONS_PER_SET = 10;
+
+let shuffled = [];
+let sets = [];
+let currentSet = 0;
+let currentQ = 0;
+let setScore = 0;
+let totalScore = 0;
+let totalCorrect = 0;
+let totalAnswered = 0;
+let answered = false;
+
+// drag state
+let dragWord = null;
+let tapSelected = null;
+
+function shuffle(arr){
+  return arr.map(v=>({v,r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
+}
+
+function init(){
+  shuffled = shuffle([...ALL_QUESTIONS]);
+  // Chunk into sets of 10
+  sets = [];
+  for(let i=0; i<shuffled.length; i+=QUESTIONS_PER_SET){
+    sets.push(shuffled.slice(i, i+QUESTIONS_PER_SET));
+  }
+  currentSet = 0;
+  currentQ = 0;
+  totalScore = 0;
+  totalCorrect = 0;
+  totalAnswered = 0;
+  updateMeta();
+  showIntro();
+}
+
+function updateMeta(){
+  const totalSets = sets.length;
+  document.getElementById('setBadge').textContent = `Set ${currentSet+1} of ${totalSets}`;
+  document.getElementById('totalBadge').textContent = `Score: ${totalCorrect} / ${totalAnswered}`;
+}
+
+function updateProgress(){
+  const total = QUESTIONS_PER_SET;
+  const done  = currentQ;
+  const pct   = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Question ${Math.min(currentQ+1, total)} of ${total}`;
+  document.getElementById('progressPct').textContent   = pct + '%';
+}
+
+function buildSetDots(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  sets.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'set-dot' + (i < currentSet ? ' done' : i === currentSet ? ' active' : '');
+    el.appendChild(d);
+  });
+}
+
+function showIntro(){
+  document.getElementById('introScreen').style.display = '';
+  document.getElementById('questionArea').style.display = 'none';
+  document.getElementById('endScreen').classList.remove('show');
+
+  buildSetDots('setDots');
+
+  const setNum = currentSet + 1;
+  document.getElementById('introTitle').textContent = currentSet === 0
+    ? 'Ready to explore the cosmos? 🚀'
+    : `Set ${setNum} — ready for more? ⭐`;
+
+  document.getElementById('introDesc').textContent = currentSet === 0
+    ? '10 questions across multiple formats. Good luck!'
+    : `You scored ${setScore} on the last set. Keep it up!`;
+
+  updateProgress();
+  updateMeta();
+}
+
+function startSet(){
+  setScore = 0;
+  currentQ = 0;
+  answered = false;
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('questionArea').style.display = '';
+  document.getElementById('endScreen').classList.remove('show');
+  showQuestion();
+}
+
+function showQuestion(){
+  answered = false;
+  updateProgress();
+
+  const q = sets[currentSet][currentQ];
+  const area = document.getElementById('questionArea');
+  area.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+
+  // type tag
+  const tag = document.createElement('div');
+  tag.className = 'quiz-type-tag';
+  const dot = document.createElement('span');
+  dot.className = 'quiz-type-dot ' + q.type;
+  tag.appendChild(dot);
+  tag.appendChild(document.createTextNode(
+    q.type === 'mc' ? 'Multiple Choice' :
+    q.type === 'tf' ? 'True or False' : 'Fill in the Blank'
+  ));
+  card.appendChild(tag);
+
+  // question
+  const qEl = document.createElement('div');
+  qEl.className = 'quiz-question';
+  qEl.textContent = q.q;
+  card.appendChild(qEl);
+
+  // answer UI
+  if(q.type === 'mc') buildMC(card, q);
+  else if(q.type === 'tf') buildTF(card, q);
+  else buildDrag(card, q);
+
+  // fact (hidden)
+  const fact = document.createElement('div');
+  fact.className = 'quiz-fact';
+  fact.id = 'quizFact';
+  fact.innerHTML = `<strong>💡 Did you know?</strong> ${q.fact}`;
+  card.appendChild(fact);
+
+  // actions
+  const actions = document.createElement('div');
+  actions.className = 'quiz-actions';
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn primary';
+  nextBtn.id = 'nextBtn';
+  nextBtn.type = 'button';
+  nextBtn.textContent = currentQ < QUESTIONS_PER_SET - 1 ? 'Next Question →' : 'See Results';
+  nextBtn.disabled = true;
+  nextBtn.addEventListener('click', advance);
+  actions.appendChild(nextBtn);
+  card.appendChild(actions);
+
+  area.appendChild(card);
+}
+
+function revealFact(){
+  document.getElementById('quizFact').classList.add('show');
+}
+
+function enableNext(){
+  const btn = document.getElementById('nextBtn');
+  if(btn) btn.disabled = false;
+}
+
+function markCorrect(){ setScore++; totalCorrect++; }
+
+/* ── MC ── */
+function buildMC(card, q){
+  const grid = document.createElement('div');
+  grid.className = 'mc-options';
+  const letters = ['A','B','C','D'];
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-btn';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="mc-letter">${letters[i]}</span>${opt}`;
+    btn.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      totalAnswered++;
+      grid.querySelectorAll('.mc-btn').forEach((b,j) => {
+        b.disabled = true;
+        if(j === q.answer) b.classList.add('correct');
+        else if(b === btn) b.classList.add('wrong');
+      });
+      if(i === q.answer) markCorrect();
+      revealFact();
+      enableNext();
+      updateMeta();
+    });
+    grid.appendChild(btn);
+  });
+
+  card.appendChild(grid);
+}
+
+/* ── TF ── */
+function buildTF(card, q){
+  const grid = document.createElement('div');
+  grid.className = 'tf-options';
+
+  ['True','False'].forEach(label => {
+    const btn = document.createElement('button');
+    btn.className = 'tf-btn';
+    btn.type = 'button';
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      totalAnswered++;
+      const chosen = (label === 'True');
+      grid.querySelectorAll('.tf-btn').forEach(b => {
+        b.disabled = true;
+        const bVal = (b.textContent === 'True');
+        if(bVal === q.answer) b.classList.add('correct');
+        else if(b === btn) b.classList.add('wrong');
+      });
+      if(chosen === q.answer) markCorrect();
+      revealFact();
+      enableNext();
+      updateMeta();
+    });
+    grid.appendChild(btn);
+  });
+
+  card.appendChild(grid);
+}
+
+/* ── DRAG ── */
+function buildDrag(card, q){
+  // Sentence with blank
+  const parts = q.sentence.split('___');
+  const sentenceEl = document.createElement('div');
+  sentenceEl.className = 'drag-sentence';
+
+  const blankSpan = document.createElement('span');
+  blankSpan.className = 'drag-blank';
+  blankSpan.textContent = 'drop here';
+  blankSpan.dataset.filled = '';
+
+  sentenceEl.appendChild(document.createTextNode(parts[0]));
+  sentenceEl.appendChild(blankSpan);
+  if(parts[1]) sentenceEl.appendChild(document.createTextNode(parts[1]));
+
+  card.appendChild(sentenceEl);
+
+  // Word chips
+  const allWords = shuffle([q.answer, ...q.distractors]);
+  const wordsEl = document.createElement('div');
+  wordsEl.className = 'drag-words';
+
+  allWords.forEach(word => {
+    const chip = document.createElement('div');
+    chip.className = 'drag-word';
+    chip.textContent = word;
+    chip.draggable = true;
+
+    // ── Desktop drag events ──
+    chip.addEventListener('dragstart', e => {
+      dragWord = word;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    chip.addEventListener('dragend', () => {
+      chip.classList.remove('dragging');
+      dragWord = null;
+    });
+
+    // ── Mobile tap-to-select ──
+    chip.addEventListener('click', () => {
+      if(answered) return;
+      if(chip.classList.contains('used')) return;
+
+      if(tapSelected === chip){
+        // deselect
+        chip.classList.remove('tap-selected');
+        tapSelected = null;
+        return;
+      }
+
+      // select this chip
+      wordsEl.querySelectorAll('.drag-word').forEach(c => c.classList.remove('tap-selected'));
+      chip.classList.add('tap-selected');
+      tapSelected = chip;
+    });
+
+    wordsEl.appendChild(chip);
+  });
+
+  // blank drag target
+  blankSpan.addEventListener('dragover', e => {
+    e.preventDefault();
+    blankSpan.classList.add('over');
+  });
+  blankSpan.addEventListener('dragleave', () => blankSpan.classList.remove('over'));
+  blankSpan.addEventListener('drop', e => {
+    e.preventDefault();
+    blankSpan.classList.remove('over');
+    if(answered || !dragWord) return;
+    placeWord(dragWord, blankSpan, wordsEl, q);
+  });
+
+  // blank tap target
+  blankSpan.addEventListener('click', () => {
+    if(answered) return;
+    if(!tapSelected) return;
+    const word = tapSelected.textContent;
+    tapSelected.classList.remove('tap-selected');
+    tapSelected = null;
+    placeWord(word, blankSpan, wordsEl, q);
+  });
+
+  card.appendChild(wordsEl);
+}
+
+function placeWord(word, blankSpan, wordsEl, q){
+  if(answered) return;
+  answered = true;
+  totalAnswered++;
+
+  blankSpan.textContent = word;
+  blankSpan.classList.add('filled');
+  blankSpan.classList.remove('over');
+
+  // mark chips used / correct
+  wordsEl.querySelectorAll('.drag-word').forEach(c => {
+    c.classList.remove('tap-selected');
+    c.classList.add('used');
+    c.draggable = false;
+  });
+
+  const correct = word.toLowerCase().trim() === q.answer.toLowerCase().trim();
+  blankSpan.classList.add(correct ? 'correct-fill' : 'wrong-fill');
+
+  if(!correct){
+    // show the correct answer chip highlighted
+    wordsEl.querySelectorAll('.drag-word').forEach(c => {
+      if(c.textContent.toLowerCase().trim() === q.answer.toLowerCase().trim()){
+        c.style.borderColor = 'rgba(52,211,153,0.60)';
+        c.style.background  = 'rgba(52,211,153,0.10)';
+        c.style.color       = 'rgba(52,211,153,0.95)';
+        c.style.opacity     = '1';
+      }
+    });
+  }
+
+  if(correct) markCorrect();
+  revealFact();
+  enableNext();
+  updateMeta();
+}
+
+function advance(){
+  currentQ++;
+  if(currentQ >= QUESTIONS_PER_SET){
+    showEndScreen();
+  } else {
+    showQuestion();
+  }
+}
+
+function showEndScreen(){
+  document.getElementById('questionArea').style.display = 'none';
+  document.getElementById('introScreen').style.display = 'none';
+
+  // progress to 100%
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressLabel').textContent = `Set complete!`;
+  document.getElementById('progressPct').textContent = '100%';
+
+  const endEl = document.getElementById('endScreen');
+  endEl.classList.add('show');
+
+  buildSetDots('endSetDots');
+
+  const correct = setScore;
+  const total   = QUESTIONS_PER_SET;
+
+  document.getElementById('scoreNum').textContent   = correct;
+  document.getElementById('scoreDenom').textContent = `/ ${total}`;
+
+  // animate ring
+  const circumference = 2 * Math.PI * 65; // ~408
+  const pct = correct / total;
+  const circle = document.getElementById('scoreCircle');
+  setTimeout(() => {
+    circle.style.strokeDashoffset = circumference * (1 - pct);
+  }, 80);
+
+  const labels = [
+    { min:10, label:'Perfect! 🌟', sub:'A flawless score — you truly know your cosmos!' },
+    { min:8,  label:'Brilliant! 🚀', sub:`${correct} out of ${total} — outstanding space knowledge!` },
+    { min:6,  label:'Great job! ⭐', sub:`${correct} out of ${total} — solid knowledge of the universe.` },
+    { min:4,  label:'Good effort! 🌙', sub:`${correct} out of ${total} — keep exploring and you\'ll reach the stars.` },
+    { min:0,  label:'Keep exploring! 🔭', sub:`${correct} out of ${total} — the universe has many secrets left for you to discover.` },
+  ];
+  const lb = labels.find(l => correct >= l.min);
+  document.getElementById('scoreLabel').textContent = lb.label;
+  document.getElementById('scoreSub').textContent   = lb.sub;
+
+  const isLastSet = currentSet >= sets.length - 1;
+  const nextSetBtn = document.getElementById('nextSetBtn');
+  if(isLastSet){
+    nextSetBtn.textContent = 'Play Again 🔄';
+  } else {
+    nextSetBtn.textContent = `Next Set →`;
+  }
+}
+
+document.getElementById('nextSetBtn').addEventListener('click', () => {
+  if(currentSet >= sets.length - 1){
+    init();
+  } else {
+    currentSet++;
+    document.getElementById('endScreen').classList.remove('show');
+    document.getElementById('scoreCircle').style.strokeDashoffset = 408;
+    showIntro();
+  }
+});
+
+document.getElementById('restartBtn').addEventListener('click', init);
+document.getElementById('startSetBtn').addEventListener('click', startSet);
+
+// Boot
+init();
+
+})();
+</script>
+
+<script src="protect-images.js"></script>
+<script src="partials/partials.js"></script>
+
+</body>
+</html>
