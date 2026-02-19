@@ -206,11 +206,11 @@
         stars = Array.from({ length: COUNT }, () => ({
           x:      rand(0, W),
           y:      rand(0, H),
-          r:      rand(1.0, 3.0),
+          r:      rand(0.75, 2.5),
           // Gentle peak brightness — soft and visible, never harsh
           peak:   rand(0.25, 0.65),
           // Glacially slow cycle: each star takes 30–90 seconds for one full breathe
-          speed:  rand(0.000003, 0.000009),
+          speed:  rand(0.000002, 0.000006),
           // Random start point in the sine cycle so stars aren't in sync
           phase:  rand(0, Math.PI * 2),
         }));
