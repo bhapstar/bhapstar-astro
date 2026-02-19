@@ -77,6 +77,13 @@
     "type": "galaxies"
   },
   {
+  "file": "images/Pinwheel.jpg",
+  "title": "The Pinwheel Galaxy (M101)",
+   "desc": "A face-on spiral galaxy in Ursa Major, its sweeping arms lined with bright star-forming regions and dark dust lanes. A delicate, expansive disk where new stars continue to emerge across tens of thousands of light-years.",
+  "alt": "The Pinwheel Galaxy (M101)",
+  "type": "galaxies"
+  },
+  {
     "file": "images/Triangulum.jpg",
     "title": "The Triangulum Galaxy (M33)",
     "desc": "A nearby spiral galaxy in the Local Group, smaller and more diffuse than the Milky Way. Its faint arms are rich with glowing star-forming regions, scattered across a delicate and expansive disk.",
