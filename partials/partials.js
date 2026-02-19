@@ -206,7 +206,7 @@
         stars = Array.from({ length: COUNT }, () => ({
           x:      rand(0, W),
           y:      rand(0, H),
-          r:      rand(0.3, 1.6),
+          r:      rand(1.0, 3.0),
           // Gentle peak brightness — soft and visible, never harsh
           peak:   rand(0.25, 0.65),
           // Glacially slow cycle: each star takes 30–90 seconds for one full breathe
