@@ -3,25 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gear — bhapstar</title>
+  <title>Gear — Bhapstar Astrophotography</title>
 
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /*
-     * FIX 1: The image-protection rule in styles.css sets pointer-events:none on
-     * .lightbox-img via the broad selector. We must restore pointer-events on the
-     * lightbox image so it doesn't silently swallow taps meant for the buttons.
-     */
     .lightbox-img {
       pointer-events: none !important;
     }
 
-    /*
-     * FIX 2: Ensure lightbox control buttons have a large-enough touch target
-     * and sit in a proper stacking context above the image layer.
-     */
     .lightbox-close,
     .lightbox-nav {
       z-index: 10 !important;
@@ -33,13 +27,13 @@
     @media (max-width: 720px) {
       .lightbox-close { width: 48px !important; height: 48px !important; }
       .lightbox-nav   { width: 52px !important; height: 52px !important; font-size: 34px !important; }
-      /* On mobile: hide card descriptions — shown in lightbox only */
       .grid .card .cap .d { display: none; }
     }
   </style>
 </head>
 <body class="page-gear">
 
+<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
@@ -91,6 +85,7 @@
   </section>
 </main>
 
+<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
 
@@ -116,6 +111,7 @@
       <div class="count" id="lbCount"></div>
     </div>
 
+    <!-- Thumbnail strip — only shown for multi-image items -->
     <div class="lightbox-thumbs" id="lbThumbs" aria-label="Thumbnails"></div>
 
   </div>
@@ -123,9 +119,15 @@
 
 
 <!-- ─────────────────────────────────────────
-     GEAR GALLERY CONTROLLER
-     Based directly on gallery.html's proven
-     controller — same scroll/touch model.
+     GEAR CONTROLLER
+     Identical structure to gallery.html.
+     Differences from gallery:
+       - Fetches gear-data.json
+       - getList() handles images[] with per-slide desc
+       - showLb() uses per-slide desc fallback
+       - renderThumbs() for multi-image items
+       - No video / vimeo support needed
+       - No list-view toggle
 ───────────────────────────────────────── -->
 <script>
 (function () {
@@ -145,10 +147,10 @@
 
   let items           = [];
   let currentItem     = null;
-  let lbList          = [];   // flat list of images for current item
-  let lbIndex         = 0;   // position within lbList
-  let activeSet       = [];   // current filtered item array
-  let activeItemIndex = 0;   // position within activeSet
+  let lbList          = [];
+  let lbIndex         = 0;
+  let activeSet       = [];
+  let activeItemIndex = 0;
 
   /* ── Load gear data ── */
   async function loadData() {
@@ -174,18 +176,18 @@
       .replaceAll("'", '&#039;');
   }
 
-  /* ── Normalise item into a flat list of slide objects ──
-     Each slide: { file, alt, desc }
-     desc is per-image if set, otherwise null (falls back to item.desc in showLb) */
+  /* ── Item helpers ──
+     getList returns an array of slide objects: { file, alt, desc }
+     desc is per-image if defined, otherwise null (showLb falls back to item.desc) */
   function getList(item) {
-    if (Array.isArray(item.images) && item.images.length) {
-      return item.images.map(x => ({
-        file: x.file,
-        alt:  x.alt  || item.alt || item.title || '',
-        desc: x.desc || null
+    if (item.images?.length) {
+      return item.images.map(im => ({
+        file: im.file,
+        alt:  im.alt  || item.alt || item.title || '',
+        desc: im.desc || null
       }));
     }
-    if (Array.isArray(item.files) && item.files.length) {
+    if (item.files?.length) {
       return item.files.map(f => ({ file: f, alt: item.alt || item.title || '', desc: null }));
     }
     return [{ file: item.file, alt: item.alt || item.title || '', desc: null }];
@@ -198,9 +200,7 @@
   /* ── Lightbox display ── */
   function showLb() {
     const cur = lbList[lbIndex];
-
     lbTitle.textContent = currentItem?.title || '';
-    // Use per-image desc if available, else fall back to item-level desc
     lbDesc.textContent  = cur.desc || currentItem?.desc || '';
     lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
 
@@ -208,13 +208,38 @@
     lbPrev.style.display = canNav ? '' : 'none';
     lbNext.style.display = canNav ? '' : 'none';
 
+    lbImg.style.display = 'block';
     lbImg.src = cur.file;
     lbImg.alt = cur.alt || currentItem?.title || '';
 
     renderThumbs();
   }
 
-  /* ── Navigate between items (cross-category) ── */
+  /* ── Thumbnail strip ── */
+  function renderThumbs() {
+    if (!lbThumbs) return;
+    if (lbList.length <= 1) {
+      lbThumbs.innerHTML = '';
+      lbThumbs.classList.remove('show');
+      return;
+    }
+    lbThumbs.classList.add('show');
+    lbThumbs.innerHTML = lbList.map((x, i) => `
+      <button type="button" class="lb-thumb${i === lbIndex ? ' active' : ''}"
+              data-i="${i}" aria-label="View image ${i + 1}"
+              aria-current="${i === lbIndex ? 'true' : 'false'}">
+        <img src="${esc(x.file)}" alt="${esc(x.alt)}" loading="lazy" />
+      </button>
+    `).join('');
+    lbThumbs.onclick = (e) => {
+      const btn = e.target.closest('button.lb-thumb');
+      if (!btn) return;
+      lbIndex = Number(btn.dataset.i);
+      showLb();
+    };
+  }
+
+  /* ── Navigate between items ── */
   function goToItem(delta) {
     if (!activeSet || activeSet.length < 2) return;
     activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
@@ -224,7 +249,7 @@
     showLb();
   }
 
-  /* ── Open lightbox ── */
+  /* ── Open / close lightbox ── */
   function openLightbox(item, indexInActiveSet) {
     currentItem     = item;
     activeItemIndex = Number(indexInActiveSet) || 0;
@@ -238,47 +263,18 @@
     requestAnimationFrame(() => lbClose.focus());
   }
 
-  /* ── Close lightbox ── */
   function closeLightbox() {
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('noscroll');
 
-    lbImg.src = '';
+    lbImg.src = ''; lbImg.style.display = 'block';
     lbTitle.textContent = ''; lbDesc.textContent = ''; lbCount.textContent = '';
     if (lbThumbs) { lbThumbs.innerHTML = ''; lbThumbs.classList.remove('show'); }
     currentItem = null; lbList = []; lbIndex = 0; activeItemIndex = 0;
   }
 
-  /* ── Thumbnail strip (for multi-image items) ── */
-  function renderThumbs() {
-    if (!lbThumbs) return;
-
-    if (lbList.length <= 1) {
-      lbThumbs.innerHTML = '';
-      lbThumbs.classList.remove('show');
-      return;
-    }
-
-    lbThumbs.classList.add('show');
-    lbThumbs.innerHTML = lbList.map((x, i) => `
-      <button type="button" class="lb-thumb${i === lbIndex ? ' active' : ''}"
-              data-i="${i}"
-              aria-label="View image ${i + 1}"
-              aria-current="${i === lbIndex ? 'true' : 'false'}">
-        <img src="${esc(x.file)}" alt="${esc(x.alt)}" loading="lazy" />
-      </button>
-    `).join('');
-
-    lbThumbs.onclick = (e) => {
-      const btn = e.target.closest('button.lb-thumb');
-      if (!btn) return;
-      lbIndex = Number(btn.dataset.i);
-      showLb();
-    };
-  }
-
-  /* ── Unified tap handler — same pattern as gallery.html ── */
+  /* ── Unified tap handler — identical to gallery.html ── */
   function addTapHandler(el, fn) {
     el.addEventListener('click', fn);
     el.addEventListener('touchend', function (e) {
@@ -308,47 +304,34 @@
         ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
         : '';
 
-      return `<div class="card"
-           role="button"
-           tabindex="0"
+      const media = `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
+
+      return `<a class="card"
+           href="${esc(cover.file)}"
            data-idx="${idx}"
            data-active-idx="${activeIdx}"
            aria-label="${esc(item.title || cover.alt)}">
-        ${badge}
-        <img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">
+        ${badge}${media}
         <div class="cap">
           <div class="t">${esc(item.title || '')}</div>
-          <div class="d">${esc(item.desc  || '')}</div>
+          <div class="d">${esc(item.desc || '')}</div>
         </div>
-      </div>`;
+      </a>`;
     }).join('');
   }
 
-  /* ── Init — all listeners attached once, exactly as gallery.html does it ── */
   function init() {
     render();
 
-    /* Keyboard activation for div-based cards (accessibility) */
-    grid.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const card = e.target.closest('[data-idx]');
-      if (!card) return;
-      e.preventDefault();
-      const item = items[Number(card.dataset.idx)];
-      if (item) openLightbox(item, Number(card.dataset.activeIdx));
-    });
+    typeFilter?.addEventListener('change', render);
 
-    typeFilter?.addEventListener('change', () => {
-      closeLightbox();
-      render();
-    });
-
-    /* Card click → open lightbox */
+    /* Card click → open lightbox — identical to gallery.html */
     grid.addEventListener('click', (e) => {
-      const card = e.target.closest('[data-idx]');
-      if (!card) return;
-      const item = items[Number(card.dataset.idx)];
-      if (item) openLightbox(item, Number(card.dataset.activeIdx));
+      const a = e.target.closest('a.card');
+      if (!a) return;
+      e.preventDefault();
+      const item = items[Number(a.dataset.idx)];
+      if (item) openLightbox(item, Number(a.dataset.activeIdx));
     });
 
     addTapHandler(lbClose, closeLightbox);
@@ -397,7 +380,7 @@
       }
     });
 
-    /* Touch swipe — passive:true on touchstart so page scroll is never blocked */
+    /* Touch swipe — identical to gallery.html */
     let touchStartX  = 0;
     let touchStartY  = 0;
     let isTouchOnBtn = false;
