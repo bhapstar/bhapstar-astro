@@ -308,8 +308,9 @@
         ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
         : '';
 
-      return `<a class="card"
-           href="${esc(cover.file)}"
+      return `<div class="card"
+           role="button"
+           tabindex="0"
            data-idx="${idx}"
            data-active-idx="${activeIdx}"
            aria-label="${esc(item.title || cover.alt)}">
@@ -319,13 +320,23 @@
           <div class="t">${esc(item.title || '')}</div>
           <div class="d">${esc(item.desc  || '')}</div>
         </div>
-      </a>`;
+      </div>`;
     }).join('');
   }
 
   /* ── Init — all listeners attached once, exactly as gallery.html does it ── */
   function init() {
     render();
+
+    /* Keyboard activation for div-based cards (accessibility) */
+    grid.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('[data-idx]');
+      if (!card) return;
+      e.preventDefault();
+      const item = items[Number(card.dataset.idx)];
+      if (item) openLightbox(item, Number(card.dataset.activeIdx));
+    });
 
     typeFilter?.addEventListener('change', () => {
       closeLightbox();
@@ -334,11 +345,10 @@
 
     /* Card click → open lightbox */
     grid.addEventListener('click', (e) => {
-      const a = e.target.closest('a.card');
-      if (!a) return;
-      e.preventDefault();
-      const item = items[Number(a.dataset.idx)];
-      if (item) openLightbox(item, Number(a.dataset.activeIdx));
+      const card = e.target.closest('[data-idx]');
+      if (!card) return;
+      const item = items[Number(card.dataset.idx)];
+      if (item) openLightbox(item, Number(card.dataset.activeIdx));
     });
 
     addTapHandler(lbClose, closeLightbox);
