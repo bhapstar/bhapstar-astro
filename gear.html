@@ -12,6 +12,17 @@
   <link rel="stylesheet" href="styles.css" />
 
   <style>
+    /* Mirror the #galleryGrid rule from styles.css for gear images —
+       without this, pointer-events on <img> absorb taps and the card
+       click handler never fires on mobile. */
+    #gearGrid img {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
     .lightbox-img {
       pointer-events: none !important;
     }
