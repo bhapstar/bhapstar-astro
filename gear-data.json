@@ -2,10 +2,6 @@
   {
     "images": [
       {
-        "file": "images/gear/Askar V 1.jpeg",
-        "alt": "Askar V refractor telescope"
-      },
-      {
         "file": "images/gear/Askar V 2.jpeg",
         "alt": "Askar V refractor telescope"
       },
@@ -19,6 +15,10 @@
       },
       {
         "file": "images/gear/Askar V 5.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 1.jpeg",
         "alt": "Askar V refractor telescope"
       },
       {
