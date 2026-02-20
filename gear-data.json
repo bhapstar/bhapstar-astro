@@ -1,0 +1,153 @@
+[
+  {
+    "images": [
+      {
+        "file": "images/gear/Askar V 1.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 2.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 3.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 4.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 5.jpeg",
+        "alt": "Askar V refractor telescope"
+      },
+      {
+        "file": "images/gear/Askar V 6.jpeg",
+        "alt": "Askar V refractor telescope"
+      }
+    ],
+    "title": "Askar V Modular APO Refractor",
+    "desc": "A telescope that refuses to be a single thing. The Askar V arrives as a system — two interchangeable ED apochromatic objectives, a reducer, a flattener, an extender — offering six distinct focal lengths from 270mm to 600mm. Wide and sweeping one night, tight and intimate the next. Chromatic aberration is reduced to near nothing, leaving only the quiet precision of starlight falling cleanly onto the sensor.",
+    "alt": "Askar V refractor telescope",
+    "type": "telescope"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Juwei 14 1.jpeg",
+        "alt": "Juwei 14 harmonic mount"
+      },
+      {
+        "file": "images/gear/Juwei 14 2.jpeg",
+        "alt": "Juwei 14 harmonic mount"
+      },
+      {
+        "file": "images/gear/Juwei 14 3.jpeg",
+        "alt": "Juwei 14 harmonic mount"
+      },
+      {
+        "file": "images/gear/Juwei 14 4.jpeg",
+        "alt": "Juwei 14 harmonic mount"
+      }
+    ],
+    "title": "Juwei 14 Harmonic Equatorial Mount",
+    "desc": "The part of the setup most people never see, yet everything depends on it. A harmonic-drive mount that weighs barely more than a bag of sugar but carries a full imaging rig without counterweights, tracking the slow rotation of the sky with quiet, backlash-free precision. Small enough to travel anywhere, steady enough to trust completely.",
+    "alt": "Juwei 14 harmonic equatorial mount",
+    "type": "mount"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/ZWO ASI585MC Air 1.jpeg",
+        "alt": "ZWO ASI585MC Air camera"
+      },
+      {
+        "file": "images/gear/ZWO ASI585MC Air 2.jpeg",
+        "alt": "ZWO ASI585MC Air camera"
+      },
+      {
+        "file": "images/gear/ZWO ASI585MC Air 3.jpeg",
+        "alt": "ZWO ASI585MC Air camera"
+      }
+    ],
+    "title": "ZWO ASI585MC Air Camera",
+    "desc": "A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and the built-in cooling pulls heat from the chip to keep the long exposures clean and quiet. Guide camera, controller, and wireless connection are all folded in — leaving nothing between the telescope and the sky but the lens cap, before it comes off.",
+    "alt": "ZWO ASI585MC Air camera",
+    "type": "camera"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Optolong L-Quad Enhance.jpeg",
+        "alt": "Optolong L-Quad Enhance filter",
+        "desc": "A piece of glass that quietly edits out the modern world. The L-Quad Enhance blocks the wavelengths that street lights and city glow pour into the sky, while letting the true light of nebulae and galaxies pass through unimpeded. The stars remain honest. The background becomes dark again. It is, in a small way, like being somewhere much further from everything."
+      },
+      {
+        "file": "images/gear/Optolong LeXtreme.jpeg",
+        "alt": "Optolong LeXtreme filter",
+        "desc": "Where the L-Quad whispers, the LeXtreme speaks in narrowband. It passes only the two wavelengths where emission nebulae burn brightest — the deep red of hydrogen and the blue-green of ionised oxygen — blocking almost everything else. Under a moon, under city light, it finds the faint structures that would otherwise be lost entirely in the noise. A filter for pushing further into the dark."
+      }
+    ],
+    "title": "Optolong Filters",
+    "desc": "Two filters for two different battles with the sky.",
+    "alt": "Optolong filters",
+    "type": "filters"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Seestar S30 1.jpeg",
+        "alt": "ZWO Seestar S30 smart telescope"
+      },
+      {
+        "file": "images/gear/Seestar S30 2.jpeg",
+        "alt": "ZWO Seestar S30 smart telescope"
+      },
+      {
+        "file": "images/gear/Seestar S30 3.jpeg",
+        "alt": "ZWO Seestar S30 smart telescope"
+      },
+      {
+        "file": "images/gear/Seestar S30 4.jpeg",
+        "alt": "ZWO Seestar S30 smart telescope"
+      }
+    ],
+    "title": "ZWO Seestar S30 Smart Telescope",
+    "desc": "A telescope that fits in a bag and asks almost nothing of you. Point it roughly skyward, tap a target in the app, and it finds its own way — tracking, stacking, and slowly drawing faint light out of the dark while you stand back and watch. It is not a replacement for a full rig and patient hours, but it is something else entirely: the night sky made suddenly, genuinely accessible.",
+    "alt": "ZWO Seestar S30 smart telescope",
+    "type": "smart-telescope"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Celestron 2in Eyepiece Kit 1.jpeg",
+        "alt": "Celestron 2-inch eyepiece kit",
+        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications — from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
+      },
+      {
+        "file": "images/gear/Celestron 2in Eyepiece Kit 2.jpeg",
+        "alt": "Celestron 2-inch eyepiece kit",
+        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications — from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
+      },
+      {
+        "file": "images/gear/SVBony Filter drawer 1.jpeg",
+        "alt": "SVBony filter drawer",
+        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
+      },
+      {
+        "file": "images/gear/SVBony Filter drawer 2.jpeg",
+        "alt": "SVBony filter drawer",
+        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
+      },
+      {
+        "file": "images/gear/ZWO EAF.jpeg",
+        "alt": "ZWO Electronic Auto Focuser",
+        "desc": "Focusing by hand is one of those things that sounds simple until you are doing it in the cold at midnight, trying not to breathe on the tube. The ZWO EAF attaches to the focuser and does it motorised and precisely, compensating for the way temperature shifts focus through the night. Touch nothing. Stay sharp."
+      }
+    ],
+    "title": "Accessories",
+    "desc": "The small things that make the difference between a frustrating night and a productive one.",
+    "alt": "Astrophotography accessories",
+    "type": "accessories"
+  }
+]

@@ -2,398 +2,383 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Mobile scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gear — bhapstar</title>
 
-  <!-- Cloudflare Web Analytics (traffic measurement) -->
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script><!-- End Cloudflare Web Analytics -->
-
-  <!-- Shared site CSS -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ── Lightbox image: no pointer events (buttons sit above) ── */
+    .lightbox-img { pointer-events: none !important; }
+
+    /* ── Lightbox controls: raised z-index + large touch targets ── */
+    .lightbox-close,
+    .lightbox-nav {
+      z-index: 10 !important;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+      cursor: pointer;
+    }
+
+    @media (max-width: 720px) {
+      .lightbox-close { width: 48px !important; height: 48px !important; }
+      .lightbox-nav   { width: 52px !important; height: 52px !important; font-size: 34px !important; }
+
+      /* On mobile: hide the card caption so only the image header shows,
+         description is revealed in the lightbox — matching gallery behaviour */
+      .grid .card .cap .d { display: none; }
+    }
+  </style>
 </head>
 <body class="page-gear">
 
-<!-- =========================
-     Header / navigation
-========================= -->
 <div id="siteHeader"></div>
 
 <main>
   <section class="section">
     <div class="wrap">
-      <div class="section-head">
-        <h2>Gear Gallery</h2>
-        <p>Click any image to view fullscreen.</p>
+
+      <div class="section-head gallery-head">
+        <div class="gallery-topline">
+          <h2>Gear</h2>
+        </div>
+
+        <p class="gallery-intro">
+          Every image in the gallery begins here — with this equipment, set up under the
+          night sky. These are the tools of the process: the optics that gather ancient light,
+          the mount that holds everything steady against the turning of the Earth, the camera
+          that records what the eye cannot see, and the small, unglamorous things that make
+          it all work.
+        </p>
+
+        <div class="gallery-filter" role="group" aria-label="Gear filters">
+          <label class="gallery-filter-label" for="typeFilter">Filter by type</label>
+          <div class="gallery-filter-row">
+            <select id="typeFilter" class="gallery-filter-select" aria-label="Filter gear by category">
+              <option value="all">All</option>
+              <option value="telescope">Telescope</option>
+              <option value="smart-telescope">Smart Telescope</option>
+              <option value="mount">Mount</option>
+              <option value="camera">Camera</option>
+              <option value="filters">Filters</option>
+              <option value="accessories">Accessories</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
       </div>
 
-      <!-- Cards are injected here from #gearData by the JS below -->
-      <div id="gearGrid" class="grid"></div>
+      <!-- Skeleton placeholders shown while JSON loads -->
+      <div id="gearGrid" class="grid" aria-live="polite" aria-label="Gear gallery">
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+      </div>
+
     </div>
   </section>
 </main>
 
-<!-- =========================
-     Footer
-========================= -->
 <div id="siteFooter"></div>
 
-<!-- Dynamic year -->
-<script>(function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();</script>
 
-<script>
-/* Burger menu controller:
-   - toggles .nav-menu.open
-   - updates aria-expanded
-   - closes on outside click + Escape */
-(function(){
-  const burger = document.querySelector('.burger');
-  const menu = document.querySelector('.nav-menu');
-  if(!burger || !menu) return;
-
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (e) => {
-    if(menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape'){
-      menu.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-  });
-})();
-</script>
-
-<!-- Embedded gallery data (single source of truth for this page)
-     You can upgrade an entry from:
-       - file: "path.jpg"
-     to:
-       - files: ["path1.jpg","path2.jpg"]
-     or:
-       - images: [{file,thumb,alt,label}, ...]
-     without changing the JS. -->
-<script id="gearData" type="application/json">
-[
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Telescope / Optics",
-    "desc": "Placeholder for scope(s), reducers/extenders, etc...",
-    "alt": "Telescope placeholder"
-  },
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Mount",
-    "desc": "Placeholder for mount model, payload notes, guiding performance, and tips.",
-    "alt": "Mount placeholder"
-  },
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Camera",
-    "desc": "Placeholder for camera, key settings, and target suitability.",
-    "alt": "Camera placeholder"
-  },
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Filters",
-    "desc": "Placeholder for filters (narrowband/dual-band), why used and results.",
-    "alt": "Filter placeholder"
-  },
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Guiding & Control",
-    "desc": "Placeholder for guide scope/cam, controller, and workflow.",
-    "alt": "Guiding placeholder"
-  },
-  {
-    "file": "data:image/svg+xml;charset=UTF-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='800'><rect%20width='100%25'%20height='100%25'%20fill='%23111418'/><circle%20cx='220'%20cy='180'%20r='2'%20fill='%23ffffff'%20opacity='0.8'/><circle%20cx='480'%20cy='320'%20r='1.6'%20fill='%23ffffff'%20opacity='0.7'/><circle%20cx='820'%20cy='260'%20r='1.8'%20fill='%23ffffff'%20opacity='0.75'/><circle%20cx='980'%20cy='520'%20r='1.4'%20fill='%23ffffff'%20opacity='0.65'/><circle%20cx='260'%20cy='620'%20r='1.2'%20fill='%23ffffff'%20opacity='0.6'/><text%20x='120'%20y='440'%20fill='%23cfd6e6'%20font-family='Arial'%20font-size='44'>Image%20coming%20soon</text></svg>",
-    "title": "Accessories",
-    "desc": "Placeholder for dew control, power, focus, adapters, and the small things.",
-    "alt": "Accessories placeholder"
-  }
-]
-</script>
-
-<!-- Lightbox markup (hidden until .open class is added)
-     - Prev/Next navigate within an item if it has multiple files
-     - Thumbnails appear only when multiple files exist -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+<!-- ─────────────────────────────────────────
+     LIGHTBOX
+───────────────────────────────────────── -->
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
   <div class="lightbox-inner">
-    <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
 
-    <!-- Prev/Next buttons are enabled/disabled by JS based on activeIndex -->
+    <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
     <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
     <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
 
     <img class="lightbox-img" id="lbImg" alt="" src="" />
     <div class="lightbox-watermark" aria-hidden="true"><span>bhapstar</span></div>
 
-    <!-- Title + count overlay (count hidden if only 1 image) -->
-    <div class="lightbox-meta" aria-hidden="false">
-      <div class="title-row">
-        <div class="ti" id="lbTitle"></div>
-        <div class="count" id="lbCount" aria-hidden="true"></div>
+    <div class="lightbox-meta">
+      <div class="meta-left">
+        <div class="title" id="lbTitle"></div>
+        <div class="desc"  id="lbDesc"></div>
       </div>
+      <div class="count" id="lbCount"></div>
     </div>
 
-    <!-- Thumbnail strip (only used for multi-image items) -->
     <div class="lightbox-thumbs" id="lbThumbs" aria-label="Thumbnails"></div>
   </div>
 </div>
 
+
+<!-- ─────────────────────────────────────────
+     GEAR GALLERY CONTROLLER
+───────────────────────────────────────── -->
 <script>
-/* =========================================================
-   Gear gallery renderer + lightbox controller
-   ---------------------------------------------------------
-   - Reads JSON from #gearData
-   - Renders a card grid into #gearGrid
-   - On click: opens lightbox
-   - Supports single images OR multiple files per item
-   - Adds thumbnail strip for multi-image items
-========================================================= */
-(function(){
-  const grid = document.getElementById('gearGrid');
-  const dataEl = document.getElementById('gearData');
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lbImg');
-  const lbTitle = document.getElementById('lbTitle');
-  const lbCount = document.getElementById('lbCount');
-  const lbThumbs = document.getElementById('lbThumbs');
-  const lbClose = document.getElementById('lbClose');
-  const lbPrev = document.getElementById('lbPrev');
-  const lbNext = document.getElementById('lbNext');
+(function () {
+  const grid       = document.getElementById('gearGrid');
+  const lb         = document.getElementById('lightbox');
+  const lbImg      = document.getElementById('lbImg');
+  const lbTitle    = document.getElementById('lbTitle');
+  const lbDesc     = document.getElementById('lbDesc');
+  const lbCount    = document.getElementById('lbCount');
+  const lbThumbs   = document.getElementById('lbThumbs');
+  const lbClose    = document.getElementById('lbClose');
+  const lbPrev     = document.getElementById('lbPrev');
+  const lbNext     = document.getElementById('lbNext');
+  const typeFilter = document.getElementById('typeFilter');
 
-  if(!grid || !dataEl || !lb || !lbImg || !lbTitle || !lbClose) return;
+  if (!grid || !lb) return;
 
-  let items = [];
-  try {
-    items = JSON.parse(dataEl.textContent);
-  } catch(err) {
-    console.error('Invalid JSON in gearData:', err);
-    /* If JSON fails, show a friendly inline error panel */
-    grid.innerHTML = `
-      <div class="panel grid-span-all">
-        <h3>Gallery data error</h3>
-        <p class="note">The JSON inside <code>#gearData</code> is invalid, so no cards could be shown.</p>
-        <p class="note">Tip: each item must be an object like <code>{"title":"Rosette","files":["images/RN Split 1.jpg","images/RN Split 2.jpg"]}</code>.</p>
-      </div>
-    `;
-    return;
+  let items    = [];   // full dataset from JSON
+  let flatList = [];   // flat array of every image across the active (filtered) set
+  let flatIndex = 0;
+
+  /* ── Load gear data ── */
+  async function loadData() {
+    try {
+      const res = await fetch('gear-data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      items = await res.json();
+      init();
+    } catch (err) {
+      console.error('Gear data load error:', err);
+      grid.innerHTML = `<div class="panel gallery-error grid-span-all">
+        <h3>Gallery unavailable</h3>
+        <p>Could not load gear-data.json. Please refresh the page.</p>
+      </div>`;
+    }
   }
 
-  /* Escape helper for safe HTML injection in template literals */
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  /* ── HTML escape ── */
+  function esc(s) {
+    return String(s ?? '')
+      .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;').replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
-  /* Lightbox state:
-     - activeItem = current gear entry (e.g., “Mount”)
-     - activeIndex = current image index within that entry */
-  let activeItem = null;
-  let activeIndex = 0;
-
-  /* Normalises gear items into an array of file objects
-     Supports:
-     - item.file: "path.jpg"
-     - item.files: ["path1.jpg","path2.jpg",...]
-     - item.images: [{file,thumb,alt,label}, ...] */
-  function getFiles(item){
-    // Supports:
-    // - item.file: "path.jpg"
-    // - item.files: ["path1.jpg","path2.jpg",...]
-    // - item.images: [{file,thumb,alt,label}, ...]
-    if(Array.isArray(item.images) && item.images.length){
-      return item.images.map(x => ({ file: x.file, thumb: x.thumb || x.file, alt: x.alt || item.alt || item.title, label: x.label || "" }));
+  /* ── Normalise item into array of file objects ── */
+  function getFiles(item) {
+    if (Array.isArray(item.images) && item.images.length) {
+      return item.images.map(x => ({
+        file:  x.file,
+        thumb: x.thumb || x.file,
+        alt:   x.alt  || item.alt || item.title || '',
+        desc:  x.desc || null    // per-image desc; falls back to item.desc in showLb
+      }));
     }
-    if(Array.isArray(item.files) && item.files.length){
-      return item.files.map(f => ({ file: f, thumb: f, alt: item.alt || item.title, label: "" }));
+    if (Array.isArray(item.files) && item.files.length) {
+      return item.files.map(f => ({ file: f, thumb: f, alt: item.alt || item.title || '', desc: null }));
     }
-    return [{ file: item.file, thumb: item.file, alt: item.alt || item.title, label: "" }];
+    return [{ file: item.file, thumb: item.file, alt: item.alt || item.title || '', desc: null }];
   }
 
-  /* Switch the lightbox to a specific index within the active item */
-  function setActive(idx){
-    const files = getFiles(activeItem);
-    activeIndex = Math.max(0, Math.min(idx, files.length - 1));
-    const cur = files[activeIndex];
+  function getCoverFile(item) {
+    return getFiles(item)[0]?.file || '';
+  }
 
-    lbImg.src = cur.file;
-    lbImg.alt = cur.alt || activeItem.title || 'Astrophotography image';
-
-    /* Count indicator (only shown when multiple files exist) */
-    if(lbCount){
-      lbCount.textContent = files.length > 1 ? `${activeIndex+1} / ${files.length}` : "";
-    }
-
-    /* Highlight active thumbnail */
-    if(lbThumbs){
-      const thumbs = Array.from(lbThumbs.querySelectorAll('button'));
-      thumbs.forEach((b, i) => {
-        b.classList.toggle('active', i === activeIndex);
-        b.setAttribute('aria-current', i === activeIndex ? 'true' : 'false');
+  /* ── Build flat image list from a filtered item set ── */
+  function buildFlatList(filteredItems) {
+    flatList = [];
+    filteredItems.forEach((item, itemIndex) => {
+      const files = getFiles(item);
+      files.forEach((f, localIndex) => {
+        flatList.push({
+          file:        f.file,
+          alt:         f.alt,
+          desc:        f.desc || null,
+          itemIndex,           // index within filteredItems
+          localIndex,
+          totalInItem: files.length
+        });
       });
-    }
-
-    /* Disable prev/next at ends */
-    if(lbPrev) lbPrev.disabled = (activeIndex === 0);
-    if(lbNext) lbNext.disabled = (activeIndex === files.length - 1);
+    });
   }
 
-  /* Builds the thumbnail strip for multi-image items */
-  function renderThumbs(){
-    if(!lbThumbs) return;
-    const files = getFiles(activeItem);
+  /* ── Lightbox display ── */
+  function showLb(filteredItems) {
+    const entry = flatList[flatIndex];
+    const item  = filteredItems[entry.itemIndex];
 
-    /* If only 1 image, hide thumbs entirely */
-    if(files.length <= 1){
-      lbThumbs.innerHTML = "";
+    lbImg.src = entry.file;
+    lbImg.alt = entry.alt;
+
+    lbTitle.textContent = item.title || '';
+    lbDesc.textContent  = entry.desc || item.desc || '';
+
+    lbCount.textContent = entry.totalInItem > 1
+      ? `${entry.localIndex + 1} / ${entry.totalInItem}`
+      : '';
+
+    renderThumbs(item, entry.itemIndex, entry.localIndex, filteredItems);
+  }
+
+  /* ── Thumbnail strip ── */
+  function renderThumbs(item, itemIndex, activeLocal, filteredItems) {
+    if (!lbThumbs) return;
+    const files = getFiles(item);
+
+    if (files.length <= 1) {
+      lbThumbs.innerHTML = '';
       lbThumbs.classList.remove('show');
       return;
     }
 
     lbThumbs.classList.add('show');
     lbThumbs.innerHTML = files.map((x, i) => `
-      <button type="button" class="lb-thumb" data-i="${i}" aria-label="Open image ${i+1}">
+      <button type="button" class="lb-thumb${i === activeLocal ? ' active' : ''}"
+              data-item="${itemIndex}" data-local="${i}"
+              aria-label="View image ${i + 1}"
+              aria-current="${i === activeLocal ? 'true' : 'false'}">
         <img src="${esc(x.thumb)}" alt="${esc(x.alt)}" loading="lazy" />
       </button>
     `).join('');
 
-    /* Click handler for thumbs (note: { once: true } means this listener is attached only once per render) */
-    lbThumbs.addEventListener('click', (e) => {
+    lbThumbs.onclick = (e) => {
       const btn = e.target.closest('button.lb-thumb');
-      if(!btn) return;
-      const i = Number(btn.getAttribute('data-i'));
-      setActive(i);
-    }, { once: true });
+      if (!btn) return;
+      const targetItem  = Number(btn.dataset.item);
+      const targetLocal = Number(btn.dataset.local);
+      const fi = flatList.findIndex(e => e.itemIndex === targetItem && e.localIndex === targetLocal);
+      if (fi !== -1) { flatIndex = fi; showLb(filteredItems); }
+    };
   }
 
-  /* Opens lightbox for a chosen gear item */
-  function openLightbox(item){
-    activeItem = item;
-    lbTitle.textContent = item.title || '';
+  /* ── Open lightbox ── */
+  function openLightbox(startFlatIndex, filteredItems) {
+    flatIndex = startFlatIndex;
+    showLb(filteredItems);
+
     lb.classList.add('open');
-    lb.setAttribute('aria-hidden','false');
+    lb.setAttribute('aria-hidden', 'false');
     document.body.classList.add('noscroll');
-
-    renderThumbs();
-    setActive(0);
+    requestAnimationFrame(() => lbClose.focus());
   }
 
-  /* Closes lightbox and fully resets state */
-  function closeLightbox(){
+  /* ── Close lightbox ── */
+  function closeLightbox() {
     lb.classList.remove('open');
-    lb.setAttribute('aria-hidden','true');
+    lb.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('noscroll');
 
-    lbImg.src = "";
-    lbImg.alt = "";
-    lbTitle.textContent = "";
-    if(lbCount) lbCount.textContent = "";
-    if(lbThumbs) lbThumbs.innerHTML = "";
-    activeItem = null;
-    activeIndex = 0;
+    lbImg.src = '';
+    lbTitle.textContent = '';
+    lbDesc.textContent  = '';
+    lbCount.textContent = '';
+    if (lbThumbs) { lbThumbs.innerHTML = ''; lbThumbs.classList.remove('show'); }
   }
 
-  /* Chooses which file should be used as the card thumbnail/cover */
-  function cardFirstFile(item){
-    if(item.file) return item.file;
-    if(Array.isArray(item.files) && item.files.length) return item.files[0];
-    if(Array.isArray(item.images) && item.images.length) return item.images[0].file;
-    return "";
+  /* ── Unified tap handler (desktop click + mobile touchend) ── */
+  function addTapHandler(el, fn) {
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      fn(e);
+    }, { passive: false });
   }
 
-  /* Render the grid cards (one card per item in #gearData) */
-  grid.innerHTML = items.map((item, idx) => `
-    <a class="card" href="${esc(cardFirstFile(item))}" data-idx="${idx}" aria-label="${esc(item.title || item.alt)}">
-      <img src="${esc(cardFirstFile(item))}" alt="${esc(item.alt)}" loading="lazy">
-      <div class="cap">
-        <div class="t">${esc(item.title)}</div>
-        <div class="d">${esc(item.desc)}</div>
-      </div>
-    </a>
-  `).join('');
+  /* ── Render grid and wire up all interactions ── */
+  function render() {
+    const selected = typeFilter?.value || 'all';
+    const filtered = selected === 'all'
+      ? items
+      : items.filter(it => (it.type || 'accessories') === selected);
 
-  /* Card click -> open the lightbox for that item */
-  grid.addEventListener('click', (e) => {
-    const a = e.target.closest('a.card');
-    if(!a) return;
-    e.preventDefault();
-    const idx = Number(a.getAttribute('data-idx'));
-    const item = items[idx];
-    if(item) openLightbox(item);
-  });
+    buildFlatList(filtered);
 
-  /* Close button */
-  lbClose.addEventListener('click', closeLightbox);
+    /* Build grid cards */
+    let fi = 0;
+    grid.innerHTML = filtered.map((item) => {
+      const cover     = getCoverFile(item);
+      const files     = getFiles(item);
+      const count     = files.length;
+      const startFlat = fi;
+      fi += count;
 
-  /* Prev/Next within a multi-image item */
-  if(lbPrev) lbPrev.addEventListener('click', () => {
-    if(!activeItem) return;
-    setActive(activeIndex - 1);
-  });
+      const badge = count > 1
+        ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
+        : '';
 
-  if(lbNext) lbNext.addEventListener('click', () => {
-    if(!activeItem) return;
-    setActive(activeIndex + 1);
-  });
+      return `<a class="card"
+           href="${esc(cover)}"
+           data-flat="${startFlat}"
+           aria-label="${esc(item.title || item.alt || '')}">
+        ${badge}
+        <img src="${esc(cover)}" alt="${esc(item.alt || item.title || '')}" loading="lazy" decoding="async">
+        <div class="cap">
+          <div class="t">${esc(item.title || '')}</div>
+          <div class="d">${esc(item.desc  || '')}</div>
+        </div>
+      </a>`;
+    }).join('');
 
-  /* Click outside the lightbox-inner closes the lightbox */
-  lb.addEventListener('click', (e) => {
-    if(e.target === lb) closeLightbox();
-  });
+    /* Card click → open lightbox */
+    grid.onclick = (e) => {
+      const a = e.target.closest('a.card');
+      if (!a) return;
+      e.preventDefault();
+      openLightbox(Number(a.dataset.flat), filtered);
+    };
 
-  /* Keyboard controls while open */
-  document.addEventListener('keydown', (e) => {
-    if(!lb.classList.contains('open')) return;
-    if(e.key === 'Escape') closeLightbox();
-    if(e.key === 'ArrowLeft') setActive(activeIndex - 1);
-    if(e.key === 'ArrowRight') setActive(activeIndex + 1);
-  });
-})();
-</script>
+    /* Wire up nav buttons with current filtered set in closure */
+    function navigate(delta) {
+      flatIndex = (flatIndex + delta + flatList.length) % flatList.length;
+      showLb(filtered);
+    }
 
-<script>
-/* Scroll reveal (adds "in" when elements enter viewport)
-   - Adds .reveal to targets
-   - Adds .in when visible
-   - Respects prefers-reduced-motion */
-(function(){
-  const els = Array.from(document.querySelectorAll('.section, .panel, .card'))
-    .filter(el => !el.classList.contains('reveal'));
+    addTapHandler(lbClose, closeLightbox);
+    addTapHandler(lbPrev,  (e) => { if (e.stopPropagation) e.stopPropagation(); navigate(-1); });
+    addTapHandler(lbNext,  (e) => { if (e.stopPropagation) e.stopPropagation(); navigate(+1); });
 
-  els.forEach(el => el.classList.add('reveal'));
+    lb.onclick    = (e) => { if (e.target === lb) closeLightbox(); };
+    lb.addEventListener('touchend', (e) => {
+      if (e.target === lb) { e.preventDefault(); closeLightbox(); }
+    }, { passive: false });
 
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    els.forEach(el => el.classList.add('in'));
-    return;
-  }
+    document.onkeydown = (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(+1);
+    };
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        io.unobserve(en.target);
+    /* Touch swipe */
+    let touchStartX = 0, touchStartY = 0, isTouchOnBtn = false;
+    const lbInner = lb.querySelector('.lightbox-inner');
+
+    lbInner.ontouchstart = (e) => {
+      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav');
+      touchStartX  = e.touches[0].clientX;
+      touchStartY  = e.touches[0].clientY;
+    };
+
+    lbInner.ontouchend = (e) => {
+      if (isTouchOnBtn) { isTouchOnBtn = false; return; }
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        dx < 0 ? navigate(+1) : navigate(-1);
       }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    };
+  }
 
-  els.forEach(el => io.observe(el));
+  /* ── Init ── */
+  function init() {
+    render();
+    typeFilter?.addEventListener('change', () => {
+      closeLightbox();
+      render();
+    });
+  }
+
+  loadData();
 })();
 </script>
 
-<!-- Image protection “speed bumps” (disable right-click / dragging etc.) -->
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 
