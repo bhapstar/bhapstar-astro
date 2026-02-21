@@ -943,7 +943,17 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 14px;
   align-items: center; position: relative; overflow: hidden;
 }
-.support-title{ margin: 0 0 8px 0; }
+.support-title{
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(255,255,255,0.90), rgba(200,195,235,0.70));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .support-text{ margin: 0; color: rgba(200,195,235,0.76); font-size: 13px; line-height: 1.62; }
 .support-right{ display: flex; flex-direction: column; gap: 8px; align-items: flex-end; justify-content: center; }
 .support-btn{ width: fit-content; }
