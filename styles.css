@@ -839,6 +839,54 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .page-about .about-panel{ margin-bottom: 0; }
 .page-about .contact-panel .section-head{ margin-bottom: 12px; }
 
+/* =========================
+   Index page — About + Contact sections
+   Centred, wider, fluid on all viewports
+========================= */
+.index-about-section .cols,
+.index-contact-section .cols{
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.index-about-section .about-panel{
+  width: 100%;
+  max-width: 860px;
+  padding: 36px 40px;
+}
+.index-about-section .about-panel p{
+  margin: 0 0 16px;
+  line-height: 1.80;
+  font-size: 15px;
+  color: rgba(255,255,255,0.82);
+}
+.index-about-section .section-head{
+  max-width: 860px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.index-contact-section .contact-panel{
+  max-width: 860px;
+  width: 100%;
+  padding: 36px 40px;
+}
+.index-contact-section .contact-form,
+.index-contact-section .contact-intro{
+  max-width: 100%;
+}
+@media (max-width: 760px){
+  .index-about-section .about-panel,
+  .index-contact-section .contact-panel{
+    padding: 24px 20px;
+  }
+}
+@media (max-width: 480px){
+  .index-about-section .about-panel,
+  .index-contact-section .contact-panel{
+    padding: 18px 14px;
+  }
+}
+
 .contact-panel{
   position: relative; max-width: 720px; margin: 0 auto; padding: 28px 30px;
 }
