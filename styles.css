@@ -1552,3 +1552,7 @@ body.noscroll{ overflow: hidden; }
 a[href="prints.html"], a[href*="prints"] {                /* Remove all reference to the Prints html page */
   display: none !important;
 }
+
+.support-panel {                                        /* Remove all reference to the Buymeacoffee on homepage*/
+  display: none;
+}
