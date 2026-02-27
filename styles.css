@@ -1548,3 +1548,7 @@ body.noscroll{ overflow: hidden; }
   to{   transform: scale(1.026); }
 }
 .page-puzzle .fx-canvas{ background: transparent !important; }
+
+a[href="prints.html"], a[href*="prints"] {                /* Remove all reference to the Prints html page */
+  display: none !important;
+}
