@@ -141,5 +141,13 @@
     "title": "Comets",
     "desc": "Small bodies from the outer Solar System, visible only briefly as they pass close to the Sun. Heating releases gas and dust from the nucleus, forming a tail shaped by solar radiation and the solar wind, changing subtly from night to night.",
     "type": "comets"
-  }
+  },
+  {
+  "file": "images/Thors-Helmet.jpg",
+  "title": "Thor’s Helmet (NGC 2359)",
+  "desc": "An emission nebula shaped by the fierce stellar winds of a rare Wolf–Rayet star nearing the end of its life. Expanding shockwaves carve intricate arcs and bubble-like structures into the surrounding gas, creating a form that echoes a winged helmet suspended in deep space.",
+  "alt": "Thor’s Helmet Nebula",
+  "type": "nebulae"
+}
+
 ]
