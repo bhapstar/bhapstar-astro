@@ -1370,18 +1370,6 @@ img.protect, #galleryGrid img, .featured-grid img, .hero img{
 .lightbox-vid{ width: 100%; height: 100%; display: none; }
 .lightbox-vid iframe.lb-iframe{ width: 100%; height: 100%; border: 0; display: block; }
 
-.lightbox-watermark.lightbox-watermark{
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;
-}
-.lightbox-watermark span{
-  font-family: var(--font); text-transform: lowercase; letter-spacing: .14em;
-  font-weight: 700; font-size: clamp(38px, 10vw, 110px);
-  opacity: var(--wm-opacity); color: #fff; transform: rotate(-12deg);
-  text-shadow: 0 8px 22px rgba(0,0,0,.35); mix-blend-mode: screen; user-select: none; white-space: nowrap;
-}
-.page-gallery .lightbox{ --wm-opacity: .04; }
-.page-gear    .lightbox{ --wm-opacity: .13; }
-
 .lightbox-close{
   position: absolute; top: 14px; right: 14px;
   width: 44px; height: 44px; border-radius: 999px;
