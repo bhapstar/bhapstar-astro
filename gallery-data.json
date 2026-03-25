@@ -148,6 +148,12 @@
   "desc": "An emission nebula shaped by the fierce stellar winds of a rare Wolf–Rayet star nearing the end of its life. Expanding shockwaves carve intricate arcs and bubble-like structures into the surrounding gas, creating a form that echoes a winged helmet suspended in deep space.",
   "alt": "Thor’s Helmet Nebula",
   "type": "nebulae"
+},
+  {
+  "src": "images/M10 Globular Cluster",
+  "title": "M10 Globular Cluster Test",
+  "description": "M10 Globular Cluster Test pipeline",
+  "type": "nebula"
 }
 
 ]
