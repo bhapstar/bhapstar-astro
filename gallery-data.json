@@ -150,9 +150,10 @@
   "type": "nebulae"
 },
   {
-  "src": "images/M10 Globular Cluster.jpeg",
+  "file": "images/M10 Globular Cluster.jpg",
   "title": "M10 Globular Cluster Test",
-  "description": "M10 Globular Cluster Test pipeline",
+  "desc": "M10 Globular Cluster Test pipeline",
+  "alt": "A golbular cluster test",
   "type": "nebula"
 }
 
