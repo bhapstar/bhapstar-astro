@@ -151,10 +151,10 @@
 },
   {
   "file": "images/M10 Globular Cluster.jpg",
-  "title": "M10 Globular Cluster Test",
-  "desc": "M10 Globular Cluster Test pipeline",
-  "alt": "A golbular cluster test",
-  "type": "nebula"
+  "title": "The M10 Globular Cluster (NGC 6254)",
+  "desc": "A dense, ancient sphere of stars bound tightly by gravity, orbiting in the outer halo of the Milky Way. Composed of some of the oldest known stars, M10 offers a glimpse into the early formation of our galaxy, where countless suns crowd together in a compact, luminous core.",
+  "alt": "M10 Globular Cluster",
+  "type": "star-clusters"
 }
 
 ]
