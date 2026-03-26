@@ -76,6 +76,10 @@
               <option value="filters">Filters</option>
               <option value="accessories">Accessories</option>
             </select>
+            <div class="gallery-filter-spacer"></div>
+            <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
+              List view
+            </button>
           </div>
         </div>
 
@@ -151,6 +155,7 @@
   const lbNext     = document.getElementById('lbNext');
   const lbThumbs   = document.getElementById('lbThumbs');
   const typeFilter = document.getElementById('typeFilter');
+  const viewToggle = document.getElementById('viewToggle');
 
   if (!grid || !lb) return;
 
@@ -330,9 +335,28 @@
   }
 
   function init() {
+    /* View mode (grid / list) */
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+    if (!isMobile) {
+      const savedView = localStorage.getItem('gearView');
+      if (savedView === 'list') {
+        grid.classList.add('list-view');
+        viewToggle.textContent = 'Grid view';
+        viewToggle.setAttribute('aria-pressed', 'true');
+      }
+    }
+
     render();
 
     typeFilter?.addEventListener('change', render);
+
+    viewToggle?.addEventListener('click', () => {
+      if (window.matchMedia('(max-width: 720px)').matches) return;
+      const isList = grid.classList.toggle('list-view');
+      viewToggle.textContent = isList ? 'Grid view' : 'List view';
+      viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
+      localStorage.setItem('gearView', isList ? 'list' : 'grid');
+    });
 
     /* Card click → open lightbox — identical to gallery.html */
     grid.addEventListener('click', (e) => {
