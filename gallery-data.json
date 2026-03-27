@@ -1,13 +1,13 @@
 [
   {
-    "file": "images/RN.jpg",
+    "file": "images/Rosette Nebula.jpg",
     "title": "The Rosette Nebula (NGC 2244)",
     "desc": "A vast, expanding cloud of ionised hydrogen surrounding a young open star cluster at its core. Intense radiation from newly formed stars carves cavities into the surrounding gas, revealing the fragile balance between stellar birth and destruction.",
     "alt": "Rosette Nebula",
     "type": "nebulae"
   },
   {
-    "file": "images/JFN.jpg",
+    "file": "images/Jellyfish Nebula.jpg",
     "title": "The Jellyfish Nebula (IC 443)",
     "desc": "The remnants of a massive stellar explosion, where an expanding supernova shockwave collides with surrounding molecular clouds. Filamentary structures trace the violence of the event, frozen in motion thousands of years after the star’s death.",
     "alt": "Jellyfish Nebula",
@@ -21,7 +21,7 @@
     "type": "nebulae"
   },
   {
-    "file": "images/MHN.jpg",
+    "file": "images/Monkeyhead Nebula.jpg",
     "title": "The Monkey Head Nebula (NGC 2174)",
     "desc": "A luminous star-forming region shaped by powerful radiation and stellar winds from young, massive stars. Dark dust lanes cut through glowing hydrogen, giving rise to the nebula’s distinctive silhouette against the Orion constellation.",
     "alt": "Monkey Head Nebula",
@@ -150,10 +150,10 @@
   "type": "nebulae"
 },
   {
-  "file": "images/M10 Globular Cluster.jpg",
-  "title": "The M10 Globular Cluster (NGC 6254)",
-  "desc": "A dense, ancient sphere of stars bound tightly by gravity, orbiting in the outer halo of the Milky Way. Composed of some of the oldest known stars, M10 offers a glimpse into the early formation of our galaxy, where countless suns crowd together in a compact, luminous core.",
-  "alt": "M10 Globular Cluster",
+  "file": "images/>Little Beehive Cluster.jpg",
+  "title": "Little Beehive Cluster (M41)",
+  "desc": "A loose open cluster in Canis Major, one of the nearest to Earth and visible to the naked eye on a clear night. Orange giant stars give it a warm, scattered appearance, set against a rich and busy field of the winter Milky Way.",
+  "alt": "Little Beehive Cluster",
   "type": "star-clusters"
 }
 
