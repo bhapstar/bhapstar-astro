@@ -7,7 +7,7 @@
     "type": "nebulae"
   },
   {
-    "file": "images/Jellyfish Nebula.jpg",
+    "file": "images/Jellyfish Nebula.png",
     "title": "The Jellyfish Nebula (IC 443)",
     "desc": "The remnants of a massive stellar explosion, where an expanding supernova shockwave collides with surrounding molecular clouds. Filamentary structures trace the violence of the event, frozen in motion thousands of years after the star’s death.",
     "alt": "Jellyfish Nebula",
@@ -42,7 +42,7 @@
     "type": "nebulae"
   },
   {
-    "file": "images/Andromeda.jpg",
+    "file": "images/Andromeda.png",
     "title": "The Andromeda Galaxy (M31)",
     "desc": "A vast spiral galaxy beyond our own, captured as its ancient light travels over two million years through intergalactic space. A reminder that the Milky Way is not alone, but one of countless island universes drifting through the dark.",
     "alt": "Andromeda",
