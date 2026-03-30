@@ -1537,10 +1537,12 @@ body.noscroll{ overflow: hidden; }
 }
 .page-puzzle .fx-canvas{ background: transparent !important; }
 
-a[href="prints.html"], a[href*="prints"] {                /* Remove all reference to the Prints html page */
+/* PRINTS LINKS — uncomment to hide */
+/* a[href="prints.html"], a[href*="prints"] {
   display: none !important;
-}
+} */
 
-.support-panel {                                        /* Remove all reference to the Buymeacoffee on homepage*/
+/* BUY ME A COFFEE PANEL — uncomment to hide */
+/* .support-panel {
   display: none;
-}
+} */
