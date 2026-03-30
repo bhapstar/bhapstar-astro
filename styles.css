@@ -1538,11 +1538,11 @@ body.noscroll{ overflow: hidden; }
 .page-puzzle .fx-canvas{ background: transparent !important; }
 
 /* PRINTS LINKS — uncomment to hide */
-/* a[href="prints.html"], a[href*="prints"] {
+ a[href="prints.html"], a[href*="prints"] {
   display: none !important;
-} */
+} 
 
 /* BUY ME A COFFEE PANEL — uncomment to hide */
-/* .support-panel {
+ .support-panel {
   display: none;
-} */
+} 
