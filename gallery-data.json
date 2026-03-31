@@ -62,7 +62,7 @@
     "alt": "The Eagle Nebula",
     "type": "nebulae"
   },
-    {
+  {
     "file": "images/Moon.jpeg",
     "title": "The Moon",
     "desc": "Earth’s natural satellite, showing a surface dominated by impact craters and dark basalt plains. With no atmosphere to erase its past, the Moon preserves a clear record of billions of years of Solar System history.",
@@ -82,6 +82,20 @@
    "desc": "A face-on spiral galaxy in Ursa Major, its sweeping arms lined with bright star-forming regions and dark dust lanes. A delicate, expansive disk where new stars continue to emerge across tens of thousands of light-years.",
   "alt": "The Pinwheel Galaxy (M101)",
   "type": "galaxies"
+  },
+  {
+  "file": "images/Thors-Helmet.jpg",
+  "title": "Thor’s Helmet (NGC 2359)",
+  "desc": "An emission nebula shaped by the fierce stellar winds of a rare Wolf–Rayet star nearing the end of its life. Expanding shockwaves carve intricate arcs and bubble-like structures into the surrounding gas, creating a form that echoes a winged helmet suspended in deep space.",
+  "alt": "Thor’s Helmet Nebula",
+  "type": "nebulae"
+  },
+  {
+  "file": "images/Little Beehive Cluster.jpg",
+  "title": "The Little Beehive Cluster (M41)",
+  "desc": "A loose open cluster in the constellation Canis Major, one of the nearest to Earth and visible to the naked eye on a clear night. Orange giant stars give it a warm, scattered appearance, set against a rich and busy field of the winter Milky Way.",
+  "alt": "Little Beehive Cluster",
+  "type": "star-clusters"
   },
   {
     "file": "images/Triangulum.jpg",
@@ -141,20 +155,5 @@
     "title": "Comets",
     "desc": "Small bodies from the outer Solar System, visible only briefly as they pass close to the Sun. Heating releases gas and dust from the nucleus, forming a tail shaped by solar radiation and the solar wind, changing subtly from night to night.",
     "type": "comets"
-  },
-  {
-  "file": "images/Thors-Helmet.jpg",
-  "title": "Thor’s Helmet (NGC 2359)",
-  "desc": "An emission nebula shaped by the fierce stellar winds of a rare Wolf–Rayet star nearing the end of its life. Expanding shockwaves carve intricate arcs and bubble-like structures into the surrounding gas, creating a form that echoes a winged helmet suspended in deep space.",
-  "alt": "Thor’s Helmet Nebula",
-  "type": "nebulae"
-},
-  {
-  "file": "images/Little Beehive Cluster.jpg",
-  "title": "The Little Beehive Cluster (M41)",
-  "desc": "A loose open cluster in the constellation Canis Major, one of the nearest to Earth and visible to the naked eye on a clear night. Orange giant stars give it a warm, scattered appearance, set against a rich and busy field of the winter Milky Way.",
-  "alt": "Little Beehive Cluster",
-  "type": "star-clusters"
-}
-
+  }
 ]
