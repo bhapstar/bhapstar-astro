@@ -21,13 +21,6 @@
     "type": "nebulae"
   },
   {
-    "file": "images/Monkeyhead Nebula.jpg",
-    "title": "The Monkey Head Nebula (NGC 2174)",
-    "desc": "A luminous star-forming region shaped by powerful radiation and stellar winds from young, massive stars. Dark dust lanes cut through glowing hydrogen, giving rise to the nebula’s distinctive silhouette against the Orion constellation.",
-    "alt": "Monkey Head Nebula",
-    "type": "nebulae"
-  },
-  {
     "file": "images/Pleiades.jpeg",
     "title": "The Pleiades (M45)",
     "desc": "A young open star cluster dominated by hot, blue stars, drifting through faint interstellar dust that reflects their light. Often mistaken for a nebula, the delicate blue haze is a foreground veil rather than material born with the stars themselves.",
@@ -42,6 +35,13 @@
     "type": "nebulae"
   },
   {
+    "file": "images/Flame&Horsehead.jpg",
+    "title": "The Flame (NGC 2024) and Horsehead (B33) Nebulae",
+    "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance.",
+    "alt": "Flame&Horsehead",
+    "type": "nebulae"
+  },
+  {
     "file": "images/Andromeda.png",
     "title": "The Andromeda Galaxy (M31)",
     "desc": "A vast spiral galaxy beyond our own, captured as its ancient light travels over two million years through intergalactic space. A reminder that the Milky Way is not alone, but one of countless island universes drifting through the dark.",
@@ -49,10 +49,10 @@
     "type": "galaxies"
   },
   {
-    "file": "images/Flame&Horsehead.jpg",
-    "title": "The Flame (NGC 2024) and Horsehead (B33) Nebulae",
-    "desc": "Dark molecular dust and glowing hydrogen clouds shaped by intense radiation from nearby young stars, suspended along the edge of Orion’s Belt. A region where star formation, erosion, and shadow coexist in delicate balance.",
-    "alt": "Flame&Horsehead",
+    "file": "images/Monkeyhead Nebula.jpg",
+    "title": "The Monkey Head Nebula (NGC 2174)",
+    "desc": "A luminous star-forming region shaped by powerful radiation and stellar winds from young, massive stars. Dark dust lanes cut through glowing hydrogen, giving rise to the nebula’s distinctive silhouette against the Orion constellation.",
+    "alt": "Monkey Head Nebula",
     "type": "nebulae"
   },
   {
