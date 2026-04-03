@@ -78,14 +78,14 @@
   {
     "images": [
       {
-        "file": "images/gear/Optolong L-Quad Enhance.jpeg",
-        "alt": "Optolong L-Quad Enhance filter",
-        "desc": "A piece of glass that quietly edits out the modern world. The L-Quad Enhance blocks the wavelengths that street lights and city glow pour into the sky, while letting the true light of nebulae and galaxies pass through unimpeded. The stars remain honest. The background becomes dark again. It is, in a small way, like being somewhere much further from everything."
-      },
-      {
         "file": "images/gear/Optolong LeXtreme.jpeg",
         "alt": "Optolong LeXtreme filter",
-        "desc": "Where the L-Quad whispers, the LeXtreme speaks in narrowband. It passes only the two wavelengths where emission nebulae burn brightest — the deep red of hydrogen and the blue-green of ionised oxygen — blocking almost everything else. Under a moon, under city light, it finds the faint structures that would otherwise be lost entirely in the noise. A filter for pushing further into the dark."
+        "desc": "An 'extreme' narrowband filter, the Optolong LeXtreme passes only the two wavelengths where emission nebulae burn brightest — the deep red of hydrogen and the blue-green of ionised oxygen — blocking almost everything else. Under a moon, under city light, it finds the faint structures that would otherwise be lost entirely in the noise. A filter for pushing further into the dark."
+      },
+      {
+        "file": "images/gear/Optolong L-Quad Enhance.jpeg",
+        "alt": "Optolong L-Quad Enhance filter",
+        "desc": "A piece of glass that quietly edits out the modern world. The L-Quad Enhance blocks the wavelengths that street lights and city glow pour into the sky, while letting the true light of nebulae and galaxies pass through unimpeded. The stars remain honest. The background becomes dark again."
       }
     ],
     "title": "Optolong Filters",
