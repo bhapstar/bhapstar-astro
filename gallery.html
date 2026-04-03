@@ -126,13 +126,17 @@
     <img class="lightbox-img" id="lbImg" alt="" src="" />
     <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
 
-    <div class="lightbox-meta">
-      <div class="meta-left">
-        <div class="title" id="lbTitle"></div>
-        <div class="desc"  id="lbDesc"></div>
-      </div>
-      <div class="count" id="lbCount"></div>
+    <!-- Info toggle button -->
+    <button class="lightbox-info-btn" id="lbInfoBtn" aria-label="Hide image information" aria-expanded="true">ⓘ</button>
+
+    <!-- Info overlay panel -->
+    <div class="lightbox-info-panel" id="lbInfoPanel" aria-hidden="true">
+      <div class="lb-info-title" id="lbTitle"></div>
+      <div class="lb-info-desc"  id="lbDesc"></div>
     </div>
+
+    <!-- Count badge (bottom-right, always visible) -->
+    <div class="lb-count-badge" id="lbCount"></div>
 
   </div>
 </div>
@@ -164,6 +168,7 @@
   let lbIndex         = 0;
   let activeSet       = [];
   let activeItemIndex = 0;
+  let infoPanelVisible = true;
 
   /* ── Load gallery data ── */
   async function loadData() {
@@ -208,11 +213,29 @@
   }
 
   /* ── Lightbox display ── */
+  const lbInfoBtn   = document.getElementById('lbInfoBtn');
+  const lbInfoPanel = document.getElementById('lbInfoPanel');
+
+  function closeInfoPanel() {
+    if (!lbInfoPanel) return;
+    lbInfoPanel.classList.remove('open');
+    lbInfoPanel.setAttribute('aria-hidden', 'true');
+    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function openInfoPanel() {
+    if (!lbInfoPanel) return;
+    lbInfoPanel.classList.add('open');
+    lbInfoPanel.setAttribute('aria-hidden', 'false');
+    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'true');
+  }
+
   function showLb() {
     const cur = lbList[lbIndex];
     lbTitle.textContent = currentItem?.title || '';
     lbDesc.textContent  = currentItem?.desc  || '';
     lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
+    infoPanelVisible ? openInfoPanel() : closeInfoPanel();
 
     const canNav = lbList.length > 1 || activeSet.length > 1;
     lbPrev.style.display = canNav ? '' : 'none';
@@ -270,7 +293,9 @@
     if (lbVid) { lbVid.innerHTML = ''; lbVid.style.display = 'none'; }
     lbImg.src = ''; lbImg.style.display = 'block';
     lbTitle.textContent = ''; lbDesc.textContent = ''; lbCount.textContent = '';
+    closeInfoPanel();
     currentItem = null; lbList = []; lbIndex = 0; activeItemIndex = 0;
+    infoPanelVisible = true;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -376,6 +401,16 @@
 
     addTapHandler(lbClose, closeLightbox);
 
+    /* Info panel toggle */
+    if (lbInfoBtn && lbInfoPanel) {
+      addTapHandler(lbInfoBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        infoPanelVisible = !infoPanelVisible;
+        infoPanelVisible ? openInfoPanel() : closeInfoPanel();
+        lbInfoBtn.setAttribute('aria-label', infoPanelVisible ? 'Hide image information' : 'Show image information');
+      });
+    }
+
     addTapHandler(lbPrev, (e) => {
       if (e.stopPropagation) e.stopPropagation();
       if (lbList.length > 1) {
@@ -437,7 +472,7 @@
        * touchend swipe handler knows to ignore this touch entirely.
        * This prevents a button tap being misread as a 0-delta swipe.
        */
-      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav');
+      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn');
       touchStartX  = e.touches[0].clientX;
       touchStartY  = e.touches[0].clientY;
     }, { passive: true });
