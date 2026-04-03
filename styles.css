@@ -1478,9 +1478,9 @@ body.noscroll{ overflow: hidden; }
 }
 
 @media (max-width: 720px){
-  .lightbox-info-panel{ padding: 18px 16px 16px; }
+  .lightbox-info-panel{ padding: 18px 16px 16px; max-height: 55%; overflow-y: auto; }
   .lb-info-title{ font-size: 14px; }
-  .lb-info-desc{ font-size: 12px; -webkit-line-clamp: 4; }
+  .lb-info-desc{ font-size: 12px; -webkit-line-clamp: unset; overflow: visible; display: block; }
 }
   width: 100%; display: none; gap: 8px; padding: 10px 12px 13px; overflow-x: auto;
   scrollbar-width: thin; scrollbar-color: rgba(167,139,250,0.18) transparent;
