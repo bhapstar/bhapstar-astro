@@ -345,7 +345,8 @@
         ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
         : '';
 
-      const media = `<img src="${esc(cover.file)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
+      const thumbSrc = cover.file.replace(/^(images\/gear\/)/, '$1thumbs/');
+      const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
       return `<a class="card"
            href="${esc(cover.file)}"
