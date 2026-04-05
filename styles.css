@@ -17,6 +17,16 @@
 
 
 /* =========================
+   SITE CONTROLS
+   Change the values below to show or hide elements
+   flex = visible | none = hidden
+========================= */
+:root {
+  --show-prints: flex;   /* flex = show prints link  | none = hide */
+  --show-coffee: block;  /* block = show buy me coffee | none = hide */
+}
+
+/* =========================
    THEME TOKENS
 ========================= */
 :root{
@@ -1608,12 +1618,12 @@ body.noscroll{ overflow: hidden; }
 }
 .page-puzzle .fx-canvas{ background: transparent !important; }
 
-/* PRINTS LINKS — uncomment to hide */
- a[href="prints.html"], a[href*="prints"] {
-  display: none !important;
-} 
+/* PRINTS LINKS — controlled by --show-prints in SITE CONTROLS at top of file */
+a[href="prints.html"], a[href*="prints"] {
+  display: var(--show-prints) !important;
+}
 
-/* BUY ME A COFFEE PANEL — uncomment to hide */
- .support-panel {
-  display: none;
-} 
+/* BUY ME A COFFEE PANEL — controlled by --show-coffee in SITE CONTROLS at top of file */
+.support-panel {
+  display: var(--show-coffee);
+}
