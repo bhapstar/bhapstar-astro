@@ -11,7 +11,7 @@
   <!-- Open Graph -->
   <meta property="og:title"       content="Print Enquiries — Bhapstar Astrophotography" />
   <meta property="og:description" content="Order astrophotography prints — A3/A4, framed or unframed, digital downloads and custom calendars." />
-  <meta property="og:image"       content="images/RN.jpg" />
+  <meta property="og:image"       content="images/Rosette Nebula.webp" />
 
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
@@ -31,8 +31,7 @@
       <div class="support-left">
         <h2 class="support-title">Support my work</h2>
         <p class="support-text">
-          If you enjoy my astrophotography or the outreach work I do, you're welcome
-          to support the time and effort behind it by clicking the button here.
+          If you enjoy my astrophotography or the outreach work I do, you're welcome to support the time and effort behind it by clicking the button here.
         </p>
       </div>
       <div class="support-right">
@@ -309,7 +308,7 @@
 
   async function loadGalleryTitles() {
     try {
-      const res = await fetch('gallery-data.json', { cache: 'no-store' });
+      const res = await fetch('gallery-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
       GALLERY_TITLES = Array.from(new Set(
