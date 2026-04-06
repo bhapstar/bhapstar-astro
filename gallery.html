@@ -11,7 +11,7 @@
   <!-- Open Graph -->
   <meta property="og:title"       content="Gallery — Bhapstar Astrophotography" />
   <meta property="og:description" content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
-  <meta property="og:image"       content="images/RN.jpg" />
+  <meta property="og:image"       content="images/Rosette Nebula.webp" />
 
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
@@ -173,7 +173,7 @@
   /* ── Load gallery data ── */
   async function loadData() {
     try {
-      const res = await fetch('gallery-data.json', { cache: 'no-store' });
+      const res = await fetch('gallery-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       items = await res.json();
       init();

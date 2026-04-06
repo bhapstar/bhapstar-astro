@@ -85,7 +85,7 @@
 (() => {
   // ---------- Pull a random IMAGE file from your gallery-data.json (skip vimeo) ----------
   async function loadGalleryData(){
-    const res = await fetch('gallery-data.json', { cache: 'no-store' });
+    const res = await fetch('gallery-data.json', { cache: 'default' });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
   }

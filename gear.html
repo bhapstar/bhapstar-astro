@@ -176,7 +176,7 @@
   /* ── Load gear data ── */
   async function loadData() {
     try {
-      const res = await fetch('gear-data.json', { cache: 'no-store' });
+      const res = await fetch('gear-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       items = await res.json();
       init();
