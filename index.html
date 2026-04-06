@@ -16,7 +16,7 @@
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content="Bhapstar Astrophotography — Fragments of the Universe" />
   <meta property="og:description" content="Nebulae, galaxies, star clusters and deep-sky objects — captured slowly through patient hours of long exposure under dark skies." />
-  <meta property="og:image"       content="images/RN.jpg" />
+  <meta property="og:image"       content="images/Rosette Nebula.webp" />
   <meta property="og:url"         content="https://bhapstar.com" />
 
 
@@ -24,7 +24,7 @@
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Bhapstar Astrophotography" />
   <meta name="twitter:description" content="Nebulae, galaxies and deep-sky objects captured through patient long-exposure imaging." />
-  <meta name="twitter:image"       content="images/RN.jpg" />
+  <meta name="twitter:image"       content="images/Rosette Nebula.webp" />
 
   <!-- Google Search Console verification -->
   <meta name="google-site-verification" content="QnMwC-ycqBRx8M1hdYQCTaO02X3GASV9P1Kmmi6QOrI" />
@@ -32,6 +32,9 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <!-- Preload gallery data for faster hero slideshow -->
+  <link rel="preload" href="gallery-data.json" as="fetch" crossorigin />
 
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -268,7 +271,7 @@
 
   let items = [];
   try {
-    const res = await fetch('gallery-data.json', { cache: 'no-store' });
+    const res = await fetch('gallery-data.json', { cache: 'default' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     items = await res.json();
     if (!Array.isArray(items) || !items.length) throw new Error('Empty');
