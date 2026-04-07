@@ -126,6 +126,12 @@
     <img class="lightbox-img" id="lbImg" alt="" src="" />
     <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
 
+    <!-- Like button -->
+    <button class="lightbox-like-btn" id="lbLikeBtn" aria-label="Like this image" type="button">
+      <span class="like-heart" aria-hidden="true">♡</span>
+      <span class="like-count"></span>
+    </button>
+
     <!-- Info toggle button -->
     <button class="lightbox-info-btn" id="lbInfoBtn" aria-label="Hide image information" aria-expanded="true">ⓘ</button>
 
@@ -143,6 +149,91 @@
 
 
 <!-- ─────────────────────────────────────────
+     LIKES MODULE
+     ─────────────────────────────────────────
+     Phase 1 (local / Live Server): localStorage mock.
+     Phase 2 (deployed): swap WORKER_URL below to your
+     Cloudflare Worker endpoint, then set USE_WORKER = true.
+───────────────────────────────────────── -->
+<script>
+(function () {
+
+  /* ── CONFIG ────────────────────────────────────────────────── */
+  const USE_WORKER  = false;          // ← set true when Worker is live
+  const WORKER_URL  = 'https://likes.bhapstar.com'; // ← your Worker URL
+
+  /* ── Slug helper — stable ID from image title / file path ─── */
+  function slugify(str) {
+    return String(str || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  /* ── localStorage mock (Phase 1) ──────────────────────────── */
+  function localGetLikes(id) {
+    const raw = localStorage.getItem('likes_' + id);
+    return raw ? JSON.parse(raw) : { count: 0, liked: false };
+  }
+  function localToggleLike(id) {
+    const data  = localGetLikes(id);
+    data.liked  = !data.liked;
+    data.count  = Math.max(0, data.count + (data.liked ? 1 : -1));
+    localStorage.setItem('likes_' + id, JSON.stringify(data));
+    return data;
+  }
+
+  /* ── Worker calls (Phase 2) ────────────────────────────────── */
+  async function workerGetLikes(id) {
+    try {
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`);
+      if (!r.ok) throw new Error();
+      return await r.json(); // expects { count, liked }
+    } catch { return { count: 0, liked: false }; }
+  }
+  async function workerToggleLike(id) {
+    try {
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { method: 'POST' });
+      if (!r.ok) throw new Error();
+      return await r.json();
+    } catch { return null; }
+  }
+
+  /* ── Public API ────────────────────────────────────────────── */
+  window.Likes = {
+    slugify,
+    async get(id)    { return USE_WORKER ? workerGetLikes(id)   : localGetLikes(id); },
+    async toggle(id) { return USE_WORKER ? workerToggleLike(id) : localToggleLike(id); },
+
+    /* Hydrate all like buttons already in the DOM */
+    async hydrate() {
+      const btns = document.querySelectorAll('[data-like-id]');
+      for (const btn of btns) {
+        const id   = btn.dataset.likeId;
+        const data = await this.get(id);
+        this._apply(btn, data);
+      }
+    },
+
+    _apply(btn, data) {
+      const countEl = btn.querySelector('.like-count');
+      if (countEl) countEl.textContent = data.count > 0 ? data.count : '';
+      btn.classList.toggle('liked', !!data.liked);
+      btn.setAttribute('aria-label', data.liked ? 'Unlike this image' : 'Like this image');
+      btn.querySelector('.like-heart').textContent = data.liked ? '♥' : '♡';
+    },
+
+    /* Called by the click handler */
+    async handleClick(btn) {
+      const id   = btn.dataset.likeId;
+      const data = await this.toggle(id);
+      if (data) this._apply(btn, data);
+    }
+  };
+})();
+</script>
+
+<!-- ─────────────────────────────────────────
      GALLERY CONTROLLER
 ───────────────────────────────────────── -->
 <script>
@@ -157,6 +248,7 @@
   const lbClose    = document.getElementById('lbClose');
   const lbPrev     = document.getElementById('lbPrev');
   const lbNext     = document.getElementById('lbNext');
+  const lbLikeBtn  = document.getElementById('lbLikeBtn');
   const typeFilter = document.getElementById('typeFilter');
   const viewToggle = document.getElementById('viewToggle');
 
@@ -236,6 +328,13 @@
     lbDesc.textContent  = currentItem?.desc  || '';
     lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
     infoPanelVisible ? openInfoPanel() : closeInfoPanel();
+
+    /* ── Update lightbox like button ── */
+    if (lbLikeBtn && window.Likes && currentItem) {
+      const likeId = window.Likes.slugify(currentItem.title || '');
+      lbLikeBtn.dataset.likeId = likeId;
+      window.Likes.get(likeId).then(data => window.Likes._apply(lbLikeBtn, data));
+    }
 
     const canNav = lbList.length > 1 || activeSet.length > 1;
     lbPrev.style.display = canNav ? '' : 'none';
@@ -350,6 +449,15 @@
       const thumbSrc = cover.file.replace(/^(images\/)/, '$1thumbs/');
       const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
+      const likeId = window.Likes ? window.Likes.slugify(item.title || cover.file) : '';
+      const likeBtn = likeId
+        ? `<button class="like-btn" data-like-id="${esc(likeId)}"
+             aria-label="Like this image" type="button">
+             <span class="like-heart" aria-hidden="true">♡</span>
+             <span class="like-count"></span>
+           </button>`
+        : '';
+
       return `<a class="card"
            href="${esc(cover.file)}"
            data-idx="${idx}"
@@ -359,6 +467,7 @@
         <div class="cap">
           <div class="t">${esc(item.title || '')}</div>
           <div class="d">${esc(item.desc || '')}</div>
+          ${likeBtn}
         </div>
       </a>`;
     }).join('');
@@ -378,8 +487,12 @@
     }
 
     render();
+    if (window.Likes) window.Likes.hydrate();
 
-    typeFilter?.addEventListener('change', render);
+    typeFilter?.addEventListener('change', () => {
+      render();
+      if (window.Likes) window.Likes.hydrate();
+    });
 
     viewToggle?.addEventListener('click', () => {
       if (window.matchMedia('(max-width: 720px)').matches) return;
@@ -389,8 +502,9 @@
       localStorage.setItem('galleryView', isList ? 'list' : 'grid');
     });
 
-    /* Card click → open lightbox */
+    /* Card click → open lightbox (ignore like button clicks) */
     grid.addEventListener('click', (e) => {
+      if (e.target.closest('.like-btn')) return; // handled separately
       const a = e.target.closest('a.card');
       if (!a) return;
       e.preventDefault();
@@ -398,9 +512,32 @@
       if (item) openLightbox(item, Number(a.dataset.activeIdx));
     });
 
+    /* Like button click */
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.like-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.Likes) window.Likes.handleClick(btn);
+    });
+
     /* ── FIX 3 applied: use addTapHandler for all lightbox controls ── */
 
     addTapHandler(lbClose, closeLightbox);
+
+    /* Lightbox like button */
+    if (lbLikeBtn && window.Likes) {
+      addTapHandler(lbLikeBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        window.Likes.handleClick(lbLikeBtn).then(() => {
+          /* Sync the matching card tile like button */
+          if (!currentItem) return;
+          const likeId = window.Likes.slugify(currentItem.title || '');
+          const cardBtn = grid.querySelector(`.like-btn[data-like-id="${likeId}"]`);
+          if (cardBtn) window.Likes.get(likeId).then(d => window.Likes._apply(cardBtn, d));
+        });
+      });
+    }
 
     /* Info panel toggle */
     if (lbInfoBtn && lbInfoPanel) {
@@ -473,7 +610,7 @@
        * touchend swipe handler knows to ignore this touch entirely.
        * This prevents a button tap being misread as a 0-delta swipe.
        */
-      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn');
+      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn, .lightbox-like-btn');
       touchStartX  = e.touches[0].clientX;
       touchStartY  = e.touches[0].clientY;
     }, { passive: true });

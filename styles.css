@@ -637,6 +637,53 @@ h1.hero-byline{
   font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4;
 }
 
+/* ── Like button ── */
+.like-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 8px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(244,114,182,0.25);
+  background: rgba(244,114,182,0.07);
+  color: rgba(244,114,182,0.75);
+  font-family: var(--font);
+  font-size: 11.5px; letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease,
+              color 180ms ease, transform 140ms var(--ease-spring);
+  /* prevent card click bubbling issues */
+  position: relative; z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* override anchor pointer-events on img */
+  pointer-events: all;
+}
+.like-btn:hover {
+  background: rgba(244,114,182,0.14);
+  border-color: rgba(244,114,182,0.45);
+  color: #f472b6;
+}
+.like-btn.liked {
+  background: rgba(244,114,182,0.18);
+  border-color: rgba(244,114,182,0.55);
+  color: #f472b6;
+}
+.like-btn .like-heart {
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 200ms var(--ease-spring);
+  display: inline-block;
+}
+.like-btn:active .like-heart,
+.like-btn.liked .like-heart {
+  transform: scale(1.3);
+}
+.like-btn .like-count {
+  font-size: 11px;
+  min-width: 8px;
+  text-align: left;
+}
+
 /* Skeleton */
 .card-skeleton{
   grid-column: span 4; border-radius: var(--radius);
@@ -1428,6 +1475,46 @@ body.noscroll{ overflow: hidden; }
   background: rgba(167,139,250,0.22);
   border-color: rgba(167,139,250,0.60);
   color: #fff;
+}
+
+/* ── Lightbox like button ── */
+.lightbox-like-btn {
+  position: absolute; bottom: 14px; right: 62px;
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 38px; padding: 0 13px 0 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(244,114,182,0.28);
+  background: rgba(5,4,20,0.55);
+  color: rgba(244,114,182,0.80);
+  font-family: var(--font); font-size: 13px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  z-index: 8;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 180ms ease, border-color 180ms ease,
+              color 180ms ease, transform 180ms var(--ease-spring);
+}
+.lightbox-like-btn:hover {
+  background: rgba(244,114,182,0.15);
+  border-color: rgba(244,114,182,0.50);
+  color: #f472b6;
+  transform: scale(1.05);
+}
+.lightbox-like-btn.liked {
+  background: rgba(244,114,182,0.20);
+  border-color: rgba(244,114,182,0.55);
+  color: #f472b6;
+}
+.lightbox-like-btn .like-heart {
+  font-size: 16px; line-height: 1;
+  display: inline-block;
+  transition: transform 200ms var(--ease-spring);
+}
+.lightbox-like-btn:active .like-heart,
+.lightbox-like-btn.liked .like-heart { transform: scale(1.35); }
+.lightbox-like-btn .like-count {
+  font-size: 12px; min-width: 8px;
 }
 
 /* ── Count badge (independent, bottom-left) ── */

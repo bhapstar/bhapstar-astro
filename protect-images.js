@@ -64,6 +64,8 @@
      the browser from registering the long-press gesture.
      { passive: false } is required to allow preventDefault. */
   document.addEventListener('touchstart', (e) => {
+    // Never block interaction on like buttons
+    if (e.target.closest('.like-btn') || e.target.closest('.lightbox-like-btn')) return;
     if (isProtected(e.target)) {
       // Only cancel if it looks like a hold (single touch on img/canvas)
       // We don't cancel multi-touch (pinch-zoom) — check touches.length
