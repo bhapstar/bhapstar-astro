@@ -22,7 +22,7 @@
     if (!el) return;
     if (el.dataset.loaded === '1') return;    // double-load guard
 
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(url, { cache: 'default' });
     if (!res.ok) throw new Error(url + ' (HTTP ' + res.status + ')');
 
     el.innerHTML = await res.text();
