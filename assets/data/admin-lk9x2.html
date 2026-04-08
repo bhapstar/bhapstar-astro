@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bhapstar — Likes Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #050414;
+      --bg2:      #0a0720;
+      --accent:   #a78bfa;
+      --accent2:  #60a5fa;
+      --accent4:  #f472b6;
+      --accent5:  #fb923c;
+      --text:     rgba(255,255,255,0.95);
+      --muted:    rgba(200,195,235,0.60);
+      --line:     rgba(167,139,250,0.15);
+      --font:     'Outfit', ui-sans-serif, system-ui, sans-serif;
+      --radius:   14px;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Background glow ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(167,139,250,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 70%, rgba(96,165,250,0.05) 0%, transparent 70%);
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+    }
+    .header-top {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent4);
+      box-shadow: 0 0 12px rgba(244,114,182,0.6);
+    }
+    h1 {
+      font-size: 22px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 13px; color: var(--muted); letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Login panel ── */
+    #loginPanel {
+      margin-top: 60px;
+      background: rgba(167,139,250,0.04);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 36px;
+      max-width: 420px;
+    }
+    #loginPanel h2 {
+      font-size: 15px; font-weight: 600; margin-bottom: 6px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+    }
+    #loginPanel p {
+      font-size: 13px; color: var(--muted); margin-bottom: 20px;
+    }
+    .input-row {
+      display: flex; gap: 10px;
+    }
+    input[type="password"] {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 180ms ease;
+    }
+    input[type="password"]:focus {
+      border-color: rgba(167,139,250,0.45);
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-family: var(--font);
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 180ms ease, transform 180ms ease;
+      white-space: nowrap;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .error-msg {
+      margin-top: 12px; font-size: 12px;
+      color: #f87171; display: none;
+    }
+
+    /* ── Stats bar ── */
+    #dashboard { display: none; }
+    .stats-bar {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      flex: 1; min-width: 140px;
+      background: rgba(167,139,250,0.04);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-label {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 28px; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent4), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .controls-left {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .sort-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+    .sort-btn.active, .sort-btn:hover {
+      background: rgba(167,139,250,0.12);
+      border-color: rgba(167,139,250,0.35);
+      color: var(--text);
+    }
+    .refresh-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(96,165,250,0.25);
+      background: transparent;
+      color: var(--accent2);
+      font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+    .refresh-btn:hover {
+      background: rgba(96,165,250,0.10);
+    }
+    .export-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(52,211,153,0.25);
+      background: transparent;
+      color: #34d399;
+      font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+    .export-btn:hover { background: rgba(52,211,153,0.10); }
+
+    /* ── Table ── */
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead {
+      background: rgba(167,139,250,0.07);
+    }
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); font-weight: 600;
+      border-bottom: 1px solid var(--line);
+    }
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid rgba(167,139,250,0.07);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(167,139,250,0.03); }
+
+    .slug-cell {
+      font-size: 12px; color: var(--muted);
+      max-width: 220px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .title-cell {
+      font-weight: 500; color: var(--text);
+    }
+    .count-cell {
+      font-size: 18px; font-weight: 700;
+      color: var(--accent4);
+      text-align: center;
+    }
+    .voters-cell {
+      text-align: center; color: var(--accent2);
+      font-size: 13px;
+    }
+    .location-cell {
+      font-size: 12px; color: var(--muted);
+    }
+    .time-cell {
+      font-size: 11.5px; color: var(--muted);
+      white-space: nowrap;
+    }
+    .flag {
+      font-size: 16px; margin-right: 5px;
+    }
+    .no-data {
+      color: rgba(200,195,235,0.30);
+      font-size: 12px; font-style: italic;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: 13px; letter-spacing: 0.08em;
+    }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid rgba(167,139,250,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top: 32px; text-align: center;
+      font-size: 11px; color: rgba(200,195,235,0.25);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 600px) {
+      .slug-cell, th:nth-child(2), td:nth-child(2) { display: none; }
+      .stat-value { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <div class="logo-dot"></div>
+      <h1>Bhapstar Likes Admin</h1>
+    </div>
+    <div class="subtitle">Gallery engagement dashboard</div>
+  </header>
+
+  <!-- Login -->
+  <div id="loginPanel">
+    <h2>Admin Access</h2>
+    <p>Enter your admin key to view the likes dashboard.</p>
+    <div class="input-row">
+      <input type="password" id="keyInput" placeholder="Admin key…" autocomplete="off" />
+      <button class="btn" id="loginBtn">View</button>
+    </div>
+    <div class="error-msg" id="errorMsg">Incorrect key — please try again.</div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <div class="stats-bar" id="statsBar"></div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="sort-btn active" data-sort="count">Sort: Most liked</button>
+        <button class="sort-btn" data-sort="recent">Sort: Most recent</button>
+        <button class="sort-btn" data-sort="alpha">Sort: A–Z</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="export-btn" id="exportBtn">⬇ Export CSV</button>
+        <button class="refresh-btn" id="refreshBtn">↺ Refresh</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="loadingMsg">
+        <div class="spinner"></div>
+        Loading likes data…
+      </div>
+      <table id="likesTable" style="display:none">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Slug</th>
+            <th style="text-align:center">Likes</th>
+            <th style="text-align:center">Unique visitors</th>
+            <th>Last liked from</th>
+            <th>Last liked at</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page-footer">bhapstar.com · private admin · do not share this page</div>
+
+</div>
+
+<script>
+(function () {
+  const WORKER_URL = 'https://bhapstar-likes.bhapindersingh.workers.dev';
+
+  const loginPanel  = document.getElementById('loginPanel');
+  const dashboard   = document.getElementById('dashboard');
+  const keyInput    = document.getElementById('keyInput');
+  const loginBtn    = document.getElementById('loginBtn');
+  const errorMsg    = document.getElementById('errorMsg');
+  const statsBar    = document.getElementById('statsBar');
+  const loadingMsg  = document.getElementById('loadingMsg');
+  const likesTable  = document.getElementById('likesTable');
+  const tableBody   = document.getElementById('tableBody');
+  const refreshBtn  = document.getElementById('refreshBtn');
+  const exportBtn   = document.getElementById('exportBtn');
+
+  let adminKey  = '';
+  let allRows   = [];
+  let sortMode  = 'count';
+
+  /* ── Country code → flag emoji ── */
+  function flag(code) {
+    if (!code || code === 'unknown') return '';
+    return code.toUpperCase().replace(/./g, c =>
+      String.fromCodePoint(127397 + c.charCodeAt(0))
+    );
+  }
+
+  /* ── Slug → readable title ── */
+  function unslug(slug) {
+    return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  /* ── Login ── */
+  async function login() {
+    adminKey = keyInput.value.trim();
+    if (!adminKey) return;
+    loginBtn.disabled = true;
+    loginBtn.textContent = '…';
+    errorMsg.style.display = 'none';
+    const ok = await fetchData();
+    if (!ok) {
+      errorMsg.style.display = 'block';
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'View';
+      adminKey = '';
+    }
+  }
+
+  keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  loginBtn.addEventListener('click', login);
+
+  /* ── Fetch data from Worker ── */
+  async function fetchData() {
+    loadingMsg.style.display = 'block';
+    likesTable.style.display = 'none';
+    try {
+      const r = await fetch(`${WORKER_URL}/admin?key=${encodeURIComponent(adminKey)}`);
+      if (r.status === 401) return false;
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+      allRows = data.rows || [];
+      loginPanel.style.display = 'none';
+      dashboard.style.display  = 'block';
+      renderStats();
+      renderTable();
+      return true;
+    } catch {
+      return false;
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'View';
+    }
+  }
+
+  /* ── Stats bar ── */
+  function renderStats() {
+    const totalLikes    = allRows.reduce((s, r) => s + (r.count || 0), 0);
+    const totalVisitors = allRows.reduce((s, r) => s + (r.voters || 0), 0);
+    const imagesLiked   = allRows.filter(r => (r.count || 0) > 0).length;
+    const topImage      = allRows[0];
+
+    statsBar.innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total likes</div>
+        <div class="stat-value">${totalLikes}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Unique visitors who liked</div>
+        <div class="stat-value">${totalVisitors}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Images liked</div>
+        <div class="stat-value">${imagesLiked}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Most liked</div>
+        <div class="stat-value" style="font-size:14px;padding-top:4px">
+          ${topImage ? unslug(topImage.slug).substring(0, 28) + (unslug(topImage.slug).length > 28 ? '…' : '') : '—'}
+        </div>
+      </div>
+    `;
+  }
+
+  /* ── Sort ── */
+  function sorted(rows) {
+    if (sortMode === 'count')  return [...rows].sort((a, b) => (b.count || 0) - (a.count || 0));
+    if (sortMode === 'recent') return [...rows].sort((a, b) => {
+      const ta = a.last_liked?.time || '';
+      const tb = b.last_liked?.time || '';
+      return tb.localeCompare(ta);
+    });
+    if (sortMode === 'alpha')  return [...rows].sort((a, b) => a.slug.localeCompare(b.slug));
+    return rows;
+  }
+
+  /* ── Table ── */
+  function renderTable() {
+    loadingMsg.style.display = 'none';
+    likesTable.style.display = 'table';
+    const rows = sorted(allRows);
+
+    tableBody.innerHTML = rows.map(row => {
+      const ll       = row.last_liked;
+      const country  = ll?.country || '';
+      const city     = ll?.city    || '';
+      const time     = ll?.time    || '';
+      const location = country && country !== 'unknown'
+        ? `<span class="flag">${flag(country)}</span>${city && city !== 'unknown' ? city + ', ' : ''}${country}`
+        : '<span class="no-data">—</span>';
+
+      return `<tr>
+        <td class="title-cell">${unslug(row.slug)}</td>
+        <td class="slug-cell">${row.slug}</td>
+        <td class="count-cell">${row.count || 0}</td>
+        <td class="voters-cell">${row.voters || 0}</td>
+        <td class="location-cell">${location}</td>
+        <td class="time-cell">${time || '<span class="no-data">—</span>'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── Sort buttons ── */
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      sortMode = btn.dataset.sort;
+      renderTable();
+    });
+  });
+
+  /* ── Refresh ── */
+  refreshBtn.addEventListener('click', () => fetchData());
+
+  /* ── Export CSV ── */
+  exportBtn.addEventListener('click', () => {
+    const rows = sorted(allRows);
+    const header = ['Image', 'Slug', 'Likes', 'Unique Visitors', 'Last Country', 'Last City', 'Last Liked At'];
+    const lines  = rows.map(r => [
+      `"${unslug(r.slug)}"`,
+      r.slug,
+      r.count || 0,
+      r.voters || 0,
+      r.last_liked?.country || '',
+      r.last_liked?.city    || '',
+      `"${r.last_liked?.time || ''}"`,
+    ].join(','));
+    const csv  = [header.join(','), ...lines].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `bhapstar-likes-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  });
+
+})();
+</script>
+</body>
+</html>
