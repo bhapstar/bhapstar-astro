@@ -149,20 +149,30 @@
 
 
 <!-- ─────────────────────────────────────────
-     LIKES MODULE
+     LIKES MODULE v2
      ─────────────────────────────────────────
-     Phase 1 (local / Live Server): localStorage mock.
-     Phase 2 (deployed): swap WORKER_URL below to your
-     Cloudflare Worker endpoint, then set USE_WORKER = true.
+     Visitor identity via localStorage UUID sent as
+     X-Visitor-ID header — avoids third-party cookie
+     blocking when Worker is on a different domain.
 ───────────────────────────────────────── -->
 <script>
 (function () {
 
   /* ── CONFIG ────────────────────────────────────────────────── */
-  const USE_WORKER  = true;          // ← set true when Worker is live
-  const WORKER_URL  = 'https://bhapstar-likes.bhapindersingh.workers.dev'; // ← your Worker URL
+  const USE_WORKER = true;
+  const WORKER_URL = 'https://bhapstar-likes.bhapindersingh.workers.dev';
 
-  /* ── Slug helper — stable ID from image title / file path ─── */
+  /* ── Visitor ID — persisted in localStorage ─────────────────── */
+  function getVisitorId() {
+    let uid = localStorage.getItem('_bhap_uid');
+    if (!uid) {
+      uid = crypto.randomUUID();
+      localStorage.setItem('_bhap_uid', uid);
+    }
+    return uid;
+  }
+
+  /* ── Slug helper ─────────────────────────────────────────────── */
   function slugify(str) {
     return String(str || '')
       .toLowerCase()
@@ -170,7 +180,7 @@
       .replace(/^-+|-+$/g, '');
   }
 
-  /* ── localStorage mock (Phase 1) ──────────────────────────── */
+  /* ── localStorage mock (for local Live Server testing) ──────── */
   function localGetLikes(id) {
     const raw = localStorage.getItem('likes_' + id);
     return raw ? JSON.parse(raw) : { count: 0, liked: false };
@@ -183,34 +193,37 @@
     return data;
   }
 
-  /* ── Worker calls (Phase 2) ────────────────────────────────── */
+  /* ── Worker calls ────────────────────────────────────────────── */
+  function headers() {
+    return { 'Content-Type': 'application/json', 'X-Visitor-ID': getVisitorId() };
+  }
   async function workerGetLikes(id) {
     try {
-      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`);
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`,
+        { headers: headers() });
       if (!r.ok) throw new Error();
-      return await r.json(); // expects { count, liked }
+      return await r.json();
     } catch { return { count: 0, liked: false }; }
   }
   async function workerToggleLike(id) {
     try {
-      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { method: 'POST' });
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`,
+        { method: 'POST', headers: headers() });
       if (!r.ok) throw new Error();
       return await r.json();
     } catch { return null; }
   }
 
-  /* ── Public API ────────────────────────────────────────────── */
+  /* ── Public API ──────────────────────────────────────────────── */
   window.Likes = {
     slugify,
     async get(id)    { return USE_WORKER ? workerGetLikes(id)   : localGetLikes(id); },
     async toggle(id) { return USE_WORKER ? workerToggleLike(id) : localToggleLike(id); },
 
-    /* Hydrate all like buttons already in the DOM */
     async hydrate() {
       const btns = document.querySelectorAll('[data-like-id]');
       for (const btn of btns) {
-        const id   = btn.dataset.likeId;
-        const data = await this.get(id);
+        const data = await this.get(btn.dataset.likeId);
         this._apply(btn, data);
       }
     },
@@ -223,7 +236,6 @@
       btn.querySelector('.like-heart').textContent = data.liked ? '♥' : '♡';
     },
 
-    /* Called by the click handler */
     async handleClick(btn) {
       const id   = btn.dataset.likeId;
       const data = await this.toggle(id);
