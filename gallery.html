@@ -221,9 +221,31 @@
     async toggle(id) { return USE_WORKER ? workerToggleLike(id) : localToggleLike(id); },
 
     async hydrate() {
-      const btns = document.querySelectorAll('[data-like-id]');
+      const btns = Array.from(document.querySelectorAll('[data-like-id]'));
+      if (!btns.length) return;
+
+      if (USE_WORKER) {
+        /* Single bulk request for all counts */
+        try {
+          const ids = [...new Set(btns.map(b => b.dataset.likeId))];
+          const r   = await fetch(
+            `${WORKER_URL}/likes/all?ids=${ids.map(encodeURIComponent).join(',')}`,
+            { headers: { 'X-Visitor-ID': getVisitorId() } }
+          );
+          if (r.ok) {
+            const all = await r.json();
+            btns.forEach(btn => {
+              const data = all[btn.dataset.likeId];
+              if (data) this._apply(btn, data);
+            });
+            return;
+          }
+        } catch { /* fall through to per-button fetch */ }
+      }
+
+      /* localStorage fallback (local testing) */
       for (const btn of btns) {
-        const data = await this.get(btn.dataset.likeId);
+        const data = localGetLikes(btn.dataset.likeId);
         this._apply(btn, data);
       }
     },
