@@ -221,6 +221,15 @@
       color: var(--muted); font-weight: 600;
       border-bottom: 1px solid var(--line);
     }
+    th.sortable {
+      cursor: pointer; user-select: none;
+      transition: color 150ms ease;
+      white-space: nowrap;
+    }
+    th.sortable:hover { color: var(--accent); }
+    th.sortable.active { color: var(--accent); }
+    .sort-arrow { font-size: 9px; margin-left: 4px; opacity: 0.5; }
+    th.sortable.active .sort-arrow { opacity: 1; color: var(--accent4); }
     td {
       padding: 13px 16px;
       border-bottom: 1px solid rgba(167,139,250,0.07);
@@ -317,9 +326,7 @@
 
     <div class="controls">
       <div class="controls-left">
-        <button class="sort-btn active" data-sort="count">Sort: Most liked</button>
-        <button class="sort-btn" data-sort="recent">Sort: Most recent</button>
-        <button class="sort-btn" data-sort="alpha">Sort: A–Z</button>
+        <span style="font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;">Click any column header to sort</span>
       </div>
       <div style="display:flex;gap:8px">
         <button class="export-btn" id="exportBtn">⬇ Export CSV</button>
@@ -335,12 +342,12 @@
       <table id="likesTable" style="display:none">
         <thead>
           <tr>
-            <th>Image</th>
-            <th>Slug</th>
-            <th style="text-align:center">Likes</th>
-            <th style="text-align:center">Unique visitors</th>
-            <th>Last liked from</th>
-            <th>Last liked at</th>
+            <th class="sortable" data-col="title">Image <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="slug">Slug <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="count" style="text-align:center">Likes <span class="sort-arrow">▼</span></th>
+            <th class="sortable" data-col="voters" style="text-align:center">Unique visitors <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="location">Last liked from <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="time">Last liked at <span class="sort-arrow"></span></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -368,16 +375,20 @@
   const refreshBtn  = document.getElementById('refreshBtn');
   const exportBtn   = document.getElementById('exportBtn');
 
-  let adminKey  = '';
-  let allRows   = [];
-  let sortMode  = 'count';
+  let adminKey   = '';
+  let allRows    = [];
+  let sortCol    = 'count';
+  let sortAsc    = false; // default: high to low
 
   /* ── Country code → flag emoji ── */
   function flag(code) {
-    if (!code || code === 'unknown') return '';
-    return code.toUpperCase().replace(/./g, c =>
-      String.fromCodePoint(127397 + c.charCodeAt(0))
-    );
+    if (!code || code === 'unknown' || code.length !== 2) return '';
+    try {
+      const chars = [...code.toUpperCase()].map(c =>
+        String.fromCodePoint(c.codePointAt(0) + 127397)
+      );
+      return chars.join('');
+    } catch { return code; }
   }
 
   /* ── Slug → readable title ── */
@@ -418,6 +429,7 @@
       dashboard.style.display  = 'block';
       renderStats();
       renderTable();
+      updateHeaders();
       return true;
     } catch {
       return false;
@@ -458,14 +470,32 @@
 
   /* ── Sort ── */
   function sorted(rows) {
-    if (sortMode === 'count')  return [...rows].sort((a, b) => (b.count || 0) - (a.count || 0));
-    if (sortMode === 'recent') return [...rows].sort((a, b) => {
-      const ta = a.last_liked?.time || '';
-      const tb = b.last_liked?.time || '';
-      return tb.localeCompare(ta);
+    const dir = sortAsc ? 1 : -1;
+    return [...rows].sort((a, b) => {
+      switch (sortCol) {
+        case 'title':
+        case 'slug':     return dir * a.slug.localeCompare(b.slug);
+        case 'count':    return dir * ((a.count || 0) - (b.count || 0));
+        case 'voters':   return dir * ((a.voters || 0) - (b.voters || 0));
+        case 'location': return dir * ((a.last_liked?.country || '').localeCompare(b.last_liked?.country || ''));
+        case 'time':     return dir * ((a.last_liked?.time || '').localeCompare(b.last_liked?.time || ''));
+        default:         return 0;
+      }
     });
-    if (sortMode === 'alpha')  return [...rows].sort((a, b) => a.slug.localeCompare(b.slug));
-    return rows;
+  }
+
+  /* ── Update header arrows ── */
+  function updateHeaders() {
+    document.querySelectorAll('th.sortable').forEach(th => {
+      const arrow = th.querySelector('.sort-arrow');
+      if (th.dataset.col === sortCol) {
+        th.classList.add('active');
+        arrow.textContent = sortAsc ? '▲' : '▼';
+      } else {
+        th.classList.remove('active');
+        arrow.textContent = '';
+      }
+    });
   }
 
   /* ── Table ── */
@@ -494,12 +524,17 @@
     }).join('');
   }
 
-  /* ── Sort buttons ── */
-  document.querySelectorAll('.sort-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      sortMode = btn.dataset.sort;
+  /* ── Column header sort ── */
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      if (sortCol === th.dataset.col) {
+        sortAsc = !sortAsc; // same column — toggle direction
+      } else {
+        sortCol = th.dataset.col;
+        // numbers default high→low, text defaults A→Z
+        sortAsc = ['title', 'slug', 'location', 'time'].includes(sortCol);
+      }
+      updateHeaders();
       renderTable();
     });
   });
