@@ -238,13 +238,17 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(167,139,250,0.03); }
 
-    .slug-cell {
-      font-size: 12px; color: var(--muted);
-      max-width: 220px; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
-    }
     .title-cell {
       font-weight: 500; color: var(--text);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .thumb-img {
+      width: 48px; height: 36px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      background: rgba(167,139,250,0.06);
     }
     .count-cell {
       font-size: 18px; font-weight: 700;
@@ -293,7 +297,6 @@
     }
 
     @media (max-width: 600px) {
-      .slug-cell, th:nth-child(2), td:nth-child(2) { display: none; }
       .stat-value { font-size: 22px; }
     }
   </style>
@@ -343,7 +346,6 @@
         <thead>
           <tr>
             <th class="sortable" data-col="title">Image <span class="sort-arrow"></span></th>
-            <th class="sortable" data-col="slug">Slug <span class="sort-arrow"></span></th>
             <th class="sortable" data-col="count" style="text-align:center">Likes <span class="sort-arrow">▼</span></th>
             <th class="sortable" data-col="voters" style="text-align:center">Unique visitors <span class="sort-arrow"></span></th>
             <th class="sortable" data-col="location">Last liked from <span class="sort-arrow"></span></th>
@@ -377,8 +379,35 @@
 
   let adminKey   = '';
   let allRows    = [];
+  let thumbMap   = {}; // slug → thumb URL, built from gallery-data.json
   let sortCol    = 'count';
   let sortAsc    = false; // default: high to low
+
+  /* ── Slugify (mirrors gallery.html) ── */
+  function slugify(str) {
+    return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  /* ── Load gallery-data.json and build slug→thumb map ── */
+  async function loadThumbMap() {
+    try {
+      const r = await fetch('https://bhapstar.com/gallery-data.json');
+      if (!r.ok) return;
+      const items = await r.json();
+      items.forEach(item => {
+        const slug = slugify(item.title || '');
+        if (!slug) return;
+        // Determine the cover file (first image or video poster)
+        let file = item.file;
+        if (!file && item.images?.length) file = item.images[0].file;
+        if (!file && item.videos?.length)  file = item.videos[0].poster;
+        if (!file) return;
+        // Mirror the gallery's thumb path logic: images/ → images/thumbs/
+        const thumb = file.replace(/^(images\/)/, '$1thumbs/');
+        thumbMap[slug] = 'https://bhapstar.com/' + thumb;
+      });
+    } catch { /* silently skip — thumbs just won't show */ }
+  }
 
   /* ── Country code → flag emoji ── */
   function flag(code) {
@@ -425,6 +454,7 @@
       if (!r.ok) throw new Error();
       const data = await r.json();
       allRows = data.rows || [];
+      await loadThumbMap();
       loginPanel.style.display = 'none';
       dashboard.style.display  = 'block';
       renderStats();
@@ -459,10 +489,13 @@
         <div class="stat-label">Images liked</div>
         <div class="stat-value">${imagesLiked}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Most liked</div>
-        <div class="stat-value" style="font-size:14px;padding-top:4px">
-          ${topImage ? unslug(topImage.slug).substring(0, 28) + (unslug(topImage.slug).length > 28 ? '…' : '') : '—'}
+      <div class="stat-card" style="display:flex;align-items:center;gap:14px">
+        ${topImage && thumbMap[topImage.slug] ? `<img src="${thumbMap[topImage.slug]}" alt="" onerror="this.style.display='none'" style="width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--line);flex-shrink:0;background:rgba(167,139,250,0.06)">` : ''}
+        <div>
+          <div class="stat-label">Most liked</div>
+          <div class="stat-value" style="font-size:14px;padding-top:4px">
+            ${topImage ? unslug(topImage.slug).substring(0, 28) + (unslug(topImage.slug).length > 28 ? '…' : '') : '—'}
+          </div>
         </div>
       </div>
     `;
@@ -513,9 +546,9 @@
         ? `<span class="flag">${flag(country)}</span>${city && city !== 'unknown' ? city + ', ' : ''}${country}`
         : '<span class="no-data">—</span>';
 
+      const thumbUrl = thumbMap[row.slug] || '';
       return `<tr>
-        <td class="title-cell">${unslug(row.slug)}</td>
-        <td class="slug-cell">${row.slug}</td>
+        <td class="title-cell">${thumbUrl ? `<img class="thumb-img" src="${thumbUrl}" alt="" onerror="this.style.display='none'">` : ''}<span>${unslug(row.slug)}</span></td>
         <td class="count-cell">${row.count || 0}</td>
         <td class="voters-cell">${row.voters || 0}</td>
         <td class="location-cell">${location}</td>
@@ -532,7 +565,7 @@
       } else {
         sortCol = th.dataset.col;
         // numbers default high→low, text defaults A→Z
-        sortAsc = ['title', 'slug', 'location', 'time'].includes(sortCol);
+        sortAsc = ['title', 'location', 'time'].includes(sortCol);
       }
       updateHeaders();
       renderTable();
