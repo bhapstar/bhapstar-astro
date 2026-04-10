@@ -304,7 +304,7 @@
 <body>
 <div class="wrap">
 
-  <header>
+  <header id="siteHeader" style="display:none">
     <div class="header-top">
       <div class="logo-dot"></div>
       <h1>Bhapstar Likes Admin</h1>
@@ -321,6 +321,9 @@
       <button class="btn" id="loginBtn">View</button>
     </div>
     <div class="error-msg" id="errorMsg">Incorrect key — please try again.</div>
+    <div style="margin-top:20px;font-size:12px;">
+      <a href="https://bhapstar.com" style="color:var(--muted);text-decoration:none;letter-spacing:0.04em;transition:color 150ms ease;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">← bhapstar.com</a>
+    </div>
   </div>
 
   <!-- Dashboard -->
@@ -346,10 +349,10 @@
         <thead>
           <tr>
             <th class="sortable" data-col="title">Image <span class="sort-arrow"></span></th>
-            <th class="sortable" data-col="count" style="text-align:center">Likes <span class="sort-arrow">▼</span></th>
+            <th class="sortable" data-col="count" style="text-align:center">Likes <span class="sort-arrow"></span></th>
             <th class="sortable" data-col="voters" style="text-align:center">Unique visitors <span class="sort-arrow"></span></th>
             <th class="sortable" data-col="location">Last liked from <span class="sort-arrow"></span></th>
-            <th class="sortable" data-col="time">Last liked at <span class="sort-arrow"></span></th>
+            <th class="sortable active" data-col="time">Last liked at <span class="sort-arrow">▼</span></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -380,8 +383,8 @@
   let adminKey   = '';
   let allRows    = [];
   let thumbMap   = {}; // slug → thumb URL, built from gallery-data.json
-  let sortCol    = 'count';
-  let sortAsc    = false; // default: high to low
+  let sortCol    = 'time';
+  let sortAsc    = false; // newest first
 
   /* ── Slugify (mirrors gallery.html) ── */
   function slugify(str) {
@@ -456,6 +459,7 @@
       allRows = data.rows || [];
       await loadThumbMap();
       loginPanel.style.display = 'none';
+      document.getElementById('siteHeader').style.display = 'block';
       dashboard.style.display  = 'block';
       renderStats();
       renderTable();
