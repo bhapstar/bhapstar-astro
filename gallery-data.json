@@ -126,8 +126,8 @@
   },
   {
     "images": [
-      { "file": "images/startrails-1.webp", "alt": "Star trails still 1" },
       { "file": "images/startrails-2.webp", "alt": "Star trails still 2" },
+      { "file": "images/startrails-1.webp", "alt": "Star trails still 1" },
       { "file": "images/startrails-3.webp", "alt": "Star trails still 3" },
       { "file": "images/startrails-4.webp", "alt": "Star trails still 4" }
     ],
