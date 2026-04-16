@@ -86,13 +86,13 @@
               <option value="others">Others</option>
             </select>
             <div class="gallery-filter-spacer"></div>
-            <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
+            <button id="viewToggle" class="view-toggle" type="button" data-view="grid" aria-pressed="false">
               List view
             </button>
           </div>
         </div>
 
-        <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
+        <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate · Try <strong>Chaos view</strong> for a scattered layout</p>
       </div>
 
       <!-- Skeleton placeholders shown while JSON loads -->
@@ -507,33 +507,207 @@
     }).join('');
   }
 
+  /* ── Chaos view — justified mosaic ─────────────────────────────────────
+   *
+   * Algorithm: row-based justified layout (like Google Photos / Flickr).
+   *   1. Shuffle items randomly (different every visit).
+   *   2. Assign each item a random "natural" aspect ratio (width/height).
+   *   3. Pack items into rows: keep adding items until the row's total
+   *      natural width (scaled to a target row height) exceeds the canvas
+   *      width, then "justify" that row — scale all items up/down so their
+   *      combined width exactly equals the canvas width.
+   *   4. Last row is left-aligned at the target height (no stretching).
+   *
+   * Result: perfectly tiled, no gaps, no overlaps, all different sizes,
+   * reshuffled on every call.
+   * ─────────────────────────────────────────────────────────────────────── */
+
+  function renderChaos() {
+    const selected = typeFilter?.value || 'all';
+    const filtered = selected === 'all'
+      ? items
+      : items.filter(it => (it.type || 'others') === selected);
+
+    activeSet = filtered;
+
+    /* ── Canvas metrics ── */
+    const canvasW  = grid.clientWidth || window.innerWidth;
+    const isMob    = canvasW < 540;
+    const GAP      = isMob ? 3 : 5;          /* px gap between tiles */
+    const TARGET_H = isMob ? 120 : 220;      /* ideal row height — varies per row */
+
+    /* ── Shuffle a copy (new order every call) ── */
+    const pool = filtered.map((item, originalIdx) => ({ item, originalIdx }));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    /* ── Assign random aspect ratios ── */
+    /* Real astrophotos are typically landscape; allow some portrait variety */
+    const aspectOptions = [
+      1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.78,  /* landscape */
+      0.75, 0.8, 0.85,                             /* portrait  */
+      2.0, 2.35,                                   /* ultra-wide */
+    ];
+    pool.forEach(p => {
+      p.aspect = aspectOptions[Math.floor(Math.random() * aspectOptions.length)];
+      /* natural width at TARGET_H */
+      p.naturalW = TARGET_H * p.aspect;
+    });
+
+    /* ── Row packing ── */
+    /* Allow row height to vary per row for extra randomness */
+    function rowTargetH() {
+      const variance = isMob ? 40 : 80;
+      return TARGET_H + (Math.random() - 0.5) * variance;
+    }
+
+    const rows = [];     /* each row: array of {item, originalIdx, w, h} */
+    let i = 0;
+    while (i < pool.length) {
+      const rh      = rowTargetH();
+      const row     = [];
+      let rowNatW   = 0;
+
+      /* Fill row until natural widths exceed canvas (accounting for gaps) */
+      while (i < pool.length) {
+        const p    = pool[i];
+        const natW = rh * p.aspect;
+        const gapContrib = row.length * GAP;
+        if (row.length > 0 && rowNatW + natW + gapContrib > canvasW * 1.02) break;
+        row.push({ item: p.item, originalIdx: p.originalIdx, natW, aspect: p.aspect });
+        rowNatW += natW;
+        i++;
+      }
+      rows.push({ row, targetH: rh });
+    }
+
+    /* ── Build HTML ── */
+    let html     = '';
+    let cursorY  = 0;
+    let activeIdx = 0;   /* position in shuffled activeSet order */
+
+    rows.forEach(({ row, targetH }, rowIdx) => {
+      const isLastRow  = rowIdx === rows.length - 1;
+      const totalNatW  = row.reduce((s, c) => s + c.natW, 0);
+      const totalGaps  = (row.length - 1) * GAP;
+
+      /* Scale factor to justify the row; last row stays at natural size */
+      const scale = isLastRow ? 1 : (canvasW - totalGaps) / totalNatW;
+      const rowH  = isLastRow ? targetH : Math.round(targetH * scale);
+
+      let cursorX = 0;
+
+      row.forEach((cell, colIdx) => {
+        const isLastInRow = colIdx === row.length - 1;
+        /* Compute tile width — last tile in row gets any rounding remainder */
+        let tileW = Math.round(cell.natW * scale);
+        if (!isLastRow && isLastInRow) {
+          tileW = canvasW - cursorX - totalGaps + (row.length - 1 - colIdx) * GAP;
+          tileW = Math.max(tileW, 1);
+        }
+
+        const globalIdx  = items.indexOf(cell.item);
+        const cover      = getCover(cell.item);
+        const thumbSrc   = cover.file.replace(/^(images\/)/, '$1thumbs/');
+        const myActiveIdx = activeIdx++;
+
+        html += `<button
+          class="chaos-tile"
+          data-idx="${globalIdx}"
+          data-active-idx="${myActiveIdx}"
+          aria-label="${esc(cell.item.title || cover.alt)}"
+          style="position:absolute;left:${cursorX}px;top:${cursorY}px;width:${tileW}px;height:${rowH}px">
+          <img src="${esc(thumbSrc)}"
+               alt="${esc(cover.alt)}"
+               loading="lazy" decoding="async"
+               draggable="false">
+        </button>`;
+
+        cursorX += tileW + GAP;
+      });
+
+      cursorY += rowH + GAP;
+    });
+
+    grid.innerHTML = `<div class="chaos-canvas" style="height:${cursorY}px">${html}</div>`;
+
+    /* Rebuild activeSet to match the shuffled order for lightbox navigation */
+    activeSet = pool.map(p => p.item);
+
+    grid.addEventListener('click', handleChaosClick, { once: false });
+  }
+
+  function handleChaosClick(e) {
+    if (!grid.classList.contains('chaos-view')) return;
+    const btn = e.target.closest('.chaos-tile');
+    if (!btn) return;
+    e.preventDefault();
+    const item = items[Number(btn.dataset.idx)];
+    if (item) openLightbox(item, Number(btn.dataset.activeIdx));
+  }
+
   function init() {
 
-    /* View mode (grid / list) */
-    const isMobile = window.matchMedia('(max-width: 720px)').matches;
-    if (!isMobile) {
-      const savedView = localStorage.getItem('galleryView');
-      if (savedView === 'list') {
-        grid.classList.add('list-view');
-        viewToggle.textContent = 'Grid view';
-        viewToggle.setAttribute('aria-pressed', 'true');
+    /* ── View mode: grid / list / chaos ── */
+    const VIEW_CYCLE = ['grid', 'list', 'chaos'];
+    const VIEW_LABELS = { grid: 'List view', list: 'Chaos view', chaos: 'Grid view' };
+
+    let currentView = 'grid';
+
+    function applyView(view, skipRender) {
+      currentView = view;
+      grid.classList.toggle('list-view',  view === 'list');
+      grid.classList.toggle('chaos-view', view === 'chaos');
+
+      if (viewToggle) {
+        viewToggle.textContent = VIEW_LABELS[view];
+        viewToggle.dataset.view = view;
+        viewToggle.setAttribute('aria-pressed', view !== 'grid' ? 'true' : 'false');
+      }
+
+      if (!skipRender) {
+        if (view === 'chaos') {
+          renderChaos();
+        } else {
+          render();
+          if (window.Likes) window.Likes.hydrate();
+        }
       }
     }
 
-    render();
-    if (window.Likes) window.Likes.hydrate();
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+    /* On mobile, restore grid or chaos but never list */
+    const savedView = localStorage.getItem('galleryView') || 'grid';
+    const restoredView = savedView === 'chaos' ? 'chaos'
+                       : (savedView === 'list' || isMobile) ? 'grid'
+                       : 'list';
+    applyView(restoredView, true);
 
-    typeFilter?.addEventListener('change', () => {
+    if (currentView === 'chaos') {
+      renderChaos();
+    } else {
       render();
       if (window.Likes) window.Likes.hydrate();
+    }
+
+    typeFilter?.addEventListener('change', () => {
+      if (currentView === 'chaos') {
+        renderChaos();
+      } else {
+        render();
+        if (window.Likes) window.Likes.hydrate();
+      }
     });
 
     viewToggle?.addEventListener('click', () => {
-      if (window.matchMedia('(max-width: 720px)').matches) return;
-      const isList = grid.classList.toggle('list-view');
-      viewToggle.textContent = isList ? 'Grid view' : 'List view';
-      viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
-      localStorage.setItem('galleryView', isList ? 'list' : 'grid');
+      const mob = window.matchMedia('(max-width: 720px)').matches;
+      /* On mobile, skip list view — cycle grid → chaos → grid */
+      const cycle = mob ? ['grid', 'chaos'] : VIEW_CYCLE;
+      const nextView = cycle[(cycle.indexOf(currentView) + 1) % cycle.length];
+      localStorage.setItem('galleryView', nextView);
+      applyView(nextView);
     });
 
     /* Card click → open lightbox (ignore like button clicks) */
@@ -674,6 +848,14 @@
         }
       }
     }, { passive: true });
+
+    /* Re-render chaos on resize so columns/sizes stay within viewport */
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      if (currentView !== 'chaos') return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderChaos, 150);
+    });
 
   } // end init()
 

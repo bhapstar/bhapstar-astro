@@ -848,10 +848,65 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   #galleryGrid.list-view .card, #gearGrid.list-view .card{ grid-template-columns: 1fr; }
   #galleryGrid.list-view .card img, #gearGrid.list-view .card img{ height: 200px; border-radius: 18px 18px 0 0; }
   #galleryGrid.list-view .cap, #gearGrid.list-view .cap{ padding: 14px; }
-  .view-toggle{ display: none !important; }
+  .view-toggle{ display: inline-flex !important; font-size: 11px; padding: 6px 12px; }
 }
 
 .gallery-error{ grid-column: 1/-1; }
+
+/* ── Chaos view — justified mosaic ──────────────────────────────────────────
+   Tiles flush edge-to-edge with tiny gaps. No rotation — the mosaic provides
+   all the visual interest. Hover lifts tile with brightness/scale.
+────────────────────────────────────────────────────────────────────────────── */
+#galleryGrid.chaos-view{
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.chaos-canvas{
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+}
+
+.chaos-tile{
+  position: absolute;
+  padding: 0;
+  border: none;
+  background: #050414;
+  cursor: pointer;
+  border-radius: 0;
+  overflow: hidden;
+  transition: transform 220ms var(--ease-spring),
+              filter 220ms ease;
+  z-index: 1;
+}
+
+.chaos-tile:hover{
+  transform: scale(1.04);
+  z-index: 20;
+  filter: brightness(1.12) saturate(1.2);
+}
+
+.chaos-tile img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* View-toggle label when active chaos state */
+.view-toggle[data-view="chaos"]{
+  background: rgba(244,114,182,0.10);
+  border-color: rgba(244,114,182,0.35);
+  color: #f472b6;
+}
+
+
 
 /* About page */
 .page-about .cols{ grid-template-columns: 1fr; justify-items: center; }
