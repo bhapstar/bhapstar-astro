@@ -78,11 +78,16 @@
               <option value="filters">Filters</option>
               <option value="accessories">Accessories</option>
             </select>
-            <div class="gallery-filter-spacer"></div>
-            <button id="viewToggle" class="view-toggle" type="button" aria-pressed="false">
-              List view
-            </button>
           </div>
+        </div>
+
+        <div class="view-buttons" role="group" aria-label="View mode selection">
+          <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true">
+            Grid
+          </button>
+          <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false">
+            List
+          </button>
         </div>
 
         <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
@@ -161,7 +166,8 @@
   const lbNext     = document.getElementById('lbNext');
   const lbThumbs   = document.getElementById('lbThumbs');
   const typeFilter = document.getElementById('typeFilter');
-  const viewToggle = document.getElementById('viewToggle');
+  const viewToggle = null; // replaced by viewBtnGrid / viewBtnList
+
 
   if (!grid || !lb) return;
 
@@ -363,28 +369,41 @@
   }
 
   function init() {
-    /* View mode (grid / list) */
-    const isMobile = window.matchMedia('(max-width: 720px)').matches;
-    if (!isMobile) {
-      const savedView = localStorage.getItem('gearView');
-      if (savedView === 'list') {
-        grid.classList.add('list-view');
-        viewToggle.textContent = 'Grid view';
-        viewToggle.setAttribute('aria-pressed', 'true');
-      }
+    /* ── View mode: grid / list ── */
+    const viewBtnGrid = document.getElementById('viewBtnGrid');
+    const viewBtnList = document.getElementById('viewBtnList');
+
+    let currentView = 'grid';
+
+    function applyView(view) {
+      currentView = view;
+      grid.classList.toggle('list-view', view === 'list');
+
+      [viewBtnGrid, viewBtnList].forEach(btn => {
+        if (btn) {
+          const isActive = btn.dataset.view === view;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        }
+      });
+
+      render();
     }
 
-    render();
+    const savedView = localStorage.getItem('gearView') || 'grid';
+    applyView(savedView === 'list' ? 'list' : 'grid');
+
+    viewBtnGrid?.addEventListener('click', () => {
+      localStorage.setItem('gearView', 'grid');
+      applyView('grid');
+    });
+
+    viewBtnList?.addEventListener('click', () => {
+      localStorage.setItem('gearView', 'list');
+      applyView('list');
+    });
 
     typeFilter?.addEventListener('change', render);
-
-    viewToggle?.addEventListener('click', () => {
-      if (window.matchMedia('(max-width: 720px)').matches) return;
-      const isList = grid.classList.toggle('list-view');
-      viewToggle.textContent = isList ? 'Grid view' : 'List view';
-      viewToggle.setAttribute('aria-pressed', isList ? 'true' : 'false');
-      localStorage.setItem('gearView', isList ? 'list' : 'grid');
-    });
 
     /* Card click → open lightbox — identical to gallery.html */
     grid.addEventListener('click', (e) => {

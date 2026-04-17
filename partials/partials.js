@@ -128,6 +128,71 @@
 
 
     /* ─────────────────────────────────────────
+       BACK TO TOP BUTTON
+       - Injected once into <body>
+       - Appears after scrolling 400px
+       - Uses existing CSS vars for theming
+       - Respects prefers-reduced-motion
+    ───────────────────────────────────────── */
+    (function initBackToTop() {
+      if (document.getElementById('backToTop')) return; // guard
+
+      const btn = document.createElement('button');
+      btn.id            = 'backToTop';
+      btn.type          = 'button';
+      btn.setAttribute('aria-label', 'Back to top');
+      btn.innerHTML     = '↑';
+
+      const isMobile = window.matchMedia('(max-width: 720px)').matches;
+
+      btn.style.cssText = `
+        position: fixed;
+        bottom: ${isMobile ? '82px' : '28px'};
+        right: 22px;
+        z-index: 900;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid rgba(167,139,250,0.35);
+        background: rgba(10,8,30,0.75);
+        color: var(--accent, #a78bfa);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 250ms ease, transform 250ms ease;
+        pointer-events: none;
+      `;
+
+      document.body.appendChild(btn);
+
+      const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+      function update() {
+        const visible = window.scrollY > 400;
+        btn.style.opacity       = visible ? '1' : '0';
+        btn.style.transform     = visible ? 'translateY(0)' : 'translateY(12px)';
+        btn.style.pointerEvents = visible ? 'auto' : 'none';
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+
+      btn.addEventListener('click', () => {
+        if (reduceMotion) {
+          window.scrollTo(0, 0);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    })();
+
+
+    /* ─────────────────────────────────────────
        SCROLL REVEAL
        - Adds .reveal to targets, then .in when
          they enter the viewport
