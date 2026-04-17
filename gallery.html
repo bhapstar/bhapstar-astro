@@ -958,10 +958,17 @@
       }
     }, { passive: true });
 
-    /* Re-render chaos on resize so columns/sizes stay within viewport */
+    /* Re-render chaos on resize so columns/sizes stay within viewport.
+     * Only trigger on WIDTH changes — mobile browsers fire resize when the
+     * address bar / bottom chrome shows or hides (height-only change), which
+     * would otherwise cause a jarring re-render on every scroll to edge. */
     let resizeTimer;
+    let lastResizeW = window.innerWidth;
     window.addEventListener('resize', () => {
       if (currentView !== 'chaos') return;
+      const newW = window.innerWidth;
+      if (newW === lastResizeW) return;
+      lastResizeW = newW;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
