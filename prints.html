@@ -18,6 +18,100 @@
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
   <link rel="stylesheet" href="styles.css" />
+<style>
+/* ── optional field label ── */
+.field-optional {
+  font-size: .78rem;
+  color: var(--muted);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── enquiry confirm hint ── */
+.enquiry-confirm-hint {
+  font-size: .88rem;
+  color: var(--muted);
+  border-left: 3px solid var(--accent);
+  padding: .5rem .75rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.enquiry-confirm-hint strong {
+  color: inherit;
+  font-weight: inherit;
+}
+
+/* ── custom image picker ── */
+.img-picker-wrap {
+  position: relative;
+  width: 100%;
+}
+.img-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  padding: .45rem .75rem;
+  background: var(--input-bg, rgba(255,255,255,.05));
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 6px);
+  color: var(--text);
+  font-size: .9rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s;
+}
+.img-picker-trigger:hover,
+.img-picker-trigger:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.img-picker-arrow {
+  margin-left: auto;
+  font-size: .75rem;
+  opacity: .6;
+}
+.img-picker-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--bg2, #0a0720);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 6px);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+.img-picker-panel.open { display: block; }
+.img-picker-opt {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .45rem .75rem;
+  cursor: pointer;
+  font-size: .88rem;
+  transition: background .15s;
+}
+.img-picker-opt:hover { background: rgba(167,139,250,.15); }
+.img-picker-thumb {
+  width: 40px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── fix: allow picker dropdown to escape the panel ── */
+.prints-panel { overflow: visible !important; }
+
+/* ── fix: custom picker takes full width in grid (mirrors select:nth-child(1)) ── */
+@media (min-width: 860px) {
+  .item-row .img-picker-wrap { grid-column: 1 / -1; }
+}
+</style>
 </head>
 <body class="page-prints">
 
@@ -100,13 +194,18 @@
                 </div>
 
                 <div class="row">
-                  <label for="pPhone">Phone</label>
-                  <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" required autocomplete="tel" />
+                  <label for="pEmail">Email</label>
+                  <input id="pEmail" name="email" type="email" placeholder="Your email address" required autocomplete="email" />
                 </div>
 
                 <div class="row">
-                  <label for="pEmail">Email</label>
-                  <input id="pEmail" name="email" type="email" placeholder="Your email address" required autocomplete="email" />
+                  <label for="pPhone">Phone <span class="field-optional">(optional)</span></label>
+                  <input id="pPhone" name="phone" type="tel" placeholder="Your phone number" autocomplete="tel" />
+                </div>
+
+                <div class="row">
+                  <label for="pCity">Location</label>
+                  <input id="pCity" name="delivery_location" type="text" placeholder="Delivery location" autocomplete="address-level2" />
                 </div>
 
                 <div class="row row-start">
@@ -121,16 +220,11 @@
                 </div>
 
                 <div class="row">
-                  <label for="pCity">Location</label>
-                  <input id="pCity" name="delivery_location" type="text" placeholder="Delivery location" autocomplete="address-level2" />
-                </div>
-
-                <div class="row">
                   <label for="pNotes">Notes</label>
                   <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
                 </div>
 
-                <!-- Calendar interest -->
+                <!-- Calendar interest — hidden, re-enable when ready
                 <div class="row row-start">
                   <label for="pCalendar">Calendar</label>
                   <div>
@@ -144,6 +238,7 @@
                     </label>
                   </div>
                 </div>
+                -->
 
               </div>
 
@@ -155,13 +250,13 @@
 
               <div class="spacer-14" aria-hidden="true"></div>
 
+              <p class="enquiry-confirm-hint">
+                Once you're happy with the summary above, hit Submit Enquiry and I'll be in touch with all the details.
+              </p>
+
               <div class="actions actions-left">
                 <button class="btn primary" id="submitEnquiry" type="submit">Submit enquiry</button>
               </div>
-
-              <p class="helper mt-10">
-                Enquiry-based only — no checkout or online payments on this site.
-              </p>
             </form>
           </div>
 
@@ -230,16 +325,23 @@
                 <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
               </details>
 
+              <!-- Calendar FAQ — hidden, re-enable when ready
               <details class="faq-item" id="faq-calendar">
                 <summary>What will the calendar look like?</summary>
                 <p>The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description. It will also be pre-populated with key astronomical events and dates.</p>
                 <p class="helper mt-10">Example layout:</p>
                 <img src="images/calendar-example.webp" alt="Example calendar layout" class="calendar-example-img" loading="lazy" />
               </details>
+              -->
 
               <details class="faq-item">
                 <summary>Is there anything else I should know?</summary>
                 <p>Due to differences in monitor/screen rendering, the print or download you receive may differ slightly from what you see here. All prints and downloads contain an imperceptible watermark.</p>
+              </details>
+
+              <details class="faq-item">
+                <summary>What if you re-image or reprocess something I've bought?</summary>
+                <p>Astrophotography is an ongoing process — sometimes I return to an object with more data, better conditions, or a different processing approach. If you've purchased a print or digital file and I release a significantly updated version of that image, I'll contact you with the option to acquire the updated version.</p>
               </details>
 
             </div>
@@ -289,7 +391,7 @@
   const TYPE_OPTIONS = [
     { v: 'A4',     t: 'A4' },
     { v: 'A3',     t: 'A3' },
-    { v: 'Digital', t: 'Digital (high-res)' },
+    { v: 'Digital', t: 'Digital file' },
   ];
   const FRAMED_OPTIONS = [
     { v: 'No',  t: 'No' },
@@ -297,6 +399,7 @@
   ];
 
   let GALLERY_TITLES = [];
+  let THUMB_MAP = {}; // title → absolute thumb URL
 
   function showToast(msg) {
     if (!toast) return;
@@ -308,14 +411,21 @@
 
   async function loadGalleryTitles() {
     try {
-      const res = await fetch('gallery-data.json', { cache: 'default' });
+      const res = await fetch('https://bhapstar.com/gallery-data.json');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
-      GALLERY_TITLES = Array.from(new Set(
-        items.filter(x => x?.title && !x.videos).map(x => x.title).filter(Boolean)
-      ));
+      // Build title list and thumb map exactly as gallery.html / admin do
+      items.forEach(item => {
+        if (!item?.title || item.videos) return;
+        let file = item.file;
+        if (!file && item.images?.length) file = item.images[0].file;
+        if (!file) return;
+        const thumb = file.replace(/^(images\/)/, '$1thumbs/');
+        THUMB_MAP[item.title] = 'https://bhapstar.com/' + thumb;
+      });
+      GALLERY_TITLES = Object.keys(THUMB_MAP);
     } catch (err) {
-      console.error(err);
+      console.warn('Could not load gallery-data.json:', err);
       GALLERY_TITLES = [];
     }
   }
@@ -333,22 +443,117 @@
     return s;
   }
 
+  /* ── custom image-picker dropdown ── */
+  function makeImgPicker(titles, prefillValue) {
+    const wrap = document.createElement('div');
+    wrap.className = 'img-picker-wrap';
+
+    /* hidden input carries the value for form submission */
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'item_image[]';
+    hidden.required = true;
+    hidden.value = prefillValue ?? '';
+
+    /* trigger button */
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'img-picker-trigger';
+
+    function renderTrigger(val) {
+      trigger.innerHTML = '';
+      if (val && titles.includes(val)) {
+        const img = document.createElement('img');
+        img.src = THUMB_MAP[val] || ''; img.alt = ''; img.className = 'img-picker-thumb';
+        img.onerror = () => { img.style.display = 'none'; };
+        trigger.appendChild(img);
+        const span = document.createElement('span');
+        span.textContent = val;
+        trigger.appendChild(span);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = titles.length ? 'Select an image' : 'Gallery unavailable';
+        span.style.color = 'var(--muted)';
+        trigger.appendChild(span);
+      }
+      const arrow = document.createElement('span');
+      arrow.className = 'img-picker-arrow'; arrow.textContent = '▾';
+      trigger.appendChild(arrow);
+    }
+    renderTrigger(prefillValue ?? '');
+
+    /* dropdown panel */
+    const panel = document.createElement('div');
+    panel.className = 'img-picker-panel';
+    panel.setAttribute('role', 'listbox');
+    panel.setAttribute('aria-label', 'Select an image');
+
+    titles.forEach(t => {
+      const opt = document.createElement('div');
+      opt.className = 'img-picker-opt';
+      opt.setAttribute('role', 'option');
+      opt.dataset.value = t;
+      const img = document.createElement('img');
+      img.src = THUMB_MAP[t] || ''; img.alt = ''; img.loading = 'lazy';
+      img.className = 'img-picker-thumb';
+      img.onerror = () => { img.style.display = 'none'; };
+      const label = document.createElement('span');
+      label.textContent = t;
+      opt.append(img, label);
+      opt.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        hidden.value = t;
+        renderTrigger(t);
+        panel.classList.remove('open');
+        build();
+      });
+      panel.appendChild(opt);
+    });
+
+    trigger.addEventListener('click', () => {
+      /* close any other open panels */
+      document.querySelectorAll('.img-picker-panel.open').forEach(p => {
+        if (p !== panel) p.classList.remove('open');
+      });
+      panel.classList.toggle('open');
+    });
+
+    /* close on outside click */
+    document.addEventListener('click', (e) => {
+      if (!wrap.contains(e.target)) panel.classList.remove('open');
+    });
+
+    wrap.append(hidden, trigger, panel);
+
+    /* expose value getter/setter for compatibility */
+    Object.defineProperty(wrap, 'pickerValue', {
+      get: () => hidden.value,
+      set: (v) => { hidden.value = v; renderTrigger(v); }
+    });
+
+    return wrap;
+  }
+
   function addItem(prefill) {
     if (!itemsWrap) return;
     const row = document.createElement('div');
     row.className = 'item-row';
 
-    const imgSel = makeSelect(GALLERY_TITLES.map(t => ({ v: t, t })),
-      GALLERY_TITLES.length ? 'Select an image' : 'Gallery unavailable');
-    imgSel.name = 'item_image[]'; imgSel.required = true;
-    if (!GALLERY_TITLES.length) imgSel.disabled = true;
+    const imgPicker = GALLERY_TITLES.length
+      ? makeImgPicker(GALLERY_TITLES, prefill?.image ?? '')
+      : (() => {
+          const dis = document.createElement('select');
+          dis.name = 'item_image[]'; dis.required = true; dis.disabled = true;
+          const ph = document.createElement('option');
+          ph.textContent = 'Gallery unavailable'; dis.appendChild(ph);
+          return dis;
+        })();
 
     const typeSel   = makeSelect(TYPE_OPTIONS,   'Image size / type');
     typeSel.name    = 'item_type[]';
     const frameSel  = makeSelect(FRAMED_OPTIONS, 'Frame required?');
     frameSel.name   = 'item_framed[]';
 
-    imgSel.value   = prefill?.image  ?? '';
     typeSel.value  = prefill?.type   ?? '';
     frameSel.value = prefill?.framed ?? '';
 
@@ -356,6 +561,9 @@
       const isDigital = typeSel.value === 'Digital';
       frameSel.value    = isDigital ? 'No' : frameSel.value;
       frameSel.disabled = isDigital;
+      // Update the "No" option label depending on context
+      const noOpt = frameSel.querySelector('option[value="No"]');
+      if (noOpt) noOpt.textContent = isDigital ? 'No frame required for Digital file' : 'No';
     }
     syncFrameLock();
     typeSel.addEventListener('change', () => { syncFrameLock(); build(); });
@@ -373,18 +581,21 @@
     });
     actions.appendChild(removeBtn);
 
-    imgSel.addEventListener('change', build);
     frameSel.addEventListener('change', build);
 
-    row.append(imgSel, typeSel, frameSel, actions);
+    row.append(imgPicker, typeSel, frameSel, actions);
     itemsWrap.appendChild(row);
     build();
   }
 
   function getItems() {
     return Array.from(itemsWrap?.querySelectorAll('.item-row') || []).map(r => {
-      const s = r.querySelectorAll('select');
-      return { image: s[0]?.value || '', type: s[1]?.value || '', framed: s[2]?.value || '' };
+      const imgHidden = r.querySelector('input[name="item_image[]"]');
+      const imgSel    = r.querySelector('select[name="item_image[]"]');
+      const imageVal  = imgHidden ? imgHidden.value : (imgSel?.value || '');
+      const typeSel   = r.querySelector('select[name="item_type[]"]');
+      const frameSel  = r.querySelector('select[name="item_framed[]"]');
+      return { image: imageVal, type: typeSel?.value || '', framed: frameSel?.value || '' };
     });
   }
 
@@ -407,7 +618,6 @@
       });
     }
 
-    lines.push('', `Calendar interest: ${pCalendar?.checked ? 'Yes (custom calendar – 12 images)' : 'No'}`);
     lines.push('', `Location: ${pCity?.value?.trim() || ''}`, `Notes: ${pNotes?.value?.trim() || ''}`);
 
     if (preview) preview.textContent = lines.join('\n');
