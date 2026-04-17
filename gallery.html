@@ -645,6 +645,94 @@
     activeSet = pool.map(p => p.item);
 
     grid.addEventListener('click', handleChaosClick, { once: false });
+
+    /* ── Floating animation ─────────────────────────────────────────
+     * Each tile drifts slowly in its own direction with gentle rotation.
+     * Uses CSS transforms (GPU-accelerated) via requestAnimationFrame.
+     * Tiles bounce off the canvas edges.
+     * The loop self-cancels when chaos view is no longer active.
+     * ──────────────────────────────────────────────────────────────── */
+    startChaosFloat(cursorY, canvasW);
+  }
+
+  /* ── Chaos float engine ─────────────────────────────────────────── */
+  let chaosRafId = null;   // current animation frame handle
+
+  function startChaosFloat(canvasH, canvasW) {
+    /* Cancel any previous loop (e.g. filter re-render) */
+    if (chaosRafId) cancelAnimationFrame(chaosRafId);
+
+    const canvas = grid.querySelector('.chaos-canvas');
+    if (!canvas) return;
+
+    const tiles = Array.from(canvas.querySelectorAll('.chaos-tile'));
+    if (!tiles.length) return;
+
+    /* Per-tile state: position offset from layout origin, velocity, rotation */
+    const state = tiles.map(tile => {
+      /* Read the tile's layout position from its inline style */
+      const baseLeft = parseFloat(tile.style.left) || 0;
+      const baseTop  = parseFloat(tile.style.top)  || 0;
+      const w        = parseFloat(tile.style.width)  || 160;
+      const h        = parseFloat(tile.style.height) || 120;
+
+      /* Full chaos: fast, far-wandering, freely rotating */
+      const speed  = 0.6 + Math.random() * 1.0;         /* px/frame ~0.6–1.6  */
+      const angle  = Math.random() * Math.PI * 2;
+      const rotSpd = (Math.random() - 0.5) * 0.18;      /* deg/frame — aggressive */
+
+      return {
+        tile, w, h,
+        /* absolute canvas position — tiles roam freely, no tether to origin */
+        x: baseLeft + (Math.random() - 0.5) * 60,
+        y: baseTop  + (Math.random() - 0.5) * 60,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        rot: (Math.random() - 0.5) * 20,
+        rotSpd,
+        /* canvas boundaries this tile bounces within */
+        minX: -w * 0.4,
+        maxX: canvasW - w * 0.6,
+        minY: -h * 0.4,
+        maxY: canvasH - h * 0.6,
+      };
+    });
+
+    const MAX_ROT = 20;   /* deg */
+
+    function step() {
+      /* Stop if we've left chaos view */
+      if (!grid.classList.contains('chaos-view')) {
+        chaosRafId = null;
+        tiles.forEach(t => { t.style.transform = ''; t.style.left = ''; t.style.top = ''; });
+        return;
+      }
+
+      state.forEach(s => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.rot += s.rotSpd;
+
+        /* Bounce off canvas edges with a tiny random nudge on each bounce */
+        if (s.x < s.minX) { s.x = s.minX; s.vx =  Math.abs(s.vx) + Math.random() * 0.1; }
+        if (s.x > s.maxX) { s.x = s.maxX; s.vx = -Math.abs(s.vx) - Math.random() * 0.1; }
+        if (s.y < s.minY) { s.y = s.minY; s.vy =  Math.abs(s.vy) + Math.random() * 0.1; }
+        if (s.y > s.maxY) { s.y = s.maxY; s.vy = -Math.abs(s.vy) - Math.random() * 0.1; }
+
+        /* Reverse rotation at cap */
+        if (Math.abs(s.rot) > MAX_ROT) s.rotSpd = -s.rotSpd * 0.92;
+        s.rot = Math.max(-MAX_ROT, Math.min(MAX_ROT, s.rot));
+
+        /* Override layout position entirely — tile floats freely */
+        s.tile.style.left      = `${s.x.toFixed(1)}px`;
+        s.tile.style.top       = `${s.y.toFixed(1)}px`;
+        s.tile.style.transform = `rotate(${s.rot.toFixed(2)}deg)`;
+      });
+
+      chaosRafId = requestAnimationFrame(step);
+    }
+
+    chaosRafId = requestAnimationFrame(step);
   }
 
   function handleChaosClick(e) {
@@ -715,13 +803,15 @@
 
     // Add click handlers for each view button
     viewBtnGrid?.addEventListener('click', () => {
+      if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
       localStorage.setItem('galleryView', 'grid');
       applyView('grid');
     });
 
     viewBtnList?.addEventListener('click', () => {
-        localStorage.setItem('galleryView', 'list');
-        applyView('list');
+      if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
+      localStorage.setItem('galleryView', 'list');
+      applyView('list');
     });
     
     viewBtnChaos?.addEventListener('click', () => {
@@ -873,7 +963,10 @@
     window.addEventListener('resize', () => {
       if (currentView !== 'chaos') return;
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderChaos, 150);
+      resizeTimer = setTimeout(() => {
+        if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
+        renderChaos();
+      }, 150);
     });
 
   } // end init()
