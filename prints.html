@@ -104,6 +104,34 @@
   flex-shrink: 0;
 }
 
+/* ── group header (non-selectable, multi-image sets) ── */
+.img-picker-group-header {
+  padding: .35rem .75rem .2rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  pointer-events: none;
+  border-top: 1px solid rgba(255,255,255,.07);
+  margin-top: .2rem;
+}
+.img-picker-group-header:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+/* ── indented sub-image entries ── */
+.img-picker-opt--sub {
+  padding-left: 1.6rem;
+  font-size: .83rem;
+  opacity: .9;
+}
+.img-picker-opt--sub .img-picker-thumb {
+  width: 34px;
+  height: 24px;
+}
+
 /* ── fix: allow picker dropdown to escape the panel ── */
 .prints-panel { overflow: visible !important; }
 
@@ -292,7 +320,7 @@
 
               <details class="faq-item">
                 <summary>What print sizes are available?</summary>
-                <p>Prints are available in A3 or A4 sizes.</p>
+                <p>Prints are available in A3 or A4 sizes (A5 may also be available opn request)</p>
               </details>
 
               <details class="faq-item">
@@ -316,13 +344,18 @@
               </details>
 
               <details class="faq-item">
+                <summary>Do the prints come with the description of what they are?</summary>
+                <p>Yes, with each print you will also receive a small printout on high quality card of its title and description, as available on the Gallery page .</p>
+              </details>
+
+              <details class="faq-item">
                 <summary>Do you ship internationally?</summary>
                 <p>It depends on destination and courier options. Tell me your location in the enquiry and I'll confirm what's possible.</p>
               </details>
 
               <details class="faq-item">
                 <summary>Can I request a specific crop or aspect ratio?</summary>
-                <p>Yes — in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
+                <p>Yes, in many cases I can prepare a crop that suits your chosen size. Mention it in the notes.</p>
               </details>
 
               <!-- Calendar FAQ — hidden, re-enable when ready
@@ -336,7 +369,7 @@
 
               <details class="faq-item">
                 <summary>Is there anything else I should know?</summary>
-                <p>Due to differences in monitor/screen rendering, the print or download you receive may differ slightly from what you see here. All prints and downloads contain an imperceptible watermark.</p>
+                <p>Due to differences in monitor/screen rendering, the print or download you receive may differ slightly from what you see here.</p>
               </details>
 
               <details class="faq-item">
@@ -404,7 +437,8 @@
   ];
 
   let GALLERY_TITLES = [];
-  let THUMB_MAP = {}; // title → absolute thumb URL
+  let THUMB_MAP = {};      // label → absolute thumb URL
+  let PICKER_ENTRIES = []; // { label, thumbUrl, isHeader, isSubImage, parentTitle }
 
   function showToast(msg) {
     if (!toast) return;
@@ -419,16 +453,39 @@
       const res = await fetch('https://bhapstar.com/gallery-data.json');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
-      // Build title list and thumb map exactly as gallery.html / admin do
+
       items.forEach(item => {
         if (!item?.title || item.videos) return;
-        let file = item.file;
-        if (!file && item.images?.length) file = item.images[0].file;
-        if (!file) return;
-        const thumb = file.replace(/^(images\/)/, '$1thumbs/');
-        THUMB_MAP[item.title] = 'https://bhapstar.com/' + thumb;
+
+        if (item.file) {
+          // Single-image entry — add directly
+          const thumb = item.file.replace(/^(images\/)/, '$1thumbs/');
+          const thumbUrl = 'https://bhapstar.com/' + thumb;
+          THUMB_MAP[item.title] = thumbUrl;
+          PICKER_ENTRIES.push({ label: item.title, thumbUrl, isHeader: false, isSubImage: false });
+
+        } else if (item.images?.length) {
+          if (item.images.length === 1) {
+            // Only one sub-image — treat as a normal single entry
+            const thumb = item.images[0].file.replace(/^(images\/)/, '$1thumbs/');
+            const thumbUrl = 'https://bhapstar.com/' + thumb;
+            THUMB_MAP[item.title] = thumbUrl;
+            PICKER_ENTRIES.push({ label: item.title, thumbUrl, isHeader: false, isSubImage: false });
+          } else {
+            // Multiple sub-images — add a non-selectable group header, then each sub-image indented
+            PICKER_ENTRIES.push({ label: item.title, thumbUrl: null, isHeader: true, isSubImage: false });
+            item.images.forEach((img, idx) => {
+              const thumb = img.file.replace(/^(images\/)/, '$1thumbs/');
+              const thumbUrl = 'https://bhapstar.com/' + thumb;
+              const subLabel = `${item.title} (${idx + 1} of ${item.images.length})`;
+              THUMB_MAP[subLabel] = thumbUrl;
+              PICKER_ENTRIES.push({ label: subLabel, thumbUrl, isHeader: false, isSubImage: true, parentTitle: item.title });
+            });
+          }
+        }
       });
-      GALLERY_TITLES = Object.keys(THUMB_MAP);
+
+      GALLERY_TITLES = PICKER_ENTRIES.filter(e => !e.isHeader).map(e => e.label);
     } catch (err) {
       console.warn('Could not load gallery-data.json:', err);
       GALLERY_TITLES = [];
@@ -493,22 +550,34 @@
     panel.setAttribute('role', 'listbox');
     panel.setAttribute('aria-label', 'Select an image');
 
-    titles.forEach(t => {
+    PICKER_ENTRIES.forEach(entry => {
+      if (entry.isHeader) {
+        /* Non-selectable group header for multi-image sets */
+        const header = document.createElement('div');
+        header.className = 'img-picker-group-header';
+        header.textContent = entry.label;
+        header.setAttribute('aria-disabled', 'true');
+        panel.appendChild(header);
+        return;
+      }
+
       const opt = document.createElement('div');
-      opt.className = 'img-picker-opt';
+      opt.className = 'img-picker-opt' + (entry.isSubImage ? ' img-picker-opt--sub' : '');
       opt.setAttribute('role', 'option');
-      opt.dataset.value = t;
+      opt.dataset.value = entry.label;
       const img = document.createElement('img');
-      img.src = THUMB_MAP[t] || ''; img.alt = ''; img.loading = 'lazy';
+      img.src = entry.thumbUrl || ''; img.alt = ''; img.loading = 'lazy';
       img.className = 'img-picker-thumb';
       img.onerror = () => { img.style.display = 'none'; };
       const label = document.createElement('span');
-      label.textContent = t;
+      label.textContent = entry.isSubImage
+        ? entry.label.replace(/^.+\((\d+ of \d+)\)$/, '↳ Image $1')  // shorten to "↳ Image 1 of 4"
+        : entry.label;
       opt.append(img, label);
       opt.addEventListener('mousedown', (e) => {
         e.preventDefault();
-        hidden.value = t;
-        renderTrigger(t);
+        hidden.value = entry.label;
+        renderTrigger(entry.label);
         panel.classList.remove('open');
         build();
       });
