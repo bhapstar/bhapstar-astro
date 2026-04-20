@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Admin dashboard — do not index
+Disallow: /admin-lk9x2.html
+
+Sitemap: https://bhapstar.com/sitemap.xml
