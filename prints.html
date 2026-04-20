@@ -53,18 +53,19 @@
   gap: .5rem;
   width: 100%;
   padding: .45rem .75rem;
-  background: var(--input-bg, rgba(255,255,255,.05));
-  border: 1px solid var(--border);
+  background: #12103a;
+  border: 1px solid rgba(167,139,250,0.22);
   border-radius: var(--radius, 6px);
   color: var(--text);
   font-size: .9rem;
   cursor: pointer;
   text-align: left;
-  transition: border-color .2s;
+  transition: border-color .2s, background-color .2s;
 }
 .img-picker-trigger:hover,
 .img-picker-trigger:focus {
-  border-color: var(--accent);
+  background: #1a1650;
+  border-color: rgba(167,139,250,0.40);
   outline: none;
 }
 .img-picker-arrow {
@@ -535,7 +536,6 @@
       } else {
         const span = document.createElement('span');
         span.textContent = titles.length ? 'Select an image' : 'Gallery unavailable';
-        span.style.color = 'var(--muted)';
         trigger.appendChild(span);
       }
       const arrow = document.createElement('span');
