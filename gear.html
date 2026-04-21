@@ -151,7 +151,7 @@
   <div class="lightbox-inner">
 
     <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
-    <button class="lightbox-zoom-btn" id="lbZoomBtn" aria-label="Toggle 2× zoom" aria-pressed="false">2×</button>
+    <button class="lightbox-zoom-btn" id="lbZoomBtn" aria-label="Toggle zoom" aria-pressed="false">⌕</button>
     <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
     <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
 
@@ -274,19 +274,23 @@
   const lbZoomBtn   = document.getElementById('lbZoomBtn');
   const lbInnerEl   = document.querySelector('#lightbox .lightbox-inner');
 
-  /* ── 2× Zoom + Pan ──────────────────────────────────────────────
+  /* ── Zoom + Pan (3-state: off → 1.5× → 2× → off) ───────────────
    * Identical module to gallery.html.
    * ────────────────────────────────────────────────────────────── */
-  const ZOOM_SCALE = 2;
-  let zoomed = false;
+  const ZOOM_STEPS = [1, 1.5, 2];
+  let zoomStep = 0;
   let zoomDragging = false;
   let zoomStartX = 0, zoomStartY = 0;
   let zoomOriginX = 0, zoomOriginY = 0;
 
+  function zoomScale()  { return ZOOM_STEPS[zoomStep]; }
+  function zoomed()     { return zoomStep > 0; }
+
   function zoomClamp(ox, oy) {
     if (!lbInnerEl || !lbImg) return { ox, oy };
-    const maxX = Math.max(0, lbImg.offsetWidth  * ZOOM_SCALE - lbInnerEl.clientWidth);
-    const maxY = Math.max(0, lbImg.offsetHeight * ZOOM_SCALE - lbInnerEl.clientHeight);
+    const s = zoomScale();
+    const maxX = Math.max(0, lbImg.offsetWidth  * s - lbInnerEl.clientWidth);
+    const maxY = Math.max(0, lbImg.offsetHeight * s - lbInnerEl.clientHeight);
     return {
       ox: Math.max(-maxX, Math.min(0, ox)),
       oy: Math.max(-maxY, Math.min(0, oy)),
@@ -295,35 +299,51 @@
 
   function zoomApply() {
     if (!lbImg) return;
-    if (zoomed) {
-      lbImg.style.transform = `scale(${ZOOM_SCALE}) translate(${zoomOriginX / ZOOM_SCALE}px, ${zoomOriginY / ZOOM_SCALE}px)`;
+    const s = zoomScale();
+    if (s > 1) {
+      lbImg.style.transform = `scale(${s}) translate(${zoomOriginX / s}px, ${zoomOriginY / s}px)`;
     } else {
       lbImg.style.transform = '';
     }
   }
 
-  function zoomEnable() {
+  function zoomUpdateBtn() {
+    if (!lbZoomBtn) return;
+    const on = zoomed();
+    lbZoomBtn.classList.toggle('active', on);
+    lbZoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    lbZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
+  }
+
+  function zoomAdvance() {
     if (!lbImg || !lbInnerEl) return;
-    zoomed = true; zoomOriginX = 0; zoomOriginY = 0;
-    lbInnerEl.classList.add('lb-zoomed');
-    if (lbZoomBtn) { lbZoomBtn.classList.add('active'); lbZoomBtn.setAttribute('aria-pressed', 'true'); }
+    zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
+    if (zoomStep === 0) {
+      zoomOriginX = 0; zoomOriginY = 0;
+    } else {
+      const s = ZOOM_STEPS[zoomStep];
+      const cx = (lbInnerEl.clientWidth  - lbImg.offsetWidth  * s) / 2;
+      const cy = (lbInnerEl.clientHeight - lbImg.offsetHeight * s) / 2;
+      const c = zoomClamp(cx, cy);
+      zoomOriginX = c.ox; zoomOriginY = c.oy;
+    }
+    lbInnerEl.classList.toggle('lb-zoomed', zoomed());
+    zoomUpdateBtn();
     zoomApply();
   }
 
   function zoomDisable() {
     if (!lbImg || !lbInnerEl) return;
-    zoomed = false; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
+    zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
     lbInnerEl.classList.remove('lb-zoomed');
-    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); }
+    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); lbZoomBtn.title = 'Zoom in (1.5×)'; }
     zoomApply();
   }
-
-  function zoomToggle() { zoomed ? zoomDisable() : zoomEnable(); }
 
   /* Pointer drag on the lightbox-inner (mouse) */
   if (lbInnerEl) {
     lbInnerEl.addEventListener('mousedown', (e) => {
-      if (!zoomed) return;
+      if (!zoomed()) return;
       if (e.target.closest('button')) return;
       zoomDragging = true;
       zoomStartX = e.clientX - zoomOriginX;
@@ -332,7 +352,7 @@
     });
 
     lbInnerEl.addEventListener('mousemove', (e) => {
-      if (!zoomDragging || !zoomed) return;
+      if (!zoomDragging || !zoomed()) return;
       const c = zoomClamp(e.clientX - zoomStartX, e.clientY - zoomStartY);
       zoomOriginX = c.ox; zoomOriginY = c.oy;
       zoomApply();
@@ -541,7 +561,7 @@
     if (lbZoomBtn) {
       addTapHandler(lbZoomBtn, (e) => {
         if (e.stopPropagation) e.stopPropagation();
-        zoomToggle();
+        zoomAdvance();
       });
     }
 
@@ -611,7 +631,7 @@
       touchStartY  = e.touches[0].clientY;
 
       /* Start zoom-pan drag if zoomed and not on a button */
-      if (zoomed && !isTouchOnBtn && e.touches.length === 1) {
+      if (zoomed() && !isTouchOnBtn && e.touches.length === 1) {
         zoomDragging = true;
         zoomStartX = e.touches[0].clientX - zoomOriginX;
         zoomStartY = e.touches[0].clientY - zoomOriginY;
@@ -619,7 +639,7 @@
     }, { passive: true });
 
     lbInner.addEventListener('touchmove', (e) => {
-      if (zoomed && zoomDragging && e.touches.length === 1) {
+      if (zoomed() && zoomDragging && e.touches.length === 1) {
         const c = zoomClamp(
           e.touches[0].clientX - zoomStartX,
           e.touches[0].clientY - zoomStartY
@@ -639,7 +659,7 @@
       }
 
       // Don't swipe-navigate when zoomed
-      if (zoomed) return;
+      if (zoomed()) return;
 
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
