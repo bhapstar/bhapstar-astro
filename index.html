@@ -50,6 +50,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://bhapstar.com/#person",
+        "name": "Bhapinder Singh",
+        "alternateName": "Bobby Singh",
+        "url": "https://bhapstar.com",
+        "sameAs": ["https://www.instagram.com/bhapstar/"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://bhapstar.com/#website",
+        "url": "https://bhapstar.com",
+        "name": "Bhapstar Astrophotography",
+        "description": "Deep-sky astrophotography by Bhapinder Singh — nebulae, galaxies, star clusters and more.",
+        "author": { "@id": "https://bhapstar.com/#person" }
+      },
+      {
+        "@type": "ImageGallery",
+        "@id": "https://bhapstar.com/gallery.html#gallery",
+        "name": "Bhapstar Astrophotography Gallery",
+        "url": "https://bhapstar.com/gallery.html",
+        "description": "Deep-sky astrophotography images including nebulae, galaxies, star clusters, star trails and comets.",
+        "author": { "@id": "https://bhapstar.com/#person" },
+        "isPartOf": { "@id": "https://bhapstar.com/#website" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 

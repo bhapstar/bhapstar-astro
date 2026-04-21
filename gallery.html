@@ -29,6 +29,7 @@
   <meta name="twitter:description" content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/og-preview.jpg" />
 
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
@@ -89,31 +90,42 @@
           faint structures and subtle detail hidden in the data.
         </p>
 
-        <div class="gallery-filter" role="group" aria-label="Gallery filters">
-          <label class="gallery-filter-label" for="typeFilter">Filter by type</label>
-          <div class="gallery-filter-row">
-            <select id="typeFilter" class="gallery-filter-select" aria-label="Filter gallery by object type">
-              <option value="all">All</option>
-              <option value="galaxies">Galaxies</option>
-              <option value="nebulae">Nebulae</option>
-              <option value="star-clusters">Star Clusters</option>
-              <option value="star-trails">Star Trails</option>
-              <option value="comets">Comets</option>
-              <option value="others">Others</option>
-            </select>
+        <div class="gallery-controls" role="group" aria-label="Gallery controls">
+          <div class="filter-pills" role="group" aria-label="Filter by type">
+            <button class="filter-pill active" data-filter="all"           type="button" aria-pressed="true">All</button>
+            <button class="filter-pill"         data-filter="nebulae"       type="button" aria-pressed="false">Nebulae</button>
+            <button class="filter-pill"         data-filter="galaxies"      type="button" aria-pressed="false">Galaxies</button>
+            <button class="filter-pill"         data-filter="star-clusters" type="button" aria-pressed="false">Star Clusters</button>
+            <button class="filter-pill"         data-filter="star-trails"   type="button" aria-pressed="false">Star Trails</button>
+            <button class="filter-pill"         data-filter="comets"        type="button" aria-pressed="false">Comets</button>
+            <button class="filter-pill"         data-filter="others"        type="button" aria-pressed="false">Others</button>
           </div>
-        </div>
 
-        <div class="view-buttons" role="group" aria-label="View mode selection">
-          <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true">
-            Grid
-          </button>
-          <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false">
-            List
-          </button>
-          <button id="viewBtnChaos" class="view-btn" type="button" data-view="chaos" aria-pressed="false">
-            Chaos
-          </button>
+          <div class="view-buttons" role="group" aria-label="View mode selection">
+            <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+            <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="1" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="5.75" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="10.5" width="14" height="2.5" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+            <button id="viewBtnChaos" class="view-btn" type="button" data-view="chaos" aria-pressed="false" aria-label="Chaos view" title="Chaos view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="0" width="5" height="8" rx="1" fill="currentColor"/>
+                <rect x="6" y="0" width="8" height="5" rx="1" fill="currentColor"/>
+                <rect x="0" y="9" width="8" height="5" rx="1" fill="currentColor"/>
+                <rect x="9" y="6" width="5" height="8" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <p class="gallery-hint">Click any image to view fullscreen. Use the arrow keys or swipe to navigate.</p>
@@ -167,6 +179,9 @@
 
     <!-- Count badge (bottom-right, always visible) -->
     <div class="lb-count-badge" id="lbCount"></div>
+
+    <!-- Keyboard hint -->
+    <div class="lb-kbd-hint" aria-hidden="true">← → navigate &nbsp;·&nbsp; Esc close</div>
 
   </div>
 </div>
@@ -307,8 +322,19 @@
   const lbPrev     = document.getElementById('lbPrev');
   const lbNext     = document.getElementById('lbNext');
   const lbLikeBtn  = document.getElementById('lbLikeBtn');
-  const typeFilter = document.getElementById('typeFilter');
   const viewToggle = document.getElementById('viewToggle');
+
+  /* ── Filter pill helpers ── */
+  function getActiveFilter() {
+    return document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
+  }
+  function setActiveFilter(value) {
+    document.querySelectorAll('.filter-pill').forEach(p => {
+      const on = p.dataset.filter === value;
+      p.classList.toggle('active', on);
+      p.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
 
   if (!grid || !lb) return;
 
@@ -486,7 +512,7 @@
 
   /* ── Grid render ── */
   function render() {
-    const selected = typeFilter?.value || 'all';
+    const selected = getActiveFilter();
     const filtered = selected === 'all'
       ? items
       : items.filter(it => (it.type || 'others') === selected);
@@ -547,7 +573,7 @@
    * ─────────────────────────────────────────────────────────────────────── */
 
   function renderChaos() {
-    const selected = typeFilter?.value || 'all';
+    const selected = getActiveFilter();
     const filtered = selected === 'all'
       ? items
       : items.filter(it => (it.type || 'others') === selected);
@@ -808,13 +834,16 @@
       if (window.Likes) window.Likes.hydrate();
     }
 
-    typeFilter?.addEventListener('change', () => {
-      if (currentView === 'chaos') {
-        renderChaos();
-      } else {
-        render();
-        if (window.Likes) window.Likes.hydrate();
-      }
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        setActiveFilter(pill.dataset.filter);
+        if (currentView === 'chaos') {
+          renderChaos();
+        } else {
+          render();
+          if (window.Likes) window.Likes.hydrate();
+        }
+      });
     });
 
     // Add click handlers for each view button
@@ -915,7 +944,7 @@
       }
     }, { passive: false });
 
-    /* Keyboard navigation */
+    /* Keyboard navigation + focus trap */
     document.addEventListener('keydown', (e) => {
       if (!lb.classList.contains('open')) return;
       if (e.key === 'Escape')     closeLightbox();
@@ -928,6 +957,20 @@
         lbList.length > 1
           ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
           : goToItem(+1);
+      }
+      /* Focus trap — keep Tab cycling inside the lightbox */
+      if (e.key === 'Tab') {
+        const focusable = Array.from(lb.querySelectorAll(
+          'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ));
+        if (!focusable.length) { e.preventDefault(); return; }
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
       }
     });
 

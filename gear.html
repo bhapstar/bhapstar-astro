@@ -33,6 +33,7 @@
   <!-- Preconnect for fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
@@ -92,28 +93,34 @@
           it all work.
         </p>
 
-        <div class="gallery-filter" role="group" aria-label="Gear filters">
-          <label class="gallery-filter-label" for="typeFilter">Filter by type</label>
-          <div class="gallery-filter-row">
-            <select id="typeFilter" class="gallery-filter-select" aria-label="Filter gear by category">
-              <option value="all">All</option>
-              <option value="telescope">Telescope</option>
-              <option value="smart-telescope">Smart Telescope</option>
-              <option value="mount">Mount</option>
-              <option value="camera">Camera</option>
-              <option value="filters">Filters</option>
-              <option value="accessories">Accessories</option>
-            </select>
+        <div class="gallery-controls" role="group" aria-label="Gear controls">
+          <div class="filter-pills" role="group" aria-label="Filter by category">
+            <button class="filter-pill active" data-filter="all"              type="button" aria-pressed="true">All</button>
+            <button class="filter-pill"         data-filter="telescope"        type="button" aria-pressed="false">Telescope</button>
+            <button class="filter-pill"         data-filter="smart-telescope"  type="button" aria-pressed="false">Smart Telescope</button>
+            <button class="filter-pill"         data-filter="mount"            type="button" aria-pressed="false">Mount</button>
+            <button class="filter-pill"         data-filter="camera"           type="button" aria-pressed="false">Camera</button>
+            <button class="filter-pill"         data-filter="filters"          type="button" aria-pressed="false">Filters</button>
+            <button class="filter-pill"         data-filter="accessories"      type="button" aria-pressed="false">Accessories</button>
           </div>
-        </div>
 
-        <div class="view-buttons" role="group" aria-label="View mode selection">
-          <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true">
-            Grid
-          </button>
-          <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false">
-            List
-          </button>
+          <div class="view-buttons" role="group" aria-label="View mode selection">
+            <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+            <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="1" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="5.75" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="10.5" width="14" height="2.5" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
@@ -191,7 +198,17 @@
   const lbPrev     = document.getElementById('lbPrev');
   const lbNext     = document.getElementById('lbNext');
   const lbThumbs   = document.getElementById('lbThumbs');
-  const typeFilter = document.getElementById('typeFilter');
+  /* ── Filter pill helpers ── */
+  function getActiveFilter() {
+    return document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
+  }
+  function setActiveFilter(value) {
+    document.querySelectorAll('.filter-pill').forEach(p => {
+      const on = p.dataset.filter === value;
+      p.classList.toggle('active', on);
+      p.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
   const viewToggle = null; // replaced by viewBtnGrid / viewBtnList
 
 
@@ -359,7 +376,7 @@
 
   /* ── Grid render ── */
   function render() {
-    const selected = typeFilter?.value || 'all';
+    const selected = getActiveFilter();
     const filtered = selected === 'all'
       ? items
       : items.filter(it => (it.type || 'accessories') === selected);
@@ -429,7 +446,12 @@
       applyView('list');
     });
 
-    typeFilter?.addEventListener('change', render);
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        setActiveFilter(pill.dataset.filter);
+        render();
+      });
+    });
 
     /* Card click → open lightbox — identical to gallery.html */
     grid.addEventListener('click', (e) => {

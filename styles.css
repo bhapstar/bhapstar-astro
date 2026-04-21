@@ -762,60 +762,69 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   margin: 16px 0 0; color: rgba(200,195,235,0.72); font-size: 14px;
   line-height: 1.72; max-width: 72ch;
 }
-.gallery-filter{ margin-top: 14px; display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
-.gallery-filter-label{ font-size: 12px; letter-spacing: 0.08em; color: rgba(200,195,235,0.58); }
-.gallery-filter-row{ display: flex; align-items: center; gap: 10px; width: 100%; }
-.gallery-filter-select{
-  background-color: #12103a;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a78bfa' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  color: rgba(255,255,255,0.92);
-  border: 1px solid rgba(167,139,250,0.22); border-radius: 12px;
-  padding: 10px 36px 10px 14px; outline: none; max-width: 270px; cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  color-scheme: dark;
-  transition: border-color 180ms ease, background-color 180ms ease;
-}
-.gallery-filter-select:hover{
-  background-color: #1a1650;
-  border-color: rgba(167,139,250,0.38);
-}
-.gallery-filter-select:focus{
-  border-color: rgba(167,139,250,0.58);
-  box-shadow: 0 0 0 4px rgba(167,139,250,0.10);
-  background-color: #1a1650;
-}
-.gallery-filter-select option{
-  background-color: #12103a;
-  color: rgba(255,255,255,0.92);
-}
-.gallery-filter-select option:checked{
-  background-color: #2d1f6e;
-  color: #ffffff;
-}
-.gallery-filter-spacer{ flex: 1; }
 .gallery-hint{ margin-top: 10px; font-size: 12px; color: rgba(200,195,235,0.46); }
 
-/* View mode buttons */
-.view-buttons{
-  display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+/* Filter pill buttons */
+.filter-pills{
+  display: flex; flex-wrap: wrap; gap: 8px;
 }
+.filter-pill{
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 34px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid rgba(167,139,250,0.18);
+  background: rgba(167,139,250,0.05);
+  color: rgba(200,195,235,0.72);
+  cursor: pointer; font-family: inherit; font-size: 12px;
+  letter-spacing: 0.09em;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.filter-pill:hover{
+  background: rgba(167,139,250,0.10);
+  border-color: rgba(167,139,250,0.32);
+  color: rgba(255,255,255,0.92);
+}
+.filter-pill:focus-visible{
+  outline: 2px solid rgba(167,139,250,0.6);
+  outline-offset: 2px;
+}
+.filter-pill.active{
+  background: rgba(167,139,250,0.18);
+  border-color: rgba(167,139,250,0.52);
+  color: rgba(255,255,255,0.98);
+}
+
+
+/* Controls row — filter pills left, view buttons right */
+.gallery-controls{
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; margin-top: 14px;
+}
+.gallery-controls .filter-pills{ flex: 1; }
+
+/* View mode buttons — compact icon squares, visually distinct from filter pills */
+.view-buttons{ display: flex; gap: 4px; flex-shrink: 0; }
 .view-btn{
   display: inline-flex; align-items: center; justify-content: center;
-  height: 42px; padding: 0 18px; border-radius: 999px;
+  width: 34px; height: 34px; border-radius: 8px;
   border: 1px solid rgba(167,139,250,0.16);
-  background: rgba(167,139,250,0.05); color: var(--text);
-  cursor: pointer; font-family: inherit; font-size: 11px;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  transition: transform 120ms var(--ease-spring), background 150ms ease, border-color 150ms ease;
+  background: transparent; color: rgba(200,195,235,0.50);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
 }
-.view-btn:hover{ background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.28); }
+.view-btn:hover{
+  background: rgba(167,139,250,0.08);
+  border-color: rgba(167,139,250,0.28);
+  color: rgba(255,255,255,0.85);
+}
 .view-btn:active{ transform: translateY(1px); }
 .view-btn.active{
-  background: rgba(167,139,250,0.18);
-  border-color: rgba(167,139,250,0.50);
+  background: rgba(167,139,250,0.15);
+  border-color: rgba(167,139,250,0.45);
   color: rgba(255,255,255,0.98);
+}
+.view-btn:focus-visible{
+  outline: 2px solid rgba(167,139,250,0.6);
+  outline-offset: 2px;
 }
 
 /* Hide list button on mobile */
