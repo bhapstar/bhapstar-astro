@@ -346,6 +346,7 @@
   let activeSet       = [];
   let activeItemIndex = 0;
   let infoPanelVisible = true;
+  let currentView     = 'grid';  // hoisted so openLightbox/closeLightbox can pause chaos
 
   /* ── Load gallery data ── */
   async function loadData() {
@@ -441,24 +442,26 @@
   function zoomAdvance() {
     if (!lbImg || !lbInnerEl) return;
     zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
-    if (zoomStep === 0) {
-      // Reset to normal — clear pan
-      zoomOriginX = 0; zoomOriginY = 0;
-    } else {
-      // Centre the image within the lightbox at the new scale.
-      // With transform-origin:0 0, the offset needed to centre is:
-      //   (containerSize - imageSize * scale) / 2
-      // This will be negative when image > container (the usual case),
-      // which is exactly the pan origin that keeps the image centred.
-      const s = ZOOM_STEPS[zoomStep];
-      const cx = (lbInnerEl.clientWidth  - lbImg.offsetWidth  * s) / 2;
-      const cy = (lbInnerEl.clientHeight - lbImg.offsetHeight * s) / 2;
-      const c = zoomClamp(cx, cy);
-      zoomOriginX = c.ox; zoomOriginY = c.oy;
-    }
-    lbInnerEl.classList.toggle('lb-zoomed', zoomed());
-    zoomUpdateBtn();
-    zoomApply();
+    requestAnimationFrame(() => {
+      if (zoomStep === 0) {
+        // Reset to normal — clear pan
+        zoomOriginX = 0; zoomOriginY = 0;
+      } else {
+        // Centre the image within the lightbox at the new scale.
+        // With transform-origin:0 0, the offset needed to centre is:
+        //   (containerSize - imageSize * scale) / 2
+        // This will be negative when image > container (the usual case),
+        // which is exactly the pan origin that keeps the image centred.
+        const s = ZOOM_STEPS[zoomStep];
+        const cx = (lbInnerEl.clientWidth  - lbImg.offsetWidth  * s) / 2;
+        const cy = (lbInnerEl.clientHeight - lbImg.offsetHeight * s) / 2;
+        const c = zoomClamp(cx, cy);
+        zoomOriginX = c.ox; zoomOriginY = c.oy;
+      }
+      lbInnerEl.classList.toggle('lb-zoomed', zoomed());
+      zoomUpdateBtn();
+      zoomApply();
+    });
   }
 
   function zoomDisable() {
@@ -507,42 +510,47 @@
 
   function showLb() {
     zoomDisable(); // reset zoom whenever image changes
-    const cur = lbList[lbIndex];
-    lbTitle.textContent = currentItem?.title || '';
-    lbDesc.textContent  = currentItem?.desc  || '';
-    lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
-    infoPanelVisible ? openInfoPanel() : closeInfoPanel();
+    const cur         = lbList[lbIndex];
+    const snapItem    = currentItem;    // capture before rAF fires
+    const snapVisible = infoPanelVisible;
 
-    /* ── Update lightbox like button ── */
-    if (lbLikeBtn && window.Likes && currentItem) {
-      const likeId = window.Likes.slugify(currentItem.title || '');
-      lbLikeBtn.dataset.likeId = likeId;
-      window.Likes.get(likeId).then(data => window.Likes._apply(lbLikeBtn, data));
-    }
+    requestAnimationFrame(() => {
+      lbTitle.textContent = snapItem?.title || '';
+      lbDesc.textContent  = snapItem?.desc  || '';
+      lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
+      snapVisible ? openInfoPanel() : closeInfoPanel();
 
-    const canNav = lbList.length > 1 || activeSet.length > 1;
-    lbPrev.style.display = canNav ? '' : 'none';
-    lbNext.style.display = canNav ? '' : 'none';
-
-    lbImg.style.display = 'none';
-    lbImg.src = '';
-    if (lbVid) { lbVid.style.display = 'none'; lbVid.innerHTML = ''; }
-
-    if (cur.kind === 'vimeo') {
-      if (lbVid) {
-        lbVid.style.display = 'block';
-        const id = encodeURIComponent(cur.vimeoId);
-        lbVid.innerHTML = `<iframe
-          src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
-          frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen class="lb-iframe"></iframe>`;
+      /* ── Update lightbox like button ── */
+      if (lbLikeBtn && window.Likes && snapItem) {
+        const likeId = window.Likes.slugify(snapItem.title || '');
+        lbLikeBtn.dataset.likeId = likeId;
+        window.Likes.get(likeId).then(data => window.Likes._apply(lbLikeBtn, data));
       }
-      return;
-    }
 
-    lbImg.style.display = 'block';
-    lbImg.src = cur.file;
-    lbImg.alt = cur.alt || currentItem?.title || '';
+      const canNav = lbList.length > 1 || activeSet.length > 1;
+      lbPrev.style.display = canNav ? '' : 'none';
+      lbNext.style.display = canNav ? '' : 'none';
+
+      lbImg.style.display = 'none';
+      lbImg.src = '';
+      if (lbVid) { lbVid.style.display = 'none'; lbVid.innerHTML = ''; }
+
+      if (cur.kind === 'vimeo') {
+        if (lbVid) {
+          lbVid.style.display = 'block';
+          const id = encodeURIComponent(cur.vimeoId);
+          lbVid.innerHTML = `<iframe
+            src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+            frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen class="lb-iframe"></iframe>`;
+        }
+        return;
+      }
+
+      lbImg.style.display = 'block';
+      lbImg.src = cur.file;
+      lbImg.alt = cur.alt || snapItem?.title || '';
+    });
   }
 
   function goToItem(delta) {
@@ -564,6 +572,7 @@
     lb.classList.add('open');
     lb.setAttribute('aria-hidden', 'false');
     document.body.classList.add('noscroll');
+    if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; } // pause chaos while lightbox is open
 
     requestAnimationFrame(() => lbClose.focus());
   }
@@ -573,6 +582,13 @@
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('noscroll');
+    // resume chaos animation if that view is active
+    if (currentView === 'chaos') {
+      const canvas = grid.querySelector('.chaos-canvas');
+      const h = parseFloat(canvas?.style.height) || 0;
+      const w = grid.clientWidth || window.innerWidth;
+      requestAnimationFrame(() => startChaosFloat(h, w));
+    }
 
     if (lbVid) { lbVid.innerHTML = ''; lbVid.style.display = 'none'; }
     lbImg.src = ''; lbImg.style.display = 'block';
@@ -893,8 +909,6 @@
     const viewBtnGrid = document.getElementById('viewBtnGrid');
     const viewBtnList = document.getElementById('viewBtnList');
     const viewBtnChaos = document.getElementById('viewBtnChaos');
-
-    let currentView = 'grid';
 
     function applyView(view, skipRender) {
       currentView = view;
