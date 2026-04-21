@@ -1580,6 +1580,44 @@ body.noscroll{ overflow: hidden; }
   color: #fff;
 }
 
+/* ── Lightbox zoom button ── */
+.lightbox-zoom-btn{
+  position: absolute; top: 14px; right: 68px;
+  width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid rgba(167,139,250,0.20);
+  background: rgba(0,0,0,0.44); color: rgba(255,255,255,0.85);
+  display: grid; place-items: center; cursor: pointer;
+  backdrop-filter: blur(8px);
+  z-index: 6;
+  transition: background 180ms ease, border-color 180ms ease,
+              color 180ms ease, transform 180ms var(--ease-spring);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+  user-select: none;
+}
+.lightbox-zoom-btn:hover{
+  background: rgba(167,139,250,0.18);
+  border-color: rgba(167,139,250,0.50);
+  color: #fff;
+  transform: scale(1.06);
+}
+.lightbox-zoom-btn.active{
+  background: rgba(167,139,250,0.28);
+  border-color: rgba(167,139,250,0.72);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(167,139,250,0.22);
+}
+.lightbox-zoom-btn svg{ display: block; }
+
+/* ── Zoomed state ── */
+.lightbox-inner.lb-zoomed{ cursor: grab; }
+.lightbox-inner.lb-zoomed:active{ cursor: grabbing; }
+.lightbox-inner.lb-zoomed .lightbox-img{
+  transform-origin: 0 0 !important;
+  will-change: transform;
+  transition: none !important;
+}
+
 /* ── Lightbox like button ── */
 .lightbox-like-btn {
   position: absolute; bottom: 14px; right: 62px;
@@ -1629,20 +1667,8 @@ body.noscroll{ overflow: hidden; }
   white-space: nowrap; pointer-events: none; z-index: 8;
 }
 
-/* ── Keyboard hint bar ── */
-.lb-kbd-hint{
-  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-  font-size: 11.5px; color: rgba(255,255,255,0.42);
-  background: rgba(0,0,0,0.32); backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 999px; padding: 5px 14px;
-  white-space: nowrap; pointer-events: none; z-index: 6;
-  letter-spacing: 0.02em;
-}
-/* Hide on touch/mobile — keyboard shortcuts don't apply */
-@media (max-width: 720px), (hover: none) {
-  .lb-kbd-hint{ display: none; }
-}
+/* ── Keyboard hint bar — hidden (users don't need the prompt) ── */
+.lb-kbd-hint{ display: none; }
 
 /* ── Info overlay panel ── */
 .lightbox-info-panel{
@@ -1707,6 +1733,10 @@ body.noscroll{ overflow: hidden; }
   background: linear-gradient(to top, rgba(5,4,20,0.80) 0%, transparent 100%);
 }
 .lightbox-thumbs.show{ display: flex; }
+/* Hide thumbnail strip on mobile — not needed on small screens */
+@media (max-width: 720px) {
+  .lightbox-thumbs.show{ display: none; }
+}
 .lightbox-thumbs::-webkit-scrollbar{ height: 6px; }
 .lightbox-thumbs::-webkit-scrollbar-thumb{ background: rgba(167,139,250,0.16); border-radius: 999px; }
 
