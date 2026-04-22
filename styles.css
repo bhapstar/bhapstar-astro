@@ -1420,11 +1420,6 @@ footer{
   display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: center;
 }
 
-/* Force copyright onto its own row so nav links wrap below it cleanly */
-.footer-links > span:first-child{
-  width: 100%; text-align: center;
-}
-
 /*
  * Aurora shimmer underline on all footer links — mirrors the header brand animation.
  * position:relative creates the stacking context for the ::after pseudo-element.
