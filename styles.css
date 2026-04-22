@@ -317,7 +317,7 @@ header{
   display: flex; align-items: center; gap: 7px;
   width: 100%; padding: 11px 13px; border-radius: 12px;
   background: none;
-  border: none; cursor: pointer;
+  border: 1px solid rgba(167,139,250,0.22); cursor: pointer;
   font-size: 11.5px; letter-spacing: 0.20em; text-transform: uppercase;
   font-family: inherit; color: transparent;
 }
@@ -327,14 +327,14 @@ header{
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
 }
-.nav-group-btn:hover{ background-color: transparent; }
+.nav-group-btn:hover{ border-color: rgba(167,139,250,0.45); }
 .nav-group-btn svg{
   transition: transform 200ms ease;
   flex-shrink: 0; margin-left: auto;
-  opacity: 0.8;
+  stroke: #a78bfa; opacity: 0.8;
 }
 .nav-group-btn[aria-expanded="true"] svg{ transform: rotate(180deg); }
-.nav-group-btn[aria-expanded="true"]{ background-color: transparent; }
+.nav-group-btn[aria-expanded="true"]{ border-color: rgba(167,139,250,0.45); }
 
 .nav-submenu{
   display: none; flex-direction: column; gap: 3px;
@@ -1418,6 +1418,11 @@ footer{
 }
 .footer-links{
   display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: center;
+}
+
+/* Force copyright onto its own row so nav links wrap below it cleanly */
+.footer-links > span:first-child{
+  width: 100%; text-align: center;
 }
 
 /*
