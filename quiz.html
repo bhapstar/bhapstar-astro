@@ -58,9 +58,9 @@
       background: rgba(167,139,250,0.03);
       margin: 18px 0 20px;
     }
-    .quiz-top h2{
+    .quiz-top h3{
       margin: 0;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
     }
     .quiz-top .sub{
@@ -475,10 +475,13 @@
   <div class="quiz-wrap">
 
     <!-- Top bar -->
+    <div class="section-head">
+      <h2>Quiz</h2>
+    </div>
+
     <div class="quiz-top">
       <div>
-        <h2>Space Trivia Quiz</h2>
-        <div class="sub">10 questions per set · Multiple formats · See how much you know about the universe</div>
+        <div class="sub">See how much you know about the universe by answering this space trivia quiz: 10 questions per set over 7 sets. Questions are in various formats: multiple choice, drag and drop, true or false.</div>
       </div>
       <div class="quiz-meta">
         <span class="quiz-badge" id="setBadge">Set 1 of 10</span>
@@ -501,7 +504,7 @@
     <div class="quiz-card quiz-intro" id="introScreen">
       <div class="set-dots" id="setDots"></div>
       <h3 id="introTitle">Ready for Set 1?</h3>
-      <p id="introDesc">10 questions about the cosmos — multiple choice, true/false, and fill-in-the-blank. Good luck! 🚀</p>
+      <p id="introDesc"></p>
       <button class="btn primary" id="startSetBtn" type="button">Start Set</button>
     </div>
 
@@ -711,7 +714,7 @@ function showIntro(){
     : `Set ${setNum} — ready for more? ⭐`;
 
   document.getElementById('introDesc').textContent = currentSet === 0
-    ? '10 questions across multiple formats. Good luck!'
+    ? ''
     : `You scored ${setScore} on the last set. Keep it up!`;
 
   updateProgress();

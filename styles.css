@@ -562,8 +562,8 @@ h1.hero-byline{
 }
 .section-head h2{
   margin: 0; font-weight: 700;
-  font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
-  background: linear-gradient(90deg, rgba(255,255,255,0.90), rgba(200,195,235,0.70));
+  font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase;
+  background: linear-gradient(90deg, #a78bfa, #38bdf8);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .section-head p{
@@ -1789,7 +1789,7 @@ body.noscroll{ overflow: hidden; }
   border: 1px solid rgba(167,139,250,0.12); border-radius: 20px; padding: 14px 16px;
   background: rgba(167,139,250,0.03); margin: 18px 0 14px;
 }
-.page-puzzle .puzzle-top h2{ margin: 0; font-size: 18px; font-weight: 700; }
+.page-puzzle .puzzle-top h2{ margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; background: linear-gradient(90deg, #a78bfa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .page-puzzle .puzzle-top .sub{ font-size: 12px; opacity: .74; margin-top: 4px; }
 .page-puzzle .puzzle-controls{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .puzzle-controls select,
