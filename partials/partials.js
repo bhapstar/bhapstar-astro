@@ -147,7 +147,7 @@
 
       btn.style.cssText = `
         position: fixed;
-        bottom: ${isMobile ? '82px' : '28px'};
+        bottom: ${isMobile ? '110px' : '28px'};
         right: 22px;
         z-index: 900;
         width: 42px;
