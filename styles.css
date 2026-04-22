@@ -954,7 +954,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   border: none;
   background: #050414;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 10px;
   overflow: hidden;
   transition: transform 220ms var(--ease-spring),
               filter 220ms ease;
