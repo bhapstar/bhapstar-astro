@@ -376,6 +376,38 @@
     if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'true');
   }
 
+  /* ── Preload adjacent images so next/prev taps feel instant ──
+   * Called at the end of showLb(). Kicks off background fetches for
+   * the next and previous images within the current item's lbList,
+   * and also the first/last image of the neighbouring gear items.
+   * Uses a simple object cache so each URL is only fetched once. */
+  const _preloadCache = {};
+  function _preload(url) {
+    if (!url || _preloadCache[url]) return;
+    _preloadCache[url] = new Image();
+    _preloadCache[url].src = url;
+  }
+
+  function preloadAdjacentImages() {
+    /* Within the current item's image list */
+    [lbIndex - 1, lbIndex + 1].forEach(i => {
+      if (i >= 0 && i < lbList.length) {
+        _preload(lbList[i]?.file);
+      }
+    });
+
+    /* First/last image of the previous and next gear items */
+    [-1, 1].forEach(delta => {
+      if (!activeSet.length) return;
+      const nextIdx  = (activeItemIndex + delta + activeSet.length) % activeSet.length;
+      const nextItem = activeSet[nextIdx];
+      if (!nextItem) return;
+      const list  = getList(nextItem);
+      const entry = delta > 0 ? list[0] : list[list.length - 1];
+      if (entry?.file) _preload(entry.file);
+    });
+  }
+
   function showLb() {
     zoomDisable(); // reset zoom whenever image changes
     const cur = lbList[lbIndex];
@@ -393,6 +425,9 @@
     lbImg.alt = cur.alt || currentItem?.title || '';
 
     renderThumbs();
+
+    /* Kick off background fetches for adjacent images */
+    preloadAdjacentImages();
   }
 
   /* ── Thumbnail strip ── */
