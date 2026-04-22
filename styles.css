@@ -563,8 +563,10 @@ h1.hero-byline{
 .section-head h2{
   margin: 0; font-weight: 700;
   font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase;
-  background: linear-gradient(90deg, #a78bfa, #38bdf8);
+  background: linear-gradient(90deg, #7c3aed, #38bdf8, #7c3aed, #38bdf8);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 .section-head p{
   margin: 0; color: var(--muted); font-size: 13px;
@@ -631,7 +633,8 @@ h1.hero-byline{
 }
 .card .cap .t{
   font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: rgba(255,255,255,0.95);
+  background: linear-gradient(90deg, #a78bfa, #38bdf8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .card .cap .d{
   font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4;
@@ -1458,9 +1461,17 @@ footer{
 
 /* Brand link in footer keeps its gradient text treatment */
 .footer-brand{
+  display: inline-flex; align-items: baseline; gap: 8px;
+  font-family: var(--mono);
+}
+.footer-brand .mark{
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em;
+  font-size: 13px; letter-spacing: 0.20em; text-transform: uppercase;
+}
+.footer-brand .sub{
+  font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted); -webkit-text-fill-color: unset;
 }
 /* gradient-text elements need the shimmer line brightened slightly */
 .footer-brand::after{
@@ -1709,11 +1720,11 @@ body.noscroll{ overflow: hidden; }
 .lb-info-title{
   font-weight: 700;
   font-size: 15px;
-  color: rgba(255,255,255,.96);
-  text-shadow: 0 2px 12px rgba(0,0,0,.70);
+  background: linear-gradient(90deg, #a78bfa, #38bdf8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-shadow: none;
   margin-bottom: 8px;
   line-height: 1.3;
-  /* aurora gradient underline accent */
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(167,139,250,0.20);
 }
@@ -1789,7 +1800,7 @@ body.noscroll{ overflow: hidden; }
   border: 1px solid rgba(167,139,250,0.12); border-radius: 20px; padding: 14px 16px;
   background: rgba(167,139,250,0.03); margin: 18px 0 14px;
 }
-.page-puzzle .puzzle-top h2{ margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; background: linear-gradient(90deg, #a78bfa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.page-puzzle .puzzle-top h2{ margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; background: linear-gradient(90deg, #7c3aed, #38bdf8, #7c3aed, #38bdf8); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientRoll 4s linear infinite reverse; }
 .page-puzzle .puzzle-top .sub{ font-size: 12px; opacity: .74; margin-top: 4px; }
 .page-puzzle .puzzle-controls{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .puzzle-controls select,
