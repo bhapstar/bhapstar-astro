@@ -762,6 +762,18 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   margin: 16px 0 0; color: rgba(200,195,235,0.72); font-size: 14px;
   line-height: 1.72; max-width: 72ch;
 }
+.gallery-intro a,
+.page-gallery .gallery-intro a[href*="prints"] {
+  display: inline !important;
+  color: rgba(167,139,250,0.9);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.gallery-intro a:hover,
+.page-gallery .gallery-intro a[href*="prints"]:hover {
+  color: #a78bfa;
+  opacity: 1;
+}
 .gallery-hint{ margin-top: 10px; font-size: 12px; color: rgba(200,195,235,0.46); }
 
 /* Filter pill buttons */
