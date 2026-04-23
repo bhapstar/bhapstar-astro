@@ -307,26 +307,15 @@
             </div>
           </div>
 
-          <!-- 4) Framed mockup -->
+          <!-- 4) Frame styles -->
           <div class="panel prints-panel">
-            <h3>Framed mockup</h3>
-            <p class="helper">A rotating preview of framed print styles.</p>
-            <div class="grid grid-single framed-grid">
-              <div class="card framed-tile" aria-hidden="false">
-                <img id="framedPreviewImg" src="" alt="Framed print preview" loading="lazy" />
-                <div class="cap"><div class="t">Framed mockup</div></div>
-              </div>
+            <h3>Frame Styles</h3>
+            <div class="framed-carousel" id="framedCarousel">
+              <!-- Add or remove <img> tags here to manage the carousel images -->
+              <img src="images/framed/Frames.webp"  alt="Framed prints" loading="lazy" class="fc-slide active" />
+              <!-- <img src="images/framed/Frames2.webp" alt="Framed prints" loading="lazy" class="fc-slide" /> -->
+              <!-- <img src="images/framed/Frames3.webp" alt="Framed prints" loading="lazy" class="fc-slide" /> -->
             </div>
-
-            <script id="framedData" type="application/json">
-            [
-              "images/framed/1.jpg",   "images/framed/2.jpg",
-              "images/framed/3.jpg",   "images/framed/4.jpg",
-              "images/framed/5.jpg",   "images/framed/1-1.jpg",
-              "images/framed/2-2.jpg", "images/framed/3-3.jpg",
-              "images/framed/4-4.jpg", "images/framed/5-5.jpg"
-            ]
-            </script>
           </div>
 
         </div>
@@ -770,54 +759,49 @@
 </script>
 
 
-<!-- ─────────────────────────────────────────
-     FRAMED MOCKUP ROTATOR
-───────────────────────────────────────── -->
-<script>
-(function () {
-  const img    = document.getElementById('framedPreviewImg');
-  const dataEl = document.getElementById('framedData');
-  if (!img || !dataEl) return;
-
-  let list = [];
-  try { list = JSON.parse(dataEl.textContent).filter(Boolean); }
-  catch { return; }
-  if (!list.length) { img.style.display = 'none'; return; }
-
-  let i = Math.floor(Math.random() * list.length);
-
-  function show(idx) { img.src = list[idx]; }
-
-  img.addEventListener('error', () => { i = (i + 1) % list.length; show(i); });
-
-  show(i);
-  setInterval(() => { i = (i + 1) % list.length; show(i); }, 5000);
-})();
-</script>
 
 
 <!-- ─────────────────────────────────────────
-     CALENDAR MODAL
+     FRAME STYLES CAROUSEL
 ───────────────────────────────────────── -->
+<style>
+.framed-carousel {
+  position: relative;
+  border-radius: var(--radius, 6px);
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 2400 / 2050;
+
+}
+.fc-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  display: block;
+}
+.fc-slide.active {
+  opacity: 1;
+}
+</style>
+
 <script>
 (function () {
-  const openBtn  = document.getElementById('openCalendarExample');
-  const modal    = document.getElementById('calendarModal');
-  const closeBtn = modal?.querySelector('.calendar-close');
-  if (!openBtn || !modal) return;
+  const carousel = document.getElementById('framedCarousel');
+  if (!carousel) return;
 
-  function open()  { modal.classList.add('open');    modal.setAttribute('aria-hidden', 'false'); closeBtn?.focus(); }
-  function close() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); openBtn.focus(); }
+  const slides = Array.from(carousel.querySelectorAll('.fc-slide'));
+  if (slides.length <= 1) return;
 
-  openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
-  closeBtn?.addEventListener('click', close);
-  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  let current = 0;
+
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 5000);
 })();
 </script>
-
-<script src="protect-images.js"></script>
-<script src="partials/partials.js"></script>
-
-</body>
-</html>
