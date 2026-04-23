@@ -87,8 +87,9 @@
 }
 .img-picker-arrow {
   margin-left: auto;
-  font-size: .75rem;
-  opacity: .6;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 .img-picker-panel {
   display: none;
@@ -545,7 +546,8 @@
         trigger.appendChild(span);
       }
       const arrow = document.createElement('span');
-      arrow.className = 'img-picker-arrow'; arrow.textContent = '▾';
+      arrow.className = 'img-picker-arrow';
+      arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#a78bfa" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       trigger.appendChild(arrow);
     }
     renderTrigger(prefillValue ?? '');
