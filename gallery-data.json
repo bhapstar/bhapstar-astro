@@ -63,10 +63,13 @@
     "type": "nebulae"
   },
   {
-    "file": "images/Moon.webp",
+    "images": [
+      { "file": "images/The Moon_1.webp", "alt": "The Moon" },
+      { "file": "images/The Moon_2.webp", "alt": "The Moon" },
+      { "file": "images/The Moon_3.webp", "alt": "The Moon" }
+    ],
     "title": "The Moon",
     "desc": "Earth’s natural satellite, showing a surface dominated by impact craters and dark basalt plains. With no atmosphere to erase its past, the Moon preserves a clear record of billions of years of Solar System history.",
-    "alt": "The Moon",
     "type": "others"
   },
   {
@@ -113,16 +116,6 @@
     ],
     "title": "The Milky Way and Me",
     "desc": "Some quiet moments for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
-    "type": "others"
-  },
-  {
-    "images": [
-      { "file": "images/The Moon_1.webp",  "alt": "Milky Way and me (1)" },
-      { "file": "images/The Moon_2.webp", "alt": "Milky Way and me (2)" },
-      { "file": "images/The Moon_3.webp", "alt": "Milky Way and me (3)" }
-    ],
-    "title": "The Moon",
-    "desc": "Earth’s natural satellite, showing a surface dominated by impact craters and dark basalt plains. With no atmosphere to erase its past, the Moon preserves a clear record of billions of years of Solar System history.",
     "type": "others"
   },
   {
