@@ -45,6 +45,16 @@
   letter-spacing: 0;
 }
 
+/* ── enquiry summary title ── */
+.enquiry-summary-title {
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--accent, #a78bfa);
+  margin: 0 0 .5rem;
+}
+
 /* ── enquiry confirm hint ── */
 .enquiry-confirm-hint {
   font-size: .88rem;
@@ -158,6 +168,52 @@
 @media (min-width: 860px) {
   .item-row .img-picker-wrap { grid-column: 1 / -1; }
 }
+
+/* ── enquiry preview table ── */
+.eq-meta {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-bottom: .75rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.eq-meta:empty { display: none; }
+.eq-items-wrap { overflow-x: auto; margin-bottom: .75rem; }
+.eq-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+.eq-table th, .eq-table td {
+  padding: .4rem .65rem;
+  text-align: left;
+  border: 1px solid rgba(167,139,250,0.18);
+}
+.eq-table thead th {
+  background: rgba(167,139,250,0.12);
+  color: var(--accent, #a78bfa);
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.eq-table tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,.03);
+}
+.eq-table td:first-child {
+  width: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: .78rem;
+}
+.eq-notes {
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.eq-notes:empty { display: none; }
 </style>
 </head>
 <body class="page-prints">
@@ -235,7 +291,7 @@
 
                 <div class="row">
                   <label for="pCity">Location</label>
-                  <input id="pCity" name="delivery_location" type="text" placeholder="Delivery location" autocomplete="address-level2" />
+                  <input id="pCity" name="delivery_location" type="text" placeholder="Delivery location" required autocomplete="address-level2" />
                 </div>
 
                 <div class="row row-start">
@@ -274,8 +330,25 @@
 
               <div class="spacer-12" aria-hidden="true"></div>
 
-              <div class="template-box">
-                <pre id="enquiryPreview" aria-label="Enquiry preview"></pre>
+              <h4 class="enquiry-summary-title">Enquiry Summary</h4>
+               <div class="template-box">
+                <div id="enquiryPreview" aria-label="Enquiry preview">
+                  <div class="eq-meta" id="eqMeta"></div>
+                  <div class="eq-items-wrap" id="eqItemsWrap" style="display:none">
+                    <table class="eq-table" id="eqTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Image</th>
+                          <th>Image Size / Type</th>
+                          <th>Frame Required</th>
+                        </tr>
+                      </thead>
+                      <tbody id="eqTableBody"></tbody>
+                    </table>
+                  </div>
+                  <div class="eq-notes" id="eqNotes"></div>
+                </div>
               </div>
 
               <div class="spacer-14" aria-hidden="true"></div>
@@ -430,7 +503,6 @@
   const pEmail      = $('pEmail');
   const pNotes      = $('pNotes');
   const pCalendar   = $('pCalendar');
-  const preview     = $('enquiryPreview');
   const toast       = $('toast');
 
   const TYPE_OPTIONS = [
@@ -632,9 +704,9 @@
         })();
 
     const typeSel   = makeSelect(TYPE_OPTIONS,   'Image size / type');
-    typeSel.name    = 'item_type[]';
+    typeSel.name    = 'item_type[]'; typeSel.required = true;
     const frameSel  = makeSelect(FRAMED_OPTIONS, 'Frame required?');
-    frameSel.name   = 'item_framed[]';
+    frameSel.name   = 'item_framed[]'; frameSel.required = true;
 
     typeSel.value  = prefill?.type   ?? '';
     frameSel.value = prefill?.framed ?? '';
@@ -643,6 +715,7 @@
       const isDigital = typeSel.value === 'Digital';
       frameSel.value    = isDigital ? 'No' : frameSel.value;
       frameSel.disabled = isDigital;
+      frameSel.required = !isDigital;
       // Update the "No" option label depending on context
       const noOpt = frameSel.querySelector('option[value="No"]');
       if (noOpt) noOpt.textContent = isDigital ? 'No frame required for Digital file' : 'No';
@@ -683,31 +756,75 @@
 
   function build() {
     const items = getItems();
-    const lines = [
-      `Name: ${pName?.value?.trim() || ''}`,
-      `Phone: ${pPhone?.value?.trim() || ''}`,
-      `Email: ${pEmail?.value?.trim() || ''}`,
-      '',
-      'Items:',
-    ];
 
-    if (!items.length) {
-      lines.push('- (none)');
-    } else {
-      items.forEach((it, i) => {
-        const f = it.type === 'Digital' ? 'No' : (it.framed || '');
-        lines.push(`${i + 1}) ${it.image || '(select image)'} — ${it.type || ''} — Frame: ${f}`);
+    // ── Meta block (name / email / phone / location) ──
+    const eqMeta      = document.getElementById('eqMeta');
+    const eqItemsWrap = document.getElementById('eqItemsWrap');
+    const eqTableBody = document.getElementById('eqTableBody');
+    const eqNotes     = document.getElementById('eqNotes');
+
+    if (eqMeta) {
+      const metaLines = [];
+      const name  = pName?.value?.trim();
+      const email = pEmail?.value?.trim();
+      const phone = pPhone?.value?.trim();
+      const city  = pCity?.value?.trim();
+      if (name)  metaLines.push(`Name: ${name}`);
+      if (email) metaLines.push(`Email: ${email}`);
+      if (phone) metaLines.push(`Phone: ${phone}`);
+      if (city)  metaLines.push(`Location: ${city}`);
+      eqMeta.textContent = metaLines.join('\n');
+    }
+
+    // ── Items table ──
+    const filledItems = items.filter(it => it.image.trim());
+    const completeItems = items.filter(it => it.image.trim() && it.type);
+    if (eqItemsWrap) eqItemsWrap.style.display = filledItems.length ? '' : 'none';
+    if (eqTableBody) {
+      eqTableBody.innerHTML = '';
+      filledItems.forEach((it, i) => {
+        const isDigital = it.type === 'Digital';
+        const sizeType  = isDigital ? 'Digital file' : (it.type || '—');
+        const frame     = isDigital ? 'No' : (it.framed || '—');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${it.image}</td>
+          <td>${sizeType}</td>
+          <td>${frame}</td>`;
+        eqTableBody.appendChild(tr);
       });
     }
 
-    lines.push('', `Location: ${pCity?.value?.trim() || ''}`, `Notes: ${pNotes?.value?.trim() || ''}`);
+    // ── Notes block ──
+    if (eqNotes) {
+      const notes = pNotes?.value?.trim();
+      eqNotes.textContent = notes ? `Notes: ${notes}` : '';
+    }
 
-    if (preview) preview.textContent = lines.join('\n');
+    // ── Hidden field for email submission (plain text) ──
     if (itemsSummary) {
-      itemsSummary.value = items.map((it, i) => {
-        const f = it.type === 'Digital' ? 'No' : (it.framed || '');
-        return `${i + 1}) ${it.image} — ${it.type} — Frame: ${f}`;
-      }).join('\n');
+      const metaParts = [];
+      const name  = pName?.value?.trim();
+      const email = pEmail?.value?.trim();
+      const phone = pPhone?.value?.trim();
+      const city  = pCity?.value?.trim();
+      if (name)  metaParts.push(`Name: ${name}`);
+      if (email) metaParts.push(`Email: ${email}`);
+      if (phone) metaParts.push(`Phone: ${phone}`);
+      if (city)  metaParts.push(`Location: ${city}`);
+
+      const itemLines = completeItems.map((it, i) => {
+        const isDigital = it.type === 'Digital';
+        const sizeType  = isDigital ? 'Digital file' : `Size: ${it.type}`;
+        const frame     = isDigital ? 'No' : (it.framed || '');
+        return `${i + 1}) Image: ${it.image} — ${sizeType} — Frame required: ${frame}`;
+      });
+
+      const notes = pNotes?.value?.trim();
+      const allParts = [...metaParts, '', 'Items:', ...itemLines];
+      if (notes) allParts.push('', `Notes: ${notes}`);
+      itemsSummary.value = allParts.join('\n');
     }
   }
 
@@ -720,8 +837,8 @@
       e.preventDefault();
 
       const items = getItems();
-      if (!items.length || !items.some(it => it.image.trim())) {
-        showToast('Please add at least one image to your enquiry.');
+      if (!items.length || !items.some(it => it.image.trim() && it.type && it.framed)) {
+        showToast('Please select an image, size/type and framing option for at least one item.');
         return;
       }
       if (!form.checkValidity()) { form.reportValidity(); return; }
