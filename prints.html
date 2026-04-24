@@ -978,6 +978,14 @@
     current = (current + 1) % slides.length;
     slides[current].classList.add('active');
   }, 4000);
+
+  // Pass pinch-to-zoom gestures through to the browser when zoomed in
+  carousel.addEventListener('touchstart', function (e) {
+    if (e.touches.length >= 2) e.stopPropagation();
+  }, { passive: true });
+  carousel.addEventListener('touchmove', function (e) {
+    if (e.touches.length >= 2) e.stopPropagation();
+  }, { passive: true });
 })();
 </script>
 <script src="protect-images.js"></script>
