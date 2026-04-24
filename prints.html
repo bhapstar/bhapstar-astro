@@ -73,6 +73,9 @@
 .img-picker-wrap {
   position: relative;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .img-picker-trigger {
   display: flex;
@@ -172,6 +175,10 @@
 
 /* ── fix: allow picker dropdown to escape the panel ── */
 .prints-panel { overflow: visible !important; }
+
+/* ── fix: prevent item-row expanding beyond viewport on mobile ── */
+.items-area { min-width: 0; max-width: 100%; }
+.item-row { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
 /* ── fix: custom picker takes full width in grid (mirrors select:nth-child(1)) ── */
 @media (min-width: 860px) {
