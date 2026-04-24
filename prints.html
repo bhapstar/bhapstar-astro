@@ -860,27 +860,52 @@
 
     // ── Hidden field for email submission (plain text) ──
     if (itemsSummary) {
-      const metaParts = [];
       const name  = pName?.value?.trim();
       const email = pEmail?.value?.trim();
       const phone = pPhone?.value?.trim();
       const city  = pCity?.value?.trim();
-      if (name)  metaParts.push(`Name: ${name}`);
-      if (email) metaParts.push(`Email: ${email}`);
-      if (phone) metaParts.push(`Phone: ${phone}`);
-      if (city)  metaParts.push(`Location: ${city}`);
+      const notes = pNotes?.value?.trim();
 
-      const itemLines = completeItems.map((it, i) => {
+      // ── ASCII table for items ──
+      function pad(str, len) { return String(str).padEnd(len).slice(0, len); }
+
+      const rows = completeItems.map((it, i) => {
         const isDigital = it.type === 'Digital';
-        const sizeType  = isDigital ? 'Digital file' : `Size: ${it.type}`;
-        const frame     = isDigital ? 'No' : (it.framed || '');
-        return `${i + 1}) Image: ${it.image} — ${sizeType} — Frame required: ${frame}`;
+        return {
+          num:   String(i + 1),
+          image: it.image,
+          size:  isDigital ? 'Digital file' : it.type,
+          frame: isDigital ? 'No' : (it.framed || ''),
+        };
       });
 
-      const notes = pNotes?.value?.trim();
-      const allParts = [...metaParts, '', 'Items:', ...itemLines];
-      if (notes) allParts.push('', `Notes: ${notes}`);
-      itemsSummary.value = allParts.join('\n');
+      const colW = {
+        num:   2,
+        image: Math.min(40, Math.max(10, ...rows.map(r => r.image.length), 5)),
+        size:  Math.max(12, ...rows.map(r => r.size.length)),
+        frame: Math.max(5,  ...rows.map(r => r.frame.length)),
+      };
+
+      const sep  = `${'─'.repeat(colW.num + 2)}-${'─'.repeat(colW.image + 2)}-${'─'.repeat(colW.size + 2)}-${'─'.repeat(colW.frame + 2)}`;
+      const header = `${pad('#',     colW.num)}  | ${pad('Image',         colW.image)}  | ${pad('Size / Type', colW.size)}  | ${pad('Frame', colW.frame)}`;
+      const itemLines = rows.map(r =>
+        `${pad(r.num, colW.num)}  | ${pad(r.image, colW.image)}  | ${pad(r.size, colW.size)}  | ${pad(r.frame, colW.frame)}`
+      );
+
+      const parts = [];
+      if (name)  parts.push(`Name:     ${name}`);
+      if (email) parts.push(`Email:    ${email}`);
+      if (phone) parts.push(`Phone:    ${phone}`);
+      if (city)  parts.push(`Location: ${city}`);
+      parts.push('');
+      parts.push('ITEMS:');
+      parts.push(header);
+      parts.push(sep);
+      itemLines.forEach(l => parts.push(l));
+      parts.push(sep);
+      if (notes) { parts.push(''); parts.push(`Notes: ${notes}`); }
+
+      itemsSummary.value = parts.join('\n');
     }
   }
 
