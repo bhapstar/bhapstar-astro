@@ -1021,9 +1021,14 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .astro-divider{ margin-top: 30px; text-align: center; opacity: 0.60; clear: both; }
 .astro-divider span{
   font-family: var(--mono); letter-spacing: 0.40em; font-size: 11px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
+
+/* Contact heading when embedded inside the about panel */
+.section-head--inline{ margin: 28px 0 10px; }
 
 .page-about .contact-section{
   border-top: 0; margin-top: 0; padding-top: 18px; padding-bottom: 56px;
