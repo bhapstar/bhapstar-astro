@@ -189,10 +189,12 @@ header{
   letter-spacing: 0.20em;
   text-transform: uppercase;
   font-size: 13px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 .brand .sub{
   font-size: 10px;
@@ -1480,8 +1482,10 @@ footer{
   font-family: var(--mono);
 }
 .footer-brand .mark{
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
   font-size: 13px; letter-spacing: 0.20em; text-transform: uppercase;
 }
 .footer-brand .sub{
