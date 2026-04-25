@@ -1141,14 +1141,30 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   letter-spacing: 0.28em;
   text-transform: uppercase;
   font-weight: 700;
-  background: linear-gradient(90deg, rgba(255,255,255,0.90), rgba(200,195,235,0.70));
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 .support-text{ margin: 0; color: rgba(200,195,235,0.76); font-size: 13px; line-height: 1.62; }
 .support-right{ display: flex; flex-direction: column; gap: 8px; align-items: flex-end; justify-content: center; }
 .support-btn{ width: fit-content; }
+
+/* Scrolling gradient text on "Support my work" and "Submit enquiry" buttons     */
+/* Gradient clips to text; border + box-shadow from .btn / .btn.primary survive  */
+.support-btn,
+#submitEnquiry {
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
+  border-color: rgba(167,139,250,0.45);
+  box-shadow: 0 0 24px rgba(167,139,250,0.14);
+}
 .support-mini{ font-size: 12px; color: rgba(200,195,235,0.60); line-height: 1.4; text-align: right; }
 .support-panel::before{
   content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
