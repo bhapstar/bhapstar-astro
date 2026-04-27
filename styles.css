@@ -1705,10 +1705,15 @@ body.noscroll{ overflow: hidden; }
 }
 
 /* ── Rotation — applied directly to lbImg by JS ── */
-/* Smooth transition on the image transform. object-fit is cleared by JS
- * when rotating 90/270 so the explicit w/h dimensions take over. */
+/* Smooth transition on the image transform at all rotation angles.
+ * .rotating is added by JS for 90/270° (explicit w/h override needed),
+ * but the transition must also cover 180° and back-to-0° which don't
+ * use that class — so we place the transition on the base selector too. */
+#lbImg {
+  transition: transform 400ms var(--ease-out-expo);
+}
 #lbImg.rotating {
-  transition: transform 280ms var(--ease-out-expo);
+  transition: transform 400ms var(--ease-out-expo);
 }
 
 /* ── Zoomed state ── */

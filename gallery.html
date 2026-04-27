@@ -88,7 +88,7 @@
           All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
-        <p class="gallery-hint">Click any image to view fullscreen. Use the arrow keys or swipe to navigate. Use the magnify glass to zoom in/out.</p><br>
+        <p class="gallery-hint">Click any image to view fullscreen. Use the arrow keys or swipe to navigate. Use the magnify glass to zoom in/out. Use the rotate button to rotate the image.</p><br>
 
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
@@ -446,6 +446,23 @@
     };
   }
 
+  /* Rotate a drag delta (dx, dy in screen space) back into the image's
+   * coordinate space so that panning always feels "normal" regardless of
+   * the current image rotation.
+   *   0°  → no change
+   *   90° → screen-right  = image-down  → map (dx,dy) to (-dy, dx)
+   *  180° → screen-right  = image-left  → map (dx,dy) to (-dx,-dy)
+   *  270° → screen-right  = image-up    → map (dx,dy) to ( dy,-dx)
+   */
+  function rotateDelta(dx, dy) {
+    switch (lbRotation) {
+      case  90: return { dx:  dy,  dy: -dx };
+      case 180: return { dx: -dx,  dy: -dy };
+      case 270: return { dx: -dy,  dy:  dx };
+      default:  return { dx,       dy      };
+    }
+  }
+
   /* Build the full transform string with transform-origin: center center.
    * Scale zooms around the centre automatically. Pan (ox,oy) is in
    * pre-scale pixel space: translate is written AFTER scale so values
@@ -510,8 +527,14 @@
 
     lbInnerEl.addEventListener('mousemove', (e) => {
       if (!zoomDragging || !zoomed()) return;
-      const c = zoomClamp(e.clientX - zoomStartX, e.clientY - zoomStartY);
+      const rawDx = e.clientX - zoomStartX;
+      const rawDy = e.clientY - zoomStartY;
+      const { dx, dy } = rotateDelta(rawDx - zoomOriginX, rawDy - zoomOriginY);
+      const c = zoomClamp(zoomOriginX + dx, zoomOriginY + dy);
       zoomOriginX = c.ox; zoomOriginY = c.oy;
+      // Re-anchor start so next move delta is relative
+      zoomStartX = e.clientX - zoomOriginX;
+      zoomStartY = e.clientY - zoomOriginY;
       zoomApply();
     });
 
@@ -568,7 +591,9 @@
 
   function showLb() {
     zoomDisable(); // reset zoom whenever image changes
-    lbRotation = 0; applyRotation(); // reset rotation whenever image changes
+    /* Reset rotation silently — remove .rotating first so no transition fires */
+    lbImg.classList.remove('rotating');
+    lbRotation = 0; applyRotation();
     const cur         = lbList[lbIndex];
     const snapItem    = currentItem;    // capture before rAF fires
     const snapVisible = infoPanelVisible;
@@ -997,11 +1022,15 @@
     lbImg.style.maxWidth  = '';
     lbImg.style.maxHeight = '';
     lbImg.style.objectFit = '';
-    lbImg.classList.remove('rotating');
     lbMediaWrap.className = lbMediaWrap.className.replace(/\blb-rot-\d+\b/g, '').trim();
 
     const cw = lbInnerEl.clientWidth;
     const ch = lbInnerEl.clientHeight;
+
+    /* Always keep .rotating so the CSS transition fires on every angle change,
+     * including 180° → 270° and 270° → 0° (back to normal). The class is only
+     * removed when resetting to 0° with no animation needed (handled in showLb). */
+    lbImg.classList.add('rotating');
 
     if (lbRotation === 90 || lbRotation === 270) {
       lbImg.style.objectFit  = 'contain';
@@ -1009,7 +1038,6 @@
       lbImg.style.height     = cw + 'px';
       lbImg.style.maxWidth   = 'none';
       lbImg.style.maxHeight  = 'none';
-      lbImg.classList.add('rotating');
     }
 
     zoomApply();
@@ -1247,11 +1275,14 @@
 
     lbInner.addEventListener('touchmove', (e) => {
       if (zoomed() && zoomDragging && e.touches.length === 1) {
-        const c = zoomClamp(
-          e.touches[0].clientX - zoomStartX,
-          e.touches[0].clientY - zoomStartY
-        );
+        const rawDx = e.touches[0].clientX - zoomStartX;
+        const rawDy = e.touches[0].clientY - zoomStartY;
+        const { dx, dy } = rotateDelta(rawDx - zoomOriginX, rawDy - zoomOriginY);
+        const c = zoomClamp(zoomOriginX + dx, zoomOriginY + dy);
         zoomOriginX = c.ox; zoomOriginY = c.oy;
+        // Re-anchor start so next move delta is relative
+        zoomStartX = e.touches[0].clientX - zoomOriginX;
+        zoomStartY = e.touches[0].clientY - zoomOriginY;
         zoomApply();
         e.preventDefault(); // prevent page scroll while panning
       }
