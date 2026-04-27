@@ -173,6 +173,68 @@
   height: 24px;
 }
 
+/* ── items info button ── */
+.items-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  margin-left: .35rem;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 50%;
+  vertical-align: middle;
+  position: relative;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.items-info-btn:hover,
+.items-info-btn[aria-expanded="true"] {
+  color: var(--accent, #a78bfa);
+}
+
+/* ── items info tooltip ── */
+.items-info-tooltip {
+  position: absolute;
+  left: 0;
+  top: calc(100% + .4rem);
+  z-index: 300;
+  width: min(22rem, 90vw);
+  background: #0e0c2e;
+  border: 1px solid rgba(167,139,250,0.28);
+  border-radius: var(--radius, 6px);
+  padding: .75rem 1rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,.55);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--text);
+  pointer-events: auto;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.items-info-tooltip ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.items-info-tooltip li {
+  margin-bottom: .45rem;
+}
+.items-info-tooltip li:last-child {
+  margin-bottom: 0;
+}
+.items-info-tooltip a {
+  color: var(--accent, #a78bfa);
+  text-decoration: underline;
+}
+/* The label needs relative positioning to anchor the tooltip */
+label:has(.items-info-btn) {
+  position: relative;
+}
+
 /* ── fix: allow picker dropdown to escape the panel ── */
 .prints-panel { overflow: visible !important; }
 
@@ -285,29 +347,6 @@
         <!-- LEFT: How it works + enquiry form + framed mockup -->
         <div class="prints-main">
 
-          <!-- 1) How it works -->
-          <div class="panel prints-panel">
-            <h3>How it works</h3>
-            <div class="steps">
-              <div class="step">
-                <div class="k">1</div>
-                <h4>Choose an image</h4>
-                <p>Pick from the <a href="gallery.html">gallery</a>, then select the image title in the enquiry builder.</p>
-              </div>
-              <div class="step">
-                <div class="k">2</div>
-                <h4>Select a format</h4>
-                <p>A3, A4 or A5 print, framed or unframed, or a high-resolution digital file.</p>
-                <p class="helper">Repeat steps 1 and 2 as many times as needed.</p>
-              </div>
-              <div class="step">
-                <div class="k">3</div>
-                <h4>Send an enquiry</h4>
-                <p>I'll confirm availability, finish options, lead time, and delivery based on your location.</p>
-              </div>
-            </div>
-          </div>
-
           <!-- Print quality note -->
           <p class="helper" style="margin-top:-.5rem;margin-bottom:1.25rem;">
             Every print is produced from the full-resolution master file: uncompressed, unwatermarked, and at the highest quality.
@@ -346,7 +385,22 @@
                 </div>
 
                 <div class="row row-start">
-                  <label>Items</label>
+                  <label>Items <button type="button" class="items-info-btn" id="itemsInfoBtn" aria-label="How it works" aria-expanded="false">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.5"/>
+                      <rect x="6.25" y="6" width="1.5" height="4.5" rx=".75" fill="currentColor"/>
+                      <circle cx="7" cy="3.75" r=".85" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <div class="items-info-tooltip" id="itemsInfoTooltip" role="tooltip" hidden>
+                    <ol>
+                      <li><strong>Select an image</strong> - select the image title in the enquiry builder.</li>
+                      <li><strong>Select a format</strong> - A3, A4 or A5 print, framed or unframed, or a high-resolution digital file. Repeat steps 1 and 2 as many times as needed.</li>
+                      <li><strong>Add any notes</strong> you want.</li>
+                      <li><strong>Send an enquiry</strong> - I'll confirm availability, finish options, lead time, and delivery based on your location.</li>
+                    </ol>
+                  </div>
+                  </label>
                   <div>
                     <div id="itemsWrap" class="items-area"></div>
                     <div class="items-controls">
@@ -909,6 +963,39 @@
       itemsSummary.value = parts.join('\n');
     }
   }
+
+  // ── Items info tooltip (hover on desktop, click on mobile) ──
+  (function () {
+    const btn     = document.getElementById('itemsInfoBtn');
+    const tooltip = document.getElementById('itemsInfoTooltip');
+    if (!btn || !tooltip) return;
+
+    let isTouch = false;
+
+    function show() { tooltip.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function hide() { tooltip.hidden = true;  btn.setAttribute('aria-expanded', 'false'); }
+
+    // Desktop: hover
+    btn.addEventListener('mouseenter', () => { if (!isTouch) show(); });
+    btn.addEventListener('mouseleave', (e) => {
+      if (!isTouch && !tooltip.contains(e.relatedTarget)) hide();
+    });
+    tooltip.addEventListener('mouseleave', (e) => {
+      if (!isTouch && !btn.contains(e.relatedTarget)) hide();
+    });
+
+    // Mobile: tap to toggle
+    btn.addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
+    btn.addEventListener('click', () => {
+      if (!isTouch) return;
+      tooltip.hidden ? show() : hide();
+    });
+
+    // Close on outside click (mobile)
+    document.addEventListener('click', (e) => {
+      if (isTouch && !btn.contains(e.target) && !tooltip.contains(e.target)) hide();
+    });
+  })();
 
   [pCity, pName, pPhone, pEmail, pNotes].forEach(x => x?.addEventListener('input', build));
   pCalendar?.addEventListener('change', build);
