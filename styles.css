@@ -1715,7 +1715,6 @@ body.noscroll{ overflow: hidden; }
 .lightbox-inner.lb-zoomed{ cursor: grab; }
 .lightbox-inner.lb-zoomed:active{ cursor: grabbing; }
 .lightbox-inner.lb-zoomed .lightbox-img{
-  transform-origin: 0 0 !important;
   will-change: transform;
   transition: none !important;
 }

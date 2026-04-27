@@ -325,7 +325,8 @@
   const lbPrev     = document.getElementById('lbPrev');
   const lbNext     = document.getElementById('lbNext');
   const lbLikeBtn  = document.getElementById('lbLikeBtn');
-  const viewToggle = document.getElementById('viewToggle');
+  const viewToggle  = document.getElementById('viewToggle');
+  const lbMediaWrap = document.getElementById('lbMediaWrap');
 
   /* ── Filter pill helpers ── */
   function getActiveFilter() {
@@ -403,35 +404,69 @@
   /* ── Zoom + Pan (3-state: off → 1.5× → 2× → off) ───────────────
    * Click 1: 1.5×  Click 2: 2×  Click 3: back to normal
    * lightbox-inner gets class "lb-zoomed" whenever scale > 1.
+   *
+   * Rotation-awareness: when the image is rotated 90/270° we set explicit
+   * swapped pixel dimensions on lbImg. The zoom transform must be composed
+   * WITH the rotation transform, and pan clamping must use the visual
+   * (post-rotation) dimensions, not the raw offsetWidth/offsetHeight.
    * ────────────────────────────────────────────────────────────── */
   const ZOOM_STEPS = [1, 1.5, 2]; // index 0 = off
-  let zoomStep = 0;  // current index into ZOOM_STEPS
+  let zoomStep = 0;
   let zoomDragging = false;
   let zoomStartX = 0, zoomStartY = 0;
   let zoomOriginX = 0, zoomOriginY = 0;
 
-  function zoomScale()  { return ZOOM_STEPS[zoomStep]; }
-  function zoomed()     { return zoomStep > 0; }
+  function zoomScale() { return ZOOM_STEPS[zoomStep]; }
+  function zoomed()    { return zoomStep > 0; }
+
+  /* Visual dimensions of the image accounting for rotation.
+   * When rotated 90/270° the image element has swapped explicit dimensions
+   * (height=cw, width=ch) but visually occupies cw×ch — so we return the
+   * container dimensions directly for those angles. */
+  function imgVisualSize() {
+    if (!lbInnerEl || !lbImg) return { w: 0, h: 0 };
+    const is90or270 = (lbRotation === 90 || lbRotation === 270);
+    if (is90or270) {
+      return { w: lbInnerEl.clientWidth, h: lbInnerEl.clientHeight };
+    }
+    return { w: lbImg.offsetWidth, h: lbImg.offsetHeight };
+  }
 
   function zoomClamp(ox, oy) {
+    /* With transform-origin: center center, panning is symmetric.
+     * Max pan in each axis = half the overflow at current scale. */
     if (!lbInnerEl || !lbImg) return { ox, oy };
-    const s = zoomScale();
-    const maxX = Math.max(0, lbImg.offsetWidth  * s - lbInnerEl.clientWidth);
-    const maxY = Math.max(0, lbImg.offsetHeight * s - lbInnerEl.clientHeight);
+    const s   = zoomScale();
+    const vs  = imgVisualSize();
+    const limX = Math.max(0, (vs.w * s - lbInnerEl.clientWidth)  / 2);
+    const limY = Math.max(0, (vs.h * s - lbInnerEl.clientHeight) / 2);
     return {
-      ox: Math.max(-maxX, Math.min(0, ox)),
-      oy: Math.max(-maxY, Math.min(0, oy)),
+      ox: Math.max(-limX, Math.min(limX, ox)),
+      oy: Math.max(-limY, Math.min(limY, oy)),
     };
   }
 
+  /* Build the full transform string with transform-origin: center center.
+   * Scale zooms around the centre automatically. Pan (ox,oy) is in
+   * pre-scale pixel space: translate is written AFTER scale so values
+   * are divided by s, keeping units in screen pixels for the drag code. */
   function zoomApply() {
     if (!lbImg) return;
-    const s = zoomScale();
-    if (s > 1) {
-      lbImg.style.transform = `scale(${s}) translate(${zoomOriginX / s}px, ${zoomOriginY / s}px)`;
-    } else {
+    const s   = zoomScale();
+    const rot = lbRotation;
+
+    if (s <= 1 && rot === 0) {
       lbImg.style.transform = '';
+      return;
     }
+
+    const parts = [];
+    if (rot !== 0)  parts.push('rotate(' + rot + 'deg)');
+    if (s  >  1) {
+      parts.push('scale(' + s + ')');
+      parts.push('translate(' + (zoomOriginX / s) + 'px, ' + (zoomOriginY / s) + 'px)');
+    }
+    lbImg.style.transform = parts.join(' ');
   }
 
   function zoomUpdateBtn() {
@@ -439,7 +474,6 @@
     const on = zoomed();
     lbZoomBtn.classList.toggle('active', on);
     lbZoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    // Show current level as a tooltip so users know where they are
     lbZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
   }
 
@@ -447,21 +481,8 @@
     if (!lbImg || !lbInnerEl) return;
     zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
     requestAnimationFrame(() => {
-      if (zoomStep === 0) {
-        // Reset to normal — clear pan
-        zoomOriginX = 0; zoomOriginY = 0;
-      } else {
-        // Centre the image within the lightbox at the new scale.
-        // With transform-origin:0 0, the offset needed to centre is:
-        //   (containerSize - imageSize * scale) / 2
-        // This will be negative when image > container (the usual case),
-        // which is exactly the pan origin that keeps the image centred.
-        const s = ZOOM_STEPS[zoomStep];
-        const cx = (lbInnerEl.clientWidth  - lbImg.offsetWidth  * s) / 2;
-        const cy = (lbInnerEl.clientHeight - lbImg.offsetHeight * s) / 2;
-        const c = zoomClamp(cx, cy);
-        zoomOriginX = c.ox; zoomOriginY = c.oy;
-      }
+      /* With centre-origin, zooming always starts centred — pan resets to 0 */
+      zoomOriginX = 0; zoomOriginY = 0;
       lbInnerEl.classList.toggle('lb-zoomed', zoomed());
       zoomUpdateBtn();
       zoomApply();
@@ -547,6 +568,7 @@
 
   function showLb() {
     zoomDisable(); // reset zoom whenever image changes
+    lbRotation = 0; applyRotation(); // reset rotation whenever image changes
     const cur         = lbList[lbIndex];
     const snapItem    = currentItem;    // capture before rAF fires
     const snapVisible = infoPanelVisible;
@@ -961,6 +983,38 @@
     if (item) openLightbox(item, Number(btn.dataset.activeIdx));
   }
 
+  function applyRotation() {
+    if (!lbMediaWrap || !lbInnerEl || !lbImg) return;
+
+    /* Reset zoom state — panning offsets are invalid after a rotation change */
+    zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
+    lbInnerEl.classList.remove('lb-zoomed');
+    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); }
+
+    /* Clear previous dimension overrides */
+    lbImg.style.width     = '';
+    lbImg.style.height    = '';
+    lbImg.style.maxWidth  = '';
+    lbImg.style.maxHeight = '';
+    lbImg.style.objectFit = '';
+    lbImg.classList.remove('rotating');
+    lbMediaWrap.className = lbMediaWrap.className.replace(/\blb-rot-\d+\b/g, '').trim();
+
+    const cw = lbInnerEl.clientWidth;
+    const ch = lbInnerEl.clientHeight;
+
+    if (lbRotation === 90 || lbRotation === 270) {
+      lbImg.style.objectFit  = 'contain';
+      lbImg.style.width      = ch + 'px';
+      lbImg.style.height     = cw + 'px';
+      lbImg.style.maxWidth   = 'none';
+      lbImg.style.maxHeight  = 'none';
+      lbImg.classList.add('rotating');
+    }
+
+    zoomApply();
+  }
+
   function init() {
 
     /* ── View mode: grid / list / chaos ── */
@@ -1083,46 +1137,8 @@
     }
 
     /* Rotate button */
-    const lbMediaWrap = document.getElementById('lbMediaWrap');
 
-    function applyRotation() {
-      if (!lbMediaWrap || !lbInnerEl || !lbImg) return;
-
-      /* Clear previous rotation state */
-      lbImg.style.transform  = '';
-      lbImg.style.width      = '';
-      lbImg.style.height     = '';
-      lbImg.style.maxWidth   = '';
-      lbImg.style.maxHeight  = '';
-      lbImg.style.objectFit  = '';
-      lbImg.classList.remove('rotating');
-      lbMediaWrap.className  = lbMediaWrap.className.replace(/\blb-rot-\d+\b/g, '').trim();
-
-      if (lbRotation === 0) return;
-
-      const cw = lbInnerEl.clientWidth;
-      const ch = lbInnerEl.clientHeight;
-
-      lbImg.classList.add('rotating');
-
-      if (lbRotation === 180) {
-        /* Simple flip — no dimension swap needed */
-        lbImg.style.transform = 'rotate(180deg)';
-        return;
-      }
-
-      /* 90° or 270°: rotate the <img> element directly.
-       * Strategy: give the image swapped dimensions (ch wide, cw tall) then
-       * rotate it. The browser rotates around the element centre, so the
-       * swapped box snaps back to fill the cw×ch container exactly.
-       * Also clear object-fit so the explicit dimensions take full effect. */
-      lbImg.style.objectFit  = 'contain';
-      lbImg.style.width      = ch + 'px';
-      lbImg.style.height     = cw + 'px';
-      lbImg.style.maxWidth   = 'none';
-      lbImg.style.maxHeight  = 'none';
-      lbImg.style.transform  = 'rotate(' + lbRotation + 'deg)';
-    }
+    /* applyRotation is now at module scope */
 
     if (lbRotateBtn && lbMediaWrap) {
       addTapHandler(lbRotateBtn, (e) => {
