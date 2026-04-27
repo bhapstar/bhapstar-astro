@@ -1578,6 +1578,9 @@ img.protect, #galleryGrid img, .featured-grid img, .hero img{
   background: rgba(0,0,0,0.30);
   box-shadow: 0 40px 100px rgba(0,0,0,0.62), 0 0 0 1px rgba(167,139,250,0.08),
               0 0 80px rgba(167,139,250,0.05);
+  /* animation applied via .lb-opening so it doesn't persist and fight rotation transforms */
+}
+.lightbox-inner.lb-opening{
   animation: lbSlideUp 300ms var(--ease-out-expo) both;
 }
 @keyframes lbSlideUp{
@@ -1667,6 +1670,46 @@ body.noscroll{ overflow: hidden; }
   box-shadow: 0 0 14px rgba(167,139,250,0.22);
 }
 .lightbox-zoom-btn svg{ display: block; }
+
+/* ── Rotate button ── */
+.lightbox-rotate-btn{
+  position: absolute; top: 14px; left: 14px;
+  width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid rgba(167,139,250,0.20);
+  background: rgba(0,0,0,0.44); color: rgba(255,255,255,0.85);
+  display: grid; place-items: center; cursor: pointer;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  transition: background 180ms ease, border-color 180ms ease,
+              color 180ms ease, transform 180ms var(--ease-spring);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+  user-select: none;
+}
+.lightbox-rotate-btn:hover{
+  background: rgba(167,139,250,0.18);
+  border-color: rgba(167,139,250,0.50);
+  color: #fff;
+  transform: scale(1.06);
+}
+.lightbox-rotate-btn svg{ display: block; }
+@media (max-width: 720px){
+  .lightbox-rotate-btn{ width: 48px; height: 48px; }
+}
+
+/* ── Media wrapper — fills lightbox-inner, clips content ── */
+.lb-media-wrap{
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Rotation — applied directly to lbImg by JS ── */
+/* Smooth transition on the image transform. object-fit is cleared by JS
+ * when rotating 90/270 so the explicit w/h dimensions take over. */
+#lbImg.rotating {
+  transition: transform 280ms var(--ease-out-expo);
+}
 
 /* ── Zoomed state ── */
 .lightbox-inner.lb-zoomed{ cursor: grab; }

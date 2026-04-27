@@ -156,11 +156,14 @@
 
     <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
     <button class="lightbox-zoom-btn" id="lbZoomBtn" aria-label="Toggle zoom" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <button class="lightbox-rotate-btn" id="lbRotateBtn" aria-label="Rotate image" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
     <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
     <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
 
-    <img class="lightbox-img" id="lbImg" alt="" src="" />
-    <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
+    <div class="lb-media-wrap" id="lbMediaWrap">
+      <img class="lightbox-img" id="lbImg" alt="" src="" />
+      <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
+    </div>
 
     <!-- Like button -->
     <button class="lightbox-like-btn" id="lbLikeBtn" aria-label="Like this image" type="button">
@@ -346,6 +349,7 @@
   let activeItemIndex = 0;
   let infoPanelVisible = true;
   let currentView     = 'grid';  // hoisted so openLightbox/closeLightbox can pause chaos
+  let lbRotation      = 0;       // current rotation in degrees (0/90/180/270)
 
   /* ── Load gallery data ── */
   async function loadData() {
@@ -393,6 +397,7 @@
   const lbInfoBtn   = document.getElementById('lbInfoBtn');
   const lbInfoPanel = document.getElementById('lbInfoPanel');
   const lbZoomBtn   = document.getElementById('lbZoomBtn');
+  const lbRotateBtn = document.getElementById('lbRotateBtn');
   const lbInnerEl   = document.querySelector('#lightbox .lightbox-inner');
 
   /* ── Zoom + Pan (3-state: off → 1.5× → 2× → off) ───────────────
@@ -604,16 +609,34 @@
     lbIndex = 0;
     showLb();
 
+    /* Reset rotation each time the lightbox opens */
+    lbRotation = 0;
+    const _mw = document.getElementById('lbMediaWrap'); if (_mw) { _mw.className = _mw.className.replace(/\blb-rot-\d+\b/g, '').trim(); _mw.style.transform = ''; }
+      const _mi = document.getElementById('lbImg'); if (_mi) { _mi.style.transform = ''; _mi.style.width = ''; _mi.style.height = ''; _mi.style.maxWidth = ''; _mi.style.maxHeight = ''; _mi.style.objectFit = ''; _mi.classList.remove('rotating'); }
+
     lb.classList.add('open');
     lb.setAttribute('aria-hidden', 'false');
     document.body.classList.add('noscroll');
     if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; } // pause chaos while lightbox is open
+
+    /* Trigger the slide-up entry animation, then remove the class so it
+       doesn't interfere with subsequent rotation transforms */
+    if (lbInnerEl) {
+      lbInnerEl.classList.add('lb-opening');
+      lbInnerEl.addEventListener('animationend', () => {
+        lbInnerEl.classList.remove('lb-opening');
+      }, { once: true });
+    }
 
     requestAnimationFrame(() => lbClose.focus());
   }
 
   function closeLightbox() {
     zoomDisable();
+    /* Reset rotation on close */
+    lbRotation = 0;
+    const _mw = document.getElementById('lbMediaWrap'); if (_mw) { _mw.className = _mw.className.replace(/\blb-rot-\d+\b/g, '').trim(); _mw.style.transform = ''; }
+      const _mi = document.getElementById('lbImg'); if (_mi) { _mi.style.transform = ''; _mi.style.width = ''; _mi.style.height = ''; _mi.style.maxWidth = ''; _mi.style.maxHeight = ''; _mi.style.objectFit = ''; _mi.classList.remove('rotating'); }
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('noscroll');
@@ -1059,6 +1082,56 @@
       });
     }
 
+    /* Rotate button */
+    const lbMediaWrap = document.getElementById('lbMediaWrap');
+
+    function applyRotation() {
+      if (!lbMediaWrap || !lbInnerEl || !lbImg) return;
+
+      /* Clear previous rotation state */
+      lbImg.style.transform  = '';
+      lbImg.style.width      = '';
+      lbImg.style.height     = '';
+      lbImg.style.maxWidth   = '';
+      lbImg.style.maxHeight  = '';
+      lbImg.style.objectFit  = '';
+      lbImg.classList.remove('rotating');
+      lbMediaWrap.className  = lbMediaWrap.className.replace(/\blb-rot-\d+\b/g, '').trim();
+
+      if (lbRotation === 0) return;
+
+      const cw = lbInnerEl.clientWidth;
+      const ch = lbInnerEl.clientHeight;
+
+      lbImg.classList.add('rotating');
+
+      if (lbRotation === 180) {
+        /* Simple flip — no dimension swap needed */
+        lbImg.style.transform = 'rotate(180deg)';
+        return;
+      }
+
+      /* 90° or 270°: rotate the <img> element directly.
+       * Strategy: give the image swapped dimensions (ch wide, cw tall) then
+       * rotate it. The browser rotates around the element centre, so the
+       * swapped box snaps back to fill the cw×ch container exactly.
+       * Also clear object-fit so the explicit dimensions take full effect. */
+      lbImg.style.objectFit  = 'contain';
+      lbImg.style.width      = ch + 'px';
+      lbImg.style.height     = cw + 'px';
+      lbImg.style.maxWidth   = 'none';
+      lbImg.style.maxHeight  = 'none';
+      lbImg.style.transform  = 'rotate(' + lbRotation + 'deg)';
+    }
+
+    if (lbRotateBtn && lbMediaWrap) {
+      addTapHandler(lbRotateBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        lbRotation = (lbRotation + 90) % 360;
+        applyRotation();
+      });
+    }
+
     /* Info panel toggle */
     if (lbInfoBtn && lbInfoPanel) {
       addTapHandler(lbInfoBtn, (e) => {
@@ -1144,7 +1217,7 @@
        * touchend swipe handler knows to ignore this touch entirely.
        * This prevents a button tap being misread as a 0-delta swipe.
        */
-      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn, .lightbox-like-btn, .lightbox-zoom-btn');
+      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn, .lightbox-like-btn, .lightbox-zoom-btn, .lightbox-rotate-btn');
       touchStartX  = e.touches[0].clientX;
       touchStartY  = e.touches[0].clientY;
 
