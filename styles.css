@@ -1948,6 +1948,11 @@ body.noscroll{ overflow: hidden; }
   padding: 26px; text-align: center;
   animation: lbSlideUp 280ms var(--ease-out-expo) both;
 }
+.page-puzzle .win-card--multiverse{
+  background: linear-gradient(160deg, rgba(10,8,40,0.98), rgba(30,10,60,0.98));
+  border-color: rgba(167,139,250,0.45);
+  box-shadow: 0 24px 70px rgba(0,0,0,.75), 0 0 60px rgba(167,139,250,0.25), 0 0 120px rgba(96,165,250,0.12);
+}
 .page-puzzle .win-card h3{ margin: 0 0 8px; font-size: 22px; font-weight: 700; }
 .page-puzzle .win-card p{ margin: 0 0 16px; font-size: 13px; color: rgba(200,195,235,.76); line-height: 1.55; }
 .page-puzzle .win-actions{ display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
