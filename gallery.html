@@ -676,9 +676,10 @@
   function zoomApply() {
     const s   = zoomScale();
     const rot = dvRotation % 360;
-    if (s <= 1 && rot === 0) { dvImg.style.transform = ''; return; }
-    const parts = [];
-    if (rot !== 0)  parts.push('rotate(' + rot + 'deg)');
+    // Use raw dvRotation (not mod) so CSS always animates forward.
+    // e.g. 270deg -> 360deg, never 270deg -> 0deg backwards.
+    if (s <= 1 && dvRotation === 0) { dvImg.style.transform = ''; return; }
+    const parts = ['rotate(' + dvRotation + 'deg)'];
     if (s  >  1) {
       parts.push('scale(' + s + ')');
       parts.push('translate(' + (zoomOriginX / s) + 'px, ' + (zoomOriginY / s) + 'px)');
