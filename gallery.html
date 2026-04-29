@@ -1070,11 +1070,14 @@
       const baseTop  = parseFloat(tile.style.top)  || 0;
       const w        = parseFloat(tile.style.width)  || 160;
       const h        = parseFloat(tile.style.height) || 120;
-      const speed    = 0.6 + Math.random() * 1.0;
+      const depth    = Math.random();  // 0 = far/dim, 1 = near/bright
+      const speed    = (0.6 + Math.random() * 1.0) * (0.5 + depth * 0.7);
       const angle    = Math.random() * Math.PI * 2;
       const rotSpd   = (Math.random() - 0.5) * 0.18;
+      tile.style.opacity = (0.55 + depth * 0.45).toFixed(2);
+      tile.style.zIndex  = Math.round(depth * 10);
       return {
-        tile, w, h,
+        tile, w, h, depth,
         x: baseLeft + (Math.random() - 0.5) * 60,
         y: baseTop  + (Math.random() - 0.5) * 60,
         vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
@@ -1097,7 +1100,7 @@
         s.rot = Math.max(-MAX_ROT, Math.min(MAX_ROT, s.rot));
         s.tile.style.left      = `${s.x.toFixed(1)}px`;
         s.tile.style.top       = `${s.y.toFixed(1)}px`;
-        s.tile.style.transform = `rotate(${s.rot.toFixed(2)}deg)`;
+        s.tile.style.transform = `rotate(${s.rot.toFixed(2)}deg) scale(${(0.88 + s.depth * 0.14).toFixed(3)})`;
       });
       chaosRafId = requestAnimationFrame(step);
     }
