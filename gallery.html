@@ -4,17 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gallery — Bhapstar Astrophotography</title>
-  <!-- Favicon & theme -->
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
-
-  <!-- Canonical URL -->
   <link rel="canonical" href="https://bhapstar.com/gallery.html" />
   <meta name="description" content="Deep-sky astrophotography gallery — nebulae, galaxies, star clusters, star trails and more by Bhapinder Singh." />
-
-  <!-- Open Graph (social sharing) -->
   <meta property="og:type"         content="website" />
   <meta property="og:title"        content="Gallery — Bhapstar Astrophotography" />
   <meta property="og:description"  content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
@@ -22,57 +17,308 @@
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url"          content="https://bhapstar.com/gallery.html" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Gallery — Bhapstar Astrophotography" />
   <meta name="twitter:description" content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/og-preview.jpg" />
-
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
-  <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
-
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /*
-     * FIX 1: The image-protection rule in styles.css sets pointer-events:none on
-     * .lightbox-img via the broad selector. We must restore pointer-events on the
-     * lightbox image so it doesn't silently swallow taps meant for the buttons.
-     * (The image itself is protected from drag/selection by user-select/user-drag.)
-     */
-    .lightbox-img {
-      pointer-events: none !important; /* image itself needs no events — buttons sit above */
+    /* ══════════════════════════════════════════════════
+       FULL-PAGE DETAIL VIEW
+       Replaces the lightbox. Slides in over the page.
+    ══════════════════════════════════════════════════ */
+
+    /* The detail view occupies the full viewport, sitting
+       above main content. Hidden by default. */
+    #detailView {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      background: var(--bg);
+      transform: translateY(100%);
+      transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    #detailView.open {
+      transform: translateY(0);
     }
 
-    /*
-     * FIX 2: Ensure lightbox control buttons have a large-enough touch target
-     * and sit in a proper stacking context above the image layer.
-     * min 44×44 px touch targets per WCAG 2.5.5
-     */
-    .lightbox-close,
-    .lightbox-nav {
-      /* Guarantee these sit above everything inside lightbox-inner */
-      z-index: 10 !important;
-      /* Prevent the touch event from being stolen by a parent listener */
-      touch-action: manipulation;
-      /* Ensure tap highlight is visible on mobile */
-      -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+    /* ── Left panel: image area ── */
+    .dv-image-panel {
+      flex: 1 1 0;
+      min-width: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #020111;
+      overflow: hidden;
+    }
+
+    /* Subtle nebula glow behind image */
+    .dv-image-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(800px 600px at 50% 50%, rgba(167,139,250,0.07), transparent 60%),
+        radial-gradient(500px 400px at 20% 80%,  rgba(96,165,250,0.06),  transparent 55%);
+      z-index: 0;
+    }
+
+    #dvImg {
+      position: relative;
+      z-index: 1;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #dvImg.rotating {
+      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Vimeo iframe */
+    #dvVid {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+    #dvVid iframe {
+      width: 100%; height: 100%; border: 0; display: block;
+    }
+
+    /* ── Floating controls over image panel ── */
+    .dv-ctrl {
+      position: absolute;
+      z-index: 10;
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(0,0,0,0.52);
+      color: rgba(255,255,255,0.88);
+      display: grid; place-items: center;
       cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 180ms ease, border-color 180ms ease,
+                  transform 180ms cubic-bezier(0.34,1.56,0.64,1);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+      user-select: none;
+    }
+    .dv-ctrl:hover {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.50);
+      color: #fff;
+      transform: scale(1.08);
+    }
+    .dv-ctrl:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
 
-    /* Slightly enlarge nav hit areas on small screens */
-    @media (max-width: 720px) {
-      .lightbox-close { width: 48px !important; height: 48px !important; }
-      .lightbox-nav   { width: 52px !important; height: 52px !important; font-size: 34px !important; }
+    /* Back button — top-left */
+    #dvBack {
+      top: 14px; left: 14px;
+      width: auto; padding: 0 14px 0 10px;
+      gap: 6px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      display: inline-flex; align-items: center;
     }
+    #dvBack svg { flex-shrink: 0; }
+
+    /* Rotate button — top-right, next to zoom */
+    #dvRotateBtn { top: 14px; right: 68px; }
+
+    /* Zoom button — top-right */
+    #dvZoomBtn { top: 14px; right: 14px; }
+    #dvZoomBtn.active {
+      background: rgba(167,139,250,0.28);
+      border-color: rgba(167,139,250,0.72);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(167,139,250,0.22);
+    }
+
+    /* Nav arrows */
+    .dv-nav {
+      top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      font-size: 30px; line-height: 1;
+      border: 1px solid rgba(167,139,250,0.18);
+      background: rgba(5,4,20,0.58);
+    }
+    .dv-nav:hover { transform: translateY(-50%) scale(1.08); background: rgba(5,4,20,0.80); }
+    .dv-nav.prev  { left: 14px; }
+    .dv-nav.next  { right: 14px; }
+
+    /* Image count badge — bottom-left of image panel */
+    #dvCount {
+      position: absolute;
+      bottom: 18px; left: 18px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    /* ── Zoomed / pan cursor ── */
+    .dv-image-panel.dv-zoomed { cursor: grab; }
+    .dv-image-panel.dv-zoomed:active { cursor: grabbing; }
+    .dv-image-panel.dv-zoomed #dvImg { will-change: transform; transition: none !important; }
+
+    /* ── Right panel: info sidebar ── */
+    .dv-info-panel {
+      width: 320px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(167,139,250,0.10);
+      background: rgba(5,4,20,0.96);
+      padding: 80px 24px 28px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.16) transparent;
+      transition: width 300ms cubic-bezier(0.16,1,0.3,1),
+                  opacity 280ms ease,
+                  transform 300ms cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Info toggle — collapses sidebar on desktop */
+    .dv-info-panel.collapsed {
+      width: 0;
+      opacity: 0;
+      padding-left: 0;
+      padding-right: 0;
+      overflow: hidden;
+    }
+
+    /* Info toggle button — bottom-right of image panel */
+    #dvInfoBtn {
+      bottom: 14px; right: 14px;
+      font-size: 18px;
+    }
+    #dvInfoBtn[aria-expanded="true"] {
+      background: rgba(167,139,250,0.22);
+      border-color: rgba(167,139,250,0.60);
+      color: #fff;
+    }
+
+    /* Like button — bottom-right area */
+    #dvLikeBtn {
+      bottom: 14px; right: 66px;
+      width: auto; padding: 0 13px 0 11px;
+      display: inline-flex; align-items: center; gap: 5px;
+      height: 38px;
+      border: 1px solid rgba(244,114,182,0.28);
+      color: rgba(244,114,182,0.80);
+      font-family: var(--font); font-size: 13px;
+    }
+    #dvLikeBtn:hover {
+      background: rgba(244,114,182,0.15);
+      border-color: rgba(244,114,182,0.50);
+      color: #f472b6;
+    }
+    #dvLikeBtn.liked {
+      background: rgba(244,114,182,0.20);
+      border-color: rgba(244,114,182,0.55);
+      color: #f472b6;
+    }
+    #dvLikeBtn .like-heart {
+      font-size: 16px; line-height: 1;
+      transition: transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #dvLikeBtn:active .like-heart,
+    #dvLikeBtn.liked  .like-heart { transform: scale(1.35); }
+    #dvLikeBtn .like-count { font-size: 12px; min-width: 8px; }
+
+    /* ── Sidebar content ── */
+    .dv-info-title {
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.3;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(167,139,250,0.15);
+    }
+
+    .dv-info-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(200,195,235,0.84);
+      flex: 1;
+    }
+
+    /* ── Mobile layout: sidebar becomes bottom drawer ── */
+    @media (max-width: 768px) {
+      #detailView {
+        flex-direction: column;
+      }
+
+      .dv-image-panel {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+
+      .dv-info-panel {
+        width: 100%;
+        max-height: 40%;
+        border-left: none;
+        border-top: 1px solid rgba(167,139,250,0.10);
+        padding: 16px 20px 24px;
+        transition: max-height 300ms cubic-bezier(0.16,1,0.3,1),
+                    opacity 280ms ease;
+      }
+      .dv-info-panel.collapsed {
+        width: 100%;
+        max-height: 0;
+        opacity: 0;
+        padding: 0;
+      }
+
+      #dvBack      { top: 10px; left: 10px; }
+      #dvRotateBtn { top: 10px; right: 58px; }
+      #dvZoomBtn   { top: 10px; right: 10px; }
+      #dvInfoBtn { bottom: 10px; right: 10px; }
+      #dvLikeBtn { bottom: 10px; right: 58px; }
+      .dv-nav.prev { left: 10px; }
+      .dv-nav.next { right: 10px; }
+      #dvCount { bottom: 10px; left: 10px; font-size: 12px; }
+
+      .dv-ctrl { width: 40px; height: 40px; }
+      .dv-nav  { width: 46px; height: 46px; }
+    }
+
+    /* Hide gallery controls while detail view is open (body class) */
+    body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
   </style>
 </head>
 <body class="page-gallery">
 
-<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
@@ -88,8 +334,7 @@
           All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
-        <p class="gallery-hint">Click any image to view fullscreen. Use the arrow keys or swipe to navigate. Use the magnify glass to zoom in/out. Use the rotate button to rotate the image.</p><br>
-
+        <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or swipe to navigate. Use the magnify button to zoom. Use the rotate button to rotate.</p><br>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
           <div class="filter-pills" role="group" aria-label="Filter by type">
@@ -144,119 +389,123 @@
   </section>
 </main>
 
-<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
 
 <!-- ─────────────────────────────────────────
-     LIGHTBOX
+     FULL-PAGE DETAIL VIEW
+     Replaces the lightbox — no overlay, no backdrop.
+     Slides in from below, sits in the normal page stacking context.
 ───────────────────────────────────────── -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
-  <div class="lightbox-inner">
+<div id="detailView" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
 
-    <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
-    <button class="lightbox-zoom-btn" id="lbZoomBtn" aria-label="Toggle zoom" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-    <button class="lightbox-rotate-btn" id="lbRotateBtn" aria-label="Rotate image" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
-    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
-    <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
+  <!-- Left: image panel -->
+  <div class="dv-image-panel" id="dvImagePanel">
 
-    <div class="lb-media-wrap" id="lbMediaWrap">
-      <img class="lightbox-img" id="lbImg" alt="" src="" />
-      <div class="lightbox-vid" id="lbVid" aria-hidden="true"></div>
-    </div>
+    <!-- Back button -->
+    <button class="dv-ctrl" id="dvBack" aria-label="Back to gallery">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Gallery
+    </button>
+
+    <!-- Zoom button -->
+    <button class="dv-ctrl" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
+        <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Rotate button — top-right, next to zoom -->
+    <button class="dv-ctrl" id="dvRotateBtn" aria-label="Rotate image">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </button>
+
+    <!-- Prev / Next nav -->
+    <button class="dv-ctrl dv-nav prev" id="dvPrev" aria-label="Previous image">‹</button>
+    <button class="dv-ctrl dv-nav next" id="dvNext" aria-label="Next image">›</button>
+
+    <!-- Image -->
+    <img id="dvImg" alt="" src="" />
+
+    <!-- Vimeo video -->
+    <div id="dvVid" aria-hidden="true"></div>
+
+    <!-- Image count badge -->
+    <div id="dvCount" aria-hidden="true"></div>
 
     <!-- Like button -->
-    <button class="lightbox-like-btn" id="lbLikeBtn" aria-label="Like this image" type="button">
+    <button class="dv-ctrl" id="dvLikeBtn" aria-label="Like this image" type="button">
       <span class="like-heart" aria-hidden="true">♡</span>
       <span class="like-count"></span>
     </button>
 
-    <!-- Info toggle button -->
-    <button class="lightbox-info-btn" id="lbInfoBtn" aria-label="Hide image information" aria-expanded="true">ⓘ</button>
+    <!-- Info toggle -->
+    <button class="dv-ctrl" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">ⓘ</button>
 
-    <!-- Info overlay panel -->
-    <div class="lightbox-info-panel" id="lbInfoPanel" aria-hidden="true">
-      <div class="lb-info-title" id="lbTitle"></div>
-      <div class="lb-info-desc"  id="lbDesc"></div>
-    </div>
+  </div><!-- /dv-image-panel -->
 
-    <!-- Count badge (bottom-right, always visible) -->
-    <div class="lb-count-badge" id="lbCount"></div>
-
-    <!-- Keyboard hint -->
-    <div class="lb-kbd-hint" aria-hidden="true">← → navigate &nbsp;·&nbsp; zoom &nbsp;·&nbsp; Esc close</div>
-
+  <!-- Right: info sidebar -->
+  <div class="dv-info-panel" id="dvInfoPanel">
+    <div class="dv-info-title" id="dvTitle"></div>
+    <div class="dv-info-desc"  id="dvDesc"></div>
   </div>
-</div>
+
+</div><!-- /detailView -->
 
 
 <!-- ─────────────────────────────────────────
      LIKES MODULE v2
-     ─────────────────────────────────────────
-     Visitor identity via localStorage UUID sent as
-     X-Visitor-ID header — avoids third-party cookie
-     blocking when Worker is on a different domain.
 ───────────────────────────────────────── -->
 <script>
 (function () {
-
-  /* ── CONFIG ────────────────────────────────────────────────── */
   const USE_WORKER = true;
   const WORKER_URL = 'https://bhapstar-likes.bhapindersingh.workers.dev';
 
-  /* ── Visitor ID — persisted in localStorage ─────────────────── */
   function getVisitorId() {
     let uid = localStorage.getItem('_bhap_uid');
-    if (!uid) {
-      uid = crypto.randomUUID();
-      localStorage.setItem('_bhap_uid', uid);
-    }
+    if (!uid) { uid = crypto.randomUUID(); localStorage.setItem('_bhap_uid', uid); }
     return uid;
   }
 
-  /* ── Slug helper ─────────────────────────────────────────────── */
   function slugify(str) {
-    return String(str || '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+    return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
 
-  /* ── localStorage mock (for local Live Server testing) ──────── */
   function localGetLikes(id) {
     const raw = localStorage.getItem('likes_' + id);
     return raw ? JSON.parse(raw) : { count: 0, liked: false };
   }
   function localToggleLike(id) {
-    const data  = localGetLikes(id);
-    data.liked  = !data.liked;
-    data.count  = Math.max(0, data.count + (data.liked ? 1 : -1));
+    const data = localGetLikes(id);
+    data.liked = !data.liked;
+    data.count = Math.max(0, data.count + (data.liked ? 1 : -1));
     localStorage.setItem('likes_' + id, JSON.stringify(data));
     return data;
   }
 
-  /* ── Worker calls ────────────────────────────────────────────── */
-  function headers() {
-    return { 'Content-Type': 'application/json', 'X-Visitor-ID': getVisitorId() };
-  }
+  function headers() { return { 'Content-Type': 'application/json', 'X-Visitor-ID': getVisitorId() }; }
+
   async function workerGetLikes(id) {
     try {
-      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`,
-        { headers: headers() });
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { headers: headers() });
       if (!r.ok) throw new Error();
       return await r.json();
     } catch { return { count: 0, liked: false }; }
   }
   async function workerToggleLike(id) {
     try {
-      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`,
-        { method: 'POST', headers: headers() });
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { method: 'POST', headers: headers() });
       if (!r.ok) throw new Error();
       return await r.json();
     } catch { return null; }
   }
 
-  /* ── Public API ──────────────────────────────────────────────── */
   window.Likes = {
     slugify,
     async get(id)    { return USE_WORKER ? workerGetLikes(id)   : localGetLikes(id); },
@@ -265,9 +514,7 @@
     async hydrate() {
       const btns = Array.from(document.querySelectorAll('[data-like-id]'));
       if (!btns.length) return;
-
       if (USE_WORKER) {
-        /* Single bulk request for all counts */
         try {
           const ids = [...new Set(btns.map(b => b.dataset.likeId))];
           const r   = await fetch(
@@ -276,20 +523,12 @@
           );
           if (r.ok) {
             const all = await r.json();
-            btns.forEach(btn => {
-              const data = all[btn.dataset.likeId];
-              if (data) this._apply(btn, data);
-            });
+            btns.forEach(btn => { const d = all[btn.dataset.likeId]; if (d) this._apply(btn, d); });
             return;
           }
-        } catch { /* fall through to per-button fetch */ }
+        } catch { /* fall through */ }
       }
-
-      /* localStorage fallback (local testing) */
-      for (const btn of btns) {
-        const data = localGetLikes(btn.dataset.likeId);
-        this._apply(btn, data);
-      }
+      for (const btn of btns) { const d = localGetLikes(btn.dataset.likeId); this._apply(btn, d); }
     },
 
     _apply(btn, data) {
@@ -309,24 +548,44 @@
 })();
 </script>
 
+
 <!-- ─────────────────────────────────────────
      GALLERY CONTROLLER
 ───────────────────────────────────────── -->
 <script>
 (function () {
-  const grid       = document.getElementById('galleryGrid');
-  const lb         = document.getElementById('lightbox');
-  const lbImg      = document.getElementById('lbImg');
-  const lbVid      = document.getElementById('lbVid');
-  const lbTitle    = document.getElementById('lbTitle');
-  const lbCount    = document.getElementById('lbCount');
-  const lbDesc     = document.getElementById('lbDesc');
-  const lbClose    = document.getElementById('lbClose');
-  const lbPrev     = document.getElementById('lbPrev');
-  const lbNext     = document.getElementById('lbNext');
-  const lbLikeBtn  = document.getElementById('lbLikeBtn');
-  const viewToggle  = document.getElementById('viewToggle');
-  const lbMediaWrap = document.getElementById('lbMediaWrap');
+  const grid        = document.getElementById('galleryGrid');
+  const dv          = document.getElementById('detailView');
+  const dvImg       = document.getElementById('dvImg');
+  const dvVid       = document.getElementById('dvVid');
+  const dvTitle     = document.getElementById('dvTitle');
+  const dvDesc      = document.getElementById('dvDesc');
+  const dvCount     = document.getElementById('dvCount');
+  const dvBack      = document.getElementById('dvBack');
+  const dvPrev      = document.getElementById('dvPrev');
+  const dvNext      = document.getElementById('dvNext');
+  const dvLikeBtn   = document.getElementById('dvLikeBtn');
+  const dvInfoBtn   = document.getElementById('dvInfoBtn');
+  const dvInfoPanel = document.getElementById('dvInfoPanel');
+  const dvZoomBtn   = document.getElementById('dvZoomBtn');
+  const dvRotateBtn = document.getElementById('dvRotateBtn');
+  const dvImgPanel  = document.getElementById('dvImagePanel');
+
+  if (!grid || !dv) return;
+
+  /* ── State ── */
+  let items           = [];
+  let currentItem     = null;
+  let dvList          = [];
+  let dvIdx           = 0;
+  let activeSet       = [];
+  let activeItemIndex = 0;
+  let infoVisible     = true;
+  let currentView     = 'grid';
+  let dvRotation      = 0;   // cumulative degrees — never resets, always increases
+  // dvRotation % 360 gives the logical angle; the cumulative value ensures
+  // CSS always transitions forward (e.g. 270→360 not 270→0 backwards)
+  let chaosRafId      = null;
 
   /* ── Filter pill helpers ── */
   function getActiveFilter() {
@@ -339,18 +598,6 @@
       p.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
-
-  if (!grid || !lb) return;
-
-  let items           = [];
-  let currentItem     = null;
-  let lbList          = [];
-  let lbIndex         = 0;
-  let activeSet       = [];
-  let activeItemIndex = 0;
-  let infoPanelVisible = true;
-  let currentView     = 'grid';  // hoisted so openLightbox/closeLightbox can pause chaos
-  let lbRotation      = 0;       // current rotation in degrees (0/90/180/270)
 
   /* ── Load gallery data ── */
   async function loadData() {
@@ -368,275 +615,254 @@
     }
   }
 
-  /* ── HTML escape ── */
   function esc(s) {
     return String(s ?? '')
-      .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;').replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+      .replaceAll('&','&amp;').replaceAll('<','&lt;')
+      .replaceAll('>','&gt;').replaceAll('"','&quot;')
+      .replaceAll("'",'&#039;');
   }
 
-  /* ── Item helpers ── */
   function getList(item) {
-    if (item.videos?.length) {
-      return item.videos.map(v => ({ kind: 'vimeo', vimeoId: v.vimeoId, poster: v.poster, alt: v.alt || item.title || '' }));
-    }
-    if (item.images?.length) {
-      return item.images.map(im => ({ kind: 'image', file: im.file, alt: im.alt || item.alt || item.title || '' }));
-    }
-    return [{ kind: 'image', file: item.file, alt: item.alt || item.title || '' }];
+    if (item.videos?.length)
+      return item.videos.map(v => ({ kind:'vimeo', vimeoId:v.vimeoId, poster:v.poster, alt:v.alt||item.title||'' }));
+    if (item.images?.length)
+      return item.images.map(im => ({ kind:'image', file:im.file, alt:im.alt||item.alt||item.title||'' }));
+    return [{ kind:'image', file:item.file, alt:item.alt||item.title||'' }];
   }
 
   function getCover(item) {
     const list  = getList(item);
     const first = list[0];
-    if (first?.kind === 'vimeo') return { file: first.poster, alt: first.alt || item.title || '' };
-    return { file: first.file, alt: first.alt || item.title || '' };
+    if (first?.kind === 'vimeo') return { file:first.poster, alt:first.alt||item.title||'' };
+    return { file:first.file, alt:first.alt||item.title||'' };
   }
 
-  /* ── Lightbox display ── */
-  const lbInfoBtn   = document.getElementById('lbInfoBtn');
-  const lbInfoPanel = document.getElementById('lbInfoPanel');
-  const lbZoomBtn   = document.getElementById('lbZoomBtn');
-  const lbRotateBtn = document.getElementById('lbRotateBtn');
-  const lbInnerEl   = document.querySelector('#lightbox .lightbox-inner');
-
-  /* ── Zoom + Pan (3-state: off → 1.5× → 2× → off) ───────────────
-   * Click 1: 1.5×  Click 2: 2×  Click 3: back to normal
-   * lightbox-inner gets class "lb-zoomed" whenever scale > 1.
-   *
-   * Rotation-awareness: when the image is rotated 90/270° we set explicit
-   * swapped pixel dimensions on lbImg. The zoom transform must be composed
-   * WITH the rotation transform, and pan clamping must use the visual
-   * (post-rotation) dimensions, not the raw offsetWidth/offsetHeight.
-   * ────────────────────────────────────────────────────────────── */
-  const ZOOM_STEPS = [1, 1.5, 2]; // index 0 = off
-  let zoomStep = 0;
-  let zoomDragging = false;
-  let zoomStartX = 0, zoomStartY = 0;
-  let zoomOriginX = 0, zoomOriginY = 0;
+  /* ══════════════════════════════════════
+     ZOOM + PAN (3-state: off → 1.5× → 2×)
+  ══════════════════════════════════════ */
+  const ZOOM_STEPS = [1, 1.5, 2];
+  let zoomStep = 0, zoomDragging = false;
+  let zoomStartX = 0, zoomStartY = 0, zoomOriginX = 0, zoomOriginY = 0;
 
   function zoomScale() { return ZOOM_STEPS[zoomStep]; }
   function zoomed()    { return zoomStep > 0; }
 
-  /* Visual dimensions of the image accounting for rotation.
-   * When rotated 90/270° the image element has swapped explicit dimensions
-   * (height=cw, width=ch) but visually occupies cw×ch — so we return the
-   * container dimensions directly for those angles. */
   function imgVisualSize() {
-    if (!lbInnerEl || !lbImg) return { w: 0, h: 0 };
-    const is90or270 = (lbRotation === 90 || lbRotation === 270);
-    if (is90or270) {
-      return { w: lbInnerEl.clientWidth, h: lbInnerEl.clientHeight };
-    }
-    return { w: lbImg.offsetWidth, h: lbImg.offsetHeight };
+    const is90or270 = (dvRotation % 360 === 90 || dvRotation % 360 === 270);
+    if (is90or270) return { w: dvImgPanel.clientWidth, h: dvImgPanel.clientHeight };
+    return { w: dvImg.offsetWidth, h: dvImg.offsetHeight };
   }
 
   function zoomClamp(ox, oy) {
-    /* With transform-origin: center center, panning is symmetric.
-     * Max pan in each axis = half the overflow at current scale. */
-    if (!lbInnerEl || !lbImg) return { ox, oy };
-    const s   = zoomScale();
-    const vs  = imgVisualSize();
-    const limX = Math.max(0, (vs.w * s - lbInnerEl.clientWidth)  / 2);
-    const limY = Math.max(0, (vs.h * s - lbInnerEl.clientHeight) / 2);
+    const s = zoomScale();
+    const vs = imgVisualSize();
+    const limX = Math.max(0, (vs.w * s - dvImgPanel.clientWidth)  / 2);
+    const limY = Math.max(0, (vs.h * s - dvImgPanel.clientHeight) / 2);
     return {
       ox: Math.max(-limX, Math.min(limX, ox)),
       oy: Math.max(-limY, Math.min(limY, oy)),
     };
   }
 
-  /* Rotate a drag delta (dx, dy in screen space) back into the image's
-   * coordinate space so that panning always feels "normal" regardless of
-   * the current image rotation.
-   *   0°  → no change
-   *   90° → screen-right  = image-down  → map (dx,dy) to (-dy, dx)
-   *  180° → screen-right  = image-left  → map (dx,dy) to (-dx,-dy)
-   *  270° → screen-right  = image-up    → map (dx,dy) to ( dy,-dx)
-   */
   function rotateDelta(dx, dy) {
-    switch (lbRotation) {
-      case  90: return { dx:  dy,  dy: -dx };
-      case 180: return { dx: -dx,  dy: -dy };
-      case 270: return { dx: -dy,  dy:  dx };
-      default:  return { dx,       dy      };
+    switch (dvRotation % 360) {
+      case  90: return { dx:  dy, dy: -dx };
+      case 180: return { dx: -dx, dy: -dy };
+      case 270: return { dx: -dy, dy:  dx };
+      default:  return { dx,      dy      };
     }
   }
 
-  /* Build the full transform string with transform-origin: center center.
-   * Scale zooms around the centre automatically. Pan (ox,oy) is in
-   * pre-scale pixel space: translate is written AFTER scale so values
-   * are divided by s, keeping units in screen pixels for the drag code. */
   function zoomApply() {
-    if (!lbImg) return;
     const s   = zoomScale();
-    const rot = lbRotation;
-
-    if (s <= 1 && rot === 0) {
-      lbImg.style.transform = '';
-      return;
-    }
-
+    const rot = dvRotation % 360;
+    if (s <= 1 && rot === 0) { dvImg.style.transform = ''; return; }
     const parts = [];
     if (rot !== 0)  parts.push('rotate(' + rot + 'deg)');
     if (s  >  1) {
       parts.push('scale(' + s + ')');
       parts.push('translate(' + (zoomOriginX / s) + 'px, ' + (zoomOriginY / s) + 'px)');
     }
-    lbImg.style.transform = parts.join(' ');
+    dvImg.style.transform = parts.join(' ');
   }
 
   function zoomUpdateBtn() {
-    if (!lbZoomBtn) return;
     const on = zoomed();
-    lbZoomBtn.classList.toggle('active', on);
-    lbZoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    lbZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
+    dvZoomBtn.classList.toggle('active', on);
+    dvZoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    dvZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
   }
 
   function zoomAdvance() {
-    if (!lbImg || !lbInnerEl) return;
     zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
     requestAnimationFrame(() => {
-      /* With centre-origin, zooming always starts centred — pan resets to 0 */
       zoomOriginX = 0; zoomOriginY = 0;
-      lbInnerEl.classList.toggle('lb-zoomed', zoomed());
+      dvImgPanel.classList.toggle('dv-zoomed', zoomed());
       zoomUpdateBtn();
       zoomApply();
     });
   }
 
   function zoomDisable() {
-    if (!lbImg || !lbInnerEl) return;
     zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
-    lbInnerEl.classList.remove('lb-zoomed');
-    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); lbZoomBtn.title = 'Zoom in (1.5×)'; }
+    dvImgPanel.classList.remove('dv-zoomed');
+    dvZoomBtn.classList.remove('active');
+    dvZoomBtn.setAttribute('aria-pressed','false');
+    dvZoomBtn.title = 'Zoom in (1.5×)';
     zoomApply();
   }
 
-  /* Pointer drag on the lightbox-inner (mouse) */
-  if (lbInnerEl) {
-    lbInnerEl.addEventListener('mousedown', (e) => {
-      if (!zoomed()) return;
-      if (e.target.closest('button')) return; // don't steal button clicks
-      zoomDragging = true;
-      zoomStartX = e.clientX - zoomOriginX;
-      zoomStartY = e.clientY - zoomOriginY;
-      e.preventDefault();
-    });
+  /* Mouse drag for zoom-pan */
+  dvImgPanel.addEventListener('mousedown', (e) => {
+    if (!zoomed()) return;
+    if (e.target.closest('button')) return;
+    zoomDragging = true;
+    zoomStartX = e.clientX - zoomOriginX;
+    zoomStartY = e.clientY - zoomOriginY;
+    e.preventDefault();
+  });
+  dvImgPanel.addEventListener('mousemove', (e) => {
+    if (!zoomDragging || !zoomed()) return;
+    const rawDx = e.clientX - zoomStartX;
+    const rawDy = e.clientY - zoomStartY;
+    const { dx, dy } = rotateDelta(rawDx - zoomOriginX, rawDy - zoomOriginY);
+    const c = zoomClamp(zoomOriginX + dx, zoomOriginY + dy);
+    zoomOriginX = c.ox; zoomOriginY = c.oy;
+    zoomStartX = e.clientX - zoomOriginX;
+    zoomStartY = e.clientY - zoomOriginY;
+    zoomApply();
+  });
+  dvImgPanel.addEventListener('mouseup',    () => { zoomDragging = false; });
+  dvImgPanel.addEventListener('mouseleave', () => { zoomDragging = false; });
 
-    lbInnerEl.addEventListener('mousemove', (e) => {
-      if (!zoomDragging || !zoomed()) return;
-      const rawDx = e.clientX - zoomStartX;
-      const rawDy = e.clientY - zoomStartY;
-      const { dx, dy } = rotateDelta(rawDx - zoomOriginX, rawDy - zoomOriginY);
-      const c = zoomClamp(zoomOriginX + dx, zoomOriginY + dy);
-      zoomOriginX = c.ox; zoomOriginY = c.oy;
-      // Re-anchor start so next move delta is relative
-      zoomStartX = e.clientX - zoomOriginX;
-      zoomStartY = e.clientY - zoomOriginY;
-      zoomApply();
-    });
+  /* ══════════════════════════════════════
+     ROTATION
+  ══════════════════════════════════════ */
+  function applyRotation() {
+    zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
+    dvImgPanel.classList.remove('dv-zoomed');
+    dvZoomBtn.classList.remove('active');
+    dvZoomBtn.setAttribute('aria-pressed','false');
 
-    lbInnerEl.addEventListener('mouseup',   () => { zoomDragging = false; });
-    lbInnerEl.addEventListener('mouseleave',() => { zoomDragging = false; });
+    dvImg.style.width = ''; dvImg.style.height = '';
+    dvImg.style.maxWidth = ''; dvImg.style.maxHeight = '';
+    dvImg.style.objectFit = '';
+
+    const cw = dvImgPanel.clientWidth;
+    const ch = dvImgPanel.clientHeight;
+
+    dvImg.classList.add('rotating');
+
+    if (dvRotation % 360 === 90 || dvRotation % 360 === 270) {
+      dvImg.style.objectFit  = 'contain';
+      dvImg.style.width      = ch + 'px';
+      dvImg.style.height     = cw + 'px';
+      dvImg.style.maxWidth   = 'none';
+      dvImg.style.maxHeight  = 'none';
+    }
+    zoomApply();
   }
 
-  function closeInfoPanel() {
-    if (!lbInfoPanel) return;
-    lbInfoPanel.classList.remove('open');
-    lbInfoPanel.setAttribute('aria-hidden', 'true');
-    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'false');
+  function resetRotation() {
+    dvRotation = 0;
+    dvImg.classList.remove('rotating');
+    // Suppress transition so the snap-to-0 on image change is instant
+    dvImg.style.transition = 'none';
+    dvImg.style.width = ''; dvImg.style.height = '';
+    dvImg.style.maxWidth = ''; dvImg.style.maxHeight = '';
+    dvImg.style.objectFit = '';
+    dvImg.style.transform = '';
+    // Re-enable transition on next frame
+    requestAnimationFrame(() => { dvImg.style.transition = ''; });
   }
 
-  function openInfoPanel() {
-    if (!lbInfoPanel) return;
-    lbInfoPanel.classList.add('open');
-    lbInfoPanel.setAttribute('aria-hidden', 'false');
-    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'true');
+  /* ══════════════════════════════════════
+     INFO PANEL
+  ══════════════════════════════════════ */
+  function openInfo() {
+    dvInfoPanel.classList.remove('collapsed');
+    dvInfoPanel.removeAttribute('aria-hidden');
+    dvInfoBtn.setAttribute('aria-expanded','true');
+    dvInfoBtn.setAttribute('aria-label','Hide image information');
+    infoVisible = true;
+  }
+  function closeInfo() {
+    dvInfoPanel.classList.add('collapsed');
+    dvInfoPanel.setAttribute('aria-hidden','true');
+    dvInfoBtn.setAttribute('aria-expanded','false');
+    dvInfoBtn.setAttribute('aria-label','Show image information');
+    infoVisible = false;
   }
 
-  /* ── Preload adjacent images so next/prev taps feel instant ──
-   * Called at the end of showLb(). Kicks off background fetches for
-   * the next and previous images within the current item's lbList,
-   * and also the first/last image of the neighbouring gallery items.
-   * Uses a simple object cache so each URL is only fetched once. */
+  /* ══════════════════════════════════════
+     PRELOAD
+  ══════════════════════════════════════ */
   const _preloadCache = {};
   function _preload(url) {
     if (!url || _preloadCache[url]) return;
     _preloadCache[url] = new Image();
     _preloadCache[url].src = url;
   }
-
-  function preloadAdjacentImages() {
-    /* Within the current item's image list */
-    [lbIndex - 1, lbIndex + 1].forEach(i => {
-      if (i >= 0 && i < lbList.length) {
-        const entry = lbList[i];
-        if (entry?.kind === 'image') _preload(entry.file);
-      }
+  function preloadAdjacent() {
+    [dvIdx - 1, dvIdx + 1].forEach(i => {
+      if (i >= 0 && i < dvList.length && dvList[i]?.kind === 'image') _preload(dvList[i].file);
     });
-
-    /* First/last image of the previous and next gallery items */
     [-1, 1].forEach(delta => {
       if (!activeSet.length) return;
-      const nextIdx  = (activeItemIndex + delta + activeSet.length) % activeSet.length;
-      const nextItem = activeSet[nextIdx];
-      if (!nextItem) return;
-      const list  = getList(nextItem);
+      const ni = (activeItemIndex + delta + activeSet.length) % activeSet.length;
+      const list = getList(activeSet[ni]);
       const entry = delta > 0 ? list[0] : list[list.length - 1];
       if (entry?.kind === 'image') _preload(entry.file);
     });
   }
 
-  function showLb() {
-    zoomDisable(); // reset zoom whenever image changes
-    /* Reset rotation silently — remove .rotating first so no transition fires */
-    lbImg.classList.remove('rotating');
-    lbRotation = 0; applyRotation();
-    const cur         = lbList[lbIndex];
-    const snapItem    = currentItem;    // capture before rAF fires
-    const snapVisible = infoPanelVisible;
+  /* ══════════════════════════════════════
+     SHOW CURRENT IMAGE
+  ══════════════════════════════════════ */
+  function showDv() {
+    zoomDisable();
+    resetRotation();
+
+    const cur = dvList[dvIdx];
+    const snapItem    = currentItem;
+    const snapVisible = infoVisible;
 
     requestAnimationFrame(() => {
-      lbTitle.textContent = snapItem?.title || '';
-      lbDesc.textContent  = snapItem?.desc  || '';
-      lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
-      snapVisible ? openInfoPanel() : closeInfoPanel();
+      dvTitle.textContent = snapItem?.title || '';
+      dvDesc.textContent  = snapItem?.desc  || '';
+      dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
 
-      /* ── Update lightbox like button ── */
-      if (lbLikeBtn && window.Likes && snapItem) {
+      snapVisible ? openInfo() : closeInfo();
+
+      /* Update like button */
+      if (window.Likes && snapItem) {
         const likeId = window.Likes.slugify(snapItem.title || '');
-        lbLikeBtn.dataset.likeId = likeId;
-        window.Likes.get(likeId).then(data => window.Likes._apply(lbLikeBtn, data));
+        dvLikeBtn.dataset.likeId = likeId;
+        window.Likes.get(likeId).then(d => window.Likes._apply(dvLikeBtn, d));
       }
 
-      const canNav = lbList.length > 1 || activeSet.length > 1;
-      lbPrev.style.display = canNav ? '' : 'none';
-      lbNext.style.display = canNav ? '' : 'none';
+      const canNav = dvList.length > 1 || activeSet.length > 1;
+      dvPrev.style.display = canNav ? '' : 'none';
+      dvNext.style.display = canNav ? '' : 'none';
 
-      lbImg.style.display = 'none';
-      lbImg.src = '';
-      if (lbVid) { lbVid.style.display = 'none'; lbVid.innerHTML = ''; }
+      dvImg.style.display = 'none';
+      dvImg.src = '';
+      if (dvVid) { dvVid.style.display = 'none'; dvVid.innerHTML = ''; }
 
       if (cur.kind === 'vimeo') {
-        if (lbVid) {
-          lbVid.style.display = 'block';
-          const id = encodeURIComponent(cur.vimeoId);
-          lbVid.innerHTML = `<iframe
-            src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
-            frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen class="lb-iframe"></iframe>`;
-        }
+        dvVid.style.display = 'block';
+        const id = encodeURIComponent(cur.vimeoId);
+        dvVid.innerHTML = `<iframe
+          src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+          frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen></iframe>`;
         return;
       }
 
-      lbImg.style.display = 'block';
-      lbImg.src = cur.file;
-      lbImg.alt = cur.alt || snapItem?.title || '';
-
-      /* Kick off background fetches for adjacent images */
-      preloadAdjacentImages();
+      dvImg.style.display = 'block';
+      dvImg.src = cur.file;
+      dvImg.alt = cur.alt || snapItem?.title || '';
+      preloadAdjacent();
     });
   }
 
@@ -644,50 +870,39 @@
     if (!activeSet || activeSet.length < 2) return;
     activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
     currentItem = activeSet[activeItemIndex];
-    lbList  = getList(currentItem);
-    lbIndex = delta > 0 ? 0 : lbList.length - 1;
-    showLb();
+    dvList  = getList(currentItem);
+    dvIdx   = delta > 0 ? 0 : dvList.length - 1;
+    showDv();
   }
 
-  function openLightbox(item, indexInActiveSet) {
+  /* ══════════════════════════════════════
+     OPEN / CLOSE DETAIL VIEW
+  ══════════════════════════════════════ */
+  function openDetail(item, indexInActiveSet) {
     currentItem     = item;
     activeItemIndex = Number(indexInActiveSet) || 0;
-    lbList  = getList(item);
-    lbIndex = 0;
-    showLb();
+    dvList  = getList(item);
+    dvIdx   = 0;
+    dvRotation = 0;
+    resetRotation();
+    showDv();
 
-    /* Reset rotation each time the lightbox opens */
-    lbRotation = 0;
-    const _mw = document.getElementById('lbMediaWrap'); if (_mw) { _mw.className = _mw.className.replace(/\blb-rot-\d+\b/g, '').trim(); _mw.style.transform = ''; }
-      const _mi = document.getElementById('lbImg'); if (_mi) { _mi.style.transform = ''; _mi.style.width = ''; _mi.style.height = ''; _mi.style.maxWidth = ''; _mi.style.maxHeight = ''; _mi.style.objectFit = ''; _mi.classList.remove('rotating'); }
-
-    lb.classList.add('open');
-    lb.setAttribute('aria-hidden', 'false');
+    dv.classList.add('open');
+    dv.setAttribute('aria-hidden','false');
     document.body.classList.add('noscroll');
-    if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; } // pause chaos while lightbox is open
 
-    /* Trigger the slide-up entry animation, then remove the class so it
-       doesn't interfere with subsequent rotation transforms */
-    if (lbInnerEl) {
-      lbInnerEl.classList.add('lb-opening');
-      lbInnerEl.addEventListener('animationend', () => {
-        lbInnerEl.classList.remove('lb-opening');
-      }, { once: true });
-    }
+    if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
 
-    requestAnimationFrame(() => lbClose.focus());
+    requestAnimationFrame(() => dvBack.focus());
   }
 
-  function closeLightbox() {
+  function closeDetail() {
     zoomDisable();
-    /* Reset rotation on close */
-    lbRotation = 0;
-    const _mw = document.getElementById('lbMediaWrap'); if (_mw) { _mw.className = _mw.className.replace(/\blb-rot-\d+\b/g, '').trim(); _mw.style.transform = ''; }
-      const _mi = document.getElementById('lbImg'); if (_mi) { _mi.style.transform = ''; _mi.style.width = ''; _mi.style.height = ''; _mi.style.maxWidth = ''; _mi.style.maxHeight = ''; _mi.style.objectFit = ''; _mi.classList.remove('rotating'); }
-    lb.classList.remove('open');
-    lb.setAttribute('aria-hidden', 'true');
+    resetRotation();
+    dv.classList.remove('open');
+    dv.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
-    // resume chaos animation if that view is active
+
     if (currentView === 'chaos') {
       const canvas = grid.querySelector('.chaos-canvas');
       const h = parseFloat(canvas?.style.height) || 0;
@@ -695,50 +910,30 @@
       requestAnimationFrame(() => startChaosFloat(h, w));
     }
 
-    if (lbVid) { lbVid.innerHTML = ''; lbVid.style.display = 'none'; }
-    lbImg.src = ''; lbImg.style.display = 'block';
-    lbTitle.textContent = ''; lbDesc.textContent = ''; lbCount.textContent = '';
-    closeInfoPanel();
-    currentItem = null; lbList = []; lbIndex = 0; activeItemIndex = 0;
-    infoPanelVisible = true;
+    if (dvVid) { dvVid.innerHTML = ''; dvVid.style.display = 'none'; }
+    dvImg.src = ''; dvImg.style.display = 'block';
+    dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    closeInfo();
+    currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
+    infoVisible = true;
   }
 
-  /* ─────────────────────────────────────────────────────────────
-   * FIX 3: Unified pointer handler for lightbox controls.
-   *
-   * Problem: On mobile (real devices & Chrome DevTools simulation),
-   * button elements inside position:fixed/absolute containers can
-   * fail to fire 'click' reliably because:
-   *   a) The synthesised click from touch is swallowed by a parent
-   *      touchend listener before it reaches the button.
-   *   b) 300ms click delay (some browsers) means the touch has
-   *      already been processed by the swipe detector.
-   *
-   * Solution: Attach BOTH 'click' AND 'touchend' to each control.
-   * The touchend handler fires immediately (no delay), calls
-   * e.preventDefault() to cancel the subsequent synthesised click
-   * (preventing double-fire), and calls e.stopPropagation() so the
-   * lbInner swipe listener never sees the tap.
-   * ───────────────────────────────────────────────────────────── */
+  /* ══════════════════════════════════════
+     TAP HANDLER (mobile-safe)
+  ══════════════════════════════════════ */
   function addTapHandler(el, fn) {
-    // Standard click — works on desktop and some mobile browsers
     el.addEventListener('click', fn);
-
-    // touchend — fires immediately on mobile, no 300ms delay
-    el.addEventListener('touchend', function (e) {
-      e.preventDefault();      // cancel the upcoming synthesised click (no double-fire)
-      e.stopPropagation();     // stop lbInner's touchend swipe handler seeing this
-      fn(e);
-    }, { passive: false });    // passive:false required so preventDefault() is allowed
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault(); e.stopPropagation(); fn(e);
+    }, { passive: false });
   }
 
-  /* ── Grid render ── */
+  /* ══════════════════════════════════════
+     GRID RENDER
+  ══════════════════════════════════════ */
   function render() {
     const selected = getActiveFilter();
-    const filtered = selected === 'all'
-      ? items
-      : items.filter(it => (it.type || 'others') === selected);
-
+    const filtered = selected === 'all' ? items : items.filter(it => (it.type || 'others') === selected);
     activeSet = filtered;
 
     grid.innerHTML = filtered.map((item) => {
@@ -753,12 +948,11 @@
         : '';
 
       const thumbSrc = cover.file.replace(/^(images\/)/, '$1thumbs/');
-      const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
+      const media    = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
-      const likeId = window.Likes ? window.Likes.slugify(item.title || cover.file) : '';
+      const likeId  = window.Likes ? window.Likes.slugify(item.title || cover.file) : '';
       const likeBtn = likeId
-        ? `<button class="like-btn" data-like-id="${esc(likeId)}"
-             aria-label="Like this image" type="button">
+        ? `<button class="like-btn" data-like-id="${esc(likeId)}" aria-label="Like this image" type="button">
              <span class="like-heart" aria-hidden="true">♡</span>
              <span class="like-count"></span>
            </button>`
@@ -779,223 +973,133 @@
     }).join('');
   }
 
-  /* ── Chaos view — justified mosaic ─────────────────────────────────────
-   *
-   * Algorithm: row-based justified layout (like Google Photos / Flickr).
-   *   1. Shuffle items randomly (different every visit).
-   *   2. Assign each item a random "natural" aspect ratio (width/height).
-   *   3. Pack items into rows: keep adding items until the row's total
-   *      natural width (scaled to a target row height) exceeds the canvas
-   *      width, then "justify" that row — scale all items up/down so their
-   *      combined width exactly equals the canvas width.
-   *   4. Last row is left-aligned at the target height (no stretching).
-   *
-   * Result: perfectly tiled, no gaps, no overlaps, all different sizes,
-   * reshuffled on every call.
-   * ─────────────────────────────────────────────────────────────────────── */
-
+  /* ══════════════════════════════════════
+     CHAOS VIEW
+  ══════════════════════════════════════ */
   function renderChaos() {
     const selected = getActiveFilter();
-    const filtered = selected === 'all'
-      ? items
-      : items.filter(it => (it.type || 'others') === selected);
-
+    const filtered = selected === 'all' ? items : items.filter(it => (it.type || 'others') === selected);
     activeSet = filtered;
 
-    /* ── Canvas metrics ── */
     const canvasW  = grid.clientWidth || window.innerWidth;
     const isMob    = canvasW < 540;
-    const GAP      = isMob ? 3 : 5;          /* px gap between tiles */
-    const TARGET_H = isMob ? 120 : 220;      /* ideal row height — varies per row */
+    const GAP      = isMob ? 3 : 5;
+    const TARGET_H = isMob ? 120 : 220;
 
-    /* ── Shuffle a copy (new order every call) ── */
     const pool = filtered.map((item, originalIdx) => ({ item, originalIdx }));
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
 
-    /* ── Assign random aspect ratios ── */
-    /* Real astrophotos are typically landscape; allow some portrait variety */
-    const aspectOptions = [
-      1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.78,  /* landscape */
-      0.75, 0.8, 0.85,                             /* portrait  */
-      2.0, 2.35,                                   /* ultra-wide */
-    ];
+    const aspectOptions = [1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.78,0.75,0.8,0.85,2.0,2.35];
     pool.forEach(p => {
-      p.aspect = aspectOptions[Math.floor(Math.random() * aspectOptions.length)];
-      /* natural width at TARGET_H */
+      p.aspect   = aspectOptions[Math.floor(Math.random() * aspectOptions.length)];
       p.naturalW = TARGET_H * p.aspect;
     });
 
-    /* ── Row packing ── */
-    /* Allow row height to vary per row for extra randomness */
     function rowTargetH() {
       const variance = isMob ? 40 : 80;
       return TARGET_H + (Math.random() - 0.5) * variance;
     }
 
-    const rows = [];     /* each row: array of {item, originalIdx, w, h} */
+    const rows = [];
     let i = 0;
     while (i < pool.length) {
-      const rh      = rowTargetH();
-      const row     = [];
-      let rowNatW   = 0;
-
-      /* Fill row until natural widths exceed canvas (accounting for gaps) */
+      const rh = rowTargetH(); const row = []; let rowNatW = 0;
       while (i < pool.length) {
-        const p    = pool[i];
-        const natW = rh * p.aspect;
-        const gapContrib = row.length * GAP;
-        if (row.length > 0 && rowNatW + natW + gapContrib > canvasW * 1.02) break;
-        row.push({ item: p.item, originalIdx: p.originalIdx, natW, aspect: p.aspect });
-        rowNatW += natW;
-        i++;
+        const p = pool[i]; const natW = rh * p.aspect;
+        if (row.length > 0 && rowNatW + natW + row.length * GAP > canvasW * 1.02) break;
+        row.push({ item:p.item, originalIdx:p.originalIdx, natW, aspect:p.aspect });
+        rowNatW += natW; i++;
       }
-      rows.push({ row, targetH: rh });
+      rows.push({ row, targetH:rh });
     }
 
-    /* ── Build HTML ── */
-    let html     = '';
-    let cursorY  = 0;
-    let activeIdx = 0;   /* position in shuffled activeSet order */
+    let html = ''; let cursorY = 0; let activeIdx = 0;
 
     rows.forEach(({ row, targetH }, rowIdx) => {
       const isLastRow  = rowIdx === rows.length - 1;
       const totalNatW  = row.reduce((s, c) => s + c.natW, 0);
       const totalGaps  = (row.length - 1) * GAP;
-
-      /* Scale factor to justify the row; last row stays at natural size */
-      const scale = isLastRow ? 1 : (canvasW - totalGaps) / totalNatW;
-      const rowH  = isLastRow ? targetH : Math.round(targetH * scale);
-
+      const scale      = isLastRow ? 1 : (canvasW - totalGaps) / totalNatW;
+      const rowH       = isLastRow ? targetH : Math.round(targetH * scale);
       let cursorX = 0;
 
       row.forEach((cell, colIdx) => {
         const isLastInRow = colIdx === row.length - 1;
-        /* Compute tile width — last tile in row gets any rounding remainder */
         let tileW = Math.round(cell.natW * scale);
         if (!isLastRow && isLastInRow) {
           tileW = canvasW - cursorX - totalGaps + (row.length - 1 - colIdx) * GAP;
           tileW = Math.max(tileW, 1);
         }
-
-        const globalIdx  = items.indexOf(cell.item);
-        const cover      = getCover(cell.item);
-        const thumbSrc   = cover.file.replace(/^(images\/)/, '$1thumbs/');
+        const globalIdx   = items.indexOf(cell.item);
+        const cover       = getCover(cell.item);
+        const thumbSrc    = cover.file.replace(/^(images\/)/, '$1thumbs/');
         const myActiveIdx = activeIdx++;
 
-        html += `<button
-          class="chaos-tile"
-          data-idx="${globalIdx}"
-          data-active-idx="${myActiveIdx}"
+        html += `<button class="chaos-tile"
+          data-idx="${globalIdx}" data-active-idx="${myActiveIdx}"
           aria-label="${esc(cell.item.title || cover.alt)}"
           style="position:absolute;left:${cursorX}px;top:${cursorY}px;width:${tileW}px;height:${rowH}px">
-          <img src="${esc(thumbSrc)}"
-               alt="${esc(cover.alt)}"
-               loading="lazy" decoding="async"
-               draggable="false">
+          <img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async" draggable="false">
         </button>`;
 
         cursorX += tileW + GAP;
       });
-
       cursorY += rowH + GAP;
     });
 
     grid.innerHTML = `<div class="chaos-canvas" style="height:${cursorY}px">${html}</div>`;
-
-    /* Rebuild activeSet to match the shuffled order for lightbox navigation */
     activeSet = pool.map(p => p.item);
-
     grid.addEventListener('click', handleChaosClick, { once: false });
-
-    /* ── Floating animation ─────────────────────────────────────────
-     * Each tile drifts slowly in its own direction with gentle rotation.
-     * Uses CSS transforms (GPU-accelerated) via requestAnimationFrame.
-     * Tiles bounce off the canvas edges.
-     * The loop self-cancels when chaos view is no longer active.
-     * ──────────────────────────────────────────────────────────────── */
     startChaosFloat(cursorY, canvasW);
   }
 
-  /* ── Chaos float engine ─────────────────────────────────────────── */
-  let chaosRafId = null;   // current animation frame handle
-
+  /* ── Chaos float engine ── */
   function startChaosFloat(canvasH, canvasW) {
-    /* Cancel any previous loop (e.g. filter re-render) */
     if (chaosRafId) cancelAnimationFrame(chaosRafId);
-
     const canvas = grid.querySelector('.chaos-canvas');
     if (!canvas) return;
-
     const tiles = Array.from(canvas.querySelectorAll('.chaos-tile'));
     if (!tiles.length) return;
 
-    /* Per-tile state: position offset from layout origin, velocity, rotation */
     const state = tiles.map(tile => {
-      /* Read the tile's layout position from its inline style */
       const baseLeft = parseFloat(tile.style.left) || 0;
       const baseTop  = parseFloat(tile.style.top)  || 0;
       const w        = parseFloat(tile.style.width)  || 160;
       const h        = parseFloat(tile.style.height) || 120;
-
-      /* Full chaos: fast, far-wandering, freely rotating */
-      const speed  = 0.6 + Math.random() * 1.0;         /* px/frame ~0.6–1.6  */
-      const angle  = Math.random() * Math.PI * 2;
-      const rotSpd = (Math.random() - 0.5) * 0.18;      /* deg/frame — aggressive */
-
+      const speed    = 0.6 + Math.random() * 1.0;
+      const angle    = Math.random() * Math.PI * 2;
+      const rotSpd   = (Math.random() - 0.5) * 0.18;
       return {
         tile, w, h,
-        /* absolute canvas position — tiles roam freely, no tether to origin */
         x: baseLeft + (Math.random() - 0.5) * 60,
         y: baseTop  + (Math.random() - 0.5) * 60,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        rot: (Math.random() - 0.5) * 20,
-        rotSpd,
-        /* canvas boundaries this tile bounces within */
-        minX: -w * 0.4,
-        maxX: canvasW - w * 0.6,
-        minY: -h * 0.4,
-        maxY: canvasH - h * 0.6,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        rot: (Math.random() - 0.5) * 20, rotSpd,
+        minX: -w * 0.4, maxX: canvasW - w * 0.6,
+        minY: -h * 0.4, maxY: canvasH - h * 0.6,
       };
     });
 
-    const MAX_ROT = 20;   /* deg */
-
+    const MAX_ROT = 20;
     function step() {
-      /* Stop if we've left chaos view */
-      if (!grid.classList.contains('chaos-view')) {
-        chaosRafId = null;
-        tiles.forEach(t => { t.style.transform = ''; t.style.left = ''; t.style.top = ''; });
-        return;
-      }
-
+      if (!grid.classList.contains('chaos-view')) { chaosRafId = null; tiles.forEach(t => { t.style.transform = ''; t.style.left = ''; t.style.top = ''; }); return; }
       state.forEach(s => {
-        s.x += s.vx;
-        s.y += s.vy;
-        s.rot += s.rotSpd;
-
-        /* Bounce off canvas edges with a tiny random nudge on each bounce */
+        s.x += s.vx; s.y += s.vy; s.rot += s.rotSpd;
         if (s.x < s.minX) { s.x = s.minX; s.vx =  Math.abs(s.vx) + Math.random() * 0.1; }
         if (s.x > s.maxX) { s.x = s.maxX; s.vx = -Math.abs(s.vx) - Math.random() * 0.1; }
         if (s.y < s.minY) { s.y = s.minY; s.vy =  Math.abs(s.vy) + Math.random() * 0.1; }
         if (s.y > s.maxY) { s.y = s.maxY; s.vy = -Math.abs(s.vy) - Math.random() * 0.1; }
-
-        /* Reverse rotation at cap */
         if (Math.abs(s.rot) > MAX_ROT) s.rotSpd = -s.rotSpd * 0.92;
         s.rot = Math.max(-MAX_ROT, Math.min(MAX_ROT, s.rot));
-
-        /* Override layout position entirely — tile floats freely */
         s.tile.style.left      = `${s.x.toFixed(1)}px`;
         s.tile.style.top       = `${s.y.toFixed(1)}px`;
         s.tile.style.transform = `rotate(${s.rot.toFixed(2)}deg)`;
       });
-
       chaosRafId = requestAnimationFrame(step);
     }
-
     chaosRafId = requestAnimationFrame(step);
   }
 
@@ -1005,157 +1109,102 @@
     if (!btn) return;
     e.preventDefault();
     const item = items[Number(btn.dataset.idx)];
-    if (item) openLightbox(item, Number(btn.dataset.activeIdx));
+    if (item) openDetail(item, Number(btn.dataset.activeIdx));
   }
 
-  function applyRotation() {
-    if (!lbMediaWrap || !lbInnerEl || !lbImg) return;
-
-    /* Reset zoom state — panning offsets are invalid after a rotation change */
-    zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
-    lbInnerEl.classList.remove('lb-zoomed');
-    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); }
-
-    /* Clear previous dimension overrides */
-    lbImg.style.width     = '';
-    lbImg.style.height    = '';
-    lbImg.style.maxWidth  = '';
-    lbImg.style.maxHeight = '';
-    lbImg.style.objectFit = '';
-    lbMediaWrap.className = lbMediaWrap.className.replace(/\blb-rot-\d+\b/g, '').trim();
-
-    const cw = lbInnerEl.clientWidth;
-    const ch = lbInnerEl.clientHeight;
-
-    /* Always keep .rotating so the CSS transition fires on every angle change,
-     * including 180° → 270° and 270° → 0° (back to normal). The class is only
-     * removed when resetting to 0° with no animation needed (handled in showLb). */
-    lbImg.classList.add('rotating');
-
-    if (lbRotation === 90 || lbRotation === 270) {
-      lbImg.style.objectFit  = 'contain';
-      lbImg.style.width      = ch + 'px';
-      lbImg.style.height     = cw + 'px';
-      lbImg.style.maxWidth   = 'none';
-      lbImg.style.maxHeight  = 'none';
-    }
-
-    zoomApply();
-  }
-
+  /* ══════════════════════════════════════
+     INIT
+  ══════════════════════════════════════ */
   function init() {
-
-    /* ── View mode: grid / list / chaos ── */
-    const viewBtnGrid = document.getElementById('viewBtnGrid');
-    const viewBtnList = document.getElementById('viewBtnList');
+    const viewBtnGrid  = document.getElementById('viewBtnGrid');
+    const viewBtnList  = document.getElementById('viewBtnList');
     const viewBtnChaos = document.getElementById('viewBtnChaos');
 
     function applyView(view, skipRender) {
       currentView = view;
       grid.classList.toggle('list-view',  view === 'list');
       grid.classList.toggle('chaos-view', view === 'chaos');
-
-      // Update button active states
       [viewBtnGrid, viewBtnList, viewBtnChaos].forEach(btn => {
         if (btn) {
-          const isActive = btn.dataset.view === view;
-          btn.classList.toggle('active', isActive);
-          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          const on = btn.dataset.view === view;
+          btn.classList.toggle('active', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         }
       });
-
       if (!skipRender) {
-        if (view === 'chaos') {
-          renderChaos();
-        } else {
-          render();
-          if (window.Likes) window.Likes.hydrate();
-        }
+        if (view === 'chaos') { renderChaos(); }
+        else { render(); if (window.Likes) window.Likes.hydrate(); }
       }
     }
 
-    const isMobile = window.matchMedia('(max-width: 720px)').matches;
-    /* On mobile, restore grid or chaos but never list */
-    const savedView = localStorage.getItem('galleryView') || 'grid';
+    const isMobile    = window.matchMedia('(max-width:720px)').matches;
+    const savedView   = localStorage.getItem('galleryView') || 'grid';
     const restoredView = savedView === 'chaos' ? 'chaos'
                        : (savedView === 'list' || isMobile) ? 'grid'
                        : 'list';
     applyView(restoredView, true);
 
-    if (currentView === 'chaos') {
-      renderChaos();
-    } else {
-      render();
-      if (window.Likes) window.Likes.hydrate();
-    }
+    if (currentView === 'chaos') { renderChaos(); }
+    else { render(); if (window.Likes) window.Likes.hydrate(); }
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         setActiveFilter(pill.dataset.filter);
-        if (currentView === 'chaos') {
-          renderChaos();
-        } else {
-          render();
-          if (window.Likes) window.Likes.hydrate();
-        }
+        if (currentView === 'chaos') { renderChaos(); }
+        else { render(); if (window.Likes) window.Likes.hydrate(); }
       });
     });
 
-    // Add click handlers for each view button
     viewBtnGrid?.addEventListener('click', () => {
       if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
-      localStorage.setItem('galleryView', 'grid');
-      applyView('grid');
+      localStorage.setItem('galleryView','grid'); applyView('grid');
     });
-
     viewBtnList?.addEventListener('click', () => {
       if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
-      localStorage.setItem('galleryView', 'list');
-      applyView('list');
+      localStorage.setItem('galleryView','list'); applyView('list');
     });
-    
     viewBtnChaos?.addEventListener('click', () => {
-      localStorage.setItem('galleryView', 'chaos');
-      applyView('chaos');
+      localStorage.setItem('galleryView','chaos'); applyView('chaos');
     });
 
-    /* Card click → open lightbox (ignore like button clicks) */
+    /* Card click → open detail view */
     grid.addEventListener('click', (e) => {
-      if (e.target.closest('.like-btn')) return; // handled separately
+      if (e.target.closest('.like-btn')) return;
       const a = e.target.closest('a.card');
       if (!a) return;
       e.preventDefault();
       const item = items[Number(a.dataset.idx)];
-      if (item) openLightbox(item, Number(a.dataset.activeIdx));
+      if (item) openDetail(item, Number(a.dataset.activeIdx));
     });
 
-    /* Like button click */
+    /* Like button on cards */
     grid.addEventListener('click', (e) => {
       const btn = e.target.closest('.like-btn');
       if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       if (window.Likes) window.Likes.handleClick(btn);
     });
 
-    /* ── FIX 3 applied: use addTapHandler for all lightbox controls ── */
+    /* ── Detail view controls ── */
+    addTapHandler(dvBack, closeDetail);
 
-    addTapHandler(lbClose, closeLightbox);
+    addTapHandler(dvZoomBtn, (e) => { if (e.stopPropagation) e.stopPropagation(); zoomAdvance(); });
 
-    /* Zoom button */
-    if (lbZoomBtn) {
-      addTapHandler(lbZoomBtn, (e) => {
+    addTapHandler(dvRotateBtn, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      dvRotation += 90;
+      applyRotation();
+    });
+
+    addTapHandler(dvInfoBtn, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      infoVisible ? closeInfo() : openInfo();
+    });
+
+    if (window.Likes) {
+      addTapHandler(dvLikeBtn, (e) => {
         if (e.stopPropagation) e.stopPropagation();
-        zoomAdvance();
-      });
-    }
-
-    /* Lightbox like button */
-    if (lbLikeBtn && window.Likes) {
-      addTapHandler(lbLikeBtn, (e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        window.Likes.handleClick(lbLikeBtn).then(() => {
-          /* Sync the matching card tile like button */
+        window.Likes.handleClick(dvLikeBtn).then(() => {
           if (!currentItem) return;
           const likeId = window.Likes.slugify(currentItem.title || '');
           const cardBtn = grid.querySelector(`.like-btn[data-like-id="${likeId}"]`);
@@ -1164,108 +1213,49 @@
       });
     }
 
-    /* Rotate button */
-
-    /* applyRotation is now at module scope */
-
-    if (lbRotateBtn && lbMediaWrap) {
-      addTapHandler(lbRotateBtn, (e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        lbRotation = (lbRotation + 90) % 360;
-        applyRotation();
-      });
-    }
-
-    /* Info panel toggle */
-    if (lbInfoBtn && lbInfoPanel) {
-      addTapHandler(lbInfoBtn, (e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        infoPanelVisible = !infoPanelVisible;
-        infoPanelVisible ? openInfoPanel() : closeInfoPanel();
-        lbInfoBtn.setAttribute('aria-label', infoPanelVisible ? 'Hide image information' : 'Show image information');
-      });
-    }
-
-    addTapHandler(lbPrev, (e) => {
+    addTapHandler(dvPrev, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      if (lbList.length > 1) {
-        lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1);
-      } else {
-        goToItem(-1);
-      }
+      dvList.length > 1
+        ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1))
+        : goToItem(-1);
     });
 
-    addTapHandler(lbNext, (e) => {
+    addTapHandler(dvNext, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      if (lbList.length > 1) {
-        lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1);
-      } else {
-        goToItem(+1);
-      }
+      dvList.length > 1
+        ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
+        : goToItem(+1);
     });
 
-    /* Click outside inner panel closes lightbox */
-    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
-
-    /*
-     * FIX 4: Also handle tap-outside on mobile.
-     * The 'click' on the backdrop won't fire reliably on all mobile browsers
-     * when touch-action is manipulated. Add a touchend fallback on the backdrop.
-     */
-    lb.addEventListener('touchend', (e) => {
-      if (e.target === lb) {
-        e.preventDefault();
-        closeLightbox();
-      }
-    }, { passive: false });
-
-    /* Keyboard navigation + focus trap */
+    /* ── Keyboard ── */
     document.addEventListener('keydown', (e) => {
-      if (!lb.classList.contains('open')) return;
-      if (e.key === 'Escape')     closeLightbox();
-      if (e.key === 'ArrowLeft') {
-        lbList.length > 1
-          ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
+      if (!dv.classList.contains('open')) return;
+      if (e.key === 'Escape') closeDetail();
+      if (e.key === 'ArrowLeft')
+        dvList.length > 1
+          ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1))
           : goToItem(-1);
-      }
-      if (e.key === 'ArrowRight') {
-        lbList.length > 1
-          ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
+      if (e.key === 'ArrowRight')
+        dvList.length > 1
+          ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
           : goToItem(+1);
-      }
-      /* Focus trap — keep Tab cycling inside the lightbox */
+      /* Focus trap */
       if (e.key === 'Tab') {
-        const focusable = Array.from(lb.querySelectorAll(
-          'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        ));
+        const focusable = Array.from(dv.querySelectorAll('button:not([disabled]),[tabindex]:not([tabindex="-1"])'));
         if (!focusable.length) { e.preventDefault(); return; }
-        const first = focusable[0];
-        const last  = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-        } else {
-          if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
-        }
+        const first = focusable[0]; const last = focusable[focusable.length - 1];
+        if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+        else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
       }
     });
 
-    /* ── Touch swipe support ── */
-    let touchStartX   = 0;
-    let touchStartY   = 0;
-    let isTouchOnBtn  = false;   // FIX 5: track whether touch started on a button
-    const lbInner = lb.querySelector('.lightbox-inner');
+    /* ── Touch swipe on image panel ── */
+    let touchStartX = 0, touchStartY = 0, isTouchOnBtn = false;
 
-    lbInner.addEventListener('touchstart', (e) => {
-      /*
-       * FIX 5: If the touch started on a control button, flag it so the
-       * touchend swipe handler knows to ignore this touch entirely.
-       * This prevents a button tap being misread as a 0-delta swipe.
-       */
-      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn, .lightbox-like-btn, .lightbox-zoom-btn, .lightbox-rotate-btn');
+    dvImgPanel.addEventListener('touchstart', (e) => {
+      isTouchOnBtn = !!e.target.closest('button');
       touchStartX  = e.touches[0].clientX;
       touchStartY  = e.touches[0].clientY;
-
-      /* Start zoom-pan drag if zoomed and not on a button */
       if (zoomed() && !isTouchOnBtn && e.touches.length === 1) {
         zoomDragging = true;
         zoomStartX = e.touches[0].clientX - zoomOriginX;
@@ -1273,58 +1263,35 @@
       }
     }, { passive: true });
 
-    lbInner.addEventListener('touchmove', (e) => {
+    dvImgPanel.addEventListener('touchmove', (e) => {
       if (zoomed() && zoomDragging && e.touches.length === 1) {
         const rawDx = e.touches[0].clientX - zoomStartX;
         const rawDy = e.touches[0].clientY - zoomStartY;
         const { dx, dy } = rotateDelta(rawDx - zoomOriginX, rawDy - zoomOriginY);
         const c = zoomClamp(zoomOriginX + dx, zoomOriginY + dy);
         zoomOriginX = c.ox; zoomOriginY = c.oy;
-        // Re-anchor start so next move delta is relative
         zoomStartX = e.touches[0].clientX - zoomOriginX;
         zoomStartY = e.touches[0].clientY - zoomOriginY;
-        zoomApply();
-        e.preventDefault(); // prevent page scroll while panning
+        zoomApply(); e.preventDefault();
       }
     }, { passive: false });
 
-    lbInner.addEventListener('touchend', (e) => {
+    dvImgPanel.addEventListener('touchend', (e) => {
       zoomDragging = false;
-
-      // Ignore if this touch began on a button (handled by addTapHandler above)
-      if (isTouchOnBtn) {
-        isTouchOnBtn = false;
-        return;
-      }
-
-      // Don't swipe-navigate when zoomed
+      if (isTouchOnBtn) { isTouchOnBtn = false; return; }
       if (zoomed()) return;
-
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
-
-      // Only trigger if horizontal swipe is dominant and large enough
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        if (dx < 0) {
-          // Swipe left → next
-          lbList.length > 1
-            ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
-            : goToItem(+1);
-        } else {
-          // Swipe right → prev
-          lbList.length > 1
-            ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
-            : goToItem(-1);
-        }
+        if (dx < 0)
+          dvList.length > 1 ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1)) : goToItem(+1);
+        else
+          dvList.length > 1 ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1)) : goToItem(-1);
       }
     }, { passive: true });
 
-    /* Re-render chaos on resize so columns/sizes stay within viewport.
-     * Only trigger on WIDTH changes — mobile browsers fire resize when the
-     * address bar / bottom chrome shows or hides (height-only change), which
-     * would otherwise cause a jarring re-render on every scroll to edge. */
-    let resizeTimer;
-    let lastResizeW = window.innerWidth;
+    /* ── Resize: re-render chaos on width change ── */
+    let resizeTimer; let lastResizeW = window.innerWidth;
     window.addEventListener('resize', () => {
       if (currentView !== 'chaos') return;
       const newW = window.innerWidth;
