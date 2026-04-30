@@ -85,6 +85,8 @@
     }
     .win-sub { font-size: 15px; color: rgba(200,195,235,0.85); margin-bottom: 6px; }
     .win-sub--small { font-size: 13px; color: rgba(167,139,250,0.65); margin-bottom: 18px; }
+    /* Override global prints-link display rule inside the win card */
+    .win-card a { display: inline !important; }
   </style>
 </head>
 
@@ -117,6 +119,7 @@
         <button id="newBtn" type="button">New random image</button>
         <button id="peekBtn" type="button" title="Hold to peek">Peek</button>
       </div>
+      <p id="multiverseTeaser" style="display:none;margin:8px 0 0;font-size:12px;color:rgba(167,139,250,0.80);letter-spacing:0.04em;text-align:right;">Complete the Multiverse puzzle for a special prize...</p>
     </div>
 
     <div class="puzzle-board">
@@ -148,6 +151,7 @@
     <div class="win-badge">🌌</div>
     <h3>MULTIVERSE CONQUERED - WELL DONE!</h3>
     <p class="win-sub">You just solved a 10×10 puzzle - 100 pieces of the cosmos.<br>That is genuinely impressive.</p>
+    <p class="win-sub" style="margin-top:14px;text-align:center;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">MULTIVERSE10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
     <div class="win-actions">
       <button class="btn" type="button" id="winCloseBtn2">Close</button>
     </div>
@@ -191,26 +195,29 @@
     return await res.json();
   }
 
-  // Flatten to list of image candidates {file, title}
+  // One entry per gallery item — equal weighting across all items.
+  // Multi-image entries store the full images array; resolveCandidate picks one at random each time.
   function flattenImages(items){
     const out = [];
     for(const item of items){
-      if(item && Array.isArray(item.videos) && item.videos.length){
-        // Skip videos entirely
-      }
-
-      if(item && Array.isArray(item.images) && item.images.length){
-        for(const im of item.images){
-          if(im && im.file) out.push({ file: im.file, title: item.title || im.alt || "Untitled" });
-        }
+      if(!item) continue;
+      if(Array.isArray(item.videos) && item.videos.length &&
+         !(Array.isArray(item.images) && item.images.length) && !item.file) continue;
+      if(Array.isArray(item.images) && item.images.length){
+        const valid = item.images.filter(im => im && im.file);
+        if(valid.length) out.push({ images: valid, title: item.title || "Untitled" });
         continue;
       }
-
-      if(item && item.file && typeof item.file === 'string'){
+      if(item.file && typeof item.file === 'string'){
         out.push({ file: item.file, title: item.title || item.alt || "Untitled" });
       }
     }
     return out;
+  }
+
+  function resolveCandidate(c){
+    if(c.images){ const im = c.images[Math.floor(Math.random()*c.images.length)]; return {file:im.file,title:c.title}; }
+    return c;
   }
 
   function pickRandom(arr){
@@ -563,7 +570,7 @@ function resizeFx(){
   const winNewBtn2   = document.getElementById('winNewBtn2');
   const winCloseBtn2 = document.getElementById('winCloseBtn2');
   winNewBtn2   && winNewBtn2.addEventListener('click',   () => { hideWin(); startNewGame(); });
-  winCloseBtn2 && winCloseBtn2.addEventListener('click', hideWin);
+  winCloseBtn2 && winCloseBtn2.addEventListener('click', () => { hideWin(); stopWinAudio(); stopMultiverseFireworks(); });
 
   winOverlay && winOverlay.addEventListener('click', (e) => {
     if(e.target === winOverlay) hideWin();
@@ -955,7 +962,7 @@ function resizeCanvasToFit(){
       return;
     }
 
-    const pick = pickRandom(candidates);
+    const pick = resolveCandidate(pickRandom(candidates));
 
     // ✅ NEW: remember title for win message
     currentImageTitle = pick.title || "Untitled";
@@ -975,7 +982,11 @@ function resizeCanvasToFit(){
   }
 
   newBtn.addEventListener('click', startNewGame);
-  difficultyEl.addEventListener('change', startNewGame);
+  difficultyEl.addEventListener('change', () => {
+    const teaser = document.getElementById('multiverseTeaser');
+    if(teaser) teaser.style.display = difficultyEl.value === '10' ? 'block' : 'none';
+    startNewGame();
+  });
 
 let lastW = window.innerWidth;
 
