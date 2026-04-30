@@ -62,14 +62,26 @@
       0%,100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(167,139,250,0.5));  }
       50%      { transform: scale(1.12); filter: drop-shadow(0 0 24px rgba(167,139,250,0.9)); }
     }
+    @keyframes gradient-shift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes pulse-title {
+      0%,100% { transform: scale(1);    filter: drop-shadow(0 0 6px rgba(167,139,250,0.5));  }
+      50%      { transform: scale(1.04); filter: drop-shadow(0 0 18px rgba(167,139,250,0.9)); }
+    }
     .win-card--multiverse h3 {
       font-size: clamp(18px, 3vw, 26px);
       letter-spacing: 0.12em;
-      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa, #a78bfa);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 12px;
+      display: inline-block;
+      animation: gradient-shift 3s ease infinite, pulse-title 2s ease-in-out infinite;
     }
     .win-sub { font-size: 15px; color: rgba(200,195,235,0.85); margin-bottom: 6px; }
     .win-sub--small { font-size: 13px; color: rgba(167,139,250,0.65); margin-bottom: 18px; }
@@ -135,7 +147,7 @@
   <div class="win-card win-card--multiverse" role="dialog" aria-modal="true" aria-label="Multiverse puzzle completed">
     <div class="win-badge">🌌</div>
     <h3>MULTIVERSE CONQUERED - WELL DONE!</h3>
-    <p class="win-sub">You just solved a 10×10 puzzle - 100 pieces of the cosmos. That is genuinely impressive.</p>
+    <p class="win-sub">You just solved a 10×10 puzzle - 100 pieces of the cosmos.<br>That is genuinely impressive.</p>
     <div class="win-actions">
       <button class="btn" type="button" id="winCloseBtn2">Close</button>
     </div>
@@ -268,90 +280,129 @@ function resizeFx(){
 }
   window.addEventListener('resize', resizeFx);
 
+  let _fireworksRaf = null;
+  let _fireworksLaunchTimer = null;
+
+  function stopFireworks(){
+    if(_fireworksRaf){ cancelAnimationFrame(_fireworksRaf); _fireworksRaf = null; }
+    if(_fireworksLaunchTimer){ clearInterval(_fireworksLaunchTimer); _fireworksLaunchTimer = null; }
+    fxCtx.clearRect(0, 0, fx.width, fx.height);
+    fx.style.display = 'none';
+  }
+
   function fireworksBurst(){
+    stopFireworks();
     resizeFx();
     fx.style.display = 'block';
 
-     const W = window.innerWidth;
-     const H = window.innerHeight;
-
-    const bursts = 10; // more bursts
+    const DURATION = 36000;
+    const startTime = performance.now();
     const particles = [];
 
-    function addBurst(cx, cy){
-      const count = 110; // more particles per burst
-      for(let i=0; i<count; i++){
-        const a = Math.random() * Math.PI * 2;
-        const sp = 2 + Math.random() * 5.5;
+    function addBurst(){
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const cx = W * (0.15 + Math.random() * 0.7);
+      const cy = H * (0.12 + Math.random() * 0.5);
+      const count = 90 + Math.floor(Math.random() * 40);
+      const hue = Math.floor(Math.random() * 360);
+      for(let i = 0; i < count; i++){
+        const a  = Math.random() * Math.PI * 2;
+        const sp = 2 + Math.random() * 6;
+        const life = 110 + Math.floor(Math.random() * 70);
         particles.push({
           x: cx, y: cy,
           vx: Math.cos(a) * sp,
           vy: Math.sin(a) * sp,
-          g: 0.06 + Math.random() * 0.07,
-          life: 120 + Math.floor(Math.random() * 60), // much longer life
-          r: 1.5 + Math.random() * 2.3,
-          col: `hsl(${Math.floor(Math.random()*360)}, 90%, ${55 + Math.floor(Math.random()*20)}%)`
+          g:    0.055 + Math.random() * 0.07,
+          life: life,
+          maxLife: life,
+          r:    1.4 + Math.random() * 2.2,
+          col:  'hsl(' + (hue + Math.floor(Math.random()*40 - 20)) + ', 90%, ' + (52 + Math.floor(Math.random()*22)) + '%)'
         });
       }
     }
 
-    for(let b=0; b<bursts; b++){
-      const cx = W * (0.2 + Math.random() * 0.6);
-      const cy = H * (0.18 + Math.random() * 0.45);
-      addBurst(cx, cy);
-    }
+    addBurst(); addBurst(); addBurst();
 
-    let t = 0;
+    _fireworksLaunchTimer = setInterval(function(){
+      const elapsed = performance.now() - startTime;
+      if(elapsed >= DURATION){
+        clearInterval(_fireworksLaunchTimer);
+        _fireworksLaunchTimer = null;
+        return;
+      }
+      const n = 1 + Math.floor(Math.random() * 3);
+      for(let i = 0; i < n; i++) addBurst();
+    }, 600);
+
     function frame(){
-      t++;
-      fxCtx.clearRect(0,0,W,H);
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const elapsed = performance.now() - startTime;
 
-      for(let i=particles.length-1; i>=0; i--){
+      fxCtx.clearRect(0, 0, W, H);
+
+      for(let i = particles.length - 1; i >= 0; i--){
         const p = particles[i];
         p.life--;
         p.vy += p.g;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.985;
-        p.vy *= 0.985;
+        p.x  += p.vx;
+        p.y  += p.vy;
+        p.vx *= 0.984;
+        p.vy *= 0.984;
 
-        const alpha = Math.max(0, Math.min(1, p.life / 160));
+        const alpha = Math.max(0, p.life / (p.maxLife || 160));
         fxCtx.globalAlpha = alpha;
         fxCtx.fillStyle = p.col;
         fxCtx.beginPath();
-        fxCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        fxCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         fxCtx.fill();
 
-        if(p.life <= 0) particles.splice(i,1);
+        if(p.life <= 0) particles.splice(i, 1);
       }
 
       fxCtx.globalAlpha = 1;
 
-      if(particles.length && t < 320){  // ~3–4 seconds
-        requestAnimationFrame(frame);
-      }else{
-        fxCtx.clearRect(0,0,W,H);
+      if(elapsed < DURATION || particles.length){
+        _fireworksRaf = requestAnimationFrame(frame);
+      } else {
+        fxCtx.clearRect(0, 0, W, H);
         fx.style.display = 'none';
+        _fireworksRaf = null;
       }
     }
 
-    requestAnimationFrame(frame);
+    _fireworksRaf = requestAnimationFrame(frame);
+  }
+
+  let _mvRaf = null;
+  let _mvLaunchTimer = null;
+
+  function stopMultiverseFireworks(){
+    if(_mvRaf){ cancelAnimationFrame(_mvRaf); _mvRaf = null; }
+    if(_mvLaunchTimer){ clearInterval(_mvLaunchTimer); _mvLaunchTimer = null; }
+    fxCtx.clearRect(0, 0, fx.width, fx.height);
+    fx.style.display = 'none';
   }
 
   function multiverseFireworks(){
+    stopMultiverseFireworks();
     resizeFx();
     fx.style.display = 'block';
-    const W = window.innerWidth;
-    const H = window.innerHeight;
 
+    const DURATION = 80000;
+    const startTime = performance.now();
     const particles = [];
     const rockets   = [];
 
     function launchRocket(){
+      const W = window.innerWidth;
+      const H = window.innerHeight;
       const x       = W * (0.1 + Math.random() * 0.8);
       const targetY = H * (0.08 + Math.random() * 0.32);
       const dist    = H * 0.95 - targetY;
-      const frames  = 40 + Math.floor(Math.random() * 20); // fixed travel time
+      const frames  = 40 + Math.floor(Math.random() * 20);
       const hue     = Math.floor(Math.random() * 360);
       rockets.push({ x, y: H * 0.95, vy: -dist / frames, targetY, hue, trail: [], framesLeft: frames });
     }
@@ -369,7 +420,7 @@ function resizeFx(){
           g:    0.05 + Math.random() * 0.05,
           life: 150 + Math.floor(Math.random() * 80),
           r:    sparkle ? 3 + Math.random() * 2 : 1.5 + Math.random() * 2,
-          col:  `hsl(${r.hue + Math.floor(Math.random()*50 - 25)}, 100%, ${50 + Math.floor(Math.random()*25)}%)`,
+          col:  'hsl(' + (r.hue + Math.floor(Math.random()*50 - 25)) + ', 100%, ' + (50 + Math.floor(Math.random()*25)) + '%)',
           sparkle,
           spin:  (Math.random() - 0.5) * 0.35,
           angle: Math.random() * Math.PI * 2
@@ -377,20 +428,26 @@ function resizeFx(){
       }
     }
 
-    let launched = 0;
-    const totalRockets = 18;
-    const launchInterval = setInterval(() => {
-      launchRocket();
-      launched++;
-      if(launched >= totalRockets) clearInterval(launchInterval);
-    }, 180);
+    // Initial salvo then keep launching
+    for(let i = 0; i < 4; i++) launchRocket();
+    _mvLaunchTimer = setInterval(function(){
+      const elapsed = performance.now() - startTime;
+      if(elapsed >= DURATION){
+        clearInterval(_mvLaunchTimer);
+        _mvLaunchTimer = null;
+        return;
+      }
+      const n = 1 + Math.floor(Math.random() * 2);
+      for(let i = 0; i < n; i++) launchRocket();
+    }, 400);
 
-    let rafId;
     function frame(){
-      // Clear fully each frame — no black fill that would darken the page
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const elapsed = performance.now() - startTime;
+
       fxCtx.clearRect(0, 0, W, H);
 
-      // Rockets
       for(let i = rockets.length - 1; i >= 0; i--){
         const rk = rockets[i];
         rk.y += rk.vy;
@@ -398,25 +455,22 @@ function resizeFx(){
         rk.trail.push({ x: rk.x, y: rk.y });
         if(rk.trail.length > 10) rk.trail.shift();
 
-        // Glowing trail
         for(let j = 0; j < rk.trail.length; j++){
           const a = (j + 1) / rk.trail.length;
           fxCtx.globalAlpha = a * 0.85;
-          fxCtx.fillStyle = `hsl(${rk.hue}, 100%, 82%)`;
+          fxCtx.fillStyle = 'hsl(' + rk.hue + ', 100%, 82%)';
           fxCtx.beginPath();
           fxCtx.arc(rk.trail[j].x, rk.trail[j].y, 2.5 * a, 0, Math.PI * 2);
           fxCtx.fill();
         }
         fxCtx.globalAlpha = 1;
 
-        // Explode at target
         if(rk.framesLeft <= 0){
           explodeRocket(rk);
           rockets.splice(i, 1);
         }
       }
 
-      // Particles
       for(let i = particles.length - 1; i >= 0; i--){
         const p = particles[i];
         p.life--;
@@ -455,19 +509,36 @@ function resizeFx(){
 
       fxCtx.globalAlpha = 1;
 
-      const stillGoing = rockets.length || particles.length || launched < totalRockets;
-      if(stillGoing){
-        rafId = requestAnimationFrame(frame);
+      if(elapsed < DURATION || rockets.length || particles.length){
+        _mvRaf = requestAnimationFrame(frame);
       } else {
         fxCtx.clearRect(0, 0, W, H);
         fx.style.display = 'none';
+        _mvRaf = null;
       }
     }
-    rafId = requestAnimationFrame(frame);
+    _mvRaf = requestAnimationFrame(frame);
+  }
+
+  // ── Win audio ──
+  let _winAudio = null;
+
+  function playWinAudio(isMultiverse){
+    try {
+      if(_winAudio){ _winAudio.pause(); _winAudio.currentTime = 0; }
+      _winAudio = new Audio(isMultiverse ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
+      _winAudio.volume = isMultiverse ? 1.0 : 0.85;
+      _winAudio.play().catch(() => {});
+    } catch(e) {}
+  }
+
+  function stopWinAudio(){
+    if(_winAudio){ _winAudio.pause(); _winAudio.currentTime = 0; _winAudio = null; }
   }
 
   function showWin(){
     const isMultiverse = grid === 10;
+    playWinAudio(isMultiverse);
     if(isMultiverse){
       multiverseFireworks();
       if(winOverlay){
@@ -476,11 +547,6 @@ function resizeFx(){
       }
     } else {
       fireworksBurst();
-      if(winOverlay){
-        winOverlay.classList.remove('multiverse');
-        winOverlay.classList.add('show');
-        winOverlay.setAttribute('aria-hidden','false');
-      }
     }
   }
 
@@ -878,6 +944,9 @@ function resizeCanvasToFit(){
   peekBtn.addEventListener('pointercancel', stopPeek);
 
   function startNewGame(){
+    stopWinAudio();
+    stopFireworks();
+    stopMultiverseFireworks();
     msg.classList.remove('win');
     grid = parseInt(difficultyEl.value, 10) || 4;
 
