@@ -459,6 +459,24 @@
     .set-dot.done{ background: rgba(52,211,153,0.60); border-color: rgba(52,211,153,0.40); }
     .set-dot.active{ background: rgba(167,139,250,0.70); border-color: rgba(167,139,250,0.50); }
 
+    @keyframes quiz-prize-gradient {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .quiz-prize-line {
+      margin-top: 8px !important;
+      font-size: 13px !important;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #a78bfa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: quiz-prize-gradient 4s ease infinite;
+      opacity: 1 !important;
+    }
     @media (max-width: 560px){
       .tf-options{ grid-template-columns: 1fr; }
       .quiz-card{ padding: 20px 16px 18px; }
@@ -481,7 +499,8 @@
 
     <div class="quiz-top">
       <div>
-        <div class="sub">See how much you know about the universe by answering this space trivia quiz: 10 questions per set over 7 sets. Questions are in various formats: multiple choice, drag and drop, true or false.</div>
+        <div class="sub">See how much you know about the universe by answering this space trivia quiz: 10 questions per set over 5 sets. Questions are in various formats: multiple choice, drag and drop, true or false.</div>
+        <div class="sub quiz-prize-line">⭐ Score 10/10 in all 5 sets to win a special prize ⭐</div>
       </div>
       <div class="quiz-meta">
         <span class="quiz-badge" id="setBadge">Set 1 of 10</span>
@@ -651,6 +670,7 @@ let totalScore = 0;
 let totalCorrect = 0;
 let totalAnswered = 0;
 let answered = false;
+let perfectSets = 0;
 
 // drag state
 let dragWord = null;
@@ -662,16 +682,18 @@ function shuffle(arr){
 
 function init(){
   shuffled = shuffle([...ALL_QUESTIONS]);
-  // Chunk into sets of 10
+  // Chunk into sets of 10, limit to 5 sets
   sets = [];
   for(let i=0; i<shuffled.length; i+=QUESTIONS_PER_SET){
     sets.push(shuffled.slice(i, i+QUESTIONS_PER_SET));
+    if(sets.length >= 5) break;
   }
   currentSet = 0;
   currentQ = 0;
   totalScore = 0;
   totalCorrect = 0;
   totalAnswered = 0;
+  perfectSets = 0;
   updateMeta();
   showIntro();
 }
@@ -716,6 +738,8 @@ function showIntro(){
   document.getElementById('introDesc').textContent = currentSet === 0
     ? ''
     : `You scored ${setScore} on the last set. Keep it up!`;
+
+
 
   updateProgress();
   updateMeta();
@@ -1034,6 +1058,9 @@ function showEndScreen(){
   document.getElementById('scoreLabel').textContent = lb.label;
   document.getElementById('scoreSub').textContent   = lb.sub;
 
+  // Track perfect sets
+  if(correct === 10) perfectSets++;
+
   // Trigger celebration for 8, 9 or 10/10
   if(typeof window._quizCelebrate === 'function') window._quizCelebrate(correct);
 
@@ -1041,6 +1068,10 @@ function showEndScreen(){
   const nextSetBtn = document.getElementById('nextSetBtn');
   if(isLastSet){
     nextSetBtn.textContent = 'Play Again 🔄';
+    // Grand finale — all 5 sets perfect
+    if(perfectSets === 5){
+      setTimeout(() => showQuizGrandFinale(), 800);
+    }
   } else {
     nextSetBtn.textContent = `Next Set →`;
   }
@@ -1258,12 +1289,41 @@ document.getElementById('startSetBtn').addEventListener('click', startSet);
     window._quizStopCelebrate = stopAll;
   })();
 
+  function showQuizGrandFinale(){
+    const overlay = document.getElementById('quizFinaleOverlay');
+    if(overlay){ overlay.style.display = 'flex'; }
+    if(typeof window._quizCelebrate === 'function') window._quizCelebrate(10);
+  }
+
+  document.getElementById('quizFinaleCloseBtn') && document.getElementById('quizFinaleCloseBtn').addEventListener('click', () => {
+    const overlay = document.getElementById('quizFinaleOverlay');
+    if(overlay) overlay.style.display = 'none';
+    if(typeof window._quizStopCelebrate === 'function') window._quizStopCelebrate();
+  });
+
 // Boot
 init();
 
 })();
 </script>
 
+<!-- Quiz grand finale overlay -->
+<div id="quizFinaleOverlay" style="display:none;position:fixed;inset:0;background:rgba(5,4,20,0.88);z-index:10060;display:none;align-items:center;justify-content:center;">
+  <div style="width:min(480px,calc(100%-28px));border-radius:24px;padding:32px 28px;text-align:center;border:1px solid rgba(167,139,250,0.45);background:linear-gradient(160deg,rgba(10,8,40,0.98),rgba(30,10,60,0.98));box-shadow:0 24px 70px rgba(0,0,0,.75),0 0 60px rgba(167,139,250,0.25);">
+    <div style="font-size:52px;line-height:1;margin-bottom:12px;animation:quizBadgePulse 1.8s ease-in-out infinite;">🏆</div>
+    <h3 style="margin:0 0 14px;font-size:clamp(17px,3vw,24px);letter-spacing:0.10em;background:linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6,#60a5fa,#a78bfa);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;animation:quizGradShift 3s ease infinite,quizTitlePulse 2s ease-in-out infinite;">PERFECT SCORE — LEGENDARY!</h3>
+    <p style="font-size:15px;color:rgba(200,195,235,0.85);margin:0 0 8px;">You scored 10/10 in all 5 sets.<br>You truly know your cosmos.</p>
+    <p style="font-size:14px;color:rgba(200,195,235,0.85);margin:14px 0 0;text-align:center;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">QUIZ10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;display:inline!important;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
+    <div style="margin-top:22px;">
+      <button id="quizFinaleCloseBtn" type="button" class="btn" style="border-radius:999px;padding:10px 24px;">Close</button>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes quizBadgePulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 8px rgba(167,139,250,0.5))}50%{transform:scale(1.12);filter:drop-shadow(0 0 24px rgba(167,139,250,0.9))}}
+@keyframes quizGradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes quizTitlePulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 6px rgba(167,139,250,0.5))}50%{transform:scale(1.04);filter:drop-shadow(0 0 18px rgba(167,139,250,0.9))}}
+</style>
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 

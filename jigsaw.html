@@ -87,6 +87,23 @@
     .win-sub--small { font-size: 13px; color: rgba(167,139,250,0.65); margin-bottom: 18px; }
     /* Override global prints-link display rule inside the win card */
     .win-card a { display: inline !important; }
+    /* Multiverse teaser gradient */
+    @keyframes mv-prize-gradient {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .mv-prize-line {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #a78bfa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: mv-prize-gradient 4s ease infinite;
+    }
   </style>
 </head>
 
@@ -119,7 +136,7 @@
         <button id="newBtn" type="button">New random image</button>
         <button id="peekBtn" type="button" title="Hold to peek">Peek</button>
       </div>
-      <p id="multiverseTeaser" style="display:none;margin:8px 0 0;font-size:12px;color:rgba(167,139,250,0.80);letter-spacing:0.04em;text-align:right;">Complete the Multiverse puzzle for a special prize...</p>
+      <p id="multiverseTeaser" class="mv-prize-line" style="display:none;margin:8px 0 0;text-align:right;">⭐ Complete the Multiverse puzzle for a special prize ⭐</p>
     </div>
 
     <div class="puzzle-board">
