@@ -13,7 +13,7 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 **Pages:**
 - **Home** — landing page
 - **Gallery** — deep-sky image collection
-- **Prints** — available prints for purchase
+- **Prints** — available prints for enquiry
 - **Gear** — equipment used for capture and processing
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
