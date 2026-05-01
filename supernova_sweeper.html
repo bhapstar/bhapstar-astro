@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Supernova Sweeper — bhapstar Astrophotography</title>
+
+  <!-- Favicon & theme -->
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bhapstar.com/supernova_sweeper.html" />
+
+  <!-- Primary SEO -->
+  <meta name="description" content="Play Supernova Sweeper — cosmic minesweeper using deep-sky astrophotography images. Clear the field without triggering a supernova." />
+  <meta name="author" content="Bhapinder Singh" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Supernova Sweeper — bhapstar Astrophotography" />
+  <meta property="og:description" content="Play Supernova Sweeper — cosmic minesweeper using deep-sky astrophotography images. Clear the field without triggering a supernova." />
+  <meta property="og:image"       content="https://bhapstar.com/images/og-preview.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/supernova_sweeper.html" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Supernova Sweeper — bhapstar Astrophotography" />
+  <meta name="twitter:description" content="Clear the cosmic field without triggering a supernova." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/og-preview.jpg" />
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ══════════════════════════════════════════
+       MINESWEEPER PAGE STYLES
+    ══════════════════════════════════════════ */
+
+    /* ── Top controls bar ── */
+    .mine-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* ── HUD row: mines remaining / timer ── */
+    .mine-hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-variant-numeric: tabular-nums;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--accent, #a78bfa);
+      margin-bottom: 10px;
+      user-select: none;
+    }
+    .mine-hud span { font-size: 18px; }
+
+    /* ── Board wrapper ── */
+    .mine-board-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── The grid itself ── */
+    #mineGrid {
+      display: grid;
+      gap: 2px;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* ── Individual cells ── */
+    .cell {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background 80ms, transform 60ms;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+
+    /* Unrevealed cell */
+    .cell.hidden {
+      background: rgba(167,139,250,0.14);
+      border: 1px solid rgba(167,139,250,0.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .cell.hidden:hover { background: rgba(167,139,250,0.24); }
+    .cell.hidden:active { transform: scale(0.93); }
+
+    /* Flagged cell */
+    .cell.flagged {
+      background: rgba(167,139,250,0.14);
+      border: 1px solid rgba(167,139,250,0.5);
+    }
+    .cell.flagged::after {
+      content: '🚩';
+      font-size: 14px;
+    }
+
+    /* Revealed — safe */
+    .cell.revealed {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: default;
+    }
+
+    /* Revealed image tile */
+    .cell.revealed .tile-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 1;
+    }
+
+    /* Number overlay on image */
+    .cell.revealed .tile-num {
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    /* Number colours */
+    .n1 { color: #60a5fa; }
+    .n2 { color: #34d399; }
+    .n3 { color: #f87171; }
+    .n4 { color: #a78bfa; }
+    .n5 { color: #fb923c; }
+    .n6 { color: #22d3ee; }
+    .n7 { color: #e879f9; }
+    .n8 { color: #f9a8d4; }
+
+    /* Mine cell */
+    .cell.mine-hit {
+      background: rgba(239,68,68,0.35) !important;
+      border-color: rgba(239,68,68,0.6) !important;
+      box-shadow: 0 0 12px rgba(255,180,0,0.6) !important;
+    }
+    .cell.mine-hit::after {
+      content: '🌟';
+      font-size: 16px;
+      filter: drop-shadow(0 0 6px rgba(255,200,0,0.9));
+    }
+    .cell.mine-revealed::after {
+      content: '🌟';
+      font-size: 14px;
+      opacity: 0.75;
+    }
+    .cell.mine-revealed {
+      background: rgba(239,68,68,0.12);
+      border-color: rgba(239,68,68,0.3);
+      cursor: default;
+    }
+    /* Wrong flag */
+    .cell.wrong-flag::after {
+      content: '❌';
+      font-size: 14px;
+    }
+
+    /* ── Teaser line ── */
+    .sv-prize-line {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #a78bfa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: sv-gradient 4s ease infinite;
+      text-align: right;
+      margin: 8px 0 0;
+    }
+    @keyframes sv-gradient {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ── Win / Lose overlays ── */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,4,20,0.82);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .win-overlay.show { display: flex; }
+
+    .win-card {
+      background: linear-gradient(160deg, rgba(10,8,40,0.97), rgba(20,10,50,0.97));
+      border: 1px solid rgba(167,139,250,0.35);
+      border-radius: 16px;
+      padding: 36px 32px 28px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 60px rgba(0,0,0,0.55);
+    }
+    .win-card h3 {
+      font-size: clamp(18px, 3.5vw, 26px);
+      margin-bottom: 10px;
+      color: #e2e0ff;
+    }
+    .win-card p { color: rgba(200,195,235,0.82); font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+    .win-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+    /* Image reveal inside win card */
+    .win-img-wrap {
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 4/3;
+      margin: 0 auto 16px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(167,139,250,0.3);
+      box-shadow: 0 0 30px rgba(167,139,250,0.15);
+    }
+    .win-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      animation: win-img-reveal 1.2s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes win-img-reveal {
+      from { transform: scale(1.1); opacity: 0; filter: blur(12px); }
+      to   { transform: scale(1);   opacity: 1; filter: blur(0); }
+    }
+
+    /* Supernova (lose) card */
+    .lose-card {
+      border-color: rgba(239,68,68,0.4);
+      background: linear-gradient(160deg, rgba(30,5,5,0.97), rgba(15,5,20,0.97));
+    }
+    .lose-card h3 { color: #fca5a5; }
+
+    /* Ultra-hard win card */
+    .win-card--ultra {
+      border-color: rgba(167,139,250,0.55);
+      background: linear-gradient(160deg, rgba(10,8,40,0.98), rgba(30,10,60,0.98));
+      box-shadow: 0 0 60px rgba(167,139,250,0.25), 0 0 120px rgba(96,165,250,0.12);
+    }
+    .win-badge {
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 10px;
+      animation: pulse-badge 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%,100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(167,139,250,0.5)); }
+      50%     { transform: scale(1.12); filter: drop-shadow(0 0 24px rgba(167,139,250,0.9)); }
+    }
+    .win-card--ultra h3 {
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: sv-gradient 3s ease infinite;
+      display: inline-block;
+    }
+    .win-card a { display: inline !important; }
+
+    /* ── Status message ── */
+    #mineMsg {
+      font-size: 13px;
+      color: rgba(200,195,235,0.65);
+      margin-top: 10px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    /* Mobile: shrink cells */
+    @media (max-width: 480px) {
+      .cell { width: 26px; height: 26px; font-size: 11px; }
+      #mineGrid { gap: 2px; }
+    }
+    @media (max-width: 380px) {
+      .cell { width: 22px; height: 22px; font-size: 10px; }
+    }
+
+    /* ── Right-click hint ── */
+    .hint-text {
+      font-size: 12px;
+      color: rgba(167,139,250,0.5);
+      text-align: center;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body class="page-puzzle">
+
+<div id="siteHeader"></div>
+
+<main class="section">
+  <div class="puzzle-wrap">
+
+    <div class="section-head">
+      <h2>Supernova Sweeper</h2>
+    </div>
+
+    <div class="puzzle-top">
+      <div>
+        <div class="sub">Clear the cosmic field without triggering a supernova. Right-click (or long-press) to flag suspected supernovae. A random deep-sky image is hidden beneath — revealed as you clear cells.</div>
+      </div>
+
+      <div class="puzzle-controls">
+        <select id="difficulty" aria-label="Difficulty">
+          <option value="nebula">Solar System (easy) — 9×9, 10 mines</option>
+          <option value="galaxy" selected>Galaxy (medium) — 16×16, 40 mines</option>
+          <option value="universe">Universe (hard) — 16×30, 99 mines</option>
+          <option value="supernova">Multiverse (ultra hard) — 20×35, 165 mines</option>
+        </select>
+        <button id="newGameBtn" type="button">New game</button>
+      </div>
+
+      <p id="supernovaTeaser" class="sv-prize-line" style="display:none;">⭐ Complete the Multiverse puzzle for a special prize ⭐</p>
+    </div>
+
+    <!-- HUD -->
+    <div class="mine-hud">
+      <div>🌟 <span id="mineCount">0</span> remaining</div>
+      <div>⏱ <span id="timer">0</span>s</div>
+    </div>
+
+    <!-- Board -->
+    <div class="mine-board-wrap">
+      <div id="mineGrid" role="grid" aria-label="Minesweeper grid"></div>
+    </div>
+
+    <p id="mineMsg">Choose a difficulty and click New game.</p>
+    <p class="hint-text">Right-click or long-press to place / remove a flag 🚩</p>
+
+  </div>
+</main>
+
+<div id="siteFooter"></div>
+
+<!-- ═══════════════════════════════════════════════
+     WIN OVERLAY (regular difficulties)
+══════════════════════════════════════════════════ -->
+<div class="win-overlay" id="winOverlay" aria-hidden="true">
+  <div class="win-card" role="dialog" aria-modal="true" aria-label="Field cleared">
+    <div class="win-img-wrap">
+      <img id="winImg" src="" alt="Revealed deep-sky image" />
+    </div>
+    <h3>Field cleared! 🌌</h3>
+    <p id="winText">You navigated the cosmic minefield without triggering a supernova.</p>
+    <p id="winImgTitle" style="font-weight:600;color:#a78bfa;"></p>
+    <div class="win-actions">
+      <button class="btn primary" type="button" id="winNewBtn">Play again</button>
+      <button class="btn" type="button" id="winCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ULTRA-HARD WIN OVERLAY
+══════════════════════════════════════════════════ -->
+<div class="win-overlay" id="ultraWinOverlay" aria-hidden="true">
+  <div class="win-card win-card--ultra" role="dialog" aria-modal="true" aria-label="Supernova cleared">
+    <div class="win-badge">🌟</div>
+    <div class="win-img-wrap">
+      <img id="ultraWinImg" src="" alt="Revealed deep-sky image" />
+    </div>
+    <h3>MULTIVERSE CLEARED</h3>
+    <p>You just navigated 165 mines across a 20×35 cosmic field. That is genuinely extraordinary.</p>
+    <p style="margin-top:14px;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">SUPERNOVA10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
+    <p id="ultraWinImgTitle" style="font-weight:600;color:#a78bfa;margin-top:8px;"></p>
+    <div class="win-actions">
+      <button class="btn" type="button" id="ultraWinCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     LOSE OVERLAY
+══════════════════════════════════════════════════ -->
+<div class="win-overlay" id="loseOverlay" aria-hidden="true">
+  <div class="win-card lose-card" role="dialog" aria-modal="true" aria-label="Triggered a supernova">
+    <div style="font-size:52px;line-height:1;margin-bottom:10px;">🌟</div>
+    <h3>Supernova!</h3>
+    <p>You triggered a supernova and collapsed the nebula. The cosmos is unforgiving.</p>
+    <div class="win-actions">
+      <button class="btn primary" type="button" id="loseNewBtn">Try again</button>
+      <button class="btn" type="button" id="loseCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- FX canvas (fireworks) -->
+<canvas id="fxCanvas" style="display:none;position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10050;" aria-hidden="true"></canvas>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SUPERNOVA SWEEPER — bhapstar Astrophotography
+   Cosmic-themed minesweeper with deep-sky image reveal behind
+   the cleared cells. Image is loaded from gallery-data.json
+   (same source as jigsaw).
+
+   Difficulties:
+     nebula    — 9×9,  10 mines  (solar system / easy)
+     galaxy    — 16×16, 40 mines (galaxy / medium)
+     universe  — 16×30, 99 mines (universe / hard)
+     supernova — 20×35, 165 mines (multiverse / ultra hard)
+
+   Win:  All non-mine cells revealed  → image reveals fully
+   Lose: Supernova cell clicked       → board reveals all supernovae
+═══════════════════════════════════════════════════════════════ */
+
+(async function () {
+
+  /* ─── GALLERY DATA ─────────────────────────────────── */
+  let candidates = [];
+  let currentImage = null; // { file, title }
+
+  async function loadGallery() {
+    try {
+      const res = await fetch('gallery-data.json', { cache: 'default' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const items = await res.json();
+      candidates = flattenImages(items);
+    } catch (e) {
+      console.warn('Minesweeper: could not load gallery data', e);
+    }
+  }
+
+  function flattenImages(items) {
+    const out = [];
+    for (const item of items) {
+      if (!item) continue;
+      if (Array.isArray(item.images) && item.images.length) {
+        const valid = item.images.filter(im => im && im.file);
+        if (valid.length) out.push({ images: valid, title: item.title || 'Untitled' });
+        continue;
+      }
+      if (item.file && typeof item.file === 'string') {
+        out.push({ file: item.file, title: item.title || item.alt || 'Untitled' });
+      }
+    }
+    return out;
+  }
+
+  function pickRandomImage() {
+    if (!candidates.length) return null;
+    const c = candidates[Math.floor(Math.random() * candidates.length)];
+    if (c.images) {
+      const im = c.images[Math.floor(Math.random() * c.images.length)];
+      return { file: im.file, title: c.title };
+    }
+    return { file: c.file, title: c.title };
+  }
+
+  /* ─── DIFFICULTY CONFIG ────────────────────────────── */
+  const CONFIGS = {
+    nebula:    { rows: 9,  cols: 9,  mines: 10  },
+    galaxy:    { rows: 16, cols: 16, mines: 40  },
+    universe:  { rows: 16, cols: 30, mines: 99  },
+    supernova: { rows: 20, cols: 35, mines: 165 },
+  };
+
+  /* ─── DOM REFS ─────────────────────────────────────── */
+  const grid       = document.getElementById('mineGrid');
+  const mineCount  = document.getElementById('mineCount');
+  const timerEl    = document.getElementById('timer');
+  const mineMsg    = document.getElementById('mineMsg');
+  const diffSel    = document.getElementById('difficulty');
+  const newGameBtn = document.getElementById('newGameBtn');
+  const snTeaser   = document.getElementById('supernovaTeaser');
+
+  const winOverlay  = document.getElementById('winOverlay');
+  const winImg      = document.getElementById('winImg');
+  const winImgTitle = document.getElementById('winImgTitle');
+  const winNewBtn   = document.getElementById('winNewBtn');
+  const winCloseBtn = document.getElementById('winCloseBtn');
+  const winText     = document.getElementById('winText');
+
+  const ultraOverlay   = document.getElementById('ultraWinOverlay');
+  const ultraWinImg    = document.getElementById('ultraWinImg');
+  const ultraImgTitle  = document.getElementById('ultraWinImgTitle');
+  const ultraCloseBtn  = document.getElementById('ultraWinCloseBtn');
+
+  const loseOverlay = document.getElementById('loseOverlay');
+  const loseNewBtn  = document.getElementById('loseNewBtn');
+  const loseCloseBtn= document.getElementById('loseCloseBtn');
+
+  /* ─── GAME STATE ───────────────────────────────────── */
+  let rows, cols, totalMines;
+  let cells        = [];  // flat array of cell objects
+  let cellEls      = [];  // flat array of <div> elements
+  let mineSet      = new Set(); // indices of mine cells
+  let revealed     = 0;
+  let flagCount    = 0;
+  let gameOver     = false;
+  let started      = false; // first click starts timer
+  let timerVal     = 0;
+  let timerInterval= null;
+  let difficulty   = 'galaxy';
+
+  /* ─── FIREWORKS ────────────────────────────────────── */
+  const fxCanvas = document.getElementById('fxCanvas');
+  const fxCtx    = fxCanvas.getContext('2d');
+  let _fwRaf = null, _fwTimer = null;
+  let _mvRaf = null, _mvTimer = null;
+
+  function resizeFx() {
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    const vw = window.innerWidth, vh = window.innerHeight;
+    fxCanvas.style.width  = vw + 'px';
+    fxCanvas.style.height = vh + 'px';
+    fxCanvas.width  = Math.floor(vw * dpr);
+    fxCanvas.height = Math.floor(vh * dpr);
+    fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', resizeFx);
+
+  function stopFx() {
+    if (_fwRaf) { cancelAnimationFrame(_fwRaf); _fwRaf = null; }
+    if (_fwTimer) { clearInterval(_fwTimer); _fwTimer = null; }
+    if (_mvRaf) { cancelAnimationFrame(_mvRaf); _mvRaf = null; }
+    if (_mvTimer) { clearInterval(_mvTimer); _mvTimer = null; }
+    fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+    fxCanvas.style.display = 'none';
+  }
+
+  /* Regular fireworks (easy/medium/hard win) */
+  function fireworksBurst() {
+    stopFx();
+    resizeFx();
+    fxCanvas.style.display = 'block';
+    const DURATION = 28000;
+    const start = performance.now();
+    const particles = [];
+
+    function addBurst() {
+      const W = window.innerWidth, H = window.innerHeight;
+      const cx = W * (0.15 + Math.random() * 0.7);
+      const cy = H * (0.12 + Math.random() * 0.5);
+      const hue = Math.floor(Math.random() * 360);
+      for (let i = 0; i < 80 + Math.floor(Math.random() * 40); i++) {
+        const a = Math.random() * Math.PI * 2;
+        const sp = 2 + Math.random() * 5;
+        const life = 100 + Math.floor(Math.random() * 60);
+        particles.push({
+          x: cx, y: cy,
+          vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+          g: 0.055 + Math.random() * 0.07,
+          life, maxLife: life,
+          r: 1.4 + Math.random() * 2,
+          col: `hsl(${hue + Math.floor(Math.random()*40-20)},90%,${52+Math.floor(Math.random()*22)}%)`
+        });
+      }
+    }
+
+    addBurst(); addBurst();
+    _fwTimer = setInterval(() => {
+      if (performance.now() - start >= DURATION) { clearInterval(_fwTimer); _fwTimer = null; return; }
+      for (let i = 0; i < 1 + Math.floor(Math.random() * 2); i++) addBurst();
+    }, 900);
+
+    function frame() {
+      const W = window.innerWidth, H = window.innerHeight;
+      const elapsed = performance.now() - start;
+      fxCtx.clearRect(0, 0, W, H);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.life--; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= 0.984; p.vy *= 0.984;
+        const alpha = Math.max(0, p.life / p.maxLife);
+        fxCtx.globalAlpha = alpha;
+        fxCtx.fillStyle = p.col;
+        fxCtx.beginPath();
+        fxCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        fxCtx.fill();
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      fxCtx.globalAlpha = 1;
+      if (elapsed < DURATION || particles.length) { _fwRaf = requestAnimationFrame(frame); }
+      else { fxCtx.clearRect(0, 0, W, H); fxCanvas.style.display = 'none'; _fwRaf = null; }
+    }
+    _fwRaf = requestAnimationFrame(frame);
+  }
+
+  /* Supernova ultra fireworks — rockets + full show */
+  function supernovaFireworks() {
+    stopFx();
+    resizeFx();
+    fxCanvas.style.display = 'block';
+    const DURATION = 80000;
+    const start = performance.now();
+    const particles = [], rockets = [];
+
+    function launchRocket() {
+      const W = window.innerWidth, H = window.innerHeight;
+      const x = W * (0.1 + Math.random() * 0.8);
+      const targetY = H * (0.08 + Math.random() * 0.32);
+      const dist = H * 0.95 - targetY;
+      const frames = 40 + Math.floor(Math.random() * 20);
+      rockets.push({ x, y: H * 0.95, vy: -dist / frames, targetY, hue: Math.floor(Math.random()*360), trail: [], framesLeft: frames });
+    }
+
+    function explodeRocket(r) {
+      for (let i = 0; i < 160; i++) {
+        const a = (Math.PI * 2 / 160) * i + (Math.random() - 0.5) * 0.3;
+        const sp = 2.5 + Math.random() * 6;
+        const sparkle = Math.random() < 0.3;
+        particles.push({
+          x: r.x, y: r.y,
+          vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+          g: 0.05 + Math.random() * 0.05,
+          life: 150 + Math.floor(Math.random() * 80),
+          r: sparkle ? 3 + Math.random() * 2 : 1.5 + Math.random() * 2,
+          col: `hsl(${r.hue + Math.floor(Math.random()*50-25)},100%,${50+Math.floor(Math.random()*25)}%)`,
+          sparkle, spin: (Math.random()-0.5)*0.35, angle: Math.random()*Math.PI*2
+        });
+      }
+    }
+
+    for (let i = 0; i < 4; i++) launchRocket();
+    _mvTimer = setInterval(() => {
+      if (performance.now() - start >= DURATION) { clearInterval(_mvTimer); _mvTimer = null; return; }
+      for (let i = 0; i < 1 + Math.floor(Math.random() * 2); i++) launchRocket();
+    }, 400);
+
+    function frame() {
+      const W = window.innerWidth, H = window.innerHeight;
+      const elapsed = performance.now() - start;
+      fxCtx.clearRect(0, 0, W, H);
+
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const rk = rockets[i];
+        rk.y += rk.vy; rk.framesLeft--;
+        rk.trail.push({ x: rk.x, y: rk.y });
+        if (rk.trail.length > 10) rk.trail.shift();
+        for (let j = 0; j < rk.trail.length; j++) {
+          const a = (j + 1) / rk.trail.length;
+          fxCtx.globalAlpha = a * 0.85;
+          fxCtx.fillStyle = `hsl(${rk.hue},100%,82%)`;
+          fxCtx.beginPath(); fxCtx.arc(rk.trail[j].x, rk.trail[j].y, 2.5*a, 0, Math.PI*2); fxCtx.fill();
+        }
+        fxCtx.globalAlpha = 1;
+        if (rk.framesLeft <= 0) { explodeRocket(rk); rockets.splice(i, 1); }
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.life--; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= 0.984; p.vy *= 0.984;
+        if (p.sparkle) { p.angle += p.spin; }
+        const alpha = Math.max(0, p.life / (p.maxLife || 180));
+        fxCtx.globalAlpha = alpha;
+        fxCtx.fillStyle = p.col;
+        fxCtx.beginPath(); fxCtx.arc(p.x, p.y, p.r, 0, Math.PI*2); fxCtx.fill();
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      fxCtx.globalAlpha = 1;
+      if (elapsed < DURATION || particles.length || rockets.length) { _mvRaf = requestAnimationFrame(frame); }
+      else { fxCtx.clearRect(0, 0, W, H); fxCanvas.style.display = 'none'; _mvRaf = null; }
+    }
+    _mvRaf = requestAnimationFrame(frame);
+  }
+
+  /* ─── AUDIO ─────────────────────────────────────────── */
+  let _winAudio = null;
+
+  function playWinChime(big = false) {
+    try {
+      if (_winAudio) { _winAudio.pause(); _winAudio.currentTime = 0; }
+      _winAudio = new Audio(big ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
+      _winAudio.volume = big ? 1.0 : 0.85;
+      _winAudio.play().catch(() => {});
+    } catch (e) { /* audio blocked */ }
+  }
+
+  function stopWinAudio() {
+    if (_winAudio) { _winAudio.pause(); _winAudio.currentTime = 0; _winAudio = null; }
+  }
+
+  function playExplosion() {
+    try {
+      const audio = new Audio('sounds/explosion.mp3');
+      audio.volume = 0.85;
+      audio.play().catch(() => {});
+    } catch (e) { /* audio blocked */ }
+  }
+
+  function playFlag() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc  = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'triangle';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+    } catch (e) { /* audio blocked */ }
+  }
+
+  /* ─── TIMER ─────────────────────────────────────────── */
+  function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+      timerVal++;
+      timerEl.textContent = timerVal;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  function resetTimer() {
+    stopTimer();
+    timerVal = 0;
+    timerEl.textContent = '0';
+  }
+
+  /* ─── BOARD SETUP ───────────────────────────────────── */
+  function idx(r, c) { return r * cols + c; }
+
+  function buildBoard() {
+    grid.innerHTML = '';
+    cells   = [];
+    cellEls = [];
+
+    // Calculate cell size to fit viewport
+    const availW = Math.min(window.innerWidth - 32, 900);
+    const availH  = window.innerHeight * 0.55;
+    const cellW   = Math.floor(Math.min(availW / cols, availH / rows, 32));
+    const cellSize = Math.max(cellW, 20); // at least 20px
+
+    grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    grid.style.gridTemplateRows    = `repeat(${rows}, ${cellSize}px)`;
+
+    // Build cell data
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        cells.push({ r, c, mine: false, revealed: false, flagged: false, adj: 0 });
+      }
+    }
+
+    // Build DOM
+    for (let i = 0; i < cells.length; i++) {
+      const div = document.createElement('div');
+      div.className = 'cell hidden';
+      div.dataset.idx = i;
+      div.setAttribute('role', 'gridcell');
+      div.setAttribute('aria-label', 'Hidden cell');
+
+      // Style: cell size
+      div.style.width  = cellSize + 'px';
+      div.style.height = cellSize + 'px';
+      div.style.fontSize = Math.max(10, cellSize * 0.4) + 'px';
+
+      attachCellEvents(div, i);
+      grid.appendChild(div);
+      cellEls.push(div);
+    }
+  }
+
+  function placeMines(safeIdx) {
+    mineSet.clear();
+    const safe = new Set([safeIdx, ...getNeighbours(safeIdx)]);
+    while (mineSet.size < totalMines) {
+      const r = Math.floor(Math.random() * cells.length);
+      if (!safe.has(r)) mineSet.add(r);
+    }
+    for (const i of mineSet) cells[i].mine = true;
+
+    // Compute adjacency
+    for (let i = 0; i < cells.length; i++) {
+      if (cells[i].mine) continue;
+      cells[i].adj = getNeighbours(i).filter(n => mineSet.has(n)).length;
+    }
+  }
+
+  function getNeighbours(i) {
+    const { r, c } = cells[i];
+    const nb = [];
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) nb.push(idx(nr, nc));
+      }
+    }
+    return nb;
+  }
+
+  /* ─── CELL STYLING ──────────────────────────────────── */
+  function styleRevealedCell(i) {
+    const cell = cells[i];
+    const el   = cellEls[i];
+    el.className = 'cell revealed';
+    el.setAttribute('aria-label', cell.adj > 0 ? `${cell.adj} adjacent mines` : 'Clear cell');
+
+    // Image tile
+    if (currentImage) {
+      const tileDiv = document.createElement('div');
+      tileDiv.className = 'tile-img';
+      const pct_c = (cell.c / (cols - 1)) * 100;
+      const pct_r = (cell.r / (rows - 1)) * 100;
+      tileDiv.style.backgroundImage = `url("${currentImage.file}")`;
+      tileDiv.style.backgroundPosition = `${pct_c}% ${pct_r}%`;
+      // Scale so the whole image maps across the grid
+      tileDiv.style.backgroundSize = `${cols * 100}% ${rows * 100}%`;
+      el.appendChild(tileDiv);
+    }
+
+    // Number overlay
+    if (cell.adj > 0) {
+      const numDiv = document.createElement('div');
+      numDiv.className = `tile-num n${cell.adj}`;
+      numDiv.textContent = cell.adj;
+      el.appendChild(numDiv);
+    }
+  }
+
+  /* ─── REVEAL LOGIC ───────────────────────────────────── */
+  function revealCell(i) {
+    const cell = cells[i];
+    if (cell.revealed || cell.flagged) return;
+
+    cell.revealed = true;
+    revealed++;
+    styleRevealedCell(i);
+
+    // Flood-fill for empty cells
+    if (cell.adj === 0 && !cell.mine) {
+      for (const n of getNeighbours(i)) {
+        if (!cells[n].revealed && !cells[n].flagged) revealCell(n);
+      }
+    }
+  }
+
+  function handleClick(i) {
+    if (gameOver) return;
+    const cell = cells[i];
+    if (cell.flagged || cell.revealed) return;
+
+    // First click — place mines, start timer
+    if (!started) {
+      started = true;
+      placeMines(i);
+      startTimer();
+    }
+
+    if (cell.mine) {
+      // HIT — game over
+      cell.revealed = true;
+      const el = cellEls[i];
+      el.className = 'cell mine-hit';
+      el.setAttribute('aria-label', 'Supernova triggered');
+      gameOver = true;
+      stopTimer();
+      playExplosion();
+      revealAllMines(i);
+      setTimeout(() => showLose(), 600);
+      return;
+    }
+
+    revealCell(i);
+    checkWin();
+  }
+
+  function toggleFlag(i) {
+    if (gameOver) return;
+    const cell = cells[i];
+    if (cell.revealed) return;
+
+    cell.flagged = !cell.flagged;
+    const el = cellEls[i];
+    if (cell.flagged) {
+      el.className = 'cell flagged';
+      el.setAttribute('aria-label', 'Flagged cell');
+      flagCount++;
+    } else {
+      el.className = 'cell hidden';
+      el.setAttribute('aria-label', 'Hidden cell');
+      flagCount--;
+    }
+    updateMineCount();
+    playFlag();
+  }
+
+  function revealAllMines(hitIdx) {
+    for (const i of mineSet) {
+      if (i === hitIdx) continue;
+      const cell = cells[i];
+      const el   = cellEls[i];
+      if (cell.flagged) continue; // correct flag — leave it
+      el.className = 'cell mine-revealed';
+      el.setAttribute('aria-label', 'Supernova');
+    }
+    // Wrong flags
+    for (let i = 0; i < cells.length; i++) {
+      if (cells[i].flagged && !cells[i].mine) {
+        cellEls[i].className = 'cell wrong-flag';
+      }
+    }
+  }
+
+  function checkWin() {
+    const total = rows * cols;
+    if (revealed === total - totalMines) {
+      gameOver = true;
+      stopTimer();
+      // Flag all remaining mines
+      for (const i of mineSet) {
+        if (!cells[i].flagged) {
+          cells[i].flagged = true;
+          cellEls[i].className = 'cell flagged';
+        }
+      }
+      mineCount.textContent = '0';
+      setTimeout(() => showWin(), 400);
+    }
+  }
+
+  function updateMineCount() {
+    mineCount.textContent = Math.max(0, totalMines - flagCount);
+  }
+
+  /* ─── CELL EVENTS ───────────────────────────────────── */
+  let longPressTimer = null;
+  let longPressTriggered = false;
+
+  function attachCellEvents(el, i) {
+    // Left click — reveal
+    el.addEventListener('click', (e) => {
+      if (longPressTriggered) { longPressTriggered = false; return; }
+      e.preventDefault();
+      handleClick(i);
+    });
+
+    // Right click — flag
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      toggleFlag(i);
+    });
+
+    // Long press for mobile flagging
+    el.addEventListener('pointerdown', () => {
+      longPressTriggered = false;
+      longPressTimer = setTimeout(() => {
+        longPressTriggered = true;
+        toggleFlag(i);
+      }, 500);
+    });
+
+    el.addEventListener('pointerup',     () => clearTimeout(longPressTimer));
+    el.addEventListener('pointercancel', () => clearTimeout(longPressTimer));
+    el.addEventListener('pointermove',   () => clearTimeout(longPressTimer));
+  }
+
+  /* ─── OVERLAYS ──────────────────────────────────────── */
+  function showLose() {
+    loseOverlay.classList.add('show');
+    loseOverlay.setAttribute('aria-hidden', 'false');
+    mineMsg.textContent = '🌟 Supernova! Try again.';
+  }
+
+  function hideLose() {
+    loseOverlay.classList.remove('show');
+    loseOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  function showWin() {
+    const isUltra = difficulty === 'supernova';
+    const imgSrc  = currentImage ? currentImage.file : '';
+    const title   = currentImage ? currentImage.title : '';
+
+    if (isUltra) {
+      ultraWinImg.src = imgSrc;
+      ultraImgTitle.textContent = title ? `"${title}"` : '';
+      ultraOverlay.classList.add('show');
+      ultraOverlay.setAttribute('aria-hidden', 'false');
+      supernovaFireworks();
+      playWinChime(true);
+    } else {
+      winImg.src = imgSrc;
+      winImgTitle.textContent = title ? `"${title}"` : '';
+      winText.textContent = `You cleared the ${difficulty} field in ${timerVal}s without triggering a supernova.`;
+      winOverlay.classList.add('show');
+      winOverlay.setAttribute('aria-hidden', 'false');
+      fireworksBurst();
+      playWinChime(false);
+    }
+
+    mineMsg.textContent = `✨ Field cleared in ${timerVal}s!`;
+  }
+
+  function hideWin() {
+    winOverlay.classList.remove('show');
+    winOverlay.setAttribute('aria-hidden', 'true');
+    ultraOverlay.classList.remove('show');
+    ultraOverlay.setAttribute('aria-hidden', 'true');
+    stopFx();
+  }
+
+  /* ─── BUTTON EVENTS ─────────────────────────────────── */
+  winNewBtn.addEventListener('click',    () => { hideWin(); startNewGame(); });
+  winCloseBtn.addEventListener('click',  () => hideWin());
+  ultraCloseBtn.addEventListener('click',() => hideWin());
+  loseNewBtn.addEventListener('click',   () => { hideLose(); startNewGame(); });
+  loseCloseBtn.addEventListener('click', () => hideLose());
+  newGameBtn.addEventListener('click',   startNewGame);
+
+  diffSel.addEventListener('change', () => {
+    const isSupernova = diffSel.value === 'supernova';
+    snTeaser.style.display = isSupernova ? 'block' : 'none';
+    startNewGame();
+  });
+
+  /* ─── NEW GAME ──────────────────────────────────────── */
+  function startNewGame() {
+    stopFx();
+    stopWinAudio();
+    hideWin();
+    hideLose();
+    resetTimer();
+
+    difficulty  = diffSel.value;
+    const cfg   = CONFIGS[difficulty];
+    rows        = cfg.rows;
+    cols        = cfg.cols;
+    totalMines  = cfg.mines;
+    revealed    = 0;
+    flagCount   = 0;
+    gameOver    = false;
+    started     = false;
+
+    currentImage = pickRandomImage();
+
+    // Preload image if we have one
+    if (currentImage) {
+      const im = new Image();
+      im.crossOrigin = 'anonymous';
+      im.src = currentImage.file;
+    }
+
+    mineCount.textContent = totalMines;
+    timerEl.textContent   = '0';
+    mineMsg.textContent   = 'Click any cell to begin — supernovae are placed after your first click.';
+
+    buildBoard();
+  }
+
+  /* ─── INIT ──────────────────────────────────────────── */
+  await loadGallery();
+  startNewGame();
+
+})();
+</script>
+
+<script>
+/* Burger menu controller */
+(function () {
+  const burger = document.querySelector('.burger');
+  const menu   = document.querySelector('.nav-menu');
+  if (!burger || !menu) return;
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', (e) => {
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)) {
+      menu.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { menu.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); }
+  });
+})();
+</script>
+
+<script src="protect-images.js"></script>
+<script src="partials/partials.js"></script>
+
+</body>
+</html>
