@@ -72,6 +72,8 @@
       position: relative;
       display: flex;
       justify-content: center;
+      width: 100%;
+      overflow-x: auto;
     }
 
     /* ── The grid itself ── */
@@ -212,6 +214,9 @@
       z-index: 10000;
       align-items: center;
       justify-content: center;
+      overflow-y: auto;
+      padding: 16px;
+      box-sizing: border-box;
     }
     .win-overlay.show { display: flex; }
 
@@ -219,11 +224,13 @@
       background: linear-gradient(160deg, rgba(10,8,40,0.97), rgba(20,10,50,0.97));
       border: 1px solid rgba(167,139,250,0.35);
       border-radius: 16px;
-      padding: 36px 32px 28px;
+      padding: 36px 24px 28px;
       max-width: 420px;
-      width: 90%;
+      width: 100%;
+      box-sizing: border-box;
       text-align: center;
       box-shadow: 0 8px 60px rgba(0,0,0,0.55);
+      margin: auto;
     }
     .win-card h3 {
       font-size: clamp(18px, 3.5vw, 26px);
@@ -754,10 +761,10 @@
     cellEls = [];
 
     // Calculate cell size to fit viewport
-    const availW = Math.min(window.innerWidth - 32, 900);
+    const availW = Math.min(window.innerWidth - 16, 900);
     const availH  = window.innerHeight * 0.55;
     const cellW   = Math.floor(Math.min(availW / cols, availH / rows, 32));
-    const cellSize = Math.max(cellW, 20); // at least 20px
+    const cellSize = Math.max(cellW, 8); // floor at 8px so tiny grids don't disappear
 
     grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
     grid.style.gridTemplateRows    = `repeat(${rows}, ${cellSize}px)`;
