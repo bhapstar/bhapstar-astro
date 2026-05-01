@@ -17,6 +17,7 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 - **Gear** — equipment used for capture and processing
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
+- **Supernova Sweeper** — supernova sweeping clearing game
 
 ---
 
