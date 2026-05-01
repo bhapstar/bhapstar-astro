@@ -73,7 +73,7 @@
       display: flex;
       justify-content: center;
       width: 100%;
-      overflow-x: auto;
+      overflow-y: auto;
     }
 
     /* ── The grid itself ── */
@@ -335,9 +335,9 @@
       <div class="puzzle-controls">
         <select id="difficulty" aria-label="Difficulty">
           <option value="nebula">Solar System (easy) — 10×10, 10 mines</option>
-          <option value="galaxy" selected>Galaxy (medium) — 10×25, 40 mines</option>
-          <option value="universe">Universe (hard) — 10×48, 99 mines</option>
-          <option value="supernova">Multiverse (ultra hard) — 10×70, 165 mines</option>
+          <option value="galaxy" selected>Galaxy (medium) — 25×10, 40 mines</option>
+          <option value="universe">Universe (hard) — 48×10, 99 mines</option>
+          <option value="supernova">Multiverse (ultra hard) — 70×10, 165 mines</option>
         </select>
         <button id="newGameBtn" type="button">New game</button>
       </div>
@@ -392,7 +392,7 @@
       <img id="ultraWinImg" src="" alt="Revealed deep-sky image" />
     </div>
     <h3>MULTIVERSE CLEARED</h3>
-    <p>You just navigated 165 mines across a 10×70 cosmic field. That is genuinely extraordinary.</p>
+    <p>You just navigated 165 mines across a 70×10 cosmic field. That is genuinely extraordinary.</p>
     <p style="margin-top:14px;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">SUPERNOVA10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
     <p id="ultraWinImgTitle" style="font-weight:600;color:#a78bfa;margin-top:8px;"></p>
     <div class="win-actions">
@@ -428,9 +428,9 @@
 
    Difficulties:
      nebula    — 10×10, 10 mines  (solar system / easy)
-     galaxy    — 10×25, 40 mines (galaxy / medium)
-     universe  — 10×48, 99 mines (universe / hard)
-     supernova — 10×70, 165 mines (multiverse / ultra hard)
+     galaxy    — 25×10, 40 mines (galaxy / medium)
+     universe  — 48×10, 99 mines (universe / hard)
+     supernova — 70×10, 165 mines (multiverse / ultra hard)
 
    Win:  All non-mine cells revealed  → image reveals fully
    Lose: Supernova cell clicked       → board reveals all supernovae
@@ -482,9 +482,9 @@
   /* ─── DIFFICULTY CONFIG ────────────────────────────── */
   const CONFIGS = {
     nebula:    { rows: 10, cols: 10, mines: 10  },
-    galaxy:    { rows: 10, cols: 25, mines: 40  },
-    universe:  { rows: 10, cols: 48, mines: 99  },
-    supernova: { rows: 10, cols: 70, mines: 165 },
+    galaxy:    { rows: 25, cols: 10, mines: 40  },
+    universe:  { rows: 48, cols: 10, mines: 99  },
+    supernova: { rows: 70, cols: 10, mines: 165 },
   };
 
   /* ─── DOM REFS ─────────────────────────────────────── */
@@ -751,14 +751,11 @@
     cells   = [];
     cellEls = [];
 
-    // Cell size is always based on a 10-column grid so all difficulties
-    // have identical cell sizes — wider boards scroll horizontally.
+    // All grids are 10 cols wide — cell size is driven by width so all
+    // difficulties have identical cell sizes. Taller boards scroll vertically.
     const BASE_COLS = 10;
     const availW   = Math.min(window.innerWidth - 16, 900);
-    const availH   = window.innerHeight * 0.55;
-    const byWidth  = Math.floor(availW / BASE_COLS);
-    const byHeight = Math.floor(availH / rows);
-    const cellSize = Math.min(byWidth, byHeight, 32);
+    const cellSize = Math.min(Math.floor(availW / BASE_COLS), 32);
 
     grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
     grid.style.gridTemplateRows    = `repeat(${rows}, ${cellSize}px)`;
