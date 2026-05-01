@@ -306,15 +306,6 @@
       text-align: center;
     }
 
-    /* Mobile: shrink cells */
-    @media (max-width: 480px) {
-      .cell { width: 26px; height: 26px; font-size: 11px; }
-      #mineGrid { gap: 2px; }
-    }
-    @media (max-width: 380px) {
-      .cell { width: 22px; height: 22px; font-size: 10px; }
-    }
-
     /* ── Right-click hint ── */
     .hint-text {
       font-size: 12px;
@@ -343,10 +334,10 @@
 
       <div class="puzzle-controls">
         <select id="difficulty" aria-label="Difficulty">
-          <option value="nebula">Solar System (easy) — 9×9, 10 mines</option>
-          <option value="galaxy" selected>Galaxy (medium) — 16×16, 40 mines</option>
-          <option value="universe">Universe (hard) — 16×30, 99 mines</option>
-          <option value="supernova">Multiverse (ultra hard) — 20×35, 165 mines</option>
+          <option value="nebula">Solar System (easy) — 10×10, 10 mines</option>
+          <option value="galaxy" selected>Galaxy (medium) — 10×25, 40 mines</option>
+          <option value="universe">Universe (hard) — 10×48, 99 mines</option>
+          <option value="supernova">Multiverse (ultra hard) — 10×70, 165 mines</option>
         </select>
         <button id="newGameBtn" type="button">New game</button>
       </div>
@@ -401,7 +392,7 @@
       <img id="ultraWinImg" src="" alt="Revealed deep-sky image" />
     </div>
     <h3>MULTIVERSE CLEARED</h3>
-    <p>You just navigated 165 mines across a 20×35 cosmic field. That is genuinely extraordinary.</p>
+    <p>You just navigated 165 mines across a 10×70 cosmic field. That is genuinely extraordinary.</p>
     <p style="margin-top:14px;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">SUPERNOVA10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
     <p id="ultraWinImgTitle" style="font-weight:600;color:#a78bfa;margin-top:8px;"></p>
     <div class="win-actions">
@@ -436,10 +427,10 @@
    (same source as jigsaw).
 
    Difficulties:
-     nebula    — 9×9,  10 mines  (solar system / easy)
-     galaxy    — 16×16, 40 mines (galaxy / medium)
-     universe  — 16×30, 99 mines (universe / hard)
-     supernova — 20×35, 165 mines (multiverse / ultra hard)
+     nebula    — 10×10, 10 mines  (solar system / easy)
+     galaxy    — 10×25, 40 mines (galaxy / medium)
+     universe  — 10×48, 99 mines (universe / hard)
+     supernova — 10×70, 165 mines (multiverse / ultra hard)
 
    Win:  All non-mine cells revealed  → image reveals fully
    Lose: Supernova cell clicked       → board reveals all supernovae
@@ -490,10 +481,10 @@
 
   /* ─── DIFFICULTY CONFIG ────────────────────────────── */
   const CONFIGS = {
-    nebula:    { rows: 9,  cols: 9,  mines: 10  },
-    galaxy:    { rows: 16, cols: 16, mines: 40  },
-    universe:  { rows: 16, cols: 30, mines: 99  },
-    supernova: { rows: 20, cols: 35, mines: 165 },
+    nebula:    { rows: 10, cols: 10, mines: 10  },
+    galaxy:    { rows: 10, cols: 25, mines: 40  },
+    universe:  { rows: 10, cols: 48, mines: 99  },
+    supernova: { rows: 10, cols: 70, mines: 165 },
   };
 
   /* ─── DOM REFS ─────────────────────────────────────── */
@@ -760,11 +751,14 @@
     cells   = [];
     cellEls = [];
 
-    // Calculate cell size to fit viewport
-    const availW = Math.min(window.innerWidth - 16, 900);
-    const availH  = window.innerHeight * 0.55;
-    const cellW   = Math.floor(Math.min(availW / cols, availH / rows, 32));
-    const cellSize = Math.max(cellW, 8); // floor at 8px so tiny grids don't disappear
+    // Cell size is always based on a 10-column grid so all difficulties
+    // have identical cell sizes — wider boards scroll horizontally.
+    const BASE_COLS = 10;
+    const availW   = Math.min(window.innerWidth - 16, 900);
+    const availH   = window.innerHeight * 0.55;
+    const byWidth  = Math.floor(availW / BASE_COLS);
+    const byHeight = Math.floor(availH / rows);
+    const cellSize = Math.min(byWidth, byHeight, 32);
 
     grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
     grid.style.gridTemplateRows    = `repeat(${rows}, ${cellSize}px)`;
