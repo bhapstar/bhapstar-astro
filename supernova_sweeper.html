@@ -195,8 +195,10 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: sv-gradient 4s ease infinite;
-      text-align: right;
+      text-align: center;
       margin: 8px 0 0;
+      white-space: normal;
+      font-size: clamp(11px, 3vw, 13px);
     }
     @keyframes sv-gradient {
       0%   { background-position: 0% 50%; }
@@ -329,7 +331,7 @@
 
     <div class="puzzle-top">
       <div>
-        <div class="sub">Clear the cosmic field without triggering a supernova. Right-click (or long-press) to flag suspected supernovae. A random deep-sky image is hidden beneath — revealed as you clear cells.</div>
+        <div class="sub">Clear the cosmic field without triggering a supernova. Right-click (or long-press) to flag suspected supernovae. Deep-sky thumbnails from the gallery are hidden in 5×5 patches beneath the cells — piece them together as you clear the field.</div>
       </div>
 
       <div class="puzzle-controls">
@@ -342,7 +344,7 @@
         <button id="newGameBtn" type="button">New game</button>
       </div>
 
-      <p id="supernovaTeaser" class="sv-prize-line" style="display:none;">⭐ Complete the Multiverse puzzle for a special prize ⭐</p>
+      <p id="supernovaTeaser" class="sv-prize-line" style="display:none;">⭐&nbsp;Complete the Multiverse puzzle for a special prize&nbsp;⭐</p>
     </div>
 
     <!-- HUD -->
@@ -439,44 +441,67 @@
 (async function () {
 
   /* ─── GALLERY DATA ─────────────────────────────────── */
-  let candidates = [];
-  let currentImage = null; // { file, title }
+  const BLOCK = 5; // each NxN block of cells gets its own thumbnail image
+  let thumbFiles = [];   // list of thumb filenames from images/thumbs/
+  let blockImages = [];  // flat array indexed by block number → thumb URL
+  let currentImage = null; // kept for win overlay (picks one of the block images)
 
   async function loadGallery() {
+    // Try gallery-data.json first to get thumb paths
     try {
       const res = await fetch('gallery-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
-      candidates = flattenImages(items);
+      thumbFiles = flattenThumbs(items);
     } catch (e) {
       console.warn('Minesweeper: could not load gallery data', e);
     }
+    // Fallback: try a few numbered thumbs from images/thumbs/
+    if (!thumbFiles.length) {
+      thumbFiles = Array.from({ length: 20 }, (_, i) =>
+        `images/thumbs/thumb-${String(i+1).padStart(2,'0')}.jpg`);
+    }
   }
 
-  function flattenImages(items) {
+  function flattenThumbs(items) {
     const out = [];
     for (const item of items) {
       if (!item) continue;
+      // Prefer explicit thumb field, then fall back to file
       if (Array.isArray(item.images) && item.images.length) {
-        const valid = item.images.filter(im => im && im.file);
-        if (valid.length) out.push({ images: valid, title: item.title || 'Untitled' });
+        for (const im of item.images) {
+          if (im && im.thumb) out.push(im.thumb);
+          else if (im && im.file) out.push(im.file);
+        }
         continue;
       }
-      if (item.file && typeof item.file === 'string') {
-        out.push({ file: item.file, title: item.title || item.alt || 'Untitled' });
-      }
+      if (item.thumb) { out.push(item.thumb); continue; }
+      if (item.file)  { out.push(item.file); }
     }
     return out;
   }
 
-  function pickRandomImage() {
-    if (!candidates.length) return null;
-    const c = candidates[Math.floor(Math.random() * candidates.length)];
-    if (c.images) {
-      const im = c.images[Math.floor(Math.random() * c.images.length)];
-      return { file: im.file, title: c.title };
-    }
-    return { file: c.file, title: c.title };
+  function pickRandomThumb() {
+    if (!thumbFiles.length) return 'images/thumbs/thumb-01.jpg';
+    return thumbFiles[Math.floor(Math.random() * thumbFiles.length)];
+  }
+
+  // Build blockImages array: one random thumb per 5×5 block
+  function assignBlockImages() {
+    const blocksAcross = Math.ceil(cols / BLOCK);
+    const blocksDown   = Math.ceil(rows / BLOCK);
+    const count        = blocksAcross * blocksDown;
+    blockImages = Array.from({ length: count }, () => pickRandomThumb());
+    // Pick one for the win overlay
+    currentImage = { file: blockImages[Math.floor(Math.random() * count)], title: '' };
+  }
+
+  // Return the thumb URL for the block that contains cell (r, c)
+  function thumbForCell(r, c) {
+    const blocksAcross = Math.ceil(cols / BLOCK);
+    const bx = Math.floor(c / BLOCK);
+    const by = Math.floor(r / BLOCK);
+    return blockImages[by * blocksAcross + bx] || pickRandomThumb();
   }
 
   /* ─── DIFFICULTY CONFIG ────────────────────────────── */
@@ -514,6 +539,7 @@
 
   /* ─── GAME STATE ───────────────────────────────────── */
   let rows, cols, totalMines;
+  let currentCellSize = 32; // updated by buildBoard, used by styleRevealedCell
   let cells        = [];  // flat array of cell objects
   let cellEls      = [];  // flat array of <div> elements
   let mineSet      = new Set(); // indices of mine cells
@@ -756,6 +782,7 @@
     const BASE_COLS = 10;
     const availW   = Math.min(window.innerWidth - 16, 900);
     const cellSize = Math.min(Math.floor(availW / BASE_COLS), 32);
+    currentCellSize = cellSize; // store for styleRevealedCell
 
     grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
     grid.style.gridTemplateRows    = `repeat(${rows}, ${cellSize}px)`;
@@ -822,16 +849,24 @@
     el.className = 'cell revealed';
     el.setAttribute('aria-label', cell.adj > 0 ? `${cell.adj} adjacent mines` : 'Clear cell');
 
-    // Image tile
-    if (currentImage) {
+    // Image tile — each 5×5 block of cells shares one thumbnail image
+    if (blockImages.length) {
       const tileDiv = document.createElement('div');
       tileDiv.className = 'tile-img';
-      const pct_c = (cell.c / (cols - 1)) * 100;
-      const pct_r = (cell.r / (rows - 1)) * 100;
-      tileDiv.style.backgroundImage = `url("${currentImage.file}")`;
-      tileDiv.style.backgroundPosition = `${pct_c}% ${pct_r}%`;
-      // Scale so the whole image maps across the grid
-      tileDiv.style.backgroundSize = `${cols * 100}% ${rows * 100}%`;
+      const gap   = 2;
+      const step  = currentCellSize + gap;
+      const bSize = BLOCK * step - gap; // pixel size a single 5×5 block occupies
+      // Position within the block (0–4 in each axis)
+      const localC = cell.c % BLOCK;
+      const localR = cell.r % BLOCK;
+      const offX   = localC * step;
+      const offY   = localR * step;
+      tileDiv.style.backgroundImage    = `url("${thumbForCell(cell.r, cell.c)}")`;
+      // Scale thumb to cover the whole 5×5 block, then offset to show this cell's slice
+      tileDiv.style.backgroundSize     = `${bSize}px ${bSize}px`;
+      tileDiv.style.backgroundRepeat   = 'no-repeat';
+      tileDiv.style.backgroundPosition = `-${offX}px -${offY}px`;
+      tileDiv.style.imageRendering     = 'auto';
       el.appendChild(tileDiv);
     }
 
@@ -1058,13 +1093,13 @@
     gameOver    = false;
     started     = false;
 
-    currentImage = pickRandomImage();
+    assignBlockImages();
 
-    // Preload image if we have one
-    if (currentImage) {
+    // Preload block images
+    for (const src of blockImages) {
       const im = new Image();
       im.crossOrigin = 'anonymous';
-      im.src = currentImage.file;
+      im.src = src;
     }
 
     mineCount.textContent = totalMines;
