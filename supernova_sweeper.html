@@ -989,31 +989,49 @@
   let longPressTriggered = false;
 
   function attachCellEvents(el, i) {
-    // Left click — reveal
-    el.addEventListener('click', (e) => {
-      if (longPressTriggered) { longPressTriggered = false; return; }
-      e.preventDefault();
-      handleClick(i);
+    // Reveal on pointerdown for instant response (no 300ms click delay)
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 && e.pointerType === 'mouse') return; // ignore non-left mouse buttons
+      longPressTriggered = false;
+      // Long press for mobile flagging
+      longPressTimer = setTimeout(() => {
+        longPressTriggered = true;
+        toggleFlag(i);
+      }, 500);
+      // Only fire reveal on primary button / touch
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      // Defer slightly so longPressTriggered can be set if needed,
+      // but use a 0ms timeout so it still beats the 300ms click delay
+      // For mouse: fire immediately (no ambiguity)
+      if (e.pointerType === 'mouse') {
+        handleClick(i);
+      }
+      // Touch: handled in pointerup (after long-press window) — see below
     });
 
-    // Right click — flag
+    el.addEventListener('pointerup', (e) => {
+      clearTimeout(longPressTimer);
+      if (longPressTriggered) { longPressTriggered = false; return; }
+      // Touch/stylus reveal fires here — after confirming it wasn't a long press
+      if (e.pointerType !== 'mouse') {
+        handleClick(i);
+      }
+    });
+
+    el.addEventListener('pointercancel', () => {
+      clearTimeout(longPressTimer);
+      longPressTriggered = false;
+    });
+    el.addEventListener('pointermove',   () => clearTimeout(longPressTimer));
+
+    // Right click — flag (mouse only)
     el.addEventListener('contextmenu', (e) => {
       e.preventDefault();
       toggleFlag(i);
     });
 
-    // Long press for mobile flagging
-    el.addEventListener('pointerdown', () => {
-      longPressTriggered = false;
-      longPressTimer = setTimeout(() => {
-        longPressTriggered = true;
-        toggleFlag(i);
-      }, 500);
-    });
-
-    el.addEventListener('pointerup',     () => clearTimeout(longPressTimer));
-    el.addEventListener('pointercancel', () => clearTimeout(longPressTimer));
-    el.addEventListener('pointermove',   () => clearTimeout(longPressTimer));
+    // Block the click event from re-triggering anything
+    el.addEventListener('click', (e) => { e.preventDefault(); });
   }
 
   /* ─── OVERLAYS ──────────────────────────────────────── */
