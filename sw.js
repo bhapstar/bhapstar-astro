@@ -7,7 +7,7 @@
 //   - External (Cloudflare, Formspree, Vimeo, fonts) → Network-only
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CACHE_VERSION = 'bhapstar-v1';
+const CACHE_VERSION = 'bhapstar-v2';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -22,10 +22,9 @@ const SHELL_ASSETS = [
   '/protect-images.js',
   '/partials/partials.js',
   '/gallery-data.json',
-  '/images/favicon.svg',
-  '/images/favicon-32.png',
-  '/images/apple-touch-icon.png',
-  '/images/og-preview.jpg',
+  '/images/icons/favicon-32.png',
+  '/images/icons/apple-touch-icon.png',
+  '/images/icons/og-preview.jpg',
 ];
 
 // ── Install: pre-cache the shell ──────────────────────────────────────────────
