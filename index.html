@@ -194,17 +194,36 @@
   if (window.navigator.standalone === true) return; // iOS standalone
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-  const isAndroidOrDesktop = !isIos;
 
   let deferredPrompt = null;
+  let promptAvailable = false;
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    promptAvailable = true;
     banner.hidden = false;
   });
 
-  // iOS — show banner with tip instead
+  // Fallback for incognito/already-installed: show banner after 1.5s
+  // with manual instructions if the prompt hasn't fired
+  if (!isIos) {
+    setTimeout(() => {
+      if (!promptAvailable) {
+        banner.hidden = false;
+        btnInstall.textContent = 'How?';
+        if (subText) subText.textContent = 'Install via your browser menu';
+        if (iosTip) {
+          iosTip.innerHTML = 'Click the <strong>⋮ menu</strong> in your browser and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>';
+        }
+        btnInstall.addEventListener('click', () => {
+          iosTip.hidden = !iosTip.hidden;
+        });
+      }
+    }, 1500);
+  }
+
+  // iOS — show banner with tip
   if (isIos) {
     banner.hidden = false;
     btnInstall.textContent = 'How?';
