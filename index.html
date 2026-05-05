@@ -101,7 +101,7 @@
   <div class="pwa-banner-inner wrap">
     <span class="pwa-banner-icon" aria-hidden="true">🔭</span>
     <div class="pwa-banner-text">
-      <strong>Install the Bhapstar app</strong>
+      <strong>Install the Bhapstar Astrophotography app</strong>
       <span class="pwa-banner-sub" id="pwaBannerSub">Add to your home screen for quick access</span>
     </div>
     <button class="btn primary pwa-banner-btn" id="pwaBannerBtn">Install</button>
@@ -137,8 +137,13 @@
   gap: 1px;
 }
 .pwa-banner-text strong {
-  color: #e2d9ff;
   font-size: 0.9rem;
+  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 .pwa-banner-sub {
   color: #9c8abf;
