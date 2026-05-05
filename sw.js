@@ -7,6 +7,9 @@
 //   - External (Cloudflare, Formspree, Vimeo, fonts) → Network-only
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Disable SW entirely on local dev so Live Server hot-reload works normally
+if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+
 const CACHE_VERSION = 'bhapstar-deeb09c';
 
 // Core shell — cached on install
