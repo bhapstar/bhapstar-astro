@@ -90,6 +90,146 @@
 <!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
+<!-- ─────────────────────────────────────────
+     PWA INSTALL BANNER
+     - Hidden by default, shown by JS
+     - Android/desktop: triggers native prompt
+     - iOS: shows "Add to Home Screen" tip
+     - Dismissed state stored in sessionStorage
+───────────────────────────────────────── -->
+<div id="pwaBanner" class="pwa-banner" role="complementary" aria-label="Install app" hidden>
+  <div class="pwa-banner-inner wrap">
+    <span class="pwa-banner-icon" aria-hidden="true">🔭</span>
+    <div class="pwa-banner-text">
+      <strong>Install the Bhapstar app</strong>
+      <span class="pwa-banner-sub" id="pwaBannerSub">Add to your home screen for quick access</span>
+    </div>
+    <button class="btn primary pwa-banner-btn" id="pwaBannerBtn">Install</button>
+    <button class="pwa-banner-close" id="pwaBannerClose" aria-label="Dismiss">✕</button>
+  </div>
+  <!-- iOS tooltip -->
+  <div class="pwa-ios-tip" id="pwaIosTip" hidden>
+    Tap <strong>Share</strong> <span aria-hidden="true">⎋</span> then <strong>"Add to Home Screen"</strong>
+  </div>
+</div>
+
+<style>
+.pwa-banner {
+  background: linear-gradient(90deg, #0d0b2a 0%, #1a0f3c 100%);
+  border-bottom: 1px solid rgba(167,139,250,0.2);
+  padding: 10px 0;
+  position: relative;
+  z-index: 90;
+}
+.pwa-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pwa-banner-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.pwa-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.pwa-banner-text strong {
+  color: #e2d9ff;
+  font-size: 0.9rem;
+}
+.pwa-banner-sub {
+  color: #9c8abf;
+  font-size: 0.78rem;
+}
+.pwa-banner-btn {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+}
+.pwa-banner-close {
+  background: none;
+  border: none;
+  color: #6b5f8a;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.pwa-banner-close:hover { color: #a78bfa; }
+.pwa-ios-tip {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #c4b5fd;
+  padding: 6px 16px 2px;
+}
+@media (max-width: 480px) {
+  .pwa-banner-text strong { font-size: 0.82rem; }
+  .pwa-banner-sub { display: none; }
+  .pwa-banner-btn { padding: 6px 12px; font-size: 0.78rem; }
+}
+</style>
+
+<script>
+(function () {
+  const banner    = document.getElementById('pwaBanner');
+  const btnInstall = document.getElementById('pwaBannerBtn');
+  const btnClose  = document.getElementById('pwaBannerClose');
+  const iosTip    = document.getElementById('pwaIosTip');
+  const subText   = document.getElementById('pwaBannerSub');
+
+  if (!banner) return;
+  if (sessionStorage.getItem('pwaBannerDismissed')) return;
+
+  // Don't show if already running as installed PWA
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+  if (window.navigator.standalone === true) return; // iOS standalone
+
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  const isAndroidOrDesktop = !isIos;
+
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.hidden = false;
+  });
+
+  // iOS — show banner with tip instead
+  if (isIos) {
+    banner.hidden = false;
+    btnInstall.textContent = 'How?';
+    if (subText) subText.textContent = 'Install on your iPhone or iPad';
+    btnInstall.addEventListener('click', () => {
+      iosTip.hidden = !iosTip.hidden;
+    });
+  } else {
+    btnInstall.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      banner.hidden = true;
+      sessionStorage.setItem('pwaBannerDismissed', '1');
+    });
+  }
+
+  btnClose.addEventListener('click', () => {
+    banner.hidden = true;
+    sessionStorage.setItem('pwaBannerDismissed', '1');
+  });
+
+  // Hide banner if user installs via browser UI rather than our button
+  window.addEventListener('appinstalled', () => {
+    banner.hidden = true;
+  });
+})();
+</script>
+
 <main>
   <!-- ─────────────────────────────
        HERO
