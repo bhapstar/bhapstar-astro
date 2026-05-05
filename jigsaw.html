@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Jigsaw Puzzle — bhapstar Astrophotography</title>
   <!-- Favicon & theme -->
-  <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
@@ -105,6 +104,7 @@
       animation: mv-prize-gradient 4s ease infinite;
     }
   </style>
+  <link rel="manifest" href="/manifest.json" />
 </head>
 
 <body class="page-puzzle">
@@ -1039,5 +1039,13 @@ window.addEventListener('orientationchange', () => {
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+</script>
 </body>
 </html>
