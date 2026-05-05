@@ -879,6 +879,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 }
 #galleryGrid.list-view .cap .t, #gearGrid.list-view .cap .t{ font-size: 13px; letter-spacing: 0.12em; }
 #galleryGrid.list-view .cap .d, #gearGrid.list-view .cap .d{ font-size: 13px; margin-top: 6px; }
+#galleryGrid.list-view .like-btn, #gearGrid.list-view .like-btn{ align-self: flex-start; width: fit-content; }
 
 .multi-badge{
   position: absolute; top: 10px; right: 10px; z-index: 3;
@@ -923,7 +924,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
     display: none;
   }
   /* Like button sits inline, smaller */
-  #galleryGrid.list-view .like-btn{ margin-top: 4px; font-size: 11px; align-self: flex-start; max-width: 100%; }
+  #galleryGrid.list-view .like-btn{ margin-top: 4px; font-size: 11px; align-self: flex-start; width: fit-content; }
   /* Multi-badge: smaller and repositioned for the narrow thumb */
   #galleryGrid.list-view .multi-badge, #gearGrid.list-view .multi-badge{
     top: 4px; right: auto; left: 4px;
