@@ -13,7 +13,7 @@ jobs:
       - name: Bump SW cache version
         run: |
           COMMIT=$(git rev-parse --short HEAD)
-          sed -i "s/const CACHE_VERSION = 'bhapstar-.*'/const CACHE_VERSION = 'bhapstar-${COMMIT}'/" sw.js
+          sed -i "s/const CACHE_VERSION = 'bhapstar-[^']*'/const CACHE_VERSION = 'bhapstar-${COMMIT}'/" sw.js
 
       - name: Commit updated sw.js
         run: |
