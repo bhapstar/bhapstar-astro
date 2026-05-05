@@ -1126,7 +1126,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 }
 .contact-form button{ margin-top: 6px; }
 .contact-intro{
-  max-width: 520px; color: rgba(200,195,235,0.70); font-size: 14px;
+  color: rgba(200,195,235,0.70); font-size: 14px;
   line-height: 1.67; margin: 6px 0 1.8rem;
 }
 
