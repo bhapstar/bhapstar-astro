@@ -194,7 +194,6 @@
   if (window.navigator.standalone === true) return; // iOS standalone
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-  const isIncognito = !window.indexedDB; // blocked in incognito on Chrome and Safari private
 
   let deferredPrompt = null;
   let promptAvailable = false;
@@ -215,9 +214,7 @@
         btnInstall.textContent = 'How?';
         if (subText) subText.textContent = 'Install via your browser';
         if (iosTip) {
-          iosTip.innerHTML = isIncognito
-            ? 'Installation isn\'t available in private/incognito mode. Open <strong>bhapstar.com</strong> in a regular browser window to install the app.'
-            : 'Click the <strong>⋮ menu</strong> in your browser and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.';
+          iosTip.innerHTML = 'Click or tap the <strong>browser menu</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>. If that option isn\'t visible, try opening the site in a regular (non-incognito) window.';
         }
         btnInstall.addEventListener('click', () => {
           iosTip.hidden = !iosTip.hidden;
@@ -226,25 +223,15 @@
     }, 1500);
   }
 
-  // iOS / Safari — show banner with appropriate tip
+  // iOS / Safari — show banner with tip (private mode not reliably detectable)
   if (isIos) {
     banner.hidden = false;
     btnInstall.textContent = 'How?';
-    if (isIncognito) {
-      // Safari private mode — installation not possible
-      if (subText) subText.textContent = 'Install the Bhapstar app';
-      if (iosTip) iosTip.innerHTML = 'Installation isn\'t available in Safari Private mode. Open <strong>bhapstar.com</strong> in a regular Safari tab to install the app.';
-      btnInstall.addEventListener('click', () => {
-        iosTip.hidden = !iosTip.hidden;
-      });
-    } else {
-      // Regular Safari — Add to Home Screen instructions
-      if (subText) subText.textContent = 'Install on your iPhone or iPad';
-      if (iosTip) iosTip.innerHTML = 'Tap the <strong>Share</strong> button ⎋ then select <strong>"Add to Home Screen"</strong>.';
-      btnInstall.addEventListener('click', () => {
-        iosTip.hidden = !iosTip.hidden;
-      });
-    }
+    if (subText) subText.textContent = 'Install on your iPhone or iPad';
+    if (iosTip) iosTip.innerHTML = 'Tap the <strong>Share</strong> button ⎋ then select <strong>"Add to Home Screen"</strong>. If you\'re in Private mode, switch to a regular tab first.';
+    btnInstall.addEventListener('click', () => {
+      iosTip.hidden = !iosTip.hidden;
+    });
   } else {
     btnInstall.addEventListener('click', async () => {
       if (!deferredPrompt) return;
