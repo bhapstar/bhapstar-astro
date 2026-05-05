@@ -7,7 +7,7 @@
 //   - External (Cloudflare, Formspree, Vimeo, fonts) → Network-only
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CACHE_VERSION = 'bhapstar-v2';
+const CACHE_VERSION = 'bhapstar-__COMMIT__';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
