@@ -731,7 +731,7 @@
   function playExplosion() {
     try {
       const audio = new Audio('sounds/explosion.mp3');
-      audio.volume = 0.85;
+      audio.volume = 0.5;
       audio.play().catch(() => {});
     } catch (e) { /* audio blocked */ }
   }
