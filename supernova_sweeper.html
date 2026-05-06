@@ -736,6 +736,30 @@
     } catch (e) { /* audio blocked */ }
   }
 
+  // Subtle synthesised tick when a numbered cell is revealed
+  let _audioCtx = null;
+  function getAudioCtx() {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return _audioCtx;
+  }
+  function playReveal(adjCount) {
+    try {
+      const ctx = getAudioCtx();
+      // Pitch rises gently with the number: 1=220Hz up to 8=520Hz
+      const freq = 220 + (adjCount - 1) * 42;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.07, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.18);
+    } catch (e) { /* audio blocked */ }
+  }
+
   function playFlag() {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -887,6 +911,9 @@
     cell.revealed = true;
     revealed++;
     styleRevealedCell(i);
+
+    // Play subtle tick for numbered cells
+    if (cell.adj > 0 && !cell.mine) playReveal(cell.adj);
 
     // Flood-fill for empty cells
     if (cell.adj === 0 && !cell.mine) {
