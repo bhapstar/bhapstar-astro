@@ -1,9 +1,10 @@
 # Bhapstar — Astrophotography Portfolio
 **Live site → [bhapstar.com](https://bhapstar.com)**
-Personal deep-sky astrophotography portfolio, imaging from both urban and dark desert sites.
+Personal deep-sky astrophotography portfolio.
 ---
 ## What this is
 A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images including nebulae, galaxies, and star clusters.
+
 **Pages:**
 - **Home** — landing page
 - **Gallery** — deep-sky image collection
