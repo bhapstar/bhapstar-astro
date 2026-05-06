@@ -84,10 +84,10 @@
       user-select: none;
       -webkit-user-drag: none;
       pointer-events: none;
-      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease;
     }
     #dvImg.rotating {
-      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease;
     }
 
     /* Vimeo iframe */
@@ -862,9 +862,18 @@
         return;
       }
 
+      // Fade out, swap src, fade in
+      dvImg.style.transition = 'none';
+      dvImg.style.opacity = '0';
       dvImg.style.display = 'block';
       dvImg.src = cur.file;
       dvImg.alt = cur.alt || snapItem?.title || '';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          dvImg.style.transition = '';
+          dvImg.style.opacity = '1';
+        });
+      });
       preloadAdjacent();
     });
   }
