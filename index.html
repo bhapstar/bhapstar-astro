@@ -214,7 +214,7 @@
         btnInstall.textContent = 'How?';
         if (subText) subText.textContent = 'Install via your browser';
         if (iosTip) {
-          iosTip.innerHTML = 'Click or tap the <strong>browser menu</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>. If that option isn\'t visible, try opening the site in a regular (non-incognito) window.';
+          iosTip.innerHTML = 'Click or tap the <strong>browser menu</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>. If that option isn\'t visible, try opening the site in a regular browsing window (not incognito or guest modes).';
         }
         btnInstall.addEventListener('click', () => {
           iosTip.hidden = !iosTip.hidden;
