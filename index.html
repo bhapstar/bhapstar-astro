@@ -429,7 +429,7 @@
       form.reset();
       showToast('Thank you — your message has been sent. I\'ll get back to you as soon as possible.');
     } catch {
-      showToast('Message sent — I\'ll get back to you as soon as possible.');
+      showToast('Something went wrong — please try again or contact me directly.');
     } finally {
       btn.textContent = originalText;
       btn.disabled = false;
@@ -496,8 +496,6 @@
   }
 
   function setLayer(layer, src) {
-    layer.style.backgroundImage = `url("${CSS.escape ? CSS.escape(src).replace(/^#/, '') : src}")`;
-    // Simpler, safer version:
     layer.style.backgroundImage = `url("${src}")`;
   }
 

@@ -10,7 +10,7 @@
 // Disable SW entirely on local dev so Live Server hot-reload works normally
 if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
 
-const CACHE_VERSION = 'bhapstar-f64bb47';
+const CACHE_VERSION = 'bhapstar-98ea867';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -21,10 +21,14 @@ const SHELL_ASSETS = [
   '/prints.html',
   '/quiz.html',
   '/jigsaw.html',
+  '/supernova_sweeper.html',
   '/styles.css',
   '/protect-images.js',
   '/partials/partials.js',
+  '/partials/header.html',
+  '/partials/footer.html',
   '/gallery-data.json',
+  '/gear-data.json',
   '/images/icons/favicon-32.png',
   '/images/icons/apple-touch-icon.png',
   '/images/icons/og-preview.jpg',
