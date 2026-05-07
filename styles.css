@@ -1314,14 +1314,37 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 details.faq-item{
   border: 1px solid rgba(167,139,250,0.09); border-radius: 16px;
   background: rgba(167,139,250,0.018); padding: 13px 16px;
-  transition: border-color 200ms ease, background 200ms ease;
+  transition: border-color 240ms ease, background 240ms ease,
+              box-shadow 240ms ease, transform 240ms ease;
+  position: relative; overflow: hidden;
+}
+details.faq-item::before{
+  content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1px;
+  background: linear-gradient(
+    90deg, transparent,
+    rgba(167,139,250,0.50), rgba(96,165,250,0.60),
+    rgba(52,211,153,0.40), transparent
+  );
+  opacity: 0; transition: opacity 240ms ease;
+}
+@media (hover:hover){
+  details.faq-item:hover{
+    border-color: rgba(167,139,250,0.28);
+    background: rgba(167,139,250,0.04);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.06), 0 8px 28px rgba(0,0,0,0.40);
+    transform: translateY(-1px);
+  }
+  details.faq-item:hover::before{ opacity: 1; }
+  details.faq-item:hover summary{ color: #a78bfa; }
 }
 details.faq-item[open]{
   border-color: rgba(167,139,250,0.22); background: rgba(167,139,250,0.05);
 }
+details.faq-item[open]::before{ opacity: 1; }
 details.faq-item summary{
   cursor: pointer; list-style: none; font-size: 13px;
   font-weight: 600; color: rgba(255,255,255,0.90); line-height: 1.4;
+  transition: color 240ms ease;
 }
 details.faq-item summary::-webkit-details-marker{ display: none; }
 details.faq-item p{

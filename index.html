@@ -360,6 +360,26 @@
   text-align: center;
   font-size: 0.85rem;
 }
+
+/* Contact panel — matches support-panel hover glow */
+.contact-panel{ margin: 28px 0; position: relative; overflow: hidden; }
+.contact-panel::before{
+  content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
+  background: linear-gradient(
+    90deg, transparent,
+    rgba(167,139,250,0.60), rgba(96,165,250,0.70),
+    rgba(52,211,153,0.55), transparent
+  );
+  opacity: 0.60;
+}
+@media (hover:hover){
+  .contact-panel{ transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
+  .contact-panel:hover{
+    border-color: rgba(167,139,250,0.32);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.10), 0 14px 44px rgba(0,0,0,0.50);
+    transform: translateY(-2px);
+  }
+}
 </style>
 
 <script>
@@ -523,36 +543,38 @@
         </div>
 
         <!-- Contact & Updates -->
-        <div class="section-head section-head--inline">
-          <h3>Contact &amp; Updates</h3>
+        <div class="panel contact-panel">
+          <div class="section-head section-head--inline">
+            <h3>Contact &amp; Updates</h3>
+          </div>
+
+          <p class="contact-intro">
+            If you'd like to be kept up to date when new images are added, or if you want to get in touch about my work, prints, gear or anything astro-related, please drop me a message here.
+          </p>
+
+          <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="bhapstar — New website message" />
+            <!-- Honeypot spam trap -->
+            <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+            <label>
+              <span>Name</span>
+              <input type="text" name="name" required autocomplete="name" />
+            </label>
+
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" required autocomplete="email" />
+            </label>
+
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+
+            <button type="submit" class="btn primary">Send message</button>
+          </form>
         </div>
-
-        <p class="contact-intro">
-          If you'd like to be kept up to date when new images are added, or if you want to get in touch about my work, prints, gear or anything astro-related, please drop me a message here.
-        </p>
-
-        <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
-          <input type="hidden" name="_subject" value="bhapstar — New website message" />
-          <!-- Honeypot spam trap -->
-          <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-
-          <label>
-            <span>Name</span>
-            <input type="text" name="name" required autocomplete="name" />
-          </label>
-
-          <label>
-            <span>Email</span>
-            <input type="email" name="email" required autocomplete="email" />
-          </label>
-
-          <label>
-            <span>Message</span>
-            <textarea name="message" rows="5" required></textarea>
-          </label>
-
-          <button type="submit" class="btn primary">Send message</button>
-        </form>
 
       </div>
     </div>
