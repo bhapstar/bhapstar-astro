@@ -10,7 +10,7 @@
 // Disable SW entirely on local dev so Live Server hot-reload works normally
 if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
 
-const CACHE_VERSION = 'bhapstar-f63310f';
+const CACHE_VERSION = 'bhapstar-98e1ee5';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
