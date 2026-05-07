@@ -8,9 +8,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Disable SW entirely on local dev so Live Server hot-reload works normally
-if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
-const CACHE_VERSION = 'bhapstar-49d3cf9';
+if (!IS_DEV) {
+
+const CACHE_VERSION = 'bhapstar-98ea867';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -21,10 +23,14 @@ const SHELL_ASSETS = [
   '/prints.html',
   '/quiz.html',
   '/jigsaw.html',
+  '/supernova_sweeper.html',
   '/styles.css',
   '/protect-images.js',
   '/partials/partials.js',
+  '/partials/header.html',
+  '/partials/footer.html',
   '/gallery-data.json',
+  '/gear-data.json',
   '/images/icons/favicon-32.png',
   '/images/icons/apple-touch-icon.png',
   '/images/icons/og-preview.jpg',
@@ -89,7 +95,7 @@ self.addEventListener('fetch', event => {
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_VERSION);
-  // For navigation and shell requests, bypass the browser HTTP cache entirely
+  // Bypass the browser HTTP cache entirely for HTML, CSS, JS
   const fetchRequest = request.mode === 'navigate' || /\.(html|css|js)$/i.test(new URL(request.url).pathname)
     ? new Request(request, { cache: 'no-store' })
     : request;
@@ -147,3 +153,5 @@ async function staleWhileRevalidate(request) {
 
   return cached || await networkFetch;
 }
+
+} // end !IS_DEV
