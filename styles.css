@@ -189,7 +189,7 @@ header{
   letter-spacing: 0.20em;
   text-transform: uppercase;
   font-size: 13px;
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -215,7 +215,7 @@ header{
     transparent,
     rgba(167,139,250,0.90),
     rgba(96,165,250,0.80),
-    rgba(52,211,153,0.70),
+    rgba(244,114,182,0.80),
     transparent
   );
   opacity: 0;
@@ -272,7 +272,7 @@ header{
   display: flex; align-items: center; gap: 10px;
   padding: 11px 13px; border-radius: 12px;
   font-size: 11.5px; letter-spacing: 0.20em; text-transform: uppercase;
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
@@ -294,7 +294,7 @@ header{
     transparent,
     rgba(167,139,250,0.90),
     rgba(96,165,250,0.80),
-    rgba(52,211,153,0.70),
+    rgba(244,114,182,0.80),
     transparent
   );
   opacity: 0;
@@ -324,7 +324,7 @@ header{
   font-family: inherit; color: transparent;
 }
 .nav-group-btn .btn-label{
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
@@ -353,7 +353,7 @@ header{
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  background-image: linear-gradient(90deg, #7c3aed, #38bdf8, #7c3aed, #38bdf8) !important;
+  background-image: linear-gradient(90deg, #f472b6, #60a5fa, #a78bfa, #60a5fa, #f472b6) !important;
   background-size: 300% 100% !important;
   animation: gradientRoll 4s linear infinite reverse;
   opacity: 0.7;
@@ -462,7 +462,7 @@ h1{
 /* Shared gradient used for both hero h1 lines — matches header brand */
 h1:first-of-type,
 h1.hero-byline{
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -580,7 +580,7 @@ h1.hero-byline{
 .section-head h2{
   margin: 0; font-weight: 700;
   font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase;
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
@@ -1022,7 +1022,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .astro-divider{ margin-top: 30px; text-align: center; opacity: 0.60; clear: both; }
 .astro-divider span{
   font-family: var(--mono); letter-spacing: 0.40em; font-size: 11px;
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
@@ -1160,7 +1160,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .support-btn span,
 #submitEnquiry,
 .contact-form .btn[type="submit"] {
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1469,7 +1469,7 @@ footer{
     transparent,
     rgba(167,139,250,0.90),
     rgba(96,165,250,0.80),
-    rgba(52,211,153,0.70),
+    rgba(244,114,182,0.80),
     transparent
   );
   opacity: 0;
@@ -1500,7 +1500,7 @@ footer{
   font-family: var(--mono);
 }
 .footer-brand .mark{
-  background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
@@ -1804,8 +1804,10 @@ body.noscroll{ overflow: hidden; }
 .lb-info-title{
   font-weight: 700;
   font-size: 15px;
-  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
   text-shadow: none;
   margin-bottom: 8px;
   line-height: 1.3;
@@ -1884,7 +1886,7 @@ body.noscroll{ overflow: hidden; }
   border: 1px solid rgba(167,139,250,0.12); border-radius: 20px; padding: 14px 16px;
   background: rgba(167,139,250,0.03); margin: 18px 0 14px;
 }
-.page-puzzle .puzzle-top h2{ margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientRoll 4s linear infinite reverse; }
+.page-puzzle .puzzle-top h2{ margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientRoll 4s linear infinite reverse; }
 .page-puzzle .puzzle-top .sub{ font-size: 12px; opacity: .74; margin-top: 4px; }
 .page-puzzle .puzzle-controls{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .puzzle-controls select,
