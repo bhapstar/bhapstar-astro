@@ -102,6 +102,20 @@
       width: 100%; height: 100%; border: 0; display: block;
     }
 
+    /* Transparent overlay on video — captures swipe gestures on mobile
+       without blocking video playback controls (pointer-events none on desktop) */
+    #dvVidSwipeOverlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: transparent;
+      touch-action: pan-y;
+    }
+    @media (hover: none) and (pointer: coarse) {
+      #dvVidSwipeOverlay { display: block; }
+    }
+
     /* ── Floating controls over image panel ── */
     .dv-ctrl {
       position: absolute;
@@ -272,6 +286,31 @@
       flex: 1;
     }
 
+    /* ── Thumbnail strip in sidebar for multi-image items ── */
+    .dv-thumbs {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(167,139,250,0.10);
+    }
+    .dv-thumb {
+      padding: 0;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.15);
+      background: rgba(0,0,0,0.25);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+      flex-shrink: 0;
+    }
+    .dv-thumb img { display: block; height: 52px; width: auto; pointer-events: none; }
+    .dv-thumb.active {
+      border-color: rgba(167,139,250,0.72);
+      box-shadow: 0 0 0 2px rgba(167,139,250,0.22);
+    }
+
     /* ── Mobile layout: sidebar becomes bottom drawer ── */
     @media (max-width: 768px) {
       #detailView {
@@ -437,6 +476,7 @@
 
     <!-- Vimeo video -->
     <div id="dvVid" aria-hidden="true"></div>
+    <div id="dvVidSwipeOverlay" aria-hidden="true"></div>
 
     <!-- Image count badge -->
     <div id="dvCount" aria-hidden="true"></div>
@@ -456,6 +496,7 @@
   <div class="dv-info-panel" id="dvInfoPanel">
     <div class="dv-info-title" id="dvTitle"></div>
     <div class="dv-info-desc"  id="dvDesc"></div>
+    <div class="dv-thumbs"     id="dvThumbs"></div>
   </div>
 
 </div><!-- /detailView -->
@@ -560,6 +601,7 @@
   const dv          = document.getElementById('detailView');
   const dvImg       = document.getElementById('dvImg');
   const dvVid       = document.getElementById('dvVid');
+  const dvVidSwipeOverlay = document.getElementById('dvVidSwipeOverlay');
   const dvTitle     = document.getElementById('dvTitle');
   const dvDesc      = document.getElementById('dvDesc');
   const dvCount     = document.getElementById('dvCount');
@@ -569,6 +611,7 @@
   const dvLikeBtn   = document.getElementById('dvLikeBtn');
   const dvInfoBtn   = document.getElementById('dvInfoBtn');
   const dvInfoPanel = document.getElementById('dvInfoPanel');
+  const dvThumbs    = document.getElementById('dvThumbs');
   const dvZoomBtn   = document.getElementById('dvZoomBtn');
   const dvRotateBtn = document.getElementById('dvRotateBtn');
   const dvImgPanel  = document.getElementById('dvImagePanel');
@@ -628,7 +671,7 @@
     if (item.videos?.length)
       return item.videos.map(v => ({ kind:'vimeo', vimeoId:v.vimeoId, poster:v.poster, alt:v.alt||item.title||'' }));
     if (item.images?.length)
-      return item.images.map(im => ({ kind:'image', file:im.file, alt:im.alt||item.alt||item.title||'' }));
+      return item.images.map(im => ({ kind:'image', file:im.file, thumb:im.thumb||im.file, alt:im.alt||item.alt||item.title||'' }));
     return [{ kind:'image', file:item.file, alt:item.alt||item.title||'' }];
   }
 
@@ -819,6 +862,33 @@
     });
   }
 
+  /* ── Thumbnail strip in sidebar ── */
+  function renderThumbs() {
+    if (!dvThumbs) return;
+    const imageList = dvList.filter(x => x.kind === 'image');
+    if (imageList.length <= 1) {
+      dvThumbs.innerHTML = '';
+      dvThumbs.style.display = 'none';
+      return;
+    }
+    dvThumbs.style.display = 'flex';
+    dvThumbs.innerHTML = imageList.map((x, i) => {
+      const realIdx = dvList.indexOf(x);
+      const thumbSrc = x.thumb || x.file.replace(/^(images\/(?!thumbs\/))/, '$1thumbs/');
+      return `<button type="button" class="dv-thumb${realIdx === dvIdx ? ' active' : ''}"
+              data-i="${realIdx}" aria-label="View image ${i + 1}"
+              aria-current="${realIdx === dvIdx ? 'true' : 'false'}">
+        <img src="${thumbSrc}" alt="${x.alt || ''}" loading="lazy" />
+      </button>`;
+    }).join('');
+    dvThumbs.onclick = (e) => {
+      const btn = e.target.closest('button.dv-thumb');
+      if (!btn) return;
+      dvIdx = Number(btn.dataset.i);
+      showDv();
+    };
+  }
+
   /* ══════════════════════════════════════
      SHOW CURRENT IMAGE
   ══════════════════════════════════════ */
@@ -852,16 +922,22 @@
       dvImg.src = '';
       if (dvVid) { dvVid.style.display = 'none'; dvVid.innerHTML = ''; }
 
+      // Always render thumbs regardless of item type, so strip clears on vimeo items
+      renderThumbs();
+
       if (cur.kind === 'vimeo') {
         dvVid.style.display = 'block';
+        if (dvVidSwipeOverlay) dvVidSwipeOverlay.style.display = '';
         const id = encodeURIComponent(cur.vimeoId);
         dvVid.innerHTML = `<iframe
           src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
           frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen></iframe>`;
+        preloadAdjacent();
         return;
       }
 
+      if (dvVidSwipeOverlay) dvVidSwipeOverlay.style.display = 'none';
       // Fade out, swap src, fade in
       dvImg.style.transition = 'none';
       dvImg.style.opacity = '0';
@@ -925,6 +1001,7 @@
     if (dvVid) { dvVid.innerHTML = ''; dvVid.style.display = 'none'; }
     dvImg.src = ''; dvImg.style.display = 'block';
     dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
     closeInfo();
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
@@ -1304,6 +1381,25 @@
           dvList.length > 1 ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1)) : goToItem(-1);
       }
     }, { passive: true });
+
+    /* ── Swipe on video overlay (mobile) ── */
+    if (dvVidSwipeOverlay) {
+      let ovTouchStartX = 0, ovTouchStartY = 0;
+      dvVidSwipeOverlay.addEventListener('touchstart', (e) => {
+        ovTouchStartX = e.touches[0].clientX;
+        ovTouchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      dvVidSwipeOverlay.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - ovTouchStartX;
+        const dy = e.changedTouches[0].clientY - ovTouchStartY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          if (dx < 0)
+            dvList.length > 1 ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1)) : goToItem(+1);
+          else
+            dvList.length > 1 ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1)) : goToItem(-1);
+        }
+      }, { passive: true });
+    }
 
     /* ── Resize: re-render chaos on width change ── */
     let resizeTimer; let lastResizeW = window.innerWidth;
