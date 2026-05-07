@@ -10,7 +10,7 @@
 // Disable SW entirely on local dev so Live Server hot-reload works normally
 if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
 
-const CACHE_VERSION = 'bhapstar-e4e7474';
+const CACHE_VERSION = 'bhapstar-98ea867';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -21,14 +21,10 @@ const SHELL_ASSETS = [
   '/prints.html',
   '/quiz.html',
   '/jigsaw.html',
-  '/supernova_sweeper.html',
   '/styles.css',
   '/protect-images.js',
   '/partials/partials.js',
-  '/partials/header.html',
-  '/partials/footer.html',
   '/gallery-data.json',
-  '/gear-data.json',
   '/images/icons/favicon-32.png',
   '/images/icons/apple-touch-icon.png',
   '/images/icons/og-preview.jpg',
@@ -43,7 +39,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// ── Activate: clean up old caches ─────────────────────────────────────────────
+// ── Activate: clean up old caches, then reload all open tabs ──────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
@@ -53,6 +49,10 @@ self.addEventListener('activate', event => {
           .map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then(clients => {
+        clients.forEach(client => client.navigate(client.url));
+      })
   );
 });
 
