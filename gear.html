@@ -4,45 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gear — Bhapstar Astrophotography</title>
-  <!-- Favicon & theme -->
   <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
-
-  <!-- Canonical URL -->
   <link rel="canonical" href="https://bhapstar.com/gear.html" />
-
-  <!-- Primary SEO -->
   <meta name="description" content="The astrophotography equipment used by Bhapinder Singh — telescopes, mounts, cameras, filters and accessories for deep-sky imaging." />
   <meta name="author" content="Bhapinder Singh" />
-
-  <!-- Open Graph -->
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content="Gear — Bhapstar Astrophotography" />
   <meta property="og:description" content="The telescopes, mounts, cameras and filters behind the images — astrophotography equipment by Bhapinder Singh." />
   <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:url"         content="https://bhapstar.com/gear.html" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Gear — Bhapstar Astrophotography" />
   <meta name="twitter:description" content="The telescopes, mounts, cameras and filters behind the images." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
-
-  <!-- Preconnect for fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
-  <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
-
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /* Mirror the #galleryGrid rule from styles.css for gear images —
-       without this, pointer-events on <img> absorb taps and the card
-       click handler never fires on mobile. */
     #gearGrid img {
       -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -51,21 +33,233 @@
       pointer-events: none;
     }
 
-    .lightbox-img {
-      pointer-events: none !important;
+    /* ══════════════════════════════════════════════════
+       FULL-PAGE DETAIL VIEW — mirrors gallery.html
+    ══════════════════════════════════════════════════ */
+    #detailView {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      background: var(--bg);
+      transform: translateY(100%);
+      transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    #detailView.open { transform: translateY(0); }
+
+    .dv-image-panel {
+      flex: 1 1 0;
+      min-width: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #020111;
+      overflow: hidden;
+    }
+    .dv-image-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(800px 600px at 50% 50%, rgba(167,139,250,0.07), transparent 60%),
+        radial-gradient(500px 400px at 20% 80%,  rgba(96,165,250,0.06),  transparent 55%);
+      z-index: 0;
     }
 
-    .lightbox-close,
-    .lightbox-nav {
-      z-index: 10 !important;
+    #dvImg {
+      position: relative;
+      z-index: 1;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease;
+    }
+
+    .dv-ctrl {
+      position: absolute;
+      z-index: 10;
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(0,0,0,0.52);
+      color: rgba(255,255,255,0.88);
+      display: grid; place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 180ms ease, border-color 180ms ease,
+                  transform 180ms cubic-bezier(0.34,1.56,0.64,1);
       touch-action: manipulation;
       -webkit-tap-highlight-color: rgba(167,139,250,0.25);
-      cursor: pointer;
+      user-select: none;
+    }
+    .dv-ctrl:hover {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.50);
+      color: #fff;
+      transform: scale(1.08);
     }
 
+    #dvBack {
+      top: 14px; left: 14px;
+      width: auto; padding: 0 14px 0 10px;
+      gap: 6px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      display: inline-flex; align-items: center;
+    }
+    #dvBack svg { flex-shrink: 0; }
+
+    #dvZoomBtn { top: 14px; right: 14px; }
+    #dvZoomBtn.active {
+      background: rgba(167,139,250,0.28);
+      border-color: rgba(167,139,250,0.72);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(167,139,250,0.22);
+    }
+
+    .dv-nav {
+      top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px;
+      font-size: 30px; line-height: 1;
+      border: 1px solid rgba(167,139,250,0.18);
+      background: rgba(5,4,20,0.58);
+    }
+    .dv-nav:hover { transform: translateY(-50%) scale(1.08); background: rgba(5,4,20,0.80); }
+    .dv-nav.prev  { left: 14px; }
+    .dv-nav.next  { right: 14px; }
+
+    #dvCount {
+      position: absolute;
+      bottom: 18px; left: 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .dv-image-panel.dv-zoomed { cursor: grab; }
+    .dv-image-panel.dv-zoomed:active { cursor: grabbing; }
+    .dv-image-panel.dv-zoomed #dvImg { will-change: transform; transition: none !important; }
+
+    #dvInfoBtn {
+      bottom: 14px; right: 14px;
+      font-size: 18px;
+    }
+    #dvInfoBtn[aria-expanded="true"] {
+      background: rgba(167,139,250,0.22);
+      border-color: rgba(167,139,250,0.60);
+      color: #fff;
+    }
+
+    .dv-info-panel {
+      width: 320px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(167,139,250,0.10);
+      background: rgba(5,4,20,0.96);
+      padding: 80px 24px 28px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.16) transparent;
+      transition: width 300ms cubic-bezier(0.16,1,0.3,1), opacity 280ms ease;
+    }
+    .dv-info-panel.collapsed {
+      width: 0;
+      opacity: 0;
+      padding-left: 0;
+      padding-right: 0;
+      overflow: hidden;
+    }
+
+    .dv-info-title {
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.3;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientRoll 4s linear infinite reverse;
+      margin-bottom: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(167,139,250,0.15);
+    }
+
+    .dv-info-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(200,195,235,0.84);
+      flex: 1;
+    }
+
+    /* Thumbnail strip in sidebar for multi-image items */
+    .dv-thumbs {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(167,139,250,0.10);
+    }
+    .dv-thumb {
+      padding: 0;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.15);
+      background: rgba(0,0,0,0.25);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+      flex-shrink: 0;
+    }
+    .dv-thumb img { display: block; height: 52px; width: auto; pointer-events: none; }
+    .dv-thumb.active {
+      border-color: rgba(167,139,250,0.72);
+      box-shadow: 0 0 0 2px rgba(167,139,250,0.22);
+    }
+
+    /* Mobile: sidebar becomes bottom drawer */
+    @media (max-width: 768px) {
+      #detailView { flex-direction: column; }
+      .dv-image-panel { flex: 1 1 0; min-height: 0; }
+      .dv-info-panel {
+        width: 100%;
+        max-height: 40%;
+        border-left: none;
+        border-top: 1px solid rgba(167,139,250,0.10);
+        padding: 16px 20px 24px;
+        transition: max-height 300ms cubic-bezier(0.16,1,0.3,1), opacity 280ms ease;
+      }
+      .dv-info-panel.collapsed { width: 100%; max-height: 0; opacity: 0; padding: 0; }
+      #dvBack    { top: 10px; left: 10px; }
+      #dvZoomBtn { top: 10px; right: 10px; }
+      #dvInfoBtn { bottom: 10px; right: 10px; }
+      .dv-nav.prev { left: 10px; }
+      .dv-nav.next { right: 10px; }
+      #dvCount { bottom: 58px; left: 10px; font-size: 12px; }
+      .dv-ctrl { width: 40px; height: 40px; }
+      .dv-nav  { width: 46px; height: 46px; }
+    }
+
+    body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
+
     @media (max-width: 720px) {
-      .lightbox-close { width: 48px !important; height: 48px !important; }
-      .lightbox-nav   { width: 52px !important; height: 52px !important; font-size: 34px !important; }
       .grid .card .cap .d { display: none; }
     }
   </style>
@@ -73,7 +267,6 @@
 </head>
 <body class="page-gear">
 
-<!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
@@ -123,10 +316,9 @@
           </div>
         </div>
 
-        <p class="gallery-hint">Click any image to view fullscreen · Arrow keys or swipe to navigate</p>
+        <p class="gallery-hint">Click any image to view full-page · Arrow keys or swipe to navigate</p>
       </div>
 
-      <!-- Skeleton placeholders shown while JSON loads -->
       <div id="gearGrid" class="grid" aria-live="polite" aria-label="Gear gallery">
         <div class="card-skeleton" aria-hidden="true"></div>
         <div class="card-skeleton" aria-hidden="true"></div>
@@ -140,66 +332,81 @@
   </section>
 </main>
 
-<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
 
 <!-- ─────────────────────────────────────────
-     LIGHTBOX
+     FULL-PAGE DETAIL VIEW
+     Replaces the lightbox — image left, info sidebar right.
 ───────────────────────────────────────── -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
-  <div class="lightbox-inner">
+<div id="detailView" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
 
-    <button class="lightbox-close" id="lbClose" aria-label="Close image viewer">✕</button>
-    <button class="lightbox-zoom-btn" id="lbZoomBtn" aria-label="Toggle zoom" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-    <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous image">‹</button>
-    <button class="lightbox-nav next" id="lbNext" aria-label="Next image">›</button>
+  <div class="dv-image-panel" id="dvImagePanel">
 
-    <img class="lightbox-img" id="lbImg" alt="" src="" />
+    <button class="dv-ctrl" id="dvBack" aria-label="Back to gear">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Gear
+    </button>
 
-    <!-- Info toggle button -->
-    <button class="lightbox-info-btn" id="lbInfoBtn" aria-label="Hide image information" aria-expanded="true">ⓘ</button>
+    <button class="dv-ctrl" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
+        <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
 
-    <!-- Info overlay panel -->
-    <div class="lightbox-info-panel" id="lbInfoPanel" aria-hidden="false">
-      <div class="lb-info-title" id="lbTitle"></div>
-      <div class="lb-info-desc"  id="lbDesc"></div>
-    </div>
+    <button class="dv-ctrl dv-nav prev" id="dvPrev" aria-label="Previous image">‹</button>
+    <button class="dv-ctrl dv-nav next" id="dvNext" aria-label="Next image">›</button>
 
-    <!-- Count badge (bottom-left, always visible) -->
-    <div class="lb-count-badge" id="lbCount"></div>
+    <img id="dvImg" alt="" src="" />
 
-    <!-- Thumbnail strip — only shown for multi-image items -->
-    <div class="lightbox-thumbs" id="lbThumbs" aria-label="Thumbnails"></div>
+    <div id="dvCount" aria-hidden="true"></div>
+
+    <button class="dv-ctrl" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">ⓘ</button>
 
   </div>
+
+  <div class="dv-info-panel" id="dvInfoPanel">
+    <div class="dv-info-title" id="dvTitle"></div>
+    <div class="dv-info-desc"  id="dvDesc"></div>
+    <div class="dv-thumbs"     id="dvThumbs"></div>
+  </div>
+
 </div>
 
 
 <!-- ─────────────────────────────────────────
      GEAR CONTROLLER
-     Identical structure to gallery.html.
-     Differences from gallery:
-       - Fetches gear-data.json
-       - getList() handles images[] with per-slide desc
-       - showLb() uses per-slide desc fallback
-       - renderThumbs() for multi-image items
-       - No video / vimeo support needed
-       - No list-view toggle
 ───────────────────────────────────────── -->
 <script>
 (function () {
   const grid       = document.getElementById('gearGrid');
-  const lb         = document.getElementById('lightbox');
-  const lbImg      = document.getElementById('lbImg');
-  const lbTitle    = document.getElementById('lbTitle');
-  const lbCount    = document.getElementById('lbCount');
-  const lbDesc     = document.getElementById('lbDesc');
-  const lbClose    = document.getElementById('lbClose');
-  const lbPrev     = document.getElementById('lbPrev');
-  const lbNext     = document.getElementById('lbNext');
-  const lbThumbs   = document.getElementById('lbThumbs');
-  /* ── Filter pill helpers ── */
+  const dv         = document.getElementById('detailView');
+  const dvImg      = document.getElementById('dvImg');
+  const dvTitle    = document.getElementById('dvTitle');
+  const dvDesc     = document.getElementById('dvDesc');
+  const dvCount    = document.getElementById('dvCount');
+  const dvBack     = document.getElementById('dvBack');
+  const dvPrev     = document.getElementById('dvPrev');
+  const dvNext     = document.getElementById('dvNext');
+  const dvInfoBtn  = document.getElementById('dvInfoBtn');
+  const dvInfoPanel= document.getElementById('dvInfoPanel');
+  const dvZoomBtn  = document.getElementById('dvZoomBtn');
+  const dvImgPanel = document.getElementById('dvImagePanel');
+  const dvThumbs   = document.getElementById('dvThumbs');
+
+  if (!grid || !dv) return;
+
+  let items           = [];
+  let currentItem     = null;
+  let dvList          = [];
+  let dvIdx           = 0;
+  let activeSet       = [];
+  let activeItemIndex = 0;
+  let infoVisible     = true;
+
   function getActiveFilter() {
     return document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
   }
@@ -210,20 +417,7 @@
       p.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
-  const viewToggle = null; // replaced by viewBtnGrid / viewBtnList
 
-
-  if (!grid || !lb) return;
-
-  let items           = [];
-  let currentItem     = null;
-  let lbList          = [];
-  let lbIndex         = 0;
-  let activeSet       = [];
-  let activeItemIndex = 0;
-  let infoPanelVisible = true;
-
-  /* ── Load gear data ── */
   async function loadData() {
     try {
       const res = await fetch('gear-data.json', { cache: 'default' });
@@ -239,7 +433,6 @@
     }
   }
 
-  /* ── HTML escape ── */
   function esc(s) {
     return String(s ?? '')
       .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
@@ -247,9 +440,6 @@
       .replaceAll("'", '&#039;');
   }
 
-  /* ── Item helpers ──
-     getList returns an array of slide objects: { file, alt, desc }
-     desc is per-image if defined, otherwise null (showLb falls back to item.desc) */
   function getList(item) {
     if (item.images?.length) {
       return item.images.map(im => ({
@@ -268,29 +458,20 @@
     return getList(item)[0] || { file: '', alt: '' };
   }
 
-  /* ── Lightbox display ── */
-  const lbInfoBtn   = document.getElementById('lbInfoBtn');
-  const lbInfoPanel = document.getElementById('lbInfoPanel');
-  const lbZoomBtn   = document.getElementById('lbZoomBtn');
-  const lbInnerEl   = document.querySelector('#lightbox .lightbox-inner');
-
-  /* ── Zoom + Pan (3-state: off → 1.5× → 2× → off) ───────────────
-   * Identical module to gallery.html.
-   * ────────────────────────────────────────────────────────────── */
+  /* ── Zoom + Pan ── */
   const ZOOM_STEPS = [1, 1.5, 2];
-  let zoomStep = 0;
-  let zoomDragging = false;
+  let zoomStep = 0, zoomDragging = false;
   let zoomStartX = 0, zoomStartY = 0;
   let zoomOriginX = 0, zoomOriginY = 0;
 
-  function zoomScale()  { return ZOOM_STEPS[zoomStep]; }
-  function zoomed()     { return zoomStep > 0; }
+  function zoomScale() { return ZOOM_STEPS[zoomStep]; }
+  function zoomed()    { return zoomStep > 0; }
 
   function zoomClamp(ox, oy) {
-    if (!lbInnerEl || !lbImg) return { ox, oy };
+    if (!dvImgPanel || !dvImg) return { ox, oy };
     const s = zoomScale();
-    const maxX = Math.max(0, lbImg.offsetWidth  * s - lbInnerEl.clientWidth);
-    const maxY = Math.max(0, lbImg.offsetHeight * s - lbInnerEl.clientHeight);
+    const maxX = Math.max(0, dvImg.offsetWidth  * s - dvImgPanel.clientWidth);
+    const maxY = Math.max(0, dvImg.offsetHeight * s - dvImgPanel.clientHeight);
     return {
       ox: Math.max(-maxX, Math.min(0, ox)),
       oy: Math.max(-maxY, Math.min(0, oy)),
@@ -298,202 +479,173 @@
   }
 
   function zoomApply() {
-    if (!lbImg) return;
+    if (!dvImg) return;
     const s = zoomScale();
-    if (s > 1) {
-      lbImg.style.transform = `scale(${s}) translate(${zoomOriginX / s}px, ${zoomOriginY / s}px)`;
-    } else {
-      lbImg.style.transform = '';
-    }
+    dvImg.style.transform = s > 1
+      ? `scale(${s}) translate(${zoomOriginX / s}px, ${zoomOriginY / s}px)`
+      : '';
   }
 
   function zoomUpdateBtn() {
-    if (!lbZoomBtn) return;
-    const on = zoomed();
-    lbZoomBtn.classList.toggle('active', on);
-    lbZoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    lbZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
+    if (!dvZoomBtn) return;
+    dvZoomBtn.classList.toggle('active', zoomed());
+    dvZoomBtn.setAttribute('aria-pressed', zoomed() ? 'true' : 'false');
+    dvZoomBtn.title = zoomStep === 0 ? 'Zoom in (1.5×)' : zoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
   }
 
   function zoomAdvance() {
-    if (!lbImg || !lbInnerEl) return;
+    if (!dvImg || !dvImgPanel) return;
     zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
     if (zoomStep === 0) {
       zoomOriginX = 0; zoomOriginY = 0;
     } else {
       const s = ZOOM_STEPS[zoomStep];
-      const cx = (lbInnerEl.clientWidth  - lbImg.offsetWidth  * s) / 2;
-      const cy = (lbInnerEl.clientHeight - lbImg.offsetHeight * s) / 2;
-      const c = zoomClamp(cx, cy);
+      const c = zoomClamp(
+        (dvImgPanel.clientWidth  - dvImg.offsetWidth  * s) / 2,
+        (dvImgPanel.clientHeight - dvImg.offsetHeight * s) / 2
+      );
       zoomOriginX = c.ox; zoomOriginY = c.oy;
     }
-    lbInnerEl.classList.toggle('lb-zoomed', zoomed());
+    dvImgPanel.classList.toggle('dv-zoomed', zoomed());
     zoomUpdateBtn();
     zoomApply();
   }
 
   function zoomDisable() {
-    if (!lbImg || !lbInnerEl) return;
     zoomStep = 0; zoomOriginX = 0; zoomOriginY = 0; zoomDragging = false;
-    lbInnerEl.classList.remove('lb-zoomed');
-    if (lbZoomBtn) { lbZoomBtn.classList.remove('active'); lbZoomBtn.setAttribute('aria-pressed', 'false'); lbZoomBtn.title = 'Zoom in (1.5×)'; }
+    dvImgPanel?.classList.remove('dv-zoomed');
+    zoomUpdateBtn();
     zoomApply();
   }
 
-  /* Pointer drag on the lightbox-inner (mouse) */
-  if (lbInnerEl) {
-    lbInnerEl.addEventListener('mousedown', (e) => {
-      if (!zoomed()) return;
-      if (e.target.closest('button')) return;
+  if (dvImgPanel) {
+    dvImgPanel.addEventListener('mousedown', (e) => {
+      if (!zoomed() || e.target.closest('button')) return;
       zoomDragging = true;
       zoomStartX = e.clientX - zoomOriginX;
       zoomStartY = e.clientY - zoomOriginY;
       e.preventDefault();
     });
-
-    lbInnerEl.addEventListener('mousemove', (e) => {
+    dvImgPanel.addEventListener('mousemove', (e) => {
       if (!zoomDragging || !zoomed()) return;
       const c = zoomClamp(e.clientX - zoomStartX, e.clientY - zoomStartY);
       zoomOriginX = c.ox; zoomOriginY = c.oy;
       zoomApply();
     });
-
-    lbInnerEl.addEventListener('mouseup',    () => { zoomDragging = false; });
-    lbInnerEl.addEventListener('mouseleave', () => { zoomDragging = false; });
+    dvImgPanel.addEventListener('mouseup',    () => { zoomDragging = false; });
+    dvImgPanel.addEventListener('mouseleave', () => { zoomDragging = false; });
   }
 
-  function closeInfoPanel() {
-    if (!lbInfoPanel) return;
-    lbInfoPanel.classList.remove('open');
-    lbInfoPanel.setAttribute('aria-hidden', 'true');
-    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'false');
+  /* ── Info panel ── */
+  function openInfo() {
+    dvInfoPanel?.classList.remove('collapsed');
+    dvInfoBtn?.setAttribute('aria-expanded', 'true');
+    infoVisible = true;
+  }
+  function closeInfo() {
+    dvInfoPanel?.classList.add('collapsed');
+    dvInfoBtn?.setAttribute('aria-expanded', 'false');
+    infoVisible = false;
   }
 
-  function openInfoPanel() {
-    if (!lbInfoPanel) return;
-    lbInfoPanel.classList.add('open');
-    lbInfoPanel.setAttribute('aria-hidden', 'false');
-    if (lbInfoBtn) lbInfoBtn.setAttribute('aria-expanded', 'true');
+  /* ── Thumbnail strip in sidebar ── */
+  function renderThumbs() {
+    if (!dvThumbs) return;
+    if (dvList.length <= 1) {
+      dvThumbs.innerHTML = '';
+      dvThumbs.style.display = 'none';
+      return;
+    }
+    dvThumbs.style.display = 'flex';
+    dvThumbs.innerHTML = dvList.map((x, i) => `
+      <button type="button" class="dv-thumb${i === dvIdx ? ' active' : ''}"
+              data-i="${i}" aria-label="View image ${i + 1}"
+              aria-current="${i === dvIdx ? 'true' : 'false'}">
+        <img src="${esc(x.file)}" alt="${esc(x.alt)}" loading="lazy" />
+      </button>
+    `).join('');
+    dvThumbs.onclick = (e) => {
+      const btn = e.target.closest('button.dv-thumb');
+      if (!btn) return;
+      dvIdx = Number(btn.dataset.i);
+      showDv();
+    };
   }
 
-  /* ── Preload adjacent images so next/prev taps feel instant ──
-   * Called at the end of showLb(). Kicks off background fetches for
-   * the next and previous images within the current item's lbList,
-   * and also the first/last image of the neighbouring gear items.
-   * Uses a simple object cache so each URL is only fetched once. */
+  /* ── Preload adjacent images ── */
   const _preloadCache = {};
   function _preload(url) {
     if (!url || _preloadCache[url]) return;
     _preloadCache[url] = new Image();
     _preloadCache[url].src = url;
   }
-
-  function preloadAdjacentImages() {
-    /* Within the current item's image list */
-    [lbIndex - 1, lbIndex + 1].forEach(i => {
-      if (i >= 0 && i < lbList.length) {
-        _preload(lbList[i]?.file);
-      }
+  function preloadAdjacent() {
+    [dvIdx - 1, dvIdx + 1].forEach(i => {
+      if (i >= 0 && i < dvList.length) _preload(dvList[i]?.file);
     });
-
-    /* First/last image of the previous and next gear items */
     [-1, 1].forEach(delta => {
       if (!activeSet.length) return;
-      const nextIdx  = (activeItemIndex + delta + activeSet.length) % activeSet.length;
-      const nextItem = activeSet[nextIdx];
-      if (!nextItem) return;
-      const list  = getList(nextItem);
-      const entry = delta > 0 ? list[0] : list[list.length - 1];
-      if (entry?.file) _preload(entry.file);
+      const ni = (activeItemIndex + delta + activeSet.length) % activeSet.length;
+      const list = getList(activeSet[ni]);
+      _preload(delta > 0 ? list[0]?.file : list[list.length - 1]?.file);
     });
   }
 
-  function showLb() {
-    zoomDisable(); // reset zoom whenever image changes
-    const cur = lbList[lbIndex];
-    lbTitle.textContent = currentItem?.title || '';
-    lbDesc.textContent  = cur.desc || currentItem?.desc || '';
-    lbCount.textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : '';
-    infoPanelVisible ? openInfoPanel() : closeInfoPanel();
+  /* ── Show current image ── */
+  function showDv() {
+    zoomDisable();
+    const cur = dvList[dvIdx];
+    dvTitle.textContent = currentItem?.title || '';
+    dvDesc.textContent  = cur.desc || currentItem?.desc || '';
+    dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
 
-    const canNav = lbList.length > 1 || activeSet.length > 1;
-    lbPrev.style.display = canNav ? '' : 'none';
-    lbNext.style.display = canNav ? '' : 'none';
+    const canNav = dvList.length > 1 || activeSet.length > 1;
+    dvPrev.style.display = canNav ? '' : 'none';
+    dvNext.style.display = canNav ? '' : 'none';
 
-    lbImg.style.display = 'block';
-    lbImg.src = cur.file;
-    lbImg.alt = cur.alt || currentItem?.title || '';
+    dvImg.src = cur.file;
+    dvImg.alt = cur.alt || currentItem?.title || '';
 
+    infoVisible ? openInfo() : closeInfo();
     renderThumbs();
-
-    /* Kick off background fetches for adjacent images */
-    preloadAdjacentImages();
+    preloadAdjacent();
   }
 
-  /* ── Thumbnail strip ── */
-  function renderThumbs() {
-    if (!lbThumbs) return;
-    if (lbList.length <= 1) {
-      lbThumbs.innerHTML = '';
-      lbThumbs.classList.remove('show');
-      return;
-    }
-    lbThumbs.classList.add('show');
-    lbThumbs.innerHTML = lbList.map((x, i) => `
-      <button type="button" class="lb-thumb${i === lbIndex ? ' active' : ''}"
-              data-i="${i}" aria-label="View image ${i + 1}"
-              aria-current="${i === lbIndex ? 'true' : 'false'}">
-        <img src="${esc(x.file)}" alt="${esc(x.alt)}" loading="lazy" />
-      </button>
-    `).join('');
-    lbThumbs.onclick = (e) => {
-      const btn = e.target.closest('button.lb-thumb');
-      if (!btn) return;
-      lbIndex = Number(btn.dataset.i);
-      showLb();
-    };
-  }
-
-  /* ── Navigate between items ── */
   function goToItem(delta) {
-    if (!activeSet || activeSet.length < 2) return;
+    if (!activeSet.length) return;
     activeItemIndex = (activeItemIndex + delta + activeSet.length) % activeSet.length;
     currentItem = activeSet[activeItemIndex];
-    lbList  = getList(currentItem);
-    lbIndex = delta > 0 ? 0 : lbList.length - 1;
-    showLb();
+    dvList  = getList(currentItem);
+    dvIdx   = delta > 0 ? 0 : dvList.length - 1;
+    showDv();
   }
 
-  /* ── Open / close lightbox ── */
-  function openLightbox(item, indexInActiveSet) {
+  function openDetail(item, indexInActiveSet) {
     currentItem     = item;
     activeItemIndex = Number(indexInActiveSet) || 0;
-    lbList  = getList(item);
-    lbIndex = 0;
-    showLb();
-
-    lb.classList.add('open');
-    lb.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('noscroll');
-    requestAnimationFrame(() => lbClose.focus());
+    dvList  = getList(item);
+    dvIdx   = 0;
+    showDv();
+    dv.classList.add('open');
+    dv.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('detail-open', 'noscroll');
+    requestAnimationFrame(() => dvBack.focus());
   }
 
-  function closeLightbox() {
+  function closeDetail() {
     zoomDisable();
-    lb.classList.remove('open');
-    lb.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('noscroll');
-
-    lbImg.src = ''; lbImg.style.display = 'block';
-    lbTitle.textContent = ''; lbDesc.textContent = ''; lbCount.textContent = '';
-    if (lbThumbs) { lbThumbs.innerHTML = ''; lbThumbs.classList.remove('show'); }
-    closeInfoPanel();
-    currentItem = null; lbList = []; lbIndex = 0; activeItemIndex = 0;
-    infoPanelVisible = true;
+    dv.classList.remove('open');
+    dv.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('detail-open', 'noscroll');
+    dvImg.src = '';
+    dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
+    currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
+    infoVisible = true;
   }
 
-  /* ── Unified tap handler — identical to gallery.html ── */
   function addTapHandler(el, fn) {
+    if (!el) return;
     el.addEventListener('click', fn);
     el.addEventListener('touchend', function (e) {
       e.preventDefault();
@@ -540,132 +692,93 @@
   }
 
   function init() {
-    /* ── View mode: grid / list ── */
     const viewBtnGrid = document.getElementById('viewBtnGrid');
     const viewBtnList = document.getElementById('viewBtnList');
-
     let currentView = 'grid';
 
     function applyView(view) {
       currentView = view;
       grid.classList.toggle('list-view', view === 'list');
-
       [viewBtnGrid, viewBtnList].forEach(btn => {
-        if (btn) {
-          const isActive = btn.dataset.view === view;
-          btn.classList.toggle('active', isActive);
-          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        }
+        if (!btn) return;
+        const isActive = btn.dataset.view === view;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
-
       render();
     }
 
     const savedView = localStorage.getItem('gearView') || 'grid';
     applyView(savedView === 'list' ? 'list' : 'grid');
 
-    viewBtnGrid?.addEventListener('click', () => {
-      localStorage.setItem('gearView', 'grid');
-      applyView('grid');
-    });
-
-    viewBtnList?.addEventListener('click', () => {
-      localStorage.setItem('gearView', 'list');
-      applyView('list');
-    });
+    viewBtnGrid?.addEventListener('click', () => { localStorage.setItem('gearView', 'grid'); applyView('grid'); });
+    viewBtnList?.addEventListener('click', () => { localStorage.setItem('gearView', 'list'); applyView('list'); });
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        setActiveFilter(pill.dataset.filter);
-        render();
-      });
+      pill.addEventListener('click', () => { setActiveFilter(pill.dataset.filter); render(); });
     });
 
-    /* Card click → open lightbox — identical to gallery.html */
     grid.addEventListener('click', (e) => {
       const a = e.target.closest('a.card');
       if (!a) return;
       e.preventDefault();
       const item = items[Number(a.dataset.idx)];
-      if (item) openLightbox(item, Number(a.dataset.activeIdx));
+      if (item) openDetail(item, Number(a.dataset.activeIdx));
     });
 
-    addTapHandler(lbClose, closeLightbox);
+    addTapHandler(dvBack, closeDetail);
 
-    /* Zoom button */
-    if (lbZoomBtn) {
-      addTapHandler(lbZoomBtn, (e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        zoomAdvance();
-      });
-    }
-
-    /* Info panel toggle */
-    if (lbInfoBtn && lbInfoPanel) {
-      addTapHandler(lbInfoBtn, (e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        infoPanelVisible = !infoPanelVisible;
-        infoPanelVisible ? openInfoPanel() : closeInfoPanel();
-        lbInfoBtn.setAttribute('aria-label', infoPanelVisible ? 'Hide image information' : 'Show image information');
-      });
-    }
-
-    addTapHandler(lbPrev, (e) => {
+    addTapHandler(dvZoomBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      if (lbList.length > 1) {
-        lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1);
-      } else {
-        goToItem(-1);
-      }
+      zoomAdvance();
     });
 
-    addTapHandler(lbNext, (e) => {
+    addTapHandler(dvInfoBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      if (lbList.length > 1) {
-        lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1);
-      } else {
-        goToItem(+1);
-      }
+      infoVisible ? closeInfo() : openInfo();
+      dvInfoBtn.setAttribute('aria-label', infoVisible ? 'Show image information' : 'Hide image information');
     });
 
-    /* Click outside inner panel closes lightbox */
-    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    addTapHandler(dvPrev, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      dvList.length > 1
+        ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1))
+        : goToItem(-1);
+    });
 
-    lb.addEventListener('touchend', (e) => {
-      if (e.target === lb) {
-        e.preventDefault();
-        closeLightbox();
-      }
-    }, { passive: false });
+    addTapHandler(dvNext, (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      dvList.length > 1
+        ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
+        : goToItem(+1);
+    });
 
-    /* Keyboard navigation */
     document.addEventListener('keydown', (e) => {
-      if (!lb.classList.contains('open')) return;
-      if (e.key === 'Escape')     closeLightbox();
-      if (e.key === 'ArrowLeft') {
-        lbList.length > 1
-          ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
+      if (!dv.classList.contains('open')) return;
+      if (e.key === 'Escape') closeDetail();
+      if (e.key === 'ArrowLeft')
+        dvList.length > 1
+          ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1))
           : goToItem(-1);
-      }
-      if (e.key === 'ArrowRight') {
-        lbList.length > 1
-          ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
+      if (e.key === 'ArrowRight')
+        dvList.length > 1
+          ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
           : goToItem(+1);
+      if (e.key === 'Tab') {
+        const focusable = Array.from(dv.querySelectorAll('button:not([disabled])'));
+        if (!focusable.length) { e.preventDefault(); return; }
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+        else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
       }
     });
 
-    /* Touch swipe — identical to gallery.html */
-    let touchStartX  = 0;
-    let touchStartY  = 0;
-    let isTouchOnBtn = false;
-    const lbInner = lb.querySelector('.lightbox-inner');
+    let touchStartX = 0, touchStartY = 0, isTouchOnBtn = false;
 
-    lbInner.addEventListener('touchstart', (e) => {
-      isTouchOnBtn = !!e.target.closest('.lightbox-close, .lightbox-nav, .lightbox-info-btn, .lightbox-zoom-btn');
+    dvImgPanel.addEventListener('touchstart', (e) => {
+      isTouchOnBtn = !!e.target.closest('button');
       touchStartX  = e.touches[0].clientX;
       touchStartY  = e.touches[0].clientY;
-
-      /* Start zoom-pan drag if zoomed and not on a button */
       if (zoomed() && !isTouchOnBtn && e.touches.length === 1) {
         zoomDragging = true;
         zoomStartX = e.touches[0].clientX - zoomOriginX;
@@ -673,39 +786,29 @@
       }
     }, { passive: true });
 
-    lbInner.addEventListener('touchmove', (e) => {
+    dvImgPanel.addEventListener('touchmove', (e) => {
       if (zoomed() && zoomDragging && e.touches.length === 1) {
-        const c = zoomClamp(
-          e.touches[0].clientX - zoomStartX,
-          e.touches[0].clientY - zoomStartY
-        );
+        const c = zoomClamp(e.touches[0].clientX - zoomStartX, e.touches[0].clientY - zoomStartY);
         zoomOriginX = c.ox; zoomOriginY = c.oy;
         zoomApply();
-        e.preventDefault(); // prevent page scroll while panning
+        e.preventDefault();
       }
     }, { passive: false });
 
-    lbInner.addEventListener('touchend', (e) => {
+    dvImgPanel.addEventListener('touchend', (e) => {
       zoomDragging = false;
-
-      if (isTouchOnBtn) {
-        isTouchOnBtn = false;
-        return;
-      }
-
-      // Don't swipe-navigate when zoomed
+      if (isTouchOnBtn) { isTouchOnBtn = false; return; }
       if (zoomed()) return;
-
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         if (dx < 0) {
-          lbList.length > 1
-            ? (lbIndex < lbList.length - 1 ? (lbIndex++, showLb()) : goToItem(+1))
+          dvList.length > 1
+            ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
             : goToItem(+1);
         } else {
-          lbList.length > 1
-            ? (lbIndex > 0 ? (lbIndex--, showLb()) : goToItem(-1))
+          dvList.length > 1
+            ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1))
             : goToItem(-1);
         }
       }
