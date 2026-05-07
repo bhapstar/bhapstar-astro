@@ -232,15 +232,6 @@
     btnInstall.addEventListener('click', () => {
       iosTip.hidden = !iosTip.hidden;
     });
-  } else {
-    btnInstall.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      banner.hidden = true;
-      sessionStorage.setItem('pwaBannerDismissed', '1');
-    });
   }
 
   btnClose.addEventListener('click', () => {
@@ -251,6 +242,186 @@
   // Hide banner if user installs via browser UI rather than our button
   window.addEventListener('appinstalled', () => {
     banner.hidden = true;
+    if (!localStorage.getItem('appDiscountShown')) {
+      setTimeout(() => showDiscountModal(), 800);
+    }
+  });
+
+  // Also hook the install button for Android/desktop — show modal after accepted
+  const _origInstallClick = btnInstall.onclick;
+  btnInstall.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    banner.hidden = true;
+    sessionStorage.setItem('pwaBannerDismissed', '1');
+    if (outcome === 'accepted' && !localStorage.getItem('appDiscountShown')) {
+      setTimeout(() => showDiscountModal(), 800);
+    }
+  });
+})();
+</script>
+
+<!-- ─────────────────────────────────────────
+     APP INSTALL DISCOUNT MODAL
+     - Shown once after PWA install (Android/desktop: appinstalled event)
+     - iOS: shown on first launch in standalone mode
+     - Shown only once ever (localStorage flag)
+───────────────────────────────────────── -->
+<div id="appDiscountOverlay" class="app-discount-overlay" hidden></div>
+<div id="appDiscountModal" class="app-discount-modal" hidden role="dialog" aria-modal="true" aria-labelledby="discountModalTitle">
+  <button class="app-discount-close" id="appDiscountClose" aria-label="Close">✕</button>
+  <div class="app-discount-icon">🎉</div>
+  <h2 id="discountModalTitle">Thanks for installing the app!</h2>
+  <p>Here's a little thank-you — use this code on the <a href="/prints.html">Prints page</a> for <strong>10% off</strong>:</p>
+  <div class="app-discount-code">BhapstarApp10</div>
+  <button class="btn primary app-discount-copy-btn" id="appDiscountCopy">Copy Code</button>
+  <a href="/prints.html" class="btn app-discount-prints-btn">Go to Prints</a>
+</div>
+
+<style>
+.app-discount-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.app-discount-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 201;
+  background: linear-gradient(135deg, #0d0b2a 0%, #1a0f3c 100%);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  border-radius: 16px;
+  padding: 2rem 2rem 1.75rem;
+  max-width: 360px;
+  width: calc(100% - 2.5rem);
+  text-align: center;
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.35), 0 0 0 1px rgba(167,139,250,0.1);
+}
+.app-discount-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #6b5f8a;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 6px;
+  line-height: 1;
+}
+.app-discount-close:hover { color: #a78bfa; }
+.app-discount-icon {
+  font-size: 2.6rem;
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.app-discount-modal h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem;
+  color: #e2d9f3;
+}
+.app-discount-modal p {
+  font-size: 0.88rem;
+  color: #9c8abf;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+.app-discount-modal p a { color: #a78bfa; text-decoration: none; }
+.app-discount-modal p a:hover { text-decoration: underline; }
+.app-discount-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  margin-bottom: 1.1rem;
+  user-select: all;
+  display: block;
+}
+.app-discount-copy-btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.6rem;
+}
+.app-discount-prints-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;
+}
+</style>
+
+<script>
+(function () {
+  // ── iOS first-launch detection ──
+  // On iOS, appinstalled never fires. Instead we detect the first time
+  // the user opens the site in standalone mode (i.e. from home screen).
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (isStandalone && !localStorage.getItem('appDiscountShown')) {
+    // Small delay so the page settles before the modal appears
+    setTimeout(() => showDiscountModal(), 1200);
+  }
+
+  // ── Modal logic ──
+  window.showDiscountModal = function () {
+    const modal   = document.getElementById('appDiscountModal');
+    const overlay = document.getElementById('appDiscountOverlay');
+    if (!modal || !overlay) return;
+    modal.hidden   = false;
+    overlay.hidden = false;
+    localStorage.setItem('appDiscountShown', '1');
+  };
+
+  function closeDiscountModal() {
+    const modal   = document.getElementById('appDiscountModal');
+    const overlay = document.getElementById('appDiscountOverlay');
+    if (modal)   modal.hidden   = true;
+    if (overlay) overlay.hidden = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.getElementById('appDiscountClose');
+    const copyBtn  = document.getElementById('appDiscountCopy');
+    const overlay  = document.getElementById('appDiscountOverlay');
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDiscountModal);
+    if (overlay)  overlay.addEventListener('click', closeDiscountModal);
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText('BhapstarApp10').then(() => {
+          copyBtn.textContent = '✓ Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy Code'; }, 2000);
+        }).catch(() => {
+          // Fallback for older browsers
+          const el = document.querySelector('.app-discount-code');
+          if (el) {
+            const range = document.createRange();
+            range.selectNode(el);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            copyBtn.textContent = '✓ Copied!';
+            setTimeout(() => { copyBtn.textContent = 'Copy Code'; }, 2000);
+          }
+        });
+      });
+    }
   });
 })();
 </script>
