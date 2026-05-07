@@ -10,7 +10,7 @@
 // Disable SW entirely on local dev so Live Server hot-reload works normally
 if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
 
-const CACHE_VERSION = 'bhapstar-98e1ee5';
+const CACHE_VERSION = 'bhapstar-98ea867';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -89,8 +89,12 @@ self.addEventListener('fetch', event => {
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_VERSION);
+  // For navigation and shell requests, bypass the browser HTTP cache entirely
+  const fetchRequest = request.mode === 'navigate' || /\.(html|css|js)$/i.test(new URL(request.url).pathname)
+    ? new Request(request, { cache: 'no-store' })
+    : request;
   try {
-    const response = await fetch(request);
+    const response = await fetch(fetchRequest);
     if (response.ok) {
       cache.put(request, response.clone());
     }
