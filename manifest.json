@@ -7,6 +7,13 @@
   "background_color": "#050414",
   "theme_color": "#050414",
   "orientation": "any",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://bhapstar.com/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "images/icons/icon-192.png",

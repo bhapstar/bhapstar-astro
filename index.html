@@ -208,18 +208,26 @@
   // Non-iOS fallback: show banner after 1.5s if prompt hasn't fired
   // (incognito, already installed, or unsupported browser)
   if (!isIos) {
-    setTimeout(() => {
-      if (!promptAvailable) {
-        banner.hidden = false;
-        btnInstall.textContent = 'How?';
-        if (subText) subText.textContent = 'Install via your browser';
-        if (iosTip) {
-          iosTip.innerHTML = 'Click or tap the <strong>browser menu</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>. If that option isn\'t visible, try opening the site in a regular browsing window (not incognito or guest modes).';
-        }
-        btnInstall.addEventListener('click', () => {
-          iosTip.hidden = !iosTip.hidden;
-        });
+    setTimeout(async () => {
+      if (promptAvailable) return; // native prompt already showing
+
+      // Check if already installed via Relationship API (Chrome/Edge)
+      if ('getInstalledRelatedApps' in navigator) {
+        try {
+          const related = await navigator.getInstalledRelatedApps();
+          if (related.length > 0) return; // app is installed — stay silent
+        } catch (e) { /* ignore — proceed to show banner */ }
       }
+
+      banner.hidden = false;
+      btnInstall.textContent = 'How?';
+      if (subText) subText.textContent = 'Install via your browser';
+      if (iosTip) {
+        iosTip.innerHTML = 'Click or tap the <strong>browser menu</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>. If that option isn\'t visible, try opening the site in a regular browsing window (not incognito or guest modes).';
+      }
+      btnInstall.addEventListener('click', () => {
+        iosTip.hidden = !iosTip.hidden;
+      });
     }, 1500);
   }
 
