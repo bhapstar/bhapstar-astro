@@ -56,6 +56,13 @@
     "type": "nebulae"
   },
   {
+  "file": "images/Needle Galaxy.webp",
+  "title": "The Needle Galaxy (NGC 4565)",
+  "desc": "A spiral galaxy seen almost perfectly edge-on, revealing the razor-thin disk and prominent dust lane that bisects its glowing core. What would appear as a sweeping spiral face-on is reduced to a sliver of light — a reminder that perspective alone can transform the familiar into something extraordinary.",
+  "alt": "The Needle Galaxy",
+  "type": "galaxies"
+  },
+  {
     "file": "images/Eagle Nebula.webp",
     "title": "The Eagle Nebula (M16)",
     "desc": "A vast stellar nursery where dense clouds of gas and dust give rise to new generations of stars. The iconic Pillars of Creation rise from the nebula’s core, slowly eroded by radiation from the young stars forming within.",
