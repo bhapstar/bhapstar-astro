@@ -354,8 +354,23 @@
     /* Hide gallery controls while detail view is open (body class) */
     body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
 
-    /* Hide card descriptions when desc-toggle is active — desktop gallery only */
-    #galleryGrid.hide-desc .card .cap .d { display: none; }
+    /* Description slide animation — transition on the element itself */
+    #galleryGrid .card .cap .d {
+      overflow: hidden;
+      max-height: 6em;      /* tall enough for any description */
+      opacity: 1;
+      margin-top: 4px;
+      transition: max-height 320ms cubic-bezier(0.16,1,0.3,1),
+                  opacity    240ms ease,
+                  margin-top 280ms ease;
+    }
+
+    /* Slide out when desc-toggle is active — desktop gallery only */
+    #galleryGrid.hide-desc .card .cap .d {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+    }
 
     /* Hide the desc-toggle button on mobile (descriptions are already hidden there) */
     @media (max-width: 720px) {
