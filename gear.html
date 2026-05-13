@@ -262,6 +262,14 @@
     @media (max-width: 720px) {
       .grid .card .cap .d { display: none; }
     }
+
+    /* Hide card descriptions when desc-toggle is active — desktop gear page only */
+    #gearGrid.hide-desc .card .cap .d { display: none; }
+
+    /* Hide the desc-toggle button on mobile (descriptions are already hidden there) */
+    @media (max-width: 720px) {
+      #viewBtnDesc { display: none; }
+    }
   </style>
   <link rel="manifest" href="/manifest.json" />
 </head>
@@ -311,6 +319,13 @@
                 <rect x="0" y="1" width="14" height="2.5" rx="1" fill="currentColor"/>
                 <rect x="0" y="5.75" width="14" height="2.5" rx="1" fill="currentColor"/>
                 <rect x="0" y="10.5" width="14" height="2.5" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+            <button id="viewBtnDesc" class="view-btn" type="button" aria-pressed="false" aria-label="Hide descriptions" title="Hide descriptions">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="1"  width="14" height="2"   rx="1" fill="currentColor"/>
+                <rect x="0" y="5"  width="10" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
+                <rect x="0" y="9"  width="12" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
               </svg>
             </button>
           </div>
@@ -713,6 +728,25 @@
 
     viewBtnGrid?.addEventListener('click', () => { localStorage.setItem('gearView', 'grid'); applyView('grid'); });
     viewBtnList?.addEventListener('click', () => { localStorage.setItem('gearView', 'list'); applyView('list'); });
+
+    /* ── Description toggle ── */
+    const viewBtnDesc   = document.getElementById('viewBtnDesc');
+    const HIDE_DESC_KEY = 'gearHideDesc';
+    function applyDescToggle(hide) {
+      grid.classList.toggle('hide-desc', hide);
+      if (viewBtnDesc) {
+        viewBtnDesc.classList.toggle('active', hide);
+        viewBtnDesc.setAttribute('aria-pressed', hide ? 'true' : 'false');
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show descriptions' : 'Hide descriptions');
+        viewBtnDesc.title = hide ? 'Show descriptions' : 'Hide descriptions';
+      }
+    }
+    applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
+    viewBtnDesc?.addEventListener('click', () => {
+      const nowHidden = !grid.classList.contains('hide-desc');
+      localStorage.setItem(HIDE_DESC_KEY, nowHidden ? '1' : '0');
+      applyDescToggle(nowHidden);
+    });
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
       pill.addEventListener('click', () => { setActiveFilter(pill.dataset.filter); render(); });
