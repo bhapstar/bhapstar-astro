@@ -80,11 +80,13 @@
     "type": "others"
   },
   {
-    "file": "images/Bodes & Cigar 2.webp",
+    "images": [
+      { "file": "images/Bodes & Cigar 2.webp", "alt": "Bodes & Cigar" },
+      { "file": "images/Bodes & Cigar.webp", "alt": "Bodes & Cigar" }
+    ],
     "title": "The Bode's (M81) and Cigar (M82) Galaxies",
-    "desc": "A closely interacting pair of galaxies in Ursa Major, their gravitational encounter leaving lasting marks on both systems. While M81 retains its elegant spiral structure, M82 shows intense starburst activity triggered by their past interaction.",
-    "alt": "Bodes & Cigar",
-    "type": "galaxies"
+    "desc": "Two renders of this closely interacting pair of galaxies in Ursa Major - one early on in my astrophotography journey and one more recent with newer equipment and much imporving processing techniques. The gravitational pull of these galaxies in Ursa Major leaved lasting marks on both systems. While M81 retains its elegant spiral structure, M82 shows intense starburst activity triggered by their past interaction.",
+    "type": "others"
   },
   {
   "file": "images/Pinwheel.webp",
