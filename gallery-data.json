@@ -71,6 +71,15 @@
   },
   {
     "images": [
+      { "file": "images/Eagle Nebula.webp", "alt": "The Eagle Nebula" },
+      { "file": "images/Eagle Nebula 2.webp", "alt": "The Eagle Nebula" }
+    ],
+    "title": "The Eagle Nebula (M16)",
+    "desc": "Two renders of this iconic stellar nursery in Serpens — an earlier capture and a more recent revisit with improved data and refined processing. Dense pillars of gas and dust rise from the Eagle Nebula's core, slowly sculpted by intense radiation from the young stars forming within. The Pillars of Creation, made famous by Hubble, sit at the heart of this vast region of active star birth.",
+    "type": "nebulae"
+  },
+  {
+    "images": [
       { "file": "images/The Moon_1.webp", "alt": "The Moon" },
       { "file": "images/The Moon_2.webp", "alt": "The Moon" },
       { "file": "images/The Moon_3.webp", "alt": "The Moon" }
