@@ -641,7 +641,7 @@ h1.hero-byline{
   padding: 10px 13px; border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(5,4,20,0.50);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
   transition: background 220ms ease;
 }
 .card:hover .cap{
