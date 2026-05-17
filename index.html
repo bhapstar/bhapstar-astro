@@ -43,7 +43,7 @@
   <link rel="preload" as="image" href="images/Orion%20Nebula.webp" fetchpriority="high" />
 
   <!-- Preload gallery data for faster hero slideshow -->
-  <link rel="preload" href="gallery-data.json" as="fetch" crossorigin />
+  <link rel="preload" href="site-data.json" as="fetch" crossorigin />
 
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -642,7 +642,7 @@
 
 <!-- ─────────────────────────────────────────
      HERO BACKGROUND SLIDESHOW
-     - Fetches gallery-data.json as single source of truth
+     - Fetches site-data.json as single source of truth
      - Randomises and cycles images every HOLD_MS
      - Crossfades between two layers (A / B)
      - Preloads upcoming images to avoid stutter
@@ -676,7 +676,7 @@
 
   let items = [];
   try {
-    const res = await fetch('gallery-data.json', { cache: 'default' });
+    const res = await fetch('site-data.json', { cache: 'default' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     items = await res.json();
     if (!Array.isArray(items) || !items.length) throw new Error('Empty');

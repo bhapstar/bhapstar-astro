@@ -548,6 +548,13 @@
     }).join('');
   }
 
+  function heroImg(post) {
+    if (post.file)                         return post.file;
+    if (post.images && post.images.length) return post.images[0].file;
+    if (post.videos && post.videos.length) return post.videos[0].poster;
+    return '';
+  }
+
   function render() {
     const visible = activeFilter === 'all'
       ? posts
@@ -565,7 +572,7 @@
            role="article" tabindex="0" aria-label="${esc(featured.title)}">
         <div class="blog-featured-img-wrap">
           <img class="blog-featured-img"
-               src="${esc(featured.image)}" alt="${esc(featured.title)}"
+               src="${esc(heroImg(featured))}" alt="${esc(featured.title)}"
                loading="eager" decoding="async" />
         </div>
         <div class="blog-featured-body">
@@ -589,7 +596,7 @@
                role="article" tabindex="0" aria-label="${esc(post.title)}">
             <div class="blog-row-img-wrap">
               <img class="blog-row-img"
-                   src="${esc(post.image)}" alt="${esc(post.title)}"
+                   src="${esc(heroImg(post))}" alt="${esc(post.title)}"
                    loading="${i < 4 ? 'eager' : 'lazy'}" decoding="async" />
             </div>
             <div class="blog-row-body">
@@ -623,7 +630,7 @@
 
     postType.textContent  = TYPE_LABELS[post.type] || post.type;
     postTitle.textContent = post.title;
-    postHeroImg.src       = post.image;
+    postHeroImg.src       = heroImg(post);
     postHeroImg.alt       = post.title;
     postIntro.textContent = post.intro;
     postBody.innerHTML    = bodyToHtml(post.body);
@@ -658,7 +665,7 @@
 
   async function loadData() {
     try {
-      const res = await fetch('blog-data.json');
+      const res = await fetch('site-data.json');
       if (!res.ok) throw new Error(res.status);
       posts = await res.json();
       render();

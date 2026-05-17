@@ -2,7 +2,7 @@
 // Bhapstar Service Worker
 // Strategy:
 //   - Shell (HTML, CSS, JS, partials)  → Network-first (fresh on every load, cache as offline fallback)
-//   - gallery-data.json / gear-data.json → Stale-while-revalidate
+//   - site-data.json / gear-data.json → Stale-while-revalidate
 //   - Images (.webp, .png, .jpg, .svg)  → Cache-first (long-lived assets)
 //   - External (Cloudflare, Formspree, Vimeo, fonts) → Network-only
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ const SHELL_ASSETS = [
   '/partials/partials.js',
   '/partials/header.html',
   '/partials/footer.html',
-  '/gallery-data.json',
+  '/site-data.json',
   '/gear-data.json',
   '/images/icons/favicon-32.png',
   '/images/icons/apple-touch-icon.png',
@@ -75,7 +75,7 @@ self.addEventListener('fetch', event => {
     return; // fall through to browser default
   }
 
-  // gallery-data.json / gear-data.json → stale-while-revalidate
+  // site-data.json / gear-data.json → stale-while-revalidate
   if (url.pathname.endsWith('-data.json')) {
     event.respondWith(staleWhileRevalidate(request));
     return;

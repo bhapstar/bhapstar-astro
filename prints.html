@@ -661,7 +661,7 @@ label:has(.items-info-btn) {
 
   async function loadGalleryTitles() {
     try {
-      const res = await fetch('https://bhapstar.com/gallery-data.json');
+      const res = await fetch('https://bhapstar.com/site-data.json');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
 
@@ -698,7 +698,7 @@ label:has(.items-info-btn) {
 
       GALLERY_TITLES = PICKER_ENTRIES.filter(e => !e.isHeader).map(e => e.label);
     } catch (err) {
-      console.warn('Could not load gallery-data.json:', err);
+      console.warn('Could not load site-data.json:', err);
       GALLERY_TITLES = [];
     }
   }

@@ -425,7 +425,7 @@
 /* ═══════════════════════════════════════════════════════════════
    SUPERNOVA SWEEPER — bhapstar Astrophotography
    Cosmic-themed minesweeper with deep-sky image reveal behind
-   the cleared cells. Image is loaded from gallery-data.json
+   the cleared cells. Image is loaded from site-data.json
    (same source as jigsaw).
 
    Difficulties:
@@ -447,14 +447,14 @@
   let currentImage = null; // kept for win overlay (picks one of the block images)
 
   async function loadGallery() {
-    // Try gallery-data.json first to get thumb paths
+    // Try site-data.json first to get thumb paths
     try {
-      const res = await fetch('gallery-data.json', { cache: 'default' });
+      const res = await fetch('site-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const items = await res.json();
       thumbFiles = flattenThumbs(items);
     } catch (e) {
-      console.warn('Minesweeper: could not load gallery data', e);
+      console.warn('Minesweeper: could not load site data', e);
     }
     // Fallback: try a few numbered thumbs from images/thumbs/
     if (!thumbFiles.length) {
