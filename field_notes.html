@@ -180,8 +180,12 @@
     @keyframes shimmer { from { background-position: 200% 0 } to { background-position: -200% 0 } }
     .blog-empty { padding: 40px 0; color: var(--muted); font-size: 14px; }
 
+    /* Scoped fade-in for blog cards — independent of global .reveal observer */
+    .blog-reveal { opacity: 0; transform: translateY(14px); transition: opacity 420ms ease, transform 420ms ease; }
+    .blog-reveal.in { opacity: 1; transform: translateY(0); }
+
     /* Ensure reveal animation never blocks clicks on blog entries */
-    #blogIndex .reveal     { pointer-events: auto !important; }
+    #blogIndex .blog-reveal     { pointer-events: auto !important; }
     #blogIndex [data-slug] { pointer-events: auto !important; cursor: pointer; }
 
 
@@ -962,7 +966,7 @@
     const featured = featuredPost;
 
     const featuredHtml = `
-      <div class="blog-featured reveal" data-slug="${esc(featured.slug)}"
+      <div class="blog-featured blog-reveal" data-slug="${esc(featured.slug)}"
            role="article" tabindex="0" aria-label="${esc(featured.title)}">
         <div class="blog-featured-polaroid">
           <img class="blog-featured-img"
@@ -985,7 +989,7 @@
     const listHtml = rest.length ? `
       <div class="blog-wall">
         ${rest.map((post, i) => `
-          <div class="blog-pcard reveal" data-slug="${esc(post.slug)}"
+          <div class="blog-pcard blog-reveal" data-slug="${esc(post.slug)}"
                role="article" tabindex="0" aria-label="${esc(post.title)}">
             <img class="blog-pcard-img"
                  src="${esc(thumbImg(post))}" alt="${esc(post.title)}"
@@ -1000,10 +1004,8 @@
     blogIndex.innerHTML = featuredHtml + listHtml;
 
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        blogIndex.querySelectorAll('.reveal').forEach((el, i) => {
-          setTimeout(() => el.classList.add('in'), i * 50);
-        });
+      blogIndex.querySelectorAll('.blog-reveal').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), i * 50);
       });
     });
 
