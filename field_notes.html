@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Field Notes — Bhapstar Astrophotography</title>
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/field_notes.html" />
+  <meta name="description" content="Astrophotography write-ups — nebulae, galaxies, star clusters and more. Imaging notes, equipment details and the stories behind each capture." />
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="Field Notes — Bhapstar Astrophotography" />
+  <meta property="og:description"  content="Astrophotography write-ups — nebulae, galaxies, star clusters and more." />
+  <meta property="og:image"        content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url"          content="https://bhapstar.com/field_notes.html" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Field Notes — Bhapstar Astrophotography" />
+  <meta name="twitter:description" content="Astrophotography write-ups — nebulae, galaxies, star clusters and more." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <style>
+
+    /* ══════════════════════════════════════
+       BLOG INDEX
+    ══════════════════════════════════════ */
+
+    /* ══ DESIGN G: POLAROID WALL ══ */
+    .blog-subhead {
+      font-size: 14px; color: var(--muted); line-height: 1.6;
+      max-width: 560px; margin-top: 12px; margin-bottom: 36px;
+    }
+    .blog-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
+
+    /* Subtle corkboard texture hint */
+    #blogIndex {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(167,139,250,0.04), transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(96,165,250,0.03),  transparent 55%);
+      padding: 8px 0 48px;
+    }
+
+    /* ── Featured polaroid ── */
+    .blog-featured {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 56px; cursor: pointer;
+    }
+    .blog-featured-polaroid {
+      background: #f5f2eb;
+      padding: 12px 12px 52px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.70), 0 4px 16px rgba(0,0,0,0.50);
+      transform: rotate(-1.5deg);
+      transition: transform 380ms cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 300ms ease;
+      max-width: 480px; width: 90%;
+      position: relative;
+    }
+    .blog-featured:hover .blog-featured-polaroid {
+      transform: rotate(0deg) scale(1.03);
+      box-shadow: 0 32px 90px rgba(0,0,0,0.80), 0 0 60px rgba(167,139,250,0.15);
+    }
+
+    .blog-featured-img {
+      width: 100%; display: block; aspect-ratio: 4/3;
+      object-fit: cover;
+      filter: sepia(0.08) saturate(1.10) contrast(1.04);
+    }
+    .blog-featured-caption {
+      padding: 14px 4px 0;
+      text-align: center;
+    }
+    .blog-featured-badge {
+      font-size: 9px; letter-spacing: 0.20em; text-transform: uppercase;
+      color: rgba(167,139,250,0.70); display: block; margin-bottom: 6px;
+    }
+    .blog-featured-title {
+      font-family: 'Georgia', serif;
+      font-size: clamp(15px, 2vw, 20px); font-weight: 400;
+      color: #2a2035; line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .blog-featured-date {
+      font-size: 10px; color: rgba(80,60,110,0.55); letter-spacing: 0.06em;
+    }
+    .blog-featured-read {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 10px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.10em;
+      text-transform: uppercase; color: rgba(167,139,250,0.80);
+      transition: gap 200ms ease, color 200ms ease;
+    }
+    .blog-featured:hover .blog-featured-read { gap: 10px; color: #a78bfa; }
+
+    /* ── Polaroid wall (remaining posts) ── */
+    .blog-wall {
+      display: flex; flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px 20px;
+      padding: 0 8px;
+    }
+    .blog-pcard {
+      cursor: pointer;
+      background: #f5f2eb;
+      padding: 10px 10px 44px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.60), 0 2px 8px rgba(0,0,0,0.40);
+      transition: transform 350ms cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 280ms ease;
+      position: relative;
+      width: 200px;
+      flex-shrink: 0;
+    }
+    /* Staggered tilts — alternating pattern */
+    .blog-pcard:nth-child(3n+1) { transform: rotate(-2.8deg); }
+    .blog-pcard:nth-child(3n+2) { transform: rotate(1.6deg);  }
+    .blog-pcard:nth-child(3n+3) { transform: rotate(-1.0deg); }
+    .blog-pcard:nth-child(5n+1) { transform: rotate(2.2deg);  }
+    .blog-pcard:nth-child(7n+1) { transform: rotate(-1.8deg); }
+    .blog-pcard:hover {
+      transform: rotate(0deg) scale(1.08) translateY(-8px) !important;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.75), 0 0 40px rgba(167,139,250,0.12);
+      z-index: 10;
+    }
+
+    .blog-pcard-img {
+      width: 100%; display: block; aspect-ratio: 1;
+      object-fit: cover;
+      filter: sepia(0.06) saturate(1.08) contrast(1.03);
+    }
+    .blog-pcard-caption {
+      padding: 10px 2px 0;
+      text-align: center;
+    }
+    .blog-pcard-title {
+      font-family: 'Georgia', serif;
+      font-size: 12.5px; font-weight: 400; line-height: 1.35;
+      color: #2a2035;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .blog-pcard-type {
+      font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(80,60,110,0.50); margin-top: 5px;
+    }
+    .blog-pcard-date {
+      font-size: 9px; color: rgba(80,60,110,0.42); letter-spacing: 0.04em;
+      margin-top: 3px;
+    }
+
+
+
+    /* Skeleton */
+    .blog-skel-featured {
+      width: 90%; max-width: 480px; margin: 0 auto 56px;
+      aspect-ratio: 4/3;
+      background: rgba(167,139,250,0.05);
+      border: 1px solid rgba(167,139,250,0.08);
+      border-radius: 2px;
+      position: relative; overflow: hidden;
+    }
+    .blog-skel-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px 20px; }
+    .blog-skel-card {
+      width: 200px; aspect-ratio: 1;
+      background: rgba(167,139,250,0.04);
+      border: 1px solid rgba(167,139,250,0.06);
+      position: relative; overflow: hidden;
+    }
+    .blog-skel-featured::after, .blog-skel-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 30%, rgba(167,139,250,0.06) 50%, transparent 70%);
+      background-size: 200% 100%; animation: shimmer 1.6s infinite;
+    }
+    @keyframes shimmer { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+    .blog-empty { padding: 40px 0; color: var(--muted); font-size: 14px; }
+
+    /* Ensure reveal animation never blocks clicks on blog entries */
+    #blogIndex .reveal     { pointer-events: auto !important; }
+    #blogIndex [data-slug] { pointer-events: auto !important; cursor: pointer; }
+
+
+    /* ══════════════════════════════════════
+       FULL POST VIEW
+    ══════════════════════════════════════ */
+
+    #postView {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      transform: translateY(100%);
+      transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto; overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.16) transparent;
+      pointer-events: none;
+    }
+    #postView.open { transform: translateY(0); pointer-events: auto; }
+
+    /* Full-width banner */
+    .post-banner {
+      width: 100%; height: 55vh;
+      min-height: 280px; max-height: 520px;
+      position: relative; overflow: hidden;
+    }
+    .post-banner-img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      filter: saturate(1.08) contrast(1.03);
+    }
+    .post-banner::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(5,4,20,0.08) 0%,
+        rgba(5,4,20,0.0)  35%,
+        rgba(5,4,20,0.65) 78%,
+        rgba(5,4,20,1.0)  100%
+      );
+    }
+
+    /* Back button floats over banner */
+    .post-back {
+      position: absolute; top: 20px; left: 20px; z-index: 10;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font); font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      background: rgba(5,4,20,0.52);
+      border: 1px solid rgba(167,139,250,0.28);
+      border-radius: 999px; padding: 0 14px 0 10px; height: 38px;
+      cursor: pointer;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+      letter-spacing: 0.03em;
+    }
+    .post-back:hover {
+      background: rgba(167,139,250,0.20);
+      border-color: rgba(167,139,250,0.55);
+      color: #fff;
+    }
+
+    /* Title overlaid on bottom of banner */
+    .post-banner-text {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
+      padding: 32px 40px 36px;
+    }
+    .post-type-label {
+      font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(167,139,250,0.85); margin-bottom: 10px;
+    }
+    .post-title {
+      font-size: clamp(22px, 4vw, 38px); font-weight: 700; line-height: 1.15;
+      color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.6); margin: 0;
+    }
+
+    /* Article body */
+    .post-article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    /* Pull-quote intro */
+    .post-intro {
+      font-size: 17px; line-height: 1.75;
+      color: rgba(200,195,235,0.92);
+      margin-bottom: 36px; padding-bottom: 32px;
+      border-bottom: 1px solid rgba(167,139,250,0.14);
+      font-style: italic;
+      position: relative; padding-left: 20px;
+    }
+    .post-intro::before {
+      content: ''; position: absolute;
+      left: 0; top: 4px; bottom: 4px; width: 3px; border-radius: 2px;
+      background: linear-gradient(to bottom, #a78bfa, #60a5fa, #f472b6);
+    }
+
+    /* Body */
+    .post-body { font-size: 14.5px; line-height: 1.90; color: rgba(200,195,235,0.78); }
+    .post-body p { margin-bottom: 22px; }
+    .post-body .update-note {
+      background: rgba(96,165,250,0.06);
+      border: 1px solid rgba(96,165,250,0.20);
+      border-left: 3px solid rgba(96,165,250,0.50);
+      border-radius: 10px; padding: 16px 20px;
+      color: rgba(96,165,250,0.75);
+      font-size: 13px; font-style: italic; margin-bottom: 22px; line-height: 1.65;
+    }
+    .post-body .update-note::before {
+      content: '📷  Capture notes';
+      display: block;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(96,165,250,0.55);
+      margin-bottom: 8px;
+    }
+
+    /* Tags */
+    .post-tags {
+      margin-top: 44px; padding-top: 28px;
+      border-top: 1px solid rgba(167,139,250,0.10);
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .post-tags-label {
+      font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(200,195,235,0.32); margin-right: 4px;
+    }
+    .post-tag {
+      font-size: 11.5px; letter-spacing: 0.05em;
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(167,139,250,0.05);
+      color: rgba(200,195,235,0.58);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    }
+    .post-tag:hover {
+      border-color: rgba(167,139,250,0.55); color: #a78bfa;
+      background: rgba(167,139,250,0.14);
+    }
+    /* Active tag filter indicator above blog index */
+    #tagFilterBar {
+      display: none;
+      align-items: center; gap: 10px;
+      margin-bottom: 16px;
+      font-size: 12.5px; color: rgba(200,195,235,0.60);
+    }
+    #tagFilterBar.visible { display: flex; }
+    #tagFilterLabel {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 12px; border-radius: 20px;
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.40);
+      color: #a78bfa; font-size: 12px;
+    }
+    #tagFilterClear {
+      background: none; border: none; cursor: pointer;
+      color: rgba(167,139,250,0.70); font-size: 14px; line-height: 1;
+      padding: 0 0 0 4px;
+      transition: color 150ms ease;
+    }
+    #tagFilterClear:hover { color: #a78bfa; }
+
+    /* Gallery CTA */
+    .post-cta {
+      margin-top: 40px; padding: 24px 28px; border-radius: 16px;
+      border: 1px solid rgba(167,139,250,0.16);
+      background: rgba(167,139,250,0.04);
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .post-cta-text { font-size: 13.5px; color: rgba(200,195,235,0.68); line-height: 1.5; }
+    .post-cta-text strong { display: block; font-size: 15px; color: rgba(200,195,235,0.90); margin-bottom: 3px; }
+    .post-cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600;
+      color: rgba(167,139,250,0.90);
+      border: 1px solid rgba(167,139,250,0.30);
+      background: rgba(167,139,250,0.08);
+      border-radius: 999px; padding: 0 18px 0 14px; height: 40px;
+      text-decoration: none; cursor: pointer; white-space: nowrap;
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+    .post-cta-btn:hover {
+      background: rgba(167,139,250,0.16); border-color: rgba(167,139,250,0.55); color: #a78bfa;
+    }
+
+    /* ── View full image button (in banner, under title) ── */
+    .post-view-img-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      margin-top: 14px;
+      font-family: var(--font); font-size: 12.5px; font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.85);
+      background: rgba(5,4,20,0.45);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 0 16px; height: 34px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative; z-index: 6;
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+    .post-view-img-btn:hover {
+      background: rgba(167,139,250,0.22);
+      border-color: rgba(167,139,250,0.55);
+      color: #fff;
+    }
+
+    body.post-open #siteHeader { opacity: 0.4; pointer-events: none; }
+
+    /* ── Post prev/next navigation ── */
+    .post-nav {
+      position: absolute;
+      top: 20px; right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .post-nav-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
+      color: rgba(200,195,235,0.80);
+      background: rgba(5,4,20,0.55);
+      border: 1px solid rgba(167,139,250,0.25);
+      border-radius: 999px;
+      padding: 0 14px; height: 34px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease, opacity 180ms ease;
+    }
+    .post-nav-btn:hover:not(:disabled) {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.50);
+      color: #a78bfa;
+    }
+    .post-nav-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .blog-featured { grid-template-columns: 1fr; min-height: auto; }
+      .blog-featured-img { min-height: 200px; }
+      .blog-featured-img-wrap { height: 200px; }
+      .blog-featured-body { padding: 24px 20px; border-left: none; border-top: 1px solid rgba(167,139,250,0.10); }
+      .blog-row { grid-template-columns: 120px 1fr; height: 100px; }
+      .blog-row-img-wrap { height: 100px; box-sizing: border-box; }
+      .blog-row-body { padding: 14px 16px; }
+      .blog-row-intro { display: none; }
+      .post-banner { height: 45vh; }
+      .post-banner-text { padding: 24px 20px 28px; }
+      .post-article { padding: 36px 20px 60px; }
+      .post-intro { font-size: 15px; }
+      .post-cta { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 420px) {
+      .blog-row { grid-template-columns: 90px 1fr; }
+    }
+
+
+    /* ── Image lightbox ── */
+    #imgLightbox {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(5,4,20,0.96);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+    #imgLightbox.open { opacity: 1; pointer-events: auto; }
+    #imgLightbox.zoomed { cursor: grab; }
+    #imgLightbox.zoomed:active { cursor: grabbing; }
+    #imgLightboxImg {
+      max-width: min(92vw, 1400px);
+      max-height: 90vh;
+      object-fit: contain;
+      display: block;
+      transition: transform 300ms cubic-bezier(0.16,1,0.3,1);
+      transform: scale(0.96);
+      user-select: none; -webkit-user-drag: none;
+    }
+    #imgLightbox.open #imgLightboxImg { transform: scale(1); }
+    #imgLightbox.zoomed #imgLightboxImg { transition: none !important; }
+    /* Shared control style matching gallery */
+    .lb-ctrl {
+      position: absolute;
+      z-index: 10;
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(0,0,0,0.52);
+      color: rgba(255,255,255,0.88);
+      display: grid; place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      transition: background 180ms ease, border-color 180ms ease,
+                  transform 180ms cubic-bezier(0.34,1.56,0.64,1);
+      touch-action: manipulation;
+      user-select: none;
+      font-family: var(--font);
+    }
+    .lb-ctrl:hover {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.50);
+      color: #fff; transform: scale(1.08);
+    }
+    #imgLightboxClose  { top: 14px; right: 14px; }
+    #imgLightboxRotate { top: 14px; right: 66px; }
+    #imgLightboxZoom   { top: 14px; right: 118px; }
+    #imgLightboxZoom.active {
+      background: rgba(167,139,250,0.28);
+      border-color: rgba(167,139,250,0.72);
+      color: #fff; box-shadow: 0 0 14px rgba(167,139,250,0.22);
+    }
+    #imgLightboxLike {
+      bottom: 14px; right: 14px;
+      width: auto; padding: 0 13px 0 11px;
+      display: inline-flex; align-items: center; gap: 5px;
+      height: 38px;
+      border: 1px solid rgba(244,114,182,0.28);
+      color: rgba(244,114,182,0.80);
+      font-size: 13px;
+    }
+    #imgLightboxLike:hover {
+      background: rgba(244,114,182,0.15);
+      border-color: rgba(244,114,182,0.50);
+      color: #f472b6;
+    }
+    #imgLightboxLike.liked {
+      background: rgba(244,114,182,0.20);
+      border-color: rgba(244,114,182,0.55);
+      color: #f472b6;
+    }
+    #imgLightboxLike .like-heart {
+      font-size: 16px; line-height: 1;
+      transition: transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #imgLightboxLike:active .like-heart,
+    #imgLightboxLike.liked  .like-heart { transform: scale(1.35); }
+    #imgLightboxLike .like-count { font-size: 12px; min-width: 8px; }
+    /* Like badges on blog list rows */
+    /* ── Like button in banner (next to View Full Image) ── */
+    .post-like-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      margin-top: 14px; margin-left: 8px;
+      font-family: var(--font); font-size: 12.5px; font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(244,114,182,0.90);
+      background: rgba(5,4,20,0.45);
+      border: 1px solid rgba(244,114,182,0.35);
+      border-radius: 999px;
+      padding: 0 16px; height: 34px;
+      cursor: pointer;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      position: relative; z-index: 6;
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+    .post-like-btn:hover {
+      background: rgba(244,114,182,0.18);
+      border-color: rgba(244,114,182,0.60);
+      color: #f472b6;
+    }
+    .post-like-btn.liked {
+      background: rgba(244,114,182,0.20);
+      border-color: rgba(244,114,182,0.65);
+      color: #f472b6;
+    }
+    .post-like-btn .like-heart {
+      font-size: 15px; line-height: 1;
+      transition: transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .post-like-btn:active .like-heart,
+    .post-like-btn.liked  .like-heart { transform: scale(1.35); }
+    .post-like-btn .like-count { font-size: 12px; min-width: 8px; }
+    /* ── Lightbox thumbnail strip ── */
+    #lbThumbs {
+      position: absolute;
+      bottom: 14px; left: 50%; transform: translateX(-50%);
+      display: none;
+      flex-wrap: nowrap;
+      gap: 6px;
+      z-index: 10;
+      max-width: 90vw;
+      overflow-x: auto;
+      padding: 4px 2px;
+      scrollbar-width: none;
+    }
+    #lbThumbs::-webkit-scrollbar { display: none; }
+    .lb-thumb {
+      padding: 0; flex-shrink: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(0,0,0,0.30);
+      overflow: hidden; cursor: pointer;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .lb-thumb img { display: block; height: 48px; width: auto; pointer-events: none; }
+    .lb-thumb.active {
+      border-color: rgba(167,139,250,0.80);
+      box-shadow: 0 0 0 2px rgba(167,139,250,0.25);
+    }
+  </style>
+</head>
+<body class="page-blog">
+
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+
+      <div class="section-head">
+        <h2>Field Notes</h2>
+      </div>
+      <p class="blog-subhead">Write-ups on the objects in the gallery — what they are, why they're worth imaging, and the story behind each capture.</p>
+
+      <!-- Filter pills -->
+      <div class="blog-filters" role="group" aria-label="Filter posts by type" id="blogFilters">
+        <button class="filter-pill active" data-filter="all"           type="button" aria-pressed="true">All</button>
+        <button class="filter-pill"         data-filter="nebulae"       type="button" aria-pressed="false">Nebulae</button>
+        <button class="filter-pill"         data-filter="galaxies"      type="button" aria-pressed="false">Galaxies</button>
+        <button class="filter-pill"         data-filter="star-clusters" type="button" aria-pressed="false">Star Clusters</button>
+        <button class="filter-pill"         data-filter="star-trails"   type="button" aria-pressed="false">Star Trails</button>
+        <button class="filter-pill"         data-filter="comets"        type="button" aria-pressed="false">Comets</button>
+        <button class="filter-pill"         data-filter="others"        type="button" aria-pressed="false">Others</button>
+      </div>
+
+      <!-- Tag filter indicator (shown when filtering by tag) -->
+      <div id="tagFilterBar" role="status" aria-live="polite">
+        <span>Filtered by tag:</span>
+        <span id="tagFilterLabel">
+          <span id="tagFilterText"></span>
+          <button id="tagFilterClear" aria-label="Clear tag filter" title="Clear tag filter">✕</button>
+        </span>
+      </div>
+
+      <!-- Skeleton placeholders while loading -->
+      <div id="blogIndex">
+        <div class="blog-skel-featured" aria-hidden="true"></div>
+        <div class="blog-skel-grid" aria-hidden="true">
+          <div class="blog-skel-card"></div>
+          <div class="blog-skel-card"></div>
+          <div class="blog-skel-card"></div>
+          <div class="blog-skel-card"></div>
+          <div class="blog-skel-card"></div>
+          <div class="blog-skel-card"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="siteFooter"></div>
+
+
+<!-- ─────────────────────────────────
+     FULL POST VIEW
+───────────────────────────────── -->
+<div id="postView" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Field Notes post">
+
+  <div class="post-banner">
+    <img class="post-banner-img" id="postHeroImg" src="" alt="" />
+    <button class="post-back" id="postBack" aria-label="Back to Field Notes">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Field Notes
+    </button>
+    <div class="post-nav">
+      <button class="post-nav-btn" id="postPrev" aria-label="Previous post">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Prev
+      </button>
+      <button class="post-nav-btn" id="postNext" aria-label="Next post">
+        Next
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="post-banner-text">
+      <div class="post-type-label" id="postType"></div>
+      <h1 class="post-title" id="postTitle"></h1>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; margin-top:0;">
+        <button class="post-view-img-btn" id="postViewImgBtn" aria-label="View full image">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <path d="M1 4.5V1.5A.5.5 0 0 1 1.5 1h3M12 4.5V1.5a.5.5 0 0 0-.5-.5h-3M1 8.5v3a.5.5 0 0 0 .5.5h3M12 8.5v3a.5.5 0 0 1-.5.5h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          View Full Image
+        </button>
+        <button class="post-like-btn" id="postLikeBtn" aria-label="Like this post" type="button">
+          <span class="like-heart" aria-hidden="true">♡</span>
+          <span class="like-count"></span>
+          Like
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-article">
+    <p class="post-intro" id="postIntro"></p>
+    <div class="post-body"  id="postBody"></div>
+
+    <div class="post-tags" id="postTags">
+      <span class="post-tags-label">Tags</span>
+    </div>
+
+    <div class="post-cta">
+      <div class="post-cta-text">
+        <strong>See it in the gallery</strong>
+        View the full image and navigate through the rest of the collection.
+      </div>
+      <a class="post-cta-btn" href="gallery.html" id="postGalleryLink">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+        </svg>
+        Open Gallery
+      </a>
+    </div>
+  </div>
+
+
+<!-- Image lightbox -->
+<div id="imgLightbox" role="dialog" aria-modal="true" aria-label="Full image view">
+  <img id="imgLightboxImg" src="" alt="" draggable="false" />
+  <button class="lb-ctrl" id="imgLightboxZoom" aria-label="Toggle zoom" aria-pressed="false" title="Zoom in (1.5×)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <button class="lb-ctrl" id="imgLightboxRotate" aria-label="Rotate image">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </button>
+  <button class="lb-ctrl" id="imgLightboxClose" aria-label="Close image">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <button class="lb-ctrl" id="imgLightboxLike" aria-label="Like this image" type="button">
+    <span class="like-heart" aria-hidden="true">♡</span>
+    <span class="like-count"></span>
+  </button>
+  <div id="lbThumbs"></div>
+</div>
+
+</div>
+
+
+<!-- ─────────────────────────────────────────
+     LIKES MODULE (shared with gallery)
+───────────────────────────────────────── -->
+<script>
+(function () {
+  const USE_WORKER = true;
+  const WORKER_URL = 'https://bhapstar-likes.bhapindersingh.workers.dev';
+
+  function getVisitorId() {
+    let uid = localStorage.getItem('_bhap_uid');
+    if (!uid) { uid = crypto.randomUUID(); localStorage.setItem('_bhap_uid', uid); }
+    return uid;
+  }
+
+  function slugify(str) {
+    return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  function localGetLikes(id) {
+    const raw = localStorage.getItem('likes_' + id);
+    return raw ? JSON.parse(raw) : { count: 0, liked: false };
+  }
+  function localToggleLike(id) {
+    const data = localGetLikes(id);
+    data.liked = !data.liked;
+    data.count = Math.max(0, data.count + (data.liked ? 1 : -1));
+    localStorage.setItem('likes_' + id, JSON.stringify(data));
+    return data;
+  }
+
+  function headers() { return { 'Content-Type': 'application/json', 'X-Visitor-ID': getVisitorId() }; }
+
+  async function workerGetLikes(id) {
+    try {
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { headers: headers() });
+      if (!r.ok) throw new Error();
+      return await r.json();
+    } catch { return { count: 0, liked: false }; }
+  }
+  async function workerToggleLike(id) {
+    try {
+      const r = await fetch(`${WORKER_URL}/likes?id=${encodeURIComponent(id)}`, { method: 'POST', headers: headers() });
+      if (!r.ok) throw new Error();
+      return await r.json();
+    } catch { return null; }
+  }
+
+  window.Likes = {
+    slugify,
+    async get(id)    { return USE_WORKER ? workerGetLikes(id)   : localGetLikes(id); },
+    async toggle(id) { return USE_WORKER ? workerToggleLike(id) : localToggleLike(id); },
+
+    async hydrate() {
+      const btns = Array.from(document.querySelectorAll('[data-like-id]'));
+      if (!btns.length) return;
+      if (USE_WORKER) {
+        try {
+          const ids = [...new Set(btns.map(b => b.dataset.likeId))];
+          const r   = await fetch(
+            `${WORKER_URL}/likes/all?ids=${ids.map(encodeURIComponent).join(',')}`,
+            { headers: { 'X-Visitor-ID': getVisitorId() } }
+          );
+          if (r.ok) {
+            const all = await r.json();
+            btns.forEach(btn => { const d = all[btn.dataset.likeId]; if (d) this._apply(btn, d); });
+            return;
+          }
+        } catch { /* fall through */ }
+      }
+      for (const btn of btns) { const d = localGetLikes(btn.dataset.likeId); this._apply(btn, d); }
+    },
+
+    _apply(btn, data) {
+      const countEl = btn.querySelector('.like-count');
+      if (countEl) countEl.textContent = data.count > 0 ? data.count : '';
+      btn.classList.toggle('liked', !!data.liked);
+      btn.setAttribute('aria-label', data.liked ? 'Unlike this image' : 'Like this image');
+      btn.querySelector('.like-heart').textContent = data.liked ? '\u2665' : '\u2661';
+    },
+
+    async handleClick(btn) {
+      const id   = btn.dataset.likeId;
+      const data = await this.toggle(id);
+      if (data) this._apply(btn, data);
+    }
+  };
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  const blogIndex = document.getElementById('blogIndex');
+  const postView  = document.getElementById('postView');
+  const postBack      = document.getElementById('postBack');
+  const imgLightbox      = document.getElementById('imgLightbox');
+  const imgLightboxImg   = document.getElementById('imgLightboxImg');
+  const imgLightboxClose = document.getElementById('imgLightboxClose');
+  const imgLightboxZoom  = document.getElementById('imgLightboxZoom');
+  const imgLightboxRotate= document.getElementById('imgLightboxRotate');
+  const imgLightboxLike  = document.getElementById('imgLightboxLike');
+  const lbThumbs         = document.getElementById('lbThumbs');
+  const filters   = document.getElementById('blogFilters');
+
+  const postType    = document.getElementById('postType');
+  const postTitle   = document.getElementById('postTitle');
+  const postHeroImg = document.getElementById('postHeroImg');
+  const postIntro   = document.getElementById('postIntro');
+  const postBody    = document.getElementById('postBody');
+  const postTags    = document.getElementById('postTags');
+  const postPrev    = document.getElementById('postPrev');
+  const postNext    = document.getElementById('postNext');
+  const postLikeBtn = document.getElementById('postLikeBtn');
+
+  let posts = [];
+  let activeFilter = 'all';
+  let activeTag    = null;
+  let currentSlug  = null;
+
+  const tagFilterBar   = document.getElementById('tagFilterBar');
+  const tagFilterText  = document.getElementById('tagFilterText');
+  const tagFilterClear = document.getElementById('tagFilterClear');
+
+  const TYPE_LABELS = {
+    nebulae:        'Nebulae',
+    galaxies:       'Galaxies',
+    'star-clusters':'Star Clusters',
+    'star-trails':  'Star Trails',
+    comets:         'Comets',
+    others:         'Others',
+  };
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function bodyToHtml(text) {
+    return text.split('\n\n').map(para => {
+      para = para.trim();
+      if (!para) return '';
+      if (/^\[/.test(para) && /\]$/.test(para)) {
+        const inner = para.replace(/^\[|\]$/g, '').trim();
+        return `<div class="update-note">${esc(inner)}</div>`;
+      }
+      return `<p>${esc(para)}</p>`;
+    }).join('');
+  }
+
+  function heroImg(post) {
+    if (post.file)                         return post.file;
+    if (post.images && post.images.length) return post.images[0].file;
+    if (post.videos && post.videos.length) return post.videos[0].poster;
+    return '';
+  }
+
+  /* Returns the thumbnail version of the hero image (images/thumbs/filename).
+     Falls back to the full-size path if the source isn't in the images/ folder. */
+  function thumbImg(post) {
+    const src = heroImg(post);
+    return src.replace(/^(images\/)(?!thumbs\/)/, '$1thumbs/');
+  }
+
+  function render() {
+    let visible = activeFilter === 'all' ? posts : posts.filter(p => p.type === activeFilter);
+    if (activeTag) visible = visible.filter(p => (p.tags || []).some(t => t.toLowerCase() === activeTag.toLowerCase()));
+
+    if (!visible.length) {
+      blogIndex.innerHTML = `<p class="blog-empty">No posts found${activeTag ? ` tagged "${activeTag}"` : " in this category"} yet.</p>`;
+      return;
+    }
+
+    // Use post with featured:true if present, otherwise fall back to first
+    const featuredIdx = visible.findIndex(p => p.featured);
+    const featuredPost = featuredIdx >= 0 ? visible[featuredIdx] : visible[0];
+    const rest = visible.filter(p => p !== featuredPost);
+    const featured = featuredPost;
+
+    const featuredHtml = `
+      <div class="blog-featured reveal" data-slug="${esc(featured.slug)}"
+           role="article" tabindex="0" aria-label="${esc(featured.title)}">
+        <div class="blog-featured-polaroid">
+          <img class="blog-featured-img"
+               src="${esc(thumbImg(featured))}" alt="${esc(featured.title)}"
+               loading="eager" decoding="async" />
+          <div class="blog-featured-caption">
+            <span class="blog-featured-badge">✦ Featured · ${esc(TYPE_LABELS[featured.type] || featured.type)}</span>
+            <div class="blog-featured-title">${esc(featured.title)}</div>
+            <div class="blog-featured-date">${esc(featured.date)}</div>
+            <div class="blog-featured-read">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    const listHtml = rest.length ? `
+      <div class="blog-wall">
+        ${rest.map((post, i) => `
+          <div class="blog-pcard reveal" data-slug="${esc(post.slug)}"
+               role="article" tabindex="0" aria-label="${esc(post.title)}">
+            <img class="blog-pcard-img"
+                 src="${esc(thumbImg(post))}" alt="${esc(post.title)}"
+                 loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async" />
+            <div class="blog-pcard-caption">
+              <div class="blog-pcard-title">${esc(post.title)}</div>
+              <div class="blog-pcard-type">${esc(TYPE_LABELS[post.type] || post.type)}</div>
+              <div class="blog-pcard-date">${esc(post.date)}</div>
+            </div>
+          </div>`).join('')}
+      </div>` : '';
+    blogIndex.innerHTML = featuredHtml + listHtml;
+
+    requestAnimationFrame(() => {
+      blogIndex.querySelectorAll('.reveal').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), i * 50);
+      });
+    });
+
+  }
+
+  function openPost(slug) {
+    const post = posts.find(p => p.slug === slug);
+    if (!post) return;
+
+    currentSlug = slug;
+    const idx = posts.indexOf(post);
+
+    postType.textContent  = TYPE_LABELS[post.type] || post.type;
+    postTitle.textContent = post.title;
+    postHeroImg.src       = heroImg(post);
+    postHeroImg.alt       = post.title;
+    // Build image list for lightbox
+    const postImages = [];
+    if (post.file)   postImages.push({ file: post.file, alt: post.title });
+    if (post.images) post.images.forEach(img => postImages.push({ file: img.file, alt: img.alt || post.title }));
+    if (!postImages.length && post.videos && post.videos.length) postImages.push({ file: post.videos[0].poster, alt: post.title });
+    const lbLikeId = window.Likes ? window.Likes.slugify(post.title) : '';
+
+    postHeroImg.onclick   = () => openLightbox(postImages, lbLikeId);
+    postIntro.textContent = post.intro;
+    postBody.innerHTML    = bodyToHtml(post.body);
+
+    postTags.innerHTML = `<span class="post-tags-label">Tags</span>` +
+      (post.tags || []).map(t => `<button class="post-tag" data-tag="${esc(t)}" type="button" title="Show all posts tagged '${esc(t)}'">${esc(t)}</button>`).join('');
+
+    postTags.querySelectorAll('.post-tag').forEach(btn => {
+      btn.addEventListener('click', () => {
+        closePost();
+        setTag(btn.dataset.tag);
+        // scroll blog index into view
+        blogIndex.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    document.getElementById('postViewImgBtn').onclick = () => openLightbox(postImages, lbLikeId);
+    if (window.Likes) {
+      const likeId = window.Likes.slugify(post.title);
+      postLikeBtn.dataset.likeId = likeId;
+      postLikeBtn.style.display = '';
+      window.Likes.get(likeId).then(d => window.Likes._apply(postLikeBtn, d));
+    } else {
+      postLikeBtn.style.display = 'none';
+    }
+    postPrev.disabled = idx <= 0;
+    postNext.disabled = idx >= posts.length - 1;
+
+    postView.classList.add('open');
+    postView.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('post-open');
+    postView.scrollTop = 0;
+    postBack.focus();
+    history.pushState({ slug }, '', `#${slug}`);
+  }
+
+  function closePost() {
+    postView.classList.remove('open');
+    postView.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('post-open');
+    history.pushState(null, '', window.location.pathname);
+  }
+
+  function setFilter(filter) {
+    activeFilter = filter;
+    filters.querySelectorAll('.filter-pill').forEach(btn => {
+      const on = btn.dataset.filter === filter;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    render();
+  }
+
+  function setTag(tag) {
+    activeTag = tag;
+    if (tag) {
+      tagFilterText.textContent = tag;
+      tagFilterBar.classList.add('visible');
+    } else {
+      tagFilterBar.classList.remove('visible');
+    }
+    render();
+  }
+
+  tagFilterClear.addEventListener('click', () => setTag(null));
+
+  async function loadData() {
+    try {
+      const res = await fetch('site-data.json');
+      if (!res.ok) throw new Error(res.status);
+      posts = await res.json();
+      render();
+      const hash = window.location.hash.replace('#', '');
+      if (hash && posts.find(p => p.slug === hash)) openPost(hash);
+    } catch (err) {
+      console.error('Failed to load blog data', err);
+      blogIndex.innerHTML = '<p class="blog-empty">Could not load posts — please try again.</p>';
+    }
+  }
+
+  filters.addEventListener('click', e => {
+    const pill = e.target.closest('.filter-pill');
+    if (pill) setFilter(pill.dataset.filter);
+  });
+
+  blogIndex.addEventListener('click', e => {
+    const card = e.target.closest('[data-slug]');
+    if (card) openPost(card.dataset.slug);
+  });
+  blogIndex.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('[data-slug]');
+      if (card) { e.preventDefault(); openPost(card.dataset.slug); }
+    }
+  });
+
+  postBack.addEventListener('click', closePost);
+
+  postLikeBtn.addEventListener('click', () => {
+    if (window.Likes) window.Likes.handleClick(postLikeBtn);
+  });
+
+  postPrev.addEventListener('click', () => {
+    const idx = posts.findIndex(p => p.slug === currentSlug);
+    if (idx > 0) openPost(posts[idx - 1].slug);
+  });
+
+  postNext.addEventListener('click', () => {
+    const idx = posts.findIndex(p => p.slug === currentSlug);
+    if (idx < posts.length - 1) openPost(posts[idx + 1].slug);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (postView.classList.contains('open')) {
+      if (e.key === 'Escape') { if (imgLightbox.classList.contains('open')) { closeLightbox(); } else { closePost(); } }
+      if (e.key === 'ArrowLeft'  && !postPrev.disabled) postPrev.click();
+      if (e.key === 'ArrowRight' && !postNext.disabled) postNext.click();
+    }
+  });
+
+  window.addEventListener('popstate', () => {
+    if (postView.classList.contains('open')) {
+      postView.classList.remove('open');
+      postView.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('post-open');
+    }
+  });
+
+
+  /* ── Lightbox zoom + pan ── */
+  const lbZoomSteps = [1, 1.5, 2];
+  let lbZoomStep = 0, lbRotation = 0;
+  let lbDragging = false, lbStartX = 0, lbStartY = 0, lbOriginX = 0, lbOriginY = 0;
+
+  function lbZoomed() { return lbZoomStep > 0; }
+  function lbApplyTransform() {
+    const s = lbZoomSteps[lbZoomStep];
+    if (s <= 1 && lbRotation === 0) { imgLightboxImg.style.transform = ''; return; }
+    const parts = [];
+    if (lbRotation !== 0) parts.push('rotate(' + lbRotation + 'deg)');
+    if (s > 1) { parts.push('scale(' + s + ')'); parts.push('translate(' + (lbOriginX/s) + 'px,' + (lbOriginY/s) + 'px)'); }
+    imgLightboxImg.style.transform = parts.join(' ');
+  }
+  function lbZoomAdvance() {
+    lbZoomStep = (lbZoomStep + 1) % lbZoomSteps.length;
+    lbOriginX = 0; lbOriginY = 0;
+    imgLightbox.classList.toggle('zoomed', lbZoomed());
+    const on = lbZoomed();
+    imgLightboxZoom.classList.toggle('active', on);
+    imgLightboxZoom.setAttribute('aria-pressed', on ? 'true' : 'false');
+    imgLightboxZoom.title = lbZoomStep === 0 ? 'Zoom in (1.5×)' : lbZoomStep === 1 ? 'Zoom in (2×)' : 'Reset zoom';
+    lbApplyTransform();
+  }
+  function lbReset() {
+    lbZoomStep = 0; lbOriginX = 0; lbOriginY = 0; lbRotation = 0; lbDragging = false;
+    imgLightbox.classList.remove('zoomed');
+    imgLightboxZoom.classList.remove('active');
+    imgLightboxZoom.setAttribute('aria-pressed', 'false');
+    imgLightboxZoom.title = 'Zoom in (1.5×)';
+    imgLightboxImg.style.transform = '';
+  }
+
+  imgLightbox.addEventListener('mousedown', e => {
+    if (!lbZoomed() || e.target.closest('button')) return;
+    lbDragging = true; lbStartX = e.clientX - lbOriginX; lbStartY = e.clientY - lbOriginY;
+    e.preventDefault();
+  });
+  imgLightbox.addEventListener('mousemove', e => {
+    if (!lbDragging || !lbZoomed()) return;
+    lbOriginX = e.clientX - lbStartX; lbOriginY = e.clientY - lbStartY;
+    lbApplyTransform();
+  });
+  imgLightbox.addEventListener('mouseup',    () => { lbDragging = false; });
+  imgLightbox.addEventListener('mouseleave', () => { lbDragging = false; });
+
+  imgLightboxZoom.addEventListener('click',   e => { e.stopPropagation(); lbZoomAdvance(); });
+  imgLightboxRotate.addEventListener('click', e => {
+    e.stopPropagation();
+    lbZoomStep = 0; lbOriginX = 0; lbOriginY = 0;
+    imgLightbox.classList.remove('zoomed');
+    lbRotation = (lbRotation + 90) % 360;
+    lbApplyTransform();
+  });
+
+  let lbImages  = [];   // [{file, alt}]
+  let lbImgIdx  = 0;
+
+  function lbShowImage(idx) {
+    lbImgIdx = idx;
+    const img = lbImages[idx];
+    imgLightboxImg.src = img.file;
+    imgLightboxImg.alt = img.alt || '';
+    lbReset();
+    // update thumb active state
+    lbThumbs.querySelectorAll('.lb-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
+    // scroll active thumb into view
+    const activeThumb = lbThumbs.querySelector('.lb-thumb.active');
+    if (activeThumb) activeThumb.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+  }
+
+  function lbRenderThumbs() {
+    if (lbImages.length <= 1) { lbThumbs.style.display = 'none'; lbThumbs.innerHTML = ''; return; }
+    lbThumbs.style.display = 'flex';
+    lbThumbs.innerHTML = lbImages.map((img, i) => {
+      const thumbSrc = img.file.replace(/^(images\/(?!thumbs\/))/, '$1thumbs/');
+      return `<button type="button" class="lb-thumb${i === lbImgIdx ? ' active' : ''}" data-i="${i}" aria-label="View image ${i+1}">
+        <img src="${thumbSrc}" alt="${img.alt || ''}" loading="lazy" />
+      </button>`;
+    }).join('');
+    lbThumbs.onclick = e => {
+      const btn = e.target.closest('.lb-thumb');
+      if (btn) { e.stopPropagation(); lbShowImage(Number(btn.dataset.i)); }
+    };
+  }
+
+  function openLightbox(images, likeId) {
+    // images: array of {file, alt} — or a single {file,alt} object
+    lbImages = Array.isArray(images) ? images : [images];
+    lbImgIdx = 0;
+    lbReset();
+    const img = lbImages[0];
+    imgLightboxImg.src = img.file;
+    imgLightboxImg.alt = img.alt || '';
+    lbRenderThumbs();
+    if (likeId && window.Likes) {
+      imgLightboxLike.dataset.likeId = likeId;
+      imgLightboxLike.style.display = '';
+      window.Likes.get(likeId).then(d => window.Likes._apply(imgLightboxLike, d));
+    } else {
+      imgLightboxLike.style.display = 'none';
+    }
+    imgLightbox.classList.add('open');
+  }
+  function closeLightbox() {
+    imgLightbox.classList.remove('open');
+    lbThumbs.style.display = 'none';
+    lbThumbs.innerHTML = '';
+    lbImages = [];
+    lbReset();
+  }
+  imgLightboxClose.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+  imgLightboxLike.addEventListener('click',  e => {
+    e.stopPropagation();
+    if (window.Likes) window.Likes.handleClick(imgLightboxLike).then(() => {
+      // sync the in-post like button if same id
+      const id = imgLightboxLike.dataset.likeId;
+      if (postLikeBtn.dataset.likeId === id) window.Likes.get(id).then(d => window.Likes._apply(postLikeBtn, d));
+    });
+  });
+  imgLightbox.addEventListener('click', e => { if (e.target === imgLightbox) closeLightbox(); });
+
+  loadData();
+
+})();
+</script>
+
+<script src="protect-images.js"></script>
+<script src="partials/partials.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>

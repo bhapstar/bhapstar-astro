@@ -36,11 +36,16 @@
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
-
-    <url>
-        <loc>https://bhapstar.com/supernova_sweeper.html</loc>
-        <lastmod>2026-05-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
+  <url>
+    <loc>https://bhapstar.com/supernova_sweeper.html</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/field_notes.html</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

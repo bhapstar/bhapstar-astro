@@ -12,7 +12,7 @@ const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0
 
 if (!IS_DEV) {
 
-const CACHE_VERSION = 'bhapstar-35a43de';
+const CACHE_VERSION = 'bhapstar-fn-launch';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -21,6 +21,7 @@ const SHELL_ASSETS = [
   '/gallery.html',
   '/gear.html',
   '/prints.html',
+  '/field_notes.html',
   '/quiz.html',
   '/jigsaw.html',
   '/supernova_sweeper.html',
