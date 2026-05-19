@@ -71,6 +71,7 @@
       width: 100%; display: block; aspect-ratio: 4/3;
       object-fit: cover;
       filter: sepia(0.08) saturate(1.10) contrast(1.04);
+      pointer-events: none;
     }
     .blog-featured-caption {
       padding: 14px 4px 0;
@@ -132,6 +133,7 @@
       width: 100%; display: block; aspect-ratio: 1;
       object-fit: cover;
       filter: sepia(0.06) saturate(1.08) contrast(1.03);
+      pointer-events: none;
     }
     .blog-pcard-caption {
       padding: 10px 2px 0;
@@ -199,7 +201,7 @@
     }
     #postView.open { transform: translateY(0); pointer-events: auto; }
 
-    /* Full-width banner */
+    /* Full-width banner — restored to original full-bleed */
     .post-banner {
       width: 100%; height: 55vh;
       min-height: 280px; max-height: 520px;
@@ -209,6 +211,7 @@
       width: 100%; height: 100%;
       object-fit: cover; display: block;
       filter: saturate(1.08) contrast(1.03);
+      pointer-events: none;
     }
     .post-banner::after {
       content: ''; position: absolute; inset: 0;
@@ -219,6 +222,33 @@
         rgba(5,4,20,0.65) 78%,
         rgba(5,4,20,1.0)  100%
       );
+      pointer-events: none;
+    }
+
+    /* ── Full-page polaroid wrapper ──
+       Wraps the banner + article in one giant polaroid card.
+       The #postView dark background acts as the "corkboard". */
+    .post-polaroid {
+      background: #f0ece0;
+      margin: 28px auto 60px;
+      max-width: 780px;
+      width: calc(100% - 32px);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.75),
+        0 6px 20px rgba(0,0,0,0.45),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      /* Classic polaroid: equal padding on sides and top, big bottom strip */
+      padding: 12px 12px 64px;
+      position: relative;
+    }
+    /* Subtle paper texture line at the bottom of the polaroid strip */
+    .post-polaroid::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: #f0ece0;
+      border-top: 1px solid rgba(0,0,0,0.06);
     }
 
     /* Back button floats over banner */
@@ -255,19 +285,21 @@
       color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.6); margin: 0;
     }
 
-    /* Article body */
+    /* Article body — sits inside the polaroid, on cream */
     .post-article {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 48px 28px 80px;
+      max-width: 100%;
+      margin: 0;
+      padding: 36px 28px 24px;
+      /* Cream paper background continues from the polaroid wrapper */
+      background: transparent;
     }
 
-    /* Pull-quote intro */
+    /* Override text colours for the cream background */
     .post-intro {
-      font-size: 17px; line-height: 1.75;
-      color: rgba(200,195,235,0.92);
-      margin-bottom: 36px; padding-bottom: 32px;
-      border-bottom: 1px solid rgba(167,139,250,0.14);
+      font-size: 16px; line-height: 1.75;
+      color: rgba(30,20,55,0.80);
+      margin-bottom: 32px; padding-bottom: 28px;
+      border-bottom: 1px solid rgba(30,20,55,0.12);
       font-style: italic;
       position: relative; padding-left: 20px;
     }
@@ -277,15 +309,14 @@
       background: linear-gradient(to bottom, #a78bfa, #60a5fa, #f472b6);
     }
 
-    /* Body */
-    .post-body { font-size: 14.5px; line-height: 1.90; color: rgba(200,195,235,0.78); }
+    .post-body { font-size: 14.5px; line-height: 1.90; color: rgba(30,20,55,0.72); }
     .post-body p { margin-bottom: 22px; }
     .post-body .update-note {
-      background: rgba(96,165,250,0.06);
-      border: 1px solid rgba(96,165,250,0.20);
-      border-left: 3px solid rgba(96,165,250,0.50);
+      background: rgba(96,165,250,0.08);
+      border: 1px solid rgba(96,165,250,0.25);
+      border-left: 3px solid rgba(96,165,250,0.55);
       border-radius: 10px; padding: 16px 20px;
-      color: rgba(96,165,250,0.75);
+      color: rgba(30,20,55,0.65);
       font-size: 13px; font-style: italic; margin-bottom: 22px; line-height: 1.65;
     }
     .post-body .update-note::before {
@@ -303,26 +334,26 @@
     /* Tags */
     .post-tags {
       margin-top: 44px; padding-top: 28px;
-      border-top: 1px solid rgba(167,139,250,0.10);
+      border-top: 1px solid rgba(30,20,55,0.12);
       display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
     }
     .post-tags-label {
       font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
-      color: rgba(200,195,235,0.32); margin-right: 4px;
+      color: rgba(30,20,55,0.35); margin-right: 4px;
     }
     .post-tag {
       font-size: 11.5px; letter-spacing: 0.05em;
       padding: 5px 12px; border-radius: 20px;
-      border: 1px solid rgba(167,139,250,0.20);
-      background: rgba(167,139,250,0.05);
-      color: rgba(200,195,235,0.58);
+      border: 1px solid rgba(167,139,250,0.35);
+      background: rgba(167,139,250,0.08);
+      color: rgba(80,50,130,0.75);
       cursor: pointer;
       font-family: var(--font);
       transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
     }
     .post-tag:hover {
-      border-color: rgba(167,139,250,0.55); color: #a78bfa;
-      background: rgba(167,139,250,0.14);
+      border-color: rgba(167,139,250,0.70); color: #7c55d6;
+      background: rgba(167,139,250,0.18);
     }
     /* Active tag filter indicator above blog index */
     #tagFilterBar {
@@ -349,14 +380,14 @@
 
     /* Gallery CTA */
     .post-cta {
-      margin-top: 40px; padding: 24px 28px; border-radius: 16px;
-      border: 1px solid rgba(167,139,250,0.16);
-      background: rgba(167,139,250,0.04);
+      margin-top: 40px; padding: 20px 24px; border-radius: 12px;
+      border: 1px solid rgba(167,139,250,0.25);
+      background: rgba(167,139,250,0.07);
       display: flex; align-items: center;
       justify-content: space-between; gap: 20px; flex-wrap: wrap;
     }
-    .post-cta-text { font-size: 13.5px; color: rgba(200,195,235,0.68); line-height: 1.5; }
-    .post-cta-text strong { display: block; font-size: 15px; color: rgba(200,195,235,0.90); margin-bottom: 3px; }
+    .post-cta-text { font-size: 13.5px; color: rgba(30,20,55,0.65); line-height: 1.5; }
+    .post-cta-text strong { display: block; font-size: 15px; color: rgba(30,20,55,0.85); margin-bottom: 3px; }
     .post-cta-btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 600;
@@ -439,9 +470,10 @@
       .blog-row-intro { display: none; }
       .post-banner { height: 45vh; }
       .post-banner-text { padding: 24px 20px 28px; }
-      .post-article { padding: 36px 20px 60px; }
+      .post-article { padding: 24px 16px 20px; }
       .post-intro { font-size: 15px; }
       .post-cta { flex-direction: column; align-items: flex-start; }
+      .post-polaroid { margin: 16px auto 40px; width: calc(100% - 16px); padding: 8px 8px 52px; }
     }
     @media (max-width: 420px) {
       .blog-row { grid-template-columns: 90px 1fr; }
@@ -648,6 +680,8 @@
 ───────────────────────────────── -->
 <div id="postView" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Field Notes post">
 
+  <div class="post-polaroid">
+
   <div class="post-banner">
     <img class="post-banner-img" id="postHeroImg" src="" alt="" />
     <button class="post-back" id="postBack" aria-label="Back to Field Notes">
@@ -712,7 +746,9 @@
         Open Gallery
       </a>
     </div>
-  </div>
+  </div><!-- /.post-article -->
+
+  </div><!-- /.post-polaroid -->
 
 
 <!-- Image lightbox -->
