@@ -10,6 +10,7 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 - **Gallery** — deep-sky image collection
 - **Prints** — available prints for enquiry
 - **Gear** — equipment used for capture and processing
+- **Field Notes** — write-ups on imaged objects and the story behind each capture
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
 - **Supernova Sweeper** — supernova sweeping clearing game
