@@ -1000,8 +1000,10 @@
     blogIndex.innerHTML = featuredHtml + listHtml;
 
     requestAnimationFrame(() => {
-      blogIndex.querySelectorAll('.reveal').forEach((el, i) => {
-        setTimeout(() => el.classList.add('in'), i * 50);
+      requestAnimationFrame(() => {
+        blogIndex.querySelectorAll('.reveal').forEach((el, i) => {
+          setTimeout(() => el.classList.add('in'), i * 50);
+        });
       });
     });
 
