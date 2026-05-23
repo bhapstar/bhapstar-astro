@@ -29,6 +29,53 @@
     el.dataset.loaded = '1';
   }
 
+  /* ─────────────────────────────────────────
+     SCROLL REVEAL — runs immediately, before any awaits,
+     so the MutationObserver is live before gallery/blog
+     cards are injected by their own async data fetches.
+  ───────────────────────────────────────── */
+  (function initScrollReveal() {
+    const SELECTOR     = '.section, .panel, .card';
+    const reduceMotion =
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        el.classList.add('reveal', 'in');
+      });
+      return;
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -6% 0px' });
+
+    function observe(el) {
+      if (!el.classList.contains('reveal')) el.classList.add('reveal');
+      io.observe(el);
+    }
+
+    // Observe elements already in the DOM at load time
+    document.querySelectorAll(SELECTOR).forEach(observe);
+
+    // Watch for elements injected after load (gallery cards, gear cards)
+    new MutationObserver((mutations) => {
+      mutations.forEach(m => {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType !== 1) return;
+          if (node.matches?.(SELECTOR))            observe(node);
+          node.querySelectorAll?.(SELECTOR).forEach(observe);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  })();
+
+
   try {
     await loadInto('siteHeader', 'partials/header.html');
     await loadInto('siteFooter', 'partials/footer.html');
@@ -189,56 +236,6 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
-    })();
-
-
-    /* ─────────────────────────────────────────
-       SCROLL REVEAL
-       - Adds .reveal to targets, then .in when
-         they enter the viewport
-       - MutationObserver catches cards injected
-         dynamically (gallery, gear pages)
-       - Respects prefers-reduced-motion
-    ───────────────────────────────────────── */
-    (function initScrollReveal() {
-      const SELECTOR     = '.section, .panel, .card';
-      const reduceMotion =
-        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-
-      if (reduceMotion) {
-        document.querySelectorAll(SELECTOR).forEach(el => {
-          el.classList.add('reveal', 'in');
-        });
-        return;
-      }
-
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(en => {
-          if (en.isIntersecting) {
-            en.target.classList.add('in');
-            io.unobserve(en.target);
-          }
-        });
-      }, { threshold: 0.10, rootMargin: '0px 0px -6% 0px' });
-
-      function observe(el) {
-        if (!el.classList.contains('reveal')) el.classList.add('reveal');
-        io.observe(el);
-      }
-
-      // Observe elements already in the DOM at load time
-      document.querySelectorAll(SELECTOR).forEach(observe);
-
-      // Watch for elements injected after load (gallery cards, gear cards)
-      new MutationObserver((mutations) => {
-        mutations.forEach(m => {
-          m.addedNodes.forEach(node => {
-            if (node.nodeType !== 1) return;
-            if (node.matches?.(SELECTOR))            observe(node);
-            node.querySelectorAll?.(SELECTOR).forEach(observe);
-          });
-        });
-      }).observe(document.body, { childList: true, subtree: true });
     })();
 
 
