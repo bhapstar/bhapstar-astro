@@ -1003,10 +1003,8 @@
       </div>` : '';
     blogIndex.innerHTML = featuredHtml + listHtml;
 
-    requestAnimationFrame(() => {
-      blogIndex.querySelectorAll('.blog-reveal').forEach((el, i) => {
-        setTimeout(() => el.classList.add('in'), i * 50);
-      });
+    blogIndex.querySelectorAll('.blog-reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('in'), i * 50);
     });
 
   }
