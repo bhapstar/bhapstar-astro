@@ -1004,7 +1004,7 @@
     blogIndex.innerHTML = featuredHtml + listHtml;
 
     blogIndex.querySelectorAll('.blog-reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('in'), i * 50);
+      setTimeout(() => el.classList.add('in', 'reveal'), i * 50);
     });
 
   }
@@ -1099,17 +1099,6 @@
       if (!res.ok) throw new Error(res.status);
       posts = await res.json();
       render();
-
-      // Force-reveal any cards already in the viewport after render
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.blog-reveal').forEach(el => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            el.classList.add('in');
-          }
-        });
-      });
-
       const hash = window.location.hash.replace('#', '');
       if (hash && posts.find(p => p.slug === hash)) openPost(hash);
     } catch (err) {
