@@ -336,10 +336,10 @@
 
       <div class="puzzle-controls">
         <select id="difficulty" aria-label="Difficulty">
-          <option value="nebula">Solar System (easy) — 10×10, 10 mines</option>
-          <option value="galaxy" selected>Galaxy (medium) — 25×10, 40 mines</option>
-          <option value="universe">Universe (hard) — 48×10, 99 mines</option>
-          <option value="supernova">Multiverse (ultra hard) — 70×10, 165 mines</option>
+          <option value="nebula">Solar System (easy) — 100 cells, 10 mines</option>
+          <option value="galaxy" selected>Galaxy (medium) — 250 cells, 40 mines</option>
+          <option value="universe">Universe (hard) — 480 cells, 99 mines</option>
+          <option value="supernova">Multiverse (ultra hard) — 700 cells, 120 mines</option>
         </select>
         <button id="newGameBtn" type="button">New game</button>
       </div>
@@ -394,7 +394,7 @@
       <img id="ultraWinImg" src="" alt="Revealed deep-sky image" />
     </div>
     <h3>MULTIVERSE CLEARED</h3>
-    <p>You just navigated 165 mines across a 70×10 cosmic field. That is genuinely extraordinary.</p>
+    <p>You just navigated 120 mines across a 700-cell cosmic field. That is genuinely extraordinary.</p>
     <p style="margin-top:14px;">Use code <strong style="color:#a78bfa;letter-spacing:0.06em;">SUPERNOVA10</strong> in the notes of any <a href="prints.html" style="color:#60a5fa;text-decoration:underline;">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
     <p id="ultraWinImgTitle" style="font-weight:600;color:#a78bfa;margin-top:8px;"></p>
     <div class="win-actions">
@@ -428,11 +428,11 @@
    the cleared cells. Image is loaded from site-data.json
    (same source as jigsaw).
 
-   Difficulties:
-     nebula    — 10×10, 10 mines  (solar system / easy)
-     galaxy    — 25×10, 40 mines (galaxy / medium)
-     universe  — 48×10, 99 mines (universe / hard)
-     supernova — 70×10, 165 mines (multiverse / ultra hard)
+   Difficulties (layout adapts to viewport width; totals fixed):
+     nebula    — 100 cells, 10 mines  (solar system / easy)
+     galaxy    — 250 cells, 40 mines  (galaxy / medium)
+     universe  — 480 cells, 99 mines  (universe / hard)
+     supernova — 700 cells, 120 mines (multiverse / ultra hard)
 
    Win:  All non-mine cells revealed  → image reveals fully
    Lose: Supernova cell clicked       → board reveals all supernovae
@@ -504,13 +504,33 @@
     return blockImages[by * blocksAcross + bx] || pickRandomThumb();
   }
 
-  /* ─── DIFFICULTY CONFIG ────────────────────────────── */
+  /* ─── DIFFICULTY CONFIG ────────────────────────────────
+     Each difficulty has a fixed total cell count and mine count,
+     with layout options listed widest-first. pickLayout() chooses
+     the widest layout that fits the viewport at full cell size,
+     so desktop gets wide boards and phones keep the 10-wide ones.
+     Totals are identical across layouts — difficulty never changes
+     with screen size. */
   const CONFIGS = {
-    nebula:    { rows: 10, cols: 10, mines: 10  },
-    galaxy:    { rows: 25, cols: 10, mines: 40  },
-    universe:  { rows: 48, cols: 10, mines: 99  },
-    supernova: { rows: 70, cols: 10, mines: 165 },
+    nebula:    { mines: 10,  layouts: [{ cols: 10, rows: 10 }] },                                              // 100 cells
+    galaxy:    { mines: 40,  layouts: [{ cols: 25, rows: 10 }, { cols: 10, rows: 25 }] },                      // 250 cells
+    universe:  { mines: 99,  layouts: [{ cols: 24, rows: 20 }, { cols: 16, rows: 30 }, { cols: 10, rows: 48 }] }, // 480 cells
+    supernova: { mines: 120, layouts: [{ cols: 25, rows: 28 }, { cols: 14, rows: 50 }, { cols: 10, rows: 70 }] }, // 700 cells
   };
+
+  const CELL_GAP = 2, MAX_CELL = 32;
+
+  function availWidth() {
+    return Math.min(window.innerWidth - 16, 900);
+  }
+
+  function pickLayout(layouts) {
+    const availW = availWidth();
+    for (const l of layouts) {
+      if (l.cols * MAX_CELL + (l.cols - 1) * CELL_GAP <= availW) return l;
+    }
+    return layouts[layouts.length - 1]; // narrowest (10-wide) fallback
+  }
 
   /* ─── DOM REFS ─────────────────────────────────────── */
   const grid       = document.getElementById('mineGrid');
@@ -807,11 +827,12 @@
     cells   = [];
     cellEls = [];
 
-    // All grids are 10 cols wide — cell size is driven by width so all
-    // difficulties have identical cell sizes. Taller boards scroll vertically.
-    const BASE_COLS = 10;
-    const availW   = Math.min(window.innerWidth - 16, 900);
-    const cellSize = Math.min(Math.floor(availW / BASE_COLS), 32);
+    // Cell size is driven by the chosen layout's column count, capped at
+    // MAX_CELL. Wide layouts are only picked when they fit at full size,
+    // so cells stay 32px on desktop; the 10-wide fallback shrinks to fit
+    // on phones. Taller boards scroll vertically.
+    const availW   = availWidth();
+    const cellSize = Math.min(Math.floor(availW / cols), MAX_CELL);
     currentCellSize = cellSize; // store for styleRevealedCell
 
     grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
@@ -883,7 +904,7 @@
     if (blockImages.length) {
       const tileDiv = document.createElement('div');
       tileDiv.className = 'tile-img';
-      const gap   = 2;
+      const gap   = CELL_GAP;
       const step  = currentCellSize + gap;
       const bSize = BLOCK * step - gap; // pixel size a single 5×5 block occupies
       // Position within the block (0–4 in each axis)
@@ -1135,9 +1156,10 @@
     resetTimer();
 
     difficulty  = diffSel.value;
-    const cfg   = CONFIGS[difficulty];
-    rows        = cfg.rows;
-    cols        = cfg.cols;
+    const cfg    = CONFIGS[difficulty];
+    const layout = pickLayout(cfg.layouts);
+    rows        = layout.rows;
+    cols        = layout.cols;
     totalMines  = cfg.mines;
     revealed    = 0;
     flagCount   = 0;
