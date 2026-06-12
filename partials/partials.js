@@ -53,7 +53,15 @@
           io.unobserve(en.target);
         }
       });
-    }, { threshold: 0.10, rootMargin: '0px 0px -6% 0px' });
+    }, {
+      // threshold: 0 — reveal as soon as ANY part of the element intersects.
+      // A ratio-based threshold (e.g. 0.10) is unreachable for elements much
+      // taller than the viewport (the Field Notes section on mobile), leaving
+      // them stuck at opacity 0. The rootMargin below still delays the reveal
+      // until the element is slightly inside the viewport.
+      threshold: 0,
+      rootMargin: '0px 0px -8% 0px'
+    });
 
     function observe(el) {
       if (!el.classList.contains('reveal')) el.classList.add('reveal');
