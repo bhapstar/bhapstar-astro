@@ -383,7 +383,7 @@
 
   let adminKey   = '';
   let allRows    = [];
-  let thumbMap   = {}; // slug → thumb URL, built from gallery-data.json
+  let thumbMap   = {}; // slug → thumb URL, built from site-data.json
   let sortCol    = 'time';
   let sortAsc    = false; // newest first
 
@@ -392,10 +392,10 @@
     return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
 
-  /* ── Load gallery-data.json and build slug→thumb map ── */
+  /* ── Load site-data.json and build slug→thumb map ── */
   async function loadThumbMap() {
     try {
-      const r = await fetch('https://bhapstar.com/gallery-data.json');
+      const r = await fetch('https://bhapstar.com/site-data.json');
       if (!r.ok) return;
       const items = await r.json();
       items.forEach(item => {
