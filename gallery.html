@@ -365,16 +365,38 @@
                   margin-top 280ms ease;
     }
 
-    /* Slide out when desc-toggle is active — desktop gallery only */
-    #galleryGrid.hide-desc .card .cap .d {
+    /* Caption toggle — grid view hides the whole pill (title + desc + like),
+       leaving an image-only tile. The cap is an absolute overlay, so a fade
+       is enough — no layout collapse needed. */
+    #galleryGrid .card .cap {
+      transition: background 220ms ease,
+                  opacity    280ms ease,
+                  transform  280ms ease;
+    }
+    #galleryGrid.hide-desc:not(.list-view) .card .cap {
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+    }
+
+    /* List view keeps title + like visible (rows look broken without them)
+       and collapses only the description, as before. */
+    #galleryGrid.list-view.hide-desc .card .cap .d {
       max-height: 0;
       opacity: 0;
       margin-top: 0;
     }
 
-    /* Hide the desc-toggle button on mobile (descriptions are already hidden there) */
+    /* Caption toggle is shown on mobile too — it now hides the whole
+       caption (title + like), not just the description, so it's useful
+       as an image-only browsing mode on small screens. */
+
+    /* Mobile grid view shows descriptions again (overrides the global
+       styles.css rule) so the caption toggle means the same thing on
+       every screen size: image-only ↔ title + description + like.
+       List view keeps its compact, description-free rows. */
     @media (max-width: 720px) {
-      #viewBtnDesc { display: none; }
+      #galleryGrid:not(.list-view) .card .cap .d { display: block; }
     }
 
   </style>
@@ -434,7 +456,7 @@
                 <rect x="9" y="6" width="5" height="8" rx="1" fill="currentColor"/>
               </svg>
             </button>
-            <button id="viewBtnDesc" class="view-btn" type="button" aria-pressed="false" aria-label="Hide descriptions" title="Hide descriptions">
+            <button id="viewBtnDesc" class="view-btn" type="button" aria-pressed="false" aria-label="Hide captions" title="Hide captions">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <rect x="0" y="1"  width="14" height="2"   rx="1" fill="currentColor"/>
                 <rect x="0" y="5"  width="10" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
@@ -1288,7 +1310,7 @@
       localStorage.setItem('galleryView','chaos'); applyView('chaos');
     });
 
-    /* ── Description toggle ── */
+    /* ── Caption toggle (title + description + like in grid view) ── */
     const viewBtnDesc   = document.getElementById('viewBtnDesc');
     const HIDE_DESC_KEY = 'galleryHideDesc';
     function applyDescToggle(hide) {
@@ -1296,8 +1318,8 @@
       if (viewBtnDesc) {
         viewBtnDesc.classList.toggle('active', hide);
         viewBtnDesc.setAttribute('aria-pressed', hide ? 'true' : 'false');
-        viewBtnDesc.setAttribute('aria-label', hide ? 'Show descriptions' : 'Hide descriptions');
-        viewBtnDesc.title = hide ? 'Show descriptions' : 'Hide descriptions';
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
+        viewBtnDesc.title = hide ? 'Show captions' : 'Hide captions';
       }
     }
     applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
