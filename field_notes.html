@@ -117,12 +117,15 @@
       width: 200px;
       flex-shrink: 0;
     }
-    /* Staggered tilts — alternating pattern */
-    .blog-pcard:nth-child(3n+1) { transform: rotate(-2.8deg); }
-    .blog-pcard:nth-child(3n+2) { transform: rotate(1.6deg);  }
-    .blog-pcard:nth-child(3n+3) { transform: rotate(-1.0deg); }
-    .blog-pcard:nth-child(5n+1) { transform: rotate(2.2deg);  }
-    .blog-pcard:nth-child(7n+1) { transform: rotate(-1.8deg); }
+    /* Staggered tilts — alternating pattern.
+       Stored in --tilt so the reveal transform below can include it
+       instead of overwriting it (which flattened every card). */
+    .blog-pcard:nth-child(3n+1) { --tilt: -2.8deg; }
+    .blog-pcard:nth-child(3n+2) { --tilt: 1.6deg;  }
+    .blog-pcard:nth-child(3n+3) { --tilt: -1.0deg; }
+    .blog-pcard:nth-child(5n+1) { --tilt: 2.2deg;  }
+    .blog-pcard:nth-child(7n+1) { --tilt: -1.8deg; }
+    .blog-pcard { transform: rotate(var(--tilt, 0deg)); }
     .blog-pcard:hover {
       transform: rotate(0deg) scale(1.08) translateY(-8px) !important;
       box-shadow: 0 24px 70px rgba(0,0,0,0.75), 0 0 40px rgba(167,139,250,0.12);
@@ -183,6 +186,10 @@
     /* Scoped fade-in for blog cards — independent of global .reveal observer */
     .blog-reveal { opacity: 0; transform: translateY(14px); transition: opacity 420ms ease, transform 420ms ease; }
     .blog-reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* Polaroid wall cards keep their tilt through the fade-in */
+    .blog-pcard.blog-reveal    { transform: translateY(14px) rotate(var(--tilt, 0deg)); }
+    .blog-pcard.blog-reveal.in { transform: translateY(0)    rotate(var(--tilt, 0deg)); }
 
     /* Ensure reveal animation never blocks clicks on blog entries */
     #blogIndex .blog-reveal     { pointer-events: auto !important; }
