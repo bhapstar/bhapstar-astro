@@ -1,0 +1,26 @@
+name: Rename images (one-off)
+
+# Manual trigger only — run it from the Actions tab, then delete this file.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # allow the workflow to commit the renames back
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Run the rename script
+        run: bash rename-images.sh
+
+      - name: Commit the renamed files
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rename gallery images to slug-based filenames" || echo "Nothing to commit"
+          git push
