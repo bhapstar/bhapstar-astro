@@ -1104,7 +1104,9 @@
     try {
       const res = await fetch('site-data.json');
       if (!res.ok) throw new Error(res.status);
-      posts = await res.json();
+      const all = await res.json();
+      // site-data.json also holds gear entries — Field Notes shows gallery only.
+      posts = all.filter(it => (it.section || 'gallery') === 'gallery');
       render();
       const hash = window.location.hash.replace('#', '');
       if (hash && posts.find(p => p.slug === hash)) openPost(hash);

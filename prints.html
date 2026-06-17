@@ -701,7 +701,9 @@ details.faq-item[open] summary::after { transform: rotate(-135deg); }
     try {
       const res = await fetch('https://bhapstar.com/site-data.json');
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      const items = await res.json();
+      const all = await res.json();
+      // site-data.json also holds gear entries — the print picker is gallery only.
+      const items = all.filter(it => (it.section || 'gallery') === 'gallery');
 
       items.forEach(item => {
         if (!item?.title || item.videos) return;
