@@ -8,7 +8,17 @@
    4. Puzzles submenu toggle + auto-open on active child
    5. Scroll reveal (with MutationObserver for dynamic cards)
    6. Hero star-particle canvas (index page only)
+   7. Instagram references (footer icon + homepage panel), gated by the
+      single HIDE_INSTAGRAM flag below
 ========================= */
+
+// Set to true to hide every Instagram reference site-wide in one go — the
+// footer icon link on every page, and the whole "Latest from Instagram"
+// panel on the homepage (including never loading embed.js at all). Useful
+// for periods where a partner agreement restricts linking to personal
+// social accounts. Flip this one line, commit, done — no other file needs
+// touching. Set back to false to restore everything.
+const HIDE_INSTAGRAM = false;
 
 (async function () {
 
@@ -87,6 +97,24 @@
   try {
     await loadInto('siteHeader', 'partials/header.html');
     await loadInto('siteFooter', 'partials/footer.html');
+
+    /* ── Hide Instagram references (gated by HIDE_INSTAGRAM above) ── */
+    if (HIDE_INSTAGRAM) {
+      // Footer social icon — present on every page
+      document.querySelector('a.social-icon[href*="instagram.com"]')?.remove();
+      // Homepage "Latest from Instagram" panel (no-op on other pages,
+      // since the selector simply won't match anything there)
+      document.querySelector('.instagram-section')?.remove();
+    } else {
+      // Only load Instagram's embed script when the panel is actually
+      // shown — avoids the network request entirely when hidden.
+      if (document.querySelector('.instagram-panel')) {
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = '//www.instagram.com/embed.js';
+        document.body.appendChild(s);
+      }
+    }
 
     /* ── Dynamic year ── */
     const y = document.getElementById('y');
