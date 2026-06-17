@@ -20,4 +20,24 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sw.js
-          git diff --staged --quiet && echo "No SW change needed." || (git commit -m "chore: bump SW cache version" && git push)
+          if git diff --staged --quiet; then
+            echo "No SW change needed."
+          else
+            git commit -m "chore: bump SW cache version"
+            # Another workflow (regenerate-sitemap) also runs on pushes that
+            # touch site-data.json and may push first. Rebase before pushing,
+            # retrying a few times in case of further timing luck.
+            success=0
+            for i in 1 2 3 4 5; do
+              if git pull --rebase origin main && git push; then
+                success=1
+                break
+              fi
+              echo "Push attempt $i failed (likely lost a race with another workflow) — retrying in 5s..."
+              sleep 5
+            done
+            if [ "$success" -ne 1 ]; then
+              echo "Could not push after 5 attempts." >&2
+              exit 1
+            fi
+          fi

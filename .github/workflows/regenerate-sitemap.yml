@@ -47,6 +47,21 @@ jobs:
           else
             git add sitemap.xml gallery.html field_notes.html
             git commit -m "Auto-regenerate sitemap + structured data from site-data.json"
-            git push
+            # bust-cache.yml also runs on every push and may push its own
+            # commit first. Rebase onto whatever's now on main before
+            # pushing, retrying a few times in case of further timing luck.
+            success=0
+            for i in 1 2 3 4 5; do
+              if git pull --rebase origin main && git push; then
+                success=1
+                break
+              fi
+              echo "Push attempt $i failed (likely lost a race with another workflow) — retrying in 5s..."
+              sleep 5
+            done
+            if [ "$success" -ne 1 ]; then
+              echo "Could not push after 5 attempts." >&2
+              exit 1
+            fi
           fi
 
