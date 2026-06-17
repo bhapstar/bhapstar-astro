@@ -1199,6 +1199,39 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   .support-mini{ text-align: left; }
 }
 
+/* Instagram panel */
+.instagram-panel{ margin: 28px 0; }
+.instagram-intro{ margin: 0 0 18px !important; }
+.instagram-grid{
+  display: grid; grid-template-columns: 1fr; gap: 22px;
+  margin-bottom: 18px;
+  max-width: 540px;       /* matches Instagram's own embed width — keeps it from
+                              stretching unnaturally wide in the single column */
+  margin-left: auto; margin-right: auto;
+}
+.instagram-embed-wrap{
+  border-radius: var(--radius);
+  border: 1px solid rgba(167,139,250,0.10);
+  background: rgba(255,255,255,0.02);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 220px;
+}
+/* Instagram's own script renders inside the blockquote/iframe it generates —
+   force it to fill the wrapper rather than keep its default fixed widths. */
+.instagram-embed-wrap iframe,
+.instagram-embed-wrap blockquote.instagram-media{
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+/* Fallback link shown only if embed.js fails to load (ad blockers, no JS) */
+.instagram-embed-wrap blockquote.instagram-media a{
+  display: block; padding: 32px 20px; text-align: center;
+  color: var(--muted); font-size: 13px; text-decoration: none;
+}
+.instagram-follow{ display: flex; justify-content: center; }
+
 /* Prints */
 .prints-layout{ display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
 .prints-main{ display: grid; gap: 18px; }
