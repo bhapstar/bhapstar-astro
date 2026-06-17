@@ -336,6 +336,44 @@ label:has(.items-info-btn) {
   border-radius: var(--radius, 6px);
   border: 1px solid rgba(167,139,250,0.2);
 }
+
+/* ── FAQ slide animation ──
+   Native <details> snaps open because the browser toggles display, which
+   can't be transitioned. The script below keeps the panel rendered and
+   animates the inner <p> via max-height + opacity for a smooth slide. */
+details.faq-item p {
+  overflow: hidden;
+  /* animated by JS via inline max-height; opacity + margin handled here */
+  transition: max-height 320ms cubic-bezier(0.16,1,0.3,1),
+              opacity    240ms ease,
+              margin-top 280ms ease;
+}
+/* Collapsed resting state (also the start state before JS runs on a closed item) */
+details.faq-item:not([open]) p {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+/* Chevron indicator that rotates on open */
+details.faq-item summary {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+}
+details.faq-item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 9px; height: 9px;
+  margin-top: 4px;
+  border-right: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 300ms cubic-bezier(0.16,1,0.3,1);
+  opacity: 0.6;
+}
+details.faq-item[open] summary::after { transform: rotate(-135deg); }
+@media (prefers-reduced-motion: reduce) {
+  details.faq-item p,
+  details.faq-item summary::after { transition: none; }
+}
 </style>
   <link rel="manifest" href="/manifest.json" />
 </head>
@@ -1140,6 +1178,69 @@ label:has(.items-info-btn) {
   carousel.addEventListener('touchmove', function (e) {
     if (e.touches.length >= 2) e.stopPropagation();
   }, { passive: true });
+})();
+</script>
+<script>
+/* ── FAQ slide animation ──
+   Intercepts the native <details> toggle so the answer slides open/closed
+   via max-height instead of snapping. On open: set max-height to the
+   content's scrollHeight, then clear it to 'none' after the transition so
+   the panel can reflow freely. On close: animate from the measured height
+   down to 0, holding [open] until the transition ends. Honours
+   prefers-reduced-motion by skipping the animation. */
+(function () {
+  const items = document.querySelectorAll('details.faq-item');
+  if (!items.length) return;
+
+  const reduceMotion =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  items.forEach(d => {
+    const panel = d.querySelector('p');
+    if (!panel) return;
+
+    // Make open items start measured (in case one is open by default)
+    if (d.open) panel.style.maxHeight = 'none';
+
+    const summary = d.querySelector('summary');
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();           // we manage the open state ourselves
+      if (reduceMotion) { d.open = !d.open; return; }
+
+      if (d.open) {
+        // ── closing ──
+        const start = panel.scrollHeight;
+        panel.style.maxHeight = start + 'px';
+        panel.style.opacity   = '1';
+        // force reflow so the browser registers the start height
+        void panel.offsetHeight;
+        panel.style.maxHeight = '0px';
+        panel.style.opacity   = '0';
+        const done = (ev) => {
+          if (ev.propertyName !== 'max-height') return;
+          d.open = false;
+          panel.style.maxHeight = '';
+          panel.style.opacity   = '';
+          panel.removeEventListener('transitionend', done);
+        };
+        panel.addEventListener('transitionend', done);
+      } else {
+        // ── opening ──
+        d.open = true;               // render the panel so we can measure it
+        panel.style.maxHeight = '0px';
+        panel.style.opacity   = '0';
+        void panel.offsetHeight;     // reflow
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+        panel.style.opacity   = '1';
+        const done = (ev) => {
+          if (ev.propertyName !== 'max-height') return;
+          panel.style.maxHeight = 'none';   // allow free reflow once open
+          panel.removeEventListener('transitionend', done);
+        };
+        panel.addEventListener('transitionend', done);
+      }
+    });
+  });
 })();
 </script>
 <script src="protect-images.js"></script>
