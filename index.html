@@ -464,6 +464,11 @@
 
     <!-- Background crossfade layers (JS swaps .is-on class) -->
     <div class="hero-bg" aria-hidden="true">
+      <!-- Static fallback: real <img> so the hero is indexable and has content
+           before JS runs / if it fails. The slideshow crossfades over this. -->
+      <img class="hero-bg-static" src="images/orion-nebula-m42.webp"
+           alt="Orion Nebula (M42) astrophotography by Bhapstar"
+           loading="eager" fetchpriority="high" decoding="async">
       <div class="hero-bg-layer layer-a"></div>
       <div class="hero-bg-layer layer-b"></div>
     </div>

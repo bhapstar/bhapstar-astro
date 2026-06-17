@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- Favicon & theme -->
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <!-- Error pages shouldn't be indexed, but should still be crawlable so
+       Googlebot can follow the links back into the real site. -->
+  <meta name="robots" content="noindex,follow" />
+
+  <title>Page not found — Bhapstar Astrophotography</title>
+  <meta name="description" content="This page couldn't be found. Browse the gallery, prints, or Field Notes instead." />
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="/manifest.json" />
+</head>
+<body>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section" style="min-height: 60vh; display: flex; align-items: center;">
+    <div class="wrap" style="text-align: center;">
+
+      <div class="section-head" style="justify-content: center; margin-bottom: 14px;">
+        <h2>404</h2>
+      </div>
+
+      <h1 style="margin: 0 0 14px;">This page has drifted out of orbit</h1>
+
+      <p class="lead" style="max-width: 540px; margin: 0 auto 28px; color: var(--muted);">
+        Whatever you were looking for isn't at this address — it may have been
+        moved, renamed, or never existed. Try the gallery, field notes, or head back home.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="index.html">Back to home</a>
+        <a class="btn" href="gallery.html">View the gallery</a>
+        <a class="btn" href="field_notes.html">Field Notes</a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+<script src="partials/partials.js"></script>
+</body>
+</html>

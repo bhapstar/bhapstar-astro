@@ -379,6 +379,13 @@ header{
 }
 
 .hero-bg{ position: absolute; inset: 0; z-index: 0; }
+.hero-bg-static{
+  position: absolute; inset: -6%;
+  width: calc(100% + 12%); height: calc(100% + 12%);
+  object-fit: cover; object-position: center;
+  filter: saturate(1.12) contrast(1.03) blur(3px);
+  transform: scale(1.08);
+}
 .hero-bg-layer{
   position: absolute; inset: -6%;
   background-size: cover; background-position: center;
