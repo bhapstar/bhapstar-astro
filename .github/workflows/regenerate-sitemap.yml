@@ -1,8 +1,10 @@
-name: Regenerate sitemap
+name: Regenerate sitemap + structured data
 
 # Runs whenever site-data.json changes on the main branch, plus a manual
-# trigger from the Actions tab. Regenerates sitemap.xml and commits it
-# only if it actually changed.
+# trigger from the Actions tab. Regenerates sitemap.xml AND the JSON-LD
+# structured data in gallery.html / field_notes.html, committing all of
+# it together in one commit (kept in the same job/workflow so the two
+# generators can't race each other and push conflicting commits).
 on:
   push:
     branches: [ main ]          # change to 'master' if that's your default branch
@@ -33,14 +35,18 @@ jobs:
       - name: Regenerate sitemap.xml
         run: python generate-sitemap.py
 
-      - name: Commit if changed
+      - name: Regenerate structured data (gallery.html, field_notes.html)
+        run: python generate-schema.py
+
+      - name: Commit if anything changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet sitemap.xml; then
-            echo "sitemap.xml unchanged — nothing to commit."
+          if git diff --quiet sitemap.xml gallery.html field_notes.html; then
+            echo "Nothing changed — skipping commit."
           else
-            git add sitemap.xml
-            git commit -m "Auto-regenerate sitemap.xml from site-data.json"
+            git add sitemap.xml gallery.html field_notes.html
+            git commit -m "Auto-regenerate sitemap + structured data from site-data.json"
             git push
           fi
+
