@@ -365,17 +365,18 @@
                   margin-top 280ms ease;
     }
 
-    /* Caption toggle — grid view hides the whole pill (title + desc + like),
-       leaving an image-only tile. The cap is an absolute overlay, so a fade
-       is enough — no layout collapse needed. */
+    /* Caption toggle — grid view slides the whole pill (title + desc + like)
+       down and out of the tile. The card has overflow:hidden, so the pill is
+       clipped as it slides past the bottom edge — a clean slide, not a fade. */
     #galleryGrid .card .cap {
       transition: background 220ms ease,
-                  opacity    280ms ease,
-                  transform  280ms ease;
+                  opacity    260ms ease,
+                  transform  340ms cubic-bezier(0.16,1,0.3,1);
     }
     #galleryGrid.hide-desc:not(.list-view) .card .cap {
       opacity: 0;
-      transform: translateY(6px);
+      /* push fully below its resting spot (own height + the 11px bottom gap) */
+      transform: translateY(calc(100% + 16px));
       pointer-events: none;
     }
 
@@ -397,6 +398,132 @@
        List view keeps its compact, description-free rows. */
     @media (max-width: 720px) {
       #galleryGrid:not(.list-view) .card .cap .d { display: block; }
+
+      /* Mobile list view already hides descriptions (styles.css), so the
+         toggle had nothing to act on. Here it hides the whole caption column
+         instead — image-only rows — so the button works in list view too. */
+      #galleryGrid.list-view.hide-desc .card .cap {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 240ms ease;
+      }
+    }
+
+    /* ── Caption toggle ──
+       Pulled out of the view-mode group and restyled as a labelled pill so
+       it reads as an independent on/off switch, not a fourth view mode.
+       A divider separates it from the Grid/List/Chaos picker. */
+    .caption-toggle {
+      display: inline-flex; align-items: center; gap: 7px;
+      height: 34px; padding: 0 13px 0 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background: rgba(167,139,250,0.06);
+      color: rgba(220,216,245,0.92);
+      font: inherit; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.02em; line-height: 1;
+      cursor: pointer; white-space: nowrap;
+      position: relative; flex-shrink: 0;
+      margin-left: 4px;
+      transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    /* Divider between the view picker and the caption toggle */
+    .caption-toggle::before {
+      content: ""; position: absolute; left: -7px; top: 7px; bottom: 7px;
+      width: 1px; background: rgba(167,139,250,0.20);
+    }
+    .caption-toggle:hover {
+      background: rgba(167,139,250,0.13);
+      border-color: rgba(167,139,250,0.45);
+      color: #fff;
+    }
+    .caption-toggle:active { transform: translateY(1px); }
+    .caption-toggle:focus-visible {
+      outline: 2px solid rgba(167,139,250,0.6); outline-offset: 2px;
+    }
+    .caption-toggle svg { flex-shrink: 0; }
+    /* Default (pressed = captions shown): show the open-eye icon */
+    .caption-toggle .cap-icon-off { display: none; }
+    .caption-toggle .cap-icon-on  { display: block; }
+    /* When captions are hidden, the button is "off": dim it + show eye-off */
+    .caption-toggle[aria-pressed="false"] {
+      background: transparent;
+      border-color: rgba(167,139,250,0.16);
+      color: rgba(200,195,235,0.55);
+    }
+    .caption-toggle[aria-pressed="false"] .cap-icon-on  { display: none; }
+    .caption-toggle[aria-pressed="false"] .cap-icon-off { display: block; }
+
+    @media (max-width: 720px) {
+      /* Keep the label — it's the whole point of the change — but tighten it */
+      .caption-toggle { padding: 0 11px 0 9px; font-size: 12px; }
+    }
+
+    /* ── Filter dropdown ──
+       Replaces the row of pills with a single compact select to keep the
+       controls row uncluttered. Themed to match the view controls. */
+    .filter-select-wrap {
+      display: inline-flex; align-items: center; gap: 9px;
+      margin-right: auto; /* keep view controls pushed to the right */
+    }
+    .filter-select-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(200,195,235,0.55);
+    }
+    .filter-select {
+      appearance: none; -webkit-appearance: none;
+      height: 34px; padding: 0 34px 0 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background-color: rgba(167,139,250,0.06);
+      color: rgba(230,226,250,0.95);
+      font: inherit; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.02em; cursor: pointer;
+      /* chevron */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a78bfa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    .filter-select:hover {
+      background-color: rgba(167,139,250,0.13);
+      border-color: rgba(167,139,250,0.45);
+    }
+    .filter-select:focus-visible {
+      outline: 2px solid rgba(167,139,250,0.6); outline-offset: 2px;
+    }
+    /* The dropdown list itself (native), keep options readable on dark UA themes */
+    .filter-select option {
+      background: #0a0820; color: #e6e2fa;
+    }
+
+    /* ── Chaos-view captions ──
+       A title-only strip across the bottom of each floating tile (full
+       descriptions would overwhelm the small tiles). Governed by the same
+       hide-desc class, so the Captions button works in chaos view too —
+       sliding the strip down out of the tile to match grid-view behaviour. */
+    .chaos-tile .chaos-cap {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 14px 9px 7px;
+      font-size: 10.5px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      text-align: left;
+      line-height: 1.25;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      /* Match the grid/list title: blue→violet gradient clipped to the text */
+      background: linear-gradient(to top, rgba(5,4,20,0.82), rgba(5,4,20,0));
+      pointer-events: none;
+      transition: opacity 260ms ease,
+                  transform 340ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .chaos-tile .chaos-cap .chaos-cap-text {
+      background: linear-gradient(90deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    #galleryGrid.chaos-view.hide-desc .chaos-tile .chaos-cap {
+      opacity: 0;
+      transform: translateY(100%);
     }
 
   </style>
@@ -420,16 +547,20 @@
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
         <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or swipe to navigate. Use the magnify button to zoom. Use the rotate button to rotate.</p><br>
+        <p class="gallery-hint">For more on each image (how it was captured, the equipment and conditions, and the story behind it) head over to the <a href="field_notes.html">Field Notes</a> page.</p><br>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
-          <div class="filter-pills" role="group" aria-label="Filter by type">
-            <button class="filter-pill active" data-filter="all"           type="button" aria-pressed="true">All</button>
-            <button class="filter-pill"         data-filter="nebulae"       type="button" aria-pressed="false">Nebulae</button>
-            <button class="filter-pill"         data-filter="galaxies"      type="button" aria-pressed="false">Galaxies</button>
-            <button class="filter-pill"         data-filter="star-clusters" type="button" aria-pressed="false">Star Clusters</button>
-            <button class="filter-pill"         data-filter="star-trails"   type="button" aria-pressed="false">Star Trails</button>
-            <button class="filter-pill"         data-filter="comets"        type="button" aria-pressed="false">Comets</button>
-            <button class="filter-pill"         data-filter="others"        type="button" aria-pressed="false">Others</button>
+          <div class="filter-select-wrap">
+            <label for="galleryFilter" class="filter-select-label">Filter</label>
+            <select id="galleryFilter" class="filter-select" aria-label="Filter by type">
+              <option value="all" selected>All images</option>
+              <option value="nebulae">Nebulae</option>
+              <option value="galaxies">Galaxies</option>
+              <option value="star-clusters">Star Clusters</option>
+              <option value="star-trails">Star Trails</option>
+              <option value="comets">Comets</option>
+              <option value="others">Others</option>
+            </select>
           </div>
 
           <div class="view-buttons" role="group" aria-label="View mode selection">
@@ -456,14 +587,20 @@
                 <rect x="9" y="6" width="5" height="8" rx="1" fill="currentColor"/>
               </svg>
             </button>
-            <button id="viewBtnDesc" class="view-btn" type="button" aria-pressed="false" aria-label="Hide captions" title="Hide captions">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <rect x="0" y="1"  width="14" height="2"   rx="1" fill="currentColor"/>
-                <rect x="0" y="5"  width="10" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
-                <rect x="0" y="9"  width="12" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
-              </svg>
-            </button>
           </div>
+
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle image titles, descriptions & likes">
+            <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" fill="currentColor"/>
+            </svg>
+            <svg class="cap-icon-off" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
+            </svg>
+            <span class="caption-toggle-label">Captions</span>
+          </button>
         </div>
       </div>
 
@@ -692,16 +829,13 @@
     return item.slug || (window.Likes ? window.Likes.slugify(item.title || '') : '');
   }
 
-  /* ── Filter pill helpers ── */
+  /* ── Filter helpers (dropdown) ── */
   function getActiveFilter() {
-    return document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
+    return document.getElementById('galleryFilter')?.value || 'all';
   }
   function setActiveFilter(value) {
-    document.querySelectorAll('.filter-pill').forEach(p => {
-      const on = p.dataset.filter === value;
-      p.classList.toggle('active', on);
-      p.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
+    const sel = document.getElementById('galleryFilter');
+    if (sel) sel.value = value;
   }
 
   /* ── Load gallery data ── */
@@ -1210,6 +1344,7 @@
           aria-label="${esc(cell.item.title || cover.alt)}"
           style="position:absolute;left:${cursorX}px;top:${cursorY}px;width:${tileW}px;height:${rowH}px">
           <img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async" draggable="false">
+          <span class="chaos-cap"><span class="chaos-cap-text">${esc(cell.item.title || '')}</span></span>
         </button>`;
 
         cursorX += tileW + GAP;
@@ -1317,12 +1452,9 @@
     if (currentView === 'chaos') { renderChaos(); }
     else { render(); if (window.Likes) window.Likes.hydrate(); }
 
-    document.querySelectorAll('.filter-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        setActiveFilter(pill.dataset.filter);
-        if (currentView === 'chaos') { renderChaos(); }
-        else { render(); if (window.Likes) window.Likes.hydrate(); }
-      });
+    document.getElementById('galleryFilter')?.addEventListener('change', () => {
+      if (currentView === 'chaos') { renderChaos(); }
+      else { render(); if (window.Likes) window.Likes.hydrate(); }
     });
 
     viewBtnGrid?.addEventListener('click', () => {
@@ -1337,16 +1469,18 @@
       localStorage.setItem('galleryView','chaos'); applyView('chaos');
     });
 
-    /* ── Caption toggle (title + description + like in grid view) ── */
+    /* ── Caption toggle (title + description + like in grid view) ──
+       aria-pressed now reflects whether captions are SHOWN (the default),
+       so the pill reads as an on/off switch. CSS keys off aria-pressed. */
     const viewBtnDesc   = document.getElementById('viewBtnDesc');
     const HIDE_DESC_KEY = 'galleryHideDesc';
     function applyDescToggle(hide) {
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
-        viewBtnDesc.classList.toggle('active', hide);
-        viewBtnDesc.setAttribute('aria-pressed', hide ? 'true' : 'false');
+        viewBtnDesc.setAttribute('aria-pressed', hide ? 'false' : 'true');
         viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
-        viewBtnDesc.title = hide ? 'Show captions' : 'Hide captions';
+        viewBtnDesc.title = hide ? 'Show image titles, descriptions & likes'
+                                 : 'Hide image titles, descriptions & likes';
       }
     }
     applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
