@@ -1205,8 +1205,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .instagram-grid{
   display: grid; grid-template-columns: 1fr; gap: 22px;
   margin-bottom: 18px;
-  max-width: 540px;       /* matches Instagram's own embed width — keeps it from
-                              stretching unnaturally wide in the single column */
+  max-width: 540px;
   margin-left: auto; margin-right: auto;
 }
 .instagram-embed-wrap{
@@ -1217,12 +1216,17 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   display: flex; align-items: center; justify-content: center;
   min-height: 220px;
 }
-/* Instagram's own script renders inside the blockquote/iframe it generates —
-   force it to fill the wrapper rather than keep its default fixed widths. */
-.instagram-embed-wrap iframe,
+/* Instagram's script replaces the blockquote with
+   <iframe class="instagram-media instagram-media-rendered">, which carries
+   an inline min-width (usually 326px) alongside its width. Overriding width
+   alone isn't enough — min-width always wins over width when they conflict,
+   which is exactly what was causing the overflow on narrower screens.
+   Neutralizing min-width here is the actual fix. */
+.instagram-embed-wrap iframe.instagram-media,
 .instagram-embed-wrap blockquote.instagram-media{
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   margin: 0 !important;
 }
 /* Fallback link shown only if embed.js fails to load (ad blockers, no JS) */
@@ -1230,6 +1234,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   display: block; padding: 32px 20px; text-align: center;
   color: var(--muted); font-size: 13px; text-decoration: none;
 }
+.instagram-follow{ display: flex; justify-content: center; }
 .instagram-follow{ display: flex; justify-content: center; }
 
 /* Prints */
