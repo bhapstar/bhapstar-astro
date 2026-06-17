@@ -528,13 +528,16 @@
           Some nights are a win. Some nights you pack up early because the sky won't cooperate. Either way, it's part of the same practice: showing up, capturing the photons, and letting the object reveal itself on its own terms. This site is a record of that process, image by image.
         </p>
 
-        <div class="astro-divider" aria-hidden="true">
-          <span>✦ ✦ ✦</span>
-        </div>
+        <!-- Instagram section (divider + panel together, so HIDE_INSTAGRAM
+             in partials.js can remove the whole thing in one shot without
+             leaving an orphaned divider behind) -->
+        <div class="instagram-section">
+          <div class="astro-divider" aria-hidden="true">
+            <span>✦ ✦ ✦</span>
+          </div>
 
-        <!-- Instagram panel -->
-        <div class="panel instagram-panel">
-          <div class="section-head section-head--inline">
+          <div class="panel instagram-panel">
+            <div class="section-head section-head--inline">
             <h3>Latest from Instagram</h3>
           </div>
           <p class="instagram-intro">
@@ -573,6 +576,7 @@
               <span>Follow on Instagram</span>
             </a>
           </div>
+        </div>
         </div>
 
         <div class="astro-divider" aria-hidden="true">
@@ -789,8 +793,8 @@
 
 <script src="protect-images.js"></script>
 <script src="partials/partials.js"></script>
-<!-- Official Instagram embed script — processes the .instagram-media blockquotes above -->
-<script async src="//www.instagram.com/embed.js"></script>
+<!-- Instagram's embed.js is now loaded conditionally from partials.js,
+     gated by the HIDE_INSTAGRAM flag at the top of that file. -->
 
 <script>
 if ('serviceWorker' in navigator) {
