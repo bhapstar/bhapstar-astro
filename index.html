@@ -678,8 +678,10 @@
   try {
     const res = await fetch('site-data.json', { cache: 'default' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    items = await res.json();
-    if (!Array.isArray(items) || !items.length) throw new Error('Empty');
+    const all = await res.json();
+    if (!Array.isArray(all) || !all.length) throw new Error('Empty');
+    // site-data.json now also holds gear entries — the hero shows gallery only.
+    items = all.filter(it => (it.section || 'gallery') === 'gallery');
   } catch (e) {
     console.warn('Hero slideshow: could not load gallery data', e);
     return;

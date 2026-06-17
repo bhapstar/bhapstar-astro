@@ -7,10 +7,11 @@ goes stale. Run by the GitHub Action on every push, or by hand:
 
     python generate-sitemap.py
 
-- Collects every full-size image + video poster from site-data.json
-  and lists them as <image:image> entries under the gallery URL.
-- De-duplicates shared images (e.g. star-trails files used by two posts).
-- Sets <lastmod> on the content pages to today's date.
+- site-data.json holds both gallery and gear entries, tagged with a
+  "section" field ("gallery" or "gear").
+- Gallery images are listed under gallery.html; gear images under
+  gear.html. Each set is de-duplicated (shared files counted once).
+- <lastmod> on content pages is set to today's date.
 - Page list / priorities / changefreq are fixed below — edit here if
   you add or remove top-level pages.
 """
@@ -23,20 +24,19 @@ DATA     = "site-data.json"
 OUT      = "sitemap.xml"
 TODAY    = datetime.date.today().isoformat()
 
-# Pages that change when content is added (get today's lastmod).
-# Static pages keep a fixed lastmod so they don't churn needlessly.
+# (path, changefreq, priority, dynamic_lastmod, image_section)
+# image_section: None = no images, else the "section" whose images go here.
 PAGES = [
-    # (path,                    changefreq, priority, dynamic_lastmod, carries_images)
-    ("",                        "monthly",  "1.0",  True,  False),
-    ("gallery.html",            "monthly",  "0.9",  True,  True),
-    ("gear.html",               "yearly",   "0.8",  False, False),
-    ("prints.html",             "monthly",  "0.7",  False, False),
-    ("jigsaw.html",             "yearly",   "0.6",  False, False),
-    ("quiz.html",               "yearly",   "0.6",  False, False),
-    ("supernova_sweeper.html",  "monthly",  "0.6",  True,  False),
-    ("field_notes.html",        "monthly",  "0.8",  True,  False),
+    ("",                        "monthly",  "1.0",  True,  None),
+    ("gallery.html",            "monthly",  "0.9",  True,  "gallery"),
+    ("gear.html",               "monthly",  "0.8",  True,  "gear"),
+    ("prints.html",             "monthly",  "0.7",  False, None),
+    ("jigsaw.html",             "yearly",   "0.6",  False, None),
+    ("quiz.html",               "yearly",   "0.6",  False, None),
+    ("supernova_sweeper.html",  "monthly",  "0.6",  True,  None),
+    ("field_notes.html",        "monthly",  "0.8",  True,  None),
 ]
-STATIC_LASTMOD = "2025-04-20"   # used for the non-dynamic pages
+STATIC_LASTMOD = "2025-04-20"
 
 
 def collect_images(items):
@@ -53,42 +53,50 @@ def collect_images(items):
                 files.append(v["poster"])
         for f in files:
             u = DOMAIN + quote(f)
-            if u not in urls:          # de-dupe, preserve order
+            if u not in urls:
                 urls.append(u)
     return urls
+
+
+def image_block_for(items, section):
+    sect_items = [it for it in items if (it.get("section") or "gallery") == section]
+    urls = collect_images(sect_items)
+    block = "\n".join(
+        f"    <image:image>\n      <image:loc>{u}</image:loc>\n    </image:image>"
+        for u in urls
+    )
+    return block, len(urls)
 
 
 def main():
     with open(DATA, encoding="utf-8") as fh:
         items = json.load(fh)
 
-    images = collect_images(items)
-    image_block = "\n".join(
-        f"    <image:image>\n      <image:loc>{u}</image:loc>\n    </image:image>"
-        for u in images
-    )
-
     out = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
         '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
     ]
-    for path, freq, prio, dynamic, carries in PAGES:
+    counts = {}
+    for path, freq, prio, dynamic, section in PAGES:
         lastmod = TODAY if dynamic else STATIC_LASTMOD
         out.append("  <url>")
         out.append(f"    <loc>{DOMAIN}{path}</loc>")
         out.append(f"    <lastmod>{lastmod}</lastmod>")
         out.append(f"    <changefreq>{freq}</changefreq>")
         out.append(f"    <priority>{prio}</priority>")
-        if carries and image_block:
-            out.append(image_block)
+        if section:
+            block, n = image_block_for(items, section)
+            if block:
+                out.append(block)
+            counts[section] = n
         out.append("  </url>")
     out.append("</urlset>")
 
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("\n".join(out) + "\n")
 
-    print(f"Wrote {OUT}: {len(PAGES)} pages, {len(images)} images.")
+    print(f"Wrote {OUT}: {len(PAGES)} pages; images by section: {counts}")
 
 
 if __name__ == "__main__":

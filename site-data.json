@@ -16,7 +16,8 @@
       "Monoceros",
       "narrowband",
       "hydrogen alpha"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -46,7 +47,8 @@
       "star forming region",
       "narrowband"
     ],
-    "featured": true
+    "featured": true,
+    "section": "gallery"
   },
   {
     "file": "images/jellyfish-nebula-ic443.webp",
@@ -65,7 +67,8 @@
       "Gemini",
       "narrowband",
       "neutron star"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/christmas-tree-nebula-ngc2264.webp",
@@ -85,7 +88,8 @@
       "Christmas Tree Cluster",
       "Monoceros",
       "star forming region"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/pleiades-m45.webp",
@@ -105,7 +109,8 @@
       "Pleiades",
       "Taurus",
       "reflection nebula"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/orion-nebula-m42.webp",
@@ -125,7 +130,8 @@
       "Orion",
       "Trapezium",
       "star forming region"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/flame-horsehead-nebulae.webp",
@@ -148,7 +154,8 @@
       "Barnard 33",
       "Orion",
       "IC 434"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/andromeda-galaxy-m31.webp",
@@ -169,7 +176,8 @@
       "Local Group",
       "M32",
       "M110"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/monkey-head-nebula-ngc2174.webp",
@@ -189,7 +197,8 @@
       "Orion",
       "HII region",
       "narrowband"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/needle-galaxy-ngc4565.webp",
@@ -209,7 +218,8 @@
       "Needle Galaxy",
       "Coma Berenices",
       "dust lane"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -240,7 +250,8 @@
       "craters",
       "maria",
       "highlands"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -272,7 +283,8 @@
       "Cigar Galaxy",
       "Ursa Major",
       "interacting galaxies"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/pinwheel-galaxy-m101.webp",
@@ -293,7 +305,8 @@
       "Pinwheel Galaxy",
       "Ursa Major",
       "HII regions"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/leo-triplet-m65-m66-ngc3628.webp",
@@ -315,7 +328,8 @@
       "Leo",
       "interacting galaxies",
       "edge-on galaxy"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/thors-helmet-ngc2359.webp",
@@ -336,7 +350,8 @@
       "Wolf-Rayet star",
       "WR7",
       "narrowband"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/little-beehive-cluster-m41.webp",
@@ -356,7 +371,8 @@
       "Little Beehive",
       "Canis Major",
       "winter sky"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "file": "images/triangulum-galaxy-m33.webp",
@@ -378,7 +394,8 @@
       "NGC 604",
       "HII regions",
       "low surface brightness"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -413,7 +430,8 @@
       "galactic centre",
       "wide field",
       "dark skies"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -441,7 +459,8 @@
       "composite",
       "asteroid",
       "night sky"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -476,7 +495,8 @@
       "night sky",
       "time-lapse",
       "landscape astrophotography"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "videos": [
@@ -515,7 +535,8 @@
       "night sky",
       "time-lapse",
       "landscape astrophotography"
-    ]
+    ],
+    "section": "gallery"
   },
   {
     "images": [
@@ -546,6 +567,170 @@
       "dust tail",
       "coma",
       "perihelion"
-    ]
+    ],
+    "section": "gallery"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Askar V 2.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 2"
+      },
+      {
+        "file": "images/gear/Askar V 3.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 3"
+      },
+      {
+        "file": "images/gear/Askar V 4.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 4"
+      },
+      {
+        "file": "images/gear/Askar V 5.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 5"
+      },
+      {
+        "file": "images/gear/Askar V 1.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 1"
+      },
+      {
+        "file": "images/gear/Askar V 6.webp",
+        "alt": "Askar V modular APO refractor telescope astrophotography 6"
+      }
+    ],
+    "title": "Askar V Modular APO Refractor",
+    "desc": "The Askar V is a unique telescope system that features two interchangeable 60mm and 80mm ED apochromatic objectives, a reducer, a flattener and an extender. This offers six distinct focal lengths from 270mm to 600mm. Wide and sweeping one night, tight and intimate the next.",
+    "alt": "Askar V modular APO refractor telescope for astrophotography",
+    "type": "telescope",
+    "section": "gear",
+    "slug": "askar-v-modular-apo-refractor"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Juwei 14 1.webp",
+        "alt": "Juwei 14 harmonic equatorial mount for astrophotography 1"
+      },
+      {
+        "file": "images/gear/Juwei 14 2.webp",
+        "alt": "Juwei 14 harmonic equatorial mount for astrophotography 2"
+      },
+      {
+        "file": "images/gear/Juwei 14 3.webp",
+        "alt": "Juwei 14 harmonic equatorial mount for astrophotography 3"
+      },
+      {
+        "file": "images/gear/Juwei 14 4.webp",
+        "alt": "Juwei 14 harmonic equatorial mount for astrophotography 4"
+      }
+    ],
+    "title": "Juwei 14 Harmonic Equatorial Mount",
+    "desc": "The part of the setup most people never see, yet everything depends on it. A seriously light-weight harmonic-drive mount that carries the full imaging rig, tracking the slow rotation of the sky with quiet, backlash-free precision. Small enough to travel anywhere, steady enough to trust completely; and the integrated laser is very cool!",
+    "alt": "Juwei 14 harmonic equatorial mount lightweight astrophotography",
+    "type": "mount",
+    "section": "gear",
+    "slug": "juwei-14-harmonic-equatorial-mount"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/ZWO ASI585MC Air 1.webp",
+        "alt": "ZWO ASI585MC Air cooled astronomy camera for astrophotography 1"
+      },
+      {
+        "file": "images/gear/ZWO ASI585MC Air 2.webp",
+        "alt": "ZWO ASI585MC Air cooled astronomy camera for astrophotography 2"
+      },
+      {
+        "file": "images/gear/ZWO ASI585MC Air 3.webp",
+        "alt": "ZWO ASI585MC Air cooled astronomy camera for astrophotography 3"
+      }
+    ],
+    "title": "ZWO ASI585MC Air Camera",
+    "desc": "A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and the built-in cooling pulls heat from the chip to keep the long exposures clean and quiet. Guide camera, controller, and wireless connection are all folded in — leaving nothing between the telescope and the sky but the lens cap, before it comes off.",
+    "alt": "ZWO ASI585MC Air cooled astronomy camera Sony IMX585 sensor",
+    "type": "camera",
+    "section": "gear",
+    "slug": "zwo-asi585mc-air-camera"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Optolong LeXtreme.webp",
+        "alt": "Optolong LeXtreme dual narrowband filter for astrophotography",
+        "desc": "An 'extreme' narrowband filter, the Optolong LeXtreme passes only the two wavelengths where emission nebulae burn brightest — the deep red of hydrogen and the blue-green of ionised oxygen — blocking almost everything else. Under a moon, under city light, it finds the faint structures that would otherwise be lost entirely in the noise. A filter for pushing further into the dark."
+      },
+      {
+        "file": "images/gear/Optolong L-Quad Enhance.webp",
+        "alt": "Optolong L-Quad Enhance light pollution filter for astrophotography",
+        "desc": "A piece of glass that quietly edits out the modern world. The L-Quad Enhance blocks the wavelengths that street lights and city glow pour into the sky, while letting the true light of nebulae and galaxies pass through unimpeded. The stars remain honest. The background becomes dark again."
+      }
+    ],
+    "title": "Optolong Filters",
+    "desc": "Two filters for two different battles with the sky.",
+    "alt": "Optolong narrowband and light pollution filters for astrophotography",
+    "type": "filters",
+    "section": "gear",
+    "slug": "optolong-filters"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Seestar S30 1.webp",
+        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 1"
+      },
+      {
+        "file": "images/gear/Seestar S30 2.webp",
+        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 2"
+      },
+      {
+        "file": "images/gear/Seestar S30 3.webp",
+        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 3"
+      },
+      {
+        "file": "images/gear/Seestar S30 4.webp",
+        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 4"
+      }
+    ],
+    "title": "ZWO Seestar S30 Smart Telescope",
+    "desc": "A telescope that fits in a bag and asks almost nothing of you. Point it roughly skyward, tap a target in the app, and it finds its own way — tracking, stacking, and slowly drawing faint light out of the dark while you stand back and watch. It is not a replacement for a full rig and patient hours, but it is something else entirely: the night sky made suddenly, genuinely accessible.",
+    "alt": "ZWO Seestar S30 smart telescope portable astrophotography",
+    "type": "smart-telescope",
+    "section": "gear",
+    "slug": "zwo-seestar-s30-smart-telescope"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Celestron 2in Eyepiece Kit 1.webp",
+        "alt": "Celestron 2-inch eyepiece kit for telescope visual astronomy 1",
+        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications — from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
+      },
+      {
+        "file": "images/gear/Celestron 2in Eyepiece Kit 2.webp",
+        "alt": "Celestron 2-inch eyepiece kit for telescope visual astronomy 2",
+        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications — from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
+      },
+      {
+        "file": "images/gear/SVBony Filter drawer 1.webp",
+        "alt": "SVBony filter drawer telescope accessory for quick filter swapping 1",
+        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
+      },
+      {
+        "file": "images/gear/SVBony Filter drawer 2.webp",
+        "alt": "SVBony filter drawer telescope accessory for quick filter swapping 2",
+        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
+      },
+      {
+        "file": "images/gear/ZWO EAF.webp",
+        "alt": "ZWO Electronic Auto Focuser motorised focuser for astrophotography",
+        "desc": "Focusing by hand is one of those things that sounds simple until you are doing it in the cold at midnight, trying not to breathe on the tube. The ZWO EAF attaches to the focuser and does it motorised and precisely, compensating for the way temperature shifts focus through the night. Touch nothing. Stay sharp."
+      }
+    ],
+    "title": "Accessories",
+    "desc": "The small things that make the difference between a frustrating night and a productive one.",
+    "alt": "Astrophotography accessories eyepieces filter drawer auto focuser",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "accessories"
   }
 ]

@@ -843,7 +843,9 @@
     try {
       const res = await fetch('site-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      items = await res.json();
+      const all = await res.json();
+      // site-data.json now holds both gallery and gear entries; keep ours.
+      items = all.filter(it => (it.section || 'gallery') === 'gallery');
       init();
     } catch (err) {
       console.error('Gallery data load error:', err);

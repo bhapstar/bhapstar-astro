@@ -544,6 +544,16 @@
   let dvIdx           = 0;
   let activeSet       = [];
   let activeItemIndex = 0;
+
+  /* ── Deep links ──
+     Each gear item gets a #slug URL while its detail view is open, and the
+     page title follows the current item — so e.g. the ASI585MC has its own
+     shareable, titled URL. BASE_TITLE restores on close. */
+  const BASE_TITLE = document.title;
+  function itemSlug(item) {
+    if (!item) return '';
+    return item.slug || '';
+  }
   let infoVisible     = true;
 
   function getActiveFilter() {
@@ -556,15 +566,17 @@
 
   async function loadData() {
     try {
-      const res = await fetch('gear-data.json', { cache: 'default' });
+      const res = await fetch('site-data.json', { cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      items = await res.json();
+      const all = await res.json();
+      // site-data.json holds both gallery and gear entries; keep gear.
+      items = all.filter(it => (it.section || '') === 'gear');
       init();
     } catch (err) {
       console.error('Gear data load error:', err);
       grid.innerHTML = `<div class="panel gallery-error grid-span-all">
-        <h3>Gallery unavailable</h3>
-        <p>Could not load gear-data.json. Please refresh the page.</p>
+        <h3>Gear unavailable</h3>
+        <p>Could not load site-data.json. Please refresh the page.</p>
       </div>`;
     }
   }
@@ -732,6 +744,7 @@
     dvTitle.textContent = currentItem?.title || '';
     dvDesc.textContent  = cur.desc || currentItem?.desc || '';
     dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
+    if (currentItem?.title) document.title = `${currentItem.title} — Bhapstar Astrophotography`;
 
     const canNav = dvList.length > 1 || activeSet.length > 1;
     dvPrev.style.display = canNav ? '' : 'none';
@@ -752,9 +765,11 @@
     dvList  = getList(currentItem);
     dvIdx   = delta > 0 ? 0 : dvList.length - 1;
     showDv();
+    const slug = itemSlug(currentItem);
+    if (slug) history.replaceState({ gear: slug }, '', '#' + encodeURIComponent(slug));
   }
 
-  function openDetail(item, indexInActiveSet) {
+  function openDetail(item, indexInActiveSet, fromHistory) {
     currentItem     = item;
     activeItemIndex = Number(indexInActiveSet) || 0;
     dvList  = getList(item);
@@ -763,10 +778,17 @@
     dv.classList.add('open');
     dv.setAttribute('aria-hidden', 'false');
     document.body.classList.add('detail-open', 'noscroll');
+
+    // Deep link: one history entry per open, so Back closes the viewer.
+    const slug = itemSlug(item);
+    if (slug && fromHistory !== true) {
+      history.pushState({ gear: slug }, '', '#' + encodeURIComponent(slug));
+    }
+
     requestAnimationFrame(() => dvBack.focus());
   }
 
-  function closeDetail() {
+  function closeDetail(fromHistory) {
     zoomDisable();
     dv.classList.remove('open');
     dv.setAttribute('aria-hidden', 'true');
@@ -776,6 +798,13 @@
     if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
+
+    // Restore title + URL. fromHistory must be strictly true — the dvBack
+    // tap handler passes the click/touch event as the first argument.
+    document.title = BASE_TITLE;
+    if (fromHistory !== true && location.hash) {
+      history.pushState(null, '', location.pathname + location.search);
+    }
   }
 
   function addTapHandler(el, fn) {
@@ -965,7 +994,25 @@
       }
     }, { passive: true });
 
+    // Open directly to a gear item if the page was loaded with a #slug.
+    openGearFromHash();
+
   } // end init()
+
+  /* ── Deep links: open from #slug on load, sync with Back/Forward ── */
+  function openGearFromHash() {
+    const slug = decodeURIComponent((location.hash || '').replace('#', ''));
+    if (!slug) return false;
+    const item = items.find(it => itemSlug(it) === slug);
+    if (!item) return false;
+    const i = activeSet.indexOf(item);
+    openDetail(item, i >= 0 ? i : 0, true);
+    return true;
+  }
+
+  window.addEventListener('popstate', () => {
+    if (!openGearFromHash() && dv.classList.contains('open')) closeDetail(true);
+  });
 
   loadData();
 })();
