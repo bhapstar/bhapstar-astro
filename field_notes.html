@@ -1412,20 +1412,26 @@
     return src.replace(/^(images\/)(?!thumbs\/)/, '$1thumbs/');
   }
 
-  function render() {
+  function getDisplayOrder() {
     let visible = activeFilter === 'all' ? posts : posts.filter(p => p.type === activeFilter);
     if (activeTag) visible = visible.filter(p => (p.tags || []).some(t => t.toLowerCase() === activeTag.toLowerCase()));
-
-    if (!visible.length) {
-      blogIndex.innerHTML = `<p class="blog-empty">No posts found${activeTag ? ` tagged "${activeTag}"` : " in this category"} yet.</p>`;
-      return;
-    }
-
+    if (!visible.length) return [];
     // Use post with featured:true if present, otherwise fall back to first
     const featuredIdx = visible.findIndex(p => p.featured);
     const featuredPost = featuredIdx >= 0 ? visible[featuredIdx] : visible[0];
     const rest = visible.filter(p => p !== featuredPost);
-    const featured = featuredPost;
+    return [featuredPost, ...rest];
+  }
+
+  function render() {
+    const order = getDisplayOrder();
+
+    if (!order.length) {
+      blogIndex.innerHTML = `<p class="blog-empty">No posts found${activeTag ? ` tagged "${activeTag}"` : " in this category"} yet.</p>`;
+      return;
+    }
+
+    const [featured, ...rest] = order;
 
     const featuredHtml = `
       <div class="blog-featured blog-reveal" data-slug="${esc(featured.slug)}"
@@ -1476,7 +1482,10 @@
     if (!post) return;
 
     currentSlug = slug;
-    const idx = posts.indexOf(post);
+    // Index within whatever's currently displayed (featured-first, filtered),
+    // not the raw site-data.json order — keeps Prev/Next matching what's on screen.
+    const order = getDisplayOrder();
+    const idx = order.indexOf(post);
 
     postType.textContent  = TYPE_LABELS[post.type] || post.type;
     postTitle.textContent = post.title;
@@ -1515,7 +1524,7 @@
       postLikeBtn.style.display = 'none';
     }
     postPrev.disabled = idx <= 0;
-    postNext.disabled = idx >= posts.length - 1;
+    postNext.disabled = idx === -1 || idx >= order.length - 1;
 
     postView.classList.add('open');
     postView.setAttribute('aria-hidden', 'false');
@@ -1594,13 +1603,15 @@
   });
 
   postPrev.addEventListener('click', () => {
-    const idx = posts.findIndex(p => p.slug === currentSlug);
-    if (idx > 0) openPost(posts[idx - 1].slug);
+    const order = getDisplayOrder();
+    const idx = order.findIndex(p => p.slug === currentSlug);
+    if (idx > 0) openPost(order[idx - 1].slug);
   });
 
   postNext.addEventListener('click', () => {
-    const idx = posts.findIndex(p => p.slug === currentSlug);
-    if (idx < posts.length - 1) openPost(posts[idx + 1].slug);
+    const order = getDisplayOrder();
+    const idx = order.findIndex(p => p.slug === currentSlug);
+    if (idx >= 0 && idx < order.length - 1) openPost(order[idx + 1].slug);
   });
 
   document.addEventListener('keydown', e => {
