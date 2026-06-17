@@ -274,16 +274,116 @@
                   margin-top 280ms ease;
     }
 
-    /* Slide out when desc-toggle is active — desktop gear page only */
-    #gearGrid.hide-desc .card .cap .d {
+    /* Caption toggle — grid view slides the whole pill (title + desc) down and
+       out of the tile. The card clips overflow, so it's a clean slide. Mirrors
+       the gallery page. */
+    #gearGrid .card .cap {
+      transition: background 220ms ease,
+                  opacity    260ms ease,
+                  transform  340ms cubic-bezier(0.16,1,0.3,1);
+    }
+    #gearGrid.hide-desc:not(.list-view) .card .cap {
+      opacity: 0;
+      transform: translateY(calc(100% + 16px));
+      pointer-events: none;
+    }
+
+    /* List view keeps the layout but collapses only the description */
+    #gearGrid.list-view.hide-desc .card .cap .d {
       max-height: 0;
       opacity: 0;
       margin-top: 0;
     }
 
-    /* Hide the desc-toggle button on mobile (descriptions are already hidden there) */
+    /* Mobile grid view shows descriptions again (overrides the global
+       styles.css rule) so the caption toggle means the same on every size:
+       image-only ↔ title + description. */
     @media (max-width: 720px) {
-      #viewBtnDesc { display: none; }
+      #gearGrid:not(.list-view) .card .cap .d { display: block; }
+
+      /* Mobile list view hides descriptions globally, so the toggle hides the
+         whole caption column instead — image-only rows. */
+      #gearGrid.list-view.hide-desc .card .cap {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 240ms ease;
+      }
+    }
+
+    /* ── Filter dropdown ── (mirrors gallery) */
+    .filter-select-wrap {
+      display: inline-flex; align-items: center; gap: 9px;
+      margin-right: auto; /* keep view controls pushed to the right */
+    }
+    .filter-select-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(200,195,235,0.55);
+    }
+    .filter-select {
+      appearance: none; -webkit-appearance: none;
+      height: 34px; padding: 0 34px 0 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background-color: rgba(167,139,250,0.06);
+      color: rgba(230,226,250,0.95);
+      font: inherit; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.02em; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a78bfa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    .filter-select:hover {
+      background-color: rgba(167,139,250,0.13);
+      border-color: rgba(167,139,250,0.45);
+    }
+    .filter-select:focus-visible {
+      outline: 2px solid rgba(167,139,250,0.6); outline-offset: 2px;
+    }
+    .filter-select option {
+      background: #0a0820; color: #e6e2fa;
+    }
+
+    /* ── Caption toggle pill ── (mirrors gallery) */
+    .caption-toggle {
+      display: inline-flex; align-items: center; gap: 7px;
+      height: 34px; padding: 0 13px 0 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background: rgba(167,139,250,0.06);
+      color: rgba(220,216,245,0.92);
+      font: inherit; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.02em; line-height: 1;
+      cursor: pointer; white-space: nowrap;
+      position: relative; flex-shrink: 0;
+      margin-left: 4px;
+      transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    .caption-toggle::before {
+      content: ""; position: absolute; left: -7px; top: 7px; bottom: 7px;
+      width: 1px; background: rgba(167,139,250,0.20);
+    }
+    .caption-toggle:hover {
+      background: rgba(167,139,250,0.13);
+      border-color: rgba(167,139,250,0.45);
+      color: #fff;
+    }
+    .caption-toggle:active { transform: translateY(1px); }
+    .caption-toggle:focus-visible {
+      outline: 2px solid rgba(167,139,250,0.6); outline-offset: 2px;
+    }
+    .caption-toggle svg { flex-shrink: 0; }
+    .caption-toggle .cap-icon-off { display: none; }
+    .caption-toggle .cap-icon-on  { display: block; }
+    .caption-toggle[aria-pressed="false"] {
+      background: transparent;
+      border-color: rgba(167,139,250,0.16);
+      color: rgba(200,195,235,0.55);
+    }
+    .caption-toggle[aria-pressed="false"] .cap-icon-on  { display: none; }
+    .caption-toggle[aria-pressed="false"] .cap-icon-off { display: block; }
+    @media (max-width: 720px) {
+      .caption-toggle { padding: 0 11px 0 9px; font-size: 12px; }
     }
   </style>
   <link rel="manifest" href="/manifest.json" />
@@ -310,14 +410,17 @@
         </p>
 
         <div class="gallery-controls" role="group" aria-label="Gear controls">
-          <div class="filter-pills" role="group" aria-label="Filter by category">
-            <button class="filter-pill active" data-filter="all"              type="button" aria-pressed="true">All</button>
-            <button class="filter-pill"         data-filter="telescope"        type="button" aria-pressed="false">Telescope</button>
-            <button class="filter-pill"         data-filter="smart-telescope"  type="button" aria-pressed="false">Smart Telescope</button>
-            <button class="filter-pill"         data-filter="mount"            type="button" aria-pressed="false">Mount</button>
-            <button class="filter-pill"         data-filter="camera"           type="button" aria-pressed="false">Camera</button>
-            <button class="filter-pill"         data-filter="filters"          type="button" aria-pressed="false">Filters</button>
-            <button class="filter-pill"         data-filter="accessories"      type="button" aria-pressed="false">Accessories</button>
+          <div class="filter-select-wrap">
+            <label for="gearFilter" class="filter-select-label">Filter</label>
+            <select id="gearFilter" class="filter-select" aria-label="Filter by category">
+              <option value="all" selected>All gear</option>
+              <option value="telescope">Telescope</option>
+              <option value="smart-telescope">Smart Telescope</option>
+              <option value="mount">Mount</option>
+              <option value="camera">Camera</option>
+              <option value="filters">Filters</option>
+              <option value="accessories">Accessories</option>
+            </select>
           </div>
 
           <div class="view-buttons" role="group" aria-label="View mode selection">
@@ -336,14 +439,20 @@
                 <rect x="0" y="10.5" width="14" height="2.5" rx="1" fill="currentColor"/>
               </svg>
             </button>
-            <button id="viewBtnDesc" class="view-btn" type="button" aria-pressed="false" aria-label="Hide descriptions" title="Hide descriptions">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <rect x="0" y="1"  width="14" height="2"   rx="1" fill="currentColor"/>
-                <rect x="0" y="5"  width="10" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
-                <rect x="0" y="9"  width="12" height="2"   rx="1" fill="currentColor" opacity="0.45"/>
-              </svg>
-            </button>
           </div>
+
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle item titles & descriptions">
+            <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" fill="currentColor"/>
+            </svg>
+            <svg class="cap-icon-off" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
+            </svg>
+            <span class="caption-toggle-label">Captions</span>
+          </button>
         </div>
 
         <p class="gallery-hint">Click any image to view full-page · Arrow keys or swipe to navigate</p>
@@ -438,14 +547,11 @@
   let infoVisible     = true;
 
   function getActiveFilter() {
-    return document.querySelector('.filter-pill.active')?.dataset.filter || 'all';
+    return document.getElementById('gearFilter')?.value || 'all';
   }
   function setActiveFilter(value) {
-    document.querySelectorAll('.filter-pill').forEach(p => {
-      const on = p.dataset.filter === value;
-      p.classList.toggle('active', on);
-      p.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
+    const sel = document.getElementById('gearFilter');
+    if (sel) sel.value = value;
   }
 
   async function loadData() {
@@ -500,11 +606,12 @@
   function zoomClamp(ox, oy) {
     if (!dvImgPanel || !dvImg) return { ox, oy };
     const s = zoomScale();
-    const maxX = Math.max(0, dvImg.offsetWidth  * s - dvImgPanel.clientWidth);
-    const maxY = Math.max(0, dvImg.offsetHeight * s - dvImgPanel.clientHeight);
+    // Centred model: origin is an offset from centre, clamped symmetrically.
+    const limX = Math.max(0, (dvImg.offsetWidth  * s - dvImgPanel.clientWidth)  / 2);
+    const limY = Math.max(0, (dvImg.offsetHeight * s - dvImgPanel.clientHeight) / 2);
     return {
-      ox: Math.max(-maxX, Math.min(0, ox)),
-      oy: Math.max(-maxY, Math.min(0, oy)),
+      ox: Math.max(-limX, Math.min(limX, ox)),
+      oy: Math.max(-limY, Math.min(limY, oy)),
     };
   }
 
@@ -526,16 +633,8 @@
   function zoomAdvance() {
     if (!dvImg || !dvImgPanel) return;
     zoomStep = (zoomStep + 1) % ZOOM_STEPS.length;
-    if (zoomStep === 0) {
-      zoomOriginX = 0; zoomOriginY = 0;
-    } else {
-      const s = ZOOM_STEPS[zoomStep];
-      const c = zoomClamp(
-        (dvImgPanel.clientWidth  - dvImg.offsetWidth  * s) / 2,
-        (dvImgPanel.clientHeight - dvImg.offsetHeight * s) / 2
-      );
-      zoomOriginX = c.ox; zoomOriginY = c.oy;
-    }
+    // Centre the zoom: origin 0,0 = dead centre of the panel (matches gallery).
+    zoomOriginX = 0; zoomOriginY = 0;
     dvImgPanel.classList.toggle('dv-zoomed', zoomed());
     zoomUpdateBtn();
     zoomApply();
@@ -558,8 +657,13 @@
     });
     dvImgPanel.addEventListener('mousemove', (e) => {
       if (!zoomDragging || !zoomed()) return;
-      const c = zoomClamp(e.clientX - zoomStartX, e.clientY - zoomStartY);
+      // Centred-model pan (equivalent to the gallery at rotation 0).
+      const rawDx = e.clientX - zoomStartX;
+      const rawDy = e.clientY - zoomStartY;
+      const c = zoomClamp(rawDx, rawDy);
       zoomOriginX = c.ox; zoomOriginY = c.oy;
+      zoomStartX = e.clientX - zoomOriginX;
+      zoomStartY = e.clientY - zoomOriginY;
       zoomApply();
     });
     dvImgPanel.addEventListener('mouseup',    () => { zoomDragging = false; });
@@ -750,10 +854,10 @@
     function applyDescToggle(hide) {
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
-        viewBtnDesc.classList.toggle('active', hide);
-        viewBtnDesc.setAttribute('aria-pressed', hide ? 'true' : 'false');
-        viewBtnDesc.setAttribute('aria-label', hide ? 'Show descriptions' : 'Hide descriptions');
-        viewBtnDesc.title = hide ? 'Show descriptions' : 'Hide descriptions';
+        viewBtnDesc.setAttribute('aria-pressed', hide ? 'false' : 'true');
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
+        viewBtnDesc.title = hide ? 'Show item titles & descriptions'
+                                 : 'Hide item titles & descriptions';
       }
     }
     applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
@@ -763,9 +867,7 @@
       applyDescToggle(nowHidden);
     });
 
-    document.querySelectorAll('.filter-pill').forEach(pill => {
-      pill.addEventListener('click', () => { setActiveFilter(pill.dataset.filter); render(); });
-    });
+    document.getElementById('gearFilter')?.addEventListener('change', () => { render(); });
 
     grid.addEventListener('click', (e) => {
       const a = e.target.closest('a.card');
