@@ -1,0 +1,46 @@
+name: Regenerate sitemap
+
+# Runs whenever site-data.json changes on the main branch, plus a manual
+# trigger from the Actions tab. Regenerates sitemap.xml and commits it
+# only if it actually changed.
+on:
+  push:
+    branches: [ main ]          # change to 'master' if that's your default branch
+    paths:
+      - 'site-data.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Avoid this job racing with itself on rapid pushes
+concurrency:
+  group: regenerate-sitemap
+  cancel-in-progress: false
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Regenerate sitemap.xml
+        run: python generate-sitemap.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet sitemap.xml; then
+            echo "sitemap.xml unchanged — nothing to commit."
+          else
+            git add sitemap.xml
+            git commit -m "Auto-regenerate sitemap.xml from site-data.json"
+            git push
+          fi
