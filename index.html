@@ -544,23 +544,57 @@
             This is where I post most often - a few recent shots below, or follow along for everything new.
           </p>
 
-          <div class="instagram-grid">
-            <div class="instagram-embed-wrap">
-              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYXXwASCuGk/" data-instgrm-version="14">
-                <a href="https://www.instagram.com/p/DYXXwASCuGk/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
-              </blockquote>
-            </div>
-            <div class="instagram-embed-wrap">
-              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYRhrCrK61I/" data-instgrm-version="14">
-                <a href="https://www.instagram.com/p/DYRhrCrK61I/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
-              </blockquote>
-            </div>
-            <div class="instagram-embed-wrap">
-              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DWWhGxFCj9b/" data-instgrm-version="14">
-                <a href="https://www.instagram.com/p/DWWhGxFCj9b/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
-              </blockquote>
-            </div>
-          </div>
+          <div class="instagram-grid" id="instagramGrid"></div>
+
+          <script>
+          /* ── Instagram: show 3 random posts from the list below ───────────
+             Each entry is a post shortcode — the part after /p/ in a post URL
+             (instagram.com/p/DYXXwASCuGk/ → 'DYXXwASCuGk'). On every page load
+             the page picks 3 at random. Add or remove shortcodes freely; keep
+             at least 3 in the list so a full row always shows. */
+          (function () {
+            const POST_IDS = [
+              'DYXXwASCuGk',
+              'DYRhrCrK61I',
+              'DWWhGxFCj9b',
+              'DWrICJ7Ci0G',
+              'DUNRLsECl2e',
+              'DUBPy-jCgjF',
+              'DSC78baj4xS',
+              'DRhq9bKD9tz',
+              'DXPatoCCmxC',
+              'DSwYrE9D_zc',
+              // ── add more post shortcodes above ──
+            ];
+
+            const grid = document.getElementById('instagramGrid');
+            if (!grid) return;
+
+            // Fisher–Yates shuffle, then take up to 3
+            const ids = POST_IDS.slice();
+            for (let i = ids.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [ids[i], ids[j]] = [ids[j], ids[i]];
+            }
+            const pick = ids.slice(0, Math.min(3, ids.length));
+
+            grid.innerHTML = pick.map(id => {
+              const url = `https://www.instagram.com/p/${id}/`;
+              return `<div class="instagram-embed-wrap">
+                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14">
+                  <a href="${url}" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
+                </blockquote>
+              </div>`;
+            }).join('');
+
+            // If Instagram's embed.js has already loaded, render the new
+            // blockquotes now. If it loads later (via partials.js) it picks
+            // them up automatically, since they're already in the DOM.
+            if (window.instgrm && window.instgrm.Embeds) {
+              window.instgrm.Embeds.process();
+            }
+          })();
+          </script>
 
           <div class="instagram-follow">
             <a class="btn primary" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener noreferrer">
