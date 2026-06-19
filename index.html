@@ -541,7 +541,7 @@
             <h3>Latest from Instagram</h3>
           </div>
           <p class="instagram-intro">
-            This is where I post most often - a few recent shots below, or follow along for everything new.
+            See below from some recent images and astro updates, or follow along for everything new.
           </p>
 
           <div class="instagram-grid" id="instagramGrid"></div>
@@ -581,7 +581,7 @@
             grid.innerHTML = pick.map(id => {
               const url = `https://www.instagram.com/p/${id}/`;
               return `<div class="instagram-embed-wrap">
-                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${url}" data-instgrm-version="14">
                   <a href="${url}" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
                 </blockquote>
               </div>`;
