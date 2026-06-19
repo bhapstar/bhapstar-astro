@@ -151,6 +151,22 @@
       opacity: 1;
     }
 
+    /* Legibility scrim — only on numbered tiles. Sits above the image
+       (z-index 1) and below the number (z-index 2). A radial fade keeps
+       it strongest behind the digit and transparent at the tile edges,
+       so the assembled picture stays continuous. */
+    .cell.revealed.has-num::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(circle at center,
+        rgba(5,4,20,0.75) 0%,
+        rgba(5,4,20,0.30) 60%,
+        rgba(5,4,20,0)   100%);
+    }
+
     /* Number overlay on image */
     .cell.revealed .tile-num {
       position: relative;
@@ -988,6 +1004,7 @@
 
     // Number overlay
     if (cell.adj > 0) {
+      el.classList.add('has-num'); // enables the legibility scrim (CSS)
       const numDiv = document.createElement('div');
       numDiv.className = `tile-num n${cell.adj}`;
       numDiv.textContent = cell.adj;
