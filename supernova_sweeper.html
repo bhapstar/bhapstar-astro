@@ -769,7 +769,7 @@
     try {
       if (_winAudio) { _winAudio.pause(); _winAudio.currentTime = 0; }
       _winAudio = new Audio(big ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
-      _winAudio.volume = big ? 1.0 : 0.85;
+      _winAudio.volume = big ? 0.7 : 0.85;
       _winAudio.play().catch(() => {});
     } catch (e) { /* audio blocked */ }
   }
