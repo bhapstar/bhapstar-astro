@@ -118,6 +118,12 @@
     .cell.flagged::after {
       content: '🚩';
       font-size: 14px;
+      animation: flag-pop 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes flag-pop {
+      0%   { transform: scale(0)    rotate(-25deg); }
+      70%  { transform: scale(1.2)  rotate(6deg); }
+      100% { transform: scale(1)    rotate(0); }
     }
 
     /* Revealed — safe */
@@ -125,6 +131,15 @@
       background: transparent;
       border: 1px solid rgba(255,255,255,0.06);
       cursor: default;
+      /* Cascade pop — each cell's delay (--d) is set from its ring
+         distance to the click, so a cleared region ripples open. */
+      animation: cell-pop 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: var(--d, 0ms);
+    }
+    @keyframes cell-pop {
+      0%   { transform: scale(0.42); opacity: 0; }
+      60%  { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1);    opacity: 1; }
     }
 
     /* Revealed image tile */
@@ -176,6 +191,20 @@
       background: rgba(239,68,68,0.12);
       border-color: rgba(239,68,68,0.3);
       cursor: default;
+      /* Supernovae bloom outward from the one you hit (--d set in JS). */
+      animation: mine-pop 320ms ease both;
+      animation-delay: var(--d, 0ms);
+    }
+    @keyframes mine-pop {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Respect reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      .cell.revealed,
+      .cell.mine-revealed { animation: none; }
+      .cell.flagged::after { animation: none; }
     }
     /* Wrong flag */
     .cell.wrong-flag::after {
@@ -519,6 +548,7 @@
   };
 
   const CELL_GAP = 2, MAX_CELL = 32;
+  const REVEAL_STAGGER_MS = 14; // per-ring delay for the cascade reveal
 
   function availWidth() {
     return Math.min(window.innerWidth - 16, 900);
@@ -786,6 +816,39 @@
     } catch (e) { /* audio blocked */ }
   }
 
+  // Soft ascending sweep that rides the reveal cascade. One short blip
+  // per ring, pitch climbing as the wave expands outward from the click.
+  // A single numbered-cell click (maxRing 0) plays one gentle blip.
+  function playCascade(maxRing) {
+    try {
+      const ctx = getAudioCtx();
+      const run = () => {
+        const t0    = ctx.currentTime + 0.01;
+        const rings = Math.min(maxRing, 20); // cap so huge floods don't drone
+        for (let ring = 0; ring <= rings; ring++) {
+          const t    = t0 + ring * (REVEAL_STAGGER_MS / 1000);
+          const freq = 300 + ring * 26;
+          const osc  = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.15, t + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+          osc.start(t);
+          osc.stop(t + 0.12);
+        }
+      };
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(run);
+      } else {
+        run();
+      }
+    } catch (e) { /* audio blocked */ }
+  }
+
   function playFlag() {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -894,10 +957,12 @@
   }
 
   /* ─── CELL STYLING ──────────────────────────────────── */
-  function styleRevealedCell(i) {
+  function styleRevealedCell(i, ring = 0) {
     const cell = cells[i];
     const el   = cellEls[i];
     el.className = 'cell revealed';
+    // Stagger the pop by ring distance so the reveal ripples outward.
+    el.style.setProperty('--d', (ring * REVEAL_STAGGER_MS) + 'ms');
     el.setAttribute('aria-label', cell.adj > 0 ? `${cell.adj} adjacent mines` : 'Clear cell');
 
     // Image tile — each 5×5 block of cells shares one thumbnail image
@@ -931,23 +996,42 @@
   }
 
   /* ─── REVEAL LOGIC ───────────────────────────────────── */
-  function revealCell(i) {
-    const cell = cells[i];
-    if (cell.revealed || cell.flagged) return;
+  // Breadth-first flood fill from the clicked cell. Each cell is tagged
+  // with its ring (Chebyshev steps from the click) which drives the
+  // staggered pop-in (CSS) and the rising audio sweep. The logical reveal
+  // still completes synchronously, so win detection is unaffected — only
+  // the visuals are staggered, via per-cell animation-delay.
+  function revealCell(startIdx) {
+    const startCell = cells[startIdx];
+    if (startCell.revealed || startCell.flagged) return;
 
-    cell.revealed = true;
-    revealed++;
-    styleRevealedCell(i);
+    const queue = [[startIdx, 0]];
+    const seen  = new Set([startIdx]);
+    let maxRing = 0;
 
-    // Play subtle tick for numbered cells
-    if (cell.adj > 0 && !cell.mine) playReveal(cell.adj);
+    while (queue.length) {
+      const [i, ring] = queue.shift();
+      const cell = cells[i];
+      if (cell.revealed || cell.flagged) continue;
 
-    // Flood-fill for empty cells
-    if (cell.adj === 0 && !cell.mine) {
-      for (const n of getNeighbours(i)) {
-        if (!cells[n].revealed && !cells[n].flagged) revealCell(n);
+      cell.revealed = true;
+      revealed++;
+      styleRevealedCell(i, ring);
+      if (ring > maxRing) maxRing = ring;
+
+      // Flood outward only through empty (zero-adjacent) cells
+      if (cell.adj === 0 && !cell.mine) {
+        for (const n of getNeighbours(i)) {
+          const nc = cells[n];
+          if (!nc.revealed && !nc.flagged && !seen.has(n)) {
+            seen.add(n);
+            queue.push([n, ring + 1]);
+          }
+        }
       }
     }
+
+    playCascade(maxRing);
   }
 
   function handleClick(i) {
@@ -1001,11 +1085,16 @@
   }
 
   function revealAllMines(hitIdx) {
+    const hr = cells[hitIdx].r, hc = cells[hitIdx].c;
     for (const i of mineSet) {
       if (i === hitIdx) continue;
       const cell = cells[i];
       const el   = cellEls[i];
       if (cell.flagged) continue; // correct flag — leave it
+      // Delay each supernova by its distance from the one you hit, so
+      // they detonate outward in a shockwave.
+      const dist = Math.max(Math.abs(cell.r - hr), Math.abs(cell.c - hc));
+      el.style.setProperty('--d', Math.min(dist * 24, 600) + 'ms');
       el.className = 'cell mine-revealed';
       el.setAttribute('aria-label', 'Supernova');
     }
