@@ -565,7 +565,11 @@ function resizeFx(){
   function toggleMute(){
     muted = !muted;
     try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch(e) {}
-    if(muted) stopWinAudio();   // silence any playing win track immediately
+    // Pause/resume any in-progress win track so unmuting brings it back
+    if(_winAudio){
+      if(muted){ _winAudio.pause(); }
+      else { _winAudio.play().catch(() => {}); }
+    }
     syncMuteBtn();
   }
   muteBtn && muteBtn.addEventListener('click', toggleMute);
