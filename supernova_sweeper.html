@@ -803,7 +803,7 @@
     // Pause/resume any in-progress win track so unmuting brings it back
     if (_winAudio) {
       if (muted) { _winAudio.pause(); }
-      else { _winAudio.play().catch(() => {}); }
+      else if (!_winAudio.ended) { _winAudio.play().catch(() => {}); }
     }
     syncMuteBtn();
   }
@@ -813,12 +813,12 @@
   let _winAudio = null;
 
   function playWinChime(big = false) {
-    if (isMuted()) return;
     try {
       if (_winAudio) { _winAudio.pause(); _winAudio.currentTime = 0; }
       _winAudio = new Audio(big ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
       _winAudio.volume = big ? 0.7 : 0.85;
-      _winAudio.play().catch(() => {});
+      // Always create the track so it can start on unmute; only auto-play if not muted
+      if (!isMuted()) _winAudio.play().catch(() => {});
     } catch (e) { /* audio blocked */ }
   }
 
