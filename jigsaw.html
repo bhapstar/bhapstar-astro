@@ -38,6 +38,9 @@
 
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* ── Sound toggle (compact icon button) ── */
+    .sound-toggle { font-size: 16px; line-height: 1; }
+
     /* ── Multiverse win card ── */
     .win-card--normal    { display: block; }
     .win-card--multiverse{ display: none; }
@@ -135,6 +138,7 @@
         </select>
         <button id="newBtn" type="button">New random image</button>
         <button id="peekBtn" type="button" title="Hold to peek">Peek</button>
+        <button id="muteBtn" type="button" class="sound-toggle" aria-label="Mute sounds" aria-pressed="false" title="Sound on">🔊</button>
       </div>
       <p id="multiverseTeaser" class="mv-prize-line" style="display:none;margin:8px 0 0;text-align:right;">⭐ Complete the Multiverse puzzle for a special prize ⭐</p>
     </div>
@@ -544,10 +548,63 @@ function resizeFx(){
     _mvRaf = requestAnimationFrame(frame);
   }
 
+  // ── Mute control (shared site-wide via localStorage) ──
+  const MUTE_KEY = 'bhapstar_sound_muted';
+  let muted = false;
+  try { muted = localStorage.getItem(MUTE_KEY) === '1'; } catch(e) {}
+  function isMuted(){ return muted; }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function syncMuteBtn(){
+    if(!muteBtn) return;
+    muteBtn.textContent = muted ? '🔇' : '🔊';
+    muteBtn.setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
+    muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    muteBtn.title = muted ? 'Sound off' : 'Sound on';
+  }
+  function toggleMute(){
+    muted = !muted;
+    try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch(e) {}
+    if(muted) stopWinAudio();   // silence any playing win track immediately
+    syncMuteBtn();
+  }
+  muteBtn && muteBtn.addEventListener('click', toggleMute);
+  syncMuteBtn();
+
+  // ── Subtle synthesised "snap" when a piece locks into place ──
+  let _audioCtx = null;
+  function getAudioCtx(){
+    if(!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return _audioCtx;
+  }
+  function playSnap(){
+    if(isMuted()) return;
+    try {
+      const ctx = getAudioCtx();
+      const play = () => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        // Gentle downward glide gives a soft "click into place" feel
+        osc.frequency.setValueAtTime(660, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.10);
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.15);
+      };
+      if(ctx.state === 'suspended'){ ctx.resume().then(play); } else { play(); }
+    } catch(e) { /* audio blocked */ }
+  }
+
   // ── Win audio ──
   let _winAudio = null;
 
   function playWinAudio(isMultiverse){
+    if(isMuted()) return;
     try {
       if(_winAudio){ _winAudio.pause(); _winAudio.currentTime = 0; }
       _winAudio = new Audio(isMultiverse ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
@@ -946,6 +1003,8 @@ function resizeCanvasToFit(){
 
     const snapped = maybeSnap(p);
     draw();
+
+    if(snapped) playSnap();
 
     if(snapped && checkWin()){
       msg.classList.add('win');
