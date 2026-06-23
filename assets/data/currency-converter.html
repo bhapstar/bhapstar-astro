@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency Converter</title>
+<style>
+  :root{
+    --bg:#FAFAF7; --surface:#FFFFFF; --ink:#1A1D29; --muted:#8A8F9C; --faint:#B9BDC7;
+    --line:#ECECE6; --line-strong:#E2E2DA; --accent:#3651D4; --accent-tint-2:#F6F7FF;
+    --danger:#C0392B; --good:#1F9D6B; --radius:14px; --flag-ring:rgba(0,0,0,.10);
+    --shadow:0 1px 2px rgba(26,29,41,.04), 0 8px 30px rgba(26,29,41,.06);
+    --titlegrad:none;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);min-height:100vh;background-attachment:fixed;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.4;padding:24px 16px 64px;transition:background .35s ease,color .35s ease;}
+  .wrap{max-width:560px;margin:0 auto;position:relative;}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s ease;}
+  header{margin:8px 4px 18px;}
+  .topbar{display:flex;align-items:flex-start;gap:12px;}
+  .topbar>div:first-child{flex:1;min-width:0;}
+  .title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .title-main{color:var(--ink);}
+  .title small{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;}
+  .status{margin-top:7px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;min-height:18px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none;}
+  .dot.live{background:var(--good);animation:pulse 2.4s infinite;}
+  .dot.err{background:var(--danger);}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,107,.45);}70%{box-shadow:0 0 0 6px rgba(31,157,107,0);}100%{box-shadow:0 0 0 0 rgba(31,157,107,0);}}
+  .status a{color:var(--accent);text-decoration:none;cursor:pointer;}
+  .status a:hover{text-decoration:underline;}
+  .theme-btn{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px;font-weight:600;
+    cursor:pointer;transition:.15s;white-space:nowrap;}
+  .theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .theme-btn .spark{color:var(--accent);}
+  .list{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .35s,border-color .35s,box-shadow .35s;}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line);position:relative;transition:background .12s ease;}
+  .row:last-child{border-bottom:none;}
+  .row.active{background:var(--accent-tint-2);}
+  .flag{width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .flag-img{width:30px;height:22px;object-fit:cover;border-radius:4px;box-shadow:0 0 0 1px var(--flag-ring);display:block;background:rgba(128,128,128,.15);}
+  .chip{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.02em;}
+  .meta{flex:1;min-width:0;}
+  .code{font-size:15px;font-weight:650;letter-spacing:.01em;}
+  .name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .amount{width:160px;flex:none;border:none;background:transparent;font-family:inherit;font-size:19px;font-weight:600;
+    text-align:right;color:var(--ink);padding:6px 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+    outline:none;border-bottom:1.5px solid transparent;}
+  .amount::placeholder{color:var(--faint);font-weight:500;}
+  .row.active .amount,.amount:focus{border-bottom-color:var(--accent);}
+  .remove{position:absolute;right:8px;top:8px;width:22px;height:22px;border-radius:50%;border:none;background:transparent;
+    color:var(--faint);font-size:15px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;}
+  .row:hover .remove{display:flex;}
+  .remove:hover{background:rgba(192,57,43,.16);color:var(--danger);}
+  .add-bar{margin-top:14px;}
+  .add-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:1px dashed var(--line-strong);
+    border-radius:var(--radius);background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:border-color .12s,background .12s;}
+  .add-btn:hover{border-color:var(--accent);background:var(--accent-tint-2);}
+  .picker{display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .picker.open{display:block;}
+  .search{width:100%;border:none;border-bottom:1px solid var(--line);padding:14px 16px;font:inherit;font-size:15px;outline:none;color:var(--ink);background:transparent;}
+  .options{max-height:300px;overflow-y:auto;}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;border:none;background:transparent;text-align:left;cursor:pointer;border-bottom:1px solid var(--line);color:var(--ink);}
+  .opt:last-child{border-bottom:none;}
+  .opt:hover,.opt.hl{background:var(--accent-tint-2);}
+  .opt .flag{width:26px;height:26px;}
+  .opt .flag-img{width:26px;height:19px;}
+  .o-text{display:flex;flex-direction:column;min-width:0;}
+  .o-code{font-weight:650;font-size:14px;}
+  .o-name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .empty{padding:18px 16px;color:var(--muted);font-size:13.5px;text-align:center;}
+  .foot{margin:22px 4px 0;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.5;}
+  @media (max-width:420px){.amount{width:128px;font-size:18px;}.name{display:none;}}
+  @media (prefers-reduced-motion:reduce){.dot.live,.title-main{animation:none!important;}*{transition:none!important;}}
+
+  /* ===== THEME 1 · DUSK (dark, sleek) ===== */
+  body[data-theme="dusk"]{--bg:#0F1117;--surface:#181B24;--ink:#ECEEF5;--muted:#888FA3;--faint:#454B5E;
+    --line:#262A36;--line-strong:#2F3442;--accent:#7C8CFF;--accent-tint-2:rgba(124,140,255,.10);
+    --good:#4ADE9A;--danger:#FF6B6B;--flag-ring:rgba(255,255,255,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 36px rgba(0,0,0,.45);}
+
+  /* ===== THEME 2 · NEON (synthwave glow) ===== */
+  body[data-theme="neon"]{--bg:#0B0614;--surface:#150C24;--ink:#F6E9FF;--muted:#9A7BC0;--faint:#574170;
+    --line:rgba(255,61,203,.20);--line-strong:rgba(255,61,203,.32);--accent:#FF3DCB;--accent-tint-2:rgba(255,61,203,.12);
+    --good:#2FF8FF;--danger:#FF5E5E;--flag-ring:rgba(255,61,203,.35);
+    --shadow:0 0 0 1px rgba(255,61,203,.18),0 0 34px rgba(255,61,203,.12);
+    background:radial-gradient(900px 600px at 50% -20%,#2A0B3F 0%,#11061F 55%,#0B0614 100%);}
+  body[data-theme="neon"] .title-main{background:linear-gradient(90deg,#FF3DCB,#2FF8FF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  body[data-theme="neon"] .list{box-shadow:0 0 0 1px rgba(255,61,203,.25),0 0 36px rgba(255,61,203,.12);}
+  body[data-theme="neon"] .amount{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-shadow:0 0 9px rgba(47,248,255,.4);}
+  body[data-theme="neon"] .code{text-shadow:0 0 12px rgba(255,61,203,.25);}
+  body[data-theme="neon"] .row.active{box-shadow:inset 3px 0 0 var(--accent);}
+  body[data-theme="neon"] .theme-btn,body[data-theme="neon"] .add-btn{box-shadow:0 0 18px rgba(255,61,203,.15);}
+
+  /* ===== THEME 3 · COSMIC (Bhapstar nebula + starfield glass) ===== */
+  body[data-theme="cosmic"]{--bg:#070318;--surface:rgba(255,255,255,.055);--ink:#F2ECFF;--muted:#AB9DD8;--faint:#5B4D80;
+    --line:rgba(255,255,255,.10);--line-strong:rgba(255,255,255,.18);--accent:#C77DFF;--accent-tint-2:rgba(199,125,255,.14);
+    --good:#5EEAD4;--danger:#FF7A8A;--flag-ring:rgba(255,255,255,.22);
+    --shadow:0 10px 44px rgba(70,24,130,.5);
+    background:radial-gradient(1200px 760px at 72% -12%,#3A1772 0%,#180A3D 42%,#070318 82%);}
+  body[data-theme="cosmic"] .list,body[data-theme="cosmic"] .picker{backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);}
+  body[data-theme="cosmic"] .add-btn{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+  body[data-theme="cosmic"] .title-main{background:linear-gradient(90deg,#C77DFF,#FF8FD0,#5EEAD4,#C77DFF);background-size:280% auto;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;}
+  @keyframes shimmer{to{background-position:280% center;}}
+  body[data-theme="cosmic"] .amount{text-shadow:0 0 14px rgba(199,125,255,.32);}
+  body[data-theme="cosmic"] .stars{opacity:1;animation:twinkle 5.5s ease-in-out infinite;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 18%,#fff,transparent),
+      radial-gradient(1.4px 1.4px at 78% 12%,rgba(255,255,255,.95),transparent),
+      radial-gradient(1.2px 1.2px at 34% 64%,rgba(255,255,255,.8),transparent),
+      radial-gradient(1.7px 1.7px at 62% 42%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 88% 72%,rgba(199,125,255,.9),transparent),
+      radial-gradient(1.3px 1.3px at 20% 84%,rgba(255,255,255,.85),transparent),
+      radial-gradient(1.2px 1.2px at 50% 8%,rgba(94,234,212,.85),transparent),
+      radial-gradient(1px 1px at 6% 52%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1.5px 1.5px at 94% 36%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 44% 30%,rgba(255,255,255,.75),transparent);
+    background-repeat:repeat;background-size:520px 520px,460px 460px,540px 540px,500px 500px,480px 480px,560px 560px,520px 520px,440px 440px,580px 580px,500px 500px;}
+  @keyframes twinkle{0%,100%{opacity:.55;}50%{opacity:1;}}
+</style>
+</head>
+<body data-theme="ledger">
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <div>
+        <h1 class="title"><span class="title-main">Currency converter</span> <small>live rates · type any field</small></h1>
+        <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading rates…</span></div>
+      </div>
+      <button id="themeBtn" class="theme-btn" type="button"><span class="spark">✦</span> <span id="themeName">Ledger</span></button>
+    </div>
+  </header>
+  <div class="list" id="list"></div>
+  <div class="add-bar">
+    <button class="add-btn" id="addBtn" type="button">＋ Add currency</button>
+    <div class="picker" id="picker">
+      <input class="search" id="search" type="text" placeholder="Search currency or code…" autocomplete="off">
+      <div class="options" id="options"></div>
+    </div>
+  </div>
+  <p class="foot">Mid-market rates, for reference only. Reload or tap refresh to update.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var NAMES={AED:"UAE Dirham",AFN:"Afghan Afghani",ALL:"Albanian Lek",AMD:"Armenian Dram",ANG:"Neth. Antillean Guilder",AOA:"Angolan Kwanza",ARS:"Argentine Peso",AUD:"Australian Dollar",AWG:"Aruban Florin",AZN:"Azerbaijani Manat",BAM:"Bosnia Mark",BBD:"Barbadian Dollar",BDT:"Bangladeshi Taka",BGN:"Bulgarian Lev",BHD:"Bahraini Dinar",BIF:"Burundian Franc",BMD:"Bermudan Dollar",BND:"Brunei Dollar",BOB:"Bolivian Boliviano",BRL:"Brazilian Real",BSD:"Bahamian Dollar",BTN:"Bhutanese Ngultrum",BWP:"Botswanan Pula",BYN:"Belarusian Ruble",BZD:"Belize Dollar",CAD:"Canadian Dollar",CDF:"Congolese Franc",CHF:"Swiss Franc",CLP:"Chilean Peso",CNY:"Chinese Yuan",COP:"Colombian Peso",CRC:"Costa Rican Colon",CUP:"Cuban Peso",CVE:"Cape Verdean Escudo",CZK:"Czech Koruna",DJF:"Djiboutian Franc",DKK:"Danish Krone",DOP:"Dominican Peso",DZD:"Algerian Dinar",EGP:"Egyptian Pound",ERN:"Eritrean Nakfa",ETB:"Ethiopian Birr",EUR:"Euro",FJD:"Fijian Dollar",FKP:"Falkland Pound",FOK:"Faroese Krona",GBP:"British Pound",GEL:"Georgian Lari",GGP:"Guernsey Pound",GHS:"Ghanaian Cedi",GIP:"Gibraltar Pound",GMD:"Gambian Dalasi",GNF:"Guinean Franc",GTQ:"Guatemalan Quetzal",GYD:"Guyanaese Dollar",HKD:"Hong Kong Dollar",HNL:"Honduran Lempira",HRK:"Croatian Kuna",HTG:"Haitian Gourde",HUF:"Hungarian Forint",IDR:"Indonesian Rupiah",ILS:"Israeli Shekel",IMP:"Manx Pound",INR:"Indian Rupee",IQD:"Iraqi Dinar",IRR:"Iranian Rial",ISK:"Icelandic Krona",JEP:"Jersey Pound",JMD:"Jamaican Dollar",JOD:"Jordanian Dinar",JPY:"Japanese Yen",KES:"Kenyan Shilling",KGS:"Kyrgystani Som",KHR:"Cambodian Riel",KID:"Kiribati Dollar",KMF:"Comorian Franc",KRW:"South Korean Won",KWD:"Kuwaiti Dinar",KYD:"Cayman Dollar",KZT:"Kazakhstani Tenge",LAK:"Laotian Kip",LBP:"Lebanese Pound",LKR:"Sri Lankan Rupee",LRD:"Liberian Dollar",LSL:"Lesotho Loti",LYD:"Libyan Dinar",MAD:"Moroccan Dirham",MDL:"Moldovan Leu",MGA:"Malagasy Ariary",MKD:"Macedonian Denar",MMK:"Myanmar Kyat",MNT:"Mongolian Tugrik",MOP:"Macanese Pataca",MRU:"Mauritanian Ouguiya",MUR:"Mauritian Rupee",MVR:"Maldivian Rufiyaa",MWK:"Malawian Kwacha",MXN:"Mexican Peso",MYR:"Malaysian Ringgit",MZN:"Mozambican Metical",NAD:"Namibian Dollar",NGN:"Nigerian Naira",NIO:"Nicaraguan Cordoba",NOK:"Norwegian Krone",NPR:"Nepalese Rupee",NZD:"New Zealand Dollar",OMR:"Omani Rial",PAB:"Panamanian Balboa",PEN:"Peruvian Sol",PGK:"Papua New Guinean Kina",PHP:"Philippine Peso",PKR:"Pakistani Rupee",PLN:"Polish Zloty",PYG:"Paraguayan Guarani",QAR:"Qatari Riyal",RON:"Romanian Leu",RSD:"Serbian Dinar",RUB:"Russian Ruble",RWF:"Rwandan Franc",SAR:"Saudi Riyal",SBD:"Solomon Islands Dollar",SCR:"Seychellois Rupee",SDG:"Sudanese Pound",SEK:"Swedish Krona",SGD:"Singapore Dollar",SHP:"St. Helena Pound",SLE:"Sierra Leonean Leone",SOS:"Somali Shilling",SRD:"Surinamese Dollar",SSP:"South Sudanese Pound",STN:"Sao Tome Dobra",SYP:"Syrian Pound",SZL:"Swazi Lilangeni",THB:"Thai Baht",TJS:"Tajikistani Somoni",TMT:"Turkmenistani Manat",TND:"Tunisian Dinar",TOP:"Tongan Pa'anga",TRY:"Turkish Lira",TTD:"Trinidad & Tobago Dollar",TVD:"Tuvaluan Dollar",TWD:"New Taiwan Dollar",TZS:"Tanzanian Shilling",UAH:"Ukrainian Hryvnia",UGX:"Ugandan Shilling",USD:"US Dollar",UYU:"Uruguayan Peso",UZS:"Uzbekistani Som",VES:"Venezuelan Bolivar",VND:"Vietnamese Dong",VUV:"Vanuatu Vatu",WST:"Samoan Tala",XAF:"Central African Franc",XCD:"East Caribbean Dollar",XDR:"IMF SDR",XOF:"West African Franc",XPF:"CFP Franc",YER:"Yemeni Rial",ZAR:"South African Rand",ZMW:"Zambian Kwacha",ZWL:"Zimbabwean Dollar"};
+
+  // currency code -> ISO country for flag image; null = use monogram chip
+  var FLAG_OV={EUR:"eu",ANG:null};
+  function flagCountry(code){
+    if(code in FLAG_OV) return FLAG_OV[code];
+    if(code.charAt(0)==="X") return null;          // XAF/XOF/XCD/XPF/XDR etc — no country
+    var cc=code.slice(0,2).toLowerCase();
+    return /^[a-z]{2}$/.test(cc)?cc:null;
+  }
+  function nameFor(code){return NAMES[code]||code;}
+  function hashHue(code){var h=0;for(var i=0;i<code.length;i++)h=(h*31+code.charCodeAt(i))%360;return h;}
+  function chipHTML(code){return '<span class="chip" style="background:hsl('+hashHue(code)+',52%,50%)">'+code.slice(0,2)+'</span>';}
+  function flagHTML(code){
+    var cc=flagCountry(code);
+    if(!cc) return chipHTML(code);
+    return '<img class="flag-img" alt="" src="https://flagcdn.com/w40/'+cc+'.png" srcset="https://flagcdn.com/w80/'+cc+'.png 2x" onerror="window.__flagFail(this)">';
+  }
+  // global fallback if a flag image 404s or can't load (e.g. offline)
+  window.__flagFail=function(img){var sp=img.parentNode;if(sp)sp.innerHTML=chipHTML(sp.getAttribute("data-code")||"?");};
+
+  var STORE_KEY="bhap_ccy_v1", THEME_KEY="bhap_ccy_theme";
+  var DEFAULTS=["AED","GBP","USD","EUR","INR","CAD"];
+  var THEMES=[{id:"ledger",name:"Ledger"},{id:"dusk",name:"Dusk"},{id:"neon",name:"Neon"},{id:"cosmic",name:"Cosmic"}];
+
+  var rates=null, updated="";
+  var state={list:DEFAULTS.slice(), base:{code:"AED", amount:1000}};
+  var themeIdx=0;
+
+  function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}}
+  function load(){try{var s=localStorage.getItem(STORE_KEY);if(s){var p=JSON.parse(s);if(p&&p.list&&p.list.length){state.list=p.list;if(p.base)state.base=p.base;}}var t=localStorage.getItem(THEME_KEY);if(t!==null){var n=parseInt(t,10);if(n>=0&&n<THEMES.length)themeIdx=n;}}catch(e){}}
+
+  var listEl=document.getElementById("list");
+  var dotEl=document.getElementById("dot");
+  var statusText=document.getElementById("statusText");
+  var addBtn=document.getElementById("addBtn");
+  var picker=document.getElementById("picker");
+  var searchEl=document.getElementById("search");
+  var optionsEl=document.getElementById("options");
+  var themeBtn=document.getElementById("themeBtn");
+  var themeName=document.getElementById("themeName");
+
+  function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);themeName.textContent=THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
+  themeBtn.addEventListener("click",function(){themeIdx=(themeIdx+1)%THEMES.length;applyTheme();});
+
+  function fmt(v){
+    if(v===null||!isFinite(v)) return "";
+    var a=Math.abs(v); var dp = a>=1?2:(a===0?2:6);
+    return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:dp});
+  }
+  function convert(amount,from,to){
+    if(!rates||!(from in rates)||!(to in rates)) return null;
+    return (amount/rates[from])*rates[to];
+  }
+  function recompute(skipCode){
+    var amt=state.base.amount, from=state.base.code;
+    state.list.forEach(function(code){
+      var input=listEl.querySelector('input[data-code="'+code+'"]');
+      if(!input) return;
+      var row=input.closest(".row");
+      if(code===from) row.classList.add("active"); else row.classList.remove("active");
+      if(code===skipCode) return;
+      if(amt===null||amt===""||isNaN(amt)){input.value="";return;}
+      var r=convert(amt,from,code);
+      input.value = r===null ? "" : fmt(r);
+    });
+  }
+  function renderList(){
+    listEl.innerHTML="";
+    state.list.forEach(function(code){
+      var row=document.createElement("div");
+      row.className="row"+(code===state.base.code?" active":"");
+      row.innerHTML=
+        '<span class="flag" data-code="'+code+'">'+flagHTML(code)+'</span>'+
+        '<div class="meta"><div class="code">'+code+'</div><div class="name">'+nameFor(code)+'</div></div>'+
+        '<input class="amount" inputmode="decimal" data-code="'+code+'" placeholder="0.00" aria-label="Amount in '+code+'">'+
+        '<button class="remove" title="Remove '+code+'" data-rm="'+code+'">\u00D7</button>';
+      listEl.appendChild(row);
+    });
+    bindRows(); recompute();
+  }
+  function bindRows(){
+    listEl.querySelectorAll(".amount").forEach(function(input){
+      input.addEventListener("input",function(){
+        var code=input.getAttribute("data-code");
+        var raw=input.value.replace(/[^0-9.]/g,"");
+        var num=raw===""?"":parseFloat(raw);
+        state.base={code:code, amount:(raw===""?"":num)}; save();
+        recompute(code);
+        listEl.querySelectorAll(".row").forEach(function(r){r.classList.remove("active");});
+        input.closest(".row").classList.add("active");
+      });
+      input.addEventListener("focus",function(){
+        var code=input.getAttribute("data-code");
+        if(state.base.code!==code && input.value!=="") state.base={code:code, amount:parseFloat(input.value.replace(/[^0-9.]/g,""))};
+        else state.base.code=code;
+        listEl.querySelectorAll(".row").forEach(function(r){r.classList.remove("active");});
+        input.closest(".row").classList.add("active");
+      });
+    });
+    listEl.querySelectorAll("[data-rm]").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        var code=btn.getAttribute("data-rm");
+        if(state.list.length<=1) return;
+        state.list=state.list.filter(function(c){return c!==code;});
+        if(state.base.code===code) state.base.code=state.list[0];
+        save(); renderList();
+      });
+    });
+  }
+
+  var hlIndex=-1, filtered=[];
+  function availableCurrencies(){return rates?Object.keys(rates).filter(function(c){return state.list.indexOf(c)===-1;}).sort():[];}
+  function renderOptions(){
+    var q=searchEl.value.trim().toLowerCase();
+    filtered=availableCurrencies().filter(function(c){
+      return c.toLowerCase().indexOf(q)>-1 || nameFor(c).toLowerCase().indexOf(q)>-1;
+    });
+    hlIndex=filtered.length?0:-1;
+    if(!filtered.length){optionsEl.innerHTML='<div class="empty">No matches</div>';return;}
+    optionsEl.innerHTML=filtered.map(function(c,i){
+      return '<button class="opt'+(i===0?' hl':'')+'" data-add="'+c+'">'+
+        '<span class="flag" data-code="'+c+'">'+flagHTML(c)+'</span>'+
+        '<span class="o-text"><span class="o-code">'+c+'</span><span class="o-name">'+nameFor(c)+'</span></span></button>';
+    }).join("");
+    optionsEl.querySelectorAll("[data-add]").forEach(function(b){b.addEventListener("click",function(){addCurrency(b.getAttribute("data-add"));});});
+  }
+  function addCurrency(code){if(state.list.indexOf(code)===-1){state.list.push(code);save();renderList();}closePicker();}
+  function openPicker(){if(!rates)return;picker.classList.add("open");addBtn.style.display="none";searchEl.value="";renderOptions();searchEl.focus();}
+  function closePicker(){picker.classList.remove("open");addBtn.style.display="";}
+  addBtn.addEventListener("click",openPicker);
+  searchEl.addEventListener("input",renderOptions);
+  searchEl.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){closePicker();return;}
+    if(e.key==="Enter"){if(hlIndex>-1&&filtered[hlIndex])addCurrency(filtered[hlIndex]);return;}
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+      e.preventDefault();
+      var opts=optionsEl.querySelectorAll(".opt");if(!opts.length)return;
+      opts[hlIndex]&&opts[hlIndex].classList.remove("hl");
+      hlIndex+=e.key==="ArrowDown"?1:-1;
+      if(hlIndex<0)hlIndex=opts.length-1; if(hlIndex>=opts.length)hlIndex=0;
+      opts[hlIndex].classList.add("hl"); opts[hlIndex].scrollIntoView({block:"nearest"});
+    }
+  });
+  document.addEventListener("click",function(e){
+    if(picker.classList.contains("open") && !picker.contains(e.target) && e.target!==addBtn){closePicker();}
+  });
+
+  function setStatus(kind,text){
+    dotEl.className="dot"+(kind?(" "+kind):"");
+    statusText.innerHTML=text;
+    var rf=document.getElementById("refresh");
+    if(rf) rf.addEventListener("click",function(e){e.preventDefault();fetchRates();});
+  }
+  function applyRates(map,when){
+    rates={}; Object.keys(map).forEach(function(k){rates[k.toUpperCase()]=map[k];});
+    updated=when||"";
+    setStatus("live","Live rates"+(updated?(" · "+updated):"")+' &nbsp;·&nbsp; <a id="refresh">refresh</a>');
+    state.list=state.list.filter(function(c){return c in rates;});
+    if(!state.list.length) state.list=DEFAULTS.slice();
+    if(state.list.indexOf(state.base.code)===-1) state.base.code=state.list[0];
+    renderList();
+  }
+  function fetchPrimary(){
+    return fetch("https://open.er-api.com/v6/latest/USD").then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      if(!d||d.result!=="success"||!d.rates) throw 0;
+      var when=d.time_last_update_utc?new Date(d.time_last_update_utc).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+      applyRates(d.rates,when);
+    });
+  }
+  function fetchFallback(){
+    return fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json").then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      if(!d||!d.usd) throw 0;
+      var when=d.date?new Date(d.date).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}):"";
+      applyRates(d.usd,when);
+    });
+  }
+  function fetchRates(){
+    setStatus("","Loading rates\u2026");
+    fetchPrimary().catch(fetchFallback).catch(function(){
+      setStatus("err",'Couldn\u2019t load rates. Check your connection and <a id="refresh">retry</a>.');
+      if(!rates) renderList();
+    });
+  }
+
+  load(); applyTheme(); renderList(); fetchRates();
+})();
+</script>
+</body>
+</html>
