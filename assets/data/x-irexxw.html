@@ -100,6 +100,32 @@
   .o-name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .empty{padding:18px 16px;color:var(--muted);font-size:13.5px;text-align:center;}
   .foot{margin:22px 4px 0;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.5;}
+  /* unit converter */
+  .unit-section{margin-top:32px;}
+  .unit-head{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px;flex-wrap:wrap;}
+  .unit-title{font-size:18px;font-weight:700;letter-spacing:-.01em;margin:0;}
+  .unit-head small{font-size:12px;color:var(--muted);}
+  .upills{display:flex;flex-wrap:wrap;gap:7px;margin:0 2px 14px;}
+  .upill{border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);font:inherit;font-size:12.5px;font-weight:600;
+    padding:7px 13px;border-radius:999px;cursor:pointer;transition:.12s;}
+  .upill:hover{color:var(--ink);border-color:var(--accent);}
+  .upill.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  body[data-theme="neon"] .upill.on{color:#11061F;}
+  .ulist{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .35s,border-color .35s,box-shadow .35s;}
+  .urow{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .12s;}
+  .urow:last-child{border-bottom:none;}
+  .urow.active{background:var(--accent-tint-2);}
+  .ubadge{flex:none;min-width:48px;height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--line-strong);
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--accent);
+    font-variant-numeric:tabular-nums;background:var(--accent-tint-2);}
+  .uname{flex:1;min-width:0;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .uamount{width:170px;flex:none;border:none;background:transparent;font-family:inherit;font-size:18px;font-weight:600;text-align:right;
+    color:var(--ink);padding:6px 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;outline:none;border-bottom:1.5px solid transparent;}
+  .uamount::placeholder{color:var(--faint);font-weight:500;}
+  .urow.active .uamount,.uamount:focus{border-bottom-color:var(--accent);}
+  .unit-foot{margin:12px 4px 0;font-size:11px;color:var(--faint);text-align:center;}
+  body[data-theme="neon"] .uamount{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+  @media (max-width:420px){.uamount{width:130px;font-size:17px;}}
   /* FAQ side panel */
   .faq-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
     padding:18px 18px 8px;max-height:calc(100vh - 48px);overflow:auto;transition:background .35s,border-color .35s;}
@@ -147,7 +173,7 @@
     --good:#5EEAD4;--danger:#FF7A8A;--warn:#F4CE73;--flag-ring:rgba(255,255,255,.22);
     --shadow:0 10px 44px rgba(70,24,130,.5);
     background:radial-gradient(1200px 760px at 72% -12%,#3A1772 0%,#180A3D 42%,#070318 82%);}
-  body[data-theme="cosmic"] .list,body[data-theme="cosmic"] .picker,body[data-theme="cosmic"] .faq-card{backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);}
+  body[data-theme="cosmic"] .list,body[data-theme="cosmic"] .picker,body[data-theme="cosmic"] .faq-card,body[data-theme="cosmic"] .ulist{backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);}
   body[data-theme="cosmic"] .add-btn,body[data-theme="cosmic"] .winseg{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
   body[data-theme="cosmic"] .title-main{background:linear-gradient(90deg,#C77DFF,#FF8FD0,#5EEAD4,#C77DFF);background-size:280% auto;
     -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;}
@@ -200,6 +226,16 @@
       </div>
     </div>
     <p class="foot">Mid-market rates, for reference only. Reload or tap refresh to update.</p>
+
+    <div class="unit-section">
+      <div class="unit-head">
+        <h2 class="unit-title">Unit converter</h2>
+        <small>pick a type · type any field, the rest update</small>
+      </div>
+      <div class="upills" id="upills"></div>
+      <div class="ulist" id="ulist"></div>
+      <p class="unit-foot" id="unitFoot"></p>
+    </div>
   </div>
 
   <aside class="side">
@@ -267,7 +303,7 @@
   }
   window.__flagFail=function(img){var sp=img.parentNode;if(sp)sp.innerHTML=chipHTML(sp.getAttribute("data-code")||"?");};
 
-  var STORE_KEY="bhap_ccy_v1", THEME_KEY="bhap_ccy_theme", TIMING_KEY="bhap_ccy_timing", WIN_KEY="bhap_ccy_win", SER_PREFIX="bhap_ccy_ser_", FAQ_KEY="bhap_ccy_faq";
+  var STORE_KEY="bhap_ccy_v1", THEME_KEY="bhap_ccy_theme", TIMING_KEY="bhap_ccy_timing", WIN_KEY="bhap_ccy_win", SER_PREFIX="bhap_ccy_ser_", FAQ_KEY="bhap_ccy_faq", UNIT_KEY="bhap_units_v1";
   var DEFAULTS=["AED","GBP","USD","EUR","INR","CAD"];
   var THEMES=[{id:"ledger",name:"Ledger"},{id:"dusk",name:"Dusk"},{id:"neon",name:"Neon"},{id:"cosmic",name:"Cosmic"}];
 
@@ -281,6 +317,7 @@
     var t=localStorage.getItem(THEME_KEY);if(t!==null){var n=parseInt(t,10);if(n>=0&&n<THEMES.length)themeIdx=n;}
     timingOn=localStorage.getItem(TIMING_KEY)==="1";
     var w=localStorage.getItem(WIN_KEY);if(w&&WINMAP[w])currentWindow=w;
+    var us=localStorage.getItem(UNIT_KEY);if(us){var u=JSON.parse(us);if(u&&u.cat){unitState.cat=u.cat;if(u.sel)unitState.sel=u.sel;}}
     var fq=localStorage.getItem(FAQ_KEY);if(fq!==null)faqShown=fq==="1";
   }catch(e){}}
 
@@ -295,6 +332,9 @@
   var themeName=document.getElementById("themeName");
   var timingBtn=document.getElementById("timingBtn");
   var winseg=document.getElementById("winseg");
+  var upillsEl=document.getElementById("upills");
+  var ulistEl=document.getElementById("ulist");
+  var unitFootEl=document.getElementById("unitFoot");
   var faqBtn=document.getElementById("faqBtn");
   var pageEl=document.querySelector(".page");
 
@@ -547,6 +587,152 @@
     renderWinseg(); ensureSeriesThenRender();
   }
 
+  /* =========================================================
+     UNIT CONVERTER — independent of currency logic
+     ========================================================= */
+  var UNIT_CATS=[
+    {id:"length",name:"Length",units:[
+      {code:"km",name:"Kilometre",sym:"km",f:1000},
+      {code:"m",name:"Metre",sym:"m",f:1},
+      {code:"cm",name:"Centimetre",sym:"cm",f:0.01},
+      {code:"mm",name:"Millimetre",sym:"mm",f:0.001},
+      {code:"mi",name:"Mile",sym:"mi",f:1609.344},
+      {code:"yd",name:"Yard",sym:"yd",f:0.9144},
+      {code:"ft",name:"Foot",sym:"ft",f:0.3048},
+      {code:"in",name:"Inch",sym:"in",f:0.0254},
+      {code:"nmi",name:"Nautical mile",sym:"nmi",f:1852}
+    ]},
+    {id:"area",name:"Area",units:[
+      {code:"km2",name:"Square kilometre",sym:"km\u00B2",f:1e6},
+      {code:"ha",name:"Hectare",sym:"ha",f:1e4},
+      {code:"m2",name:"Square metre",sym:"m\u00B2",f:1},
+      {code:"cm2",name:"Square centimetre",sym:"cm\u00B2",f:1e-4},
+      {code:"mi2",name:"Square mile",sym:"mi\u00B2",f:2589988.110336},
+      {code:"acre",name:"Acre",sym:"ac",f:4046.8564224},
+      {code:"ft2",name:"Square foot",sym:"ft\u00B2",f:0.09290304},
+      {code:"in2",name:"Square inch",sym:"in\u00B2",f:0.00064516}
+    ]},
+    {id:"volume",name:"Volume",units:[
+      {code:"m3",name:"Cubic metre",sym:"m\u00B3",f:1000},
+      {code:"l",name:"Litre",sym:"L",f:1},
+      {code:"ml",name:"Millilitre",sym:"mL",f:0.001},
+      {code:"galus",name:"Gallon (US)",sym:"gal",f:3.785411784},
+      {code:"galuk",name:"Gallon (UK)",sym:"gal UK",f:4.54609},
+      {code:"qt",name:"Quart (US)",sym:"qt",f:0.946352946},
+      {code:"pt",name:"Pint (US)",sym:"pt",f:0.473176473},
+      {code:"floz",name:"Fluid ounce (US)",sym:"fl oz",f:0.0295735295625},
+      {code:"cup",name:"Cup (US)",sym:"cup",f:0.2365882365},
+      {code:"ft3",name:"Cubic foot",sym:"ft\u00B3",f:28.316846592}
+    ]},
+    {id:"weight",name:"Weight",units:[
+      {code:"t",name:"Tonne",sym:"t",f:1000},
+      {code:"kg",name:"Kilogram",sym:"kg",f:1},
+      {code:"g",name:"Gram",sym:"g",f:0.001},
+      {code:"mg",name:"Milligram",sym:"mg",f:1e-6},
+      {code:"lb",name:"Pound",sym:"lb",f:0.45359237},
+      {code:"oz",name:"Ounce",sym:"oz",f:0.028349523125},
+      {code:"st",name:"Stone",sym:"st",f:6.35029318}
+    ]},
+    {id:"temp",name:"Temperature",special:"temp",units:[
+      {code:"C",name:"Celsius",sym:"\u00B0C"},
+      {code:"F",name:"Fahrenheit",sym:"\u00B0F"},
+      {code:"K",name:"Kelvin",sym:"K"}
+    ]},
+    {id:"speed",name:"Speed",units:[
+      {code:"ms",name:"Metres per second",sym:"m/s",f:1},
+      {code:"kmh",name:"Kilometres per hour",sym:"km/h",f:0.2777777777778},
+      {code:"mph",name:"Miles per hour",sym:"mph",f:0.44704},
+      {code:"knot",name:"Knot",sym:"kn",f:0.5144444444444},
+      {code:"fts",name:"Feet per second",sym:"ft/s",f:0.3048}
+    ]},
+    {id:"time",name:"Time",units:[
+      {code:"ms",name:"Millisecond",sym:"ms",f:0.001},
+      {code:"s",name:"Second",sym:"s",f:1},
+      {code:"min",name:"Minute",sym:"min",f:60},
+      {code:"h",name:"Hour",sym:"h",f:3600},
+      {code:"day",name:"Day",sym:"d",f:86400},
+      {code:"week",name:"Week",sym:"wk",f:604800},
+      {code:"yr",name:"Year (365d)",sym:"yr",f:31536000}
+    ]},
+    {id:"data",name:"Data",units:[
+      {code:"bit",name:"Bit",sym:"bit",f:0.125},
+      {code:"B",name:"Byte",sym:"B",f:1},
+      {code:"KB",name:"Kilobyte (1024)",sym:"KB",f:1024},
+      {code:"MB",name:"Megabyte",sym:"MB",f:1048576},
+      {code:"GB",name:"Gigabyte",sym:"GB",f:1073741824},
+      {code:"TB",name:"Terabyte",sym:"TB",f:1099511627776}
+    ]}
+  ];
+  var UNIT_NOTE={data:"Data sizes use binary units (1 KB = 1024 bytes).",temp:"Temperature uses exact °C/°F/K formulas, not ratios."};
+  var unitState={cat:"length", sel:{}};
+
+  function unitCat(id){for(var i=0;i<UNIT_CATS.length;i++)if(UNIT_CATS[i].id===id)return UNIT_CATS[i];return UNIT_CATS[0];}
+  function unitDef(cat,code){for(var i=0;i<cat.units.length;i++)if(cat.units[i].code===code)return cat.units[i];return null;}
+  function tempToC(code,v){return code==="C"?v:code==="F"?(v-32)*5/9:v-273.15;}
+  function tempFromC(code,c){return code==="C"?c:code==="F"?c*9/5+32:c+273.15;}
+  function convertUnit(cat,fromCode,toCode,value){
+    if(cat.special==="temp") return tempFromC(toCode,tempToC(fromCode,value));
+    var fu=unitDef(cat,fromCode),tu=unitDef(cat,toCode); if(!fu||!tu)return null;
+    return (value*fu.f)/tu.f;
+  }
+  function fmtUnit(v){
+    if(v===""||v===null||v===undefined||!isFinite(v)) return "";
+    if(v===0) return "0";
+    return v.toLocaleString("en-US",{maximumSignificantDigits:7});
+  }
+  function curSel(){var c=unitState.cat;if(!unitState.sel[c]){var cat=unitCat(c);unitState.sel[c]={code:cat.units[0].code,value:1};}return unitState.sel[c];}
+  function saveUnits(){try{localStorage.setItem(UNIT_KEY,JSON.stringify(unitState));}catch(e){}}
+  function renderUPills(){
+    if(!upillsEl) return;
+    upillsEl.innerHTML=UNIT_CATS.map(function(c){return '<button type="button" class="upill'+(c.id===unitState.cat?" on":"")+'" data-cat="'+c.id+'">'+c.name+'</button>';}).join("");
+    upillsEl.querySelectorAll("[data-cat]").forEach(function(b){b.addEventListener("click",function(){setUnitCat(b.getAttribute("data-cat"));});});
+  }
+  function setUnitCat(id){unitState.cat=id;curSel();saveUnits();renderUPills();renderUnits();}
+  function recomputeUnits(skipCode){
+    var cat=unitCat(unitState.cat), sel=curSel();
+    cat.units.forEach(function(u){
+      var input=ulistEl.querySelector('input[data-ucode="'+u.code+'"]'); if(!input) return;
+      var row=input.closest(".urow");
+      if(u.code===sel.code) row.classList.add("active"); else row.classList.remove("active");
+      if(u.code===skipCode) return;
+      if(sel.value===""||sel.value===null||isNaN(sel.value)){input.value="";return;}
+      var r=convertUnit(cat,sel.code,u.code,sel.value);
+      input.value=(r===null)?"":fmtUnit(r);
+    });
+  }
+  function bindUnitRows(){
+    ulistEl.querySelectorAll(".uamount").forEach(function(input){
+      input.addEventListener("input",function(){
+        var code=input.getAttribute("data-ucode");
+        var raw=input.value.replace(/[^0-9.\-]/g,"");
+        var num=raw===""?"":parseFloat(raw);
+        unitState.sel[unitState.cat]={code:code,value:(raw===""?"":num)}; saveUnits();
+        recomputeUnits(code);
+        ulistEl.querySelectorAll(".urow").forEach(function(r){r.classList.remove("active");});
+        input.closest(".urow").classList.add("active");
+      });
+      input.addEventListener("focus",function(){
+        var code=input.getAttribute("data-ucode"), sel=curSel();
+        if(sel.code!==code && input.value!=="") unitState.sel[unitState.cat]={code:code,value:parseFloat(input.value.replace(/[^0-9.\-]/g,""))};
+        else unitState.sel[unitState.cat].code=code;
+        ulistEl.querySelectorAll(".urow").forEach(function(r){r.classList.remove("active");});
+        input.closest(".urow").classList.add("active");
+      });
+    });
+  }
+  function renderUnits(){
+    if(!ulistEl) return;
+    var cat=unitCat(unitState.cat), sel=curSel();
+    ulistEl.innerHTML=cat.units.map(function(u){
+      return '<div class="urow'+(u.code===sel.code?" active":"")+'">'+
+        '<span class="ubadge">'+u.sym+'</span>'+
+        '<span class="uname">'+u.name+'</span>'+
+        '<input class="uamount" inputmode="decimal" data-ucode="'+u.code+'" placeholder="0" aria-label="'+u.name+'"></div>';
+    }).join("");
+    bindUnitRows(); recomputeUnits();
+    if(unitFootEl) unitFootEl.textContent=UNIT_NOTE[unitState.cat]||"";
+  }
+
   /* ---------- add-currency picker ---------- */
   var hlIndex=-1, filtered=[];
   function availableCurrencies(){return rates?Object.keys(rates).filter(function(c){return state.list.indexOf(c)===-1;}).sort():[];}
@@ -621,7 +807,7 @@
     });
   }
 
-  load(); applyTheme(); applyFaq(); applyTimingClass(); renderWinseg(); renderList(); fetchRates();
+  load(); applyTheme(); applyFaq(); applyTimingClass(); renderWinseg(); renderUPills(); renderUnits(); renderList(); fetchRates();
   if(timingOn) ensureSeriesThenRender();
 })();
 </script>
