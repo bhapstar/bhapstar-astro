@@ -107,10 +107,17 @@
   .unit-head small{font-size:12px;color:var(--muted);}
   .upills{display:flex;flex-wrap:wrap;gap:7px;margin:0 2px 14px;}
   .upill{border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);font:inherit;font-size:12.5px;font-weight:600;
-    padding:7px 13px;border-radius:999px;cursor:pointer;transition:.12s;}
+    padding:7px 13px;border-radius:999px;cursor:grab;transition:.12s;touch-action:none;user-select:none;-webkit-user-select:none;}
   .upill:hover{color:var(--ink);border-color:var(--accent);}
   .upill.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .upill.dragging{cursor:grabbing;opacity:.9;transform:scale(1.05);box-shadow:0 8px 20px rgba(0,0,0,.18);}
   body[data-theme="neon"] .upill.on{color:#11061F;}
+  .iconbtn{flex:none;width:38px;height:38px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:.15s;}
+  .iconbtn:hover{border-color:var(--accent);transform:rotate(-15deg);}
+  .theme-swatch{width:18px;height:18px;border-radius:50%;
+    background:conic-gradient(from 140deg, var(--accent), #ffffff 35%, var(--good) 60%, var(--accent) 100%);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);}
   .ulist{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .35s,border-color .35s,box-shadow .35s;}
   .urow{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .12s;}
   .urow:last-child{border-bottom:none;}
@@ -208,7 +215,7 @@
         <div class="btns">
           <button id="timingBtn" class="pillbtn" type="button"><span class="spark">📈</span> <span>Timing</span></button>
           <button id="faqBtn" class="pillbtn" type="button"><span class="spark">?</span> <span>FAQ</span></button>
-          <button id="themeBtn" class="pillbtn" type="button"><span class="spark">✦</span> <span id="themeName">Ledger</span></button>
+          <button id="themeBtn" class="iconbtn" type="button" title="Change theme" aria-label="Change theme"><span class="theme-swatch"></span></button>
         </div>
       </div>
     </header>
@@ -317,7 +324,7 @@
     var t=localStorage.getItem(THEME_KEY);if(t!==null){var n=parseInt(t,10);if(n>=0&&n<THEMES.length)themeIdx=n;}
     timingOn=localStorage.getItem(TIMING_KEY)==="1";
     var w=localStorage.getItem(WIN_KEY);if(w&&WINMAP[w])currentWindow=w;
-    var us=localStorage.getItem(UNIT_KEY);if(us){var u=JSON.parse(us);if(u&&u.cat){unitState.cat=u.cat;if(u.sel)unitState.sel=u.sel;}}
+    var us=localStorage.getItem(UNIT_KEY);if(us){var u=JSON.parse(us);if(u&&u.cat){unitState.cat=u.cat;if(u.sel)unitState.sel=u.sel;if(u.order&&u.order.length)unitState.order=u.order;}}
     var fq=localStorage.getItem(FAQ_KEY);if(fq!==null)faqShown=fq==="1";
   }catch(e){}}
 
@@ -329,7 +336,6 @@
   var searchEl=document.getElementById("search");
   var optionsEl=document.getElementById("options");
   var themeBtn=document.getElementById("themeBtn");
-  var themeName=document.getElementById("themeName");
   var timingBtn=document.getElementById("timingBtn");
   var winseg=document.getElementById("winseg");
   var upillsEl=document.getElementById("upills");
@@ -338,7 +344,7 @@
   var faqBtn=document.getElementById("faqBtn");
   var pageEl=document.querySelector(".page");
 
-  function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);themeName.textContent=THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
+  function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);if(themeBtn)themeBtn.title="Theme: "+THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
   themeBtn.addEventListener("click",function(){themeIdx=(themeIdx+1)%THEMES.length;applyTheme();});
 
   function applyFaq(){if(pageEl)pageEl.classList.toggle("faq-hidden",!faqShown);if(faqBtn)faqBtn.classList.toggle("on",faqShown);}
@@ -664,7 +670,7 @@
     ]}
   ];
   var UNIT_NOTE={data:"Data sizes use binary units (1 KB = 1024 bytes).",temp:"Temperature uses exact °C/°F/K formulas, not ratios."};
-  var unitState={cat:"length", sel:{}};
+  var unitState={cat:"length", sel:{}, order:[]};
 
   function unitCat(id){for(var i=0;i<UNIT_CATS.length;i++)if(UNIT_CATS[i].id===id)return UNIT_CATS[i];return UNIT_CATS[0];}
   function unitDef(cat,code){for(var i=0;i<cat.units.length;i++)if(cat.units[i].code===code)return cat.units[i];return null;}
@@ -682,10 +688,53 @@
   }
   function curSel(){var c=unitState.cat;if(!unitState.sel[c]){var cat=unitCat(c);unitState.sel[c]={code:cat.units[0].code,value:1};}return unitState.sel[c];}
   function saveUnits(){try{localStorage.setItem(UNIT_KEY,JSON.stringify(unitState));}catch(e){}}
+  function orderedCats(){
+    var byId={}; UNIT_CATS.forEach(function(c){byId[c.id]=c;});
+    var out=[],seen={};
+    (unitState.order||[]).forEach(function(id){if(byId[id]&&!seen[id]){out.push(byId[id]);seen[id]=1;}});
+    UNIT_CATS.forEach(function(c){if(!seen[c.id])out.push(c);});
+    return out;
+  }
   function renderUPills(){
     if(!upillsEl) return;
-    upillsEl.innerHTML=UNIT_CATS.map(function(c){return '<button type="button" class="upill'+(c.id===unitState.cat?" on":"")+'" data-cat="'+c.id+'">'+c.name+'</button>';}).join("");
-    upillsEl.querySelectorAll("[data-cat]").forEach(function(b){b.addEventListener("click",function(){setUnitCat(b.getAttribute("data-cat"));});});
+    upillsEl.innerHTML=orderedCats().map(function(c){return '<button type="button" class="upill'+(c.id===unitState.cat?" on":"")+'" data-cat="'+c.id+'">'+c.name+'</button>';}).join("");
+    bindPills();
+  }
+  function commitPillOrder(){
+    var ids=[]; upillsEl.querySelectorAll(".upill").forEach(function(x){ids.push(x.getAttribute("data-cat"));});
+    unitState.order=ids; saveUnits();
+  }
+  function bindPills(){
+    upillsEl.querySelectorAll(".upill").forEach(function(p){
+      var startX=0,startY=0,moved=false;
+      p.addEventListener("pointerdown",function(e){
+        startX=e.clientX;startY=e.clientY;moved=false;
+        try{p.setPointerCapture(e.pointerId);}catch(_){}
+      });
+      p.addEventListener("pointermove",function(e){
+        if(e.buttons===0 && e.pointerType==="mouse") return;
+        if(!moved){
+          if(Math.abs(e.clientX-startX)<6 && Math.abs(e.clientY-startY)<6) return;
+          moved=true; p.classList.add("dragging"); p.style.pointerEvents="none";
+        }
+        e.preventDefault();
+        var over=document.elementFromPoint(e.clientX,e.clientY);
+        var tgt=over&&over.closest?over.closest(".upill"):null;
+        if(tgt && tgt!==p && tgt.parentNode===upillsEl){
+          var r=tgt.getBoundingClientRect();
+          var before=(e.clientY < r.top+r.height/2) || (Math.abs(e.clientY-(r.top+r.height/2))<r.height/2 && e.clientX < r.left+r.width/2);
+          upillsEl.insertBefore(p, before?tgt:tgt.nextSibling);
+        }
+      });
+      function end(e){
+        try{p.releasePointerCapture(e.pointerId);}catch(_){}
+        if(moved){ p.classList.remove("dragging"); p.style.pointerEvents=""; commitPillOrder(); }
+        else { setUnitCat(p.getAttribute("data-cat")); }
+        moved=false;
+      }
+      p.addEventListener("pointerup",end);
+      p.addEventListener("pointercancel",end);
+    });
   }
   function setUnitCat(id){unitState.cat=id;curSel();saveUnits();renderUPills();renderUnits();}
   function recomputeUnits(skipCode){
