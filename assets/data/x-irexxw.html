@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency Converter</title>
+<style>
+  :root{
+    --bg:#FAFAF7; --surface:#FFFFFF; --ink:#1A1D29; --muted:#8A8F9C; --faint:#B9BDC7;
+    --line:#ECECE6; --line-strong:#E2E2DA; --accent:#3651D4; --accent-tint-2:#F6F7FF;
+    --danger:#C0392B; --good:#1F9D6B; --warn:#B9892B; --radius:14px; --flag-ring:rgba(0,0,0,.10);
+    --shadow:0 1px 2px rgba(26,29,41,.04), 0 8px 30px rgba(26,29,41,.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);min-height:100vh;background-attachment:fixed;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.4;padding:24px 16px 64px;transition:background .35s ease,color .35s ease;}
+  .page{display:flex;gap:26px;align-items:flex-start;max-width:1000px;margin:0 auto;}
+  .main{flex:1 1 auto;min-width:0;max-width:560px;}
+  .side{flex:0 0 326px;max-width:326px;position:sticky;top:24px;overflow:hidden;
+    transition:max-width .35s ease, opacity .3s ease, margin .35s ease;}
+  .page.faq-hidden .side{flex-basis:0;max-width:0;opacity:0;margin-left:-26px;pointer-events:none;}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s ease;}
+  header{margin:8px 4px 18px;}
+  .topbar{display:flex;align-items:flex-start;gap:12px;}
+  .topbar>div:first-child{flex:1;min-width:0;}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex:none;}
+  .title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .title-main{color:var(--ink);}
+  .title small{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;}
+  .status{margin-top:7px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;min-height:18px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none;}
+  .dot.live{background:var(--good);animation:pulse 2.4s infinite;}
+  .dot.err{background:var(--danger);}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,107,.45);}70%{box-shadow:0 0 0 6px rgba(31,157,107,0);}100%{box-shadow:0 0 0 0 rgba(31,157,107,0);}}
+  .status a{color:var(--accent);text-decoration:none;cursor:pointer;}
+  .status a:hover{text-decoration:underline;}
+  .pillbtn{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px;font-weight:600;
+    cursor:pointer;transition:.15s;white-space:nowrap;}
+  .pillbtn:hover{border-color:var(--accent);color:var(--accent);}
+  .pillbtn .spark{color:var(--accent);}
+  .pillbtn.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .pillbtn.on .spark{color:#fff;}
+  .timing-bar{display:none;margin:0 2px 14px;align-items:center;gap:10px;flex-wrap:wrap;}
+  body.timing .timing-bar{display:flex;}
+  .winseg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;box-shadow:var(--shadow);}
+  .winseg button{border:none;background:transparent;color:var(--muted);font:inherit;font-size:12px;font-weight:650;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.12s;}
+  .winseg button:hover{color:var(--ink);}
+  .winseg button.on{background:var(--accent);color:#fff;}
+  .winseg-label{font-size:11.5px;color:var(--muted);}
+  .list{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .35s,border-color .35s,box-shadow .35s;}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line);position:relative;transition:background .12s ease;}
+  .row:last-child{border-bottom:none;}
+  .row.active{background:var(--accent-tint-2);}
+  .flag{width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:none;align-self:flex-start;margin-top:1px;}
+  .flag-img{width:30px;height:22px;object-fit:cover;border-radius:4px;box-shadow:0 0 0 1px var(--flag-ring);display:block;background:rgba(128,128,128,.15);}
+  .chip{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.02em;}
+  .meta{flex:1;min-width:0;}
+  .code{font-size:15px;font-weight:650;letter-spacing:.01em;}
+  .name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .amount{width:160px;flex:none;border:none;background:transparent;font-family:inherit;font-size:19px;font-weight:600;
+    text-align:right;color:var(--ink);padding:6px 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+    outline:none;border-bottom:1.5px solid transparent;align-self:flex-start;}
+  .amount::placeholder{color:var(--faint);font-weight:500;}
+  .row.active .amount,.amount:focus{border-bottom-color:var(--accent);}
+  .remove{position:absolute;right:8px;top:8px;width:22px;height:22px;border-radius:50%;border:none;background:transparent;
+    color:var(--faint);font-size:15px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;}
+  .row:hover .remove{display:flex;}
+  .remove:hover{background:rgba(192,57,43,.16);color:var(--danger);}
+  /* timing trend (only when active) */
+  .trend{display:none;margin-top:6px;align-items:center;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);}
+  body.timing .trend{display:flex;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.02em;}
+  .pill.good{background:rgba(31,157,107,.15);color:var(--good);}
+  .pill.warn{background:rgba(185,137,43,.16);color:var(--warn);}
+  .pill.low{background:rgba(192,57,43,.15);color:var(--danger);}
+  .pill.flat{background:rgba(128,128,140,.16);color:var(--muted);}
+  .trend .detail{white-space:nowrap;}
+  .spark{margin-left:auto;flex:none;}
+  .from-note{display:none;margin-top:6px;font-size:11.5px;color:var(--muted);font-style:italic;}
+  body.timing .row.active .from-note{display:block;}
+  body.timing .row.active .trend{display:none;}
+  .add-bar{margin-top:14px;}
+  .add-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:1px dashed var(--line-strong);
+    border-radius:var(--radius);background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:border-color .12s,background .12s;}
+  .add-btn:hover{border-color:var(--accent);background:var(--accent-tint-2);}
+  .picker{display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .picker.open{display:block;}
+  .search{width:100%;border:none;border-bottom:1px solid var(--line);padding:14px 16px;font:inherit;font-size:15px;outline:none;color:var(--ink);background:transparent;}
+  .options{max-height:300px;overflow-y:auto;}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;border:none;background:transparent;text-align:left;cursor:pointer;border-bottom:1px solid var(--line);color:var(--ink);}
+  .opt:last-child{border-bottom:none;}
+  .opt:hover,.opt.hl{background:var(--accent-tint-2);}
+  .opt .flag{width:26px;height:26px;align-self:center;margin:0;}
+  .opt .flag-img{width:26px;height:19px;}
+  .o-text{display:flex;flex-direction:column;min-width:0;}
+  .o-code{font-weight:650;font-size:14px;}
+  .o-name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .empty{padding:18px 16px;color:var(--muted);font-size:13.5px;text-align:center;}
+  .foot{margin:22px 4px 0;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.5;}
+  /* FAQ side panel */
+  .faq-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:18px 18px 8px;max-height:calc(100vh - 48px);overflow:auto;transition:background .35s,border-color .35s;}
+  .faq-card h3{margin:0 0 3px;font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  .faq-card .sub{margin:0 0 8px;font-size:11.8px;color:var(--muted);line-height:1.5;}
+  .faq-item{border-top:1px solid var(--line);}
+  .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:transparent;border:none;
+    cursor:pointer;font:inherit;font-size:12.8px;font-weight:650;color:var(--ink);text-align:left;padding:11px 0;}
+  .faq-q .chev{color:var(--accent);font-weight:700;font-size:16px;line-height:1;flex:none;}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .faq-item.open .faq-a{max-height:520px;}
+  .faq-a-inner{font-size:12.2px;color:var(--muted);line-height:1.58;padding:0 0 12px;}
+  .faq-a b{color:var(--ink);font-weight:600;}
+  .faq-card .legend{display:inline-block;margin:1px 0;}
+  @media (max-width:920px){
+    .page{flex-direction:column;align-items:stretch;}
+    .main{max-width:560px;width:100%;margin:0 auto;}
+    .side{position:static;flex:1 1 auto;max-width:560px;width:100%;margin:0 auto;max-height:2000px;transition:max-height .35s ease,opacity .3s ease;}
+    .page.faq-hidden .side{max-width:560px;max-height:0;opacity:0;margin:0;}
+    .faq-card{max-height:none;}
+  }
+  @media (max-width:420px){.amount{width:128px;font-size:18px;}.name{display:none;}.spark{display:none;}}
+  @media (prefers-reduced-motion:reduce){.dot.live,.title-main{animation:none!important;}*{transition:none!important;}}
+
+  /* ===== THEME 1 · DUSK ===== */
+  body[data-theme="dusk"]{--bg:#0F1117;--surface:#181B24;--ink:#ECEEF5;--muted:#888FA3;--faint:#454B5E;
+    --line:#262A36;--line-strong:#2F3442;--accent:#7C8CFF;--accent-tint-2:rgba(124,140,255,.10);
+    --good:#4ADE9A;--danger:#FF6B6B;--warn:#E5B95E;--flag-ring:rgba(255,255,255,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 36px rgba(0,0,0,.45);}
+  /* ===== THEME 2 · NEON ===== */
+  body[data-theme="neon"]{--bg:#0B0614;--surface:#150C24;--ink:#F6E9FF;--muted:#9A7BC0;--faint:#574170;
+    --line:rgba(255,61,203,.20);--line-strong:rgba(255,61,203,.32);--accent:#FF3DCB;--accent-tint-2:rgba(255,61,203,.12);
+    --good:#2FF8FF;--danger:#FF5E5E;--warn:#FFC857;--flag-ring:rgba(255,61,203,.35);
+    --shadow:0 0 0 1px rgba(255,61,203,.18),0 0 34px rgba(255,61,203,.12);
+    background:radial-gradient(900px 600px at 50% -20%,#2A0B3F 0%,#11061F 55%,#0B0614 100%);}
+  body[data-theme="neon"] .title-main{background:linear-gradient(90deg,#FF3DCB,#2FF8FF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  body[data-theme="neon"] .list{box-shadow:0 0 0 1px rgba(255,61,203,.25),0 0 36px rgba(255,61,203,.12);}
+  body[data-theme="neon"] .amount{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-shadow:0 0 9px rgba(47,248,255,.4);}
+  body[data-theme="neon"] .code{text-shadow:0 0 12px rgba(255,61,203,.25);}
+  body[data-theme="neon"] .row.active{box-shadow:inset 3px 0 0 var(--accent);}
+  body[data-theme="neon"] .pillbtn.on,body[data-theme="neon"] .winseg button.on{color:#11061F;}
+  /* ===== THEME 3 · COSMIC ===== */
+  body[data-theme="cosmic"]{--bg:#070318;--surface:rgba(255,255,255,.055);--ink:#F2ECFF;--muted:#AB9DD8;--faint:#5B4D80;
+    --line:rgba(255,255,255,.10);--line-strong:rgba(255,255,255,.18);--accent:#C77DFF;--accent-tint-2:rgba(199,125,255,.14);
+    --good:#5EEAD4;--danger:#FF7A8A;--warn:#F4CE73;--flag-ring:rgba(255,255,255,.22);
+    --shadow:0 10px 44px rgba(70,24,130,.5);
+    background:radial-gradient(1200px 760px at 72% -12%,#3A1772 0%,#180A3D 42%,#070318 82%);}
+  body[data-theme="cosmic"] .list,body[data-theme="cosmic"] .picker,body[data-theme="cosmic"] .faq-card{backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);}
+  body[data-theme="cosmic"] .add-btn,body[data-theme="cosmic"] .winseg{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+  body[data-theme="cosmic"] .title-main{background:linear-gradient(90deg,#C77DFF,#FF8FD0,#5EEAD4,#C77DFF);background-size:280% auto;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;}
+  @keyframes shimmer{to{background-position:280% center;}}
+  body[data-theme="cosmic"] .amount{text-shadow:0 0 14px rgba(199,125,255,.32);}
+  body[data-theme="cosmic"] .stars{opacity:1;animation:twinkle 5.5s ease-in-out infinite;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 18%,#fff,transparent),
+      radial-gradient(1.4px 1.4px at 78% 12%,rgba(255,255,255,.95),transparent),
+      radial-gradient(1.2px 1.2px at 34% 64%,rgba(255,255,255,.8),transparent),
+      radial-gradient(1.7px 1.7px at 62% 42%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 88% 72%,rgba(199,125,255,.9),transparent),
+      radial-gradient(1.3px 1.3px at 20% 84%,rgba(255,255,255,.85),transparent),
+      radial-gradient(1.2px 1.2px at 50% 8%,rgba(94,234,212,.85),transparent),
+      radial-gradient(1px 1px at 6% 52%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1.5px 1.5px at 94% 36%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 44% 30%,rgba(255,255,255,.75),transparent);
+    background-repeat:repeat;background-size:520px 520px,460px 460px,540px 540px,500px 500px,480px 480px,560px 560px,520px 520px,440px 440px,580px 580px,500px 500px;}
+  @keyframes twinkle{0%,100%{opacity:.55;}50%{opacity:1;}}
+</style>
+</head>
+<body data-theme="ledger">
+<div class="stars" id="stars"></div>
+<div class="page">
+  <div class="main">
+    <header>
+      <div class="topbar">
+        <div>
+          <h1 class="title"><span class="title-main">Currency converter</span> <small>live rates · type any field</small></h1>
+          <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading rates…</span></div>
+        </div>
+        <div class="btns">
+          <button id="timingBtn" class="pillbtn" type="button"><span class="spark">📈</span> <span>Timing</span></button>
+          <button id="faqBtn" class="pillbtn" type="button"><span class="spark">?</span> <span>FAQ</span></button>
+          <button id="themeBtn" class="pillbtn" type="button"><span class="spark">✦</span> <span id="themeName">Ledger</span></button>
+        </div>
+      </div>
+    </header>
+    <div class="timing-bar">
+      <div class="winseg" id="winseg"></div>
+      <span class="winseg-label">look-back window</span>
+      <span class="winseg-label" id="histStatus" style="margin-left:auto;"></span>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="add-bar">
+      <button class="add-btn" id="addBtn" type="button">＋ Add currency</button>
+      <div class="picker" id="picker">
+        <input class="search" id="search" type="text" placeholder="Search currency or code…" autocomplete="off">
+        <div class="options" id="options"></div>
+      </div>
+    </div>
+    <p class="foot">Mid-market rates, for reference only. Reload or tap refresh to update.</p>
+  </div>
+
+  <aside class="side">
+    <div class="faq-card">
+      <h3>How the Timing signal works</h3>
+      <p class="sub">Turn on <b>Timing</b>, then type into the currency you’re sending <b>from</b>. Each other row shows where today’s rate sits versus its own recent range. Tap a question below.</p>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">What does it tell me?<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Whether today is a relatively good or poor moment to convert — compared with the past, not the future. <b>Favourable</b> means you’re getting more of the target currency per unit sent than on most recent days.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">The labels<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <span class="legend pill good">▲ favourable</span> top third of the window’s range.<br>
+          <span class="legend pill warn">◆ around avg</span> middle of the range.<br>
+          <span class="legend pill low">▼ below avg</span> bottom third — weaker than usual.<br>
+          <span class="legend pill flat">◆ pegged / flat</span> the pair barely moves.
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">The 90D / 1Y / 5Y / 10Y windows<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">They set how far back today is compared against. <b>90D</b> answers “better than the last few months?”; <b>10Y</b> shows where today sits across a decade. Longer windows give more context but react more slowly.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Is this a prediction?<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">No. It’s purely descriptive — how today compares to history, not where rates are heading. Nobody reliably forecasts FX. Treat it as context, not financial advice.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Why does AED show “pegged”?<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">The dirham is fixed to the US dollar (~3.6725), so AED↔USD barely moves. But AED↔GBP and AED↔INR <b>do</b> move, because the pound and rupee float against the dollar — that’s where the signal matters for you.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Where’s the data from?<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Live conversion uses a real-time mid-market feed. Timing history uses a free public dataset built on European Central Bank rates, going back to 1999, anchored to the US dollar (with pegged currencies like AED derived from their fixed rate). Cached for ~12 hours.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Which currencies have history?<span class="chev">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Major floating currencies (GBP, EUR, INR, CAD, JPY, AUD, CHF and more) plus USD-pegged ones including AED, SAR, QAR, OMR and BHD. A few thinly-traded currencies may show “no history” — live conversion still works for all of them.</div></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var NAMES={AED:"UAE Dirham",AFN:"Afghan Afghani",ALL:"Albanian Lek",AMD:"Armenian Dram",ANG:"Neth. Antillean Guilder",AOA:"Angolan Kwanza",ARS:"Argentine Peso",AUD:"Australian Dollar",AWG:"Aruban Florin",AZN:"Azerbaijani Manat",BAM:"Bosnia Mark",BBD:"Barbadian Dollar",BDT:"Bangladeshi Taka",BGN:"Bulgarian Lev",BHD:"Bahraini Dinar",BIF:"Burundian Franc",BMD:"Bermudan Dollar",BND:"Brunei Dollar",BOB:"Bolivian Boliviano",BRL:"Brazilian Real",BSD:"Bahamian Dollar",BTN:"Bhutanese Ngultrum",BWP:"Botswanan Pula",BYN:"Belarusian Ruble",BZD:"Belize Dollar",CAD:"Canadian Dollar",CDF:"Congolese Franc",CHF:"Swiss Franc",CLP:"Chilean Peso",CNY:"Chinese Yuan",COP:"Colombian Peso",CRC:"Costa Rican Colon",CUP:"Cuban Peso",CVE:"Cape Verdean Escudo",CZK:"Czech Koruna",DJF:"Djiboutian Franc",DKK:"Danish Krone",DOP:"Dominican Peso",DZD:"Algerian Dinar",EGP:"Egyptian Pound",ERN:"Eritrean Nakfa",ETB:"Ethiopian Birr",EUR:"Euro",FJD:"Fijian Dollar",FKP:"Falkland Pound",FOK:"Faroese Krona",GBP:"British Pound",GEL:"Georgian Lari",GGP:"Guernsey Pound",GHS:"Ghanaian Cedi",GIP:"Gibraltar Pound",GMD:"Gambian Dalasi",GNF:"Guinean Franc",GTQ:"Guatemalan Quetzal",GYD:"Guyanaese Dollar",HKD:"Hong Kong Dollar",HNL:"Honduran Lempira",HRK:"Croatian Kuna",HTG:"Haitian Gourde",HUF:"Hungarian Forint",IDR:"Indonesian Rupiah",ILS:"Israeli Shekel",IMP:"Manx Pound",INR:"Indian Rupee",IQD:"Iraqi Dinar",IRR:"Iranian Rial",ISK:"Icelandic Krona",JEP:"Jersey Pound",JMD:"Jamaican Dollar",JOD:"Jordanian Dinar",JPY:"Japanese Yen",KES:"Kenyan Shilling",KGS:"Kyrgystani Som",KHR:"Cambodian Riel",KID:"Kiribati Dollar",KMF:"Comorian Franc",KRW:"South Korean Won",KWD:"Kuwaiti Dinar",KYD:"Cayman Dollar",KZT:"Kazakhstani Tenge",LAK:"Laotian Kip",LBP:"Lebanese Pound",LKR:"Sri Lankan Rupee",LRD:"Liberian Dollar",LSL:"Lesotho Loti",LYD:"Libyan Dinar",MAD:"Moroccan Dirham",MDL:"Moldovan Leu",MGA:"Malagasy Ariary",MKD:"Macedonian Denar",MMK:"Myanmar Kyat",MNT:"Mongolian Tugrik",MOP:"Macanese Pataca",MRU:"Mauritanian Ouguiya",MUR:"Mauritian Rupee",MVR:"Maldivian Rufiyaa",MWK:"Malawian Kwacha",MXN:"Mexican Peso",MYR:"Malaysian Ringgit",MZN:"Mozambican Metical",NAD:"Namibian Dollar",NGN:"Nigerian Naira",NIO:"Nicaraguan Cordoba",NOK:"Norwegian Krone",NPR:"Nepalese Rupee",NZD:"New Zealand Dollar",OMR:"Omani Rial",PAB:"Panamanian Balboa",PEN:"Peruvian Sol",PGK:"Papua New Guinean Kina",PHP:"Philippine Peso",PKR:"Pakistani Rupee",PLN:"Polish Zloty",PYG:"Paraguayan Guarani",QAR:"Qatari Riyal",RON:"Romanian Leu",RSD:"Serbian Dinar",RUB:"Russian Ruble",RWF:"Rwandan Franc",SAR:"Saudi Riyal",SBD:"Solomon Islands Dollar",SCR:"Seychellois Rupee",SDG:"Sudanese Pound",SEK:"Swedish Krona",SGD:"Singapore Dollar",SHP:"St. Helena Pound",SLE:"Sierra Leonean Leone",SOS:"Somali Shilling",SRD:"Surinamese Dollar",SSP:"South Sudanese Pound",STN:"Sao Tome Dobra",SYP:"Syrian Pound",SZL:"Swazi Lilangeni",THB:"Thai Baht",TJS:"Tajikistani Somoni",TMT:"Turkmenistani Manat",TND:"Tunisian Dinar",TOP:"Tongan Pa'anga",TRY:"Turkish Lira",TTD:"Trinidad & Tobago Dollar",TVD:"Tuvaluan Dollar",TWD:"New Taiwan Dollar",TZS:"Tanzanian Shilling",UAH:"Ukrainian Hryvnia",UGX:"Ugandan Shilling",USD:"US Dollar",UYU:"Uruguayan Peso",UZS:"Uzbekistani Som",VES:"Venezuelan Bolivar",VND:"Vietnamese Dong",VUV:"Vanuatu Vatu",WST:"Samoan Tala",XAF:"Central African Franc",XCD:"East Caribbean Dollar",XDR:"IMF SDR",XOF:"West African Franc",XPF:"CFP Franc",YER:"Yemeni Rial",ZAR:"South African Rand",ZMW:"Zambian Kwacha",ZWL:"Zimbabwean Dollar"};
+
+  var FLAG_OV={EUR:"eu",ANG:null};
+  function flagCountry(code){
+    if(code in FLAG_OV) return FLAG_OV[code];
+    if(code.charAt(0)==="X") return null;
+    var cc=code.slice(0,2).toLowerCase();
+    return /^[a-z]{2}$/.test(cc)?cc:null;
+  }
+  function nameFor(code){return NAMES[code]||code;}
+  function hashHue(code){var h=0;for(var i=0;i<code.length;i++)h=(h*31+code.charCodeAt(i))%360;return h;}
+  function chipHTML(code){return '<span class="chip" style="background:hsl('+hashHue(code)+',52%,50%)">'+code.slice(0,2)+'</span>';}
+  function flagHTML(code){
+    var cc=flagCountry(code);
+    if(!cc) return chipHTML(code);
+    return '<img class="flag-img" alt="" src="https://flagcdn.com/w40/'+cc+'.png" srcset="https://flagcdn.com/w80/'+cc+'.png 2x" onerror="window.__flagFail(this)">';
+  }
+  window.__flagFail=function(img){var sp=img.parentNode;if(sp)sp.innerHTML=chipHTML(sp.getAttribute("data-code")||"?");};
+
+  var STORE_KEY="bhap_ccy_v1", THEME_KEY="bhap_ccy_theme", TIMING_KEY="bhap_ccy_timing", WIN_KEY="bhap_ccy_win", SER_PREFIX="bhap_ccy_ser_", FAQ_KEY="bhap_ccy_faq";
+  var DEFAULTS=["AED","GBP","USD","EUR","INR","CAD"];
+  var THEMES=[{id:"ledger",name:"Ledger"},{id:"dusk",name:"Dusk"},{id:"neon",name:"Neon"},{id:"cosmic",name:"Cosmic"}];
+
+  var rates=null, updated="";
+  var state={list:DEFAULTS.slice(), base:{code:"AED", amount:1000}};
+  var themeIdx=0, faqShown=true;
+
+  function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}}
+  function load(){try{
+    var s=localStorage.getItem(STORE_KEY);if(s){var p=JSON.parse(s);if(p&&p.list&&p.list.length){state.list=p.list;if(p.base)state.base=p.base;}}
+    var t=localStorage.getItem(THEME_KEY);if(t!==null){var n=parseInt(t,10);if(n>=0&&n<THEMES.length)themeIdx=n;}
+    timingOn=localStorage.getItem(TIMING_KEY)==="1";
+    var w=localStorage.getItem(WIN_KEY);if(w&&WINMAP[w])currentWindow=w;
+    var fq=localStorage.getItem(FAQ_KEY);if(fq!==null)faqShown=fq==="1";
+  }catch(e){}}
+
+  var listEl=document.getElementById("list");
+  var dotEl=document.getElementById("dot");
+  var statusText=document.getElementById("statusText");
+  var addBtn=document.getElementById("addBtn");
+  var picker=document.getElementById("picker");
+  var searchEl=document.getElementById("search");
+  var optionsEl=document.getElementById("options");
+  var themeBtn=document.getElementById("themeBtn");
+  var themeName=document.getElementById("themeName");
+  var timingBtn=document.getElementById("timingBtn");
+  var winseg=document.getElementById("winseg");
+  var faqBtn=document.getElementById("faqBtn");
+  var pageEl=document.querySelector(".page");
+
+  function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);themeName.textContent=THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
+  themeBtn.addEventListener("click",function(){themeIdx=(themeIdx+1)%THEMES.length;applyTheme();});
+
+  function applyFaq(){if(pageEl)pageEl.classList.toggle("faq-hidden",!faqShown);if(faqBtn)faqBtn.classList.toggle("on",faqShown);}
+  faqBtn.addEventListener("click",function(){faqShown=!faqShown;try{localStorage.setItem(FAQ_KEY,faqShown?"1":"0");}catch(e){}applyFaq();});
+  Array.prototype.forEach.call(document.querySelectorAll(".faq-q"),function(q){
+    q.addEventListener("click",function(){
+      var item=q.parentNode; var open=item.classList.toggle("open");
+      var ch=q.querySelector(".chev"); if(ch) ch.textContent=open?"\u2013":"+";
+    });
+  });
+
+  function fmt(v){
+    if(v===null||!isFinite(v)) return "";
+    var a=Math.abs(v); var dp = a>=1?2:(a===0?2:6);
+    return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:dp});
+  }
+  function convert(amount,from,to){
+    if(!rates||!(from in rates)||!(to in rates)) return null;
+    return (amount/rates[from])*rates[to];
+  }
+  function recompute(skipCode){
+    var amt=state.base.amount, from=state.base.code;
+    state.list.forEach(function(code){
+      var input=listEl.querySelector('input[data-code="'+code+'"]');
+      if(!input) return;
+      var row=input.closest(".row");
+      if(code===from) row.classList.add("active"); else row.classList.remove("active");
+      if(code===skipCode) return;
+      if(amt===null||amt===""||isNaN(amt)){input.value="";return;}
+      var r=convert(amt,from,code);
+      input.value = r===null ? "" : fmt(r);
+    });
+  }
+  function renderList(){
+    listEl.innerHTML="";
+    state.list.forEach(function(code){
+      var row=document.createElement("div");
+      row.className="row"+(code===state.base.code?" active":"");
+      row.innerHTML=
+        '<span class="flag" data-code="'+code+'">'+flagHTML(code)+'</span>'+
+        '<div class="meta"><div class="code">'+code+'</div><div class="name">'+nameFor(code)+'</div>'+
+          '<div class="from-note"></div><div class="trend" data-trend="'+code+'"></div></div>'+
+        '<input class="amount" inputmode="decimal" data-code="'+code+'" placeholder="0.00" aria-label="Amount in '+code+'">'+
+        '<button class="remove" title="Remove '+code+'" data-rm="'+code+'">\u00D7</button>';
+      listEl.appendChild(row);
+    });
+    bindRows(); recompute();
+    if(timingOn) ensureSeriesThenRender();
+  }
+  function bindRows(){
+    listEl.querySelectorAll(".amount").forEach(function(input){
+      input.addEventListener("input",function(){
+        var code=input.getAttribute("data-code");
+        var raw=input.value.replace(/[^0-9.]/g,"");
+        var num=raw===""?"":parseFloat(raw);
+        state.base={code:code, amount:(raw===""?"":num)}; save();
+        recompute(code);
+        listEl.querySelectorAll(".row").forEach(function(r){r.classList.remove("active");});
+        input.closest(".row").classList.add("active");
+        if(timingOn) safeTrends();
+      });
+      input.addEventListener("focus",function(){
+        var code=input.getAttribute("data-code");
+        if(state.base.code!==code && input.value!=="") state.base={code:code, amount:parseFloat(input.value.replace(/[^0-9.]/g,""))};
+        else state.base.code=code;
+        listEl.querySelectorAll(".row").forEach(function(r){r.classList.remove("active");});
+        input.closest(".row").classList.add("active");
+        if(timingOn) safeTrends();
+      });
+    });
+    listEl.querySelectorAll("[data-rm]").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        var code=btn.getAttribute("data-rm");
+        if(state.list.length<=1) return;
+        state.list=state.list.filter(function(c){return c!==code;});
+        if(state.base.code===code) state.base.code=state.list[0];
+        save(); renderList();
+      });
+    });
+  }
+
+  /* =========================================================
+     TIMING ENGINE — fully isolated; never affects conversion
+     ========================================================= */
+  var FRANK=["AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","SEK","SGD","THB","TRY","ZAR"];
+  var FRANK_SET={}; FRANK.forEach(function(c){FRANK_SET[c]=1;});
+  var PEG={AED:3.6725,SAR:3.75,QAR:3.64,OMR:0.384497,BHD:0.376,BSD:1,BMD:1,PAB:1,BBD:2,BZD:2,KYD:0.833333,AWG:1.79,XCD:2.70,ERN:15,DJF:177.721};
+  var WINS=[["90D",90,"the last 90 days"],["1Y",366,"the last 12 months"],["5Y",1827,"the last 5 years"],["10Y",3653,"the last 10 years"]];
+  var WINMAP={}; WINS.forEach(function(w){WINMAP[w[0]]=w;});
+  var SER_TTL=12*3600*1000;
+  var timingOn=false, currentWindow="90D";
+  var serCache={}, serLoading={};
+
+  function applyTimingClass(){document.body.classList.toggle("timing",timingOn);if(timingBtn)timingBtn.classList.toggle("on",timingOn);try{renderTimingStatus();}catch(e){}}
+  timingBtn.addEventListener("click",function(){
+    timingOn=!timingOn; try{localStorage.setItem(TIMING_KEY,timingOn?"1":"0");}catch(e){}
+    applyTimingClass();
+    if(timingOn){renderWinseg();ensureSeriesThenRender();}
+  });
+
+  function isoDaysAgo(d){return new Date(Date.now()-d*864e5).toISOString().slice(0,10);}
+  function supportedSyms(){return state.list.filter(function(c){return FRANK_SET[c] && c!=="USD";}).sort();}
+  function serKey(win){return win+"|"+supportedSyms().join(",");}
+  function fxFrank(url){
+    return fetch(url).then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(j){if(!j||!j.rates)throw 0;return {dates:Object.keys(j.rates).sort(),rates:j.rates};});
+  }
+  function fawazVia(win,host){ // host: "jsdelivr" or "pages" (different domains)
+    var offs = win==="90D"?[84,77,70,63,56,49,42,35,28,21,14,7,0]
+             : win==="1Y"?[365,335,305,274,244,213,182,152,121,91,60,30,0] : null;
+    if(!offs) return Promise.resolve(null);
+    function one(o){
+      var ds=isoDaysAgo(o), tag=o===0?"@latest":"@"+ds;
+      var u = host==="jsdelivr"
+        ? "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api"+tag+"/v1/currencies/usd.json"
+        : (o===0?"https://latest.currency-api.pages.dev":"https://"+ds+".currency-api.pages.dev")+"/v1/currencies/usd.json";
+      return fetch(u).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){return (j&&j.usd)?{date:(j.date||ds),usd:j.usd}:null;}).catch(function(){return null;});
+    }
+    return Promise.all(offs.map(one)).then(function(arr){
+      var rmap={},dates=[];
+      arr.forEach(function(p){if(p){var d={};Object.keys(p.usd).forEach(function(k){d[k.toUpperCase()]=p.usd[k];});rmap[p.date]=d;dates.push(p.date);}});
+      dates.sort();
+      return dates.length>=4?{dates:dates,rates:rmap}:null;
+    });
+  }
+  function fxProxy(url){ // CORS proxy (different domain) wrapping a Frankfurter URL
+    return fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(url)).then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(j){if(!j||!j.rates)throw 0;return {dates:Object.keys(j.rates).sort(),rates:j.rates};});
+  }
+  var histDiag="";
+  function renderTimingStatus(){var el=document.getElementById("histStatus");if(el)el.textContent=timingOn?histDiag:"";}
+  function setDiag(t){histDiag=t;try{renderTimingStatus();}catch(e){}}
+  function fetchSeries(win){
+    var key=serKey(win);
+    var mem=serCache[key]; if(mem && Date.now()-mem.ts<SER_TTL){setDiag("history ready (cached)");return Promise.resolve(mem);}
+    try{var ls=localStorage.getItem(SER_PREFIX+key);if(ls){var pj=JSON.parse(ls);if(pj&&Date.now()-pj.ts<SER_TTL){serCache[key]=pj;setDiag("history ready (cached)");return Promise.resolve(pj);}}}catch(e){}
+    if(serLoading[key]) return serLoading[key];
+    var toList=supportedSyms().join(",");
+    var start=isoDaysAgo(WINMAP[win][1]), end=isoDaysAgo(0), range=start+".."+end;
+    var appUrl="https://api.frankfurter.app/"+range+"?from=USD"+(toList?("&to="+toList):"");
+    var devUrl="https://api.frankfurter.dev/v1/"+range+"?base=USD"+(toList?("&symbols="+toList):"");
+    var deep=(win==="5Y"||win==="10Y");
+    var srcs=[{l:"frankfurter.app",r:function(){return fxFrank(appUrl);}},
+              {l:"frankfurter.dev",r:function(){return fxFrank(devUrl);}}];
+    if(!deep){srcs.push({l:"jsdelivr",r:function(){return fawazVia(win,"jsdelivr");}});
+              srcs.push({l:"pages.dev",r:function(){return fawazVia(win,"pages");}});}
+    srcs.push({l:"proxy",r:function(){return fxProxy(appUrl);}});
+    var tried=[];
+    function run(i){
+      if(i>=srcs.length) return Promise.resolve(null);
+      tried.push(srcs[i].l); setDiag("loading "+win+" history… ("+srcs[i].l+")");
+      return srcs[i].r().catch(function(){return null;}).then(function(res){ if(res){res.__src=srcs[i].l;return res;} return run(i+1); });
+    }
+    var p=run(0).then(function(res){
+      var rec=res?{ts:Date.now(),win:win,dates:res.dates,rates:res.rates}:null;
+      if(rec){serCache[key]=rec;try{localStorage.setItem(SER_PREFIX+key,JSON.stringify(rec));}catch(e){} setDiag("✓ history via "+res.__src);}
+      else setDiag("✗ history unreachable — tried: "+tried.join(", "));
+      delete serLoading[key]; return rec;
+    }).catch(function(){delete serLoading[key];setDiag("✗ history error");return null;});
+    serLoading[key]=p; return p;
+  }
+  function usdTo(code,dr){ // USD -> code (source-agnostic)
+    if(code==="USD") return 1;
+    if(dr && typeof dr[code]==="number") return dr[code];
+    if(PEG[code]!=null) return PEG[code];
+    return null;
+  }
+  function pairSeries(rec,baseCode,targetCode){
+    if(!rec) return null;
+    var out=[];
+    for(var i=0;i<rec.dates.length;i++){
+      var dr=rec.rates[rec.dates[i]];
+      var b=usdTo(baseCode,dr), t=usdTo(targetCode,dr);
+      if(b!=null && t!=null && b!==0) out.push(t/b);
+    }
+    return out.length?out:null;
+  }
+  function verdict(vals){
+    if(!vals||vals.length<4) return null;
+    var cur=vals[vals.length-1];
+    var min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);
+    var sum=0;for(var k=0;k<vals.length;k++)sum+=vals[k];var avg=sum/vals.length;
+    var range=max-min;
+    return {cur:cur,min:min,max:max,avg:avg,range:range,pctAvg:(cur/avg-1)*100,pos:range>0?(cur-min)/range:0.5,flat:(range/avg)<0.004};
+  }
+  function downsample(vals,n){
+    if(vals.length<=n) return vals;
+    var out=[],step=(vals.length-1)/(n-1);
+    for(var i=0;i<n;i++) out.push(vals[Math.round(i*step)]);
+    return out;
+  }
+  function sparkline(valsFull){
+    var vals=downsample(valsFull,56);
+    var w=84,h=22,pad=2,n=vals.length;
+    var min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);
+    if(max===min){max=min*1.0001+0.0001;}
+    var pts=[];
+    for(var i=0;i<n;i++){
+      var x=pad+(i/(n-1))*(w-2*pad);
+      var y=h-pad-((vals[i]-min)/(max-min))*(h-2*pad);
+      pts.push(x.toFixed(1)+","+y.toFixed(1));
+    }
+    var last=pts[pts.length-1].split(",");
+    return '<svg class="spark" width="84" height="22" viewBox="0 0 84 22" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+      '<polyline points="'+pts.join(" ")+'" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'+
+      '<circle cx="'+last[0]+'" cy="'+last[1]+'" r="2.1" fill="var(--accent)"/></svg>';
+  }
+  function signPct(x){return (x>=0?"+":"")+x.toFixed(1)+"%";}
+  function renderTrends(){
+    if(!timingOn) return;
+    var rec=serCache[serKey(currentWindow)];
+    var loading=!rec && !!serLoading[serKey(currentWindow)];
+    state.list.forEach(function(code){
+      var el=listEl.querySelector('.trend[data-trend="'+code+'"]');
+      if(!el) return;
+      var row=el.closest(".row"); if(!row) return;
+      if(code===state.base.code){
+        el.innerHTML="";
+        var fn=row.querySelector(".from-note");
+        if(fn) fn.textContent="Sending from "+code+" — rows below show how today compares over "+WINMAP[currentWindow][2]+".";
+        return;
+      }
+      if(!rec){el.innerHTML='<span class="detail" style="opacity:.7">'+(loading?"loading "+currentWindow+" history…":"history unavailable — re-tap "+currentWindow)+'</span>';return;}
+      var vals=pairSeries(rec,state.base.code,code);
+      var v=verdict(vals);
+      if(!v){el.innerHTML='<span class="detail" style="opacity:.7">no '+currentWindow+' history</span>';return;}
+      var cls,label;
+      if(v.flat){cls="flat";label="◆ pegged / flat";}
+      else if(v.pos>=0.66){cls="good";label="▲ favourable";}
+      else if(v.pos<=0.34){cls="low";label="▼ below avg";}
+      else{cls="warn";label="◆ around avg";}
+      var hi=v.pos>=0.92?" · "+currentWindow+" high":(v.pos<=0.08?" · "+currentWindow+" low":"");
+      el.innerHTML='<span class="pill '+cls+'">'+label+'</span><span class="detail">'+signPct(v.pctAvg)+" vs "+currentWindow+" avg"+hi+'</span>'+sparkline(vals);
+    });
+  }
+  function safeTrends(){try{renderTrends();}catch(e){}}
+  function ensureSeriesThenRender(){try{fetchSeries(currentWindow).then(safeTrends);}catch(e){} safeTrends();}
+  function renderWinseg(){
+    if(!winseg) return;
+    winseg.innerHTML=WINS.map(function(w){return '<button type="button" data-win="'+w[0]+'" class="'+(w[0]===currentWindow?'on':'')+'">'+w[0]+'</button>';}).join("");
+    winseg.querySelectorAll("[data-win]").forEach(function(b){b.addEventListener("click",function(){setWindow(b.getAttribute("data-win"));});});
+  }
+  function setWindow(w){
+    if(!WINMAP[w]) return;
+    currentWindow=w; try{localStorage.setItem(WIN_KEY,w);}catch(e){}
+    renderWinseg(); ensureSeriesThenRender();
+  }
+
+  /* ---------- add-currency picker ---------- */
+  var hlIndex=-1, filtered=[];
+  function availableCurrencies(){return rates?Object.keys(rates).filter(function(c){return state.list.indexOf(c)===-1;}).sort():[];}
+  function renderOptions(){
+    var q=searchEl.value.trim().toLowerCase();
+    filtered=availableCurrencies().filter(function(c){return c.toLowerCase().indexOf(q)>-1 || nameFor(c).toLowerCase().indexOf(q)>-1;});
+    hlIndex=filtered.length?0:-1;
+    if(!filtered.length){optionsEl.innerHTML='<div class="empty">No matches</div>';return;}
+    optionsEl.innerHTML=filtered.map(function(c,i){
+      return '<button class="opt'+(i===0?' hl':'')+'" data-add="'+c+'">'+
+        '<span class="flag" data-code="'+c+'">'+flagHTML(c)+'</span>'+
+        '<span class="o-text"><span class="o-code">'+c+'</span><span class="o-name">'+nameFor(c)+'</span></span></button>';
+    }).join("");
+    optionsEl.querySelectorAll("[data-add]").forEach(function(b){b.addEventListener("click",function(){addCurrency(b.getAttribute("data-add"));});});
+  }
+  function addCurrency(code){if(state.list.indexOf(code)===-1){state.list.push(code);save();renderList();}closePicker();}
+  function openPicker(){if(!rates)return;picker.classList.add("open");addBtn.style.display="none";searchEl.value="";renderOptions();searchEl.focus();}
+  function closePicker(){picker.classList.remove("open");addBtn.style.display="";}
+  addBtn.addEventListener("click",openPicker);
+  searchEl.addEventListener("input",renderOptions);
+  searchEl.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){closePicker();return;}
+    if(e.key==="Enter"){if(hlIndex>-1&&filtered[hlIndex])addCurrency(filtered[hlIndex]);return;}
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+      e.preventDefault();
+      var opts=optionsEl.querySelectorAll(".opt");if(!opts.length)return;
+      opts[hlIndex]&&opts[hlIndex].classList.remove("hl");
+      hlIndex+=e.key==="ArrowDown"?1:-1;
+      if(hlIndex<0)hlIndex=opts.length-1; if(hlIndex>=opts.length)hlIndex=0;
+      opts[hlIndex].classList.add("hl"); opts[hlIndex].scrollIntoView({block:"nearest"});
+    }
+  });
+  document.addEventListener("click",function(e){
+    if(picker.classList.contains("open") && !picker.contains(e.target) && e.target!==addBtn){closePicker();}
+  });
+
+  /* ---------- live rates ---------- */
+  function setStatus(kind,text){
+    dotEl.className="dot"+(kind?(" "+kind):"");
+    statusText.innerHTML=text;
+    var rf=document.getElementById("refresh");
+    if(rf) rf.addEventListener("click",function(e){e.preventDefault();fetchRates();});
+  }
+  function applyRates(map,when){
+    rates={}; Object.keys(map).forEach(function(k){rates[k.toUpperCase()]=map[k];});
+    updated=when||"";
+    setStatus("live","Live rates"+(updated?(" · "+updated):"")+' &nbsp;·&nbsp; <a id="refresh">refresh</a>');
+    state.list=state.list.filter(function(c){return c in rates;});
+    if(!state.list.length) state.list=DEFAULTS.slice();
+    if(state.list.indexOf(state.base.code)===-1) state.base.code=state.list[0];
+    renderList();
+  }
+  function fetchPrimary(){
+    return fetch("https://open.er-api.com/v6/latest/USD").then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      if(!d||d.result!=="success"||!d.rates) throw 0;
+      var when=d.time_last_update_utc?new Date(d.time_last_update_utc).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+      applyRates(d.rates,when);
+    });
+  }
+  function fetchFallback(){
+    return fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json").then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      if(!d||!d.usd) throw 0;
+      var when=d.date?new Date(d.date).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}):"";
+      applyRates(d.usd,when);
+    });
+  }
+  function fetchRates(){
+    setStatus("","Loading rates\u2026");
+    fetchPrimary().catch(fetchFallback).catch(function(){
+      setStatus("err",'Couldn\u2019t load rates. Check your connection and <a id="refresh">retry</a>.');
+      if(!rates) renderList();
+    });
+  }
+
+  load(); applyTheme(); applyFaq(); applyTimingClass(); renderWinseg(); renderList(); fetchRates();
+  if(timingOn) ensureSeriesThenRender();
+})();
+</script>
+</body>
+</html>
