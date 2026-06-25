@@ -2050,3 +2050,87 @@ a[href="prints.html"], a[href*="prints"] {
 .support-panel {
   display: var(--show-coffee);
 }
+/* =========================================================
+   Instagram carousel + gallery counter (homepage)
+========================================================= */
+
+/* ── Instagram carousel ── */
+.ig-carousel{ position:relative; }
+
+/* Controls sit ABOVE the track */
+.ig-carousel-controls{
+  display:flex; align-items:center; justify-content:center; gap:14px; margin:0 0 16px;
+}
+.cbtn{
+  width:44px; height:44px; flex:0 0 auto; border-radius:999px;
+  display:grid; place-items:center;
+  border:1px solid rgba(167,139,250,.28); background:rgba(167,139,250,.06); color:var(--text);
+  cursor:pointer;
+  transition:transform .15s var(--ease-spring), border-color .2s ease, background .2s ease, opacity .2s ease;
+}
+.cbtn:hover{ border-color:rgba(167,139,250,.55); background:rgba(167,139,250,.12); transform:translateY(-1px); }
+.cbtn:disabled{ opacity:.3; cursor:default; transform:none; }
+.cbtn svg{ display:block; }
+.ig-dots{ display:flex; gap:8px; }
+.ig-dot{
+  width:7px; height:7px; padding:0; border:0; border-radius:999px; cursor:pointer;
+  background:rgba(167,139,250,.25); transition:width .25s ease, background .25s ease;
+}
+.ig-dot.on{ width:22px; background:var(--accent); }
+
+/* Turn the base .instagram-grid (vertical stack) into a horizontal track */
+.ig-carousel .instagram-grid{
+  display:flex; grid-template-columns:none;
+  max-width:none; margin:0;
+  gap:18px; align-items:flex-start;
+  overflow-x:auto; overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory; scroll-behavior:smooth;
+  padding:4px 2px 6px;
+  scrollbar-width:none; -ms-overflow-style:none;
+}
+.ig-carousel .instagram-grid::-webkit-scrollbar{ display:none; }
+.ig-carousel .instagram-grid.dragging{ scroll-behavior:auto; scroll-snap-type:none; cursor:grabbing; }
+.ig-carousel .instagram-embed-wrap{ scroll-snap-align:center; flex:0 0 86%; }
+@media (min-width:680px){ .ig-carousel .instagram-embed-wrap{ flex-basis:46%; } }
+@media (min-width:1000px){ .ig-carousel .instagram-embed-wrap{ flex-basis:31%; } }
+
+/* ── Gallery counter ── */
+.stats-panel{ margin:28px 0; }
+.stats-sub{ margin:0 0 22px; color:var(--muted); font-size:14px; line-height:1.6; }
+.stats-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px;
+}
+.stat{
+  position:relative; overflow:hidden; padding:24px 22px;
+  border:1px solid rgba(167,139,250,.10); border-radius:var(--radius);
+  background:rgba(167,139,250,.025);
+  opacity:0; transform:translateY(20px);
+  transition:opacity .6s var(--ease-out-expo), transform .6s var(--ease-out-expo);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.stat.in{ opacity:1; transform:none; }
+.stat::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--c,var(--accent)),transparent); opacity:.6;
+}
+.stat .num{
+  font-size:clamp(40px,6vw,60px); font-weight:800; line-height:1;
+  letter-spacing:-0.03em; font-variant-numeric:tabular-nums;
+  background:linear-gradient(180deg,#fff,var(--c,var(--accent)));
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.stat .label{
+  margin-top:12px; font-size:12px; letter-spacing:.16em;
+  text-transform:uppercase; color:rgba(200,195,235,.66);
+}
+.stat--total{ background:rgba(167,139,250,.05); border-color:rgba(167,139,250,.18); }
+
+@media (max-width:480px){
+  .stats-grid{ grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; }
+  .stat{ padding:18px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .stat{ opacity:1 !important; transform:none !important; transition:none !important; }
+  .ig-carousel .instagram-grid{ scroll-behavior:auto; }
+}

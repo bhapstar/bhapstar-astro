@@ -544,7 +544,18 @@
             See below from some recent images and astro updates, or follow along for everything new.
           </p>
 
-          <div class="instagram-grid" id="instagramGrid"></div>
+          <div class="ig-carousel">
+            <div class="ig-carousel-controls">
+              <button class="cbtn" id="igPrev" type="button" aria-label="Previous posts">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div class="ig-dots" id="igDots" role="tablist" aria-label="Carousel position"></div>
+              <button class="cbtn" id="igNext" type="button" aria-label="Next posts">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="instagram-grid" id="instagramGrid"></div>
+          </div>
 
           <script>
           /* ── Instagram: show 3 random posts from the list below ───────────
@@ -576,7 +587,7 @@
               const j = Math.floor(Math.random() * (i + 1));
               [ids[i], ids[j]] = [ids[j], ids[i]];
             }
-            const pick = ids.slice(0, Math.min(3, ids.length));
+            const pick = ids.slice(0, Math.min(8, ids.length));
 
             grid.innerHTML = pick.map(id => {
               const url = `https://www.instagram.com/p/${id}/`;
@@ -611,6 +622,19 @@
             </a>
           </div>
         </div>
+        </div>
+
+        <div class="astro-divider" aria-hidden="true">
+          <span>✦ ✦ ✦</span>
+        </div>
+
+        <!-- Gallery counter — auto-derived from site-data.json, counts up slowly -->
+        <div class="panel stats-panel" id="statsSection">
+          <div class="section-head section-head--inline">
+            <h3>By the numbers</h3>
+          </div>
+          <p class="stats-sub">A running tally of what's currently in the gallery.</p>
+          <div class="stats-grid" id="statsGrid" aria-live="polite"></div>
         </div>
 
         <div class="astro-divider" aria-hidden="true">
@@ -822,6 +846,171 @@
   }
 
   setInterval(nextSlide, HOLD_MS);
+})();
+</script>
+
+<!-- ─────────────────────────────────────────
+     GALLERY COUNTER + INSTAGRAM CAROUSEL
+───────────────────────────────────────── -->
+<script>
+(function () {
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasIO  = 'IntersectionObserver' in window;
+
+  /* ── Gallery counter: count up slowly, live from site-data.json ── */
+  (async function () {
+    const grid    = document.getElementById('statsGrid');
+    const section = document.getElementById('statsSection');
+    if (!grid) return;
+
+    // label + accent colour per `type`; ORDER controls display sequence
+    const META = {
+      'nebulae':       { label: 'Nebulae',       c: 'var(--accent4)' },
+      'galaxies':      { label: 'Galaxies',      c: 'var(--accent2)' },
+      'star-clusters': { label: 'Star clusters', c: 'var(--accent)'  },
+      'star-trails':   { label: 'Star trails',   c: 'var(--accent3)' },
+      'comets':        { label: 'Comets',        c: 'var(--accent5)' },
+      'others':        { label: 'Other targets', c: 'var(--accent2)' }
+    };
+    const ORDER = ['nebulae', 'galaxies', 'star-clusters', 'star-trails', 'comets', 'others'];
+
+    let items = [];
+    try {
+      const res = await fetch('site-data.json', { cache: 'default' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const all = await res.json();
+      items = all.filter(it => (it.section || 'gallery') === 'gallery');  // gallery entries only
+    } catch (e) {
+      if (section) section.hidden = true;
+      return;
+    }
+    if (!items.length) { if (section) section.hidden = true; return; }
+
+    const counts = {};
+    items.forEach(it => { const t = it.type || 'others'; counts[t] = (counts[t] || 0) + 1; });
+
+    const keys = [
+      ...ORDER.filter(k => counts[k]),
+      ...Object.keys(counts).filter(k => !ORDER.includes(k))   // any new type still appears
+    ];
+    const titleCase = s => s.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    let html = keys.map((k, i) => {
+      const m = META[k] || { label: titleCase(k), c: 'var(--accent)' };
+      return '<div class="stat" style="--c:' + m.c + '; --i:' + i + '">' +
+               '<div class="num" data-count="' + counts[k] + '">0</div>' +
+               '<div class="label">' + m.label + '</div></div>';
+    }).join('');
+    html += '<div class="stat stat--total" style="--c:var(--accent); --i:' + keys.length + '">' +
+              '<div class="num" data-count="' + items.length + '">0</div>' +
+              '<div class="label">Images captured</div></div>';
+    grid.innerHTML = html;
+
+    // Slow, deliberate tick — one integer at a time. Small numbers read clearly.
+    const STEP_MS = 220;
+    function countUp(numEl) {
+      const target = +numEl.dataset.count;
+      if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
+      let v = 0;
+      numEl.textContent = '0';
+      const id = setInterval(() => {
+        v += 1;
+        numEl.textContent = v.toLocaleString();
+        if (v >= target) clearInterval(id);
+      }, STEP_MS);
+    }
+
+    const tiles = grid.querySelectorAll('.stat');
+    if (!hasIO) {
+      tiles.forEach(t => { t.classList.add('in'); const n = t.querySelector('.num'); if (n) countUp(n); });
+    } else {
+      const sIO = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            const n = e.target.querySelector('.num');
+            if (n) countUp(n);
+            sIO.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.45 });
+      tiles.forEach(t => sIO.observe(t));
+    }
+  })();
+
+  /* ── Instagram carousel (arrows · dots · drag) ── */
+  (function () {
+    const track = document.getElementById('instagramGrid');
+    const prev  = document.getElementById('igPrev');
+    const next  = document.getElementById('igNext');
+    const dotsW = document.getElementById('igDots');
+    if (!track || !prev || !next || !dotsW) return;
+
+    const slides = () => [...track.children];
+    function step() {
+      const s = slides();
+      if (s.length < 2) return track.clientWidth;
+      return s[1].offsetLeft - s[0].offsetLeft;
+    }
+    function buildDots() {
+      dotsW.innerHTML = slides().map((_, i) =>
+        '<button class="ig-dot" type="button" role="tab" aria-label="Go to post ' + (i + 1) + '" data-i="' + i + '"></button>'
+      ).join('');
+      dotsW.querySelectorAll('.ig-dot').forEach(d => {
+        d.addEventListener('click', () => {
+          slides()[+d.dataset.i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        });
+      });
+    }
+    function sync() {
+      const s = slides();
+      if (!s.length) return;
+      const c = track.scrollLeft + track.clientWidth / 2;
+      let active = 0, best = Infinity;
+      s.forEach((el, i) => {
+        const mid = el.offsetLeft + el.clientWidth / 2;
+        const d = Math.abs(mid - c);
+        if (d < best) { best = d; active = i; }
+      });
+      [...dotsW.children].forEach((d, i) => d.classList.toggle('on', i === active));
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    }
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+    window.addEventListener('resize', () => { buildDots(); sync(); });
+
+    // Drag to scroll (desktop); skips links/embeds so taps still open posts.
+    let down = false, sx = 0, ss = 0, moved = false;
+    track.addEventListener('pointerdown', e => {
+      if (e.target.closest('a') || e.target.closest('iframe')) return;
+      down = true; moved = false; sx = e.clientX; ss = track.scrollLeft;
+      track.classList.add('dragging');
+    });
+    track.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - sx;
+      if (Math.abs(dx) > 4) moved = true;
+      track.scrollLeft = ss - dx;
+    });
+    const end = () => { if (down) { down = false; track.classList.remove('dragging'); } };
+    track.addEventListener('pointerup', end);
+    track.addEventListener('pointercancel', end);
+    track.addEventListener('pointerleave', end);
+    track.addEventListener('click', e => { if (moved) e.preventDefault(); }, true);
+
+    // Embeds render/resize async — rebuild dots on DOM changes, resync while they settle.
+    if ('MutationObserver' in window) {
+      new MutationObserver(() => { buildDots(); sync(); }).observe(track, { childList: true });
+    }
+    let n = 0;
+    const iv = setInterval(() => { sync(); if (++n > 20) clearInterval(iv); }, 400);
+
+    buildDots();
+    sync();
+  })();
 })();
 </script>
 
