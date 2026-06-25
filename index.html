@@ -496,41 +496,19 @@
 <!-- ── About (integrated from about.html) ── -->
 <section class="section index-about-section">
   <div class="wrap">
-    <div class="section-head">
-      <h2>About Me</h2>
-    </div>
-
     <div class="cols">
       <div class="panel about-panel">
 
-        <div class="about-header">
-          <img
-            src="images/me/bobby.jpg"
-            alt="Portrait of Bhapinder (Bobby) Singh"
-            class="about-photo"
-            loading="lazy"
-          />
+        <!-- By the numbers -->
+        <div class="panel stats-panel" id="statsSection">
+          <div class="section-head section-head--inline">
+            <h3>By the numbers</h3>
+          </div>
+          <p class="stats-sub">A running tally of every image in the gallery.</p>
+          <div class="stats-grid" id="statsGrid" aria-live="polite"></div>
         </div>
 
-        <p>
-          Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on imaging nebulae, star-forming regions, and distant galaxies - objects whose light has travelled for thousands or millions of years before reaching Earth - alongside the Moon, star trails and our own Milky Way.
-        </p>
-        <p>
-          I like images that feel honest. They may not be perfect, but they are real <strong><em>Fragments of the Universe</em></strong>, showing the structure, dust lanes, shock fronts and faint halos of these immense astronomical objects, shaped through careful processing that allows faint signal to emerge from the noise.
-        </p>
-        <p>
-          Most images begin the same way: checking weather conditions, waiting for a workable night, and committing the hours needed to see what the data reveals.
-        </p>
-        <p>
-          I'm not trying to "make space look dramatic". I'm just trying to make it look true.
-        </p>
-        <p>
-          Some nights are a win. Some nights you pack up early because the sky won't cooperate. Either way, it's part of the same practice: showing up, capturing the photons, and letting the object reveal itself on its own terms. This site is a record of that process, image by image.
-        </p>
-
-        <!-- Instagram section (divider + panel together, so HIDE_INSTAGRAM
-             in partials.js can remove the whole thing in one shot without
-             leaving an orphaned divider behind) -->
+        <!-- Latest from Instagram (carousel) -->
         <div class="instagram-section">
           <div class="astro-divider" aria-hidden="true">
             <span>✦ ✦ ✦</span>
@@ -561,7 +539,7 @@
           /* ── Instagram: show 3 random posts from the list below ───────────
              Each entry is a post shortcode — the part after /p/ in a post URL
              (instagram.com/p/DYXXwASCuGk/ → 'DYXXwASCuGk'). On every page load
-             the page picks 3 at random. Add or remove shortcodes freely; keep
+             the page picks several at random. Add or remove shortcodes freely; keep
              at least 3 in the list so a full row always shows. */
           (function () {
             const POST_IDS = [
@@ -628,14 +606,34 @@
           <span>✦ ✦ ✦</span>
         </div>
 
-        <!-- Gallery counter — auto-derived from site-data.json, counts up slowly -->
-        <div class="panel stats-panel" id="statsSection">
-          <div class="section-head section-head--inline">
-            <h3>By the numbers</h3>
-          </div>
-          <p class="stats-sub">A running tally of what's currently in the gallery.</p>
-          <div class="stats-grid" id="statsGrid" aria-live="polite"></div>
+        <!-- About Me -->
+        <div class="section-head section-head--inline">
+          <h3>About Me</h3>
         </div>
+                <div class="about-header">
+          <img
+            src="images/me/bobby.jpg"
+            alt="Portrait of Bhapinder (Bobby) Singh"
+            class="about-photo"
+            loading="lazy"
+          />
+        </div>
+
+        <p>
+          Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on capturing the quiet structure of the deep night sky. My work centres on imaging nebulae, star-forming regions, and distant galaxies - objects whose light has travelled for thousands or millions of years before reaching Earth - alongside the Moon, star trails and our own Milky Way.
+        </p>
+        <p>
+          I like images that feel honest. They may not be perfect, but they are real <strong><em>Fragments of the Universe</em></strong>, showing the structure, dust lanes, shock fronts and faint halos of these immense astronomical objects, shaped through careful processing that allows faint signal to emerge from the noise.
+        </p>
+        <p>
+          Most images begin the same way: checking weather conditions, waiting for a workable night, and committing the hours needed to see what the data reveals.
+        </p>
+        <p>
+          I'm not trying to "make space look dramatic". I'm just trying to make it look true.
+        </p>
+        <p>
+          Some nights are a win. Some nights you pack up early because the sky won't cooperate. Either way, it's part of the same practice: showing up, capturing the photons, and letting the object reveal itself on its own terms. This site is a record of that process, image by image.
+        </p>
 
         <div class="astro-divider" aria-hidden="true">
           <span>✦ ✦ ✦</span>
@@ -887,7 +885,13 @@
     if (!items.length) { if (section) section.hidden = true; return; }
 
     const counts = {};
-    items.forEach(it => { const t = it.type || 'others'; counts[t] = (counts[t] || 0) + 1; });
+    let total = 0;
+    items.forEach(it => {
+      const t = it.type || 'others';
+      const n = (Array.isArray(it.images) && it.images.length) ? it.images.length : 1;
+      counts[t] = (counts[t] || 0) + n;
+      total += n;
+    });
 
     const keys = [
       ...ORDER.filter(k => counts[k]),
@@ -902,22 +906,23 @@
                '<div class="label">' + m.label + '</div></div>';
     }).join('');
     html += '<div class="stat stat--total" style="--c:var(--accent); --i:' + keys.length + '">' +
-              '<div class="num" data-count="' + items.length + '">0</div>' +
+              '<div class="num" data-count="' + total + '">0</div>' +
               '<div class="label">Images captured</div></div>';
     grid.innerHTML = html;
 
-    // Slow, deliberate tick — one integer at a time. Small numbers read clearly.
-    const STEP_MS = 220;
+    // Slow, deliberate tick — one integer at a time. Small numbers stay slow
+    // (~220ms/step); larger ones speed up so the longest finishes in ~3s.
     function countUp(numEl) {
       const target = +numEl.dataset.count;
       if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
+      const stepMs = Math.max(60, Math.min(220, Math.round(3000 / target)));
       let v = 0;
       numEl.textContent = '0';
       const id = setInterval(() => {
         v += 1;
         numEl.textContent = v.toLocaleString();
         if (v >= target) clearInterval(id);
-      }, STEP_MS);
+      }, stepMs);
     }
 
     const tiles = grid.querySelectorAll('.stat');
@@ -947,19 +952,27 @@
     if (!track || !prev || !next || !dotsW) return;
 
     const slides = () => [...track.children];
-    function step() {
-      const s = slides();
-      if (s.length < 2) return track.clientWidth;
-      return s[1].offsetLeft - s[0].offsetLeft;
+
+    // Scroll the TRACK horizontally only. scrollIntoView() was moving the whole
+    // page vertically too, pushing the controls out of view — this never does.
+    function maxScroll() { return track.scrollWidth - track.clientWidth; }
+    function scrollToLeft(left) {
+      track.scrollTo({ left: Math.max(0, Math.min(maxScroll(), left)), behavior: 'smooth' });
+    }
+    function scrollToSlide(i) {
+      const el = slides()[i];
+      if (!el) return;
+      const tr = track.getBoundingClientRect();
+      const er = el.getBoundingClientRect();
+      const delta = (er.left + er.width / 2) - (tr.left + tr.width / 2);  // centre the slide
+      scrollToLeft(track.scrollLeft + delta);
     }
     function buildDots() {
       dotsW.innerHTML = slides().map((_, i) =>
         '<button class="ig-dot" type="button" role="tab" aria-label="Go to post ' + (i + 1) + '" data-i="' + i + '"></button>'
       ).join('');
       dotsW.querySelectorAll('.ig-dot').forEach(d => {
-        d.addEventListener('click', () => {
-          slides()[+d.dataset.i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        });
+        d.addEventListener('click', () => scrollToSlide(+d.dataset.i));
       });
     }
     function sync() {
@@ -973,12 +986,30 @@
         if (d < best) { best = d; active = i; }
       });
       [...dotsW.children].forEach((d, i) => d.classList.toggle('on', i === active));
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
     }
 
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    function activeIndex() {
+      const s = slides();
+      const c = track.scrollLeft + track.clientWidth / 2;
+      let a = 0, best = Infinity;
+      s.forEach((el, i) => {
+        const mid = el.offsetLeft + el.clientWidth / 2;
+        const d = Math.abs(mid - c);
+        if (d < best) { best = d; a = i; }
+      });
+      return a;
+    }
+    function go(dir) {
+      const s = slides();
+      if (!s.length) return;
+      const atEnd   = track.scrollLeft >= maxScroll() - 2;
+      const atStart = track.scrollLeft <= 2;
+      if (dir > 0 && atEnd)   { scrollToLeft(0); return; }            // wrap to first
+      if (dir < 0 && atStart) { scrollToLeft(maxScroll()); return; }  // wrap to last
+      scrollToSlide(Math.max(0, Math.min(s.length - 1, activeIndex() + dir)));
+    }
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
     track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
     window.addEventListener('resize', () => { buildDots(); sync(); });
 

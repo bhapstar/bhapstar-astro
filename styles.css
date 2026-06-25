@@ -2134,3 +2134,30 @@ a[href="prints.html"], a[href*="prints"] {
   .stat{ opacity:1 !important; transform:none !important; transition:none !important; }
   .ig-carousel .instagram-grid{ scroll-behavior:auto; }
 }
+
+/* ── "Follow on Instagram" button: scrolling gradient text + logo,
+      matching the "Support my work" button ── */
+.instagram-follow .btn span{
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
+}
+/* The logo is stroke/fill:currentColor — cycle its colour through the same
+   hues on the same 4s cadence so it shifts in step with the text. */
+.instagram-follow .btn svg{
+  animation: igLogoHue 4s linear infinite reverse;
+}
+@keyframes igLogoHue{
+  0%   { color:#a78bfa; }
+  25%  { color:#60a5fa; }
+  50%  { color:#f472b6; }
+  75%  { color:#60a5fa; }
+  100% { color:#a78bfa; }
+}
+@media (prefers-reduced-motion: reduce){
+  .instagram-follow .btn span,
+  .instagram-follow .btn svg{ animation:none !important; }
+}
