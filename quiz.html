@@ -481,6 +481,9 @@
       .quiz-card{ padding: 20px 16px 18px; }
       .quiz-question{ font-size: 15px; }
     }
+    /* ── Sound toggle ── */
+    .page-quiz .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .sound-toggle{ font-size:16px; line-height:1; padding:6px 12px; }
   </style>
   <link rel="manifest" href="/manifest.json" />
 </head>
@@ -495,6 +498,7 @@
     <!-- Top bar -->
     <div class="section-head">
       <h2>Quiz</h2>
+      <button id="muteBtn" type="button" class="btn sound-toggle" aria-label="Mute sounds" aria-pressed="false" title="Sound on">🔊</button>
     </div>
 
     <div class="quiz-top">
@@ -694,6 +698,95 @@ let perfectSets = 0;
 let dragWord = null;
 let tapSelected = null;
 
+/* ================================================================
+   AUDIO — mute control + subtle synth cues (matches the sweeper)
+================================================================ */
+const MUTE_KEY = 'bhapstar_sound_muted';
+let muted = false;
+try { muted = localStorage.getItem(MUTE_KEY) === '1'; } catch(e){}
+function isMuted(){ return muted; }
+
+// Set by the celebrations module so the mute button can pause/resume the win track
+let winAudioCtl = null;
+
+const muteBtn = document.getElementById('muteBtn');
+function syncMuteBtn(){
+  if(!muteBtn) return;
+  muteBtn.textContent = muted ? '🔇' : '🔊';
+  muteBtn.setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
+  muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+  muteBtn.title = muted ? 'Sound off' : 'Sound on';
+}
+function toggleMute(){
+  muted = !muted;
+  try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch(e){}
+  if(winAudioCtl){
+    if(muted) winAudioCtl.pause();
+    else winAudioCtl.resume();
+  }
+  syncMuteBtn();
+}
+muteBtn && muteBtn.addEventListener('click', toggleMute);
+syncMuteBtn();
+
+// Web Audio synth cues — soft sine/triangle blips, in keeping with Supernova Sweeper
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+function _blip(freq, when, dur, peak, type){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, when);
+  gain.gain.setValueAtTime(0.0001, when);
+  gain.gain.exponentialRampToValueAtTime(peak, when + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  osc.start(when);
+  osc.stop(when + dur + 0.02);
+}
+function _withCtx(fn){
+  try {
+    const ctx = getAudioCtx();
+    if(ctx.state === 'suspended'){ ctx.resume().then(fn); } else { fn(); }
+  } catch(e){ /* audio blocked */ }
+}
+// Subtle tick when a drag chip is picked up / selected
+function playSelect(){
+  if(isMuted()) return;
+  _withCtx(() => _blip(660, getAudioCtx().currentTime, 0.10, 0.07, 'triangle'));
+}
+// Gentle ascending two-note confirm on a correct answer
+function playCorrect(){
+  if(isMuted()) return;
+  _withCtx(() => {
+    const t = getAudioCtx().currentTime + 0.01;
+    _blip(523.25, t,        0.12, 0.16, 'sine'); // C5
+    _blip(783.99, t + 0.09, 0.16, 0.15, 'sine'); // G5
+  });
+}
+// Soft low descending note on a wrong answer (not a harsh buzzer)
+function playWrong(){
+  if(isMuted()) return;
+  _withCtx(() => {
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime + 0.01;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(311.13, t);                   // Eb4
+    osc.frequency.exponentialRampToValueAtTime(220, t + 0.18); // → A3
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.14, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+    osc.start(t); osc.stop(t + 0.26);
+  });
+}
+
 function shuffle(arr){
   return arr.map(v=>({v,r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
 }
@@ -862,6 +955,7 @@ function buildMC(card, q){
         else if(b === btn) b.classList.add('wrong');
       });
       if(i === q.answer) markCorrect();
+      (i === q.answer) ? playCorrect() : playWrong();
       revealFact();
       enableNext();
       updateMeta();
@@ -894,6 +988,7 @@ function buildTF(card, q){
         else if(b === btn) b.classList.add('wrong');
       });
       if(chosen === q.answer) markCorrect();
+      (chosen === q.answer) ? playCorrect() : playWrong();
       revealFact();
       enableNext();
       updateMeta();
@@ -938,6 +1033,7 @@ function buildDrag(card, q){
       dragWord = word;
       chip.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
+      playSelect();
     });
     chip.addEventListener('dragend', () => {
       chip.classList.remove('dragging');
@@ -960,6 +1056,7 @@ function buildDrag(card, q){
       wordsEl.querySelectorAll('.drag-word').forEach(c => c.classList.remove('tap-selected'));
       chip.classList.add('tap-selected');
       tapSelected = chip;
+      playSelect();
     });
 
     wordsEl.appendChild(chip);
@@ -1023,6 +1120,7 @@ function placeWord(word, blankSpan, wordsEl, q){
   }
 
   if(correct) markCorrect();
+  correct ? playCorrect() : playWrong();
   revealFact();
   enableNext();
   updateMeta();
@@ -1153,9 +1251,16 @@ document.getElementById('startSetBtn').addEventListener('click', startSet);
         if(_audio){ _audio.pause(); _audio.currentTime = 0; }
         _audio = new Audio(isMultiverse ? 'sounds/multiverse.mp3' : 'sounds/fireworks.mp3');
         _audio.volume = isMultiverse ? 1.0 : 0.85;
-        _audio.play().catch(function(){});
+        // Always create the track so it can start on unmute; only auto-play if not muted
+        if(!isMuted()) _audio.play().catch(function(){});
       } catch(e){}
     }
+
+    // Let the mute button pause/resume the in-progress win track
+    winAudioCtl = {
+      pause:  function(){ if(_audio){ _audio.pause(); } },
+      resume: function(){ if(_audio && !_audio.ended){ _audio.play().catch(function(){}); } }
+    };
 
     function fireworksBurst(){
       if(_fwRaf){ cancelAnimationFrame(_fwRaf); _fwRaf = null; }
