@@ -2181,3 +2181,15 @@ a[href="prints.html"], a[href*="prints"] {
   width: fit-content;
   margin: 6px auto 0;
 }
+
+/* Contact form: keep the fields left-aligned (in line with the intro) but
+   let the "Send message" button centre across the full panel width, so it
+   matches the Follow and Support buttons. */
+.contact-form{ max-width: none; }
+.contact-form label{ max-width: 520px; }
+
+/* "Send message" icon — same gentle hue shift as the Instagram logo. */
+.contact-form .btn[type="submit"] svg{ animation: igLogoHue 4s linear infinite reverse; }
+@media (prefers-reduced-motion: reduce){
+  .contact-form .btn[type="submit"] svg{ animation: none !important; }
+}
