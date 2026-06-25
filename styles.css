@@ -2161,3 +2161,23 @@ a[href="prints.html"], a[href*="prints"] {
   .instagram-follow .btn span,
   .instagram-follow .btn svg{ animation:none !important; }
 }
+
+/* =========================================================
+   Uniform, centred action buttons
+   (Follow on Instagram · Support my work · Send message)
+========================================================= */
+
+/* "Follow on Instagram" is already centred via .instagram-follow. */
+
+/* "Support my work" — stack the about panel so the button centres
+   beneath the text instead of hugging the right column. Scoped to the
+   homepage variant so the Prints page layout is untouched. */
+.support-panel--about{ grid-template-columns: 1fr; }
+.support-panel--about .support-right{ align-items: center; text-align: center; }
+
+/* "Send message" — centre the submit button under the form fields. */
+.contact-form .btn[type="submit"]{
+  display: flex;
+  width: fit-content;
+  margin: 6px auto 0;
+}
