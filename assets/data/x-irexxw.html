@@ -25,6 +25,12 @@
     transition:max-width .35s ease, opacity .3s ease, margin .35s ease;}
   .page.calc-hidden .side-left{flex-basis:0;max-width:0;opacity:0;margin-right:-26px;pointer-events:none;}
   .stars{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s ease;}
+  .sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  .sheet-backdrop.open{opacity:1;pointer-events:auto;}
+  .sheet-bar{display:none;position:sticky;top:0;align-items:center;justify-content:center;gap:8px;
+    padding:9px 0 11px;margin-bottom:4px;background:var(--surface);cursor:pointer;z-index:2;}
+  .sheet-grab{width:42px;height:5px;border-radius:3px;background:var(--line-strong);}
+  .sheet-bar .sheet-x{position:absolute;right:6px;top:7px;font-size:14px;color:var(--muted);font-weight:600;}
   header{margin:8px 4px 18px;}
   .topbar{display:flex;align-items:flex-start;gap:12px;}
   .topbar>div:first-child{flex:1;min-width:0;}
@@ -180,15 +186,19 @@
   @media (max-width:920px){
     .page{flex-direction:column;align-items:stretch;}
     .main{order:0;max-width:560px;width:100%;margin:0 auto;}
-    .side-left{order:1;}
-    .side{order:2;}
-    .main{max-width:560px;width:100%;margin:0 auto;}
-    .side{position:static;flex:1 1 auto;max-width:560px;width:100%;margin:0 auto;max-height:2000px;transition:max-height .35s ease,opacity .3s ease;}
-    .page.faq-hidden .side{max-width:560px;max-height:0;opacity:0;margin:0;}
-    .side-left{position:static;flex:1 1 auto;max-width:560px;width:100%;margin:0 auto;max-height:2000px;transition:max-height .35s ease,opacity .3s ease;}
-    .page.calc-hidden .side-left{max-width:560px;max-height:0;opacity:0;margin:0;}
+    .side,.side-left{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-width:none;margin:0;
+      z-index:200;max-height:84vh;overflow:auto;padding:0 14px 26px;
+      background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -12px 44px rgba(0,0,0,.34);
+      transform:translateY(103%);opacity:1;pointer-events:auto;
+      transition:transform .34s cubic-bezier(.32,.72,0,1);}
+    .page:not(.calc-hidden) .side-left{transform:translateY(0);}
+    .page:not(.faq-hidden) .side{transform:translateY(0);}
+    .page.calc-hidden .side-left,.page.faq-hidden .side{transform:translateY(103%);pointer-events:none;}
+    .side .faq-card,.side-left .calc-card{border:none;box-shadow:none;background:transparent;padding-left:4px;padding-right:4px;}
     .faq-card{max-height:none;}
+    .sheet-bar{display:flex;}
   }
+  @media (min-width:921px){.sheet-backdrop{display:none!important;}}
   @media (max-width:420px){.amount{width:128px;font-size:18px;}.name{display:none;}.spark{display:none;}}
   @media (prefers-reduced-motion:reduce){.dot.live,.title-main{animation:none!important;}*{transition:none!important;}}
 
@@ -234,8 +244,10 @@
 </head>
 <body data-theme="ledger">
 <div class="stars" id="stars"></div>
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
 <div class="page">
   <aside class="side-left">
+    <div class="sheet-bar" data-close="calc"><span class="sheet-grab"></span><span class="sheet-x">✕</span></div>
     <div class="calc-card">
       <div class="calc-top">
         <span class="calc-title">Calculator</span>
@@ -291,6 +303,7 @@
   </div>
 
   <aside class="side">
+    <div class="sheet-bar" data-close="faq"><span class="sheet-grab"></span><span class="sheet-x">✕</span></div>
     <div class="faq-card">
       <h3>How the Timing signal works</h3>
       <p class="sub">Turn on <b>Timing</b>, then type into the currency you’re sending <b>from</b>. Each other row shows where today’s rate sits versus its own recent range. Tap a question below.</p>
@@ -395,10 +408,18 @@
   function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);if(themeBtn)themeBtn.title="Theme: "+THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
   themeBtn.addEventListener("click",function(){themeIdx=(themeIdx+1)%THEMES.length;applyTheme();});
 
-  function applyFaq(){if(pageEl)pageEl.classList.toggle("faq-hidden",!faqShown);if(faqBtn)faqBtn.classList.toggle("on",faqShown);}
-  faqBtn.addEventListener("click",function(){faqShown=!faqShown;try{localStorage.setItem(FAQ_KEY,faqShown?"1":"0");}catch(e){}applyFaq();});
-  function applyCalc(){if(pageEl)pageEl.classList.toggle("calc-hidden",!calcShown);if(calcBtn)calcBtn.classList.toggle("on",calcShown);}
-  calcBtn.addEventListener("click",function(){calcShown=!calcShown;calcSave();applyCalc();});
+  var sheetBackdrop=document.getElementById("sheetBackdrop");
+  function isMobile(){return !!(window.matchMedia&&window.matchMedia("(max-width:920px)").matches);}
+  function updateSheet(){if(sheetBackdrop)sheetBackdrop.classList.toggle("open",isMobile()&&(calcShown||faqShown));}
+  function applyFaq(){if(pageEl)pageEl.classList.toggle("faq-hidden",!faqShown);if(faqBtn)faqBtn.classList.toggle("on",faqShown);updateSheet();}
+  function applyCalc(){if(pageEl)pageEl.classList.toggle("calc-hidden",!calcShown);if(calcBtn)calcBtn.classList.toggle("on",calcShown);updateSheet();}
+  function setFaq(v){faqShown=v;try{localStorage.setItem(FAQ_KEY,v?"1":"0");}catch(e){}applyFaq();}
+  function setCalc(v){calcShown=v;calcSave();applyCalc();}
+  faqBtn.addEventListener("click",function(){var v=!faqShown;if(isMobile()&&v&&calcShown)setCalc(false);setFaq(v);});
+  calcBtn.addEventListener("click",function(){var v=!calcShown;if(isMobile()&&v&&faqShown)setFaq(false);setCalc(v);});
+  if(sheetBackdrop)sheetBackdrop.addEventListener("click",function(){setCalc(false);setFaq(false);});
+  document.querySelectorAll(".sheet-bar").forEach(function(b){b.addEventListener("click",function(){if(b.getAttribute("data-close")==="calc")setCalc(false);else setFaq(false);});});
+  window.addEventListener("resize",updateSheet);
   Array.prototype.forEach.call(document.querySelectorAll(".faq-q"),function(q){
     q.addEventListener("click",function(){
       var item=q.parentNode; var open=item.classList.toggle("open");
@@ -1118,7 +1139,9 @@
     });
   }
 
-  load(); applyTheme(); applyFaq(); applyCalc(); renderCalc(); applyTimingClass(); renderWinseg(); renderUPills(); renderUnits(); renderList(); fetchRates();
+  load();
+  if(isMobile()){faqShown=false;calcShown=false;}
+  applyTheme(); applyFaq(); applyCalc(); renderCalc(); applyTimingClass(); renderWinseg(); renderUPills(); renderUnits(); renderList(); fetchRates();
   if(timingOn) ensureSeriesThenRender();
 })();
 </script>
