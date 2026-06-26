@@ -60,6 +60,10 @@
   .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex:none;}
   .title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
   .title-main{color:var(--ink);}
+  .brandhead{display:inline-flex;align-items:center;gap:7px;text-decoration:none;margin:0 0 8px;
+    font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);transition:opacity .15s ease;}
+  .brandhead:hover{opacity:.72;}
+  .brandhead .bk{font-size:15px;font-weight:800;letter-spacing:0;}
   .title small{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;}
   .status{margin-top:7px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;min-height:18px;}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none;}
@@ -288,6 +292,7 @@
     <header>
       <div class="topbar">
         <div>
+          <a class="brandhead" href="/" title="Back to bhapstar.com"><span class="bk">←</span><span>bhapstar · tools</span></a>
           <h1 class="title"><span class="title-main">Currency converter</span> <small>live rates · type any field</small></h1>
           <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading rates…</span></div>
         </div>
