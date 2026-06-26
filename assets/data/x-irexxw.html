@@ -57,13 +57,13 @@
   header{margin:8px 4px 18px;}
   .topbar{display:flex;align-items:flex-start;gap:12px;}
   .topbar>div:first-child{flex:1;min-width:0;}
-  .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex:none;}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:14px;}
   .title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
-  .title-main{color:var(--ink);}
-  .brandhead{display:inline-flex;align-items:center;gap:7px;text-decoration:none;margin:0 0 8px;
-    font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);transition:opacity .15s ease;}
-  .brandhead:hover{opacity:.72;}
-  .brandhead .bk{font-size:15px;font-weight:800;letter-spacing:0;}
+  .title-main{color:var(--ink);white-space:nowrap;}
+  .brandhead{display:inline-flex;align-items:center;gap:6px;text-decoration:none;margin:0 0 10px;
+    font-size:13px;font-weight:650;letter-spacing:.01em;color:var(--accent);transition:opacity .15s ease;}
+  .brandhead:hover{opacity:.74;text-decoration:underline;text-underline-offset:3px;}
+  .brandhead .bk{font-size:15px;font-weight:800;}
   .title small{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;}
   .status{margin-top:7px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;min-height:18px;}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none;}
@@ -226,7 +226,8 @@
     .sheet-bar{display:flex;}
   }
   @media (min-width:921px){.sheet-backdrop{display:none!important;}}
-  @media (max-width:420px){.amount{width:128px;font-size:18px;}.name{display:none;}.spark{display:none;}}
+  @media (max-width:560px){.title{flex-direction:column;align-items:flex-start;gap:3px;}}
+  @media (max-width:420px){.amount{width:128px;font-size:18px;}.name{display:none;}}
   @media (prefers-reduced-motion:reduce){.dot.live,.title-main{animation:none!important;}*{transition:none!important;}}
 
   /* ===== THEME 1 · DUSK ===== */
@@ -290,18 +291,14 @@
   </aside>
   <div class="main">
     <header>
-      <div class="topbar">
-        <div>
-          <a class="brandhead" href="/" title="Back to bhapstar.com"><span class="bk">←</span><span>bhapstar · tools</span></a>
-          <h1 class="title"><span class="title-main">Currency converter</span> <small>live rates · type any field</small></h1>
-          <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading rates…</span></div>
-        </div>
-        <div class="btns">
-          <button id="calcBtn" class="pillbtn" type="button"><span class="spark">🧮</span> <span>Calc</span></button>
-          <button id="timingBtn" class="pillbtn" type="button"><span class="spark">📈</span> <span>Timing</span></button>
-          <button id="faqBtn" class="pillbtn" type="button"><span class="spark">?</span> <span>FAQ</span></button>
-          <button id="themeBtn" class="iconbtn" type="button" title="Change theme" aria-label="Change theme"><span class="theme-swatch"></span></button>
-        </div>
+      <a class="brandhead" href="/" title="Back to bhapstar.com"><span class="bk">←</span><span>back to bhapstar.com</span></a>
+      <h1 class="title"><span class="title-main">Currency converter</span> <small>live rates · type any field</small></h1>
+      <div class="status"><span class="dot" id="dot"></span><span id="statusText">Loading rates…</span></div>
+      <div class="btns">
+        <button id="calcBtn" class="pillbtn" type="button"><span class="spark">🧮</span> <span>Calc</span></button>
+        <button id="timingBtn" class="pillbtn" type="button"><span class="spark">📈</span> <span>Timing</span></button>
+        <button id="faqBtn" class="pillbtn" type="button"><span class="spark">?</span> <span>FAQ</span></button>
+        <button id="themeBtn" class="iconbtn" type="button" title="Change theme" aria-label="Change theme"><span class="theme-swatch"></span></button>
       </div>
     </header>
     <div class="timing-bar">
