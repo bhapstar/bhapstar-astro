@@ -724,7 +724,8 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       transition: background 180ms ease, border-color 180ms ease,
-                  transform 180ms cubic-bezier(0.34,1.56,0.64,1);
+                  transform 180ms cubic-bezier(0.34,1.56,0.64,1),
+                  opacity 300ms ease;
       touch-action: manipulation;
       -webkit-tap-highlight-color: rgba(167,139,250,0.25);
       user-select: none;
@@ -777,10 +778,11 @@
     .dv-nav.prev  { left: 14px; }
     .dv-nav.next  { right: 14px; }
 
-    /* Image count badge — above info button, bottom-right */
+    /* Image count badge — bottom centre */
     #dvCount {
       position: absolute;
-      bottom: 66px; right: 14px;
+      bottom: 14px; left: 50%;
+      transform: translateX(-50%);
       font-size: 13px;
       color: rgba(255,255,255,0.65);
       text-shadow: 0 2px 8px rgba(0,0,0,0.6);
@@ -859,6 +861,196 @@
     #dvLikeBtn.liked  .like-heart { transform: scale(1.35); }
     #dvLikeBtn .like-count { font-size: 12px; min-width: 8px; }
 
+    /* ── Share button — bottom-left ── */
+    #dvShareBtn { bottom: 14px; left: 14px; }
+
+    /* ── Share menu popover ── */
+    #dvShareMenu {
+      position: absolute;
+      top: 66px; right: 14px;
+      z-index: 12;
+      min-width: 190px;
+      max-height: calc(100% - 96px);
+      overflow-y: auto;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(5,4,20,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 44px rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+      transform-origin: top right;
+      pointer-events: none;
+      visibility: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.20) transparent;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1),
+                  visibility 0s linear 220ms;
+    }
+    #dvShareMenu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      visibility: visible;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .dv-share-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: rgba(230,228,245,0.86);
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-align: left;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(167,139,250,0.25);
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .dv-share-item svg { flex-shrink: 0; width: 16px; height: 16px; }
+    .dv-share-item:hover { background: rgba(167,139,250,0.10); }
+    .dv-share-item:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+    .dv-share-item.copied { color: #4ade80; }
+    .dv-share-back {
+      color: rgba(200,195,235,0.62);
+      font-size: 12.5px;
+      letter-spacing: 0.02em;
+    }
+    .dv-share-back:hover { color: #a78bfa; background: rgba(167,139,250,0.08); }
+    .dv-share-back svg { width: 14px; height: 14px; }
+
+    /* Per-network hover tints */
+    .dv-share-item[data-share="native"]:hover,
+    .dv-share-item[data-share="copy"]:hover,
+    .dv-share-item[data-share="email"]:hover    { color: #a78bfa; }
+    .dv-share-item[data-share="whatsapp"]:hover  { color: #25d366; }
+    .dv-share-item[data-share="x"]:hover         { color: #ffffff; }
+    .dv-share-item[data-share="facebook"]:hover  { color: #1877f2; }
+    .dv-share-item[data-share="pinterest"]:hover { color: #e60023; }
+    .dv-share-item[data-share="reddit"]:hover    { color: #ff4500; }
+    .dv-share-item[data-share="telegram"]:hover  { color: #229ed9; }
+
+    .dvs-sep {
+      height: 1px;
+      margin: 5px 8px;
+      background: rgba(167,139,250,0.14);
+    }
+
+    /* ── Auto-hide chrome when idle ── */
+    #dvCount { transition: opacity 300ms ease; }
+    #detailView.dv-idle .dv-ctrl,
+    #detailView.dv-idle .dv-nav,
+    #detailView.dv-idle #dvCount {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Tools button + menu (zoom / rotate) ── */
+    #dvToolsBtn { top: 14px; right: 14px; }
+
+    #dvToolsMenu {
+      position: absolute;
+      top: 66px; right: 14px;
+      z-index: 12;
+      min-width: 190px;
+      max-height: calc(100% - 96px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.20) transparent;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(5,4,20,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 44px rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.97);
+      transform-origin: top right;
+      pointer-events: none;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1),
+                  visibility 0s linear 220ms;
+    }
+    #dvToolsMenu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Zoom & rotate rendered as rows inside the menu */
+    #dvToolsMenu .dv-ctrl {
+      position: static;
+      width: 100%;
+      height: auto;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 11px;
+      padding: 9px 12px;
+      color: rgba(230,228,245,0.86);
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transform: none;
+    }
+    #dvToolsMenu .dv-ctrl svg { flex-shrink: 0; }
+    #dvToolsMenu .dv-ctrl:hover {
+      background: rgba(167,139,250,0.10);
+      border: 0;
+      transform: none;
+      color: #fff;
+    }
+    #dvToolsMenu #dvZoomBtn.active {
+      background: rgba(167,139,250,0.16);
+      border: 0;
+      box-shadow: none;
+      color: #c4b5fd;
+    }
+    #dvToolsMenu #dvInfoBtn[aria-expanded="true"] {
+      background: rgba(167,139,250,0.16);
+      border: 0;
+      color: #c4b5fd;
+    }
+    #dvToolsMenu #dvLikeBtn .like-heart { font-size: 16px; line-height: 1; }
+    #dvToolsMenu #dvLikeBtn .like-count {
+      margin-left: auto;
+      font-size: 12px;
+      color: rgba(200,195,235,0.70);
+    }
+    #dvToolsMenu #dvLikeBtn.liked { color: #f472b6; }
+    .dvt-label { pointer-events: none; }
+
     /* ── Sidebar content ── */
     .dv-info-title {
       font-weight: 700;
@@ -933,13 +1125,15 @@
       }
 
       #dvBack      { top: 10px; left: 10px; }
-      #dvRotateBtn { top: 10px; right: 58px; }
-      #dvZoomBtn   { top: 10px; right: 10px; }
+      #dvToolsBtn  { top: 10px; right: 10px; }
+      #dvToolsMenu { top: 58px; right: 10px; }
       #dvInfoBtn { bottom: 10px; right: 10px; }
       #dvLikeBtn { bottom: 10px; right: 58px; }
+      #dvShareBtn { bottom: 10px; left: 10px; }
+      #dvShareMenu { top: 58px; right: 10px; }
       .dv-nav.prev { left: 10px; }
       .dv-nav.next { right: 10px; }
-      #dvCount { bottom: 58px; right: 10px; font-size: 12px; }
+      #dvCount { bottom: 12px; left: 50%; transform: translateX(-50%); right: auto; font-size: 12px; }
 
       .dv-ctrl { width: 40px; height: 40px; }
       .dv-nav  { width: 46px; height: 46px; }
@@ -1233,21 +1427,67 @@
       Gallery
     </button>
 
-    <!-- Zoom button -->
-    <button class="dv-ctrl" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
-        <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    <!-- Options button — top-right (zoom, rotate, info, like, share) -->
+    <button class="dv-ctrl" id="dvToolsBtn" aria-label="Options" aria-haspopup="true" aria-expanded="false" type="button">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <line x1="2.5" y1="5" x2="13.5" y2="5"/>
+        <circle cx="6" cy="5" r="1.7"/>
+        <line x1="2.5" y1="11" x2="13.5" y2="11"/>
+        <circle cx="10.5" cy="11" r="1.7"/>
       </svg>
     </button>
 
-    <!-- Rotate button — top-right, next to zoom -->
-    <button class="dv-ctrl" id="dvRotateBtn" aria-label="Rotate image">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        <polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
-    </button>
+    <!-- Options menu popover -->
+    <div id="dvToolsMenu" role="menu" aria-label="Options">
+      <!-- Zoom -->
+      <button class="dv-ctrl dv-tools-item" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="dvt-label">Zoom</span>
+      </button>
+
+      <!-- Rotate -->
+      <button class="dv-ctrl dv-tools-item" id="dvRotateBtn" aria-label="Rotate image">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M13.5 2.5A6.5 6.5 0 1 0 14 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <polyline points="10.5,0.5 13.5,2.5 11.5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="dvt-label">Rotate</span>
+      </button>
+
+      <div class="dvs-sep" aria-hidden="true"></div>
+
+      <!-- Information (toggles the info sidebar) -->
+      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
+        </svg>
+        <span class="dvt-label">Information</span>
+      </button>
+
+      <!-- Like -->
+      <button class="dv-ctrl dv-tools-item" id="dvLikeBtn" aria-label="Like this image" type="button">
+        <span class="like-heart" aria-hidden="true">♡</span>
+        <span class="dvt-label">Like</span>
+        <span class="like-count"></span>
+      </button>
+
+      <!-- Share (opens the share networks submenu) -->
+      <button class="dv-ctrl dv-tools-item" id="dvShareBtn" aria-label="Share this image" aria-haspopup="true" aria-expanded="false" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="4" cy="8" r="1.9" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="12" cy="3.6" r="1.9" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="12" cy="12.4" r="1.9" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="5.7" y1="7.1" x2="10.3" y2="4.5" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="5.7" y1="8.9" x2="10.3" y2="11.5" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span class="dvt-label">Share</span>
+      </button>
+    </div>
 
     <!-- Prev / Next nav -->
     <button class="dv-ctrl dv-nav prev" id="dvPrev" aria-label="Previous image">‹</button>
@@ -1263,14 +1503,80 @@
     <!-- Image count badge -->
     <div id="dvCount" aria-hidden="true"></div>
 
-    <!-- Like button -->
-    <button class="dv-ctrl" id="dvLikeBtn" aria-label="Like this image" type="button">
-      <span class="like-heart" aria-hidden="true">♡</span>
-      <span class="like-count"></span>
-    </button>
+    <!-- Like / Info / Share now live in the Options menu (top-right) -->
 
-    <!-- Info toggle -->
-    <button class="dv-ctrl" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">ⓘ</button>
+    <!-- Share menu popover -->
+    <div id="dvShareMenu" role="menu" aria-label="Share options">
+      <button class="dv-share-item dv-share-back" data-share="back" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        <span class="dvs-label">Back</span>
+      </button>
+      <div class="dvs-sep" aria-hidden="true"></div>
+      <button class="dv-share-item" data-share="native" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 10V2"/><path d="M5 5l3-3 3 3"/><path d="M3.5 8v5.5h9V8"/>
+        </svg>
+        <span class="dvs-label">Share…</span>
+      </button>
+      <button class="dv-share-item" data-share="copy" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6.4 9.6l3.2-3.2"/><path d="M7.2 5.2l1.1-1.1a2.6 2.6 0 0 1 3.6 3.6l-1.1 1.1"/><path d="M8.8 10.8l-1.1 1.1a2.6 2.6 0 0 1-3.6-3.6l1.1-1.1"/>
+        </svg>
+        <span class="dvs-label">Copy link</span>
+      </button>
+      <div class="dvs-sep" aria-hidden="true"></div>
+      <button class="dv-share-item" data-share="whatsapp" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.6 13.4l.85-2.9A5.6 5.6 0 1 1 8 13.6a5.6 5.6 0 0 1-2.55-.62z"/>
+          <path d="M6 6c.15-.4.3-.4.55-.4.2 0 .45.05.6.5.15.45.45 1 .5 1.1.05.1.05.25-.05.4-.25.35-.4.45-.2.7.35.5.85.85 1.35 1.05.2.08.35.05.5-.1.15-.2.45-.55.6-.75"/>
+        </svg>
+        <span class="dvs-label">WhatsApp</span>
+      </button>
+      <button class="dv-share-item" data-share="x" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <line x1="3.6" y1="3.6" x2="12.4" y2="12.4"/><line x1="12.4" y1="3.6" x2="3.6" y2="12.4"/>
+        </svg>
+        <span class="dvs-label">X</span>
+      </button>
+      <button class="dv-share-item" data-share="facebook" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M9.6 14V8.4h1.9l.3-2.2H9.6V4.8c0-.64.18-1.07 1.1-1.07h1.17V1.76A15.6 15.6 0 0 0 10.16 1.6c-1.7 0-2.86 1.04-2.86 2.94v1.66H5.4v2.2h1.9V14z"/>
+        </svg>
+        <span class="dvs-label">Facebook</span>
+      </button>
+      <button class="dv-share-item" data-share="pinterest" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 1.6a6.4 6.4 0 0 0-2.33 12.36c-.05-.5-.1-1.27.02-1.82.11-.49.7-3.1.7-3.1s-.18-.36-.18-.88c0-.83.48-1.45 1.08-1.45.51 0 .76.38.76.84 0 .51-.33 1.28-.5 1.99-.14.6.3 1.08.88 1.08 1.06 0 1.87-1.11 1.87-2.72 0-1.42-1.02-2.42-2.48-2.42-1.69 0-2.68 1.27-2.68 2.58 0 .51.2 1.06.44 1.36a.18.18 0 0 1 .04.17c-.05.19-.15.6-.17.68-.03.11-.09.14-.21.08-.78-.36-1.27-1.5-1.27-2.41 0-1.96 1.43-3.77 4.11-3.77 2.16 0 3.84 1.54 3.84 3.6 0 2.14-1.35 3.87-3.23 3.87-.63 0-1.22-.33-1.43-.72l-.39 1.48c-.14.54-.52 1.22-.78 1.63A6.4 6.4 0 1 0 8 1.6z"/>
+        </svg>
+        <span class="dvs-label">Pinterest</span>
+      </button>
+      <button class="dv-share-item" data-share="reddit" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+          <ellipse cx="8" cy="9" rx="5.2" ry="3.4"/>
+          <circle cx="12.6" cy="4.2" r="1.1" fill="currentColor" stroke="none"/>
+          <line x1="8" y1="6.2" x2="11.7" y2="4.6"/>
+          <circle cx="6" cy="9" r="0.7" fill="currentColor" stroke="none"/>
+          <circle cx="10" cy="9" r="0.7" fill="currentColor" stroke="none"/>
+          <path d="M6.3 10.7c.5.4 1 .55 1.7.55s1.2-.15 1.7-.55" stroke-linecap="round"/>
+        </svg>
+        <span class="dvs-label">Reddit</span>
+      </button>
+      <button class="dv-share-item" data-share="telegram" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M13.6 3.2L2.6 7.5c-.5.2-.5.7 0 .85l2.75.86 1.05 3.3c.13.4.45.45.7.18l1.5-1.46 2.65 1.95c.32.24.7.1.78-.3l1.9-9.1c.1-.46-.27-.78-.58-.63z"/>
+          <path d="M5.35 9.2l5.6-3.45-4.55 4.35"/>
+        </svg>
+        <span class="dvs-label">Telegram</span>
+      </button>
+      <button class="dv-share-item" data-share="email" role="menuitem" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2.2" y="3.6" width="11.6" height="8.8" rx="1.4"/><path d="M2.6 4.4L8 8.6l5.4-4.2"/>
+        </svg>
+        <span class="dvs-label">Email</span>
+      </button>
+    </div>
 
   </div><!-- /dv-image-panel -->
 
@@ -1397,6 +1703,10 @@
   const dvZoomBtn   = document.getElementById('dvZoomBtn');
   const dvRotateBtn = document.getElementById('dvRotateBtn');
   const dvImgPanel  = document.getElementById('dvImagePanel');
+  const dvShareBtn  = document.getElementById('dvShareBtn');
+  const dvShareMenu = document.getElementById('dvShareMenu');
+  const dvToolsBtn  = document.getElementById('dvToolsBtn');
+  const dvToolsMenu = document.getElementById('dvToolsMenu');
 
   if (!grid || !dv) return;
 
@@ -1685,6 +1995,7 @@
   function showDv() {
     zoomDisable();
     resetRotation();
+    pokeChrome();
 
     const cur = dvList[dvIdx];
     const snapItem    = currentItem;
@@ -1788,6 +2099,7 @@
   function closeDetail(fromHistory) {
     zoomDisable();
     resetRotation();
+    stopChrome();
     dv.classList.remove('open');
     dv.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
@@ -1813,6 +2125,30 @@
     closeInfo();
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
+  }
+
+  /* ══════════════════════════════════════
+     AUTO-HIDE CHROME (idle)
+  ══════════════════════════════════════ */
+  let idleTimer = null;
+  const IDLE_DELAY = 2000;
+
+  function revealChrome() { dv.classList.remove('dv-idle'); }
+  function hideChrome() {
+    if (!dv.classList.contains('open')) return;
+    // Never hide while a popover menu is open
+    if (dvShareMenu && dvShareMenu.classList.contains('open')) return;
+    if (dvToolsMenu && dvToolsMenu.classList.contains('open')) return;
+    dv.classList.add('dv-idle');
+  }
+  function pokeChrome() {
+    revealChrome();
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(hideChrome, IDLE_DELAY);
+  }
+  function stopChrome() {
+    clearTimeout(idleTimer);
+    revealChrome();
   }
 
   /* ══════════════════════════════════════
@@ -2115,10 +2451,187 @@
       applyRotation();
     });
 
+    /* ── Tools menu (zoom / rotate) ── */
+    if (dvToolsBtn && dvToolsMenu) {
+      function closeToolsMenu() {
+        dvToolsMenu.classList.remove('open');
+        dvToolsBtn.setAttribute('aria-expanded', 'false');
+      }
+      function openToolsMenu() {
+        if (dvShareMenu) { dvShareMenu.classList.remove('open'); if (dvShareBtn) dvShareBtn.setAttribute('aria-expanded', 'false'); }
+        dvToolsMenu.classList.add('open');
+        dvToolsBtn.setAttribute('aria-expanded', 'true');
+      }
+      addTapHandler(dvToolsBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        dvToolsMenu.classList.contains('open') ? closeToolsMenu() : openToolsMenu();
+      });
+      document.addEventListener('click', (e) => {
+        if (!dvToolsMenu.classList.contains('open')) return;
+        if (dvToolsMenu.contains(e.target) || dvToolsBtn.contains(e.target)) return;
+        closeToolsMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvToolsMenu.classList.contains('open')) {
+          e.stopPropagation();
+          closeToolsMenu();
+        }
+      }, true);
+    }
+
     addTapHandler(dvInfoBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
       infoVisible ? closeInfo() : openInfo();
     });
+
+    /* ── Share ── */
+    if (dvShareBtn && dvShareMenu) {
+      const SHARE_BASE   = 'https://bhapstar.com/gallery.html';
+      const SHARE_ORIGIN = 'https://bhapstar.com/';
+      const SHARE_OG     = 'https://bhapstar.com/images/icons/og-preview.jpg';
+
+      function getShareData() {
+        const item = currentItem;
+        const cur  = dvList[dvIdx];
+        const slug = itemSlug(item);
+        const url  = slug ? SHARE_BASE + '#' + encodeURIComponent(slug) : SHARE_BASE;
+        const title = (item && item.title) ? item.title : 'Bhapstar Astrophotography';
+        const text  = title + ' — astrophotography by Bhapstar';
+        let image = SHARE_OG;
+        let thumb = '';
+        if (cur && cur.file && cur.kind !== 'vimeo') {
+          image = SHARE_ORIGIN + cur.file;
+          thumb = cur.file.replace(/^(images\/)/, '$1thumbs/');
+        }
+        return { url, title, text, image, thumb };
+      }
+
+      function openShareMenu() {
+        if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
+        const nativeRow = dvShareMenu.querySelector('[data-share="native"]');
+        if (nativeRow) nativeRow.style.display = navigator.share ? '' : 'none';
+        dvShareMenu.classList.add('open');
+        dvShareBtn.setAttribute('aria-expanded', 'true');
+      }
+      function closeShareMenu() {
+        dvShareMenu.classList.remove('open');
+        dvShareBtn.setAttribute('aria-expanded', 'false');
+      }
+      function toggleShareMenu() {
+        dvShareMenu.classList.contains('open') ? closeShareMenu() : openShareMenu();
+      }
+
+      function flashCopied() {
+        const btn = dvShareMenu.querySelector('[data-share="copy"]');
+        const lbl = btn && btn.querySelector('.dvs-label');
+        if (!btn || !lbl) return;
+        if (!lbl.dataset.orig) lbl.dataset.orig = lbl.textContent;
+        lbl.textContent = 'Link copied!';
+        btn.classList.add('copied');
+        clearTimeout(flashCopied._t);
+        flashCopied._t = setTimeout(() => {
+          lbl.textContent = lbl.dataset.orig;
+          btn.classList.remove('copied');
+        }, 1500);
+      }
+
+      async function copyLink() {
+        const { url } = getShareData();
+        try {
+          await navigator.clipboard.writeText(url);
+          flashCopied();
+        } catch (err) {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); flashCopied(); } catch (_) {}
+          document.body.removeChild(ta);
+        }
+      }
+
+      async function nativeShare() {
+        const { url, title, text, thumb } = getShareData();
+        // Attach the actual per-image thumbnail so the share preview shows the right photo.
+        // Fetched from a same-origin relative path so it works locally and in production.
+        if (thumb) {
+          try {
+            const resp = await fetch(thumb, { cache: 'force-cache' });
+            if (resp.ok) {
+              const blob = await resp.blob();
+              const name = thumb.split('/').pop() || 'image.webp';
+              const file = new File([blob], name, { type: blob.type || 'image/webp' });
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title, text, url });
+                closeShareMenu();
+                return;
+              }
+            }
+          } catch (_) { /* fall back to link-only share */ }
+        }
+        try { await navigator.share({ title, text, url }); } catch (_) {}
+        closeShareMenu();
+      }
+
+      function shareTo(network) {
+        const { url, text, title, image } = getShareData();
+        const u   = encodeURIComponent(url);
+        const t   = encodeURIComponent(text);
+        const ti  = encodeURIComponent(title);
+        const img = encodeURIComponent(image);
+        let target = '';
+        switch (network) {
+          case 'whatsapp':  target = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url); break;
+          case 'x':         target = 'https://twitter.com/intent/tweet?url=' + u + '&text=' + t; break;
+          case 'facebook':  target = 'https://www.facebook.com/sharer/sharer.php?u=' + u; break;
+          case 'pinterest': target = 'https://pinterest.com/pin/create/button/?url=' + u + '&media=' + img + '&description=' + t; break;
+          case 'reddit':    target = 'https://www.reddit.com/submit?url=' + u + '&title=' + t; break;
+          case 'telegram':  target = 'https://t.me/share/url?url=' + u + '&text=' + t; break;
+          case 'email':     target = 'mailto:?subject=' + ti + '&body=' + encodeURIComponent(text + '\n\n' + url); break;
+        }
+        if (!target) return;
+        if (network === 'email') window.location.href = target;
+        else window.open(target, '_blank', 'noopener,noreferrer');
+        closeShareMenu();
+      }
+
+      addTapHandler(dvShareBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        toggleShareMenu();
+      });
+
+      dvShareMenu.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-share]');
+        if (!btn) return;
+        e.stopPropagation();
+        const net = btn.dataset.share;
+        if (net === 'back') {
+          closeShareMenu();
+          if (dvToolsMenu) { dvToolsMenu.classList.add('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'true'); }
+          return;
+        }
+        if (net === 'native') nativeShare();
+        else if (net === 'copy') copyLink();
+        else shareTo(net);
+      });
+
+      // Close on outside click / tap
+      document.addEventListener('click', (e) => {
+        if (!dvShareMenu.classList.contains('open')) return;
+        if (dvShareMenu.contains(e.target) || dvShareBtn.contains(e.target)) return;
+        closeShareMenu();
+      });
+
+      // Close on Escape before the detail view closes (capture phase)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvShareMenu.classList.contains('open')) {
+          e.stopPropagation();
+          closeShareMenu();
+        }
+      }, true);
+    }
 
     if (window.Likes) {
       addTapHandler(dvLikeBtn, (e) => {
@@ -2144,6 +2657,15 @@
       dvList.length > 1
         ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1))
         : goToItem(+1);
+    });
+
+    /* ── Auto-hide: reveal chrome on interaction ── */
+    ['mousemove','pointerdown','touchstart','touchmove','touchend'].forEach((evt) =>
+      dvImgPanel.addEventListener(evt, pokeChrome, { passive: true })
+    );
+    dv.addEventListener('focusin', pokeChrome);
+    document.addEventListener('keydown', () => {
+      if (dv.classList.contains('open')) pokeChrome();
     });
 
     /* ── Keyboard ── */
