@@ -1023,6 +1023,7 @@
       font-weight: 500;
       letter-spacing: 0.01em;
       transform: none;
+      text-decoration: none;
     }
     #dvToolsMenu .dv-ctrl svg { flex-shrink: 0; }
     #dvToolsMenu .dv-ctrl:hover {
@@ -1469,6 +1470,17 @@
         <span class="dvt-label">Information</span>
       </button>
 
+      <!-- Field Notes (full write-up for this image) -->
+      <a class="dv-ctrl dv-tools-item" id="dvFieldNotesLink" role="menuitem" href="field_notes.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 2.4h5.3L12.8 5.7V13a0.7 0.7 0 0 1-0.7 0.7H4A0.7 0.7 0 0 1 3.3 13V3.1A0.7 0.7 0 0 1 4 2.4z"/>
+          <path d="M9.2 2.6v3.2h3.3"/>
+          <line x1="5.6" y1="8.4" x2="10.2" y2="8.4"/>
+          <line x1="5.6" y1="10.5" x2="9" y2="10.5"/>
+        </svg>
+        <span class="dvt-label">Field Notes</span>
+      </a>
+
       <!-- Like -->
       <button class="dv-ctrl dv-tools-item" id="dvLikeBtn" aria-label="Like this image" type="button">
         <span class="like-heart" aria-hidden="true">♡</span>
@@ -1707,6 +1719,7 @@
   const dvShareMenu = document.getElementById('dvShareMenu');
   const dvToolsBtn  = document.getElementById('dvToolsBtn');
   const dvToolsMenu = document.getElementById('dvToolsMenu');
+  const dvFieldNotesLink = document.getElementById('dvFieldNotesLink');
 
   if (!grid || !dv) return;
 
@@ -2459,6 +2472,10 @@
       }
       function openToolsMenu() {
         if (dvShareMenu) { dvShareMenu.classList.remove('open'); if (dvShareBtn) dvShareBtn.setAttribute('aria-expanded', 'false'); }
+        if (dvFieldNotesLink) {
+          const fnSlug = itemSlug(currentItem);
+          dvFieldNotesLink.setAttribute('href', fnSlug ? 'field_notes.html#' + fnSlug : 'field_notes.html');
+        }
         dvToolsMenu.classList.add('open');
         dvToolsBtn.setAttribute('aria-expanded', 'true');
       }
@@ -2552,22 +2569,52 @@
         }
       }
 
+      // Convert an image blob to JPEG so OS share sheets render a preview.
+      // (Windows' share sheet shows a generic icon for WebP, but previews JPEG.)
+      function blobToJpeg(blob) {
+        return new Promise((resolve) => {
+          const objUrl = URL.createObjectURL(blob);
+          const img = new Image();
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width  = img.naturalWidth  || 1200;
+              canvas.height = img.naturalHeight || 800;
+              const ctx = canvas.getContext('2d');
+              ctx.fillStyle = '#050414';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, 0, 0);
+              canvas.toBlob((b) => { URL.revokeObjectURL(objUrl); resolve(b); }, 'image/jpeg', 0.9);
+            } catch (_) { URL.revokeObjectURL(objUrl); resolve(null); }
+          };
+          img.onerror = () => { URL.revokeObjectURL(objUrl); resolve(null); };
+          img.src = objUrl;
+        });
+      }
+
+      async function buildShareFile(path) {
+        const resp = await fetch(path, { cache: 'force-cache' });
+        if (!resp.ok) return null;
+        const blob = await resp.blob();
+        const base = (path.split('/').pop() || 'image').replace(/\.[^.]+$/, '');
+        const jpeg = await blobToJpeg(blob);
+        if (jpeg) return new File([jpeg], base + '.jpg', { type: 'image/jpeg' });
+        // Fallback: share the original file if conversion failed
+        const ext = (blob.type === 'image/png') ? '.png' : '.webp';
+        return new File([blob], base + ext, { type: blob.type || 'image/webp' });
+      }
+
       async function nativeShare() {
         const { url, title, text, thumb } = getShareData();
-        // Attach the actual per-image thumbnail so the share preview shows the right photo.
+        // Attach the per-image photo (as JPEG) so the preview shows the right image.
         // Fetched from a same-origin relative path so it works locally and in production.
         if (thumb) {
           try {
-            const resp = await fetch(thumb, { cache: 'force-cache' });
-            if (resp.ok) {
-              const blob = await resp.blob();
-              const name = thumb.split('/').pop() || 'image.webp';
-              const file = new File([blob], name, { type: blob.type || 'image/webp' });
-              if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], title, text, url });
-                closeShareMenu();
-                return;
-              }
+            const file = await buildShareFile(thumb);
+            if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title, text, url });
+              closeShareMenu();
+              return;
             }
           } catch (_) { /* fall back to link-only share */ }
         }
