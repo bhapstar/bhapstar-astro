@@ -1142,7 +1142,13 @@
       line-height: 1.2;
       margin: 0 0 14px;
       padding-right: 30px;
-      color: #fff;
+      color: transparent;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientRoll 4s linear infinite reverse;
     }
     .dv-detail-intro {
       font-size: 15.5px;
@@ -1247,7 +1253,7 @@
     }
     @media (max-width: 768px) {
       .dv-detail { padding: 14px; }
-      .dv-detail-card { padding: 24px 20px 22px; max-height: 88%; }
+      .dv-detail-card { padding: 50px 20px 22px; max-height: 88%; }
       .dv-detail-title { font-size: 21px; }
     }
 
