@@ -1159,6 +1159,72 @@
       color: rgba(214,209,240,0.85);
       letter-spacing: 0.02em;
     }
+
+    /* Basic popup description + thumbnails */
+    .dv-detail-desc {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: rgba(232,230,247,0.84);
+    }
+    #dvBasic .dv-thumbs { justify-content: center; }
+
+    .dv-detail-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background: rgba(167,139,250,0.12);
+      color: #c4b5fd;
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .dv-detail-more:hover {
+      background: rgba(167,139,250,0.20);
+      border-color: rgba(167,139,250,0.5);
+      color: #fff;
+    }
+    .dv-detail-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .dv-detail-more svg { width: 15px; height: 15px; }
+
+    /* Capture-specs strip (detailed popup) */
+    .dv-detail-specs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      gap: 12px 10px;
+      margin: 2px 0 20px;
+      padding: 16px 14px;
+      border-radius: 12px;
+      background: rgba(167,139,250,0.06);
+      border: 1px solid rgba(167,139,250,0.14);
+    }
+    .dv-spec {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 7px;
+    }
+    .dv-spec-ico {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      color: #a78bfa;
+    }
+    .dv-spec-ico svg { width: 20px; height: 20px; }
+    .dv-spec-val {
+      font-size: 12.5px;
+      line-height: 1.3;
+      font-weight: 500;
+      color: rgba(232,230,247,0.9);
+    }
     @media (max-width: 768px) {
       .dv-detail { padding: 14px; }
       .dv-detail-card { padding: 24px 20px 22px; max-height: 88%; }
@@ -1574,24 +1640,13 @@
       <div class="dvs-sep" aria-hidden="true"></div>
 
       <!-- Information (toggles the info sidebar) -->
-      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">
+      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Image information" aria-haspopup="dialog" type="button">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
           <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
         </svg>
         <span class="dvt-label">Information</span>
-      </button>
-
-      <!-- Detailed info (full write-up for this image, shown inline) -->
-      <button class="dv-ctrl dv-tools-item" id="dvDetailBtn" aria-label="Detailed information" aria-haspopup="dialog" type="button">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 2.4h5.3L12.8 5.7V13a0.7 0.7 0 0 1-0.7 0.7H4A0.7 0.7 0 0 1 3.3 13V3.1A0.7 0.7 0 0 1 4 2.4z"/>
-          <path d="M9.2 2.6v3.2h3.3"/>
-          <line x1="5.6" y1="8.4" x2="10.2" y2="8.4"/>
-          <line x1="5.6" y1="10.5" x2="9" y2="10.5"/>
-        </svg>
-        <span class="dvt-label">Detailed info</span>
       </button>
 
       <!-- Like -->
@@ -1706,10 +1761,24 @@
   </div><!-- /dv-image-panel -->
 
   <!-- Right: info sidebar -->
-  <div class="dv-info-panel" id="dvInfoPanel">
-    <div class="dv-info-title" id="dvTitle"></div>
-    <div class="dv-info-desc"  id="dvDesc"></div>
-    <div class="dv-thumbs"     id="dvThumbs"></div>
+  <!-- Basic info popup (title, description, image thumbnails) -->
+  <div id="dvBasic" class="dv-detail" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image information">
+    <div class="dv-detail-scrim" data-basic-close></div>
+    <div class="dv-detail-card">
+      <button class="dv-detail-close" id="dvBasicClose" aria-label="Close information" type="button">✕</button>
+      <h2 class="dv-detail-title" id="dvTitle"></h2>
+      <div class="dv-detail-desc"  id="dvDesc"></div>
+      <div class="dv-thumbs"       id="dvThumbs"></div>
+      <button class="dv-detail-more" id="dvDetailBtn" aria-haspopup="dialog" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 2.4h5.3L12.8 5.7V13a0.7 0.7 0 0 1-0.7 0.7H4A0.7 0.7 0 0 1 3.3 13V3.1A0.7 0.7 0 0 1 4 2.4z"/>
+          <path d="M9.2 2.6v3.2h3.3"/>
+          <line x1="5.6" y1="8.4" x2="10.2" y2="8.4"/>
+          <line x1="5.6" y1="10.5" x2="9" y2="10.5"/>
+        </svg>
+        <span>Detailed info</span>
+      </button>
+    </div>
   </div>
 
   <!-- Detailed info popup (per-image write-up, shown inline) -->
@@ -1720,6 +1789,7 @@
       <div class="dv-detail-meta"  id="dvDetailMeta"></div>
       <h2 class="dv-detail-title"  id="dvDetailTitle"></h2>
       <p class="dv-detail-intro"   id="dvDetailIntro"></p>
+      <div class="dv-detail-specs" id="dvDetailSpecs"></div>
       <div class="dv-detail-body"  id="dvDetailBody"></div>
       <div class="dv-detail-tags"  id="dvDetailTags"></div>
     </div>
@@ -1853,6 +1923,9 @@
   const dvDetailIntro = document.getElementById('dvDetailIntro');
   const dvDetailBody  = document.getElementById('dvDetailBody');
   const dvDetailTags  = document.getElementById('dvDetailTags');
+  const dvDetailSpecs = document.getElementById('dvDetailSpecs');
+  const dvBasic       = document.getElementById('dvBasic');
+  const dvBasicClose  = document.getElementById('dvBasicClose');
 
   if (!grid || !dv) return;
 
@@ -2069,21 +2142,21 @@
   }
 
   /* ══════════════════════════════════════
-     INFO PANEL
+     BASIC INFO POPUP (title, description, thumbs)
   ══════════════════════════════════════ */
-  function openInfo() {
-    dvInfoPanel.classList.remove('collapsed');
-    dvInfoPanel.removeAttribute('aria-hidden');
-    dvInfoBtn.setAttribute('aria-expanded','true');
-    dvInfoBtn.setAttribute('aria-label','Hide image information');
-    infoVisible = true;
+  function openBasicInfo() {
+    if (!dvBasic || !currentItem) return;
+    // dvTitle / dvDesc / dvThumbs are kept current by showDv(); just reveal.
+    const card = dvBasic.querySelector('.dv-detail-card');
+    if (card) card.scrollTop = 0;
+    dvBasic.classList.add('open');
+    dvBasic.setAttribute('aria-hidden', 'false');
+    if (dvBasicClose) dvBasicClose.focus();
   }
-  function closeInfo() {
-    dvInfoPanel.classList.add('collapsed');
-    dvInfoPanel.setAttribute('aria-hidden','true');
-    dvInfoBtn.setAttribute('aria-expanded','false');
-    dvInfoBtn.setAttribute('aria-label','Show image information');
-    infoVisible = false;
+  function closeBasicInfo() {
+    if (!dvBasic) return;
+    dvBasic.classList.remove('open');
+    dvBasic.setAttribute('aria-hidden', 'true');
   }
 
   /* ══════════════════════════════════════
@@ -2143,18 +2216,16 @@
     resetRotation();
     pokeChrome();
     closeDetailInfo();
+    closeBasicInfo();
 
     const cur = dvList[dvIdx];
     const snapItem    = currentItem;
-    const snapVisible = infoVisible;
 
     requestAnimationFrame(() => {
       dvTitle.textContent = snapItem?.title || '';
       dvDesc.textContent  = snapItem?.desc  || '';
       if (snapItem?.title) document.title = `${snapItem.title} — Bhapstar Astrophotography`;
       dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
-
-      snapVisible ? openInfo() : closeInfo();
 
       /* Update like button */
       if (window.Likes && snapItem) {
@@ -2248,6 +2319,7 @@
     resetRotation();
     stopChrome();
     closeDetailInfo();
+    closeBasicInfo();
     dv.classList.remove('open');
     dv.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
@@ -2270,7 +2342,6 @@
     dvImg.src = ''; dvImg.style.display = 'block';
     dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
     if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
-    closeInfo();
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
   }
@@ -2328,11 +2399,11 @@
   function openDetailInfo() {
     const it = currentItem;
     if (!it || !dvDetail) return;
-    dvDetailMeta.textContent = [DETAIL_TYPE_LABELS[it.type] || it.type || '', it.date || '']
-      .filter(Boolean).join('  ·  ');
+    dvDetailMeta.textContent = DETAIL_TYPE_LABELS[it.type] || it.type || '';
     dvDetailTitle.textContent = it.title || '';
     dvDetailIntro.textContent = it.intro || '';
     dvDetailIntro.style.display = it.intro ? '' : 'none';
+    renderDetailSpecs(it);
     dvDetailBody.innerHTML = detailBodyToHtml(it.body);
     dvDetailBody.style.display = it.body ? '' : 'none';
     const tags = it.tags || [];
@@ -2354,6 +2425,48 @@
     if (!dvDetail) return;
     dvDetail.classList.remove('open');
     dvDetail.setAttribute('aria-hidden', 'true');
+  }
+
+  // Capture-detail icons (telescope, camera, filter, integration, location, date)
+  const SPEC_ICONS = {
+    telescope:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9.1l8.5-4.2 1.7 3-8.5 4.2z"/><path d="M4.3 11.3L3 14"/><path d="M9.4 8.7L10.8 11.4"/><path d="M11.2 4.7l1.2-.6"/></svg>',
+    camera:      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.6" width="12" height="8.4" rx="1.5"/><path d="M5.6 4.6l1-1.6h2.8l1 1.6"/><circle cx="8" cy="8.8" r="2.2"/></svg>',
+    filter:      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 3.4h10.8l-4.1 5v4.2l-2.6 1.3V8.4z"/></svg>',
+    integration: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9.2" r="4.9"/><path d="M8 9.2V6.6"/><path d="M6.5 1.9h3"/><path d="M8 1.9v2.4"/></svg>',
+    location:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s4.1-3.9 4.1-7A4.1 4.1 0 0 0 8 2.9 4.1 4.1 0 0 0 3.9 7C3.9 10.1 8 14 8 14z"/><circle cx="8" cy="6.9" r="1.5"/></svg>',
+    date:        '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.4" width="11" height="10.1" rx="1.4"/><path d="M2.5 6.4h11"/><path d="M5.4 2.1v2.4"/><path d="M10.6 2.1v2.4"/></svg>',
+  };
+
+  // Entry dates are DD-MM-YYYY → "Month YYYY"; falls back to the raw value.
+  function fmtSpecDate(d) {
+    if (!d) return '';
+    const m = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(String(d).trim());
+    if (!m) return String(d);
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const mi = parseInt(m[2], 10) - 1;
+    return (months[mi] ? months[mi] + ' ' : '') + m[3];
+  }
+
+  function renderDetailSpecs(it) {
+    if (!dvDetailSpecs) return;
+    const sp = it.specs || {};
+    const rows = [
+      ['telescope',   sp.telescope],
+      ['camera',      sp.camera],
+      ['filter',      sp.filter],
+      ['integration', sp.integration],
+      ['location',    sp.location],
+      ['date',        fmtSpecDate(it.date)],
+    ].filter(([, v]) => v && String(v).trim());
+    if (!rows.length) {
+      dvDetailSpecs.innerHTML = '';
+      dvDetailSpecs.style.display = 'none';
+      return;
+    }
+    dvDetailSpecs.innerHTML = rows.map(([k, v]) =>
+      `<div class="dv-spec"><span class="dv-spec-ico">${SPEC_ICONS[k] || ''}</span><span class="dv-spec-val">${esc(String(v))}</span></div>`
+    ).join('');
+    dvDetailSpecs.style.display = '';
   }
 
   /* ══════════════════════════════════════
@@ -2688,7 +2801,7 @@
     if (dvDetailBtn && dvDetail) {
       addTapHandler(dvDetailBtn, (e) => {
         if (e.stopPropagation) e.stopPropagation();
-        if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
+        closeBasicInfo();
         openDetailInfo();
       });
       if (dvDetailClose) addTapHandler(dvDetailClose, (e) => { if (e.stopPropagation) e.stopPropagation(); closeDetailInfo(); });
@@ -2705,8 +2818,23 @@
 
     addTapHandler(dvInfoBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      infoVisible ? closeInfo() : openInfo();
+      if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
+      openBasicInfo();
     });
+
+    /* ── Basic info popup close handlers ── */
+    if (dvBasic) {
+      if (dvBasicClose) addTapHandler(dvBasicClose, (e) => { if (e.stopPropagation) e.stopPropagation(); closeBasicInfo(); });
+      dvBasic.addEventListener('click', (e) => {
+        if (e.target === dvBasic || e.target.hasAttribute('data-basic-close')) closeBasicInfo();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvBasic.classList.contains('open')) {
+          e.stopPropagation();
+          closeBasicInfo();
+        }
+      }, true);
+    }
 
     /* ── Share ── */
     if (dvShareBtn && dvShareMenu) {
