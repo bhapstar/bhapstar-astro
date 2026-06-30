@@ -1052,6 +1052,119 @@
     #dvToolsMenu #dvLikeBtn.liked { color: #f472b6; }
     .dvt-label { pointer-events: none; }
 
+    /* ── Detailed info popup (inline write-up) ── */
+    .dv-detail {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 220ms ease, visibility 0s linear 220ms;
+    }
+    .dv-detail.open {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 220ms ease;
+    }
+    .dv-detail-scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(3,2,12,0.74);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .dv-detail-card {
+      position: relative;
+      width: min(640px, 100%);
+      max-height: min(86%, 760px);
+      overflow-y: auto;
+      padding: 30px 32px 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(10,9,28,0.97);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+      color: rgba(232,230,247,0.92);
+      transform: translateY(10px) scale(0.985);
+      transition: transform 260ms cubic-bezier(0.16,1,0.3,1);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.25) transparent;
+    }
+    .dv-detail.open .dv-detail-card { transform: translateY(0) scale(1); }
+    .dv-detail-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 34px; height: 34px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      color: rgba(232,230,247,0.8);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .dv-detail-close:hover { background: rgba(167,139,250,0.18); color: #fff; }
+    .dv-detail-meta {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 8px;
+    }
+    .dv-detail-title {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 0 0 14px;
+      padding-right: 30px;
+      color: #fff;
+    }
+    .dv-detail-intro {
+      font-size: 15.5px;
+      line-height: 1.6;
+      font-style: italic;
+      color: rgba(232,230,247,0.82);
+      margin: 0 0 18px;
+    }
+    .dv-detail-body { font-size: 14.5px; line-height: 1.72; }
+    .dv-detail-body p { margin: 0 0 14px; }
+    .dv-detail-body .update-note {
+      margin: 0 0 14px;
+      padding: 10px 14px;
+      border-left: 2px solid #a78bfa;
+      background: rgba(167,139,250,0.08);
+      border-radius: 6px;
+      font-size: 13.5px;
+      color: rgba(232,230,247,0.78);
+    }
+    .dv-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(167,139,250,0.14);
+    }
+    .dv-detail-tag {
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(167,139,250,0.12);
+      color: rgba(214,209,240,0.85);
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 768px) {
+      .dv-detail { padding: 14px; }
+      .dv-detail-card { padding: 24px 20px 22px; max-height: 88%; }
+      .dv-detail-title { font-size: 21px; }
+    }
+
     /* ── Sidebar content ── */
     .dv-info-title {
       font-weight: 700;
@@ -1336,7 +1449,7 @@
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
         <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or swipe to navigate. Use the magnify button to zoom. Use the rotate button to rotate.</p><br>
-        <p class="gallery-hint">For more on each image (how it was captured, the equipment and conditions, and the story behind it) head over to the <a href="field_notes.html">Field Notes</a> page.</p><br>
+        <p class="gallery-hint">For more on each image — how it was captured, the equipment and conditions, and the story behind it — open any image and choose <strong>Detailed info</strong> from the options menu.</p><br>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
           <div class="filter-select-wrap">
@@ -1470,16 +1583,16 @@
         <span class="dvt-label">Information</span>
       </button>
 
-      <!-- Field Notes (full write-up for this image) -->
-      <a class="dv-ctrl dv-tools-item" id="dvFieldNotesLink" role="menuitem" href="field_notes.html">
+      <!-- Detailed info (full write-up for this image, shown inline) -->
+      <button class="dv-ctrl dv-tools-item" id="dvDetailBtn" aria-label="Detailed information" aria-haspopup="dialog" type="button">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 2.4h5.3L12.8 5.7V13a0.7 0.7 0 0 1-0.7 0.7H4A0.7 0.7 0 0 1 3.3 13V3.1A0.7 0.7 0 0 1 4 2.4z"/>
           <path d="M9.2 2.6v3.2h3.3"/>
           <line x1="5.6" y1="8.4" x2="10.2" y2="8.4"/>
           <line x1="5.6" y1="10.5" x2="9" y2="10.5"/>
         </svg>
-        <span class="dvt-label">Field Notes</span>
-      </a>
+        <span class="dvt-label">Detailed info</span>
+      </button>
 
       <!-- Like -->
       <button class="dv-ctrl dv-tools-item" id="dvLikeBtn" aria-label="Like this image" type="button">
@@ -1597,6 +1710,19 @@
     <div class="dv-info-title" id="dvTitle"></div>
     <div class="dv-info-desc"  id="dvDesc"></div>
     <div class="dv-thumbs"     id="dvThumbs"></div>
+  </div>
+
+  <!-- Detailed info popup (per-image write-up, shown inline) -->
+  <div id="dvDetail" class="dv-detail" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Detailed information">
+    <div class="dv-detail-scrim" data-detail-close></div>
+    <div class="dv-detail-card">
+      <button class="dv-detail-close" id="dvDetailClose" aria-label="Close detailed information" type="button">✕</button>
+      <div class="dv-detail-meta"  id="dvDetailMeta"></div>
+      <h2 class="dv-detail-title"  id="dvDetailTitle"></h2>
+      <p class="dv-detail-intro"   id="dvDetailIntro"></p>
+      <div class="dv-detail-body"  id="dvDetailBody"></div>
+      <div class="dv-detail-tags"  id="dvDetailTags"></div>
+    </div>
   </div>
 
 </div><!-- /detailView -->
@@ -1719,7 +1845,14 @@
   const dvShareMenu = document.getElementById('dvShareMenu');
   const dvToolsBtn  = document.getElementById('dvToolsBtn');
   const dvToolsMenu = document.getElementById('dvToolsMenu');
-  const dvFieldNotesLink = document.getElementById('dvFieldNotesLink');
+  const dvDetailBtn   = document.getElementById('dvDetailBtn');
+  const dvDetail      = document.getElementById('dvDetail');
+  const dvDetailClose = document.getElementById('dvDetailClose');
+  const dvDetailMeta  = document.getElementById('dvDetailMeta');
+  const dvDetailTitle = document.getElementById('dvDetailTitle');
+  const dvDetailIntro = document.getElementById('dvDetailIntro');
+  const dvDetailBody  = document.getElementById('dvDetailBody');
+  const dvDetailTags  = document.getElementById('dvDetailTags');
 
   if (!grid || !dv) return;
 
@@ -2009,6 +2142,7 @@
     zoomDisable();
     resetRotation();
     pokeChrome();
+    closeDetailInfo();
 
     const cur = dvList[dvIdx];
     const snapItem    = currentItem;
@@ -2113,6 +2247,7 @@
     zoomDisable();
     resetRotation();
     stopChrome();
+    closeDetailInfo();
     dv.classList.remove('open');
     dv.setAttribute('aria-hidden','true');
     document.body.classList.remove('noscroll');
@@ -2162,6 +2297,63 @@
   function stopChrome() {
     clearTimeout(idleTimer);
     revealChrome();
+  }
+
+  /* ══════════════════════════════════════
+     DETAILED INFO POPUP (inline write-up)
+  ══════════════════════════════════════ */
+  const DETAIL_TYPE_LABELS = {
+    nebulae:         'Nebulae',
+    galaxies:        'Galaxies',
+    'star-clusters': 'Star Clusters',
+    'star-trails':   'Star Trails',
+    comets:          'Comets',
+    others:          'Others',
+  };
+
+  // Mirrors the Field Notes page: blank-line-separated paragraphs, with
+  // [bracketed] lines rendered as update notes.
+  function detailBodyToHtml(text) {
+    if (!text) return '';
+    return String(text).split('\n\n').map(para => {
+      para = para.trim();
+      if (!para) return '';
+      if (/^\[/.test(para) && /\]$/.test(para)) {
+        return `<div class="update-note">${esc(para.replace(/^\[|\]$/g, '').trim())}</div>`;
+      }
+      return `<p>${esc(para)}</p>`;
+    }).join('');
+  }
+
+  function openDetailInfo() {
+    const it = currentItem;
+    if (!it || !dvDetail) return;
+    dvDetailMeta.textContent = [DETAIL_TYPE_LABELS[it.type] || it.type || '', it.date || '']
+      .filter(Boolean).join('  ·  ');
+    dvDetailTitle.textContent = it.title || '';
+    dvDetailIntro.textContent = it.intro || '';
+    dvDetailIntro.style.display = it.intro ? '' : 'none';
+    dvDetailBody.innerHTML = detailBodyToHtml(it.body);
+    dvDetailBody.style.display = it.body ? '' : 'none';
+    const tags = it.tags || [];
+    if (tags.length) {
+      dvDetailTags.innerHTML = tags.map(t => `<span class="dv-detail-tag">${esc(t)}</span>`).join('');
+      dvDetailTags.style.display = '';
+    } else {
+      dvDetailTags.innerHTML = '';
+      dvDetailTags.style.display = 'none';
+    }
+    const card = dvDetail.querySelector('.dv-detail-card');
+    if (card) card.scrollTop = 0;
+    dvDetail.classList.add('open');
+    dvDetail.setAttribute('aria-hidden', 'false');
+    if (dvDetailClose) dvDetailClose.focus();
+  }
+
+  function closeDetailInfo() {
+    if (!dvDetail) return;
+    dvDetail.classList.remove('open');
+    dvDetail.setAttribute('aria-hidden', 'true');
   }
 
   /* ══════════════════════════════════════
@@ -2472,10 +2664,6 @@
       }
       function openToolsMenu() {
         if (dvShareMenu) { dvShareMenu.classList.remove('open'); if (dvShareBtn) dvShareBtn.setAttribute('aria-expanded', 'false'); }
-        if (dvFieldNotesLink) {
-          const fnSlug = itemSlug(currentItem);
-          dvFieldNotesLink.setAttribute('href', fnSlug ? 'field_notes.html#' + fnSlug : 'field_notes.html');
-        }
         dvToolsMenu.classList.add('open');
         dvToolsBtn.setAttribute('aria-expanded', 'true');
       }
@@ -2492,6 +2680,25 @@
         if (e.key === 'Escape' && dvToolsMenu.classList.contains('open')) {
           e.stopPropagation();
           closeToolsMenu();
+        }
+      }, true);
+    }
+
+    /* ── Detailed info popup ── */
+    if (dvDetailBtn && dvDetail) {
+      addTapHandler(dvDetailBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
+        openDetailInfo();
+      });
+      if (dvDetailClose) addTapHandler(dvDetailClose, (e) => { if (e.stopPropagation) e.stopPropagation(); closeDetailInfo(); });
+      dvDetail.addEventListener('click', (e) => {
+        if (e.target === dvDetail || e.target.hasAttribute('data-detail-close')) closeDetailInfo();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvDetail.classList.contains('open')) {
+          e.stopPropagation();
+          closeDetailInfo();
         }
       }, true);
     }
@@ -2515,12 +2722,12 @@
         const title = (item && item.title) ? item.title : 'Bhapstar Astrophotography';
         const text  = title + ' — astrophotography by Bhapstar';
         let image = SHARE_OG;
-        let thumb = '';
+        let filePath = '';
         if (cur && cur.file && cur.kind !== 'vimeo') {
           image = SHARE_ORIGIN + cur.file;
-          thumb = cur.file.replace(/^(images\/)/, '$1thumbs/');
+          filePath = cur.file; // full image from /images for the actual shared file
         }
-        return { url, title, text, image, thumb };
+        return { url, title, text, image, filePath };
       }
 
       function openShareMenu() {
@@ -2605,12 +2812,12 @@
       }
 
       async function nativeShare() {
-        const { url, title, text, thumb } = getShareData();
-        // Attach the per-image photo (as JPEG) so the preview shows the right image.
-        // Fetched from a same-origin relative path so it works locally and in production.
-        if (thumb) {
+        const { url, title, text, filePath } = getShareData();
+        // Attach the actual full-size /images photo (converted to JPEG) so apps receive the
+        // real image and the preview renders. Same-origin path, so it works locally and live.
+        if (filePath) {
           try {
-            const file = await buildShareFile(thumb);
+            const file = await buildShareFile(filePath);
             if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
               await navigator.share({ files: [file], title, text, url });
               closeShareMenu();

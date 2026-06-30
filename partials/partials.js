@@ -20,6 +20,12 @@
 // touching. Set back to false to restore everything.
 const HIDE_INSTAGRAM = false;
 
+// Hides the Field Notes page from navigation (header + footer links) site-wide
+// without deleting the page — it stays reachable by direct URL. The per-image
+// write-ups now live inline on the gallery (Options → Detailed info).
+// Set back to false to restore the nav links.
+const HIDE_FIELD_NOTES = true;
+
 (async function () {
 
   /* ─────────────────────────────────────────
@@ -114,6 +120,13 @@ const HIDE_INSTAGRAM = false;
         s.src = '//www.instagram.com/embed.js';
         document.body.appendChild(s);
       }
+    }
+
+    /* ── Hide Field Notes nav links (gated by HIDE_FIELD_NOTES above) ── */
+    if (HIDE_FIELD_NOTES) {
+      document.querySelectorAll('a[href*="field_notes.html"]').forEach(a => {
+        (a.closest('li') || a).remove();
+      });
     }
 
     /* ── Dynamic year ── */
