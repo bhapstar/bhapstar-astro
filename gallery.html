@@ -1188,10 +1188,11 @@
     #dvBasic .dv-thumbs { justify-content: center; }
 
     .dv-detail-more {
-      display: inline-flex;
+      display: flex;
+      width: fit-content;
       align-items: center;
       gap: 8px;
-      margin-top: 20px;
+      margin: 20px auto 0;
       padding: 10px 16px;
       border-radius: 10px;
       border: 1px solid rgba(167,139,250,0.30);
@@ -1810,7 +1811,7 @@
     <div class="dv-detail-card">
       <button class="dv-detail-back" id="dvDetailBack" type="button">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
-        <span>Back to info</span>
+        <span>Back to summary</span>
       </button>
       <button class="dv-detail-close" id="dvDetailClose" aria-label="Close detailed information" type="button">✕</button>
       <div class="dv-detail-meta"  id="dvDetailMeta"></div>
