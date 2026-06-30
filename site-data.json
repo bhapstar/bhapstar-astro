@@ -19,7 +19,7 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "Askar V (80mm)",
+      "telescope": "Askar V (60mm) with reducer",
       "camera": "ZWO ASI585MC Air",
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
@@ -112,11 +112,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (60mm) with reducer",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-eXtreme",
+      "integration": "6 hours",
+      "location": "Al Quaa, UAE"
     }
   },
   {
@@ -126,7 +126,7 @@
     "alt": "Pleiades M45 open star cluster reflection nebula astrophotography",
     "type": "star-clusters",
     "slug": "pleiades-m45",
-    "date": "01-01-2025",
+    "date": "01-11-2025",
     "intro": "The Pleiades are among the most recognisable objects in the night sky — a young open cluster of hot blue stars surrounded by delicate wisps of interstellar dust that catch and reflect their light.",
     "body": "Messier 45, the Pleiades, have been known to every human culture that ever looked up at the night sky. At only around 440 light-years away, they are one of the nearest star clusters to Earth and easily visible to the naked eye — appearing as a tight, shimmering knot of blue-white stars in the constellation Taurus.\n\nWhat makes this target so rewarding to photograph is the nebulosity. The blue reflection nebula surrounding the cluster — particularly around the brightest star Merope — is not material left over from the stars' formation, but a separate dust cloud the cluster is currently passing through. Getting this faint, delicate haze to show up without blowing out the bright stars requires careful exposure management.\n\nThe Pleiades are a broadband target — the reflection nebula is blue and doesn't respond to narrowband filters the way emission nebulae do. Short individual exposures to protect the star cores, combined with longer exposures for the faint dust, is a common approach worth considering.",
     "tags": [
@@ -140,11 +140,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (60mm) with reducer",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "None",
+      "integration": "6 hours",
+      "location": "Al Quaa, UAE"
     }
   },
   {
@@ -168,11 +168,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (60mm) with reducer",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-Quad Enance",
+      "integration": "6 hours",
+      "location": "Al Quaa, UAE"
     }
   },
   {
@@ -199,11 +199,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (60mm) native",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "None",
+      "integration": "6 hours",
+      "location": "Al Quaa, UAE"
     }
   },
   {
@@ -228,11 +228,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Seestar S30",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "4 hours",
+      "location": "Al Quaa, UAE"
     }
   },
   {
@@ -242,7 +242,7 @@
     "alt": "Monkey Head Nebula NGC 2174 emission nebula astrophotography",
     "type": "nebulae",
     "slug": "monkey-head-nebula-ngc2174",
-    "date": "01-01-2025",
+    "date": "01-04-2025",
     "intro": "NGC 2174 is a glowing emission nebula in Orion, sculpted by the radiation of massive young stars — its dark dust lanes and bright hydrogen clouds creating the silhouette that gives it its name.",
     "body": "The Monkey Head Nebula sits around 6,400 light-years away on the outskirts of the Orion constellation. It is an HII region — a cloud of ionised hydrogen energised by a cluster of hot young stars embedded within it. The interaction between the stellar radiation and the surrounding gas and dust creates the pillars, arcs and dark intrusions that define its distinctive appearance.\n\nThis is a target that benefits enormously from narrowband imaging. In hydrogen-alpha, the structure and detail in the gas clouds becomes particularly sharp, and combining Ha with OIII data reveals the full complexity of the region in a way that broadband alone cannot match.\n\nThe Monkey Head is less frequently imaged than its Orion neighbours like M42 or the Horsehead, which means there is more room to produce something distinctive. The dark dust lanes cutting through the bright nebula are particularly satisfying to bring out.",
     "tags": [
@@ -256,11 +256,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "SkyWatcher Evostar 72ED",
+      "camera": "ZWO ASI585",
+      "filter": "Optolong L-eXtreme",
+      "integration": "6 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -270,7 +270,7 @@
     "alt": "Needle Galaxy NGC 4565 edge-on spiral galaxy astrophotography",
     "type": "galaxies",
     "slug": "needle-galaxy-ngc4565",
-    "date": "13-01-2026",
+    "date": "13-05-2026",
     "intro": "NGC 4565 is a spiral galaxy seen almost perfectly edge-on from Earth — its thin disk bisected by a dark dust lane, presenting one of the most elegant and geometry-driven views in the deep sky.",
     "body": "The Needle Galaxy lies around 30–50 million light-years away in the constellation Coma Berenices. It is often cited as one of the finest examples of an edge-on spiral galaxy visible from the northern hemisphere — the near-perfect alignment with our line of sight means we see its disk as a thin sliver of light, with the central bulge rising above and below the plane like a lens.\n\nThe dark dust lane that runs the full length of the disk is the defining feature — a band of cold, unilluminated gas and dust that bisects the galaxy cleanly when seen from this angle. What we are looking at is essentially the same structure as our own Milky Way would present to a distant observer.\n\nThe Needle rewards longer focal lengths — the more you can resolve along that thin disk, the more detail you pull out of the dust lane and the faint extensions of the outer arms. Background galaxies in the same field are a nice bonus.",
     "tags": [
@@ -284,11 +284,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (80mm) native",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-Quad Enance",
+      "integration": "6 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -323,11 +323,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Various",
+      "camera": "Various",
+      "filter": "None",
+      "integration": "Various",
+      "location": "Various"
     }
   },
   {
@@ -363,11 +363,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (60mm) with reducer",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-Quad Enance",
+      "integration": "6 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -392,11 +392,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Seestar S30",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "4 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -422,11 +422,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Seestar S30",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "4 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -451,11 +451,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Askar V (80mm) with extender",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-eXtreme",
+      "integration": "4 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -479,11 +479,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Seestar S30",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "4 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -493,7 +493,7 @@
     "alt": "Triangulum Galaxy M33 Local Group spiral galaxy astrophotography",
     "type": "galaxies",
     "slug": "triangulum-galaxy-m33",
-    "date": "01-01-2025",
+    "date": "01-03-2026",
     "intro": "M33 is the third-largest member of the Local Group — a face-on spiral galaxy in Triangulum whose faint, diffuse arms and prominent HII regions make it one of the most challenging and rewarding objects in the deep sky.",
     "body": "Messier 33 lies around 2.73 million light-years away in the small constellation Triangulum, making it one of our closest galactic neighbours after Andromeda. Despite its relative proximity, it has an extremely low surface brightness — its light is spread across a large apparent area, making it notoriously difficult to detect visually and requiring significant integration time to photograph well.\n\nWithin its arms sit some of the largest and brightest HII regions known — NGC 604 in particular is a giant star-forming complex that dwarfs anything in the Milky Way, visible as a bright knot within the spiral arm structure.\n\nThe Triangulum Galaxy rewards patience above almost any other target. The more integration time you give it, the more the faint outer arms and the HII regions within them emerge from the background. It is a target worth returning to repeatedly.",
     "tags": [
@@ -509,11 +509,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Seestar S30",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "4 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -539,7 +539,7 @@
     "desc": "Some quiet moments for me beneath the arc of the Milky Way, standing against the glowing structure of our home galaxy. A human scale set against cosmic distances, where Earth becomes part of the wider scene rather than its centre.",
     "type": "others",
     "slug": "milky-way-and-me",
-    "date": "01-01-2025",
+    "date": "01-12-2025",
     "intro": "Some quiet nights beneath the arc of our own galaxy — a reminder that astrophotography is not just about the objects in the sky, but about the experience of being small beneath them.",
     "body": "These images are something different from the rest of the gallery. Rather than isolating a specific deep-sky object, they place a human figure within the wider scene — the Milky Way arching overhead, the horizon grounding the composition, the gap between the cosmic and the personal collapsed into a single frame.\n\nThe core of the Milky Way — the brightest and most structured part of the band — is visible from darker sites during the summer months in the northern hemisphere. What we are seeing is the direction toward the galactic centre, some 26,000 light-years away, dense with stars, dust clouds and the glow of billions of suns.\n\nMilky Way landscape photography sits at the intersection of astrophotography and landscape photography, and the techniques differ somewhat from pure deep-sky work. Single exposures or short sequences rather than long stacked sessions, wide fast lenses, and careful attention to foreground composition all come into play.",
     "tags": [
@@ -552,11 +552,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Various",
+      "camera": "Various",
+      "filter": "None",
+      "integration": "Various",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -574,7 +574,7 @@
     "desc": "An annual meteor shower caused by debris from asteroid 3200 Phaethon. This composite records multiple Geminid meteors over a single night, tracing their apparent paths back to the constellation Gemini as Earth passes through the stream.",
     "type": "others",
     "slug": "geminids-meteor-shower",
-    "date": "01-01-2025",
+    "date": "01-12-2023",
     "intro": "The Geminids are one of the year's most reliable and prolific meteor showers — caused not by a comet but by asteroid 3200 Phaethon, producing fast, bright meteors that radiate from the constellation Gemini.",
     "body": "The Geminids peak each year around the 13th–14th of December and are unusual among major meteor showers in having an asteroid rather than a comet as their parent body. 3200 Phaethon is a rocky object that passes unusually close to the Sun, and the debris trail it has shed over time produces the stream of particles that Earth passes through each December.\n\nThis composite records multiple Geminid meteors captured over a single night, with their trails traced back to the radiant point in Gemini — the apparent origin of the shower as seen from Earth. Individual meteors are captured in single frames; the composite combines them to show the full pattern of the shower's geometry.\n\nMeteor shower photography is one of the more unpredictable and patience-testing forms of astrophotography — you are essentially leaving the camera running and hoping. The Geminids reward persistence, producing reliably high meteor rates even under imperfect conditions.",
     "tags": [
@@ -588,11 +588,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Samyang 14mm f2.8",
+      "camera": "Sony A7III Full Frame Mirrorless Camera",
+      "filter": "None",
+      "integration": "5 hours",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -631,11 +631,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Various",
+      "camera": "Various",
+      "filter": "None",
+      "integration": "Various",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -678,11 +678,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Various",
+      "camera": "Various",
+      "filter": "None",
+      "integration": "Various",
+      "location": "Al Qudra, UAE"
     }
   },
   {
@@ -704,7 +704,7 @@
     "desc": "Small bodies from the outer Solar System, visible only briefly as they pass close to the Sun. Heating releases gas and dust from the nucleus, forming a tail shaped by solar radiation and the solar wind, changing subtly from night to night.",
     "type": "comets",
     "slug": "comets",
-    "date": "01-01-2025",
+    "date": "01-10-2024",
     "intro": "Visitors from the outer Solar System, comets are among the most dynamic and unpredictable targets in astrophotography — each one unique, each one changing from night to night as it sweeps around the Sun.",
     "body": "Comets are ancient bodies, remnants from the formation of the Solar System, preserved in deep freeze in the outer reaches beyond Neptune. When their orbits bring them toward the inner Solar System, the Sun's heat begins to sublimate their ices — releasing gas and dust that forms the distinctive coma and tail that makes them visible from Earth.\n\nThe ion tail always points directly away from the Sun, pushed by the solar wind. The dust tail curves gently behind the comet's path, following its orbit. The two tails often have slightly different colours and structures, and both change on timescales of hours as the comet's activity fluctuates.\n\nComets present a unique tracking challenge — they move against the background stars, meaning a long exposure will either trail the comet nucleus or trail the stars. Many astrophotographers capture separate exposures tracked on the comet and on the stars, then combine them in processing.",
     "tags": [
@@ -717,11 +717,11 @@
     ],
     "section": "gallery",
     "specs": {
-      "telescope": "",
-      "camera": "",
-      "filter": "",
-      "integration": "",
-      "location": ""
+      "telescope": "Various",
+      "camera": "Various",
+      "filter": "None",
+      "integration": "Various",
+      "location": "Al Qudra, UAE"
     }
   },
   {
