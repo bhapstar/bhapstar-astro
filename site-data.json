@@ -9,14 +9,6 @@
     "date": "27-12-2025",
     "intro": "One of the most recognisable emission nebulae in the winter sky, the Rosette Nebula is a vast cloud of ionised hydrogen surrounding a young open star cluster at its heart.",
     "body": "The Rosette Nebula (NGC 2237–2244) sits around 5,000 light-years away in the constellation Monoceros, and spans roughly 130 light-years across — making it one of the largest star-forming regions visible from Earth. The cluster of young, hot stars at its core (NGC 2244) is only a few million years old, yet the intense ultraviolet radiation they pour out is already carving enormous cavities into the surrounding gas and dust.\n\nThis is a target I had been planning for a while. The sheer scale of the nebula means it benefits from a shorter focal length, and getting the balance between the bright core and the delicate outer filaments right took some patience in processing.\n\nThe Rosette is a popular narrowband target — the hydrogen-alpha signal is strong and rewards even modest integration times. If you image it in broadband, the red emission can be tricky to balance without blowing out the core. Worth experimenting with both approaches.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "NGC 2244",
-      "Monoceros",
-      "narrowband",
-      "hydrogen alpha"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -44,16 +36,6 @@
     "date": "15-05-2026",
     "intro": "Home to the Pillars of Creation, the Eagle Nebula is one of the most iconic targets in all of astrophotography — a stellar nursery where new stars are being born inside towering columns of gas and dust.",
     "body": "Messier 16, the Eagle Nebula, lies roughly 7,000 light-years away in the constellation Serpens. It was the subject of one of the most famous astronomical images ever taken — Hubble's 1995 photograph of the Pillars of Creation — three enormous columns of molecular gas and dust rising from the nebula's interior, slowly being sculpted by the radiation of newly formed stars.\n\nThis was a target I returned to more than once. The two renders in the gallery represent an earlier attempt and a later revisit with improved equipment and a better understanding of the processing. Comparing the two side by side is one of the more satisfying things about this hobby — seeing the same subject reveal more detail as your technique develops.\n\nThe Pillars themselves sit near the centre of the nebula and require good seeing and sufficient focal length to resolve properly. In narrowband, the hydrogen-alpha and OIII contrast beautifully — the pillars appear as dark silhouettes against the glowing gas behind them.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "M16",
-      "Messier 16",
-      "Serpens",
-      "Pillars of Creation",
-      "star forming region",
-      "narrowband"
-    ],
     "featured": true,
     "section": "gallery",
     "specs": {
@@ -74,14 +56,6 @@
     "date": "01-01-2025",
     "intro": "A supernova remnant in Gemini, the Jellyfish Nebula is the ghostly aftermath of a stellar explosion that occurred between 3,000 and 30,000 years ago — its tangled filaments still expanding outward through space.",
     "body": "IC 443 sits around 5,000 light-years away in the constellation Gemini, and is one of the most studied supernova remnants in the sky. Unlike many nebulae which are powered by ongoing star formation, the Jellyfish is a relic — the expanding shockwave from a single catastrophic stellar death, still colliding with surrounding molecular clouds thousands of years later.\n\nAt its heart lies a neutron star, the compressed core left behind after the explosion. The interaction between the expanding remnant and the surrounding interstellar medium creates the complex, filamentary structures that give this nebula its distinctive shape.\n\nThe Jellyfish is a challenging narrowband target — the signal is fainter than objects like the Orion or Rosette nebulae, and the structure is complex enough that processing requires care to bring out the filaments without introducing artefacts. It rewards patience.",
-    "tags": [
-      "nebula",
-      "supernova remnant",
-      "IC 443",
-      "Gemini",
-      "narrowband",
-      "neutron star"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -101,15 +75,6 @@
     "date": "27-01-2026",
     "intro": "NGC 2264 is a rich star-forming complex in Monoceros containing both the Christmas Tree Cluster and the iconic Cone Nebula — a region where glowing hydrogen gas, dark dust lanes and newly-formed stars exist in dramatic tension.",
     "body": "NGC 2264 is a designation that covers an entire region of activity — a young star cluster whose arrangement resembles a Christmas tree when viewed in the right orientation, surrounded by glowing emission nebulae and punctuated by the Cone Nebula, a striking dark pillar of cold molecular gas rising against the brighter hydrogen behind it.\n\nThe region sits around 2,500 light-years away in Monoceros, making it one of the closer star-forming regions to Earth. The young, hot stars of the cluster are energising the surrounding gas, causing it to glow, while denser pockets of dust remain dark — creating the mix of bright emission and dark absorption structures that makes this such a visually rich target.\n\nFraming this region requires some thought — the Christmas Tree orientation and the Cone Nebula don't always sit comfortably in the same field depending on your focal length. Worth planning carefully in stellarium or similar before you image it.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "NGC 2264",
-      "Cone Nebula",
-      "Christmas Tree Cluster",
-      "Monoceros",
-      "star forming region"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -129,15 +94,6 @@
     "date": "01-11-2025",
     "intro": "The Pleiades are among the most recognisable objects in the night sky — a young open cluster of hot blue stars surrounded by delicate wisps of interstellar dust that catch and reflect their light.",
     "body": "Messier 45, the Pleiades, have been known to every human culture that ever looked up at the night sky. At only around 440 light-years away, they are one of the nearest star clusters to Earth and easily visible to the naked eye — appearing as a tight, shimmering knot of blue-white stars in the constellation Taurus.\n\nWhat makes this target so rewarding to photograph is the nebulosity. The blue reflection nebula surrounding the cluster — particularly around the brightest star Merope — is not material left over from the stars' formation, but a separate dust cloud the cluster is currently passing through. Getting this faint, delicate haze to show up without blowing out the bright stars requires careful exposure management.\n\nThe Pleiades are a broadband target — the reflection nebula is blue and doesn't respond to narrowband filters the way emission nebulae do. Short individual exposures to protect the star cores, combined with longer exposures for the faint dust, is a common approach worth considering.",
-    "tags": [
-      "star cluster",
-      "open cluster",
-      "M45",
-      "Messier 45",
-      "Pleiades",
-      "Taurus",
-      "reflection nebula"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -157,15 +113,6 @@
     "date": "01-01-2025",
     "intro": "The Orion Nebula is the closest large star-forming region to Earth and one of the most studied objects in the sky — a vast cloud of gas and dust glowing just below Orion's Belt, visible to the naked eye on any clear winter night.",
     "body": "Messier 42 lies just 1,344 light-years away — practically next door in cosmic terms — making it the nearest region of massive star formation to Earth. At its heart sits the Trapezium, a tight cluster of four extraordinarily hot young stars whose ultraviolet output is responsible for ionising and illuminating the entire nebula.\n\nFor any astrophotographer, M42 is an early and inevitable target. Its brightness and proximity mean it shows up in virtually any exposure, but that same brightness makes it genuinely challenging to image well — the core is so bright that it saturates long before the fainter outer regions become visible.\n\nThe Orion Nebula is a rite of passage target. Every astrophotographer images it early, and most go back to it repeatedly as their equipment and technique improves. The challenge of capturing both the Trapezium detail and the faint outer wisps in a single image is one that keeps drawing people back.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "M42",
-      "Messier 42",
-      "Orion",
-      "Trapezium",
-      "star forming region"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -185,18 +132,6 @@
     "date": "01-01-2025",
     "intro": "Two of astrophotography's most iconic subjects sharing the same field of view — the glowing Flame Nebula and the dark, silhouetted Horsehead, both suspended along the edge of Orion's Belt.",
     "body": "The Flame Nebula (NGC 2024) and the Horsehead Nebula (Barnard 33) sit just to the south of Alnitak, the easternmost star of Orion's Belt, around 1,400 light-years from Earth. They are physically close to one another and beautifully frame each other in the same field — making this one of the most satisfying two-for-one compositions in astrophotography.\n\nThe Flame is an emission nebula, energised by Alnitak's intense radiation. The Horsehead is something different entirely — a dark nebula, a dense column of cold dust silhouetted against the bright emission region IC 434 behind it. The contrast between the two types of nebula in a single image is part of what makes this field so compelling.\n\nAlnitak itself can cause problems — it's bright enough to produce diffraction spikes and blooming that require careful handling in processing. Getting the star under control while preserving the delicate nebula detail around it is one of the main challenges with this target.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "dark nebula",
-      "NGC 2024",
-      "Flame Nebula",
-      "B33",
-      "Horsehead Nebula",
-      "Barnard 33",
-      "Orion",
-      "IC 434"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) native",
@@ -216,16 +151,6 @@
     "date": "01-01-2025",
     "intro": "The Andromeda Galaxy is our nearest large galactic neighbour — a vast spiral system over two million light-years away, and the most distant object visible to the naked eye.",
     "body": "Messier 31 is a spiral galaxy roughly 2.537 million light-years from Earth in the constellation Andromeda. It is larger than the Milky Way — spanning some 220,000 light-years across — and is accompanied by several satellite galaxies, most notably M32 and M110, which are often captured in the same field.\n\nAndromeda and the Milky Way are on a collision course, expected to merge in approximately 4.5 billion years. For now, it drifts toward us at around 110 kilometres per second — its ancient light arriving here after more than two million years of travel.\n\nThe sheer angular size of Andromeda — it spans roughly six times the diameter of the full Moon on the sky — means that capturing it in full requires either a very short focal length or a mosaic. The outer halo and the faint tidal streams are some of the most challenging and rewarding details to pull out.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "M31",
-      "Messier 31",
-      "Andromeda",
-      "Local Group",
-      "M32",
-      "M110"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Seestar S30",
@@ -245,15 +170,6 @@
     "date": "01-04-2025",
     "intro": "NGC 2174 is a glowing emission nebula in Orion, sculpted by the radiation of massive young stars — its dark dust lanes and bright hydrogen clouds creating the silhouette that gives it its name.",
     "body": "The Monkey Head Nebula sits around 6,400 light-years away on the outskirts of the Orion constellation. It is an HII region — a cloud of ionised hydrogen energised by a cluster of hot young stars embedded within it. The interaction between the stellar radiation and the surrounding gas and dust creates the pillars, arcs and dark intrusions that define its distinctive appearance.\n\nThis is a target that benefits enormously from narrowband imaging. In hydrogen-alpha, the structure and detail in the gas clouds becomes particularly sharp, and combining Ha with OIII data reveals the full complexity of the region in a way that broadband alone cannot match.\n\nThe Monkey Head is less frequently imaged than its Orion neighbours like M42 or the Horsehead, which means there is more room to produce something distinctive. The dark dust lanes cutting through the bright nebula are particularly satisfying to bring out.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "NGC 2174",
-      "Monkey Head Nebula",
-      "Orion",
-      "HII region",
-      "narrowband"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "SkyWatcher Evostar 72ED",
@@ -273,15 +189,6 @@
     "date": "13-05-2026",
     "intro": "NGC 4565 is a spiral galaxy seen almost perfectly edge-on from Earth — its thin disk bisected by a dark dust lane, presenting one of the most elegant and geometry-driven views in the deep sky.",
     "body": "The Needle Galaxy lies around 30–50 million light-years away in the constellation Coma Berenices. It is often cited as one of the finest examples of an edge-on spiral galaxy visible from the northern hemisphere — the near-perfect alignment with our line of sight means we see its disk as a thin sliver of light, with the central bulge rising above and below the plane like a lens.\n\nThe dark dust lane that runs the full length of the disk is the defining feature — a band of cold, unilluminated gas and dust that bisects the galaxy cleanly when seen from this angle. What we are looking at is essentially the same structure as our own Milky Way would present to a distant observer.\n\nThe Needle rewards longer focal lengths — the more you can resolve along that thin disk, the more detail you pull out of the dust lane and the faint extensions of the outer arms. Background galaxies in the same field are a nice bonus.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "edge-on galaxy",
-      "NGC 4565",
-      "Needle Galaxy",
-      "Coma Berenices",
-      "dust lane"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (80mm) native",
@@ -313,14 +220,6 @@
     "date": "01-01-2025",
     "intro": "Earth's only natural satellite, the Moon presents an endlessly detailed surface of impact craters, mountain ranges, lava plains and ancient geological history — all within reach of even a modest telescope.",
     "body": "The Moon is simultaneously the easiest and most demanding target in astrophotography. Easy, because it is enormous, close and extraordinarily bright. Demanding, because that same brightness and the sheer wealth of surface detail mean there is always more to resolve, more dynamic range to manage, and more processing nuance to develop.\n\nThe dark plains — the maria — are solidified lava flows from volcanic eruptions billions of years ago. The bright highlands are older and more heavily cratered, a record of the intense bombardment the inner Solar System experienced in its early history. Every crater, every ray system and every mountain range is a chapter in a story that predates complex life on Earth.\n\nLunar imaging at high resolution is a discipline of its own — atmospheric seeing becomes the primary limiting factor, and the best results come from imaging at high frame rates and selecting only the sharpest frames for stacking.",
-    "tags": [
-      "Moon",
-      "lunar",
-      "Solar System",
-      "craters",
-      "maria",
-      "highlands"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Various",
@@ -348,19 +247,6 @@
     "date": "01-01-2025",
     "intro": "M81 and M82 are a gravitationally interacting pair of galaxies in Ursa Major — one a textbook grand-design spiral, the other a chaotic starburst galaxy bearing the visible scars of their shared history.",
     "body": "Messier 81 and Messier 82 lie around 12 million light-years away in Ursa Major and are among the most studied galaxy pairs in the sky. M81 (Bode's Galaxy) is a large, well-defined spiral whose structure has been distorted by repeated close encounters with its neighbour. M82 (the Cigar Galaxy) shows the more dramatic consequences — a burst of intense star formation triggered by the gravitational interaction, driving enormous plumes of gas and dust out from its plane.\n\nThis was a target I came back to, and the two renders in the gallery tell that story. The earlier capture shows what was possible with the equipment and technique at the time. The later revisit — with improved gear and considerably more refined processing — reveals the difference that experience and iteration makes.\n\nThe pair sit close enough together on the sky to fit comfortably in a single field at most focal lengths. M82's hydrogen-alpha outflow is one of the most striking details to target — glowing red filaments extending perpendicular to the galaxy's disk.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "starburst galaxy",
-      "M81",
-      "M82",
-      "Messier 81",
-      "Messier 82",
-      "Bode's Galaxy",
-      "Cigar Galaxy",
-      "Ursa Major",
-      "interacting galaxies"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (60mm) with reducer",
@@ -380,16 +266,6 @@
     "date": "01-01-2025",
     "intro": "M101 is a large face-on spiral galaxy in Ursa Major — its sweeping arms traced with bright star-forming regions and dark dust lanes, presenting one of the most detailed spiral structures visible from Earth.",
     "body": "Messier 101 lies around 21 million light-years away in Ursa Major and is one of the largest known spiral galaxies, spanning roughly 170,000 light-years — nearly twice the diameter of the Milky Way. Seen almost perfectly face-on, its spiral structure is fully exposed, with the arms studded by HII regions — glowing pink clouds where new stars are forming.\n\nThe face-on orientation that makes M101 so visually striking also makes it a low surface-brightness challenge. The outer arms in particular are faint, and pulling them out without introducing noise requires significant integration time.\n\nThe background field around M101 is rich with distant background galaxies — a reminder of how much is out there beyond our immediate cosmic neighbourhood. Several are bright enough to be worth noting in the final image.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "face-on galaxy",
-      "M101",
-      "Messier 101",
-      "Pinwheel Galaxy",
-      "Ursa Major",
-      "HII regions"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Seestar S30",
@@ -409,17 +285,6 @@
     "date": "01-01-2025",
     "intro": "Three spiral galaxies bound by gravity in the constellation Leo, each presenting a different orientation to our line of sight — together offering three distinct perspectives on the spiral galaxy form in a single field of view.",
     "body": "The Leo Triplet sits around 35 million light-years away in Leo. M65 and M66 are a classic interacting pair whose mutual gravity has subtly distorted both structures over billions of years. NGC 3628, the third member, presents almost perfectly edge-on — its disk bisected by a prominent dust lane and its outer arms slightly warped by the same gravitational interaction.\n\nHaving all three in one field makes this one of the most compositionally satisfying galaxy targets in the sky. The variety of orientations — M65 slightly inclined, M66 more face-on, NGC 3628 edge-on — means each tells a different part of the story of what a spiral galaxy is.\n\nNGC 3628 has a faint tidal stream — a trail of stars pulled out by the gravitational interaction with its neighbours. It requires significant integration time and careful processing to reveal, but is a worthwhile challenge for a revisit.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "M65",
-      "M66",
-      "NGC 3628",
-      "Leo Triplet",
-      "Leo",
-      "interacting galaxies",
-      "edge-on galaxy"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Seestar S30",
@@ -439,16 +304,6 @@
     "date": "01-01-2025",
     "intro": "NGC 2359 is an emission nebula in Canis Major shaped by the powerful stellar winds of a rare Wolf–Rayet star — its bubble-like structure and wing-like extensions forming one of the most dramatic silhouettes in the deep sky.",
     "body": "Thor's Helmet lies around 15,000 light-years away in Canis Major. At its heart is WR7, a Wolf–Rayet star — one of the most luminous and short-lived stellar types known, a massive star in the final stages of its life that is blasting material into space at extraordinary speed. The expanding bubble of gas around it, compressed and shaped by the stellar wind, creates the distinctive helmet form.\n\nWolf–Rayet stars are rare — there are only a few hundred known in the entire Milky Way — and the nebulae they create are among the most visually striking objects in the sky. NGC 2359 is one of the finest examples accessible to amateur telescopes.\n\nThe OIII signal in the bubble shell is particularly strong, which makes this a rewarding narrowband target. A Hubble palette or a natural Ha/OIII combination both work well depending on the aesthetic you are going for.",
-    "tags": [
-      "nebula",
-      "emission nebula",
-      "NGC 2359",
-      "Thor's Helmet",
-      "Canis Major",
-      "Wolf-Rayet star",
-      "WR7",
-      "narrowband"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Askar V (80mm) with extender",
@@ -468,15 +323,6 @@
     "date": "03-04-2026",
     "intro": "M41 is a loose open cluster in Canis Major, one of the nearest open clusters to Earth and easily visible to the naked eye — its scattered stars giving it a warm, open appearance against the winter Milky Way.",
     "body": "Messier 41 lies around 2,300 light-years away in Canis Major, sitting just 4 degrees south of Sirius — the brightest star in the night sky. It contains around 100 stars spread across a region about 25 light-years across, with a notable orange giant near its centre that gives the cluster a warm, multicoloured character.\n\nOpen clusters like M41 are young by cosmic standards — typically only tens or hundreds of millions of years old, not yet dispersed by the gravitational interactions that gradually pull these stellar families apart over time.\n\nThe proximity of Sirius requires careful framing to keep it outside the field, or at least to manage its glare and diffraction spikes if it does creep in. The rich background of Milky Way stars adds texture and depth to the wider field around the cluster.",
-    "tags": [
-      "star cluster",
-      "open cluster",
-      "M41",
-      "Messier 41",
-      "Little Beehive",
-      "Canis Major",
-      "winter sky"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Seestar S30",
@@ -496,17 +342,6 @@
     "date": "01-03-2026",
     "intro": "M33 is the third-largest member of the Local Group — a face-on spiral galaxy in Triangulum whose faint, diffuse arms and prominent HII regions make it one of the most challenging and rewarding objects in the deep sky.",
     "body": "Messier 33 lies around 2.73 million light-years away in the small constellation Triangulum, making it one of our closest galactic neighbours after Andromeda. Despite its relative proximity, it has an extremely low surface brightness — its light is spread across a large apparent area, making it notoriously difficult to detect visually and requiring significant integration time to photograph well.\n\nWithin its arms sit some of the largest and brightest HII regions known — NGC 604 in particular is a giant star-forming complex that dwarfs anything in the Milky Way, visible as a bright knot within the spiral arm structure.\n\nThe Triangulum Galaxy rewards patience above almost any other target. The more integration time you give it, the more the faint outer arms and the HII regions within them emerge from the background. It is a target worth returning to repeatedly.",
-    "tags": [
-      "galaxy",
-      "spiral galaxy",
-      "M33",
-      "Messier 33",
-      "Triangulum Galaxy",
-      "Local Group",
-      "NGC 604",
-      "HII regions",
-      "low surface brightness"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Seestar S30",
@@ -542,14 +377,6 @@
     "date": "01-12-2025",
     "intro": "Some quiet nights beneath the arc of our own galaxy — a reminder that astrophotography is not just about the objects in the sky, but about the experience of being small beneath them.",
     "body": "These images are something different from the rest of the gallery. Rather than isolating a specific deep-sky object, they place a human figure within the wider scene — the Milky Way arching overhead, the horizon grounding the composition, the gap between the cosmic and the personal collapsed into a single frame.\n\nThe core of the Milky Way — the brightest and most structured part of the band — is visible from darker sites during the summer months in the northern hemisphere. What we are seeing is the direction toward the galactic centre, some 26,000 light-years away, dense with stars, dust clouds and the glow of billions of suns.\n\nMilky Way landscape photography sits at the intersection of astrophotography and landscape photography, and the techniques differ somewhat from pure deep-sky work. Single exposures or short sequences rather than long stacked sessions, wide fast lenses, and careful attention to foreground composition all come into play.",
-    "tags": [
-      "Milky Way",
-      "landscape astrophotography",
-      "night sky",
-      "galactic centre",
-      "wide field",
-      "dark skies"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Various",
@@ -577,15 +404,6 @@
     "date": "01-12-2023",
     "intro": "The Geminids are one of the year's most reliable and prolific meteor showers — caused not by a comet but by asteroid 3200 Phaethon, producing fast, bright meteors that radiate from the constellation Gemini.",
     "body": "The Geminids peak each year around the 13th–14th of December and are unusual among major meteor showers in having an asteroid rather than a comet as their parent body. 3200 Phaethon is a rocky object that passes unusually close to the Sun, and the debris trail it has shed over time produces the stream of particles that Earth passes through each December.\n\nThis composite records multiple Geminid meteors captured over a single night, with their trails traced back to the radiant point in Gemini — the apparent origin of the shower as seen from Earth. Individual meteors are captured in single frames; the composite combines them to show the full pattern of the shower's geometry.\n\nMeteor shower photography is one of the more unpredictable and patience-testing forms of astrophotography — you are essentially leaving the camera running and hoping. The Geminids reward persistence, producing reliably high meteor rates even under imperfect conditions.",
-    "tags": [
-      "meteor shower",
-      "Geminids",
-      "3200 Phaethon",
-      "Gemini",
-      "composite",
-      "asteroid",
-      "night sky"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Samyang 14mm f2.8",
@@ -621,14 +439,6 @@
     "date": "01-01-2025",
     "intro": "Long-exposure images that reveal the apparent motion of the stars as the Earth rotates — each arc a record of time passing, the fixed geometry of the sky turned into a visual record of our planet's movement.",
     "body": "Star trail photography captures something that the eye alone cannot perceive — the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the celestial pole, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.\n\nThese images can be created either through a single very long exposure or by stacking many shorter exposures — the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.\n\nThe time-lapse videos in the gallery show the same phenomenon in motion — the still composites and the video sequences complement each other, the stills showing the full geometry of the night's movement and the videos making the rotation viscerally apparent.",
-    "tags": [
-      "star trails",
-      "long exposure",
-      "Earth rotation",
-      "night sky",
-      "time-lapse",
-      "landscape astrophotography"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Various",
@@ -668,14 +478,6 @@
     "date": "01-01-2025",
     "intro": "Long-exposure images stitched together that reveal the apparent motion of the stars as the Earth rotates — each arc a record of time passing, the fixed geometry of the sky turned into a visual record of our planet's movement.",
     "body": "Star trail photography captures something that the eye alone cannot perceive — the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the celestial pole, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.\n\nThese images can be created either through a single very long exposure or by stacking many shorter exposures — the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.\n\nThe time-lapse videos in the gallery show the same phenomenon in motion — the still composites and the video sequences complement each other, the stills showing the full geometry of the night's movement and the videos making the rotation viscerally apparent.",
-    "tags": [
-      "star trails",
-      "long exposure",
-      "Earth rotation",
-      "night sky",
-      "time-lapse",
-      "landscape astrophotography"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Various",
@@ -707,14 +509,6 @@
     "date": "01-10-2024",
     "intro": "Visitors from the outer Solar System, comets are among the most dynamic and unpredictable targets in astrophotography — each one unique, each one changing from night to night as it sweeps around the Sun.",
     "body": "Comets are ancient bodies, remnants from the formation of the Solar System, preserved in deep freeze in the outer reaches beyond Neptune. When their orbits bring them toward the inner Solar System, the Sun's heat begins to sublimate their ices — releasing gas and dust that forms the distinctive coma and tail that makes them visible from Earth.\n\nThe ion tail always points directly away from the Sun, pushed by the solar wind. The dust tail curves gently behind the comet's path, following its orbit. The two tails often have slightly different colours and structures, and both change on timescales of hours as the comet's activity fluctuates.\n\nComets present a unique tracking challenge — they move against the background stars, meaning a long exposure will either trail the comet nucleus or trail the stars. Many astrophotographers capture separate exposures tracked on the comet and on the stars, then combine them in processing.",
-    "tags": [
-      "comet",
-      "Solar System",
-      "ion tail",
-      "dust tail",
-      "coma",
-      "perihelion"
-    ],
     "section": "gallery",
     "specs": {
       "telescope": "Various",

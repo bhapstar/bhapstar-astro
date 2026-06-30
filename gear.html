@@ -98,7 +98,8 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       transition: background 180ms ease, border-color 180ms ease,
-                  transform 180ms cubic-bezier(0.34,1.56,0.64,1);
+                  transform 180ms cubic-bezier(0.34,1.56,0.64,1),
+                  opacity 300ms ease;
       touch-action: manipulation;
       -webkit-tap-highlight-color: rgba(167,139,250,0.25);
       user-select: none;
@@ -143,12 +144,155 @@
 
     #dvCount {
       position: absolute;
-      bottom: 18px; left: 16px;
+      bottom: 14px; left: 50%;
+      transform: translateX(-50%);
       font-size: 13px;
       color: rgba(255,255,255,0.65);
       text-shadow: 0 2px 8px rgba(0,0,0,0.6);
       pointer-events: none;
       z-index: 8;
+    }
+
+    /* ── Auto-hide chrome when idle ── */
+    #dvCount { transition: opacity 300ms ease; }
+    #detailView.dv-idle .dv-ctrl,
+    #detailView.dv-idle .dv-nav,
+    #detailView.dv-idle #dvCount {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Options button + menu (zoom / information) ── */
+    #dvToolsBtn { top: 14px; right: 14px; }
+    #dvToolsMenu {
+      position: absolute;
+      top: 66px; right: 14px;
+      z-index: 12;
+      min-width: 178px;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(5,4,20,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 44px rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.97);
+      transform-origin: top right;
+      pointer-events: none;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1),
+                  visibility 0s linear 220ms;
+    }
+    #dvToolsMenu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      transition: opacity 180ms ease,
+                  transform 220ms cubic-bezier(0.16,1,0.3,1);
+    }
+    #dvToolsMenu .dv-ctrl {
+      position: static;
+      width: 100%;
+      height: auto;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 11px;
+      padding: 9px 12px;
+      color: rgba(230,228,245,0.86);
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transform: none;
+    }
+    #dvToolsMenu .dv-ctrl svg { flex-shrink: 0; }
+    #dvToolsMenu .dv-ctrl:hover {
+      background: rgba(167,139,250,0.10);
+      border: 0;
+      transform: none;
+      color: #fff;
+    }
+    #dvToolsMenu #dvZoomBtn.active {
+      background: rgba(167,139,250,0.16);
+      border: 0;
+      box-shadow: none;
+      color: #c4b5fd;
+    }
+    .dvt-label { pointer-events: none; }
+
+    /* ── Basic info popup ── */
+    .dv-detail {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 220ms ease, visibility 0s linear 220ms;
+    }
+    .dv-detail.open { opacity: 1; visibility: visible; transition: opacity 220ms ease; }
+    .dv-detail-scrim {
+      position: absolute; inset: 0;
+      background: rgba(3,2,12,0.74);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .dv-detail-card {
+      position: relative;
+      width: min(560px, 100%);
+      max-height: min(86%, 700px);
+      overflow-y: auto;
+      padding: 30px 32px 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(10,9,28,0.97);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+      color: rgba(232,230,247,0.92);
+      transform: translateY(10px) scale(0.985);
+      transition: transform 260ms cubic-bezier(0.16,1,0.3,1);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,139,250,0.25) transparent;
+    }
+    .dv-detail.open .dv-detail-card { transform: translateY(0) scale(1); }
+    .dv-detail-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border: 0; border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      color: rgba(232,230,247,0.8);
+      font-size: 14px; cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .dv-detail-close:hover { background: rgba(167,139,250,0.18); color: #fff; }
+    .dv-detail-title {
+      font-size: 23px; font-weight: 600; line-height: 1.2;
+      margin: 0 0 14px; padding-right: 30px; color: #fff;
+    }
+    .dv-detail-desc {
+      font-size: 14.5px; line-height: 1.65;
+      color: rgba(232,230,247,0.84);
+    }
+    #dvBasic .dv-thumbs { justify-content: center; }
+    @media (max-width: 768px) {
+      .dv-detail { padding: 14px; }
+      .dv-detail-card { padding: 24px 20px 22px; max-height: 88%; }
+      .dv-detail-title { font-size: 20px; }
     }
 
     .dv-image-panel.dv-zoomed { cursor: grab; }
@@ -248,11 +392,11 @@
       }
       .dv-info-panel.collapsed { width: 100%; max-height: 0; opacity: 0; padding: 0; }
       #dvBack    { top: 10px; left: 10px; }
-      #dvZoomBtn { top: 10px; right: 10px; }
-      #dvInfoBtn { bottom: 10px; right: 10px; }
+      #dvToolsBtn  { top: 10px; right: 10px; }
+      #dvToolsMenu { top: 58px; right: 10px; }
       .dv-nav.prev { left: 10px; }
       .dv-nav.next { right: 10px; }
-      #dvCount { bottom: 58px; left: 10px; font-size: 12px; }
+      #dvCount { bottom: 12px; left: 50%; transform: translateX(-50%); right: auto; font-size: 12px; }
       .dv-ctrl { width: 40px; height: 40px; }
       .dv-nav  { width: 46px; height: 46px; }
     }
@@ -489,12 +633,34 @@
       Gear
     </button>
 
-    <button class="dv-ctrl" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
-        <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    <!-- Options button — top-right (zoom, information) -->
+    <button class="dv-ctrl" id="dvToolsBtn" aria-label="Options" aria-haspopup="true" aria-expanded="false" type="button">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <line x1="2.5" y1="5" x2="13.5" y2="5"/>
+        <circle cx="6" cy="5" r="1.7"/>
+        <line x1="2.5" y1="11" x2="13.5" y2="11"/>
+        <circle cx="10.5" cy="11" r="1.7"/>
       </svg>
     </button>
+
+    <!-- Options menu popover -->
+    <div id="dvToolsMenu" role="menu" aria-label="Options">
+      <button class="dv-ctrl dv-tools-item" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="dvt-label">Zoom</span>
+      </button>
+      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Image information" aria-haspopup="dialog" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
+        </svg>
+        <span class="dvt-label">Information</span>
+      </button>
+    </div>
 
     <button class="dv-ctrl dv-nav prev" id="dvPrev" aria-label="Previous image">‹</button>
     <button class="dv-ctrl dv-nav next" id="dvNext" aria-label="Next image">›</button>
@@ -503,14 +669,17 @@
 
     <div id="dvCount" aria-hidden="true"></div>
 
-    <button class="dv-ctrl" id="dvInfoBtn" aria-label="Show image information" aria-expanded="true">ⓘ</button>
-
   </div>
 
-  <div class="dv-info-panel" id="dvInfoPanel">
-    <div class="dv-info-title" id="dvTitle"></div>
-    <div class="dv-info-desc"  id="dvDesc"></div>
-    <div class="dv-thumbs"     id="dvThumbs"></div>
+  <!-- Basic info popup (title, description, image thumbnails) -->
+  <div id="dvBasic" class="dv-detail" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image information">
+    <div class="dv-detail-scrim" data-basic-close></div>
+    <div class="dv-detail-card">
+      <button class="dv-detail-close" id="dvBasicClose" aria-label="Close information" type="button">✕</button>
+      <h2 class="dv-detail-title" id="dvTitle"></h2>
+      <div class="dv-detail-desc"  id="dvDesc"></div>
+      <div class="dv-thumbs"       id="dvThumbs"></div>
+    </div>
   </div>
 
 </div>
@@ -535,6 +704,10 @@
   const dvZoomBtn  = document.getElementById('dvZoomBtn');
   const dvImgPanel = document.getElementById('dvImagePanel');
   const dvThumbs   = document.getElementById('dvThumbs');
+  const dvToolsBtn  = document.getElementById('dvToolsBtn');
+  const dvToolsMenu = document.getElementById('dvToolsMenu');
+  const dvBasic       = document.getElementById('dvBasic');
+  const dvBasicClose  = document.getElementById('dvBasicClose');
 
   if (!grid || !dv) return;
 
@@ -682,16 +855,38 @@
     dvImgPanel.addEventListener('mouseleave', () => { zoomDragging = false; });
   }
 
-  /* ── Info panel ── */
-  function openInfo() {
-    dvInfoPanel?.classList.remove('collapsed');
-    dvInfoBtn?.setAttribute('aria-expanded', 'true');
-    infoVisible = true;
+  /* ── Basic info popup ── */
+  function openBasicInfo() {
+    if (!dvBasic || !currentItem) return;
+    const card = dvBasic.querySelector('.dv-detail-card');
+    if (card) card.scrollTop = 0;
+    dvBasic.classList.add('open');
+    dvBasic.setAttribute('aria-hidden', 'false');
+    if (dvBasicClose) dvBasicClose.focus();
   }
-  function closeInfo() {
-    dvInfoPanel?.classList.add('collapsed');
-    dvInfoBtn?.setAttribute('aria-expanded', 'false');
-    infoVisible = false;
+  function closeBasicInfo() {
+    if (!dvBasic) return;
+    dvBasic.classList.remove('open');
+    dvBasic.setAttribute('aria-hidden', 'true');
+  }
+
+  /* ── Auto-hide chrome when idle ── */
+  let idleTimer = null;
+  const IDLE_DELAY = 2000;
+  function revealChrome() { dv.classList.remove('dv-idle'); }
+  function hideChrome() {
+    if (!dv.classList.contains('open')) return;
+    if (dvToolsMenu && dvToolsMenu.classList.contains('open')) return;
+    dv.classList.add('dv-idle');
+  }
+  function pokeChrome() {
+    revealChrome();
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(hideChrome, IDLE_DELAY);
+  }
+  function stopChrome() {
+    clearTimeout(idleTimer);
+    revealChrome();
   }
 
   /* ── Thumbnail strip in sidebar ── */
@@ -740,6 +935,8 @@
   /* ── Show current image ── */
   function showDv() {
     zoomDisable();
+    pokeChrome();
+    closeBasicInfo();
     const cur = dvList[dvIdx];
     dvTitle.textContent = currentItem?.title || '';
     dvDesc.textContent  = cur.desc || currentItem?.desc || '';
@@ -753,7 +950,6 @@
     dvImg.src = cur.file;
     dvImg.alt = cur.alt || currentItem?.title || '';
 
-    infoVisible ? openInfo() : closeInfo();
     renderThumbs();
     preloadAdjacent();
   }
@@ -790,6 +986,8 @@
 
   function closeDetail(fromHistory) {
     zoomDisable();
+    stopChrome();
+    closeBasicInfo();
     dv.classList.remove('open');
     dv.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('detail-open', 'noscroll');
@@ -915,8 +1113,58 @@
 
     addTapHandler(dvInfoBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      infoVisible ? closeInfo() : openInfo();
-      dvInfoBtn.setAttribute('aria-label', infoVisible ? 'Show image information' : 'Hide image information');
+      if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
+      openBasicInfo();
+    });
+
+    /* ── Options menu (zoom / information) ── */
+    if (dvToolsBtn && dvToolsMenu) {
+      function closeToolsMenu() {
+        dvToolsMenu.classList.remove('open');
+        dvToolsBtn.setAttribute('aria-expanded', 'false');
+      }
+      function openToolsMenu() {
+        dvToolsMenu.classList.add('open');
+        dvToolsBtn.setAttribute('aria-expanded', 'true');
+      }
+      addTapHandler(dvToolsBtn, (e) => {
+        if (e.stopPropagation) e.stopPropagation();
+        dvToolsMenu.classList.contains('open') ? closeToolsMenu() : openToolsMenu();
+      });
+      document.addEventListener('click', (e) => {
+        if (!dvToolsMenu.classList.contains('open')) return;
+        if (dvToolsMenu.contains(e.target) || dvToolsBtn.contains(e.target)) return;
+        closeToolsMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvToolsMenu.classList.contains('open')) {
+          e.stopPropagation();
+          closeToolsMenu();
+        }
+      }, true);
+    }
+
+    /* ── Basic info popup close handlers ── */
+    if (dvBasic) {
+      if (dvBasicClose) addTapHandler(dvBasicClose, (e) => { if (e.stopPropagation) e.stopPropagation(); closeBasicInfo(); });
+      dvBasic.addEventListener('click', (e) => {
+        if (e.target === dvBasic || e.target.hasAttribute('data-basic-close')) closeBasicInfo();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dvBasic.classList.contains('open')) {
+          e.stopPropagation();
+          closeBasicInfo();
+        }
+      }, true);
+    }
+
+    /* ── Auto-hide: reveal chrome on interaction ── */
+    ['mousemove','pointerdown','touchstart','touchmove','touchend'].forEach((evt) =>
+      dvImgPanel.addEventListener(evt, pokeChrome, { passive: true })
+    );
+    dv.addEventListener('focusin', pokeChrome);
+    document.addEventListener('keydown', () => {
+      if (dv.classList.contains('open')) pokeChrome();
     });
 
     addTapHandler(dvPrev, (e) => {
