@@ -66,6 +66,25 @@
     }
   },
   {
+  "file": "images/cats_paw_nebula_ngc6334.webp",
+  "title": "The Cat's Paw Nebula (NGC 6334)",
+  "desc": "An emission nebula in Scorpius and one of the most active star-forming regions in the Milky Way. The rounded lobes of glowing hydrogen that give the nebula its paw-print shape mark pockets where tens of thousands of stars have formed over the past few million years (note this is a balcony shot, imaged over 2 nighta from bortle 8 skies).",
+  "alt": "Cat's Paw Nebula NGC 6334 astrophotography",
+  "type": "nebulae",
+  "slug": "cats-paw-nebula-ngc6334",
+  "date": "26-06-2026",
+  "intro": "The Cat's Paw Nebula is a large emission nebula in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.",
+  "body": "The Cat's Paw Nebula (NGC 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy — its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.\n\nThe emission is dominated by hydrogen-alpha, so it responds very well to narrowband and dual-band filters — the paw structure and the dark dust lanes separating the lobes come through strongly even at modest integration. At a southern declination of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.",
+  "section": "gallery",
+  "specs": {
+      "telescope": "Askar V (80mm) native",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "Optolong L-eXtreme",
+      "integration": "6 hours",
+      "location": "Dubai, UAE"
+  }
+},
+  {
     "file": "images/christmas-tree-nebula-ngc2264.webp",
     "title": "The Christmas Tree Nebula (NGC 2264)",
     "desc": "A rich and chaotic star-forming region where glowing emission nebulae intertwine with dense, cold dust. The Cone Nebula stands as a towering pillar of molecular gas, sculpted by ultraviolet radiation from nearby massive stars.",
