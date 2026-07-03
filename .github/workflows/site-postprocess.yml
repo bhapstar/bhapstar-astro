@@ -1,43 +1,67 @@
-name: Bust SW cache on deploy
+name: Build & deploy site to Pages
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # commit regenerated files back
+  pages: write      # deploy to Pages
+  id-token: write   # verify deploy origin
+
+# Queue deployments instead of letting them collide — this is what kills
+# the "Deployment failed, try again later" error for good.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  bust-cache:
+  build-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Regenerate sitemap + structured data
+        run: |
+          python generate-sitemap.py
+          python generate-schema.py
 
       - name: Bump SW cache version
         run: |
           COMMIT=$(git rev-parse --short HEAD)
           sed -i "s/const CACHE_VERSION = 'bhapstar-[^']*'/const CACHE_VERSION = 'bhapstar-${COMMIT}'/" sw.js
 
-      - name: Commit updated sw.js
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Commit regenerated files back
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sw.js
+          git add sitemap.xml gallery.html field_notes.html sw.js
           if git diff --staged --quiet; then
-            echo "No SW change needed."
+            echo "Nothing to commit."
           else
-            git commit -m "chore: bump SW cache version"
-            # Another workflow (regenerate-sitemap) also runs on pushes that
-            # touch site-data.json and may push first. Rebase before pushing,
-            # retrying a few times in case of further timing luck.
-            success=0
-            for i in 1 2 3 4 5; do
-              if git pull --rebase origin main && git push; then
-                success=1
-                break
-              fi
-              echo "Push attempt $i failed (likely lost a race with another workflow) — retrying in 5s..."
-              sleep 5
-            done
-            if [ "$success" -ne 1 ]; then
-              echo "Could not push after 5 attempts." >&2
-              exit 1
-            fi
+            git commit -m "Auto: regenerate sitemap + structured data, bump SW cache"
+            git pull --rebase origin main
+            git push
           fi
