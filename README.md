@@ -66,6 +66,7 @@ Every page carries Open Graph and Twitter Card meta tags. Because link crawlers 
 - Vanilla HTML, CSS, and JavaScript — no framework, no build tooling
 - Static hosting via GitHub Pages with a custom domain
 - Progressive Web App (PWA) support via `manifest.json` and `sw.js`
+- Service-worker caching (`sw.js`): the shell — HTML, CSS, JS, and partials — is **network-first** (bypassing the HTTP cache with `no-store`, falling back to cache only when offline); `*-data.json` feeds are **stale-while-revalidate**; images are **cache-first** (long-lived); external requests (analytics, fonts, Formspree, Vimeo, likes API) are **network-only**. The SW is disabled on `localhost`/`127.0.0.1` so Live Server hot-reload works, and activating a new version reloads open tabs
 - Cloudflare Analytics; a Cloudflare Worker backs the image "likes" system
 - Canonical tags on all pages
 - Open Graph / Twitter Card previews, with per-image share pages (see above)
