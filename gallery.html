@@ -795,17 +795,20 @@
     .dv-nav.prev  { left: 14px; }
     .dv-nav.next  { right: 14px; }
 
-    /* Image title — bottom centre, above the count badge.
+    /* Image title — top right, just left of the Options button.
        Uses the same scrolling gradient as the info-popup title. */
     #dvCaption {
       position: absolute;
-      bottom: 40px; left: 50%;
-      transform: translateX(-50%);
-      max-width: min(80%, 620px);
-      text-align: center;
+      top: 14px; right: 68px; left: auto;
+      height: 44px;
+      line-height: 44px;
+      max-width: min(46vw, 440px);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: 15px;
       font-weight: 600;
-      line-height: 1.3;
       letter-spacing: 0.01em;
       color: transparent;
       background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
@@ -1383,7 +1386,7 @@
       #dvShareMenu { top: 58px; right: 10px; }
       .dv-nav.prev { left: 10px; }
       .dv-nav.next { right: 10px; }
-      #dvCaption { bottom: 34px; font-size: 13.5px; max-width: 86%; }
+      #dvCaption { top: 10px; right: 56px; bottom: auto; height: 40px; line-height: 40px; font-size: 13px; max-width: 52vw; }
       #dvCount { bottom: 12px; left: 50%; transform: translateX(-50%); right: auto; font-size: 12px; }
 
       .dv-ctrl { width: 40px; height: 40px; }
@@ -2291,6 +2294,21 @@
     };
   }
 
+  /* Shrink the top-right title until it fits its max-width (down to a
+     floor), so long names scale down instead of being clipped. */
+  function fitCaption() {
+    if (!dvCaption || !dvCaption.textContent) return;
+    dvCaption.style.fontSize = '';                 // reset to CSS base (15 / 13 mobile)
+    let size = parseFloat(getComputedStyle(dvCaption).fontSize) || 15;
+    const MIN = 10;
+    let guard = 0;
+    while (dvCaption.scrollWidth > dvCaption.clientWidth && size > MIN && guard < 40) {
+      size -= 0.5;
+      dvCaption.style.fontSize = size + 'px';
+      guard++;
+    }
+  }
+
   /* ══════════════════════════════════════
      SHOW CURRENT IMAGE
   ══════════════════════════════════════ */
@@ -2307,7 +2325,7 @@
     requestAnimationFrame(() => {
       dvTitle.textContent = snapItem?.title || '';
       dvDesc.textContent  = snapItem?.desc  || '';
-      if (dvCaption) dvCaption.textContent = snapItem?.title || '';
+      if (dvCaption) { dvCaption.textContent = snapItem?.title || ''; fitCaption(); }
       if (snapItem?.title) document.title = `${snapItem.title} — Bhapstar Astrophotography`;
       dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
 
@@ -3210,7 +3228,11 @@
       }, { passive: true });
     }
 
-    /* ── Resize: re-render chaos on width change ── */
+    /* ── Resize: re-fit the title, and re-render chaos on width change ── */
+    window.addEventListener('resize', () => {
+      if (dv.classList.contains('open')) fitCaption();
+    });
+
     let resizeTimer; let lastResizeW = window.innerWidth;
     window.addEventListener('resize', () => {
       if (currentView !== 'chaos') return;
