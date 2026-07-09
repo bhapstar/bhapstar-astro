@@ -142,6 +142,35 @@
     .dv-nav.prev  { left: 14px; }
     .dv-nav.next  { right: 14px; }
 
+    /* Image title — top right, just left of the Options button.
+       Uses the same scrolling gradient as the info-popup title. */
+    #dvCaption {
+      position: absolute;
+      top: 14px; right: 68px; left: auto;
+      height: 44px;
+      line-height: 44px;
+      max-width: min(46vw, 440px);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: transparent;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientRoll 4s linear infinite reverse;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+      pointer-events: none;
+      z-index: 8;
+      transition: opacity 300ms ease;
+    }
+    #dvCaption:empty { display: none; }
+
     #dvCount {
       position: absolute;
       bottom: 14px; left: 50%;
@@ -157,6 +186,7 @@
     #dvCount { transition: opacity 300ms ease; }
     #detailView.dv-idle .dv-ctrl,
     #detailView.dv-idle .dv-nav,
+    #detailView.dv-idle #dvCaption,
     #detailView.dv-idle #dvCount {
       opacity: 0;
       pointer-events: none;
@@ -422,6 +452,7 @@
       #dvToolsMenu { top: 58px; right: 10px; }
       .dv-nav.prev { left: 10px; }
       .dv-nav.next { right: 10px; }
+      #dvCaption { top: 10px; right: 56px; bottom: auto; height: 40px; line-height: 40px; font-size: 13px; max-width: 52vw; }
       #dvCount { bottom: 12px; left: 50%; transform: translateX(-50%); right: auto; font-size: 12px; }
       .dv-ctrl { width: 40px; height: 40px; }
       .dv-nav  { width: 46px; height: 46px; }
@@ -693,6 +724,8 @@
 
     <img id="dvImg" alt="" src="" />
 
+    <div id="dvCaption" aria-hidden="true"></div>
+
     <div id="dvCount" aria-hidden="true"></div>
 
   </div>
@@ -725,6 +758,7 @@
   const dvTitle    = document.getElementById('dvTitle');
   const dvDesc     = document.getElementById('dvDesc');
   const dvCount    = document.getElementById('dvCount');
+  const dvCaption  = document.getElementById('dvCaption');
   const dvBack     = document.getElementById('dvBack');
   const dvPrev     = document.getElementById('dvPrev');
   const dvNext     = document.getElementById('dvNext');
@@ -962,6 +996,24 @@
     });
   }
 
+  /* Shrink the top-right title until it fits its max-width (down to a
+     floor), so long names scale down instead of being clipped. */
+  function fitCaption() {
+    if (!dvCaption || !dvCaption.textContent) return;
+    dvCaption.style.fontSize = '';                 // reset to CSS base (15 / 13 mobile)
+    let size = parseFloat(getComputedStyle(dvCaption).fontSize) || 15;
+    const MIN = 10;
+    let guard = 0;
+    while (dvCaption.scrollWidth > dvCaption.clientWidth && size > MIN && guard < 40) {
+      size -= 0.5;
+      dvCaption.style.fontSize = size + 'px';
+      guard++;
+    }
+  }
+  window.addEventListener('resize', () => {
+    if (dv.classList.contains('open')) fitCaption();
+  });
+
   /* ── Show current image ── */
   function showDv() {
     zoomDisable();
@@ -969,6 +1021,7 @@
     closeBasicInfo();
     const cur = dvList[dvIdx];
     dvTitle.textContent = currentItem?.title || '';
+    if (dvCaption) { dvCaption.textContent = currentItem?.title || ''; fitCaption(); }
     dvDesc.textContent  = cur.desc || currentItem?.desc || '';
     dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
     if (currentItem?.title) document.title = `${currentItem.title} — Bhapstar Astrophotography`;
@@ -1023,6 +1076,7 @@
     document.body.classList.remove('detail-open', 'noscroll');
     dvImg.src = '';
     dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    if (dvCaption) dvCaption.textContent = '';
     if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
