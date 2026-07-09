@@ -1693,6 +1693,25 @@
 
     <!-- Options menu popover -->
     <div id="dvToolsMenu" role="menu" aria-label="Options">
+      <!-- Information (toggles the info sidebar) -->
+      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Image information" aria-haspopup="dialog" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
+        </svg>
+        <span class="dvt-label">Information</span>
+      </button>
+
+      <!-- Like -->
+      <button class="dv-ctrl dv-tools-item" id="dvLikeBtn" aria-label="Like this image" type="button">
+        <span class="like-heart" aria-hidden="true">♡</span>
+        <span class="dvt-label">Like</span>
+        <span class="like-count"></span>
+      </button>
+
+      <div class="dvs-sep" aria-hidden="true"></div>
+
       <!-- Zoom -->
       <button class="dv-ctrl dv-tools-item" id="dvZoomBtn" aria-label="Toggle zoom" aria-pressed="false">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -1712,23 +1731,6 @@
       </button>
 
       <div class="dvs-sep" aria-hidden="true"></div>
-
-      <!-- Information (toggles the info sidebar) -->
-      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Image information" aria-haspopup="dialog" type="button">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
-        </svg>
-        <span class="dvt-label">Information</span>
-      </button>
-
-      <!-- Like -->
-      <button class="dv-ctrl dv-tools-item" id="dvLikeBtn" aria-label="Like this image" type="button">
-        <span class="like-heart" aria-hidden="true">♡</span>
-        <span class="dvt-label">Like</span>
-        <span class="like-count"></span>
-      </button>
 
       <!-- Share (opens the share networks submenu) -->
       <button class="dv-ctrl dv-tools-item" id="dvShareBtn" aria-label="Share this image" aria-haspopup="true" aria-expanded="false" type="button">
