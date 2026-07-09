@@ -2937,6 +2937,7 @@
     /* ── Share ── */
     if (dvShareBtn && dvShareMenu) {
       const SHARE_BASE   = 'https://bhapstar.com/gallery.html';
+      const SHARE_PAGES  = 'https://bhapstar.com/share/';
       const SHARE_ORIGIN = 'https://bhapstar.com/';
       const SHARE_OG     = 'https://bhapstar.com/images/icons/og-preview.jpg';
 
@@ -2944,7 +2945,10 @@
         const item = currentItem;
         const cur  = dvList[dvIdx];
         const slug = itemSlug(item);
-        const url  = slug ? SHARE_BASE + '#' + encodeURIComponent(slug) : SHARE_BASE;
+        // Share the per-image page (share/<slug>.html) so link previews on X,
+        // Facebook, WhatsApp etc. show THIS image. That page carries the
+        // correct og:image and redirects human visitors to gallery.html#slug.
+        const url  = slug ? SHARE_PAGES + encodeURIComponent(slug) + '.html' : SHARE_BASE;
         const title = (item && item.title) ? item.title : 'Bhapstar Astrophotography';
         const text  = title + ' — astrophotography by Bhapstar';
         let image = SHARE_OG;
