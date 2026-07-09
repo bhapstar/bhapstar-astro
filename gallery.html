@@ -795,10 +795,36 @@
     .dv-nav.prev  { left: 14px; }
     .dv-nav.next  { right: 14px; }
 
+    /* Image title — bottom centre, above the count badge.
+       Uses the same scrolling gradient as the info-popup title. */
+    #dvCaption {
+      position: absolute;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      max-width: min(80%, 620px);
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+      color: transparent;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientRoll 4s linear infinite reverse;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+      pointer-events: none;
+      z-index: 8;
+      transition: opacity 300ms ease;
+    }
+    #dvCaption:empty { display: none; }
+
     /* Image count badge — bottom centre */
     #dvCount {
       position: absolute;
-      bottom: 14px; left: 50%;
+      bottom: 16px; left: 50%;
       transform: translateX(-50%);
       font-size: 13px;
       color: rgba(255,255,255,0.65);
@@ -974,6 +1000,7 @@
     #dvCount { transition: opacity 300ms ease; }
     #detailView.dv-idle .dv-ctrl,
     #detailView.dv-idle .dv-nav,
+    #detailView.dv-idle #dvCaption,
     #detailView.dv-idle #dvCount {
       opacity: 0;
       pointer-events: none;
@@ -1356,6 +1383,7 @@
       #dvShareMenu { top: 58px; right: 10px; }
       .dv-nav.prev { left: 10px; }
       .dv-nav.next { right: 10px; }
+      #dvCaption { bottom: 34px; font-size: 13.5px; max-width: 86%; }
       #dvCount { bottom: 12px; left: 50%; transform: translateX(-50%); right: auto; font-size: 12px; }
 
       .dv-ctrl { width: 40px; height: 40px; }
@@ -1558,7 +1586,7 @@
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
         <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or swipe to navigate. Use the magnify button to zoom. Use the rotate button to rotate.</p><br>
-        <p class="gallery-hint">For more on each image — how it was captured, the equipment and conditions, and the story behind it — open any image and choose <strong>Detailed info</strong> from the options menu.</p><br>
+        <p class="gallery-hint">For more on each image (how it was captured, the equipment and conditions, and the story behind it) open any image and choose <strong>Information</strong> from the options menu.</p><br>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
           <div class="filter-select-wrap">
@@ -1722,6 +1750,9 @@
     <!-- Vimeo video -->
     <div id="dvVid" aria-hidden="true"></div>
     <div id="dvVidSwipeOverlay" aria-hidden="true"></div>
+
+    <!-- Image title -->
+    <div id="dvCaption" aria-hidden="true"></div>
 
     <!-- Image count badge -->
     <div id="dvCount" aria-hidden="true"></div>
@@ -1950,6 +1981,7 @@
   const dvTitle     = document.getElementById('dvTitle');
   const dvDesc      = document.getElementById('dvDesc');
   const dvCount     = document.getElementById('dvCount');
+  const dvCaption   = document.getElementById('dvCaption');
   const dvBack      = document.getElementById('dvBack');
   const dvPrev      = document.getElementById('dvPrev');
   const dvNext      = document.getElementById('dvNext');
@@ -2275,6 +2307,7 @@
     requestAnimationFrame(() => {
       dvTitle.textContent = snapItem?.title || '';
       dvDesc.textContent  = snapItem?.desc  || '';
+      if (dvCaption) dvCaption.textContent = snapItem?.title || '';
       if (snapItem?.title) document.title = `${snapItem.title} — Bhapstar Astrophotography`;
       dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
 
@@ -2392,6 +2425,7 @@
     if (dvVid) { dvVid.innerHTML = ''; dvVid.style.display = 'none'; }
     dvImg.src = ''; dvImg.style.display = 'block';
     dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    if (dvCaption) dvCaption.textContent = '';
     if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
     infoVisible = true;
