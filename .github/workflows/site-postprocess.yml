@@ -31,10 +31,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Regenerate sitemap + structured data
+      - name: Regenerate sitemap + structured data + share pages
         run: |
           python generate-sitemap.py
           python generate-schema.py
+          python generate-share-pages.py
 
       - name: Bump SW cache version
         run: |
@@ -57,11 +58,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sitemap.xml gallery.html field_notes.html sw.js
+          git add sitemap.xml gallery.html field_notes.html sw.js share
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "Auto: regenerate sitemap + structured data, bump SW cache"
+            git commit -m "Auto: regenerate sitemap + structured data + share pages, bump SW cache"
             git pull --rebase origin main
             git push
           fi
