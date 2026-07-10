@@ -2365,13 +2365,22 @@
 
       if (dvVidSwipeOverlay) dvVidSwipeOverlay.style.display = 'none';
 
-      // Swap src while invisible, fade in only after the new frame decodes.
-      // decode()-gating (not a blind double-rAF) stops iOS Safari compositing the
-      // previous image's stale tiles during the transition — the ghosting fix.
+      // iOS Safari on older iPads keeps the previously shown image's composited
+      // GPU tiles alive when the <img> box changes between frames, so ghosts of
+      // prior images stack up on navigation. Detaching and re-inserting the SAME
+      // element forces WebKit to discard that backing store and build a fresh
+      // layer. Safe here: every gesture listener is bound to .dv-image-panel (the
+      // parent), and zoom/rotate transforms were already cleared by resetRotation()
+      // at the top of showDv(), so re-inserting the child loses nothing.
       const nextSrc = cur.file;
       dvImg.style.transition = 'none';
       dvImg.style.opacity = '0';
       dvImg.style.display = 'block';
+
+      const _imgParent = dvImg.parentNode;
+      const _imgAnchor = dvImg.nextSibling;
+      if (_imgParent) { _imgParent.removeChild(dvImg); _imgParent.insertBefore(dvImg, _imgAnchor); }
+
       dvImg.src = nextSrc;
       dvImg.alt = cur.alt || snapItem?.title || '';
 
