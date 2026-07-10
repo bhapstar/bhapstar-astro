@@ -2342,14 +2342,16 @@
       dvPrev.style.display = canNav ? '' : 'none';
       dvNext.style.display = canNav ? '' : 'none';
 
-      dvImg.style.display = 'none';
-      dvImg.src = '';
+      // Don't blank the <img> here — clearing src while it's a composited layer
+      // leaves stale tiles on iOS Safari (ghost of the previous image). The image
+      // src is swapped atomically below; only tear down video here.
       if (dvVid) { dvVid.style.display = 'none'; dvVid.innerHTML = ''; }
 
       // Always render thumbs regardless of item type, so strip clears on vimeo items
       renderThumbs();
 
       if (cur.kind === 'vimeo') {
+        dvImg.style.display = 'none';
         dvVid.style.display = 'block';
         if (dvVidSwipeOverlay) dvVidSwipeOverlay.style.display = '';
         const id = encodeURIComponent(cur.vimeoId);
@@ -2362,18 +2364,27 @@
       }
 
       if (dvVidSwipeOverlay) dvVidSwipeOverlay.style.display = 'none';
-      // Fade out, swap src, fade in
+
+      // Swap src while invisible, fade in only after the new frame decodes.
+      // decode()-gating (not a blind double-rAF) stops iOS Safari compositing the
+      // previous image's stale tiles during the transition — the ghosting fix.
+      const nextSrc = cur.file;
       dvImg.style.transition = 'none';
       dvImg.style.opacity = '0';
       dvImg.style.display = 'block';
-      dvImg.src = cur.file;
+      dvImg.src = nextSrc;
       dvImg.alt = cur.alt || snapItem?.title || '';
-      requestAnimationFrame(() => {
+
+      const fadeIn = () => {
+        if (dvImg.getAttribute('src') !== nextSrc) return; // navigated again mid-decode
         requestAnimationFrame(() => {
           dvImg.style.transition = '';
           dvImg.style.opacity = '1';
         });
-      });
+      };
+      if (dvImg.decode) { dvImg.decode().then(fadeIn).catch(fadeIn); }
+      else { requestAnimationFrame(() => requestAnimationFrame(fadeIn)); }
+
       preloadAdjacent();
     });
   }
