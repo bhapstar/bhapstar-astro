@@ -101,8 +101,12 @@ const HIDE_FIELD_NOTES = true;
 
 
   try {
-    await loadInto('siteHeader', 'partials/header.html');
-    await loadInto('siteFooter', 'partials/footer.html');
+    // Root-absolute URLs: GitHub Pages serves 404.html for nested missing
+    // paths (e.g. /share/typo.html), where a relative 'partials/…' would
+    // resolve to /share/partials/… and fail. All real pages live at the
+    // site root, so absolute paths behave identically for them.
+    await loadInto('siteHeader', '/partials/header.html');
+    await loadInto('siteFooter', '/partials/footer.html');
 
     /* ── Hide Instagram references (gated by HIDE_INSTAGRAM above) ── */
     if (HIDE_INSTAGRAM) {
