@@ -97,7 +97,7 @@
   .code{font-size:15px;font-weight:650;letter-spacing:.01em;}
   .name{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .amount{width:160px;flex:none;border:none;background:transparent;font-family:inherit;font-size:19px;font-weight:600;
-    text-align:right;color:var(--ink);padding:6px 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+    text-align:right;color:var(--ink);padding:6px 28px 6px 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
     outline:none;border-bottom:1.5px solid transparent;align-self:flex-start;}
   .amount::placeholder{color:var(--faint);font-weight:500;}
   .row.active .amount,.amount:focus{border-bottom-color:var(--accent);}
@@ -1089,6 +1089,23 @@
     updateCalcDisplay();
   }
   if(calcModeBtn)calcModeBtn.addEventListener("click",function(){calcState.sci=!calcState.sci;calcSave();renderCalc();});
+
+  /* ---------- calculator keyboard support (incl. numpad) ---------- */
+  var CALC_KEYMAP={"*":"\u00D7","/":"\u00F7","-":"\u2212"};
+  document.addEventListener("keydown",function(e){
+    if(!calcShown)return; // only steer keystrokes to the calculator while its panel is open
+    var ae=document.activeElement;
+    if(ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA"))return; // don't hijack typing in amount/search fields
+    var key=e.key;
+    if(key>="0"&&key<="9"){calcDo({a:"app",v:key});e.preventDefault();return;}
+    if(key==="."){calcDo({a:"app",v:"."});e.preventDefault();return;}
+    if(key==="+"||key==="-"||key==="*"||key==="/"){calcDo({a:"app",v:CALC_KEYMAP[key]||key});e.preventDefault();return;}
+    if(key==="%"){calcDo({a:"app",v:"%"});e.preventDefault();return;}
+    if(key==="("||key===")"){calcDo({a:"app",v:key});e.preventDefault();return;}
+    if(key==="Enter"||key==="="){calcDo({a:"equals"});e.preventDefault();return;}
+    if(key==="Backspace"){calcDo({a:"back"});e.preventDefault();return;}
+    if(key==="Escape"||key==="Delete"){calcDo({a:"clear"});e.preventDefault();return;}
+  });
 
   /* ---------- add-currency picker ---------- */
   var hlIndex=-1, filtered=[];
