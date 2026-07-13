@@ -1,12 +1,16 @@
 <!doctype html>
+<!-- All asset paths and links on this page are ROOT-ABSOLUTE (/styles.css,
+     /partials/partials.js, …). GitHub Pages serves this file for EVERY missing
+     URL, including nested ones like /share/typo.html — relative paths would
+     resolve under /share/ and 404, leaving the page unstyled and broken. -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
   <!-- Favicon & theme -->
-  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
-  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
 
   <!-- Error pages shouldn't be indexed, but should still be crawlable so
@@ -20,7 +24,7 @@
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
   <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
@@ -44,9 +48,9 @@
       </p>
 
       <div class="actions">
-        <a class="btn primary" href="index.html">Back to home</a>
-        <a class="btn" href="gallery.html">View the gallery</a>
-        <a class="btn" href="field_notes.html">Field Notes</a>
+        <a class="btn primary" href="/index.html">Back to home</a>
+        <a class="btn" href="/gallery.html">View the gallery</a>
+        <a class="btn" href="/field_notes.html">Field Notes</a>
       </div>
 
     </div>
@@ -56,6 +60,6 @@
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
-<script src="partials/partials.js"></script>
+<script src="/partials/partials.js"></script>
 </body>
 </html>

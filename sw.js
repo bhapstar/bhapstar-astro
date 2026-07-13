@@ -2,8 +2,8 @@
 // Bhapstar Service Worker
 // Strategy:
 //   - Shell (HTML, CSS, JS, partials)  → Network-first (fresh on every load, cache as offline fallback)
-//   - site-data.json / gear-data.json → Stale-while-revalidate
-//   - Images (.webp, .png, .jpg, .svg)  → Cache-first (long-lived assets)
+//   - site-data.json                   → Stale-while-revalidate
+//   - Images + fonts (.webp, .png, .jpg, .svg, .woff2) → Cache-first (long-lived assets)
 //   - External (Cloudflare, Formspree, Vimeo, fonts) → Network-only
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -31,17 +31,24 @@ const SHELL_ASSETS = [
   '/partials/header.html',
   '/partials/footer.html',
   '/site-data.json',
-  '/gear-data.json',
+  '/fonts/outfit-latin-wght-normal.woff2',
+  '/fonts/outfit-latin-ext-wght-normal.woff2',
   '/images/icons/favicon-32.png',
   '/images/icons/apple-touch-icon.png',
   '/images/icons/og-preview.jpg',
 ];
 
 // ── Install: pre-cache the shell ──────────────────────────────────────────────
+// Each asset is added individually via Promise.allSettled instead of
+// cache.addAll(), which is all-or-nothing: a single 404 in the list fails the
+// entire install and the SW never activates. (This is exactly what happened
+// when gear-data.json was consolidated into site-data.json but stayed in the
+// shell list — the SW was silently broken in production.) With allSettled, a
+// missing file just skips pre-caching; it still gets cached on first fetch.
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
-      .then(cache => cache.addAll(SHELL_ASSETS))
+      .then(cache => Promise.allSettled(SHELL_ASSETS.map(asset => cache.add(asset))))
       .then(() => self.skipWaiting())
   );
 });
@@ -76,14 +83,14 @@ self.addEventListener('fetch', event => {
     return; // fall through to browser default
   }
 
-  // site-data.json / gear-data.json → stale-while-revalidate
+  // site-data.json → stale-while-revalidate
   if (url.pathname.endsWith('-data.json')) {
     event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
-  // Images → cache-first (they don't change often)
-  if (/\.(webp|png|jpe?g|svg|gif)$/i.test(url.pathname)) {
+  // Images + fonts → cache-first (they don't change often)
+  if (/\.(webp|png|jpe?g|svg|gif|woff2?)$/i.test(url.pathname)) {
     event.respondWith(cacheFirst(request));
     return;
   }
