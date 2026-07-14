@@ -1701,14 +1701,18 @@
 
     <!-- Options menu popover -->
     <div id="dvToolsMenu" role="menu" aria-label="Options">
-      <!-- Information (toggles the info sidebar) -->
-      <button class="dv-ctrl dv-tools-item" id="dvInfoBtn" aria-label="Image information" aria-haspopup="dialog" type="button">
+      <!-- Image page: opens share/<slug>.html — the image's own page with
+           title, write-up and capture specs. This REPLACED the old
+           "Information" item; the dvBasic/dvDetail dialogs further down are
+           left in place but dormant (no entry point), so restoring
+           Information later is a copy-paste job. -->
+      <button class="dv-ctrl dv-tools-item" id="dvPageBtn" aria-label="Open this image’s page" type="button">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="8" y1="7.3" x2="8" y2="11.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="8" cy="4.9" r="0.65" fill="currentColor"/>
+          <path d="M6.4 3.2H4A1.3 1.3 0 0 0 2.7 4.5V12A1.3 1.3 0 0 0 4 13.3h7.5A1.3 1.3 0 0 0 12.8 12V9.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M9.3 2.7h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="7.4" y1="8.6" x2="13" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        <span class="dvt-label">Information</span>
+        <span class="dvt-label">Image page</span>
       </button>
 
       <!-- Like -->
@@ -2000,7 +2004,7 @@
   const dvPrev      = document.getElementById('dvPrev');
   const dvNext      = document.getElementById('dvNext');
   const dvLikeBtn   = document.getElementById('dvLikeBtn');
-  const dvInfoBtn   = document.getElementById('dvInfoBtn');
+  const dvPageBtn   = document.getElementById('dvPageBtn');
   const dvInfoPanel = document.getElementById('dvInfoPanel');
   const dvThumbs    = document.getElementById('dvThumbs');
   const dvZoomBtn   = document.getElementById('dvZoomBtn');
@@ -2918,6 +2922,7 @@
       }
       function openToolsMenu() {
         if (dvShareMenu) { dvShareMenu.classList.remove('open'); if (dvShareBtn) dvShareBtn.setAttribute('aria-expanded', 'false'); }
+        if (dvPageBtn) dvPageBtn.style.display = (currentItem && currentItem.slug) ? '' : 'none';
         dvToolsMenu.classList.add('open');
         dvToolsBtn.setAttribute('aria-expanded', 'true');
       }
@@ -2958,10 +2963,12 @@
       }, true);
     }
 
-    addTapHandler(dvInfoBtn, (e) => {
+    /* Options -> Image page: straight to this image's own page */
+    if (dvPageBtn) addTapHandler(dvPageBtn, (e) => {
       if (e.stopPropagation) e.stopPropagation();
-      if (dvToolsMenu) { dvToolsMenu.classList.remove('open'); if (dvToolsBtn) dvToolsBtn.setAttribute('aria-expanded', 'false'); }
-      openBasicInfo();
+      if (currentItem && currentItem.slug) {
+        location.href = `share/${currentItem.slug}.html`;
+      }
     });
 
     /* ── Basic info popup close handlers ── */

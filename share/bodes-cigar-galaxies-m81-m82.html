@@ -49,21 +49,40 @@
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; }
+    /* Capture-specs panel — mirrors the viewer's info popup tiles */
     .share-specs{
-      margin: 28px 0; padding: 18px 20px;
-      border: 1px solid var(--line); border-radius: 14px;
-      background: var(--soft);
+      margin: 28px 0; padding: 16px 14px;
+      border: 1px solid rgba(167,139,250,0.14); border-radius: 12px;
+      background: rgba(167,139,250,0.06);
     }
     .share-specs h2{
-      margin: 0 0 12px; font-size: 13px; font-weight: 700;
+      margin: 0 0 14px; font-size: 13px; font-weight: 700;
       letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+      text-align: center;
     }
-    .share-specs dl{
-      margin: 0; display: grid; grid-template-columns: auto 1fr;
-      gap: 6px 18px; font-size: 14px;
+    .share-specs-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      gap: 12px 10px;
     }
-    .share-specs dt{ color: var(--muted); }
-    .share-specs dd{ margin: 0; color: var(--text); }
+    .share-spec{
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 7px;
+    }
+    .share-spec-ico{
+      width: 22px; height: 22px;
+      display: grid; place-items: center; color: var(--accent);
+    }
+    .share-spec-ico svg{ width: 20px; height: 20px; }
+    .sr-only{
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .share-spec-val{
+      font-size: 12.5px; line-height: 1.3; font-weight: 500;
+      color: rgba(232,230,247,0.9);
+    }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
       margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
@@ -149,7 +168,6 @@
   <section class="section">
     <div class="wrap share-wrap">
       <h1>The Bode's (M81) and Cigar (M82) Galaxies</h1>
-      <p class="share-date">1 January 2025 · Al Qudra, UAE</p>
 
       <figure class="share-figure">
         <a href="/gallery.html#bodes-cigar-galaxies-m81-m82" aria-label="Open The Bode&#x27;s (M81) and Cigar (M82) Galaxies in the gallery viewer"><img src="/images/bodes-cigar-galaxies-m81-m82-2.webp" alt="Bode&#x27;s Galaxy M81 and Cigar Galaxy M82 astrophotography second render" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a>
@@ -169,13 +187,14 @@
 
       <div class="share-specs">
         <h2>Capture details</h2>
-        <dl>
-          <dt>Telescope</dt><dd>Askar V (60mm) with reducer</dd>
-          <dt>Camera</dt><dd>ZWO ASI585MC Air</dd>
-          <dt>Filter</dt><dd>Optolong L-Quad Enance</dd>
-          <dt>Integration</dt><dd>6 hours</dd>
-          <dt>Location</dt><dd>Al Qudra, UAE</dd>
-        </dl>
+        <div class="share-specs-grid">
+          <div class="share-spec" title="Telescope"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.4 9.3 8.9 5.6 10 7.5 3.5 11.2Z"/><path d="M8.9 5.6 11 4.4 12.1 6.3 10 7.5"/><path d="M3 10.4 1.8 11.1"/><path d="M4.3 11 3.2 13.9"/><path d="M5.1 10.5 6.4 13.4"/></svg></span><span class="share-spec-val">Askar V (60mm) with reducer</span><span class="sr-only">Telescope</span></div>
+          <div class="share-spec" title="Camera"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.6" width="12" height="8.4" rx="1.5"/><path d="M5.6 4.6l1-1.6h2.8l1 1.6"/><circle cx="8" cy="8.8" r="2.2"/></svg></span><span class="share-spec-val">ZWO ASI585MC Air</span><span class="sr-only">Camera</span></div>
+          <div class="share-spec" title="Filter"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 3.4h10.8l-4.1 5v4.2l-2.6 1.3V8.4z"/></svg></span><span class="share-spec-val">Optolong L-Quad Enance</span><span class="sr-only">Filter</span></div>
+          <div class="share-spec" title="Integration"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9.2" r="4.9"/><path d="M8 9.2V6.6"/><path d="M6.5 1.9h3"/><path d="M8 1.9v2.4"/></svg></span><span class="share-spec-val">6 hours</span><span class="sr-only">Integration</span></div>
+          <div class="share-spec" title="Location"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s4.1-3.9 4.1-7A4.1 4.1 0 0 0 8 2.9 4.1 4.1 0 0 0 3.9 7C3.9 10.1 8 14 8 14z"/><circle cx="8" cy="6.9" r="1.5"/></svg></span><span class="share-spec-val">Al Qudra, UAE</span><span class="sr-only">Location</span></div>
+          <div class="share-spec" title="Date"><span class="share-spec-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.4" width="11" height="10.1" rx="1.4"/><path d="M2.5 6.4h11"/><path d="M5.4 2.1v2.4"/><path d="M10.6 2.1v2.4"/></svg></span><span class="share-spec-val">January 2025</span><span class="sr-only">Date</span></div>
+        </div>
       </div>
 
       <div class="actions">

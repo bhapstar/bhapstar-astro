@@ -45,13 +45,16 @@ PERSON_ID = f"{DOMAIN}/#person"
 WEBSITE_ID = f"{DOMAIN}/#website"
 PRINTS_PAGE = f"{DOMAIN}/prints.html"
 
-# Human-readable labels for the specs block, in display order.
-SPEC_LABELS = [
-    ("telescope",   "Telescope"),
-    ("camera",      "Camera"),
-    ("filter",      "Filter"),
-    ("integration", "Integration"),
-    ("location",    "Location"),
+# Capture-detail tiles, in display order. The SVGs are copied verbatim from
+# gallery.html's SPEC_ICONS so the share pages' specs panel looks identical
+# to the viewer's info popup (icon above value, violet tint).
+SPEC_ICONS = [
+    ("telescope",   "Telescope",   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.4 9.3 8.9 5.6 10 7.5 3.5 11.2Z"/><path d="M8.9 5.6 11 4.4 12.1 6.3 10 7.5"/><path d="M3 10.4 1.8 11.1"/><path d="M4.3 11 3.2 13.9"/><path d="M5.1 10.5 6.4 13.4"/></svg>'),
+    ("camera",      "Camera",      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.6" width="12" height="8.4" rx="1.5"/><path d="M5.6 4.6l1-1.6h2.8l1 1.6"/><circle cx="8" cy="8.8" r="2.2"/></svg>'),
+    ("filter",      "Filter",      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 3.4h10.8l-4.1 5v4.2l-2.6 1.3V8.4z"/></svg>'),
+    ("integration", "Integration", '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9.2" r="4.9"/><path d="M8 9.2V6.6"/><path d="M6.5 1.9h3"/><path d="M8 1.9v2.4"/></svg>'),
+    ("location",    "Location",    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s4.1-3.9 4.1-7A4.1 4.1 0 0 0 8 2.9 4.1 4.1 0 0 0 3.9 7C3.9 10.1 8 14 8 14z"/><circle cx="8" cy="6.9" r="1.5"/></svg>'),
+    ("date",        "Date",        '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.4" width="11" height="10.1" rx="1.4"/><path d="M2.5 6.4h11"/><path d="M5.4 2.1v2.4"/><path d="M10.6 2.1v2.4"/></svg>'),
 ]
 
 # Page-specific styles. Everything else comes from /styles.css so these pages
@@ -72,21 +75,40 @@ PAGE_STYLE = """\
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; }
+    /* Capture-specs panel — mirrors the viewer's info popup tiles */
     .share-specs{
-      margin: 28px 0; padding: 18px 20px;
-      border: 1px solid var(--line); border-radius: 14px;
-      background: var(--soft);
+      margin: 28px 0; padding: 16px 14px;
+      border: 1px solid rgba(167,139,250,0.14); border-radius: 12px;
+      background: rgba(167,139,250,0.06);
     }
     .share-specs h2{
-      margin: 0 0 12px; font-size: 13px; font-weight: 700;
+      margin: 0 0 14px; font-size: 13px; font-weight: 700;
       letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+      text-align: center;
     }
-    .share-specs dl{
-      margin: 0; display: grid; grid-template-columns: auto 1fr;
-      gap: 6px 18px; font-size: 14px;
+    .share-specs-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      gap: 12px 10px;
     }
-    .share-specs dt{ color: var(--muted); }
-    .share-specs dd{ margin: 0; color: var(--text); }
+    .share-spec{
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 7px;
+    }
+    .share-spec-ico{
+      width: 22px; height: 22px;
+      display: grid; place-items: center; color: var(--accent);
+    }
+    .share-spec-ico svg{ width: 20px; height: 20px; }
+    .sr-only{
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .share-spec-val{
+      font-size: 12.5px; line-height: 1.3; font-weight: 500;
+      color: rgba(232,230,247,0.9);
+    }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
       margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
@@ -110,10 +132,10 @@ def to_iso(date_str):
 
 
 def display_date(date_str):
-    """Convert 'DD-MM-YYYY' to '27 December 2025'. Falls back to None."""
+    """Convert 'DD-MM-YYYY' to 'December 2025' — the same month-year format
+    the viewer's date tile uses. Falls back to None."""
     try:
-        d = datetime.strptime(date_str, "%d-%m-%Y")
-        return f"{d.day} {d.strftime('%B %Y')}"
+        return datetime.strptime(date_str, "%d-%m-%Y").strftime("%B %Y")
     except (TypeError, ValueError):
         return None
 
@@ -269,11 +291,7 @@ def build_page(entry, prev_link, next_link):
     iso_date = to_iso(entry.get("date"))
     nice_date = display_date(entry.get("date"))
 
-    # ── date / location line ──
     specs = entry.get("specs") or {}
-    date_bits = [b for b in (nice_date, specs.get("location")) if b]
-    date_line = (f'      <p class="share-date">{t(" · ".join(date_bits))}</p>\n'
-                 if date_bits else "")
 
     # ── figures ──
     figures = []
@@ -306,16 +324,23 @@ def build_page(entry, prev_link, next_link):
         body_parts.append(f"        <p>{t(entry['desc'])}</p>")
     body_html = "\n".join(body_parts)
 
-    # ── capture specs ──
+    # ── capture specs: icon tiles, identical to the viewer's info popup ──
     specs_html = ""
-    rows = [(label, specs[key]) for key, label in SPEC_LABELS if specs.get(key)]
+    rows = [(label, specs.get(key) if key != "date" else nice_date, icon)
+            for key, label, icon in SPEC_ICONS]
+    rows = [(label, val, icon) for label, val, icon in rows
+            if val and str(val).strip()]
     if rows:
-        dl = "\n".join(f"          <dt>{t(lbl)}</dt><dd>{t(val)}</dd>"
-                       for lbl, val in rows)
+        tiles = "\n".join(
+            f'          <div class="share-spec" title="{a(lbl)}">'
+            f'<span class="share-spec-ico" aria-hidden="true">{icon}</span>'
+            f'<span class="share-spec-val">{t(val)}</span>'
+            f'<span class="sr-only">{t(lbl)}</span></div>'
+            for lbl, val, icon in rows)
         specs_html = (
             '      <div class="share-specs">\n'
             "        <h2>Capture details</h2>\n"
-            "        <dl>\n" + dl + "\n        </dl>\n"
+            '        <div class="share-specs-grid">\n' + tiles + "\n        </div>\n"
             "      </div>\n"
         )
 
@@ -383,7 +408,7 @@ def build_page(entry, prev_link, next_link):
   <section class="section">
     <div class="wrap share-wrap">
       <h1>{t(title)}</h1>
-{date_line}
+
 {figures_html}
 
       <div class="share-body">
