@@ -1205,6 +1205,14 @@
       margin: 0 0 18px;
     }
     .dv-detail-body { font-size: 14.5px; line-height: 1.72; }
+    .dv-detail-page-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 13.5px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .dv-detail-page-link:hover { text-decoration: underline; }
     .dv-detail-body p { margin: 0 0 14px; }
     .dv-detail-body .update-note {
       margin: 0 0 14px;
@@ -1581,7 +1589,7 @@
 
       <div class="section-head gallery-head">
         <div class="gallery-topline">
-          <h2>Gallery</h2>
+          <h1>Gallery</h1>
         </div>
 
         <p class="gallery-intro">
@@ -1877,6 +1885,7 @@
       <h2 class="dv-detail-title"  id="dvDetailTitle"></h2>
       <p class="dv-detail-intro"   id="dvDetailIntro"></p>
       <div class="dv-detail-body"  id="dvDetailBody"></div>
+      <a class="dv-detail-page-link" id="dvDetailPageLink" href="#">Open this image’s page →</a>
     </div>
   </div>
 
@@ -2009,6 +2018,7 @@
   const dvDetailTitle = document.getElementById('dvDetailTitle');
   const dvDetailIntro = document.getElementById('dvDetailIntro');
   const dvDetailBody  = document.getElementById('dvDetailBody');
+  const dvDetailPageLink = document.getElementById('dvDetailPageLink');
   const dvDetailSpecs = document.getElementById('dvDetailSpecs');
   const dvBasic       = document.getElementById('dvBasic');
   const dvBasicClose  = document.getElementById('dvBasicClose');
@@ -2530,6 +2540,14 @@
     dvDetailIntro.style.display = it.intro ? '' : 'none';
     dvDetailBody.innerHTML = detailBodyToHtml(it.body);
     dvDetailBody.style.display = it.body ? '' : 'none';
+    if (dvDetailPageLink) {
+      if (it.slug) {
+        dvDetailPageLink.href = `share/${it.slug}.html`;
+        dvDetailPageLink.style.display = '';
+      } else {
+        dvDetailPageLink.style.display = 'none';
+      }
+    }
     const card = dvDetail.querySelector('.dv-detail-card');
     if (card) card.scrollTop = 0;
     dvDetail.classList.add('open');
@@ -2617,6 +2635,13 @@
       const thumbSrc = cover.file.replace(/^(images\/)/, '$1thumbs/');
       const media    = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
+      // Real, crawlable href: the image's own landing page (share/<slug>.html).
+      // A normal click is intercepted below and opens the viewer exactly as
+      // before, so browsing is unchanged — but search engines follow this
+      // link, and middle-click / open-in-new-tab now lands on the image's
+      // page instead of the raw .webp file.
+      const cardHref = item.slug ? `share/${item.slug}.html` : cover.file;
+
       const likeId  = window.Likes ? window.Likes.slugify(item.title || cover.file) : '';
       const likeBtn = likeId
         ? `<button class="like-btn" data-like-id="${esc(likeId)}" aria-label="Like this image" type="button">
@@ -2626,7 +2651,7 @@
         : '';
 
       return `<a class="card"
-           href="${esc(cover.file)}"
+           href="${esc(cardHref)}"
            data-idx="${idx}"
            data-active-idx="${activeIdx}"
            aria-label="${esc(item.title || cover.alt)}">

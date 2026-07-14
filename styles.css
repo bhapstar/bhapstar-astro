@@ -494,9 +494,8 @@ h1{
   margin-bottom: -0.12em;
 }
 
-/* Shared gradient used for both hero h1 lines — matches header brand */
-h1:first-of-type,
-h1.hero-byline{
+/* Shared gradient for main page h1s — matches header brand */
+h1:first-of-type{
   background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -510,12 +509,15 @@ h1.hero-byline{
   100% { background-position: 100% 50%; }
 }
 
-/* Byline is a touch smaller and lighter than the main title */
-h1.hero-byline{
+/* Byline is a touch smaller and lighter than the main title.
+   It's a <p> (not a second h1 — one h1 per page for SEO), so the sizing
+   the h1 tag used to provide is restated here explicitly. */
+.hero-byline{
   font-size: clamp(18px, 2.2vw, 32px);
   font-weight: 400;
   letter-spacing: 0.01em;
-  margin-top: 4px;
+  line-height: 1.2;
+  margin: 4px 0 6px;
   background: none;
   -webkit-background-clip: unset;
   -webkit-text-fill-color: rgba(200,195,235,0.72);
@@ -612,6 +614,7 @@ h1.hero-byline{
   justify-content: space-between; gap: 16px;
   margin-bottom: 24px;
 }
+.section-head h1,
 .section-head h2{
   margin: 0; font-weight: 700;
   font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase;
