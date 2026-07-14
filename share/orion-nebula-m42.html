@@ -5,38 +5,172 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Orion Nebula (M42) — Bhapstar Astrophotography</title>
 
-  <!-- Thin redirect page: humans go to the gallery, crawlers read the tags below. -->
-  <meta name="robots" content="noindex,follow" />
-  <link rel="canonical" href="https://bhapstar.com/gallery.html#orion-nebula-m42" />
-  <meta name="description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems." />
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <link rel="canonical" href="https://bhapstar.com/share/orion-nebula-m42.html" />
+  <meta name="description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into…" />
+  <meta name="author" content="Bhapinder Singh" />
 
   <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Slack, Discord, …) -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Bhapstar Astrophotography" />
   <meta property="og:title" content="The Orion Nebula (M42)" />
-  <meta property="og:description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems." />
+  <meta property="og:description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into…" />
   <meta property="og:image" content="https://bhapstar.com/images/thumbs/orion-nebula-m42.webp" />
   <meta property="og:image:alt" content="Orion Nebula M42 star forming region astrophotography" />
   <meta property="og:url" content="https://bhapstar.com/share/orion-nebula-m42.html" />
+  <meta property="article:published_time" content="2025-01-01" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Orion Nebula (M42)" />
-  <meta name="twitter:description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems." />
+  <meta name="twitter:description" content="The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into…" />
   <meta name="twitter:image" content="https://bhapstar.com/images/thumbs/orion-nebula-m42.webp" />
   <meta name="twitter:image:alt" content="Orion Nebula M42 star forming region astrophotography" />
 
-  <!-- JS redirect: crawlers don't run JS, so they stay and read the tags above.
-       Humans are sent straight to the image in the gallery. -->
-  <script>location.replace("https://bhapstar.com/gallery.html#orion-nebula-m42");</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="/styles.css" />
   <style>
-    body { margin:0; background:#050414; color:#c8c3eb;
-           font-family:system-ui,sans-serif; display:grid; place-items:center;
-           min-height:100vh; text-align:center; padding:24px; }
-    a { color:#a78bfa; }
+    .share-wrap{ max-width: 900px; margin: 0 auto; }
+    .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
+    .share-figure{ margin: 0 0 22px; }
+    .share-figure img{
+      display: block; width: 100%; height: auto; border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    }
+    .share-figure figcaption{
+      margin-top: 8px; color: var(--muted); font-size: 13px;
+    }
+    .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
+    .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; }
+    .share-specs{
+      margin: 28px 0; padding: 18px 20px;
+      border: 1px solid var(--line); border-radius: 14px;
+      background: var(--soft);
+    }
+    .share-specs h2{
+      margin: 0 0 12px; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+    }
+    .share-specs dl{
+      margin: 0; display: grid; grid-template-columns: auto 1fr;
+      gap: 6px 18px; font-size: 14px;
+    }
+    .share-specs dt{ color: var(--muted); }
+    .share-specs dd{ margin: 0; color: var(--text); }
+    .share-nav{
+      display: flex; justify-content: space-between; gap: 16px;
+      margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .share-nav a{ color: var(--accent); text-decoration: none; max-width: 46%; }
+    .share-nav a:hover{ text-decoration: underline; }
+    .share-nav .nav-next{ margin-left: auto; text-align: right; }
   </style>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://bhapstar.com/#person",
+      "name": "Bhapinder Singh",
+      "alternateName": "Bobby Singh",
+      "url": "https://bhapstar.com"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://bhapstar.com/share/orion-nebula-m42.html",
+      "url": "https://bhapstar.com/share/orion-nebula-m42.html",
+      "name": "The Orion Nebula (M42) — Bhapstar Astrophotography",
+      "description": "The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into…",
+      "author": {
+        "@id": "https://bhapstar.com/#person"
+      },
+      "isPartOf": {
+        "@id": "https://bhapstar.com/#website"
+      },
+      "datePublished": "2025-01-01",
+      "primaryImageOfPage": {
+        "@id": "https://bhapstar.com/images/orion-nebula-m42.webp#image"
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://bhapstar.com/images/orion-nebula-m42.webp#image",
+      "contentUrl": "https://bhapstar.com/images/orion-nebula-m42.webp",
+      "url": "https://bhapstar.com/images/orion-nebula-m42.webp",
+      "name": "The Orion Nebula (M42)",
+      "description": "The closest large star-forming region to Earth, glowing just below Orion’s Belt. Visible to the naked eye, this vast stellar nursery offers a rare glimpse into the processes that give rise to new stars and planetary systems.",
+      "creator": {
+        "@id": "https://bhapstar.com/#person"
+      },
+      "creditText": "Bhapinder Singh",
+      "copyrightNotice": "© Bhapinder Singh",
+      "license": "https://bhapstar.com/prints.html",
+      "acquireLicensePage": "https://bhapstar.com/prints.html",
+      "caption": "Orion Nebula M42 star forming region astrophotography",
+      "datePublished": "2025-01-01"
+    }
+  ]
+}
+  </script>
 </head>
 <body>
-  <p>Taking you to <a href="https://bhapstar.com/gallery.html#orion-nebula-m42">The Orion Nebula (M42)</a>…</p>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap share-wrap">
+      <h1>The Orion Nebula (M42)</h1>
+      <p class="share-date">1 January 2025 · Al Quaa, UAE</p>
+
+      <figure class="share-figure">
+        <a href="/gallery.html#orion-nebula-m42" aria-label="Open The Orion Nebula (M42) in the gallery viewer"><img src="/images/orion-nebula-m42.webp" alt="Orion Nebula M42 star forming region astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a>
+      </figure>
+
+      <div class="share-body">
+        <p class="lead">The Orion Nebula is the closest large star-forming region to Earth and one of the most studied objects in the sky — a vast cloud of gas and dust glowing just below Orion's Belt, visible to the naked eye on any clear winter night.</p>
+        <p>Messier 42 lies just 1,344 light-years away — practically next door in cosmic terms — making it the nearest region of massive star formation to Earth. At its heart sits the Trapezium, a tight cluster of four extraordinarily hot young stars whose ultraviolet output is responsible for ionising and illuminating the entire nebula.</p>
+        <p>For any astrophotographer, M42 is an early and inevitable target. Its brightness and proximity mean it shows up in virtually any exposure, but that same brightness makes it genuinely challenging to image well — the core is so bright that it saturates long before the fainter outer regions become visible.</p>
+        <p>The Orion Nebula is a rite of passage target. Every astrophotographer images it early, and most go back to it repeatedly as their equipment and technique improves. The challenge of capturing both the Trapezium detail and the faint outer wisps in a single image is one that keeps drawing people back.</p>
+      </div>
+
+      <div class="share-specs">
+        <h2>Capture details</h2>
+        <dl>
+          <dt>Telescope</dt><dd>Askar V (60mm) with reducer</dd>
+          <dt>Camera</dt><dd>ZWO ASI585MC Air</dd>
+          <dt>Filter</dt><dd>Optolong L-Quad Enance</dd>
+          <dt>Integration</dt><dd>6 hours</dd>
+          <dt>Location</dt><dd>Al Quaa, UAE</dd>
+        </dl>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="/gallery.html#orion-nebula-m42">Open in the gallery viewer</a>
+        <a class="btn" href="/prints.html">Order a print</a>
+      </div>
+
+      <nav class="share-nav" aria-label="More images"><a class="nav-prev" href="/share/pleiades-m45.html">← The Pleiades (M45)</a><a class="nav-next" href="/share/flame-horsehead-nebulae.html">The Flame (NGC 2024) and Horsehead (B33) Nebulae →</a></nav>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+<script src="/partials/partials.js"></script>
+<script src="/protect-images.js"></script>
 </body>
 </html>

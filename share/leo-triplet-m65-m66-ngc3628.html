@@ -5,38 +5,172 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Leo Triplet (M65, M66 &amp; NGC 3628) — Bhapstar Astrophotography</title>
 
-  <!-- Thin redirect page: humans go to the gallery, crawlers read the tags below. -->
-  <meta name="robots" content="noindex,follow" />
-  <link rel="canonical" href="https://bhapstar.com/gallery.html#leo-triplet-m65-m66-ngc3628" />
-  <meta name="description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure face-on, while NGC 3628 appears edge-on with a dark dust lane bisecting its disk — three distinct perspectives on the spiral form, caught in a single field of view." />
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <link rel="canonical" href="https://bhapstar.com/share/leo-triplet-m65-m66-ngc3628.html" />
+  <meta name="description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure…" />
+  <meta name="author" content="Bhapinder Singh" />
 
   <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Slack, Discord, …) -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Bhapstar Astrophotography" />
   <meta property="og:title" content="The Leo Triplet (M65, M66 &amp; NGC 3628)" />
-  <meta property="og:description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure face-on, while NGC 3628 appears edge-on with a dark dust lane bisecting its disk — three distinct perspectives on the spiral form, caught in a single field of view." />
+  <meta property="og:description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure…" />
   <meta property="og:image" content="https://bhapstar.com/images/thumbs/leo-triplet-m65-m66-ngc3628.webp" />
   <meta property="og:image:alt" content="Leo Triplet M65 M66 NGC 3628 spiral galaxies astrophotography" />
   <meta property="og:url" content="https://bhapstar.com/share/leo-triplet-m65-m66-ngc3628.html" />
+  <meta property="article:published_time" content="2025-01-01" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Leo Triplet (M65, M66 &amp; NGC 3628)" />
-  <meta name="twitter:description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure face-on, while NGC 3628 appears edge-on with a dark dust lane bisecting its disk — three distinct perspectives on the spiral form, caught in a single field of view." />
+  <meta name="twitter:description" content="Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure…" />
   <meta name="twitter:image" content="https://bhapstar.com/images/thumbs/leo-triplet-m65-m66-ngc3628.webp" />
   <meta name="twitter:image:alt" content="Leo Triplet M65 M66 NGC 3628 spiral galaxies astrophotography" />
 
-  <!-- JS redirect: crawlers don't run JS, so they stay and read the tags above.
-       Humans are sent straight to the image in the gallery. -->
-  <script>location.replace("https://bhapstar.com/gallery.html#leo-triplet-m65-m66-ngc3628");</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="/styles.css" />
   <style>
-    body { margin:0; background:#050414; color:#c8c3eb;
-           font-family:system-ui,sans-serif; display:grid; place-items:center;
-           min-height:100vh; text-align:center; padding:24px; }
-    a { color:#a78bfa; }
+    .share-wrap{ max-width: 900px; margin: 0 auto; }
+    .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
+    .share-figure{ margin: 0 0 22px; }
+    .share-figure img{
+      display: block; width: 100%; height: auto; border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    }
+    .share-figure figcaption{
+      margin-top: 8px; color: var(--muted); font-size: 13px;
+    }
+    .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
+    .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; }
+    .share-specs{
+      margin: 28px 0; padding: 18px 20px;
+      border: 1px solid var(--line); border-radius: 14px;
+      background: var(--soft);
+    }
+    .share-specs h2{
+      margin: 0 0 12px; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+    }
+    .share-specs dl{
+      margin: 0; display: grid; grid-template-columns: auto 1fr;
+      gap: 6px 18px; font-size: 14px;
+    }
+    .share-specs dt{ color: var(--muted); }
+    .share-specs dd{ margin: 0; color: var(--text); }
+    .share-nav{
+      display: flex; justify-content: space-between; gap: 16px;
+      margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .share-nav a{ color: var(--accent); text-decoration: none; max-width: 46%; }
+    .share-nav a:hover{ text-decoration: underline; }
+    .share-nav .nav-next{ margin-left: auto; text-align: right; }
   </style>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://bhapstar.com/#person",
+      "name": "Bhapinder Singh",
+      "alternateName": "Bobby Singh",
+      "url": "https://bhapstar.com"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://bhapstar.com/share/leo-triplet-m65-m66-ngc3628.html",
+      "url": "https://bhapstar.com/share/leo-triplet-m65-m66-ngc3628.html",
+      "name": "The Leo Triplet (M65, M66 & NGC 3628) — Bhapstar Astrophotography",
+      "description": "Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure…",
+      "author": {
+        "@id": "https://bhapstar.com/#person"
+      },
+      "isPartOf": {
+        "@id": "https://bhapstar.com/#website"
+      },
+      "datePublished": "2025-01-01",
+      "primaryImageOfPage": {
+        "@id": "https://bhapstar.com/images/leo-triplet-m65-m66-ngc3628.webp#image"
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://bhapstar.com/images/leo-triplet-m65-m66-ngc3628.webp#image",
+      "contentUrl": "https://bhapstar.com/images/leo-triplet-m65-m66-ngc3628.webp",
+      "url": "https://bhapstar.com/images/leo-triplet-m65-m66-ngc3628.webp",
+      "name": "The Leo Triplet (M65, M66 & NGC 3628)",
+      "description": "Three spiral galaxies bound by gravity in the constellation Leo, each tilted at a different angle to our line of sight. M65 and M66 display their structure face-on, while NGC 3628 appears edge-on with a dark dust lane bisecting its disk — three distinct perspectives on the spiral form, caught in a single field of view.",
+      "creator": {
+        "@id": "https://bhapstar.com/#person"
+      },
+      "creditText": "Bhapinder Singh",
+      "copyrightNotice": "© Bhapinder Singh",
+      "license": "https://bhapstar.com/prints.html",
+      "acquireLicensePage": "https://bhapstar.com/prints.html",
+      "caption": "Leo Triplet M65 M66 NGC 3628 spiral galaxies astrophotography",
+      "datePublished": "2025-01-01"
+    }
+  ]
+}
+  </script>
 </head>
 <body>
-  <p>Taking you to <a href="https://bhapstar.com/gallery.html#leo-triplet-m65-m66-ngc3628">The Leo Triplet (M65, M66 &amp; NGC 3628)</a>…</p>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap share-wrap">
+      <h1>The Leo Triplet (M65, M66 &amp; NGC 3628)</h1>
+      <p class="share-date">1 January 2025 · Al Qudra, UAE</p>
+
+      <figure class="share-figure">
+        <a href="/gallery.html#leo-triplet-m65-m66-ngc3628" aria-label="Open The Leo Triplet (M65, M66 &amp; NGC 3628) in the gallery viewer"><img src="/images/leo-triplet-m65-m66-ngc3628.webp" alt="Leo Triplet M65 M66 NGC 3628 spiral galaxies astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a>
+      </figure>
+
+      <div class="share-body">
+        <p class="lead">Three spiral galaxies bound by gravity in the constellation Leo, each presenting a different orientation to our line of sight — together offering three distinct perspectives on the spiral galaxy form in a single field of view.</p>
+        <p>The Leo Triplet sits around 35 million light-years away in Leo. M65 and M66 are a classic interacting pair whose mutual gravity has subtly distorted both structures over billions of years. NGC 3628, the third member, presents almost perfectly edge-on — its disk bisected by a prominent dust lane and its outer arms slightly warped by the same gravitational interaction.</p>
+        <p>Having all three in one field makes this one of the most compositionally satisfying galaxy targets in the sky. The variety of orientations — M65 slightly inclined, M66 more face-on, NGC 3628 edge-on — means each tells a different part of the story of what a spiral galaxy is.</p>
+        <p>NGC 3628 has a faint tidal stream — a trail of stars pulled out by the gravitational interaction with its neighbours. It requires significant integration time and careful processing to reveal, but is a worthwhile challenge for a revisit.</p>
+      </div>
+
+      <div class="share-specs">
+        <h2>Capture details</h2>
+        <dl>
+          <dt>Telescope</dt><dd>Seestar S30</dd>
+          <dt>Camera</dt><dd>Sony IMX662</dd>
+          <dt>Filter</dt><dd>None</dd>
+          <dt>Integration</dt><dd>4 hours</dd>
+          <dt>Location</dt><dd>Al Qudra, UAE</dd>
+        </dl>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="/gallery.html#leo-triplet-m65-m66-ngc3628">Open in the gallery viewer</a>
+        <a class="btn" href="/prints.html">Order a print</a>
+      </div>
+
+      <nav class="share-nav" aria-label="More images"><a class="nav-prev" href="/share/pinwheel-galaxy-m101.html">← The Pinwheel Galaxy (M101)</a><a class="nav-next" href="/share/thors-helmet-ngc2359.html">Thor’s Helmet (NGC 2359) →</a></nav>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+<script src="/partials/partials.js"></script>
+<script src="/protect-images.js"></script>
 </body>
 </html>
