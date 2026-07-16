@@ -79,6 +79,9 @@
   .pillbtn .spark{color:var(--accent);}
   .pillbtn.on{background:var(--accent);color:#fff;border-color:var(--accent);}
   .pillbtn.on .spark{color:#fff;}
+  .pillbtn.reset .spark{color:var(--muted);}
+  .pillbtn.reset:hover{border-color:var(--danger);color:var(--danger);}
+  .pillbtn.reset:hover .spark{color:var(--danger);}
   .timing-bar{display:none;margin:0 2px 14px;align-items:center;gap:10px;flex-wrap:wrap;}
   body.timing .timing-bar{display:flex;}
   .winseg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;box-shadow:var(--shadow);}
@@ -298,6 +301,7 @@
         <button id="calcBtn" class="pillbtn" type="button"><span class="spark">🧮</span> <span>Calc</span></button>
         <button id="timingBtn" class="pillbtn" type="button"><span class="spark">📈</span> <span>Timing</span></button>
         <button id="faqBtn" class="pillbtn" type="button"><span class="spark">?</span> <span>FAQ</span></button>
+        <button id="resetBtn" class="pillbtn reset" type="button" title="Reset to default layout"><span class="spark">↺</span> <span>Reset</span></button>
         <button id="themeBtn" class="iconbtn" type="button" title="Change theme" aria-label="Change theme"><span class="theme-swatch"></span></button>
       </div>
     </header>
@@ -432,6 +436,16 @@
 
   function applyTheme(){document.body.setAttribute("data-theme",THEMES[themeIdx].id);if(themeBtn)themeBtn.title="Theme: "+THEMES[themeIdx].name;try{localStorage.setItem(THEME_KEY,String(themeIdx));}catch(e){}}
   themeBtn.addEventListener("click",function(){themeIdx=(themeIdx+1)%THEMES.length;applyTheme();});
+
+  var resetBtn=document.getElementById("resetBtn");
+  if(resetBtn)resetBtn.addEventListener("click",function(){
+    if(!confirm("Reset everything back to the default layout?\n\nThis clears your saved currencies, order, units, calculator and theme on this device."))return;
+    try{
+      [STORE_KEY,THEME_KEY,TIMING_KEY,WIN_KEY,FAQ_KEY,UNIT_KEY,CALC_KEY].forEach(function(k){localStorage.removeItem(k);});
+      for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf(SER_PREFIX)===0)localStorage.removeItem(k);}
+    }catch(e){}
+    location.reload();
+  });
 
   var sheetBackdrop=document.getElementById("sheetBackdrop");
   function isMobile(){return !!(window.matchMedia&&window.matchMedia("(max-width:920px)").matches);}
