@@ -3,7 +3,7 @@
    ---------------------------------------------------------
    Loads the shared header + footer HTML partials, then runs:
    1. Dynamic year in footer
-   2. Burger menu toggle (with double-bind + double-load guards)
+   2. Puzzles dropdown toggle (with double-bind + double-load guards)
    3. Active nav link highlighting
    4. Puzzles submenu toggle + auto-open on active child
    5. Scroll reveal (with MutationObserver for dynamic cards)
@@ -139,60 +139,54 @@ const HIDE_FIELD_NOTES = true;
 
 
     /* ─────────────────────────────────────────
-       BURGER MENU
-       - Must bind AFTER header HTML is injected
-       - Double-bind guard via data-bound
-       - Closes on outside click, Escape, or
-         clicking any nav link (mobile UX)
+       PUZZLES DROPDOWN
+       - The burger has been removed; the header nav
+         links are always visible now, so only the
+         Puzzles group needs interaction.
+       - Click toggles the submenu popover; it closes
+         on outside click, Escape, or choosing a link.
+       - Must bind AFTER header HTML is injected;
+         double-bind guard via data-bound.
     ───────────────────────────────────────── */
-    const burger = document.querySelector('.burger');
-    const menu   = document.querySelector('.nav-menu');
+    const menu        = document.querySelector('.nav-menu');
+    const navGroup    = menu && menu.querySelector('.nav-group');
+    const navGroupBtn = menu && menu.querySelector('.nav-group-btn');
+    const navSubmenu  = menu && menu.querySelector('.nav-submenu');
 
-    if (burger && menu && !burger.dataset.bound) {
-      burger.dataset.bound = '1';
+    if (navGroup && navGroupBtn && navSubmenu && !navGroupBtn.dataset.bound) {
+      navGroupBtn.dataset.bound = '1';
 
-      function menuOpen() {
-        menu.classList.add('open');
-        burger.setAttribute('aria-expanded', 'true');
+      function submenuOpen() {
+        navSubmenu.classList.add('open');
+        navGroupBtn.setAttribute('aria-expanded', 'true');
       }
-      function menuClose() {
-        menu.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
+      function submenuClose() {
+        navSubmenu.classList.remove('open');
+        navGroupBtn.setAttribute('aria-expanded', 'false');
       }
 
-      burger.addEventListener('click', (e) => {
+      navGroupBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        menu.classList.contains('open') ? menuClose() : menuOpen();
+        navSubmenu.classList.contains('open') ? submenuClose() : submenuOpen();
       });
 
+      // Close when clicking anywhere outside the Puzzles group
       document.addEventListener('click', (e) => {
-        if (menu.classList.contains('open') &&
-            !menu.contains(e.target) &&
-            !burger.contains(e.target)) {
-          menuClose();
+        if (navSubmenu.classList.contains('open') &&
+            !navGroup.contains(e.target)) {
+          submenuClose();
         }
       });
 
+      // Close on Escape
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') menuClose();
+        if (e.key === 'Escape') submenuClose();
       });
 
-      // Close when a nav link is tapped (mobile UX)
-      // Note: excludes the submenu toggle button so it doesn't close the menu
-      menu.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', menuClose);
+      // Close after a puzzle link is chosen (navigation happens anyway)
+      navSubmenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', submenuClose);
       });
-
-      // ── Puzzles submenu toggle ──
-      const navGroupBtn = menu.querySelector('.nav-group-btn');
-      const navSubmenu  = menu.querySelector('.nav-submenu');
-      if (navGroupBtn && navSubmenu) {
-        navGroupBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const open = navSubmenu.classList.toggle('open');
-          navGroupBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
     }
 
 
@@ -215,15 +209,12 @@ const HIDE_FIELD_NOTES = true;
       }
     });
 
-    // Auto-open the Puzzles submenu if a child link is the active page
+    // If a puzzle page is the active page, highlight the Puzzles button —
+    // but don't force the popover open now that the nav is always visible.
     const activeSubmenuLink = document.querySelector('.nav-submenu a.active');
     if (activeSubmenuLink) {
-      const submenu = activeSubmenuLink.closest('.nav-submenu');
-      const btn     = submenu?.previousElementSibling;
-      if (submenu && btn) {
-        submenu.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
+      const grp = activeSubmenuLink.closest('.nav-group');
+      grp?.querySelector('.nav-group-btn')?.classList.add('active');
     }
 
 

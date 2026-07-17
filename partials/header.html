@@ -1,27 +1,22 @@
 <!-- =========================
      Header / navigation
-     - Brand centred in the navbar grid
-     - Burger button opens the dropdown nav
-     - CSS handles the burger → X animation
-       via aria-expanded (set by partials.js)
-     - Active link (.active + aria-current)
-       is set by partials.js after load
+     - Brand sits on the top row, centred
+     - Nav links sit on a second row beneath it,
+       always visible and wrapping like the footer
+       (the burger menu has been removed)
+     - Puzzles remains a click-to-expand group
+       (dropdown popover) — toggled by partials.js
+     - Active link (.active + aria-current) and the
+       active Puzzles-button state are set by partials.js
 ========================= -->
 <header>
   <div class="wrap">
     <div class="navbar">
-      <div></div><!-- spacer keeps brand centred -->
 
       <a class="brand" href="/index.html" aria-label="bhapstar astrophotography — home">
         <span class="mark">bhapstar</span>
         <span class="sub">astrophotography</span>
       </a>
-
-      <button class="burger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="siteNav">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
 
       <nav id="siteNav" class="nav-menu" aria-label="Site navigation">
         <a href="/index.html">Home</a>
