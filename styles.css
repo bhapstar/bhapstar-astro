@@ -2222,3 +2222,216 @@ a[href="prints.html"], a[href*="prints"] {
 @media (prefers-reduced-motion: reduce){
   .contact-form .btn[type="submit"] svg{ animation: none !important; }
 }
+
+
+/* ============================================================
+   LIGHT THEME
+   Activated by html[data-theme="light"] (set by the header
+   toggle in partials.js; remembered in localStorage). Dark
+   remains the default (:root), so everything below only takes
+   effect in light mode and the dark styling stays untouched.
+
+   Deliberately NOT re-themed (correct as light-on-dark in both
+   modes, since they float over photos/dark scrims): the hero,
+   the lightbox / image-detail viewer, thumbnail strip and the
+   calendar modal.
+   ============================================================ */
+html[data-theme="light"]{
+  --bg:          #eceaf6;   /* soft lavender-white */
+  --bg2:         #f5f4fc;
+  --header:      rgba(255,255,255,0.82);
+  --header-solid:#ffffff;
+  --text:        rgba(26,23,48,0.94);
+  --muted:       rgba(70,64,110,0.72);
+  --line:        rgba(124,92,246,0.28);
+  --soft:        rgba(124,92,246,0.06);
+  --glow:        rgba(124,92,246,0.18);
+  --glow2:       rgba(96,165,250,0.12);
+  --shadow:      0 24px 60px rgba(60,50,110,0.18);
+}
+
+/* Soft pastel cosmic wash instead of the dark nebula + white stars.
+   'multiply' lets the pastel blooms gently tint the light page; the
+   white star speckles are dropped (they'd be invisible on light). */
+html[data-theme="light"] body::before{
+  opacity: .55;
+  filter: none;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(1400px 900px  at 5%   20%,  rgba(167,139,250,0.16), transparent 55%),
+    radial-gradient(1000px 800px  at 95%  15%,  rgba(96,165,250,0.13),  transparent 58%),
+    radial-gradient(1200px 1000px at 50%  100%, rgba(244,114,182,0.11), transparent 55%),
+    radial-gradient(800px  600px  at 20%  75%,  rgba(52,211,153,0.09),  transparent 52%),
+    radial-gradient(600px  500px  at 75%  55%,  rgba(251,146,60,0.08),  transparent 50%);
+  background-size: auto, auto, auto, auto, auto;
+}
+html[data-theme="light"] body::after{
+  opacity: .16;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(700px 500px at 60% 40%, rgba(167,139,250,0.18), transparent 55%),
+    radial-gradient(500px 400px at 30% 60%, rgba(96,165,250,0.15),  transparent 55%);
+}
+
+/* Content-surface text that was hardcoded white -> darken on light.
+   (Photo/overlay UI is intentionally excluded — see header note.) */
+html[data-theme="light"] .panel h3,
+html[data-theme="light"] .filter-pill:hover,
+html[data-theme="light"] .filter-pill.active,
+html[data-theme="light"] .view-btn:hover,
+html[data-theme="light"] .view-btn.active,
+html[data-theme="light"] .page-about .about-panel p,
+html[data-theme="light"] .index-about-section .about-panel p,
+html[data-theme="light"] .template-box pre,
+html[data-theme="light"] details.faq-item summary{
+  color: rgba(26,23,48,0.92);
+}
+
+/* Form controls: dark fields -> light fields with dark text */
+html[data-theme="light"] .picker select,
+html[data-theme="light"] .picker input,
+html[data-theme="light"] .picker textarea,
+html[data-theme="light"] .item-row select,
+html[data-theme="light"] .puzzle-controls select,
+html[data-theme="light"] .page-puzzle .puzzle-controls button{
+  background-color: #ffffff;
+  color: rgba(26,23,48,0.92);
+  border-color: rgba(124,92,246,0.28);
+}
+html[data-theme="light"] .picker select option,
+html[data-theme="light"] .item-row select option,
+html[data-theme="light"] .puzzle-controls select option{
+  background: #ffffff;
+  color: rgba(26,23,48,0.92);
+}
+
+/* Boxed content areas that used near-black fills */
+html[data-theme="light"] .template-box{
+  background: rgba(124,92,246,0.05);
+  border-color: rgba(124,92,246,0.16);
+}
+html[data-theme="light"] .item-row{ background: rgba(124,92,246,0.04); }
+html[data-theme="light"] .page-puzzle .puzzle-top{ background: rgba(124,92,246,0.05); }
+
+/* Cards/panels used ~3% violet on black — nudge the tint + border
+   a little so they read against the lighter page. */
+html[data-theme="light"] .card,
+html[data-theme="light"] .panel{
+  background: rgba(124,92,246,0.045);
+  border-color: rgba(124,92,246,0.16);
+}
+
+/* ── Theme toggle button (lives in the header navbar) ── */
+.theme-toggle{
+  position: absolute; top: 12px; right: 2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border-radius: 999px; cursor: pointer;
+  background: none; border: 1px solid var(--line);
+  color: var(--accent);
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.theme-toggle:hover{
+  background: var(--soft);
+  border-color: rgba(167,139,250,0.45);
+  transform: translateY(-1px);
+}
+.theme-toggle:active{ transform: translateY(0); }
+.theme-toggle svg{ width: 18px; height: 18px; display: block; }
+/* Dark mode shows the sun (tap -> go light); light mode shows the moon */
+.theme-toggle .icon-moon{ display: none; }
+html[data-theme="light"] .theme-toggle .icon-sun{ display: none; }
+html[data-theme="light"] .theme-toggle .icon-moon{ display: block; }
+
+@media (max-width: 720px){
+  .theme-toggle{ top: 8px; right: 0; width: 34px; height: 34px; }
+  .theme-toggle svg{ width: 16px; height: 16px; }
+}
+
+
+/* ============================================================
+   LIGHT THEME — READABILITY PASS
+   Darkens text that was hardcoded light (near-white / lavender)
+   so it reads on the light page, and keeps the few spots that
+   sit on dark scrims light. All scoped to html[data-theme="light"]
+   so dark mode is completely untouched.
+   ============================================================ */
+
+/* 1 — "By the numbers" stat cards.
+   The big number used a white->accent gradient (white half vanished
+   on light) — flip it to accent->deep-ink so it stays colourful. */
+html[data-theme="light"] .stat .num{
+  background: linear-gradient(180deg, var(--c, var(--accent)), rgba(26,23,48,0.82));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+html[data-theme="light"] .stat .label{ color: rgba(60,54,96,0.82); }
+
+/* 2 — "Support my work" panel (title was a white->grey gradient). */
+html[data-theme="light"] .support-title{
+  background: none;
+  -webkit-text-fill-color: rgba(26,23,48,0.92);
+  color: rgba(26,23,48,0.92);
+}
+html[data-theme="light"] .support-text,
+html[data-theme="light"] .support-mini{ color: rgba(60,54,96,0.82); }
+
+/* 3 — Form labels (contact + prints/gear pickers). */
+html[data-theme="light"] .contact-form span,
+html[data-theme="light"] .picker label{ color: rgba(60,54,96,0.82); }
+
+/* 4 — Gallery controls. */
+html[data-theme="light"] .filter-select-label{ color: rgba(60,54,96,0.78); }
+html[data-theme="light"] .filter-select,
+html[data-theme="light"] .caption-toggle{ color: rgba(26,23,48,0.90); }
+html[data-theme="light"] .filter-select option{ background:#ffffff; color: rgba(26,23,48,0.92); }
+html[data-theme="light"] .filter-pill{ color: rgba(60,54,96,0.85); }
+html[data-theme="light"] .view-btn{ color: rgba(60,54,96,0.70); }
+
+/* Card caption *descriptions* sit on a dark scrim (kept dark), so they
+   must stay light rather than following var(--muted) into dark.
+   Covers both the gallery and gear grids. */
+html[data-theme="light"] .card .cap .d{ color: rgba(224,221,242,0.82); }
+
+/* 5 — Image (share) page: lead paragraph + capture-spec values. */
+html[data-theme="light"] .share-body .lead{ color: rgba(60,54,96,0.88); }
+html[data-theme="light"] .share-spec-val{ color: rgba(40,35,72,0.90); }
+
+/* 6 — Prints: FAQ answers, the (i) tooltip, and the image picker. */
+html[data-theme="light"] details.faq-item p{ color: rgba(60,54,96,0.82); }
+html[data-theme="light"] .items-info-tooltip{
+  background: #ffffff;
+  border-color: rgba(124,92,246,0.20);
+  color: rgba(26,23,48,0.92);
+}
+html[data-theme="light"] .items-info-tooltip li{ color: rgba(45,40,80,0.88); }
+html[data-theme="light"] .img-picker-trigger{
+  background: #ffffff;
+  color: rgba(26,23,48,0.92);
+  border-color: rgba(124,92,246,0.24);
+}
+
+/* 7 — Quiz (self-styled inline; overridden from here).
+   Base option/question text -> dark, but the correct/wrong feedback
+   colours are re-asserted at higher specificity so answers still
+   read green/red after selection. */
+html[data-theme="light"] .page-quiz .quiz-question,
+html[data-theme="light"] .page-quiz .quiz-intro h3,
+html[data-theme="light"] .page-quiz .mc-btn,
+html[data-theme="light"] .page-quiz .tf-btn,
+html[data-theme="light"] .page-quiz .drag-word,
+html[data-theme="light"] .page-quiz .drag-sentence,
+html[data-theme="light"] .page-quiz .drag-blank{
+  color: rgba(26,23,48,0.92);
+}
+html[data-theme="light"] .page-quiz .quiz-fact,
+html[data-theme="light"] .page-quiz .quiz-intro p,
+html[data-theme="light"] .page-quiz .quiz-top p,
+html[data-theme="light"] .page-quiz .quiz-badge,
+html[data-theme="light"] .page-quiz .quiz-progress-labels{
+  color: rgba(60,54,96,0.82);
+}
+/* preserve answer feedback (deepened for contrast on light) */
+html[data-theme="light"] .page-quiz .mc-btn.correct,
+html[data-theme="light"] .page-quiz .tf-btn.correct{ color: rgba(6,120,80,0.98); }
+html[data-theme="light"] .page-quiz .mc-btn.wrong,
+html[data-theme="light"] .page-quiz .tf-btn.wrong{ color: rgba(190,40,110,0.96); }

@@ -29,6 +29,21 @@ const HIDE_FIELD_NOTES = true;
 (async function () {
 
   /* ─────────────────────────────────────────
+     THEME (dark is the default; light is opt-in)
+     Apply any saved preference as early as this script
+     runs, so light-mode users see minimal flash. The
+     header toggle (wired further below) flips it live.
+  ───────────────────────────────────────── */
+  (function initThemeEarly(){
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+
+  /* ─────────────────────────────────────────
      LOAD PARTIALS
      - Guards against double-injection if the
        script is accidentally included twice
@@ -188,6 +203,35 @@ const HIDE_FIELD_NOTES = true;
         a.addEventListener('click', submenuClose);
       });
     }
+
+
+    /* ─────────────────────────────────────────
+       THEME TOGGLE (button injected with the header)
+       - Flips html[data-theme] between dark and light
+       - Persists the choice to localStorage
+       - Keeps the mobile browser chrome colour in sync
+    ───────────────────────────────────────── */
+    (function initThemeToggle(){
+      const btn = document.querySelector('.theme-toggle');
+      if (!btn || btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+
+      function currentTheme(){
+        return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      }
+      function applyTheme(theme){
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('theme', theme); } catch (e) {}
+        btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#eceaf6' : '#050414');
+      }
+
+      btn.setAttribute('aria-pressed', currentTheme() === 'light' ? 'true' : 'false');
+      btn.addEventListener('click', () => {
+        applyTheme(currentTheme() === 'light' ? 'dark' : 'light');
+      });
+    })();
 
 
     /* ─────────────────────────────────────────
