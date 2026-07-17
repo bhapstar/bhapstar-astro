@@ -2441,3 +2441,16 @@ html[data-theme="light"] .page-quiz .tf-btn.wrong{ color: rgba(190,40,110,0.96);
    so it needed an explicit light override like the others. */
 html[data-theme="light"] .helper,
 html[data-theme="light"] .step p.helper{ color: rgba(60,54,96,0.82); }
+
+/* 9 — Hero CTAs sit over a dark photo, so keep their text light in
+   light mode (the shared .btn uses var(--text), which goes dark). */
+html[data-theme="light"] .hero .btn{ color: rgba(240,238,250,0.96); }
+
+/* Suppress the mobile long-press "Save image" sheet on full-page image
+   views (e.g. share pages) via CSS, so protect-images.js no longer needs
+   to cancel touchstart there (which was blocking scroll). Theme-agnostic. */
+.share-figure img{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none; user-select: none;
+  -webkit-user-drag: none;
+}

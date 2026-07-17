@@ -66,17 +66,14 @@
   document.addEventListener('touchstart', (e) => {
     // Never block interaction on like buttons
     if (e.target.closest('.like-btn') || e.target.closest('.lightbox-like-btn')) return;
-    if (isProtected(e.target)) {
-      // Only cancel if it looks like a hold (single touch on img/canvas)
-      // We don't cancel multi-touch (pinch-zoom) — check touches.length
-      if (e.touches.length === 1 && (
-        e.target.tagName === 'IMG'    ||
-        e.target.tagName === 'VIDEO'  ||
-        e.target.closest('canvas')    ||
-        e.target.closest('.lightbox-inner')
-      )) {
-        e.preventDefault();
-      }
+    // Only cancel the long-press gesture INSIDE the fullscreen lightbox,
+    // where the page doesn't scroll and pan/zoom is handled manually.
+    // On normal pages, cancelling touchstart over an image would also kill
+    // vertical page scrolling (finger resting on an image couldn't scroll),
+    // so there we rely on the CSS -webkit-touch-callout/user-select rules
+    // and the contextmenu handler to suppress the "Save image" sheet.
+    if (e.touches.length === 1 && e.target.closest('.lightbox-inner')) {
+      e.preventDefault();
     }
   }, { passive: false });
 
