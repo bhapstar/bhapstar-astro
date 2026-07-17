@@ -2435,3 +2435,9 @@ html[data-theme="light"] .page-quiz .mc-btn.correct,
 html[data-theme="light"] .page-quiz .tf-btn.correct{ color: rgba(6,120,80,0.98); }
 html[data-theme="light"] .page-quiz .mc-btn.wrong,
 html[data-theme="light"] .page-quiz .tf-btn.wrong{ color: rgba(190,40,110,0.96); }
+
+/* 8 — Generic .helper note text (e.g. the prints intro line).
+   It uses a hardcoded lavender literal rather than var(--muted),
+   so it needed an explicit light override like the others. */
+html[data-theme="light"] .helper,
+html[data-theme="light"] .step p.helper{ color: rgba(60,54,96,0.82); }
