@@ -1548,9 +1548,12 @@ footer .nav-group-btn{
 }
 footer .nav-menu a::after{ left: 9px; right: 9px; bottom: 2px; }
 footer .nav-group-btn svg{ width: 9px; height: 5px; }
-/* The current page shouldn't show the header's "active" pill down here */
+/* The current page shouldn't show the header's "active" pill down here.
+   NOTE: clear background-COLOR only — the `background` shorthand would
+   also wipe the gradient image that the text is clipped from, making the
+   active link invisible (text-fill is transparent). */
 footer .nav-menu a.active,
-footer .nav-group-btn.active{ background: none; border-color: transparent; }
+footer .nav-group-btn.active{ background-color: transparent; border-color: transparent; }
 /* Footer is at the page bottom, so the Puzzles menu opens UPWARD */
 footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
 
