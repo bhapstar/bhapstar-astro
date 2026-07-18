@@ -1533,60 +1533,39 @@ footer{
   border-top: 1px solid rgba(167,139,250,0.08);
   color: var(--muted); font-size: 11.5px; letter-spacing: 0.08em;
 }
-.footer-links{
-  display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: center;
+/* Footer nav — mirrors the header (gradient links + Puzzles menu),
+   just sized down. Links sit on top; © line + socials sit beneath. */
+.footer-nav{
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
 
-/*
- * Aurora shimmer underline on all footer links — mirrors the header brand animation.
- * position:relative creates the stacking context for the ::after pseudo-element.
- */
-.footer-links a{
-  position: relative;
-  color: var(--muted);
-  transition: color 200ms ease, opacity 200ms ease;
-  /* nudge inline-flex icons so the underline sits flush */
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding-bottom: 2px;
+/* Reuse the header's .nav-menu / .nav-group styling, but smaller here.
+   (Gradient text + shimmer underline + dropdown popover come for free.) */
+footer .nav-menu{ gap: 3px; }
+footer .nav-menu a,
+footer .nav-group-btn{
+  font-size: 10px; letter-spacing: 0.16em; padding: 5px 9px;
 }
-.footer-links a:hover{
-  opacity: 1;
-}
+footer .nav-menu a::after{ left: 9px; right: 9px; bottom: 2px; }
+footer .nav-group-btn svg{ width: 9px; height: 5px; }
+/* The current page shouldn't show the header's "active" pill down here */
+footer .nav-menu a.active,
+footer .nav-group-btn.active{ background: none; border-color: transparent; }
+/* Footer is at the page bottom, so the Puzzles menu opens UPWARD */
+footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
 
-/* The shimmer line — same gradient + animation as .brand::after */
-.footer-links a::after{
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: -1px;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(167,139,250,0.90),
-    rgba(96,165,250,0.80),
-    rgba(244,114,182,0.80),
-    transparent
-  );
-  opacity: 0;
-  transform: scaleX(0.3) translateY(3px);
-  transform-origin: center;
-  transition: opacity 240ms ease, transform 240ms var(--ease-out-expo);
-  pointer-events: none;
+/* Meta row: copyright line + social icons, centred beneath the links */
+.footer-meta{
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 14px;
 }
-.footer-links a:hover::after{
-  opacity: 1;
-  transform: scaleX(1) translateY(0);
-}
-
-/* Social icon links: icon colour transitions to accent on hover */
-.footer-links .social-icon{
+.footer-social{ display: inline-flex; align-items: center; gap: 14px; }
+.footer-social .social-icon{
   display: inline-flex; align-items: center;
   color: inherit; opacity: 0.80;
   transition: color 200ms ease, opacity 200ms ease;
 }
-.footer-links .social-icon:hover{
+.footer-social .social-icon:hover{
   opacity: 1;
   color: var(--accent2);
 }

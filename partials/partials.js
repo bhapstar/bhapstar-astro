@@ -163,44 +163,57 @@ const HIDE_FIELD_NOTES = true;
        - Must bind AFTER header HTML is injected;
          double-bind guard via data-bound.
     ───────────────────────────────────────── */
-    const menu        = document.querySelector('.nav-menu');
-    const navGroup    = menu && menu.querySelector('.nav-group');
-    const navGroupBtn = menu && menu.querySelector('.nav-group-btn');
-    const navSubmenu  = menu && menu.querySelector('.nav-submenu');
+    // Bind EVERY .nav-group (the header's Puzzles group AND the footer's),
+    // each toggling its own submenu. Per-button double-bind guard.
+    const navGroups = document.querySelectorAll('.nav-group');
 
-    if (navGroup && navGroupBtn && navSubmenu && !navGroupBtn.dataset.bound) {
-      navGroupBtn.dataset.bound = '1';
+    navGroups.forEach((group) => {
+      const btn     = group.querySelector('.nav-group-btn');
+      const submenu = group.querySelector('.nav-submenu');
+      if (!btn || !submenu || btn.dataset.bound) return;
+      btn.dataset.bound = '1';
 
-      function submenuOpen() {
-        navSubmenu.classList.add('open');
-        navGroupBtn.setAttribute('aria-expanded', 'true');
-      }
-      function submenuClose() {
-        navSubmenu.classList.remove('open');
-        navGroupBtn.setAttribute('aria-expanded', 'false');
-      }
+      const closeSubmenu = () => {
+        submenu.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      };
+      const openSubmenu = () => {
+        submenu.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      };
 
-      navGroupBtn.addEventListener('click', (e) => {
+      btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        navSubmenu.classList.contains('open') ? submenuClose() : submenuOpen();
+        submenu.classList.contains('open') ? closeSubmenu() : openSubmenu();
       });
 
-      // Close when clicking anywhere outside the Puzzles group
+      // Close after a link is chosen (navigation happens anyway)
+      submenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', closeSubmenu);
+      });
+
+      // Expose a closer for the shared outside-click / Escape handlers
+      group._closeSubmenu = closeSubmenu;
+    });
+
+    // One shared outside-click + Escape handler covering all groups
+    if (navGroups.length && !document.body.dataset.navGroupsBound) {
+      document.body.dataset.navGroupsBound = '1';
+
       document.addEventListener('click', (e) => {
-        if (navSubmenu.classList.contains('open') &&
-            !navGroup.contains(e.target)) {
-          submenuClose();
-        }
+        document.querySelectorAll('.nav-group').forEach((group) => {
+          const submenu = group.querySelector('.nav-submenu');
+          if (submenu && submenu.classList.contains('open') && !group.contains(e.target)) {
+            group._closeSubmenu && group._closeSubmenu();
+          }
+        });
       });
 
-      // Close on Escape
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') submenuClose();
-      });
-
-      // Close after a puzzle link is chosen (navigation happens anyway)
-      navSubmenu.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', submenuClose);
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.nav-group').forEach((group) => {
+          group._closeSubmenu && group._closeSubmenu();
+        });
       });
     }
 
