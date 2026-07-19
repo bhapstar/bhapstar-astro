@@ -1,4 +1,23 @@
 [
+    {
+    "file": "images/the_milky_way.webp",
+    "title": "The Milky Way",
+    "desc": "A wide-field view toward the centre of our own galaxy, where the combined glow of billions of distant stars is cut through by vast lanes of cold interstellar dust. Everything visible here lies within the disc of the Milky Way — the galaxy seen from the inside, edge-on, from a vantage point around 26,000 light-years out along one of its spiral arms.",
+    "alt": "Milky Way galactic core wide-field astrophotography with dark dust lanes",
+    "type": "others",
+    "slug": "the-milky-way",
+    "date": "19-07-2026",
+    "intro": "The brightest, densest stretch of our home galaxy — the direction of the galactic centre, thick with star clouds and threaded with the dark dust lanes of the Great Rift.",
+    "body": "This is the view toward the heart of the Milky Way. The bright, textured band running through the frame is not a nebula or a cluster but the accumulated light of hundreds of millions of stars too distant and too tightly packed to resolve individually — the galactic disc seen edge-on, from our position roughly 26,000 light-years out along the Orion Arm.\n\nThe dark channels cutting through that glow are the Great Rift: enormous clouds of cold molecular gas and dust lying between us and the core, absorbing the light of everything behind them. They are not empty space but the opposite — some of the densest material in the galaxy, and the raw ingredients from which future generations of stars will form. Scattered through the star clouds are knots of pink and teal where individual emission nebulae and open clusters sit embedded in the arm.\n\nWide-field Milky Way work is a different discipline from deep-sky imaging. There is no single target to frame and no guiding on a faint smudge — the challenge is composition, a genuinely dark horizon, and restraint in processing. Push the contrast too hard and the dust lanes turn to mud; too little and the core never separates from the background. The core season here runs through the summer months, and it climbs highest in the small hours.",
+    "section": "gallery",
+    "specs": {
+      "telescope": "ZWO Seestar S30 Pro",
+      "camera": "Sony IMX662",
+      "filter": "None",
+      "integration": "3 hours",
+      "location": "Al Quaa, UAE"
+    }
+  },
   {
     "file": "images/rosette-nebula-ngc2244.webp",
     "title": "The Rosette Nebula (NGC 2244)",
