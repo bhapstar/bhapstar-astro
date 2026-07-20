@@ -19,6 +19,7 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
 - **Supernova Sweeper** — supernova sweeping clearing game
+- **Star Word** — astro-related word guessing game
 
 Per-object write-ups (the "Field Notes" content — how each image was captured, the equipment and conditions, and the story behind it) are surfaced inside the Gallery image viewer via **Detailed info**, rather than as a standalone page. The `field_notes.html` file still exists (and receives structured data) but is not currently linked in site navigation, gated behind a `HIDE_FIELD_NOTES` feature flag in `partials.js`.
 
