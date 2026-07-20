@@ -74,7 +74,7 @@ PAGE_STYLE = """\
       margin-top: 8px; color: var(--muted); font-size: 13px;
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
-    .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; }
+    .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }
     /* Capture-specs panel — mirrors the viewer's info popup tiles */
     .share-specs{
       margin: 28px 0; padding: 16px 14px;
