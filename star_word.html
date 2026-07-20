@@ -153,7 +153,18 @@
       letter-spacing: 0.08em;
       color: #a78bfa;
     }
-    .sw-prize a{ color: #60a5fa; text-decoration: underline; }
+    /* styles.css turns EVERY prints link into a flex container:
+         a[href*="prints"] { display: var(--show-prints) !important; }
+       with --show-prints: flex. That makes this inline link a
+       full-width block whose text falls back to flex-start, i.e. its
+       own line, left-aligned, in the middle of a centred paragraph.
+       Forcing it back to inline is the same workaround quiz.html uses.
+       Do not drop the !important — the site rule carries one too. */
+    .page-starword .sw-prize a{
+      display: inline !important;
+      color: #60a5fa;
+      text-decoration: underline;
+    }
     html[data-theme="light"] .page-starword .sw-prize{
       background: linear-gradient(160deg, rgba(124,92,246,0.10), rgba(96,165,250,0.08));
       border-color: rgba(124,92,246,0.35);
