@@ -42,6 +42,16 @@
     .share-figure img{
       display: block; width: 100%; height: auto; border-radius: 14px;
       border: 1px solid var(--line);
+      /* Dark theme: a black shadow is invisible on #050414, so lift the
+         image off the page with a soft violet bloom instead, plus a faint
+         accent rim to define the edge. */
+      box-shadow: 0 0 0 1px rgba(167,139,250,0.14),
+                  0 12px 48px rgba(167,139,250,0.22),
+                  0 4px 18px rgba(96,165,250,0.14);
+    }
+    /* Light theme: keep the original soft drop shadow, which reads well
+       against the pale background. */
+    html[data-theme="light"] .share-figure img{
       box-shadow: 0 10px 40px rgba(0,0,0,0.45);
     }
     .share-figure figcaption{
