@@ -514,7 +514,7 @@
 
       <div class="sw-prize" id="prizeBox">
         <div class="trophy">🏆</div>
-        <h4>Two guesses — outstanding</h4>
+        <h4 id="prizeTitle">Two guesses — outstanding</h4>
         <p>Use code <code>STARWORD10</code> in the notes of any
            <a href="prints.html">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
       </div>
@@ -911,6 +911,7 @@ const hintBox  = document.getElementById('hintBox');
 const hintBtn  = document.getElementById('hintBtn');
 const endPanel = document.getElementById('endPanel');
 const prizeBox = document.getElementById('prizeBox');
+const prizeTitle = document.getElementById('prizeTitle');
 
 /* ══════════════════════════════════════════════════════════════
    BUILD UI
@@ -1104,7 +1105,17 @@ const WIN_LINES = ['Extraordinary','Superb','Sharp','Solid','Got there','Phew �
 
 // The prize threshold: solved in two guesses or fewer.
 function prizeEarned(won){ return !!won && guesses.length <= 2; }
-function syncPrize(won){ prizeBox.classList.toggle('show', prizeEarned(won)); }
+function syncPrize(won){
+  const earned = prizeEarned(won);
+  prizeBox.classList.toggle('show', earned);
+  if(earned){
+    // The heading has to follow the actual guess count — a one-guess
+    // solve reading "two guesses" is worse than no heading at all.
+    prizeTitle.textContent = guesses.length === 1
+      ? 'First guess \u2014 unbelievable'
+      : 'Two guesses \u2014 outstanding';
+  }
+}
 
 function finish(won){
   finished = true;
