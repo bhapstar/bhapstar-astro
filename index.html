@@ -550,6 +550,7 @@
               'DRhq9bKD9tz',
               'DXPatoCCmxC',
               'DSwYrE9D_zc',
+              'Da-3kt5q7vV',
               // ── add more post shortcodes above ──
             ];
 
@@ -567,7 +568,7 @@
             grid.innerHTML = pick.map(id => {
               const url = `https://www.instagram.com/p/${id}/`;
               return `<div class="instagram-embed-wrap">
-                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${url}" data-instgrm-version="14">
+                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14">
                   <a href="${url}" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
                 </blockquote>
               </div>`;
