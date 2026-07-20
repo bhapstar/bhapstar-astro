@@ -45,6 +45,7 @@ PAGES = [
     ("prints.html",             "monthly",  "0.7",  None),
     ("jigsaw.html",             "yearly",   "0.6",  None),
     ("quiz.html",               "yearly",   "0.6",  None),
+    ("star_word.html",          "yearly",   "0.6",  None),
     ("supernova_sweeper.html",  "yearly",   "0.6",  None),
 ]
 STATIC_LASTMOD = "2025-04-20"

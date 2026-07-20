@@ -24,6 +24,7 @@ const SHELL_ASSETS = [
   '/field_notes.html',
   '/quiz.html',
   '/jigsaw.html',
+  '/star_word.html',
   '/supernova_sweeper.html',
   '/styles.css',
   '/protect-images.js',

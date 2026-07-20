@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Star Word — bhapstar Astrophotography</title>
+
+  <!-- Favicon & theme -->
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bhapstar.com/star_word.html" />
+
+  <!-- Primary SEO -->
+  <meta name="description" content="Star Word — a daily five-letter astronomy word puzzle by bhapstar. Six guesses, one word from the night sky, a new one every day." />
+  <meta name="author" content="Bhapinder Singh" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Star Word — bhapstar Astrophotography" />
+  <meta property="og:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
+  <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/star_word.html" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Star Word — bhapstar Astrophotography" />
+  <meta name="twitter:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       Star Word — page-scoped styles
+       Palette deliberately uses the site's Nebula Drift
+       accents (violet / cobalt) rather than the usual
+       word-game green/yellow, so it reads as ours.
+       ══════════════════════════════════════════════════ */
+
+    .page-starword .sw-wrap{
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 12px 16px 40px;
+    }
+
+    /* ── Intro / status bar ── */
+    .sw-top{
+      border: 1px solid rgba(167,139,250,0.12);
+      border-radius: 20px;
+      padding: 14px 18px;
+      background: rgba(167,139,250,0.03);
+      margin: 14px 0 16px;
+    }
+    .sw-top .sub{
+      font-size: 12.5px;
+      opacity: .78;
+      line-height: 1.55;
+    }
+    .sw-badges{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .sw-badge{
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(167,139,250,0.07);
+      color: var(--text);
+      opacity: .88;
+      white-space: nowrap;
+    }
+    .sw-badge.streak{
+      border-color: rgba(52,211,153,0.30);
+      background: rgba(52,211,153,0.07);
+      color: rgba(52,211,153,0.95);
+    }
+
+    /* ── Prize teaser + reveal ── */
+    .sw-prize-line{
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #a78bfa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: swPrizeGrad 6s ease infinite;
+    }
+    @keyframes swPrizeGrad{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    .sw-prize{
+      display: none;
+      margin: 4px 0 16px;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(167,139,250,0.42);
+      background: linear-gradient(160deg, rgba(20,12,55,0.85), rgba(45,16,80,0.75));
+      box-shadow: 0 0 40px rgba(167,139,250,0.18);
+    }
+    .sw-prize.show{ display: block; }
+    .sw-prize .trophy{
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 8px;
+      animation: swTrophy 1.9s ease-in-out infinite;
+    }
+    @keyframes swTrophy{
+      0%,100%{ transform: scale(1);    filter: drop-shadow(0 0 6px rgba(167,139,250,0.5)); }
+      50%    { transform: scale(1.12); filter: drop-shadow(0 0 20px rgba(167,139,250,0.9)); }
+    }
+    .sw-prize h4{
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6,#60a5fa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: swPrizeGrad 4s ease infinite;
+    }
+    .sw-prize p{
+      margin: 0;
+      font-size: 13px;
+      color: rgba(200,195,235,0.88);
+      line-height: 1.6;
+    }
+    .sw-prize code{
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #a78bfa;
+    }
+    .sw-prize a{ color: #60a5fa; text-decoration: underline; }
+    html[data-theme="light"] .page-starword .sw-prize{
+      background: linear-gradient(160deg, rgba(124,92,246,0.10), rgba(96,165,250,0.08));
+      border-color: rgba(124,92,246,0.35);
+    }
+    html[data-theme="light"] .page-starword .sw-prize p{ color: rgba(26,23,48,0.86); }
+
+    /* ── Board ── */
+    .sw-board{
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 330px;
+      margin: 18px auto 14px;
+      touch-action: manipulation;
+    }
+    .sw-row{
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .sw-tile{
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 7vw, 30px);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text);
+      border: 2px solid rgba(167,139,250,0.20);
+      border-radius: 10px;
+      background: rgba(167,139,250,0.03);
+      user-select: none;
+      transition: border-color 120ms ease, transform 90ms ease;
+    }
+    .sw-tile.filled{
+      border-color: rgba(167,139,250,0.55);
+      animation: swPop 110ms ease;
+    }
+    @keyframes swPop{ 0%{transform:scale(0.92)} 100%{transform:scale(1)} }
+
+    /* Flip reveal */
+    .sw-tile.flip{ animation: swFlip 520ms ease forwards; }
+    @keyframes swFlip{
+      0%   { transform: rotateX(0deg); }
+      50%  { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    /* Result states */
+    .sw-tile.correct{
+      background: linear-gradient(135deg, #a78bfa, #8b6df0);
+      border-color: #a78bfa;
+      color: #0b0820;
+    }
+    .sw-tile.present{
+      background: linear-gradient(135deg, #60a5fa, #4b8ff0);
+      border-color: #60a5fa;
+      color: #061024;
+    }
+    .sw-tile.absent{
+      background: rgba(120,116,150,0.16);
+      border-color: rgba(120,116,150,0.28);
+      color: var(--muted);
+    }
+
+    .sw-row.shake{ animation: swShake 420ms ease; }
+    @keyframes swShake{
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-7px)}
+      40%{transform:translateX(7px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+    .sw-row.bounce .sw-tile{ animation: swBounce 620ms ease; }
+    @keyframes swBounce{
+      0%,100%{transform:translateY(0)}
+      35%{transform:translateY(-14px)}
+      60%{transform:translateY(4px)}
+    }
+
+    /* ── Toast ── */
+    .sw-toast-slot{
+      min-height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    .sw-toast{
+      font-size: 12.5px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.28);
+      background: rgba(10,8,30,0.82);
+      color: #e8e5ff;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .sw-toast.show{ opacity: 1; transform: translateY(0); }
+
+    /* ── Hint ── */
+    .sw-hint-bar{
+      display: flex;
+      justify-content: center;
+      margin: 4px 0 12px;
+    }
+    .sw-hint{
+      font-size: 12.5px;
+      text-align: center;
+      max-width: 420px;
+      margin: 0 auto 12px;
+      padding: 9px 14px;
+      border-radius: 14px;
+      border: 1px dashed rgba(96,165,250,0.35);
+      background: rgba(96,165,250,0.05);
+      color: var(--text);
+      opacity: .9;
+      line-height: 1.5;
+    }
+
+    /* ── Keyboard ── */
+    .sw-keys{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .sw-krow{
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+    .sw-key{
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 50px;
+      border-radius: 8px;
+      border: 1px solid rgba(167,139,250,0.20);
+      background: rgba(167,139,250,0.07);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 120ms ease, transform 80ms ease, border-color 120ms ease;
+    }
+    .sw-key:active{ transform: scale(0.94); }
+    .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
+    .sw-key.correct{ background: #a78bfa; border-color: #a78bfa; color: #0b0820; }
+    .sw-key.present{ background: #60a5fa; border-color: #60a5fa; color: #061024; }
+    .sw-key.absent { background: rgba(120,116,150,0.14); border-color: rgba(120,116,150,0.18); color: var(--muted); opacity: .65; }
+
+    /* ── End panel ── */
+    .sw-end{
+      display: none;
+      margin: 20px auto 0;
+      max-width: 460px;
+      text-align: center;
+      border: 1px solid rgba(167,139,250,0.16);
+      border-radius: 20px;
+      padding: 20px 18px;
+      background: rgba(167,139,250,0.04);
+    }
+    .sw-end.show{ display: block; }
+    .sw-end h3{
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+    .sw-answer{
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      background: linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: swGrad 8s linear infinite;
+      margin: 6px 0 8px;
+    }
+    @keyframes swGrad{ 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+    .sw-def{
+      font-size: 13px;
+      opacity: .82;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .sw-stats{
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 14px 0 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(167,139,250,0.12);
+    }
+    .sw-stat b{
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .sw-stat span{
+      font-size: 10.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .68;
+    }
+    .sw-end .actions{
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Celebration canvas ── */
+    #swFx{
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 950;
+      display: none;
+    }
+
+    /* ── Light theme tweaks ──
+       Solved tiles stay violet and blue in light mode, just a deeper,
+       more saturated shade so they carry against a pale background —
+       the on-page explanation of the colours holds in either theme.
+
+       The blank/filled rules below are scoped with :not() on purpose.
+       A bare `html[data-theme="light"] .sw-tile` selector outranks
+       `.sw-tile.correct` on specificity and would quietly wipe out the
+       result colours it is meant to leave alone. */
+    html[data-theme="light"] .page-starword .sw-tile:not(.correct):not(.present):not(.absent){
+      background: rgba(124,92,246,0.05);
+      border-color: rgba(124,92,246,0.22);
+    }
+    html[data-theme="light"] .page-starword .sw-tile.filled:not(.correct):not(.present):not(.absent){
+      border-color: rgba(124,92,246,0.55);
+    }
+    html[data-theme="light"] .page-starword .sw-tile.correct{
+      background: linear-gradient(135deg, #7c5cf6, #6740e4);
+      border-color: #6740e4;
+      color: #fff;
+    }
+    html[data-theme="light"] .page-starword .sw-tile.present{
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-color: #2563eb;
+      color: #fff;
+    }
+    html[data-theme="light"] .page-starword .sw-tile.absent{
+      background: rgba(70,64,110,0.16);
+      border-color: rgba(70,64,110,0.22);
+      color: rgba(70,64,110,0.78);
+    }
+
+    html[data-theme="light"] .page-starword .sw-key:not(.correct):not(.present):not(.absent){
+      background: rgba(124,92,246,0.07);
+      border-color: rgba(124,92,246,0.20);
+    }
+    /* Keys carry small bold labels, so they use the deeper end of the
+       same violet/blue pair — the tiles' large letters clear the
+       contrast bar at the brighter shade, but these would not. */
+    html[data-theme="light"] .page-starword .sw-key.correct{
+      background: #6740e4; border-color: #6740e4; color: #fff;
+    }
+    html[data-theme="light"] .page-starword .sw-key.present{
+      background: #2563eb; border-color: #2563eb; color: #fff;
+    }
+    html[data-theme="light"] .page-starword .sw-key.absent{
+      background: rgba(70,64,110,0.13);
+      border-color: rgba(70,64,110,0.17);
+      color: rgba(70,64,110,0.62);
+    }
+    html[data-theme="light"] .page-starword .sw-toast{
+      background: rgba(255,255,255,0.94);
+      color: #1a1730;
+    }
+
+    @media (max-width: 420px){
+      .page-starword .sw-wrap{ padding: 10px 10px 32px; }
+      .sw-key{ height: 46px; font-size: 12px; }
+      .sw-key.wide{ font-size: 10px; }
+      .sw-keys{ gap: 5px; }
+      .sw-krow{ gap: 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .sw-tile.flip, .sw-row.bounce .sw-tile, .sw-row.shake, .sw-answer{ animation: none !important; }
+    }
+  </style>
+</head>
+
+<body class="page-starword">
+
+<div id="siteHeader"></div>
+
+<main class="section">
+  <div class="sw-wrap">
+
+    <div class="section-head">
+      <h1>Star Word</h1>
+      <button id="muteBtn" type="button" class="btn sound-toggle" aria-label="Mute sounds" aria-pressed="false" title="Sound on">🔊</button>
+    </div>
+
+    <div class="sw-top">
+      <div class="sub">
+        Guess the five-letter word in six tries. Every answer comes from astronomy or astrophotography —
+        constellations, nebulae, moons, gear and technique. A <strong>violet</strong> tile means the letter is
+        in the right place; a <strong>blue</strong> tile means it's in the word but somewhere else.
+        A new word appears each day.
+      </div>
+      <div class="sw-prize-line">⭐ Solve it in two guesses or fewer to win a special prize ⭐</div>
+      <div class="sw-badges">
+        <span class="sw-badge" id="modeBadge">Daily #1</span>
+        <span class="sw-badge streak" id="streakBadge">Streak: 0</span>
+        <span class="sw-badge" id="playedBadge">Played: 0</span>
+      </div>
+    </div>
+
+    <div class="sw-toast-slot"><div class="sw-toast" id="toast" role="status" aria-live="polite"></div></div>
+
+    <div class="sw-board" id="board" aria-label="Star Word guess board"></div>
+
+    <div class="sw-hint-bar">
+      <button class="btn" id="hintBtn" type="button">Reveal clue</button>
+    </div>
+    <div class="sw-hint" id="hintBox" style="display:none;"></div>
+
+    <div class="sw-keys" id="keyboard" aria-label="On-screen keyboard"></div>
+
+    <div class="sw-end" id="endPanel">
+      <h3 id="endTitle">Nicely done</h3>
+      <div class="sw-answer" id="endAnswer">ORION</div>
+      <div class="sw-def" id="endDef"></div>
+
+      <div class="sw-prize" id="prizeBox">
+        <div class="trophy">🏆</div>
+        <h4>Two guesses — outstanding</h4>
+        <p>Use code <code>STARWORD10</code> in the notes of any
+           <a href="prints.html">prints enquiry</a> for&nbsp;10%&nbsp;off.</p>
+      </div>
+
+      <div class="sw-stats">
+        <div class="sw-stat"><b id="statPlayed">0</b><span>Played</span></div>
+        <div class="sw-stat"><b id="statWins">0</b><span>Win %</span></div>
+        <div class="sw-stat"><b id="statStreak">0</b><span>Streak</span></div>
+        <div class="sw-stat"><b id="statBest">0</b><span>Best</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="shareBtn" type="button">Share result</button>
+        <button class="btn" id="practiceBtn" type="button">Practice word →</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="siteFooter"></div>
+
+<canvas id="swFx" aria-hidden="true"></canvas>
+
+<script>
+(function(){
+'use strict';
+
+/* ══════════════════════════════════════════════════════════════
+   WORD LIST
+   Each entry: [WORD, clue]. Answers are astronomy /
+   astrophotography terms, several drawn straight from the
+   site's own gallery and gear entries.
+   ══════════════════════════════════════════════════════════════ */
+const WORDS = [
+  ['ORION','The hunter — the winter constellation holding the Great Nebula.'],
+  ['EAGLE','M16, the nebula containing the Pillars of Creation.'],
+  ['CIGAR','Nickname for the starburst galaxy M82.'],
+  ['MILKY','____ Way — our own galaxy, seen edge-on from inside it.'],
+  ['FLAME','Nebula sitting beside Alnitak in Orion\u2019s belt.'],
+  ['HORSE','____head — the famous dark nebula silhouette in Orion.'],
+  ['HEART','Large emission nebula in Cassiopeia, IC 1805.'],
+  ['JELLY','____fish Nebula, a supernova remnant in Gemini.'],
+  ['WHALE','Nickname for the edge-on galaxy NGC 4631.'],
+  ['WITCH','____ Head Nebula, lit by nearby Rigel.'],
+  ['CLOUD','Molecular ____ — the cold gas where stars are born.'],
+  ['COMET','Icy visitor that grows a tail as it nears the Sun.'],
+  ['ORBIT','The path one body traces around another.'],
+  ['LUNAR','Of or relating to the Moon.'],
+  ['SOLAR','Of or relating to the Sun.'],
+  ['PHASE','The changing lit fraction of the Moon.'],
+  ['FLARE','A sudden violent release of energy on the Sun.'],
+  ['GIANT','Red ____ — a swollen, ageing star.'],
+  ['DWARF','White ____ — the cooling ember a Sun-like star leaves behind.'],
+  ['LIGHT','____ year — a measure of distance, not time.'],
+  ['FOCAL','____ length — 495mm on the Askar V used for these images.'],
+  ['ASKAR','The brand of refractor behind most of this gallery.'],
+  ['JUWEI','Maker of the harmonic drive mount used here.'],
+  ['SIRIL','Free stacking and processing software used on every image here.'],
+  ['MOUNT','The tracking platform that cancels the Earth\u2019s rotation.'],
+  ['SCOPE','Informal word for a telescope.'],
+  ['PIXEL','The smallest light-collecting element on a sensor.'],
+  ['BAYER','Colour filter matrix laid over a one-shot-colour sensor.'],
+  ['DARKS','Calibration frames shot with the lens cap on.'],
+  ['FLATS','Calibration frames that cancel vignetting and dust motes.'],
+  ['STACK','Combine many sub-exposures into one cleaner image.'],
+  ['NOISE','The grain that stacking and dithering beat down.'],
+  ['FRAME','A single exposure within a longer sequence.'],
+  ['FIELD','Flat ____ — an optical corrector for edge-of-frame stars.'],
+  ['DRIFT','____ alignment — a patient way to perfect polar alignment.'],
+  ['GUIDE','Auto____ing keeps stars pinpoint over long exposures.'],
+  ['TRAIL','Star ____ — what you get when tracking goes wrong, or right.'],
+  ['FOCUS','A Bahtinov mask exists to help you nail this.'],
+  ['OPTIC','Relating to light and the lenses that bend it.'],
+  ['CURVE','Light ____ — brightness plotted against time.'],
+  ['TOTAL','The kind of solar eclipse worth crossing the world for.'],
+  ['CHART','A map of the sky.'],
+  ['NADIR','The point directly beneath your feet.'],
+  ['MIZAR','Double star in the handle of the Big Dipper.'],
+  ['RIGEL','Blue supergiant marking the foot of Orion.'],
+  ['SPICA','Brightest star in Virgo.'],
+  ['DENEB','The swan\u2019s tail, a corner of the Summer Triangle.'],
+  ['ATLAS','A star in the Pleiades — and a book of sky maps.'],
+  ['CERES','Largest object in the asteroid belt, and a dwarf planet.'],
+  ['TITAN','Saturn\u2019s big moon, wrapped in orange haze.'],
+  ['PLUTO','Reclassified as a dwarf planet in 2006.'],
+  ['VENUS','The brightest planet in our sky.'],
+  ['EARTH','The pale blue dot we shoot from.'],
+  ['CANIS','____ Major — the constellation containing Sirius.'],
+  ['MARIA','The dark basaltic plains of the Moon.'],
+  ['TYCHO','Bright rayed lunar crater — and a Danish astronomer.'],
+  ['MOONS','Natural satellites, from Phobos to Titan.'],
+  ['RINGS','Saturn\u2019s most famous feature.'],
+  ['HALOS','Rings of light around the Moon on an icy night.'],
+  ['METAL','Astronomers\u2019 term for any element heavier than helium.'],
+  ['SUPER','____nova — the death of a massive star.'],
+  ['PULSE','The metronome-steady beat of a pulsar.'],
+  ['PROBE','A robotic craft sent out to explore.'],
+  ['ROVER','A wheeled explorer trundling across Mars.'],
+  ['SPACE','The final frontier.'],
+  ['STARS','What we are all out here for.'],
+  ['VOIDS','The vast empty regions between filaments of the cosmic web.'],
+  ['TIDAL','____ tails — streams of stars pulled out by a galactic encounter.'],
+  ['DISKS','Protoplanetary ____ — the flattened birthplaces of planets.'],
+  ['DENSE','What the core of a neutron star very much is.'],
+  ['BLACK','____ hole — a place light cannot climb out of.'],
+  ['WHITE','____ dwarf, or ____ balance — take your pick.'],
+  ['BLINK','Compare two frames to spot something that moved.'],
+  ['CLEAR','What every astrophotographer wants the skies to be.'],
+  ['NORTH','Polaris sits almost exactly at this celestial pole.'],
+  ['POLAR','____ alignment — the first job of every session.'],
+  ['ALIGN','What you do to the mount before anything else works.'],
+  ['DEPTH','What hours of extra integration time buy you.'],
+  ['FAINT','How most deep-sky targets look before stretching.'],
+  ['SKIES','Bortle scales grade them.'],
+  ['NIGHT','When the work happens.'],
+  ['EVENT','____ horizon — the point of no return around a black hole.'],
+  ['BIRTH','Star ____ — what a glowing nebula is really showing you.'],
+  ['DEATH','A supernova marks the ____ of a massive star.'],
+  ['HOURS','Deep-sky imaging is measured in these, not seconds.'],
+  ['DUSTY','What those dark lanes across the Milky Way are.'],
+  ['SETUP','Everything you assemble before the first exposure.'],
+  ['QUIET','What a good imaging night is — no wind, no neighbours.'],
+  ['ANGLE','Wide-____ — a lens that takes in a big slice of sky.'],
+  ['SHARP','What every star in a good frame should be.'],
+  ['FROST','Dew heaters exist to stop this forming on the lens.'],
+  ['RADIO','The kind of telescope that listens rather than looks.'],
+  ['ALIEN','What we are all quietly hoping to find out there.'],
+  ['TWINS','Gemini, the celestial ____.'],
+  ['BEARS','Ursa Major and Minor — the great and little ____.'],
+  ['VIRGO','Zodiac constellation hiding an enormous galaxy cluster.'],
+  ['LIBRA','The scales, a zodiac constellation.'],
+  ['SOUTH','The ____ern Cross points toward a pole with no bright star.'],
+  ['SWORD','Orion\u2019s ____ hangs below his belt, the Great Nebula inside it.'],
+  ['GREAT','The ____ Nebula in Orion — M42, the showpiece of winter.']
+];
+
+const ROWS = 6, COLS = 5;
+const SITE_URL = 'https://bhapstar.com/star_word.html';
+
+/* ══════════════════════════════════════════════════════════════
+   AUDIO — shares the site-wide mute key with the other puzzles
+   ══════════════════════════════════════════════════════════════ */
+const MUTE_KEY = 'bhapstar_sound_muted';
+let muted = false;
+try { muted = localStorage.getItem(MUTE_KEY) === '1'; } catch(e){}
+function isMuted(){ return muted; }
+
+let winAudioCtl = null;
+
+const muteBtn = document.getElementById('muteBtn');
+function syncMuteBtn(){
+  if(!muteBtn) return;
+  muteBtn.textContent = muted ? '🔇' : '🔊';
+  muteBtn.setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
+  muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+  muteBtn.title = muted ? 'Sound off' : 'Sound on';
+}
+function toggleMute(){
+  muted = !muted;
+  try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch(e){}
+  if(winAudioCtl){ muted ? winAudioCtl.pause() : winAudioCtl.resume(); }
+  syncMuteBtn();
+}
+muteBtn && muteBtn.addEventListener('click', toggleMute);
+syncMuteBtn();
+
+// Web Audio synth cues — same soft blip vocabulary as Quiz / Supernova Sweeper
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+function _blip(freq, when, dur, peak, type){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, when);
+  gain.gain.setValueAtTime(0.0001, when);
+  gain.gain.exponentialRampToValueAtTime(peak, when + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  osc.start(when);
+  osc.stop(when + dur + 0.02);
+}
+function _withCtx(fn){
+  try {
+    const ctx = getAudioCtx();
+    if(ctx.state === 'suspended'){ ctx.resume().then(fn); } else { fn(); }
+  } catch(e){}
+}
+function playType(){
+  if(isMuted()) return;
+  _withCtx(function(){ _blip(520, getAudioCtx().currentTime, 0.055, 0.045, 'triangle'); });
+}
+function playDelete(){
+  if(isMuted()) return;
+  _withCtx(function(){ _blip(320, getAudioCtx().currentTime, 0.06, 0.04, 'triangle'); });
+}
+// One tick per tile as it flips — pitch rises for a hit, stays flat for a miss
+function playTileReveal(state, idx){
+  if(isMuted()) return;
+  _withCtx(function(){
+    const t = getAudioCtx().currentTime + 0.005;
+    const base = state === 'correct' ? 660 : (state === 'present' ? 523.25 : 300);
+    const peak = state === 'absent' ? 0.05 : 0.10;
+    _blip(base + idx * (state === 'absent' ? 0 : 22), t, 0.10, peak, 'sine');
+  });
+}
+function playInvalid(){
+  if(isMuted()) return;
+  _withCtx(function(){
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime + 0.01;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(311.13, t);
+    osc.frequency.exponentialRampToValueAtTime(220, t + 0.18);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.12, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+    osc.start(t); osc.stop(t + 0.26);
+  });
+}
+
+/* ── Existing mp3 assets: fireworks / multiverse / explosion ── */
+let _track = null;
+function playTrack(name, vol){
+  try {
+    if(_track){ _track.pause(); _track.currentTime = 0; }
+    _track = new Audio('sounds/' + name);
+    _track.volume = vol;
+    if(!isMuted()) _track.play().catch(function(){});
+  } catch(e){}
+}
+winAudioCtl = {
+  pause:  function(){ if(_track) _track.pause(); },
+  resume: function(){ if(_track && !_track.ended) _track.play().catch(function(){}); }
+};
+
+/* ══════════════════════════════════════════════════════════════
+   CELEBRATION — lightweight fireworks over the page
+   ══════════════════════════════════════════════════════════════ */
+const fx = document.getElementById('swFx');
+const fxCtx = fx.getContext('2d');
+let _fxRaf = null, _fxTimer = null;
+
+function resizeFx(){
+  const dpr = window.devicePixelRatio || 1;
+  fx.width  = Math.floor(window.innerWidth  * dpr);
+  fx.height = Math.floor(window.innerHeight * dpr);
+  fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', function(){ if(fx.style.display === 'block') resizeFx(); });
+
+function stopFx(){
+  if(_fxRaf){ cancelAnimationFrame(_fxRaf); _fxRaf = null; }
+  if(_fxTimer){ clearInterval(_fxTimer); _fxTimer = null; }
+  fxCtx.clearRect(0, 0, fx.width, fx.height);
+  fx.style.display = 'none';
+}
+function fireworks(durationMs){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  stopFx();
+  resizeFx();
+  fx.style.display = 'block';
+  const start = performance.now();
+  const particles = [];
+
+  function burst(){
+    const W = window.innerWidth, H = window.innerHeight;
+    const cx = W * (0.15 + Math.random() * 0.7);
+    const cy = H * (0.12 + Math.random() * 0.5);
+    const hue = Math.floor(Math.random() * 360);
+    const count = 70 + Math.floor(Math.random() * 40);
+    for(let i = 0; i < count; i++){
+      const a = Math.random() * Math.PI * 2;
+      const sp = 2 + Math.random() * 5.5;
+      const life = 100 + Math.floor(Math.random() * 70);
+      particles.push({
+        x: cx, y: cy,
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        g: 0.05 + Math.random() * 0.06,
+        life: life, maxLife: life,
+        r: 1.3 + Math.random() * 2.0,
+        col: 'hsl(' + (hue + Math.floor(Math.random() * 40 - 20)) + ',90%,' + (55 + Math.floor(Math.random() * 20)) + '%)'
+      });
+    }
+  }
+  burst();
+  _fxTimer = setInterval(burst, 620);
+
+  function frame(now){
+    fxCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += p.g;
+      p.vx *= 0.988; p.vy *= 0.988;
+      p.life--;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      fxCtx.globalAlpha = Math.max(0, p.life / p.maxLife);
+      fxCtx.fillStyle = p.col;
+      fxCtx.beginPath();
+      fxCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      fxCtx.fill();
+    }
+    fxCtx.globalAlpha = 1;
+    if(now - start > durationMs && particles.length === 0){ stopFx(); return; }
+    if(now - start > durationMs && _fxTimer){ clearInterval(_fxTimer); _fxTimer = null; }
+    _fxRaf = requestAnimationFrame(frame);
+  }
+  _fxRaf = requestAnimationFrame(frame);
+}
+// Tapping anywhere clears the celebration early
+document.addEventListener('click', function(e){
+  if(e.target && e.target.closest && e.target.closest('button, a')) return;
+  if(fx.style.display === 'block') stopFx();
+});
+
+/* ══════════════════════════════════════════════════════════════
+   DAILY WORD SELECTION
+   Deterministic from the number of days since the launch epoch,
+   run through a small hash so consecutive days aren't neighbours
+   in the list. Everyone gets the same word on the same date.
+   ══════════════════════════════════════════════════════════════ */
+const EPOCH = Date.UTC(2026, 0, 1);   // 1 Jan 2026
+function todayIndex(){
+  const now = new Date();
+  const utcMidnight = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.max(0, Math.floor((utcMidnight - EPOCH) / 86400000));
+}
+// Small seeded PRNG (mulberry32) — same seed always gives the same sequence
+function prng(seed){
+  let a = seed >>> 0;
+  return function(){
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+// The list is shuffled once per "cycle" of WORDS.length days, seeded by the
+// cycle number. Every word therefore appears exactly once per cycle — no
+// repeats a day or two apart, which a plain hash-modulo would have given us.
+function dailyWord(dayIdx){
+  const n     = WORDS.length;
+  const cycle = Math.floor(dayIdx / n);
+  const pos   = dayIdx % n;
+  const order = WORDS.map(function(_, i){ return i; });
+  const rnd   = prng(cycle * 2654435761 + 12345);
+  for(let i = order.length - 1; i > 0; i--){
+    const j = Math.floor(rnd() * (i + 1));
+    const t = order[i]; order[i] = order[j]; order[j] = t;
+  }
+  return WORDS[order[pos]];
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STATE + PERSISTENCE
+   ══════════════════════════════════════════════════════════════ */
+const STATS_KEY = 'bhapstar_starword_stats';
+const STATE_KEY = 'bhapstar_starword_state';
+
+function loadJSON(key, fallback){
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch(e){ return fallback; }
+}
+function saveJSON(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+}
+
+let stats = loadJSON(STATS_KEY, { played:0, wins:0, streak:0, best:0, lastDay:-1 });
+
+const DAY = todayIndex();
+let practiceMode = false;
+let answer = '';
+let clue = '';
+let guesses = [];        // array of submitted guess strings
+let current = '';        // in-progress guess
+let finished = false;
+let hintShown = false;
+let busy = false;        // true while a row is animating
+
+const board    = document.getElementById('board');
+const keyboard = document.getElementById('keyboard');
+const toastEl  = document.getElementById('toast');
+const hintBox  = document.getElementById('hintBox');
+const hintBtn  = document.getElementById('hintBtn');
+const endPanel = document.getElementById('endPanel');
+const prizeBox = document.getElementById('prizeBox');
+
+/* ══════════════════════════════════════════════════════════════
+   BUILD UI
+   ══════════════════════════════════════════════════════════════ */
+function buildBoard(){
+  board.innerHTML = '';
+  for(let r = 0; r < ROWS; r++){
+    const row = document.createElement('div');
+    row.className = 'sw-row';
+    row.dataset.row = String(r);
+    for(let c = 0; c < COLS; c++){
+      const t = document.createElement('div');
+      t.className = 'sw-tile';
+      t.dataset.col = String(c);
+      row.appendChild(t);
+    }
+    board.appendChild(row);
+  }
+}
+
+const KEY_ROWS = [
+  'QWERTYUIOP'.split(''),
+  'ASDFGHJKL'.split(''),
+  ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL'])
+];
+
+function buildKeyboard(){
+  keyboard.innerHTML = '';
+  KEY_ROWS.forEach(function(rowKeys){
+    const row = document.createElement('div');
+    row.className = 'sw-krow';
+    rowKeys.forEach(function(k){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sw-key' + (k.length > 1 ? ' wide' : '');
+      b.textContent = k === 'DEL' ? '⌫' : k;
+      b.dataset.key = k;
+      b.setAttribute('aria-label', k === 'DEL' ? 'Delete' : k);
+      b.addEventListener('click', function(){ handleKey(k); });
+      row.appendChild(b);
+    });
+    keyboard.appendChild(row);
+  });
+}
+
+function rowEl(r){ return board.children[r]; }
+function tileEl(r, c){ return rowEl(r).children[c]; }
+
+function renderCurrent(){
+  const r = guesses.length;
+  if(r >= ROWS) return;
+  for(let c = 0; c < COLS; c++){
+    const t = tileEl(r, c);
+    const ch = current[c] || '';
+    if(t.textContent !== ch){
+      t.textContent = ch;
+      t.classList.toggle('filled', !!ch);
+      if(ch){ t.classList.remove('filled'); void t.offsetWidth; t.classList.add('filled'); }
+    }
+  }
+}
+
+let toastTimer = null;
+function toast(msg, ms){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, ms || 1800);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCORING
+   Two-pass so repeated letters are marked the way players expect:
+   exact matches are claimed first, then leftovers are matched.
+   ══════════════════════════════════════════════════════════════ */
+function score(guess, target){
+  const res = new Array(COLS).fill('absent');
+  const pool = {};
+  for(let i = 0; i < COLS; i++){
+    if(guess[i] === target[i]){
+      res[i] = 'correct';
+    } else {
+      pool[target[i]] = (pool[target[i]] || 0) + 1;
+    }
+  }
+  for(let i = 0; i < COLS; i++){
+    if(res[i] === 'correct') continue;
+    const ch = guess[i];
+    if(pool[ch] > 0){ res[i] = 'present'; pool[ch]--; }
+  }
+  return res;
+}
+
+const keyState = {};
+const RANK = { absent: 0, present: 1, correct: 2 };
+function updateKeys(guess, res){
+  for(let i = 0; i < COLS; i++){
+    const ch = guess[i];
+    if(!keyState[ch] || RANK[res[i]] > RANK[keyState[ch]]) keyState[ch] = res[i];
+  }
+  keyboard.querySelectorAll('.sw-key').forEach(function(b){
+    const k = b.dataset.key;
+    if(k.length > 1) return;
+    b.classList.remove('correct','present','absent');
+    if(keyState[k]) b.classList.add(keyState[k]);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INPUT
+   ══════════════════════════════════════════════════════════════ */
+function handleKey(k){
+  if(finished || busy) return;
+  if(k === 'ENTER'){ submit(); return; }
+  if(k === 'DEL'){
+    if(current.length){ current = current.slice(0, -1); renderCurrent(); playDelete(); }
+    return;
+  }
+  if(/^[A-Z]$/.test(k) && current.length < COLS){
+    current += k;
+    renderCurrent();
+    playType();
+  }
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = (e.target && e.target.tagName) || '';
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(e.key === 'Enter'){ e.preventDefault(); handleKey('ENTER'); return; }
+  if(e.key === 'Backspace'){ e.preventDefault(); handleKey('DEL'); return; }
+  const ch = e.key.toUpperCase();
+  if(/^[A-Z]$/.test(ch) && ch.length === 1) handleKey(ch);
+});
+
+function shakeRow(r){
+  const row = rowEl(r);
+  row.classList.remove('shake'); void row.offsetWidth; row.classList.add('shake');
+}
+
+function submit(){
+  const r = guesses.length;
+  if(current.length < COLS){
+    toast('Not enough letters');
+    shakeRow(r);
+    playInvalid();
+    return;
+  }
+  const guess = current;
+  const res = score(guess, answer);
+  busy = true;
+
+  // Flip the tiles one at a time
+  for(let i = 0; i < COLS; i++){
+    (function(i){
+      setTimeout(function(){
+        const t = tileEl(r, i);
+        t.classList.add('flip');
+        setTimeout(function(){
+          t.classList.remove('filled');
+          t.classList.add(res[i]);
+          playTileReveal(res[i], i);
+        }, 250);
+      }, i * 260);
+    })(i);
+  }
+
+  setTimeout(function(){
+    guesses.push(guess);
+    current = '';
+    updateKeys(guess, res);
+    busy = false;
+
+    const won = guess === answer;
+    if(won){
+      rowEl(r).classList.add('bounce');
+      finish(true);
+    } else if(guesses.length >= ROWS){
+      finish(false);
+    } else {
+      if(guesses.length === 3 && !hintShown) toast('Stuck? A clue is waiting below.');
+      saveState();
+    }
+  }, (COLS - 1) * 260 + 560);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FINISH + STATS
+   ══════════════════════════════════════════════════════════════ */
+const WIN_LINES = ['Extraordinary','Superb','Sharp','Solid','Got there','Phew — just in time'];
+
+// The prize threshold: solved in two guesses or fewer.
+function prizeEarned(won){ return !!won && guesses.length <= 2; }
+function syncPrize(won){ prizeBox.classList.toggle('show', prizeEarned(won)); }
+
+function finish(won){
+  finished = true;
+  saveState();
+
+  if(!practiceMode && stats.lastDay !== DAY){
+    stats.played += 1;
+    if(won){
+      stats.wins += 1;
+      stats.streak = (stats.lastDay === DAY - 1 || stats.lastDay === -1) ? stats.streak + 1 : 1;
+      if(stats.streak > stats.best) stats.best = stats.streak;
+    } else {
+      stats.streak = 0;
+    }
+    stats.lastDay = DAY;
+    saveJSON(STATS_KEY, stats);
+  }
+
+  document.getElementById('endTitle').textContent =
+    won ? (WIN_LINES[Math.min(guesses.length - 1, WIN_LINES.length - 1)] + '!') : 'Clouded out';
+  document.getElementById('endAnswer').textContent = answer;
+  document.getElementById('endDef').textContent = clue;
+  endPanel.classList.add('show');
+  renderStats();
+  renderBadges();
+
+  hintBox.style.display = 'block';
+  hintBox.textContent = clue;
+  hintBtn.style.display = 'none';
+
+  syncPrize(won);
+
+  if(won){
+    const brilliant = prizeEarned(won);
+    fireworks(brilliant ? 16000 : 9000);
+    playTrack(brilliant ? 'multiverse.mp3' : 'fireworks.mp3', brilliant ? 1.0 : 0.85);
+  } else {
+    playTrack('explosion.mp3', 0.6);
+  }
+
+  setTimeout(function(){
+    endPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 700);
+}
+
+function renderStats(){
+  document.getElementById('statPlayed').textContent = stats.played;
+  document.getElementById('statWins').textContent   = stats.played ? Math.round(stats.wins / stats.played * 100) : 0;
+  document.getElementById('statStreak').textContent = stats.streak;
+  document.getElementById('statBest').textContent   = stats.best;
+}
+function renderBadges(){
+  document.getElementById('modeBadge').textContent    = practiceMode ? 'Practice' : ('Daily #' + (DAY + 1));
+  document.getElementById('streakBadge').textContent  = 'Streak: ' + stats.streak;
+  document.getElementById('playedBadge').textContent  = 'Played: ' + stats.played;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARE — deliberately uses our own violet/blue squares
+   ══════════════════════════════════════════════════════════════ */
+const EMOJI = { correct: '🟪', present: '🟦', absent: '⬛' };
+
+function buildShare(){
+  const solved = guesses.length && guesses[guesses.length - 1] === answer;
+  const head = 'bhapstar Star Word ' + (practiceMode ? '(practice)' : '#' + (DAY + 1)) +
+               ' ' + (solved ? guesses.length : 'X') + '/' + ROWS;
+  const grid = guesses.map(function(g){
+    return score(g, answer).map(function(s){ return EMOJI[s]; }).join('');
+  }).join('\n');
+  return head + '\n\n' + grid + '\n\n' + SITE_URL;
+}
+
+document.getElementById('shareBtn').addEventListener('click', function(){
+  const text = buildShare();
+  if(navigator.share){
+    navigator.share({ text: text }).catch(function(){});
+    return;
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      toast('Result copied to clipboard');
+    }).catch(function(){ toast('Could not copy'); });
+  } else {
+    toast('Copying is not supported here');
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   HINT
+   ══════════════════════════════════════════════════════════════ */
+hintBtn.addEventListener('click', function(){
+  hintShown = true;
+  hintBox.textContent = clue;
+  hintBox.style.display = 'block';
+  hintBtn.style.display = 'none';
+  saveState();
+});
+
+/* ══════════════════════════════════════════════════════════════
+   SAVE / RESTORE today's board so a refresh doesn't lose progress
+   ══════════════════════════════════════════════════════════════ */
+function saveState(){
+  if(practiceMode) return;
+  saveJSON(STATE_KEY, { day: DAY, guesses: guesses, finished: finished, hint: hintShown });
+}
+
+function replay(saved){
+  saved.guesses.forEach(function(g, r){
+    const res = score(g, answer);
+    for(let c = 0; c < COLS; c++){
+      const t = tileEl(r, c);
+      t.textContent = g[c];
+      t.classList.add(res[c]);
+    }
+    updateKeys(g, res);
+  });
+  guesses = saved.guesses.slice();
+  if(saved.hint){
+    hintShown = true;
+    hintBox.textContent = clue;
+    hintBox.style.display = 'block';
+    hintBtn.style.display = 'none';
+  }
+  if(saved.finished || guesses.length >= ROWS || (guesses.length && guesses[guesses.length - 1] === answer)){
+    finished = true;
+    const won = guesses.length && guesses[guesses.length - 1] === answer;
+    document.getElementById('endTitle').textContent =
+      won ? (WIN_LINES[Math.min(guesses.length - 1, WIN_LINES.length - 1)] + '!') : 'Clouded out';
+    document.getElementById('endAnswer').textContent = answer;
+    document.getElementById('endDef').textContent = clue;
+    endPanel.classList.add('show');
+    syncPrize(won);
+    hintBox.textContent = clue;
+    hintBox.style.display = 'block';
+    hintBtn.style.display = 'none';
+    toast('You have already played today — try a practice word', 2600);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   START / RESET
+   ══════════════════════════════════════════════════════════════ */
+function startDaily(){
+  practiceMode = false;
+  const w = dailyWord(DAY);
+  answer = w[0]; clue = w[1];
+  resetBoardState();
+  const saved = loadJSON(STATE_KEY, null);
+  if(saved && saved.day === DAY && saved.guesses && saved.guesses.length){
+    replay(saved);
+  }
+  renderBadges();
+  renderStats();
+}
+
+function startPractice(){
+  practiceMode = true;
+  let w;
+  do { w = WORDS[Math.floor(Math.random() * WORDS.length)]; } while(w[0] === answer && WORDS.length > 1);
+  answer = w[0]; clue = w[1];
+  resetBoardState();
+  renderBadges();
+  toast('New practice word — this one does not affect your streak', 2400);
+}
+
+function resetBoardState(){
+  guesses = [];
+  current = '';
+  finished = false;
+  hintShown = false;
+  busy = false;
+  Object.keys(keyState).forEach(function(k){ delete keyState[k]; });
+  buildBoard();
+  buildKeyboard();
+  endPanel.classList.remove('show');
+  prizeBox.classList.remove('show');
+  hintBox.style.display = 'none';
+  hintBtn.style.display = '';
+  stopFx();
+  if(_track){ _track.pause(); _track = null; }
+}
+
+document.getElementById('practiceBtn').addEventListener('click', function(e){
+  e.stopPropagation();
+  startPractice();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Boot
+buildBoard();
+buildKeyboard();
+startDaily();
+
+})();
+</script>
+
+<script src="protect-images.js"></script>
+<script src="partials/partials.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
