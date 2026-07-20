@@ -1634,7 +1634,7 @@
           All images shown here are my own, created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
-        <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or swipe to navigate. Use the magnify button to zoom. Use the rotate button to rotate.</p><br>
+        <p class="gallery-hint">Click any image to view it full-page. Use the arrow keys or the on-screen arrows to navigate. Pinch or use the magnify button to zoom. Use the rotate button to rotate.</p><br>
         <p class="gallery-hint">For more on each image (how it was captured, the equipment and conditions, and the story behind it) open any image and choose <strong>Information</strong> from the options menu.</p><br>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
@@ -3265,12 +3265,10 @@
     });
 
     /* ── Touch swipe on image panel ── */
-    let touchStartX = 0, touchStartY = 0, isTouchOnBtn = false;
+    let isTouchOnBtn = false;
 
     dvImgPanel.addEventListener('touchstart', (e) => {
       isTouchOnBtn = !!e.target.closest('button');
-      touchStartX  = e.touches[0].clientX;
-      touchStartY  = e.touches[0].clientY;
       if (zoomed() && !isTouchOnBtn && e.touches.length === 1) {
         zoomDragging = true;
         zoomStartX = e.touches[0].clientX - zoomOriginX;
@@ -3291,18 +3289,11 @@
       }
     }, { passive: false });
 
-    dvImgPanel.addEventListener('touchend', (e) => {
+    dvImgPanel.addEventListener('touchend', () => {
       zoomDragging = false;
-      if (isTouchOnBtn) { isTouchOnBtn = false; return; }
-      if (zoomed()) return;
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      const dy = e.changedTouches[0].clientY - touchStartY;
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        if (dx < 0)
-          dvList.length > 1 ? (dvIdx < dvList.length - 1 ? (dvIdx++, showDv()) : goToItem(+1)) : goToItem(+1);
-        else
-          dvList.length > 1 ? (dvIdx > 0 ? (dvIdx--, showDv()) : goToItem(-1)) : goToItem(-1);
-      }
+      isTouchOnBtn = false;
+      /* Swipe-to-navigate intentionally disabled on images:
+         it conflicted with two-finger pinch zoom. Use the arrow buttons. */
     }, { passive: true });
 
     /* ── Swipe on video overlay (mobile) ── */
