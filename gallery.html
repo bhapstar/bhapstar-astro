@@ -877,6 +877,10 @@
     /* ── Zoomed / pan cursor ── */
     .dv-image-panel.dv-zoomed { cursor: grab; }
     .dv-image-panel.dv-zoomed:active { cursor: grabbing; }
+    /* The image is clickable (→ its own page), except while zoomed, where a
+       drag is a pan and the grab cursor above should win. */
+    #dvImg { cursor: pointer; }
+    .dv-image-panel.dv-zoomed #dvImg { cursor: inherit; }
     .dv-image-panel.dv-zoomed #dvImg { will-change: transform; transition: none !important; }
 
     /* ── Right panel: info sidebar ── */
@@ -2215,6 +2219,20 @@
     dvZoomBtn.title = 'Zoom in (1.5×)';
     zoomApply();
   }
+
+  /* Click the viewer image → that image's own page.
+     Skipped while zoomed, because there a click is the end of a pan drag
+     rather than a deliberate tap. Entries with no slug have no page, so
+     those keep the old behaviour of doing nothing. */
+  dvImg.addEventListener('click', (e) => {
+    if (zoomed()) return;
+    if (e.target.closest('button')) return;
+    const slug = currentItem && currentItem.slug;
+    if (!slug) return;
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = 'share/' + encodeURIComponent(slug) + '.html';
+  });
 
   /* Mouse drag for zoom-pan */
   dvImgPanel.addEventListener('mousedown', (e) => {
