@@ -2847,7 +2847,10 @@
     if (!btn) return;
     e.preventDefault();
     const item = items[Number(btn.dataset.idx)];
-    if (item) openDetail(item, Number(btn.dataset.activeIdx));
+    if (!item) return;
+    // Match the grid tiles: go to the image's own page when it has one.
+    if (item.slug) { window.location.href = `share/${item.slug}.html`; return; }
+    openDetail(item, Number(btn.dataset.activeIdx));
   }
 
   /* ══════════════════════════════════════
@@ -2923,13 +2926,17 @@
       applyDescToggle(nowHidden);
     });
 
-    /* Card click → open detail view */
+    /* Card click → the image's own page (share/<slug>.html).
+       The anchor already carries that href, so we simply let the browser
+       follow it. Entries without a slug have no page, so those still fall
+       back to opening the in-page viewer. */
     grid.addEventListener('click', (e) => {
       if (e.target.closest('.like-btn')) return;
       const a = e.target.closest('a.card');
       if (!a) return;
-      e.preventDefault();
       const item = items[Number(a.dataset.idx)];
+      if (item && item.slug) return;          // navigate normally
+      e.preventDefault();
       if (item) openDetail(item, Number(a.dataset.activeIdx));
     });
 

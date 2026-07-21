@@ -65,6 +65,11 @@ PAGE_STYLE = """\
     .share-wrap{ max-width: 900px; margin: 0 auto; }
     .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
     .share-figure{ margin: 0 0 22px; }
+    /* The image box. Both arrow sets are absolutely positioned against
+       this, so they track the picture and not the caption below it. */
+    .share-slides{ position: relative; }
+    .share-slide{ display: none; }
+    .share-slide.is-active{ display: block; }
     .share-figure img{
       display: block; width: 100%; height: auto; border-radius: 14px;
       border: 1px solid var(--line);
@@ -82,6 +87,81 @@ PAGE_STYLE = """\
     }
     .share-figure figcaption{
       margin-top: 8px; color: var(--muted); font-size: 13px;
+    }
+    .share-slide-cap:empty{ display: none; }
+    /* Prev / next arrows overlaid on the image. The image itself links to the
+       full-screen viewer, so the arrows sit above it on their own layer. */
+    .share-arrow{
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 26px; line-height: 1; text-decoration: none;
+      color: rgba(232,230,247,0.92);
+      background: rgba(5,4,20,0.52);
+      border: 1px solid rgba(167,139,250,0.28);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      opacity: 0.75;
+      transition: background .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+    .share-arrow:hover, .share-arrow:focus-visible{
+      opacity: 1; background: rgba(5,4,20,0.78);
+      border-color: rgba(167,139,250,0.6);
+    }
+    .share-arrow.prev{ left: 12px; }
+    .share-arrow.next{ right: 12px; }
+    html[data-theme="light"] .share-arrow{
+      color: #0b0a1c; background: rgba(255,255,255,0.72);
+      border-color: rgba(120,90,220,0.32);
+    }
+    html[data-theme="light"] .share-arrow:hover,
+    html[data-theme="light"] .share-arrow:focus-visible{
+      background: rgba(255,255,255,0.92);
+    }
+    @media (max-width: 620px){
+      .share-arrow{ width: 38px; height: 38px; font-size: 22px; }
+      .share-arrow.prev{ left: 8px; }
+      .share-arrow.next{ right: 8px; }
+    }
+    /* Second control: cycles this entry's own pictures. Sat at the bottom
+       centre of the image so it never collides with the page-to-page arrows
+       on the left and right edges. Only rendered when there's more than one
+       picture, and only usable with JS — hence the button elements. */
+    .share-pager{
+      position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: 14px; z-index: 3;
+      display: flex; align-items: center; gap: 2px;
+      padding: 4px 6px; border-radius: 999px;
+      background: rgba(5,4,20,0.58);
+      border: 1px solid rgba(167,139,250,0.28);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .share-pager-btn{
+      appearance: none; background: none; border: 0; cursor: pointer;
+      width: 30px; height: 30px; border-radius: 50%;
+      display: grid; place-items: center;
+      font: inherit; font-size: 20px; line-height: 1;
+      color: rgba(232,230,247,0.92);
+      transition: background .18s ease, color .18s ease;
+    }
+    .share-pager-btn:hover, .share-pager-btn:focus-visible{
+      background: rgba(167,139,250,0.22);
+    }
+    .share-pager-count{
+      min-width: 42px; text-align: center;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+      color: rgba(232,230,247,0.8);
+      font-variant-numeric: tabular-nums;
+    }
+    html[data-theme="light"] .share-pager{
+      background: rgba(255,255,255,0.78);
+      border-color: rgba(120,90,220,0.32);
+    }
+    html[data-theme="light"] .share-pager-btn{ color: #0b0a1c; }
+    html[data-theme="light"] .share-pager-count{ color: rgba(20,18,44,0.75); }
+    @media (max-width: 620px){
+      .share-pager{ bottom: 10px; }
+      .share-pager-btn{ width: 26px; height: 26px; font-size: 18px; }
+      .share-pager-count{ min-width: 38px; font-size: 11px; }
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }
@@ -304,19 +384,56 @@ def build_page(entry, prev_link, next_link):
     specs = entry.get("specs") or {}
 
     # ── figures ──
-    figures = []
+    # Prev / next arrows, overlaid on the cover image (first figure only).
+    arrows = ""
+    if prev_link:
+        arrows += (f'\n        <a class="share-arrow prev" href="{a(prev_link[0])}"'
+                   f' rel="prev" aria-label="Previous image: {a(prev_link[1])}"'
+                   f' title="{a(prev_link[1])}">‹</a>')
+    if next_link:
+        arrows += (f'\n        <a class="share-arrow next" href="{a(next_link[0])}"'
+                   f' rel="next" aria-label="Next image: {a(next_link[1])}"'
+                   f' title="{a(next_link[1])}">›</a>')
+
+    # All of an entry's pictures live in one figure as slides. With a single
+    # picture that's just the picture; with several, the pager below cycles
+    # them in place instead of stacking them down the page.
+    multi = len(media) > 1
+    slides = []
     for i, (file, img_alt) in enumerate(media):
         eager = 'loading="eager" fetchpriority="high"' if i == 0 else 'loading="lazy"'
-        caption = (f"\n        <figcaption>{t(img_alt)}</figcaption>"
-                   if len(media) > 1 and img_alt else "")
-        figures.append(
-            f'      <figure class="share-figure">\n'
-            f'        <a href="{a(viewer_url)}" aria-label="Open {a(title)} in the gallery viewer">'
+        cap = t(img_alt) if (multi and img_alt) else ""
+        slides.append(
+            f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
+            f' data-cap="{a(cap)}">'
+            f'<a href="{a(viewer_url)}" aria-label="Open {a(title)} full screen">'
             f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
-            f'decoding="async" draggable="false"></a>{caption}\n'
-            f'      </figure>'
+            f'decoding="async" draggable="false"></a></div>'
         )
-    figures_html = "\n".join(figures)
+
+    pager = ""
+    if multi:
+        pager = (
+            '\n          <div class="share-pager">'
+            '<button class="share-pager-btn prev" type="button"'
+            ' aria-label="Previous picture">‹</button>'
+            f'<span class="share-pager-count" aria-live="polite">1 / {len(media)}</span>'
+            '<button class="share-pager-btn next" type="button"'
+            ' aria-label="Next picture">›</button>'
+            '</div>'
+        )
+
+    first_cap = t(media[0][1]) if (multi and media[0][1]) else ""
+    figures_html = (
+        '      <figure class="share-figure">\n'
+        '        <div class="share-slides">\n'
+        + "\n".join(slides)
+        + arrows.replace("\n        ", "\n          ")
+        + pager
+        + '\n        </div>\n'
+        f'        <figcaption class="share-slide-cap">{first_cap}</figcaption>\n'
+        '      </figure>'
+    )
     if is_video_entry:
         figures_html += (
             '\n      <p class="share-date">Stills from the time-lapse videos — '
@@ -355,15 +472,53 @@ def build_page(entry, prev_link, next_link):
         )
 
     # ── prev / next ──
+    slides_script = ""
+    if multi:
+        slides_script = (
+            "      <script>\n"
+            "        (function(){\n"
+            "          var box = document.querySelector('.share-slides');\n"
+            "          if (!box) return;\n"
+            "          var slides = box.querySelectorAll('.share-slide');\n"
+            "          var count  = box.querySelector('.share-pager-count');\n"
+            "          var cap    = document.querySelector('.share-slide-cap');\n"
+            "          var i = 0;\n"
+            "          function show(n){\n"
+            "            i = (n + slides.length) % slides.length;\n"
+            "            for (var k = 0; k < slides.length; k++){\n"
+            "              slides[k].classList.toggle('is-active', k === i);\n"
+            "            }\n"
+            "            if (count) count.textContent = (i + 1) + ' / ' + slides.length;\n"
+            "            if (cap) cap.textContent = slides[i].getAttribute('data-cap') || '';\n"
+            "          }\n"
+            "          box.querySelector('.share-pager-btn.prev')\n"
+            "             .addEventListener('click', function(){ show(i - 1); });\n"
+            "          box.querySelector('.share-pager-btn.next')\n"
+            "             .addEventListener('click', function(){ show(i + 1); });\n"
+            "        })();\n"
+            "      </script>\n"
+        )
+
+    # Keyboard support for the overlaid arrows: left / right move between images.
     nav_html = ""
     if prev_link or next_link:
-        prev_a = (f'<a class="nav-prev" href="{a(prev_link[0])}">← {t(prev_link[1])}</a>'
-                  if prev_link else "")
-        next_a = (f'<a class="nav-next" href="{a(next_link[0])}">{t(next_link[1])} →</a>'
-                  if next_link else "")
-        nav_html = f'      <nav class="share-nav" aria-label="More images">{prev_a}{next_a}</nav>\n'
+        prev_js = f'"{a(prev_link[0])}"' if prev_link else "null"
+        next_js = f'"{a(next_link[0])}"' if next_link else "null"
+        nav_html = (
+            "      <script>\n"
+            "        (function(){\n"
+            f"          var prev = {prev_js}, next = {next_js};\n"
+            "          document.addEventListener('keydown', function(e){\n"
+            "            if (e.metaKey || e.ctrlKey || e.altKey) return;\n"
+            "            var tag = (e.target.tagName || '').toLowerCase();\n"
+            "            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;\n"
+            "            if (e.key === 'ArrowLeft'  && prev) location.href = prev;\n"
+            "            if (e.key === 'ArrowRight' && next) location.href = next;\n"
+            "          });\n"
+            "        })();\n"
+            "      </script>\n"
+        )
 
-    viewer_label = "Watch in the gallery viewer" if is_video_entry else "Open in the gallery viewer"
     published = (f'  <meta property="article:published_time" content="{a(iso_date)}" />\n'
                  if iso_date else "")
     json_ld = build_json_ld(entry, share_url, iso_date, media, meta_desc)
@@ -427,11 +582,11 @@ def build_page(entry, prev_link, next_link):
 
 {specs_html}
       <div class="actions">
-        <a class="btn primary" href="{a(viewer_url)}">{t(viewer_label)}</a>
+        <a class="btn primary" href="/gallery.html">Back to gallery</a>
         <a class="btn" href="/prints.html">Order a print</a>
       </div>
 
-{nav_html}
+{slides_script}{nav_html}
     </div>
   </section>
 </main>
