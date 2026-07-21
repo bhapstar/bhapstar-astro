@@ -39,6 +39,11 @@
     .share-wrap{ max-width: 900px; margin: 0 auto; }
     .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
     .share-figure{ margin: 0 0 22px; }
+    /* The image box. Both arrow sets are absolutely positioned against
+       this, so they track the picture and not the caption below it. */
+    .share-slides{ position: relative; }
+    .share-slide{ display: none; }
+    .share-slide.is-active{ display: block; }
     .share-figure img{
       display: block; width: 100%; height: auto; border-radius: 14px;
       border: 1px solid var(--line);
@@ -56,6 +61,81 @@
     }
     .share-figure figcaption{
       margin-top: 8px; color: var(--muted); font-size: 13px;
+    }
+    .share-slide-cap:empty{ display: none; }
+    /* Prev / next arrows overlaid on the image. The image itself links to the
+       full-screen viewer, so the arrows sit above it on their own layer. */
+    .share-arrow{
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 26px; line-height: 1; text-decoration: none;
+      color: rgba(232,230,247,0.92);
+      background: rgba(5,4,20,0.52);
+      border: 1px solid rgba(167,139,250,0.28);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      opacity: 0.75;
+      transition: background .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+    .share-arrow:hover, .share-arrow:focus-visible{
+      opacity: 1; background: rgba(5,4,20,0.78);
+      border-color: rgba(167,139,250,0.6);
+    }
+    .share-arrow.prev{ left: 12px; }
+    .share-arrow.next{ right: 12px; }
+    html[data-theme="light"] .share-arrow{
+      color: #0b0a1c; background: rgba(255,255,255,0.72);
+      border-color: rgba(120,90,220,0.32);
+    }
+    html[data-theme="light"] .share-arrow:hover,
+    html[data-theme="light"] .share-arrow:focus-visible{
+      background: rgba(255,255,255,0.92);
+    }
+    @media (max-width: 620px){
+      .share-arrow{ width: 38px; height: 38px; font-size: 22px; }
+      .share-arrow.prev{ left: 8px; }
+      .share-arrow.next{ right: 8px; }
+    }
+    /* Second control: cycles this entry's own pictures. Sat at the bottom
+       centre of the image so it never collides with the page-to-page arrows
+       on the left and right edges. Only rendered when there's more than one
+       picture, and only usable with JS — hence the button elements. */
+    .share-pager{
+      position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: 14px; z-index: 3;
+      display: flex; align-items: center; gap: 2px;
+      padding: 4px 6px; border-radius: 999px;
+      background: rgba(5,4,20,0.58);
+      border: 1px solid rgba(167,139,250,0.28);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .share-pager-btn{
+      appearance: none; background: none; border: 0; cursor: pointer;
+      width: 30px; height: 30px; border-radius: 50%;
+      display: grid; place-items: center;
+      font: inherit; font-size: 20px; line-height: 1;
+      color: rgba(232,230,247,0.92);
+      transition: background .18s ease, color .18s ease;
+    }
+    .share-pager-btn:hover, .share-pager-btn:focus-visible{
+      background: rgba(167,139,250,0.22);
+    }
+    .share-pager-count{
+      min-width: 42px; text-align: center;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+      color: rgba(232,230,247,0.8);
+      font-variant-numeric: tabular-nums;
+    }
+    html[data-theme="light"] .share-pager{
+      background: rgba(255,255,255,0.78);
+      border-color: rgba(120,90,220,0.32);
+    }
+    html[data-theme="light"] .share-pager-btn{ color: #0b0a1c; }
+    html[data-theme="light"] .share-pager-count{ color: rgba(20,18,44,0.75); }
+    @media (max-width: 620px){
+      .share-pager{ bottom: 10px; }
+      .share-pager-btn{ width: 26px; height: 26px; font-size: 18px; }
+      .share-pager-count{ min-width: 38px; font-size: 11px; }
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }
@@ -163,7 +243,12 @@
       <h1>The Andromeda Galaxy (M31)</h1>
 
       <figure class="share-figure">
-        <a href="/gallery.html#andromeda-galaxy-m31" aria-label="Open The Andromeda Galaxy (M31) in the gallery viewer"><img src="/images/andromeda-galaxy-m31.webp" alt="Andromeda Galaxy M31 spiral galaxy astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a>
+        <div class="share-slides">
+          <div class="share-slide is-active" data-cap=""><a href="/gallery.html#andromeda-galaxy-m31" aria-label="Open The Andromeda Galaxy (M31) full screen"><img src="/images/andromeda-galaxy-m31.webp" alt="Andromeda Galaxy M31 spiral galaxy astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a></div>
+          <a class="share-arrow prev" href="/share/flame-horsehead-nebulae.html" rel="prev" aria-label="Previous image: The Flame (NGC 2024) and Horsehead (B33) Nebulae" title="The Flame (NGC 2024) and Horsehead (B33) Nebulae">‹</a>
+          <a class="share-arrow next" href="/share/monkey-head-nebula-ngc2174.html" rel="next" aria-label="Next image: The Monkey Head Nebula (NGC 2174)" title="The Monkey Head Nebula (NGC 2174)">›</a>
+        </div>
+        <figcaption class="share-slide-cap"></figcaption>
       </figure>
 
       <div class="share-body">
@@ -186,11 +271,22 @@
       </div>
 
       <div class="actions">
-        <a class="btn primary" href="/gallery.html#andromeda-galaxy-m31">Open in the gallery viewer</a>
+        <a class="btn primary" href="/gallery.html">Back to gallery</a>
         <a class="btn" href="/prints.html">Order a print</a>
       </div>
 
-      <nav class="share-nav" aria-label="More images"><a class="nav-prev" href="/share/flame-horsehead-nebulae.html">← The Flame (NGC 2024) and Horsehead (B33) Nebulae</a><a class="nav-next" href="/share/monkey-head-nebula-ngc2174.html">The Monkey Head Nebula (NGC 2174) →</a></nav>
+      <script>
+        (function(){
+          var prev = "/share/flame-horsehead-nebulae.html", next = "/share/monkey-head-nebula-ngc2174.html";
+          document.addEventListener('keydown', function(e){
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            var tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+            if (e.key === 'ArrowLeft'  && prev) location.href = prev;
+            if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+        })();
+      </script>
 
     </div>
   </section>
