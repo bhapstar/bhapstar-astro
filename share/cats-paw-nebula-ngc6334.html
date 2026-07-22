@@ -211,7 +211,7 @@
     html[data-theme="light"] .slb-img{
       box-shadow: 0 22px 55px rgba(0,0,0,0.45);
     }
-    .slb-close, .slb-arrow{
+    .slb-close, .slb-arrow, .slb-share{
       position: fixed; z-index: 2; appearance: none; cursor: pointer;
       display: grid; place-items: center; line-height: 1;
       color: rgba(232,230,247,0.92);
@@ -222,12 +222,15 @@
     }
     .slb-close{ top: 16px; right: 16px; width: 44px; height: 44px;
       border-radius: 50%; font-size: 20px; }
+    .slb-share{ top: 16px; left: 16px; width: 44px; height: 44px; border-radius: 50%; }
+    .slb-share svg{ width: 20px; height: 20px; }
+    .slb-share.copied{ color: #34d399; border-color: rgba(52,211,153,0.6); }
     .slb-arrow{ top: 50%; transform: translateY(-50%);
       width: 52px; height: 52px; border-radius: 50%; font-size: 30px; }
     .slb-arrow.prev{ left: 16px; }
     .slb-arrow.next{ right: 16px; }
-    .slb-close:hover, .slb-arrow:hover,
-    .slb-close:focus-visible, .slb-arrow:focus-visible{
+    .slb-close:hover, .slb-arrow:hover, .slb-share:hover,
+    .slb-close:focus-visible, .slb-arrow:focus-visible, .slb-share:focus-visible{
       background: rgba(5,4,20,0.82); border-color: rgba(167,139,250,0.6);
     }
     .slb-count{
@@ -240,6 +243,7 @@
     html[data-theme="light"] .share-lightbox{ background: rgba(245,244,255,0.96); }
     html[data-theme="light"] .slb-close,
     html[data-theme="light"] .slb-arrow,
+    html[data-theme="light"] .slb-share,
     html[data-theme="light"] .slb-count{
       color: #0b0a1c; background: rgba(255,255,255,0.80);
       border-color: rgba(120,90,220,0.32);
@@ -248,6 +252,7 @@
       .slb-arrow{ width: 42px; height: 42px; font-size: 26px; }
       .slb-arrow.prev{ left: 8px; } .slb-arrow.next{ right: 8px; }
       .slb-close{ top: 10px; right: 10px; width: 40px; height: 40px; }
+      .slb-share{ top: 10px; left: 10px; width: 40px; height: 40px; }
       .slb-img{ max-width: 100vw; max-height: 88vh; border-radius: 0; }
     }
   </style>
@@ -363,6 +368,7 @@
 
   <div class="share-lightbox" id="shareLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="The Cat&#x27;s Paw Nebula (NGC 6334) — full screen">
     <button class="slb-close" type="button" aria-label="Close full screen">✕</button>
+    <button class="slb-share" type="button" aria-label="Share this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line></svg></button>
     <button class="slb-arrow prev" type="button" aria-label="Previous photo">‹</button>
     <button class="slb-arrow next" type="button" aria-label="Next photo">›</button>
     <div class="slb-stage"><img class="slb-img" src="" alt="" draggable="false"></div>
@@ -438,6 +444,12 @@
         var dx = tt.clientX - sx, dy = tt.clientY - sy;
         if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }
       }, { passive: true });
+      var shareBtn = box.querySelector('.slb-share');
+      function slbFlash(){ if(!shareBtn) return; shareBtn.classList.add('copied'); clearTimeout(slbFlash._t); slbFlash._t = setTimeout(function(){ shareBtn.classList.remove('copied'); }, 1400); }
+      function slbJpeg(blob){ return new Promise(function(res){ var o=URL.createObjectURL(blob), im=new Image(); im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); res(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); res(null);} }; im.onerror=function(){ URL.revokeObjectURL(o); res(null); }; im.src=o; }); }
+      async function slbFile(src){ try{ var r=await fetch(src,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(src.split('/').pop()||'image').replace(/\.[^.]+$/,''); var j=await slbJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; } }
+      async function slbShare(){ var m=media[i]; var page=m.page||location.href; var title=m.alt||document.title; if(navigator.share){ var f=await slbFile(m.src); try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:title, text:title, url:page}); return; } }catch(_){} try{ await navigator.share({title:title, text:title, url:page}); }catch(_){} } else if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(page); slbFlash(); }catch(_){} } }
+      if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); slbShare(); });
     })();
   </script>
 
