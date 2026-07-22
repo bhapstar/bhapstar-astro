@@ -445,7 +445,7 @@
       }
       async function nativeShare(){
         var f=await buildFile();
-        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:TITLE, text:TEXT, url:PAGE}); return; } }catch(_){}
+        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:TITLE}); return; } }catch(_){ return; }
         try{ await navigator.share({title:TITLE, text:TEXT, url:PAGE}); }catch(_){}
       }
       btn.addEventListener('click', function(){ if (navigator.share){ nativeShare(); } else { copyLink(); } });

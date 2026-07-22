@@ -508,7 +508,7 @@
       function slbFlash(){ if(!shareBtn) return; shareBtn.classList.add('copied'); clearTimeout(slbFlash._t); slbFlash._t = setTimeout(function(){ shareBtn.classList.remove('copied'); }, 1400); }
       function slbJpeg(blob){ return new Promise(function(res){ var o=URL.createObjectURL(blob), im=new Image(); im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); res(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); res(null);} }; im.onerror=function(){ URL.revokeObjectURL(o); res(null); }; im.src=o; }); }
       async function slbFile(src){ try{ var r=await fetch(src,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(src.split('/').pop()||'image').replace(/\.[^.]+$/,''); var j=await slbJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; } }
-      async function slbShare(){ var m=media[i]; var page=m.page||location.href; var title=m.alt||document.title; if(navigator.share){ var f=await slbFile(m.src); try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:title, text:title, url:page}); return; } }catch(_){} try{ await navigator.share({title:title, text:title, url:page}); }catch(_){} } else if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(page); slbFlash(); }catch(_){} } }
+      async function slbShare(){ var m=media[i]; var page=m.page||location.href; var title=m.alt||document.title; if(navigator.share){ var f=await slbFile(m.src); try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:title}); return; } }catch(_){ return; } try{ await navigator.share({title:title, text:title, url:page}); }catch(_){} } else if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(page); slbFlash(); }catch(_){} } }
       if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); slbShare(); });
     })();
   </script>
@@ -539,7 +539,7 @@
       }
       async function nativeShare(){
         var f=await buildFile();
-        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:TITLE, text:TEXT, url:PAGE}); return; } }catch(_){}
+        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:TITLE}); return; } }catch(_){ return; }
         try{ await navigator.share({title:TITLE, text:TEXT, url:PAGE}); }catch(_){}
       }
       btn.addEventListener('click', function(){ if (navigator.share){ nativeShare(); } else { copyLink(); } });
