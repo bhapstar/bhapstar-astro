@@ -705,6 +705,48 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "  </script>\n"
         )
 
+    # ── share button (native share sheet + copy-link fallback) ──
+    # Mirrors the gallery viewer: shares this image's share page URL and, where
+    # supported, attaches the full-size photo as JPEG so previews render.
+    def _j(v):
+        return json.dumps(v, ensure_ascii=False).replace("<", "\\u003c")
+    share_text = meta_desc or title
+    share_file = f"/{cover}"
+    share_script = (
+        "  <script>\n"
+        "    (function(){\n"
+        "      var btn = document.getElementById('shareBtn');\n"
+        "      if (!btn) return;\n"
+        f"      var PAGE = {_j(share_url)}, TITLE = {_j(title)}, TEXT = {_j(share_text)}, FILE = {_j(share_file)};\n"
+        "      var orig = btn.textContent;\n"
+        "      function flash(m){ btn.textContent = m; clearTimeout(flash._t); flash._t = setTimeout(function(){ btn.textContent = orig; }, 1500); }\n"
+        "      function fallbackCopy(){\n"
+        "        try{ var ta=document.createElement('textarea'); ta.value=PAGE; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); flash('Link copied!'); }catch(_){}\n"
+        "      }\n"
+        "      function copyLink(){\n"
+        "        if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE).then(function(){ flash('Link copied!'); }, fallbackCopy); }\n"
+        "        else { fallbackCopy(); }\n"
+        "      }\n"
+        "      function blobToJpeg(blob){\n"
+        "        return new Promise(function(resolve){\n"
+        "          var o=URL.createObjectURL(blob), im=new Image();\n"
+        "          im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); resolve(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); resolve(null);} };\n"
+        "          im.onerror=function(){ URL.revokeObjectURL(o); resolve(null); }; im.src=o;\n"
+        "        });\n"
+        "      }\n"
+        "      async function buildFile(){\n"
+        "        try{ var r=await fetch(FILE,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(FILE.split('/').pop()||'image').replace(/\\.[^.]+$/,''); var j=await blobToJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; }\n"
+        "      }\n"
+        "      async function nativeShare(){\n"
+        "        var f=await buildFile();\n"
+        "        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:TITLE, text:TEXT, url:PAGE}); return; } }catch(_){}\n"
+        "        try{ await navigator.share({title:TITLE, text:TEXT, url:PAGE}); }catch(_){}\n"
+        "      }\n"
+        "      btn.addEventListener('click', function(){ if (navigator.share){ nativeShare(); } else { copyLink(); } });\n"
+        "    })();\n"
+        "  </script>\n"
+    )
+
     published = (f'  <meta property="article:published_time" content="{a(iso_date)}" />\n'
                  if iso_date else "")
     json_ld = build_json_ld(entry, share_url, iso_date, media, meta_desc)
@@ -770,6 +812,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
       <div class="actions">
         <a class="btn primary" href="/gallery.html">Back to gallery</a>
         <a class="btn" href="/prints.html">Order a print</a>
+        <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
 
 {slides_script}{nav_html}
@@ -778,6 +821,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 </main>
 {lightbox_html}
 {lightbox_script}
+{share_script}
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 

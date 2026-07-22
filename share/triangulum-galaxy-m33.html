@@ -342,6 +342,7 @@
       <div class="actions">
         <a class="btn primary" href="/gallery.html">Back to gallery</a>
         <a class="btn" href="/prints.html">Order a print</a>
+        <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
 
       <script>
@@ -438,6 +439,39 @@
         var dx = tt.clientX - sx, dy = tt.clientY - sy;
         if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }
       }, { passive: true });
+    })();
+  </script>
+
+  <script>
+    (function(){
+      var btn = document.getElementById('shareBtn');
+      if (!btn) return;
+      var PAGE = "https://bhapstar.com/share/triangulum-galaxy-m33.html", TITLE = "The Triangulum Galaxy (M33)", TEXT = "A nearby spiral galaxy in the Local Group, smaller and more diffuse than the Milky Way. Its faint arms are rich with glowing star-forming regions, scattered…", FILE = "/images/triangulum-galaxy-m33.webp";
+      var orig = btn.textContent;
+      function flash(m){ btn.textContent = m; clearTimeout(flash._t); flash._t = setTimeout(function(){ btn.textContent = orig; }, 1500); }
+      function fallbackCopy(){
+        try{ var ta=document.createElement('textarea'); ta.value=PAGE; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); flash('Link copied!'); }catch(_){}
+      }
+      function copyLink(){
+        if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE).then(function(){ flash('Link copied!'); }, fallbackCopy); }
+        else { fallbackCopy(); }
+      }
+      function blobToJpeg(blob){
+        return new Promise(function(resolve){
+          var o=URL.createObjectURL(blob), im=new Image();
+          im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); resolve(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); resolve(null);} };
+          im.onerror=function(){ URL.revokeObjectURL(o); resolve(null); }; im.src=o;
+        });
+      }
+      async function buildFile(){
+        try{ var r=await fetch(FILE,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(FILE.split('/').pop()||'image').replace(/\.[^.]+$/,''); var j=await blobToJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; }
+      }
+      async function nativeShare(){
+        var f=await buildFile();
+        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:TITLE, text:TEXT, url:PAGE}); return; } }catch(_){}
+        try{ await navigator.share({title:TITLE, text:TEXT, url:PAGE}); }catch(_){}
+      }
+      btn.addEventListener('click', function(){ if (navigator.share){ nativeShare(); } else { copyLink(); } });
     })();
   </script>
 
