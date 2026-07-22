@@ -281,6 +281,29 @@ PAGE_STYLE = """\
       .slb-share{ top: 10px; left: 10px; width: 40px; height: 40px; }
       .slb-img{ max-width: 100vw; max-height: 88vh; border-radius: 0; }
     }
+    .sm-backdrop{ position: fixed; inset: 0; z-index: 1100; display: none;
+      background: rgba(3,2,12,0.55); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .sm-backdrop.open{ display: block; }
+    .share-menu{ position: fixed; z-index: 1101; left: 50%; top: 50%;
+      transform: translate(-50%,-50%); display: none; width: min(300px, 88vw);
+      background: #0b0a1c; border: 1px solid rgba(167,139,250,0.28);
+      border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); padding: 8px; }
+    .share-menu.open{ display: block; }
+    .sm-title{ font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--muted); padding: 8px 12px 6px; }
+    .sm-item{ display: flex; align-items: center; gap: 13px; width: 100%;
+      padding: 11px 12px; border: 0; border-radius: 10px; cursor: pointer;
+      background: transparent; color: rgba(232,230,247,0.92); font-size: 15px;
+      text-align: left; font-family: inherit; transition: background .15s ease, color .15s ease; }
+    .sm-item:hover, .sm-item:focus-visible{ background: rgba(167,139,250,0.14); outline: none; }
+    .sm-item svg{ width: 19px; height: 19px; flex: 0 0 auto; }
+    .sm-item.copied{ color: #34d399; }
+    .sm-item[data-share="whatsapp"]:hover{ color: #25d366; }
+    .sm-item[data-share="facebook"]:hover{ color: #1877f2; }
+    html[data-theme="light"] .share-menu{ background: #fff; border-color: rgba(120,90,220,0.28);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25); }
+    html[data-theme="light"] .sm-item{ color: #14122c; }
+    html[data-theme="light"] .sm-item:hover, html[data-theme="light"] .sm-item:focus-visible{ background: rgba(120,90,220,0.12); }
   </style>
 """
 
@@ -695,6 +718,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      });\n"
             "      document.addEventListener('keydown', function(e){\n"
             "        if (!box.classList.contains('is-open')) return;\n"
+            "        var _sm=document.getElementById('shareMenu'); if(_sm && _sm.classList.contains('open')) return;\n"
             "        if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'ArrowRight'){\n"
             "          e.preventDefault(); e.stopPropagation();\n"
             "        }\n"
@@ -714,53 +738,66 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }\n"
             "      }, { passive: true });\n"
             "      var shareBtn = box.querySelector('.slb-share');\n"
-            "      function slbFlash(){ if(!shareBtn) return; shareBtn.classList.add('copied'); clearTimeout(slbFlash._t); slbFlash._t = setTimeout(function(){ shareBtn.classList.remove('copied'); }, 1400); }\n"
-            "      function slbJpeg(blob){ return new Promise(function(res){ var o=URL.createObjectURL(blob), im=new Image(); im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); res(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); res(null);} }; im.onerror=function(){ URL.revokeObjectURL(o); res(null); }; im.src=o; }); }\n"
-            "      async function slbFile(src){ try{ var r=await fetch(src,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(src.split('/').pop()||'image').replace(/\\.[^.]+$/,''); var j=await slbJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; } }\n"
-            "      async function slbShare(){ var m=media[i]; var page=m.page||location.href; var title=m.alt||document.title; if(navigator.share){ var f=await slbFile(m.src); try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:title}); return; } }catch(_){ return; } try{ await navigator.share({title:title, text:title, url:page}); }catch(_){} } else if(navigator.clipboard && navigator.clipboard.writeText){ try{ await navigator.clipboard.writeText(page); slbFlash(); }catch(_){} } }\n"
-            "      if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); slbShare(); });\n"
+            "      if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); if(window.openShareMenu){ window.openShareMenu({url:(media[i].share||media[i].page||location.href), title:(media[i].alt||document.title), image:media[i].src}); } });\n"
             "    })();\n"
             "  </script>\n"
         )
 
-    # ── share button (native share sheet + copy-link fallback) ──
-    # Mirrors the gallery viewer: shares this image's share page URL and, where
-    # supported, attaches the full-size photo as JPEG so previews render.
+    # ── share menu (Copy link / WhatsApp / X / Facebook / Email / Share…) ──
+    # One menu opened by the page's Share button OR the lightbox share icon via
+    # window.openShareMenu({url,title,image}). Per-network share links (X uses
+    # the composer, which cards from og:image) — the way that shares reliably.
     def _j(v):
         return json.dumps(v, ensure_ascii=False).replace("<", "\\u003c")
-    share_text = meta_desc or title
     share_file = f"/{cover}"
-    share_script = (
+
+    _IC = {
+        "native": '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10V2"/><path d="M5 5l3-3 3 3"/><path d="M3.5 8v5.5h9V8"/></svg>',
+        "copy": '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.4 9.6l3.2-3.2"/><path d="M7.2 5.2l1.1-1.1a2.6 2.6 0 0 1 3.6 3.6l-1.1 1.1"/><path d="M8.8 10.8l-1.1 1.1a2.6 2.6 0 0 1-3.6-3.6l1.1-1.1"/></svg>',
+        "whatsapp": '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 13.4l.85-2.9A5.6 5.6 0 1 1 8 13.6a5.6 5.6 0 0 1-2.55-.62z"/><path d="M6 6c.15-.4.3-.4.55-.4.2 0 .45.05.6.5.15.45.45 1 .5 1.1.05.1.05.25-.05.4-.25.35-.4.45-.2.7.35.5.85.85 1.35 1.05.2.08.35.05.5-.1.15-.2.45-.55.6-.75"/></svg>',
+        "x": '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><line x1="3.6" y1="3.6" x2="12.4" y2="12.4"/><line x1="12.4" y1="3.6" x2="3.6" y2="12.4"/></svg>',
+        "facebook": '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.6 14V8.4h1.9l.3-2.2H9.6V4.8c0-.64.18-1.07 1.1-1.07h1.17V1.76A15.6 15.6 0 0 0 10.16 1.6c-1.7 0-2.86 1.04-2.86 2.94v1.66H5.4v2.2h1.9V14z"/></svg>',
+        "email": '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.6" width="11.6" height="8.8" rx="1.4"/><path d="M2.6 4.4L8 8.6l5.4-4.2"/></svg>',
+    }
+    def _item(net, label):
+        return (f'\n    <button class="sm-item" data-share="{net}" role="menuitem" type="button">'
+                f'{_IC[net]}<span class="sm-lbl">{label}</span></button>')
+
+    sharemenu_html = (
+        '\n  <div class="sm-backdrop" id="smBackdrop" aria-hidden="true"></div>'
+        '\n  <div class="share-menu" id="shareMenu" role="menu" aria-label="Share options" aria-hidden="true">'
+        '\n    <div class="sm-title">Share</div>'
+        + _item("native", "Share\u2026")
+        + _item("copy", "Copy link")
+        + _item("whatsapp", "WhatsApp")
+        + _item("x", "X")
+        + _item("facebook", "Facebook")
+        + _item("email", "Email")
+        + '\n  </div>'
+    )
+
+    sharemenu_script = (
         "  <script>\n"
         "    (function(){\n"
-        "      var btn = document.getElementById('shareBtn');\n"
-        "      if (!btn) return;\n"
-        f"      var PAGE = {_j(share_url)}, TITLE = {_j(title)}, TEXT = {_j(share_text)}, FILE = {_j(share_file)};\n"
-        "      var orig = btn.textContent;\n"
-        "      function flash(m){ btn.textContent = m; clearTimeout(flash._t); flash._t = setTimeout(function(){ btn.textContent = orig; }, 1500); }\n"
-        "      function fallbackCopy(){\n"
-        "        try{ var ta=document.createElement('textarea'); ta.value=PAGE; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); flash('Link copied!'); }catch(_){}\n"
-        "      }\n"
-        "      function copyLink(){\n"
-        "        if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE).then(function(){ flash('Link copied!'); }, fallbackCopy); }\n"
-        "        else { fallbackCopy(); }\n"
-        "      }\n"
-        "      function blobToJpeg(blob){\n"
-        "        return new Promise(function(resolve){\n"
-        "          var o=URL.createObjectURL(blob), im=new Image();\n"
-        "          im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); resolve(b); },'image/jpeg',0.9); }catch(_){ URL.revokeObjectURL(o); resolve(null);} };\n"
-        "          im.onerror=function(){ URL.revokeObjectURL(o); resolve(null); }; im.src=o;\n"
-        "        });\n"
-        "      }\n"
-        "      async function buildFile(){\n"
-        "        try{ var r=await fetch(FILE,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(FILE.split('/').pop()||'image').replace(/\\.[^.]+$/,''); var j=await blobToJpeg(b); if(j) return new File([j], base+'.jpg', {type:'image/jpeg'}); return new File([b], base+'.webp', {type:b.type||'image/webp'}); }catch(_){ return null; }\n"
-        "      }\n"
-        "      async function nativeShare(){\n"
-        "        var f=await buildFile();\n"
-        "        try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:TITLE}); return; } }catch(_){ return; }\n"
-        "        try{ await navigator.share({title:TITLE, text:TEXT, url:PAGE}); }catch(_){}\n"
-        "      }\n"
-        "      btn.addEventListener('click', function(){ if (navigator.share){ nativeShare(); } else { copyLink(); } });\n"
+        "      var menu = document.getElementById('shareMenu'), backdrop = document.getElementById('smBackdrop');\n"
+        "      if (!menu) return;\n"
+        "      var cur = null;\n"
+        "      var nat = menu.querySelector('[data-share=\"native\"]'); if (nat && !navigator.share) nat.style.display = 'none';\n"
+        "      function openM(t){ cur = t; menu.classList.add('open'); backdrop.classList.add('open'); menu.setAttribute('aria-hidden','false'); var f=menu.querySelector('.sm-item'); if(f) f.focus(); }\n"
+        "      function closeM(){ menu.classList.remove('open'); backdrop.classList.remove('open'); menu.setAttribute('aria-hidden','true'); }\n"
+        "      window.openShareMenu = openM;\n"
+        "      function flashCopy(btn){ if(!btn) return; var l=btn.querySelector('.sm-lbl'); var o=l?l.textContent:''; if(l) l.textContent='Link copied!'; btn.classList.add('copied'); clearTimeout(flashCopy._t); flashCopy._t=setTimeout(function(){ if(l) l.textContent=o; btn.classList.remove('copied'); }, 1400); }\n"
+        "      function doCopy(btn){ var url=cur.url; if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(function(){flashCopy(btn);}, function(){fbCopy(url,btn);}); } else fbCopy(url,btn); }\n"
+        "      function fbCopy(url,btn){ try{ var ta=document.createElement('textarea'); ta.value=url; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); flashCopy(btn);}catch(_){} }\n"
+        "      function jpeg(blob){ return new Promise(function(res){ var o=URL.createObjectURL(blob), im=new Image(); im.onload=function(){ try{ var c=document.createElement('canvas'); c.width=im.naturalWidth||1200; c.height=im.naturalHeight||800; var x=c.getContext('2d'); x.fillStyle='#050414'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0); c.toBlob(function(b){ URL.revokeObjectURL(o); res(b); },'image/jpeg',0.9);}catch(_){URL.revokeObjectURL(o);res(null);} }; im.onerror=function(){URL.revokeObjectURL(o);res(null);}; im.src=o; }); }\n"
+        "      async function mkfile(src){ try{ var r=await fetch(src,{cache:'force-cache'}); if(!r.ok) return null; var b=await r.blob(); var base=(src.split('/').pop()||'image').replace(/\\.[^.]+$/,''); var j=await jpeg(b); if(j) return new File([j],base+'.jpg',{type:'image/jpeg'}); return new File([b],base+'.webp',{type:b.type||'image/webp'}); }catch(_){ return null; } }\n"
+        "      async function nativeShare(){ var f=cur.image?await mkfile(cur.image):null; try{ if(f && navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:cur.title, text:cur.title, url:cur.url}); return; } }catch(_){ return; } try{ await navigator.share({title:cur.title, text:cur.title, url:cur.url}); }catch(_){} }\n"
+        "      function shareTo(net){ var url=cur.url, text=cur.title; var u=encodeURIComponent(url), t=encodeURIComponent(text), ti=encodeURIComponent(text); var tgt=''; if(net==='whatsapp') tgt='https://wa.me/?text='+encodeURIComponent(text+' '+url); else if(net==='x') tgt='https://twitter.com/intent/tweet?url='+u+'&text='+t; else if(net==='facebook') tgt='https://www.facebook.com/sharer/sharer.php?u='+u; else if(net==='email') tgt='mailto:?subject='+ti+'&body='+encodeURIComponent(text+'\\n\\n'+url); if(!tgt) return; if(net==='email') window.location.href=tgt; else window.open(tgt,'_blank','noopener,noreferrer'); }\n"
+        "      menu.addEventListener('click', function(e){ var btn=e.target.closest('[data-share]'); if(!btn) return; var net=btn.dataset.share; if(net==='copy'){ doCopy(btn); return; } if(net==='native'){ closeM(); nativeShare(); return; } shareTo(net); closeM(); });\n"
+        "      backdrop.addEventListener('click', closeM);\n"
+        "      document.addEventListener('keydown', function(e){ if(e.key==='Escape' && menu.classList.contains('open')){ e.stopPropagation(); closeM(); } }, true);\n"
+        f"      var PAGE = {_j(share_url)}, TITLE = {_j(title)}, IMG = {_j(share_file)};\n"
+        "      var pb = document.getElementById('shareBtn'); if (pb) pb.addEventListener('click', function(){ openM({url:PAGE, title:TITLE, image:IMG}); });\n"
         "    })();\n"
         "  </script>\n"
     )
@@ -839,7 +876,8 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 </main>
 {lightbox_html}
 {lightbox_script}
-{share_script}
+{sharemenu_html}
+{sharemenu_script}
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
@@ -877,10 +915,12 @@ def main():
             continue
         entry_photo_start[e["slug"]] = len(all_photos)
         page = f"/{OUT_DIR}/{e['slug']}.html"
+        share = f"{DOMAIN}/{OUT_DIR}/{e['slug']}.html"
         for file, alt in entry_media(e):
             all_photos.append({"src": f"/{file}",
                                "alt": alt or e.get("title") or "",
-                               "page": page})
+                               "page": page,
+                               "share": share})
 
     written = set()
     skipped = sum(1 for e in items
