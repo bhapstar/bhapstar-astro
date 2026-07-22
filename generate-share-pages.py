@@ -675,6 +675,12 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      var pb = box.querySelector('.slb-arrow.prev'); if (pb) pb.addEventListener('click', function(){ step(-1); });\n"
             "      var nb = box.querySelector('.slb-arrow.next'); if (nb) nb.addEventListener('click', function(){ step(1); });\n"
             "      box.addEventListener('click', function(e){ if (e.target === box) close(); });\n"
+            "      var moved = false;\n"
+            "      img.addEventListener('click', function(){\n"
+            "        if (moved) { moved = false; return; }  /* a swipe, not a tap */\n"
+            "        var pg = media[i] && media[i].page;\n"
+            "        if (pg) window.location.href = pg;      /* go to this photo's share page */\n"
+            "      });\n"
             "      document.addEventListener('keydown', function(e){\n"
             "        if (!box.classList.contains('is-open')) return;\n"
             "        if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'ArrowRight'){\n"
@@ -693,7 +699,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        if (!swiping) return; swiping = false;\n"
             "        var tt = e.changedTouches[0];\n"
             "        var dx = tt.clientX - sx, dy = tt.clientY - sy;\n"
-            "        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);\n"
+            "        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }\n"
             "      }, { passive: true });\n"
             "    })();\n"
             "  </script>\n"
@@ -808,8 +814,11 @@ def main():
         if e.get("videos"):
             continue
         entry_photo_start[e["slug"]] = len(all_photos)
+        page = f"/{OUT_DIR}/{e['slug']}.html"
         for file, alt in entry_media(e):
-            all_photos.append({"src": f"/{file}", "alt": alt or e.get("title") or ""})
+            all_photos.append({"src": f"/{file}",
+                               "alt": alt or e.get("title") or "",
+                               "page": page})
 
     written = set()
     skipped = sum(1 for e in items
