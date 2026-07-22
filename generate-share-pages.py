@@ -73,17 +73,17 @@ PAGE_STYLE = """\
     .share-figure img{
       display: block; width: 100%; height: auto; border-radius: 14px;
       border: 1px solid var(--line);
-      /* Dark theme: a black shadow is invisible on #050414, so lift the
-         image off the page with a soft violet bloom instead, plus a faint
-         accent rim to define the edge. */
-      box-shadow: 0 0 0 1px rgba(167,139,250,0.14),
-                  0 12px 48px rgba(167,139,250,0.22),
-                  0 4px 18px rgba(96,165,250,0.14);
+      /* Dark theme: a plain black shadow is invisible on #050414, so lift the
+         image with a deep shadow plus a violet bloom and a faint accent rim. */
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55),
+                  0 0 0 1px rgba(167,139,250,0.18),
+                  0 10px 44px rgba(167,139,250,0.28),
+                  0 4px 18px rgba(96,165,250,0.16);
     }
-    /* Light theme: keep the original soft drop shadow, which reads well
-       against the pale background. */
+    /* Light theme: a soft, clearly visible drop shadow. */
     html[data-theme="light"] .share-figure img{
-      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+                  0 6px 18px rgba(0,0,0,0.18);
     }
     .share-figure figcaption{
       margin-top: 8px; color: var(--muted); font-size: 13px;
@@ -207,6 +207,75 @@ PAGE_STYLE = """\
     .share-nav a{ color: var(--accent); text-decoration: none; max-width: 46%; }
     .share-nav a:hover{ text-decoration: underline; }
     .share-nav .nav-next{ margin-left: auto; text-align: right; }
+    .share-open{ cursor: pointer; }
+
+    /* ── Full-screen lightbox ──────────────────────────────────────────────
+       Opens in place when a photo is clicked; the page URL never changes.
+       Pinch (or trackpad / browser zoom) to zoom — there is no click-to-zoom.
+       The arrows cycle through every photo in the gallery. */
+    .share-lightbox{
+      position: fixed; inset: 0; z-index: 1000;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(3,2,12,0.94);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    .share-lightbox.is-open{ display: flex; }
+    body.slb-lock{ overflow: hidden; }
+    .slb-stage{
+      position: relative; display: grid; place-items: center;
+      max-width: 100vw; max-height: 100vh;
+      touch-action: pinch-zoom;   /* two-finger pinch zooms; one-finger swipe navigates */
+    }
+    .slb-img{
+      max-width: 96vw; max-height: 92vh; width: auto; height: auto;
+      display: block; border-radius: 8px;
+      user-select: none; -webkit-user-select: none;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55),
+                  0 0 0 1px rgba(167,139,250,0.18),
+                  0 10px 44px rgba(167,139,250,0.28);
+    }
+    html[data-theme="light"] .slb-img{
+      box-shadow: 0 22px 55px rgba(0,0,0,0.45);
+    }
+    .slb-close, .slb-arrow{
+      position: fixed; z-index: 2; appearance: none; cursor: pointer;
+      display: grid; place-items: center; line-height: 1;
+      color: rgba(232,230,247,0.92);
+      background: rgba(5,4,20,0.55);
+      border: 1px solid rgba(167,139,250,0.30);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: background .18s ease, border-color .18s ease;
+    }
+    .slb-close{ top: 16px; right: 16px; width: 44px; height: 44px;
+      border-radius: 50%; font-size: 20px; }
+    .slb-arrow{ top: 50%; transform: translateY(-50%);
+      width: 52px; height: 52px; border-radius: 50%; font-size: 30px; }
+    .slb-arrow.prev{ left: 16px; }
+    .slb-arrow.next{ right: 16px; }
+    .slb-close:hover, .slb-arrow:hover,
+    .slb-close:focus-visible, .slb-arrow:focus-visible{
+      background: rgba(5,4,20,0.82); border-color: rgba(167,139,250,0.6);
+    }
+    .slb-count{
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      z-index: 2; font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+      color: rgba(232,230,247,0.82); font-variant-numeric: tabular-nums;
+      padding: 5px 12px; border-radius: 999px;
+      background: rgba(5,4,20,0.55); border: 1px solid rgba(167,139,250,0.24);
+    }
+    html[data-theme="light"] .share-lightbox{ background: rgba(245,244,255,0.96); }
+    html[data-theme="light"] .slb-close,
+    html[data-theme="light"] .slb-arrow,
+    html[data-theme="light"] .slb-count{
+      color: #0b0a1c; background: rgba(255,255,255,0.80);
+      border-color: rgba(120,90,220,0.32);
+    }
+    @media (max-width: 620px){
+      .slb-arrow{ width: 42px; height: 42px; font-size: 26px; }
+      .slb-arrow.prev{ left: 8px; } .slb-arrow.next{ right: 8px; }
+      .slb-close{ top: 10px; right: 10px; width: 40px; height: 40px; }
+      .slb-img{ max-width: 100vw; max-height: 88vh; border-radius: 0; }
+    }
   </style>
 """
 
@@ -364,7 +433,7 @@ def build_json_ld(entry, share_url, iso_date, media, meta_desc):
 
 # ── page template ────────────────────────────────────────────────────────────
 
-def build_page(entry, prev_link, next_link):
+def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
     slug = entry["slug"]
     title = entry.get("title") or SITE_NAME
     cover = cover_file(entry)
@@ -403,13 +472,31 @@ def build_page(entry, prev_link, next_link):
     for i, (file, img_alt) in enumerate(media):
         eager = 'loading="eager" fetchpriority="high"' if i == 0 else 'loading="lazy"'
         cap = t(img_alt) if (multi and img_alt) else ""
-        slides.append(
-            f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
-            f' data-cap="{a(cap)}">'
-            f'<a href="{a(viewer_url)}" aria-label="Open {a(title)} full screen">'
-            f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
-            f'decoding="async" draggable="false"></a></div>'
-        )
+        # Non-video photos open the in-page lightbox (JS intercepts the click
+        # via .share-open + data-idx). The href stays pointed at the gallery
+        # viewer as a no-JS / new-tab / crawler fallback. Video entries keep
+        # the plain link so they open in the gallery viewer and actually play.
+        if is_video_entry:
+            # Video stills link to the gallery viewer so the clip can play.
+            slides.append(
+                f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
+                f' data-cap="{a(cap)}">'
+                f'<a href="{a(viewer_url)}" aria-label="Play {a(title)} in the viewer">'
+                f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
+                f'decoding="async" draggable="false"></a></div>'
+            )
+        else:
+            # Photo opens the in-page lightbox (JS intercepts via .share-open +
+            # data-idx). Fallback href -> gallery viewer for no-JS / crawlers.
+            gidx = (global_start + i) if (global_start is not None) else i
+            slides.append(
+                f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
+                f' data-cap="{a(cap)}">'
+                f'<a class="share-open" data-idx="{gidx}" href="{a(viewer_url)}"'
+                f' aria-label="Open {a(title)} full screen">'
+                f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
+                f'decoding="async" draggable="false"></a></div>'
+            )
 
     pager = ""
     if multi:
@@ -519,6 +606,99 @@ def build_page(entry, prev_link, next_link):
             "      </script>\n"
         )
 
+    # ── full-screen lightbox (photo entries only) ──
+    # Opens in place on click; URL stays put. Pinch to zoom (no click-to-zoom);
+    # arrows cycle the whole gallery. Video entries are skipped.
+    lightbox_html = ""
+    lightbox_script = ""
+    lb_all = all_photos if all_photos else []
+    if not is_video_entry and lb_all:
+        lb_json = json.dumps(lb_all, ensure_ascii=False).replace("<", "\\u003c")
+        lb_arrows = lb_count = ""
+        if len(lb_all) > 1:
+            lb_arrows = (
+                '\n    <button class="slb-arrow prev" type="button" aria-label="Previous photo">‹</button>'
+                '\n    <button class="slb-arrow next" type="button" aria-label="Next photo">›</button>'
+            )
+            lb_count = '\n    <div class="slb-count" aria-live="polite"></div>'
+        lightbox_html = (
+            '\n  <div class="share-lightbox" id="shareLightbox" aria-hidden="true"'
+            ' role="dialog" aria-modal="true" aria-label="' + a(title) + ' — full screen">'
+            '\n    <button class="slb-close" type="button" aria-label="Close full screen">✕</button>'
+            + lb_arrows
+            + '\n    <div class="slb-stage"><img class="slb-img" src="" alt="" draggable="false"></div>'
+            + lb_count
+            + '\n  </div>'
+        )
+        lightbox_script = (
+            "  <script>\n"
+            "    (function(){\n"
+            f"      var media = {lb_json};\n"
+            "      var box = document.getElementById('shareLightbox');\n"
+            "      if (!box || !media.length) return;\n"
+            "      var img   = box.querySelector('.slb-img');\n"
+            "      var stage = box.querySelector('.slb-stage');\n"
+            "      var count = box.querySelector('.slb-count');\n"
+            "      var multi = media.length > 1;\n"
+            "      var i = 0, lastFocus = null;\n"
+            "      function render(){\n"
+            "        var m = media[i];\n"
+            "        img.src = m.src; img.alt = m.alt || '';\n"
+            "        if (count) count.textContent = (i + 1) + ' / ' + media.length;\n"
+            "      }\n"
+            "      function open(n){\n"
+            "        i = ((n || 0) % media.length + media.length) % media.length;\n"
+            "        lastFocus = document.activeElement;\n"
+            "        render();\n"
+            "        box.classList.add('is-open');\n"
+            "        box.setAttribute('aria-hidden', 'false');\n"
+            "        document.body.classList.add('slb-lock');\n"
+            "        var c = box.querySelector('.slb-close'); if (c) c.focus();\n"
+            "      }\n"
+            "      function close(){\n"
+            "        box.classList.remove('is-open');\n"
+            "        box.setAttribute('aria-hidden', 'true');\n"
+            "        document.body.classList.remove('slb-lock');\n"
+            "        img.src = '';\n"
+            "        if (lastFocus && lastFocus.focus) lastFocus.focus();\n"
+            "      }\n"
+            "      function step(d){ if (multi){ i = (i + d + media.length) % media.length; render(); } }\n"
+            "      var opens = document.querySelectorAll('a.share-open');\n"
+            "      for (var k = 0; k < opens.length; k++){\n"
+            "        opens[k].addEventListener('click', function(e){\n"
+            "          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;\n"
+            "          e.preventDefault();\n"
+            "          open(parseInt(this.getAttribute('data-idx'), 10) || 0);\n"
+            "        });\n"
+            "      }\n"
+            "      var cb = box.querySelector('.slb-close'); if (cb) cb.addEventListener('click', close);\n"
+            "      var pb = box.querySelector('.slb-arrow.prev'); if (pb) pb.addEventListener('click', function(){ step(-1); });\n"
+            "      var nb = box.querySelector('.slb-arrow.next'); if (nb) nb.addEventListener('click', function(){ step(1); });\n"
+            "      box.addEventListener('click', function(e){ if (e.target === box) close(); });\n"
+            "      document.addEventListener('keydown', function(e){\n"
+            "        if (!box.classList.contains('is-open')) return;\n"
+            "        if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'ArrowRight'){\n"
+            "          e.preventDefault(); e.stopPropagation();\n"
+            "        }\n"
+            "        if (e.key === 'Escape') close();\n"
+            "        else if (e.key === 'ArrowLeft') step(-1);\n"
+            "        else if (e.key === 'ArrowRight') step(1);\n"
+            "      }, true);\n"
+            "      var sx = 0, sy = 0, swiping = false;\n"
+            "      stage.addEventListener('touchstart', function(e){\n"
+            "        if (e.touches.length !== 1){ swiping = false; return; }\n"
+            "        sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true;\n"
+            "      }, { passive: true });\n"
+            "      stage.addEventListener('touchend', function(e){\n"
+            "        if (!swiping) return; swiping = false;\n"
+            "        var tt = e.changedTouches[0];\n"
+            "        var dx = tt.clientX - sx, dy = tt.clientY - sy;\n"
+            "        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);\n"
+            "      }, { passive: true });\n"
+            "    })();\n"
+            "  </script>\n"
+        )
+
     published = (f'  <meta property="article:published_time" content="{a(iso_date)}" />\n'
                  if iso_date else "")
     json_ld = build_json_ld(entry, share_url, iso_date, media, meta_desc)
@@ -590,7 +770,8 @@ def build_page(entry, prev_link, next_link):
     </div>
   </section>
 </main>
-
+{lightbox_html}
+{lightbox_script}
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
@@ -618,6 +799,18 @@ def main():
                 if e.get("section", "gallery") == "gallery"
                 and e.get("slug") and cover_file(e)]
 
+    # Global, gallery-ordered list of every photo so the lightbox arrows cycle
+    # the whole collection. Video entries excluded (they open in the gallery
+    # viewer to play). entry_photo_start[slug] = global index of its 1st photo.
+    all_photos = []
+    entry_photo_start = {}
+    for e in pageable:
+        if e.get("videos"):
+            continue
+        entry_photo_start[e["slug"]] = len(all_photos)
+        for file, alt in entry_media(e):
+            all_photos.append({"src": f"/{file}", "alt": alt or e.get("title") or ""})
+
     written = set()
     skipped = sum(1 for e in items
                   if e.get("section", "gallery") == "gallery"
@@ -632,7 +825,8 @@ def main():
             n = pageable[i + 1]
             next_link = (f"/{OUT_DIR}/{n['slug']}.html", n.get("title") or n["slug"])
 
-        page = build_page(entry, prev_link, next_link)
+        page = build_page(entry, prev_link, next_link,
+                          all_photos, entry_photo_start.get(entry["slug"]))
         if page is None:
             continue
         fname = f"{entry['slug']}.html"
