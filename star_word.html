@@ -40,9 +40,9 @@
   <style>
     /* ══════════════════════════════════════════════════
        Star Word — page-scoped styles
-       Palette deliberately uses the site's Nebula Drift
-       accents (violet / cobalt) rather than the usual
-       word-game green/yellow, so it reads as ours.
+       Result tiles use the familiar word-game green (right
+       spot) and yellow (in word, wrong spot); the rest of the
+       page keeps the site's Nebula Drift violet/cobalt accents.
        ══════════════════════════════════════════════════ */
 
     .page-starword .sw-wrap{
@@ -217,14 +217,14 @@
 
     /* Result states */
     .sw-tile.correct{
-      background: linear-gradient(135deg, #a78bfa, #8b6df0);
-      border-color: #a78bfa;
-      color: #0b0820;
+      background: #538d4e;      /* Wordle dark-theme green */
+      border-color: #538d4e;
+      color: #fff;
     }
     .sw-tile.present{
-      background: linear-gradient(135deg, #60a5fa, #4b8ff0);
-      border-color: #60a5fa;
-      color: #061024;
+      background: #b59f3b;      /* Wordle dark-theme yellow */
+      border-color: #b59f3b;
+      color: #1a1a2e;           /* dark text — white on this yellow is unreadable */
     }
     .sw-tile.absent{
       background: rgba(120,116,150,0.16);
@@ -322,8 +322,8 @@
     }
     .sw-key:active{ transform: scale(0.94); }
     .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
-    .sw-key.correct{ background: #a78bfa; border-color: #a78bfa; color: #0b0820; }
-    .sw-key.present{ background: #60a5fa; border-color: #60a5fa; color: #061024; }
+    .sw-key.correct{ background: #538d4e; border-color: #538d4e; color: #fff; }
+    .sw-key.present{ background: #b59f3b; border-color: #b59f3b; color: #1a1a2e; }
     .sw-key.absent { background: rgba(120,116,150,0.14); border-color: rgba(120,116,150,0.18); color: var(--muted); opacity: .65; }
 
     /* ── End panel ── */
@@ -401,9 +401,11 @@
     }
 
     /* ── Light theme tweaks ──
-       Solved tiles stay violet and blue in light mode, just a deeper,
-       more saturated shade so they carry against a pale background —
-       the on-page explanation of the colours holds in either theme.
+       Wordle itself uses a brighter green/yellow in its light theme
+       and a muted pair in its dark theme; we mirror that split so the
+       tiles read well on a pale background too. Letters are dark on
+       yellow because white on yellow fails contrast, especially on
+       the small keyboard labels.
 
        The blank/filled rules below are scoped with :not() on purpose.
        A bare `html[data-theme="light"] .sw-tile` selector outranks
@@ -417,14 +419,14 @@
       border-color: rgba(124,92,246,0.55);
     }
     html[data-theme="light"] .page-starword .sw-tile.correct{
-      background: linear-gradient(135deg, #7c5cf6, #6740e4);
-      border-color: #6740e4;
+      background: #6aaa64;      /* Wordle light-theme green */
+      border-color: #6aaa64;
       color: #fff;
     }
     html[data-theme="light"] .page-starword .sw-tile.present{
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      border-color: #2563eb;
-      color: #fff;
+      background: #c9b458;      /* Wordle light-theme yellow */
+      border-color: #c9b458;
+      color: #1a1a2e;
     }
     html[data-theme="light"] .page-starword .sw-tile.absent{
       background: rgba(70,64,110,0.16);
@@ -436,14 +438,11 @@
       background: rgba(124,92,246,0.07);
       border-color: rgba(124,92,246,0.20);
     }
-    /* Keys carry small bold labels, so they use the deeper end of the
-       same violet/blue pair — the tiles' large letters clear the
-       contrast bar at the brighter shade, but these would not. */
     html[data-theme="light"] .page-starword .sw-key.correct{
-      background: #6740e4; border-color: #6740e4; color: #fff;
+      background: #6aaa64; border-color: #6aaa64; color: #fff;
     }
     html[data-theme="light"] .page-starword .sw-key.present{
-      background: #2563eb; border-color: #2563eb; color: #fff;
+      background: #c9b458; border-color: #c9b458; color: #1a1a2e;
     }
     html[data-theme="light"] .page-starword .sw-key.absent{
       background: rgba(70,64,110,0.13);
@@ -484,8 +483,8 @@
     <div class="sw-top">
       <div class="sub">
         Guess the five-letter word in six tries. Every answer comes from astronomy or astrophotography —
-        constellations, nebulae, moons, gear and technique. A <strong>violet</strong> tile means the letter is
-        in the right place; a <strong>blue</strong> tile means it's in the word but somewhere else.
+        constellations, nebulae, moons, gear and technique. A <strong>green</strong> tile means the letter is
+        in the right place; a <strong>yellow</strong> tile means it's in the word but somewhere else.
         A new word appears each day.
       </div>
       <div class="sw-prize-line">⭐ Solve it in two guesses or fewer to win a special prize ⭐</div>
@@ -1174,9 +1173,9 @@ function renderBadges(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SHARE — deliberately uses our own violet/blue squares
+   SHARE — green / yellow / black squares
    ══════════════════════════════════════════════════════════════ */
-const EMOJI = { correct: '🟪', present: '🟦', absent: '⬛' };
+const EMOJI = { correct: '🟩', present: '🟨', absent: '⬛' };
 
 function buildShare(){
   const solved = guesses.length && guesses[guesses.length - 1] === answer;
