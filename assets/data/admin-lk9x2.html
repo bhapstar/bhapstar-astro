@@ -384,6 +384,7 @@
   let adminKey   = '';
   let allRows    = [];
   let thumbMap   = {}; // slug → thumb URL, built from site-data.json
+  let titleMap   = {}; // slug → real display title, built from site-data.json
   let sortCol    = 'time';
   let sortAsc    = false; // newest first
 
@@ -401,6 +402,7 @@
       items.forEach(item => {
         const slug = slugify(item.title || '');
         if (!slug) return;
+        titleMap[slug] = item.title || '';
         // Determine the cover file (first image or video poster)
         let file = item.file;
         if (!file && item.images?.length) file = item.images[0].file;
@@ -427,6 +429,11 @@
   /* ── Slug → readable title ── */
   function unslug(slug) {
     return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  /* ── Real gallery title if known, else prettified slug ── */
+  function displayTitle(slug) {
+    return titleMap[slug] || unslug(slug);
   }
 
   /* ── Login ── */
@@ -499,11 +506,18 @@
         <div>
           <div class="stat-label">Most liked</div>
           <div class="stat-value" style="font-size:14px;padding-top:4px">
-            ${topImage ? unslug(topImage.slug).substring(0, 28) + (unslug(topImage.slug).length > 28 ? '…' : '') : '—'}
+            ${topImage ? displayTitle(topImage.slug).substring(0, 28) + (displayTitle(topImage.slug).length > 28 ? '…' : '') : '—'}
           </div>
         </div>
       </div>
     `;
+  }
+
+  /* ── Parse "DD/MM/YYYY HH:MM:SS" → epoch ms (0 if missing/unparseable) ── */
+  function parseTime(s) {
+    const m = String(s || '').match(/^(\d{2})\/(\d{2})\/(\d{4})[ T](\d{2}):(\d{2}):(\d{2})/);
+    if (!m) return 0;
+    return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5], +m[6]).getTime();
   }
 
   /* ── Sort ── */
@@ -516,7 +530,7 @@
         case 'count':    return dir * ((a.count || 0) - (b.count || 0));
         case 'voters':   return dir * ((a.voters || 0) - (b.voters || 0));
         case 'location': return dir * ((a.last_liked?.country || '').localeCompare(b.last_liked?.country || ''));
-        case 'time':     return dir * ((a.last_liked?.time || '').localeCompare(b.last_liked?.time || ''));
+        case 'time':     return dir * (parseTime(a.last_liked?.time) - parseTime(b.last_liked?.time));
         default:         return 0;
       }
     });
@@ -553,7 +567,7 @@
 
       const thumbUrl = thumbMap[row.slug] || '';
       return `<tr>
-        <td class="title-cell">${thumbUrl ? `<img class="thumb-img" src="${thumbUrl}" alt="" onerror="this.style.display='none'">` : ''}<span>${unslug(row.slug)}</span></td>
+        <td class="title-cell">${thumbUrl ? `<img class="thumb-img" src="${thumbUrl}" alt="" onerror="this.style.display='none'">` : ''}<span>${displayTitle(row.slug)}</span></td>
         <td class="count-cell">${row.count || 0}</td>
         <td class="voters-cell">${row.voters || 0}</td>
         <td class="location-cell">${location}</td>
@@ -585,7 +599,7 @@
     const rows = sorted(allRows);
     const header = ['Image', 'Slug', 'Likes', 'Unique Visitors', 'Last Country', 'Last City', 'Last Liked At'];
     const lines  = rows.map(r => [
-      `"${unslug(r.slug)}"`,
+      `"${displayTitle(r.slug).replace(/"/g, '""')}"`,
       r.slug,
       r.count || 0,
       r.voters || 0,
