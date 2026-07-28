@@ -394,6 +394,23 @@ header{
   opacity: 1;
 }
 
+/* ── Mobile: keep the header nav on one line ──
+   Tightens tracking, padding and the inter-item gap just enough that
+   all five items (incl. Puzzles) hold a single row on typical phone
+   widths, instead of dropping Puzzles onto a second line at 100% zoom.
+   The font size is left untouched, so nothing looks smaller than before.
+   Desktop is unaffected; if a very narrow device still can't fit, the
+   row wraps gracefully exactly as it does today. */
+@media (max-width: 720px){
+  .nav-menu{ gap: 3px; }
+  .nav-menu a,
+  .nav-group-btn{
+    padding-left: 8px; padding-right: 8px;
+    letter-spacing: 0.12em;
+  }
+  .nav-group-btn{ gap: 4px; }
+}
+
 /* =========================
    Hero
 ========================= */
