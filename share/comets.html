@@ -496,15 +496,21 @@
           open(parseInt(this.getAttribute('data-idx'), 10) || 0);
         });
       }
-      var cb = box.querySelector('.slb-close'); if (cb) cb.addEventListener('click', close);
+      function goToCurrent(){
+        var pg = media[i] && media[i].page;
+        /* Land on the photo currently shown. If that is the page we
+           are already on (or the item has no page), just close. */
+        if (pg && pg !== location.pathname) window.location.href = pg;
+        else close();
+      }
+      var cb = box.querySelector('.slb-close'); if (cb) cb.addEventListener('click', goToCurrent);
       var pb = box.querySelector('.slb-arrow.prev'); if (pb) pb.addEventListener('click', function(){ step(-1); });
       var nb = box.querySelector('.slb-arrow.next'); if (nb) nb.addEventListener('click', function(){ step(1); });
       box.addEventListener('click', function(e){ if (e.target === box) close(); });
       var moved = false;
       img.addEventListener('click', function(){
         if (moved) { moved = false; return; }  /* a swipe, not a tap */
-        var pg = media[i] && media[i].page;
-        if (pg) window.location.href = pg;      /* go to this photo's share page */
+        goToCurrent();
       });
       document.addEventListener('keydown', function(e){
         if (!box.classList.contains('is-open')) return;
