@@ -369,7 +369,7 @@
     .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
     .sw-key.correct{ background: #538d4e; border-color: #538d4e; color: #fff; }
     .sw-key.present{ background: #b59f3b; border-color: #b59f3b; color: #1a1a2e; }
-    .sw-key.absent { background: rgba(120,116,150,0.14); border-color: rgba(120,116,150,0.18); color: var(--muted); opacity: .65; }
+    .sw-key.absent { background: #46454f; border-color: #56545f; color: #cfcede; opacity: 1; }
 
     /* ── End panel ── */
     .sw-end{
@@ -490,9 +490,9 @@
       background: #c9b458; border-color: #c9b458; color: #1a1a2e;
     }
     html[data-theme="light"] .page-starword .sw-key.absent{
-      background: rgba(70,64,110,0.13);
-      border-color: rgba(70,64,110,0.17);
-      color: rgba(70,64,110,0.62);
+      background: #b9b7c4;
+      border-color: #a7a4b4;
+      color: #2a2740;
     }
     html[data-theme="light"] .page-starword .sw-toast{
       background: rgba(255,255,255,0.94);
@@ -598,27 +598,27 @@
    site's own gallery and gear entries.
    ══════════════════════════════════════════════════════════════ */
 const WORDS = [
-  ['ORION','The hunter — the winter constellation holding the Great Nebula.'],
+  ['ORION','The hunter, the winter constellation holding the Great Nebula.'],
   ['EAGLE','M16, the nebula containing the Pillars of Creation.'],
   ['CIGAR','Nickname for the starburst galaxy M82.'],
-  ['MILKY','____ Way — our own galaxy, seen edge-on from inside it.'],
+  ['MILKY','____ Way, our own galaxy, seen edge-on from inside it.'],
   ['FLAME','Nebula sitting beside Alnitak in Orion\u2019s belt.'],
-  ['HORSE','____head — the famous dark nebula silhouette in Orion.'],
+  ['HORSE','____head, the famous dark nebula silhouette in Orion.'],
   ['HEART','Large emission nebula in Cassiopeia, IC 1805.'],
   ['JELLY','____fish Nebula, a supernova remnant in Gemini.'],
   ['WHALE','Nickname for the edge-on galaxy NGC 4631.'],
   ['WITCH','____ Head Nebula, lit by nearby Rigel.'],
-  ['CLOUD','Molecular ____ — the cold gas where stars are born.'],
+  ['CLOUD','Molecular ____, the cold gas where stars are born.'],
   ['COMET','Icy visitor that grows a tail as it nears the Sun.'],
   ['ORBIT','The path one body traces around another.'],
   ['LUNAR','Of or relating to the Moon.'],
   ['SOLAR','Of or relating to the Sun.'],
   ['PHASE','The changing lit fraction of the Moon.'],
   ['FLARE','A sudden violent release of energy on the Sun.'],
-  ['GIANT','Red ____ — a swollen, ageing star.'],
-  ['DWARF','White ____ — the cooling ember a Sun-like star leaves behind.'],
-  ['LIGHT','____ year — a measure of distance, not time.'],
-  ['FOCAL','____ length — 495mm on the Askar V used for these images.'],
+  ['GIANT','Red ____, a swollen, ageing star.'],
+  ['DWARF','White ____, the cooling ember a Sun-like star leaves behind.'],
+  ['LIGHT','____ year, a measure of distance, not time.'],
+  ['FOCAL','____ length, 495mm on the Askar V used for these images.'],
   ['ASKAR','The brand of refractor behind most of this gallery.'],
   ['JUWEI','Maker of the harmonic drive mount used here.'],
   ['SIRIL','Free stacking and processing software used on every image here.'],
@@ -631,13 +631,13 @@ const WORDS = [
   ['STACK','Combine many sub-exposures into one cleaner image.'],
   ['NOISE','The grain that stacking and dithering beat down.'],
   ['FRAME','A single exposure within a longer sequence.'],
-  ['FIELD','Flat ____ — an optical corrector for edge-of-frame stars.'],
-  ['DRIFT','____ alignment — a patient way to perfect polar alignment.'],
+  ['FIELD','Flat ____, an optical corrector for edge-of-frame stars.'],
+  ['DRIFT','____ alignment, a patient way to perfect polar alignment.'],
   ['GUIDE','Auto____ing keeps stars pinpoint over long exposures.'],
-  ['TRAIL','Star ____ — what you get when tracking goes wrong, or right.'],
+  ['TRAIL','Star ____, what you get when tracking goes wrong, or right.'],
   ['FOCUS','A Bahtinov mask exists to help you nail this.'],
   ['OPTIC','Relating to light and the lenses that bend it.'],
-  ['CURVE','Light ____ — brightness plotted against time.'],
+  ['CURVE','Light ____, brightness plotted against time.'],
   ['TOTAL','The kind of solar eclipse worth crossing the world for.'],
   ['CHART','A map of the sky.'],
   ['NADIR','The point directly beneath your feet.'],
@@ -645,60 +645,163 @@ const WORDS = [
   ['RIGEL','Blue supergiant marking the foot of Orion.'],
   ['SPICA','Brightest star in Virgo.'],
   ['DENEB','The swan\u2019s tail, a corner of the Summer Triangle.'],
-  ['ATLAS','A star in the Pleiades — and a book of sky maps.'],
+  ['ATLAS','A star in the Pleiades, and a book of sky maps.'],
   ['CERES','Largest object in the asteroid belt, and a dwarf planet.'],
   ['TITAN','Saturn\u2019s big moon, wrapped in orange haze.'],
   ['PLUTO','Reclassified as a dwarf planet in 2006.'],
   ['VENUS','The brightest planet in our sky.'],
   ['EARTH','The pale blue dot we shoot from.'],
-  ['CANIS','____ Major — the constellation containing Sirius.'],
+  ['CANIS','____ Major, the constellation containing Sirius.'],
   ['MARIA','The dark basaltic plains of the Moon.'],
-  ['TYCHO','Bright rayed lunar crater — and a Danish astronomer.'],
+  ['TYCHO','Bright rayed lunar crater, and a Danish astronomer.'],
   ['MOONS','Natural satellites, from Phobos to Titan.'],
   ['RINGS','Saturn\u2019s most famous feature.'],
   ['HALOS','Rings of light around the Moon on an icy night.'],
   ['METAL','Astronomers\u2019 term for any element heavier than helium.'],
-  ['SUPER','____nova — the death of a massive star.'],
+  ['SUPER','____nova, the death of a massive star.'],
   ['PULSE','The metronome-steady beat of a pulsar.'],
   ['PROBE','A robotic craft sent out to explore.'],
   ['ROVER','A wheeled explorer trundling across Mars.'],
   ['SPACE','The final frontier.'],
   ['STARS','What we are all out here for.'],
   ['VOIDS','The vast empty regions between filaments of the cosmic web.'],
-  ['TIDAL','____ tails — streams of stars pulled out by a galactic encounter.'],
-  ['DISKS','Protoplanetary ____ — the flattened birthplaces of planets.'],
+  ['TIDAL','____ tails, streams of stars pulled out by a galactic encounter.'],
+  ['DISKS','Protoplanetary ____, the flattened birthplaces of planets.'],
   ['DENSE','What the core of a neutron star very much is.'],
-  ['BLACK','____ hole — a place light cannot climb out of.'],
-  ['WHITE','____ dwarf, or ____ balance — take your pick.'],
+  ['BLACK','____ hole, a place light cannot climb out of.'],
+  ['WHITE','____ dwarf, or ____ balance, take your pick.'],
   ['BLINK','Compare two frames to spot something that moved.'],
   ['CLEAR','What every astrophotographer wants the skies to be.'],
   ['NORTH','Polaris sits almost exactly at this celestial pole.'],
-  ['POLAR','____ alignment — the first job of every session.'],
+  ['POLAR','____ alignment, the first job of every session.'],
   ['ALIGN','What you do to the mount before anything else works.'],
   ['DEPTH','What hours of extra integration time buy you.'],
   ['FAINT','How most deep-sky targets look before stretching.'],
   ['SKIES','Bortle scales grade them.'],
   ['NIGHT','When the work happens.'],
-  ['EVENT','____ horizon — the point of no return around a black hole.'],
-  ['BIRTH','Star ____ — what a glowing nebula is really showing you.'],
+  ['EVENT','____ horizon, the point of no return around a black hole.'],
+  ['BIRTH','Star ____, what a glowing nebula is really showing you.'],
   ['DEATH','A supernova marks the ____ of a massive star.'],
   ['HOURS','Deep-sky imaging is measured in these, not seconds.'],
   ['DUSTY','What those dark lanes across the Milky Way are.'],
   ['SETUP','Everything you assemble before the first exposure.'],
-  ['QUIET','What a good imaging night is — no wind, no neighbours.'],
-  ['ANGLE','Wide-____ — a lens that takes in a big slice of sky.'],
+  ['QUIET','What a good imaging night is - no wind, no neighbours.'],
+  ['ANGLE','Wide-____, a lens that takes in a big slice of sky.'],
   ['SHARP','What every star in a good frame should be.'],
   ['FROST','Dew heaters exist to stop this forming on the lens.'],
   ['RADIO','The kind of telescope that listens rather than looks.'],
   ['ALIEN','What we are all quietly hoping to find out there.'],
   ['TWINS','Gemini, the celestial ____.'],
-  ['BEARS','Ursa Major and Minor — the great and little ____.'],
+  ['BEARS','Ursa Major and Minor, the great and little ____.'],
   ['VIRGO','Zodiac constellation hiding an enormous galaxy cluster.'],
   ['LIBRA','The scales, a zodiac constellation.'],
   ['SOUTH','The ____ern Cross points toward a pole with no bright star.'],
   ['SWORD','Orion\u2019s ____ hangs below his belt, the Great Nebula inside it.'],
-  ['GREAT','The ____ Nebula in Orion — M42, the showpiece of winter.']
+  ['GREAT','The ____ Nebula in Orion - M42, the showpiece of winter.']
 ];
+
+const DEFS = {
+  ORION: 'A bright constellation shaped like a hunter, easy to spot in winter by the three stars of his \'belt\'. It holds the Orion Nebula, a huge cloud of gas where new stars are being born.',
+  EAGLE: 'The Eagle Nebula (M16) is a cloud of gas and dust about 5,700 light years away. Inside it stand the \'Pillars of Creation\', towering columns where stars are forming.',
+  CIGAR: 'The Cigar Galaxy (M82) is a galaxy seen almost edge-on, so it looks long and thin like a cigar. It\'s a \'starburst\' galaxy, making new stars unusually fast.',
+  MILKY: 'The Milky Way is our own galaxy, the huge spiral of hundreds of billions of stars that the Sun belongs to. On a dark night you can see it as a faint band of light across the sky.',
+  FLAME: 'The Flame Nebula is a glowing cloud of gas in Orion that looks like a flickering fire. It sits right next to the bright belt star Alnitak.',
+  HORSE: 'The Horsehead Nebula is a dark cloud of dust in Orion shaped exactly like a horse\'s head, seen as a silhouette against brighter glowing gas behind it.',
+  HEART: 'The Heart Nebula is a large red cloud of glowing hydrogen in the constellation Cassiopeia, shaped like a Valentine\'s heart. It\'s a nursery where new stars form.',
+  JELLY: 'The Jellyfish Nebula is the wispy remains of a star that exploded as a supernova, found in the constellation Gemini. Its trailing tendrils look like a jellyfish.',
+  WHALE: 'The Whale Galaxy (NGC 4631) is a galaxy seen edge-on, its lumpy shape resembling a whale. It lies about 25 million light years away.',
+  WITCH: 'The Witch Head Nebula is a faint blue cloud that looks like a witch\'s face in profile. It glows because it reflects light from the nearby bright star Rigel.',
+  CLOUD: 'In space, a cloud is a vast region of gas and dust. The coldest, densest ones are where gravity pulls material together to form new stars.',
+  COMET: 'A comet is a small icy body that orbits the Sun. As it comes closer, the Sun\'s heat turns its ice to gas, creating a glowing head and a long tail.',
+  ORBIT: 'An orbit is the curved path one object takes around another under gravity, like the Moon around Earth, or Earth around the Sun.',
+  LUNAR: '\'Lunar\' means anything to do with the Moon - a lunar eclipse, a lunar crater, or a lunar phase.',
+  SOLAR: '\'Solar\' means anything to do with the Sun - the solar system, solar power, or a solar eclipse.',
+  PHASE: 'A phase is how much of the Moon looks lit up from Earth, from a thin crescent to a full circle. The phases change over about a month as the Moon orbits us.',
+  FLARE: 'A solar flare is a sudden, powerful burst of energy and light from the Sun\'s surface. Big flares can disturb radio signals and satellites at Earth.',
+  GIANT: 'A giant is a very large, bright star. A red giant is an old star that has swollen up as it runs out of fuel - the Sun will become one billions of years from now.',
+  DWARF: 'A white dwarf is the small, dense, cooling core left behind when a Sun-like star dies. About the size of Earth, but incredibly heavy.',
+  LIGHT: 'A light year is the distance light travels in one year, about 9.5 trillion kilometres. It measures distance, not time, and shows how far away the stars really are.',
+  FOCAL: 'Focal length is how strongly a lens or telescope bends light to a point. A longer focal length magnifies more and shows a smaller patch of sky.',
+  ASKAR: 'Askar is a brand of refractor telescopes (ones that use lenses). The photos on this site are taken through an Askar V.',
+  JUWEI: 'Juwei makes the tracking mount used here. The mount slowly turns to follow the stars as the Earth rotates, so they stay sharp in long photos.',
+  SIRIL: 'Siril is free software astrophotographers use to stack and process their images, combining many photos and bringing out faint detail.',
+  MOUNT: 'A mount is the moving platform a telescope or camera sits on. A tracking mount turns at the same speed as the sky to keep the stars still in the frame.',
+  SCOPE: '\'Scope\' is a short, everyday word for a telescope, the instrument that gathers light to make distant things look bigger and brighter.',
+  PIXEL: 'A pixel is one of the millions of tiny light-collecting squares on a camera sensor. More and smaller pixels can capture finer detail.',
+  BAYER: 'A Bayer filter is a grid of red, green and blue filters laid over a camera sensor so it can record colour. It\'s named after engineer Bryce Bayer.',
+  DARKS: 'Dark frames are photos taken with the lens covered. Subtracting them removes the sensor\'s own heat-speckle and glow from the real images.',
+  FLATS: 'Flat frames are photos of an evenly lit surface. They map out dust shadows and darkened corners so those flaws can be cancelled from the final picture.',
+  STACK: 'Stacking means combining many photos of the same target into one. It averages away the random grain and reveals faint detail a single shot can\'t show.',
+  NOISE: 'Noise is the random speckle or grain in a photo, worst in dark areas. Stacking many frames and cooling the camera both help reduce it.',
+  FRAME: 'A frame is a single exposure, one photo. Astrophotographers take many frames of the same target and stack them together.',
+  FIELD: 'A flat field, or field flattener, is an extra lens that keeps stars looking sharp and round all the way to the edges of the picture.',
+  DRIFT: 'Drift alignment is a careful method of aiming a telescope mount exactly at the sky\'s pole, by watching how stars slowly drift and correcting until they don\'t.',
+  GUIDE: 'Autoguiding uses a second small camera to watch one star and make tiny corrections, keeping the mount tracking perfectly through long exposures.',
+  TRAIL: 'A star trail is the streak a star leaves in a photo when the camera isn\'t tracking the sky. Long exposures turn the stars into curved arcs around the pole.',
+  FOCUS: 'Focus is adjusting the telescope so the stars come to their sharpest, smallest points. A tool called a Bahtinov mask helps get it exactly right.',
+  OPTIC: '\'Optic\' refers to light and the lenses or mirrors that bend and focus it. Optics are the heart of every telescope and camera.',
+  CURVE: 'A light curve is a graph of how a star\'s brightness changes over time. It can reveal a hidden planet passing in front, or a star that pulses.',
+  TOTAL: 'A total solar eclipse is when the Moon completely covers the Sun, briefly turning day to twilight and revealing the Sun\'s glowing outer atmosphere.',
+  CHART: 'A star chart is a map of the night sky, showing where the constellations, stars and planets are so you can find your way around.',
+  NADIR: 'The nadir is the point on the sky directly below you, beneath your feet, the exact opposite of the zenith, which is straight overhead.',
+  MIZAR: 'Mizar is a star in the handle of the Big Dipper. Look closely and you\'ll see a fainter companion, Alcor, a classic test of sharp eyesight.',
+  RIGEL: 'Rigel is a brilliant blue-white supergiant star marking the foot of Orion. It\'s one of the brightest stars in the whole night sky.',
+  SPICA: 'Spica is the brightest star in the constellation Virgo, a hot blue star about 250 light years away.',
+  DENEB: 'Deneb marks the tail of Cygnus, the swan. It\'s one of three stars forming the Summer Triangle, and one of the most luminous stars we can see.',
+  ATLAS: 'Atlas is one of the stars in the Pleiades star cluster. The name is also used for a book of sky maps.',
+  CERES: 'Ceres is the largest object in the asteroid belt between Mars and Jupiter, big and round enough to count as a dwarf planet.',
+  TITAN: 'Titan is Saturn\'s largest moon, bigger than the planet Mercury. It has a thick orange atmosphere and lakes of liquid methane on its surface.',
+  PLUTO: 'Pluto is a small, icy world beyond Neptune. Once called the ninth planet, it was reclassified as a \'dwarf planet\' in 2006.',
+  VENUS: 'Venus is the second planet from the Sun and the brightest object in our sky after the Sun and Moon. It\'s often seen as the \'evening\' or \'morning star\'.',
+  EARTH: 'Earth is our home planet, the third from the Sun and the only place we know of with life. Every astro photo on this site is taken from its surface.',
+  CANIS: 'Canis Major, \'the Great Dog\', is a constellation containing Sirius, the brightest star in the entire night sky.',
+  MARIA: 'The maria are the large dark patches on the Moon, ancient plains of hardened lava. Early astronomers thought they were seas, so named them the Latin for \'seas\'.',
+  TYCHO: 'Tycho is a bright young crater on the Moon with long pale streaks spreading out from it. It\'s named after the astronomer Tycho Brahe.',
+  MOONS: 'Moons are natural objects that orbit planets. Earth has one, but Jupiter and Saturn each have dozens, from tiny rocks to worlds bigger than Mercury.',
+  RINGS: 'Rings are flat bands of ice and rock circling a planet. Saturn\'s are the most spectacular, but Jupiter, Uranus and Neptune have faint ones too.',
+  HALOS: 'A halo is a ring of light around the Moon or Sun, made when their light bends through ice crystals high in Earth\'s atmosphere. Often a sign of coming weather.',
+  METAL: 'To astronomers, a \'metal\' is any element heavier than hydrogen and helium, even carbon and oxygen. These were forged inside stars.',
+  SUPER: 'A supernova is the enormous explosion of a dying massive star, briefly outshining an entire galaxy and scattering new elements into space.',
+  PULSE: 'A pulsar is the fast-spinning core of a dead star that sweeps a beam of radio waves past us, so we detect it as steady, clock-like pulses.',
+  PROBE: 'A space probe is a robotic craft sent to explore other worlds, sending back photos and measurements from places no human has been.',
+  ROVER: 'A rover is a wheeled robot that drives across another world\'s surface. Several have explored Mars, studying its rocks and searching for signs of past water.',
+  SPACE: 'Space is the near-empty vastness beyond Earth\'s atmosphere, where the planets, stars and galaxies exist. It begins about 100 km above the ground.',
+  STARS: 'Stars are enormous glowing balls of gas, powered by nuclear fusion in their cores. Our Sun is the nearest one; the rest are so far away they look like points.',
+  VOIDS: 'Voids are the huge, nearly empty regions between the great sheets and threads of galaxies that make up the structure of the universe.',
+  TIDAL: 'Tidal tails are streams of stars pulled out of galaxies when two of them pass close and their gravity stretches each other.',
+  DISKS: 'A protoplanetary disk is the flat, spinning ring of gas and dust around a young star. Planets slowly build up from the material within it.',
+  DENSE: 'Dense means having a lot of mass packed into a small space. A neutron star is so dense that a sugar-cube-sized piece would weigh billions of tonnes.',
+  BLACK: 'A black hole is a region where gravity is so strong that nothing, not even light, can escape. They form when the most massive stars collapse.',
+  WHITE: 'A white dwarf is the dense, cooling remnant of a Sun-like star. \'White balance\' is also a camera setting that keeps colours looking natural.',
+  BLINK: 'Blinking is flicking between two photos of the same patch of sky taken at different times, to spot anything that has moved, like an asteroid or comet.',
+  CLEAR: 'Clear skies, free of cloud and haze, are what every stargazer hopes for. Astronomers even greet each other with the phrase \'clear skies\'.',
+  NORTH: 'The north celestial pole is the point the northern sky appears to turn around. The star Polaris sits almost exactly there, marking north.',
+  POLAR: 'Polar alignment means aiming a telescope mount\'s axis at the sky\'s pole. Get it right and the mount can track the stars smoothly all night.',
+  ALIGN: 'Aligning is setting up your mount so it points correctly at the sky before you begin. Good alignment keeps stars sharp through long exposures.',
+  DEPTH: 'In astrophotography, more depth means collecting more hours of light, which reveals fainter and fainter detail in a target.',
+  FAINT: 'Faint means very dim. Most deep-sky objects are far too faint to see by eye and only appear after long exposures and careful processing.',
+  SKIES: '\'Skies\' describes the observing conditions. The Bortle scale grades how dark they are, from bright city skies to truly black wilderness.',
+  NIGHT: 'Night is when the sky is dark enough to observe. Astrophotographers plan around clear, moonless nights for the best views.',
+  EVENT: 'The event horizon is the boundary around a black hole. Cross it and there is no return - not even light can get back out.',
+  BIRTH: 'Star birth happens inside cold clouds of gas and dust, where gravity pulls material together until it\'s hot and dense enough to shine.',
+  DEATH: 'A star\'s death depends on its size - small stars fade to white dwarfs, while giant stars explode as supernovae, leaving neutron stars or black holes.',
+  HOURS: 'Deep-sky imaging is measured in hours of total exposure. The more hours of light you gather, the cleaner and deeper the final picture.',
+  DUSTY: 'Space is full of dust, tiny grains that form dark lanes across the Milky Way and glowing clouds where starlight catches them.',
+  SETUP: 'A setup is all the gear you assemble for a session (telescope, camera, mount and cables) and getting it working before the first shot.',
+  QUIET: 'A quiet night for astronomy means steady, still air with little wind. Calm air makes the stars twinkle less and look sharper.',
+  ANGLE: 'A wide-angle lens takes in a large slice of sky, good for capturing the Milky Way or sweeping star fields in a single frame.',
+  SHARP: 'Sharp means perfectly in focus, with stars as tiny pinpoints. Sharpness is a sign of good focus, steady tracking and calm air.',
+  FROST: 'On cold nights frost or dew can form on a lens and ruin the view. A gentle heater strip around the lens keeps it clear.',
+  RADIO: 'A radio telescope listens to radio waves from space instead of collecting visible light, revealing things the eye can never see.',
+  ALIEN: '\'Alien\' means from beyond Earth. Astronomers search for signs of alien life by studying distant planets and listening for signals.',
+  TWINS: 'Gemini, \'the Twins\', is a zodiac constellation marked by its two bright stars, Castor and Pollux, named after twin brothers in myth.',
+  BEARS: 'Ursa Major and Ursa Minor are \'the Great Bear\' and \'the Little Bear\', two northern constellations that contain the Big and Little Dippers.',
+  VIRGO: 'Virgo is a large zodiac constellation. It hides the Virgo Cluster, a swarm of over a thousand galaxies bound together by gravity.',
+  LIBRA: 'Libra, \'the Scales\', is a zodiac constellation between Virgo and Scorpius, once seen as the claws of the scorpion.',
+  SOUTH: 'The south celestial pole is the point the southern sky turns around. Unlike the north, it has no bright star to mark it.',
+  SWORD: 'Orion\'s Sword hangs below his three-star belt. The middle \'star\' is really the Orion Nebula, a glowing stellar nursery.',
+  GREAT: 'The Great Nebula in Orion (M42) is one of the brightest nebulae in the sky, a vast cloud of gas, visible even to the naked eye, where stars are being born.',
+};
 
 const ROWS = 6, COLS = 5;
 const SITE_URL = 'https://bhapstar.com/star_word.html';
@@ -972,6 +1075,7 @@ const DAY = todayIndex();
 let practiceMode = false;
 let answer = '';
 let clue = '';
+let fullDef = '';
 let guesses = [];        // array of submitted guess strings
 let current = '';        // in-progress guess
 let finished = false;
@@ -1211,7 +1315,7 @@ function finish(won){
   document.getElementById('endTitle').textContent =
     won ? (WIN_LINES[Math.min(guesses.length - 1, WIN_LINES.length - 1)] + '!') : 'Clouded out';
   document.getElementById('endAnswer').textContent = answer;
-  document.getElementById('endDef').textContent = clue;
+  document.getElementById('endDef').textContent = fullDef;
   endPanel.classList.add('show');
   renderStats();
   renderBadges();
@@ -1319,7 +1423,7 @@ function replay(saved){
     document.getElementById('endTitle').textContent =
       won ? (WIN_LINES[Math.min(guesses.length - 1, WIN_LINES.length - 1)] + '!') : 'Clouded out';
     document.getElementById('endAnswer').textContent = answer;
-    document.getElementById('endDef').textContent = clue;
+    document.getElementById('endDef').textContent = fullDef;
     endPanel.classList.add('show');
     syncPrize(won);
     hintBox.textContent = clue;
@@ -1335,7 +1439,7 @@ function replay(saved){
 function startDaily(){
   practiceMode = false;
   const w = dailyWord(DAY);
-  answer = w[0]; clue = w[1];
+  answer = w[0]; clue = w[1]; fullDef = DEFS[answer] || w[1];
   resetBoardState();
   const saved = loadJSON(STATE_KEY, null);
   if(saved && saved.day === DAY && saved.guesses && saved.guesses.length){
@@ -1349,7 +1453,7 @@ function startPractice(){
   practiceMode = true;
   let w;
   do { w = WORDS[Math.floor(Math.random() * WORDS.length)]; } while(w[0] === answer && WORDS.length > 1);
-  answer = w[0]; clue = w[1];
+  answer = w[0]; clue = w[1]; fullDef = DEFS[answer] || w[1];
   resetBoardState();
   renderBadges();
   toast('New practice word — this one does not affect your streak', 2400);
