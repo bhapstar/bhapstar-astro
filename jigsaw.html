@@ -126,7 +126,7 @@
 
     <div class="puzzle-top">
       <div>
-        <div class="sub">Drag the puzzle pieces into place. They snap when close. You can use Peek if you’re stuck.</div>
+        <div class="sub">Drag the pieces from the tray up onto the frame. They snap when close. You can use Peek if you’re stuck.</div>
       </div>
 
       <div class="puzzle-controls">
@@ -258,7 +258,10 @@
 
   let grid = 4;
   let pieces = [];
-  let board = { w: 0, h: 0 };
+  let board = { w: 0, h: 0 };   // image frame, anchored at canvas origin (0,0)
+  let tray  = { y: 0, h: 0 };   // loose-piece staging area, sits below the board
+  let cssW = 0, cssH = 0;        // full canvas size in CSS px (board + gap + tray)
+  const TRAY_GAP = 14;           // gap between board frame and the tray
   let dragging = null;
   let peek = false;
 
@@ -674,42 +677,39 @@ function resizeFx(){
 function resizeCanvasToFit(){
   const isMobile = window.innerWidth < 768;
 
-  // On desktop: use most of the viewport so the puzzle feels large.
-  // Reserve ~220px for header + controls + padding.
-  // On mobile: keep existing behaviour with tighter caps.
+  // Fraction of the vertical budget reserved for the loose-piece tray.
+  const TRAY_FRAC = isMobile ? 0.42 : 0.40;
+
   const maxW = isMobile
     ? Math.min((canvas.getBoundingClientRect().width || window.innerWidth), 600)
     : Math.min(window.innerWidth - 48, 1600);
 
-  const maxH = isMobile
-    ? Math.min(window.innerHeight * 0.65, 520)
-    : Math.max(window.innerHeight - 220, 480);
+  // Total vertical budget for board + gap + tray (kept on-screen, no scroll).
+  const budgetH = isMobile
+    ? Math.min(window.innerHeight * 0.82, 760)
+    : Math.max(window.innerHeight - 180, 520);
 
-  const minH = isMobile ? 280 : 400;
+  // The board (image) may use everything left after the tray + gap.
+  const boardMaxH = Math.max(budgetH * (1 - TRAY_FRAC) - TRAY_GAP, 200);
+  const trayH     = budgetH * TRAY_FRAC;
 
   const imgW = img?.naturalWidth || 1200;
   const imgH = img?.naturalHeight || 800;
 
-  // Scale to fit within maxW x maxH while preserving aspect ratio
-  let scale = maxW / imgW;
-  let cssW = imgW * scale;
-  let cssH = imgH * scale;
+  // Scale the board to fit within maxW x boardMaxH, preserving aspect ratio.
+  let scale  = maxW / imgW;
+  let boardW = imgW * scale;
+  let boardH = imgH * scale;
 
-  if(cssH > maxH){
-    scale = maxH / imgH;
-    cssW = imgW * scale;
-    cssH = imgH * scale;
+  if(boardH > boardMaxH){
+    scale  = boardMaxH / imgH;
+    boardW = imgW * scale;
+    boardH = imgH * scale;
   }
 
-  if(cssH < minH){
-    const scaleUp = minH / imgH;
-    const wUp = imgW * scaleUp;
-    if(wUp <= maxW){
-      scale = scaleUp;
-      cssW = wUp;
-      cssH = minH;
-    }
-  }
+  // Full canvas = board on top, gap, then tray. Canvas width follows the board.
+  cssW = boardW;
+  cssH = boardH + TRAY_GAP + trayH;
 
   canvas.style.width  = `${cssW}px`;
   canvas.style.height = `${cssH}px`;
@@ -719,8 +719,10 @@ function resizeCanvasToFit(){
   canvas.height = Math.round(cssH * dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
 
-  board.w = cssW;
-  board.h = cssH;
+  board.w = boardW;
+  board.h = boardH;
+  tray.y  = boardH + TRAY_GAP;
+  tray.h  = trayH;
 
   draw();
 }
@@ -812,6 +814,47 @@ function resizeCanvasToFit(){
 
   let edgeMap = null;
 
+  // Lay n loose pieces out in a shuffled, jittered grid inside the tray so
+  // they spread out and stay easy to grab, instead of piling on the image.
+  function scatterInTray(n, pw, ph){
+    const trayW = cssW;
+    const trayH = tray.h;
+    const trayTop = tray.y;
+
+    // Choose a column count that balances the tray's aspect ratio.
+    let cols = Math.round(Math.sqrt(n * (trayW / Math.max(trayH, 1))));
+    cols = Math.max(1, Math.min(cols, n));
+    const rows = Math.ceil(n / cols);
+
+    const cellW = trayW / cols;
+    const cellH = trayH / rows;
+
+    // Random cell assignment so neighbouring pieces aren't laid out in order.
+    const order = Array.from({ length: n }, (_, i) => i);
+    for(let i = order.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+
+    const out = new Array(n);
+    for(let k = 0; k < n; k++){
+      const cell = order[k];
+      const cx = cell % cols;
+      const cy = Math.floor(cell / cols);
+
+      // Centre the piece in its cell, then add a little jitter.
+      const baseX = cx * cellW + (cellW - pw) / 2;
+      const baseY = trayTop + cy * cellH + (cellH - ph) / 2;
+      const jx = (Math.random() - 0.5) * cellW * 0.35;
+      const jy = (Math.random() - 0.5) * cellH * 0.35;
+
+      const x = Math.max(0, Math.min(cssW - pw, baseX + jx));
+      const y = Math.max(trayTop, Math.min(cssH - ph, baseY + jy));
+      out[k] = { x, y };
+    }
+    return out;
+  }
+
   function makePieces(){
     pieces = [];
     const pw = board.w / grid;
@@ -833,10 +876,7 @@ function resizeCanvasToFit(){
       }
     }
 
-    const shuffled = starts.map(() => ({
-      x: Math.random() * (board.w - pw),
-      y: Math.random() * (board.h - ph)
-    }));
+    const shuffled = scatterInTray(starts.length, pw, ph);
 
     for(let i=0; i<starts.length; i++){
       const s = starts[i];
@@ -892,7 +932,7 @@ function resizeCanvasToFit(){
   }
 
   function draw(){
-    ctx.clearRect(0,0,board.w,board.h);
+    ctx.clearRect(0,0,cssW,cssH);
 
     if(!img || !img.naturalWidth){
       ctx.fillStyle = "rgba(255,255,255,.7)";
@@ -900,6 +940,8 @@ function resizeCanvasToFit(){
       ctx.fillText("No image loaded.", 16, 28);
       return;
     }
+
+    drawStaging();
 
     if(peek){
       ctx.globalAlpha = 0.25;
@@ -911,6 +953,47 @@ function resizeCanvasToFit(){
      const free   = pieces.filter(p => !p.locked);
      for(const p of locked) drawPiece(p);
      for(const p of free)   drawPiece(p);
+  }
+
+  // Board frame (drop target) + tray backdrop. Neutral grey reads on both themes.
+  function drawStaging(){
+    // Tray backdrop
+    ctx.save();
+    ctx.fillStyle = "rgba(128,128,128,0.10)";
+    roundRect(0, tray.y, cssW, tray.h, 12);
+    ctx.fill();
+    ctx.restore();
+
+    // Tray hint label (only while pieces are still loose)
+    if(pieces.some(p => !p.locked)){
+      ctx.save();
+      ctx.fillStyle = "rgba(128,128,128,0.75)";
+      ctx.font = "600 12px system-ui, -apple-system, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText("PIECES — drag onto the frame above", cssW / 2, tray.y + 6);
+      ctx.restore();
+    }
+
+    // Board frame
+    ctx.save();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "rgba(128,128,128,0.55)";
+    ctx.setLineDash([6, 6]);
+    roundRect(0.75, 0.75, board.w - 1.5, board.h - 1.5, 8);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function roundRect(x, y, w, h, r){
+    const rr = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y,     x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x,     y + h, rr);
+    ctx.arcTo(x,     y + h, x,     y,     rr);
+    ctx.arcTo(x,     y,     x + w, y,     rr);
+    ctx.closePath();
   }
 
   // Return ALL unlocked pieces under the pointer, top-to-bottom
@@ -950,8 +1033,8 @@ function resizeCanvasToFit(){
 
   function pointerPos(ev){
     const rect = canvas.getBoundingClientRect();
-    const x = (ev.clientX - rect.left) * (board.w / rect.width);
-    const y = (ev.clientY - rect.top) * (board.h / rect.height);
+    const x = (ev.clientX - rect.left) * (cssW / rect.width);
+    const y = (ev.clientY - rect.top) * (cssH / rect.height);
     return {x,y};
   }
 
@@ -995,8 +1078,8 @@ function resizeCanvasToFit(){
 
     p.x = x - dragging.dx;
     p.y = y - dragging.dy;
-    p.x = Math.max(0, Math.min(board.w - p.w, p.x));
-    p.y = Math.max(0, Math.min(board.h - p.h, p.y));
+    p.x = Math.max(0, Math.min(cssW - p.w, p.x));
+    p.y = Math.max(0, Math.min(cssH - p.h, p.y));
     draw();
   });
 
@@ -1055,7 +1138,7 @@ function resizeCanvasToFit(){
       resizeCanvasToFit();
       makePieces();
       draw();
-      setMsg("Drag pieces into place. They snap when close.");
+      setMsg("Drag pieces from the tray onto the frame. They snap when close.");
     };
     img.onerror = () => setMsg("Couldn’t load that image file.");
     img.src = pick.file;
