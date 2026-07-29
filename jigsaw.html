@@ -964,14 +964,24 @@ function resizeCanvasToFit(){
     ctx.fill();
     ctx.restore();
 
-    // Tray hint label (only while pieces are still loose)
+    // Tray hint label (only while pieces are still loose).
+    // Shrinks to fit, then falls back to a short label, so it never clips
+    // on narrow (portrait) boards.
     if(pieces.some(p => !p.locked)){
       ctx.save();
       ctx.fillStyle = "rgba(128,128,128,0.75)";
-      ctx.font = "600 12px system-ui, -apple-system, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
-      ctx.fillText("PIECES — drag onto the frame above", cssW / 2, tray.y + 6);
+      const maxW = cssW - 16;
+      const setF = s => { ctx.font = "600 " + s + "px system-ui, -apple-system, sans-serif"; };
+      let label = "PIECES: drag onto the frame above";
+      let fp = 12; setF(fp);
+      while(fp > 9 && ctx.measureText(label).width > maxW){ fp--; setF(fp); }
+      if(ctx.measureText(label).width > maxW){
+        label = "PIECES ↑"; fp = 12; setF(fp);
+        while(fp > 9 && ctx.measureText(label).width > maxW){ fp--; setF(fp); }
+      }
+      ctx.fillText(label, cssW / 2, tray.y + 6);
       ctx.restore();
     }
 
