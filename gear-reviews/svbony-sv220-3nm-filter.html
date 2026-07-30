@@ -1,0 +1,60 @@
+<!--
+  Svbony SV220 review draft.
+  3nm dual narrowband Ha/OIII is Svbony's published figure.
+  This item is currently marked "hidden": true in site-data.json because there
+  is no photograph of it yet. The page will not build until that flag is removed.
+  No measured figures here; those are yours to supply.
+-->
+
+<h2>Narrower, and what that actually buys</h2>
+
+<p>The SV220 does the same job as a 7nm dual narrowband filter, with tighter
+windows: 3nm at hydrogen-alpha and 3nm at doubly-ionised oxygen. The logic is
+straightforward. If skyglow is broadband and the target is not, then narrowing the
+window rejects proportionally more sky while keeping the same signal.</p>
+
+<p>In principle that means better contrast from a bright sky. In practice there
+are two complications that make 3nm the more demanding choice rather than the
+automatically better one.</p>
+
+<h2>Complication one: signal</h2>
+
+<p>A narrower passband transmits less total light, so exposures lengthen and total
+integration has to grow. If your limiting factor is available hours rather than
+sky brightness, a 3nm filter can produce a worse result than a 7nm filter in the
+same session, simply because you gathered less.</p>
+
+<h2>Complication two: focal ratio</h2>
+
+<p>Interference filters are specified for light arriving perpendicular to the
+surface. In a fast optical system the light cone is steep, rays strike at an
+angle, and the effective passband shifts towards shorter wavelengths. The
+narrower the nominal band, the more damage a given shift does, because there is
+less margin before the emission line falls outside the window entirely.</p>
+
+<p>This is why 3nm filters are usually recommended for f/5 and slower, and why the
+same filter can perform well on one telescope and disappoint on a faster one.</p>
+
+<!--
+  TODO: state which scope and focal ratio you used it at. That single detail
+  determines whether your result generalises to the reader's setup, and most
+  reviews omit it.
+-->
+
+<h2>The comparison worth making</h2>
+
+<p>You also own the Optolong L-eXtreme at 7nm, which makes a direct comparison
+possible: same telescope, same camera, same target, matched integration time. That
+is the test almost nobody publishes, because it requires owning both.</p>
+
+<!--
+  TODO: run that comparison and put the result here. Report it straight, even if
+  the 7nm filter wins, or if the difference is too small to matter. An honest
+  null result is a more useful page than a confident recommendation.
+-->
+
+<h2>Who it suits</h2>
+
+<p>Imagers with slower optics, patience for long integrations, and skies bright
+enough that the extra rejection earns its cost. If you image at f/4, or if your
+sessions are short, a 7nm filter is the more sensible starting point.</p>

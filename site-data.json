@@ -750,6 +750,21 @@
   {
     "images": [
       {
+        "file": "images/gear/Svbony SV220 1.webp",
+        "alt": "Svbony SV220 3nm dual narrowband filter for astrophotography 1"
+      }
+    ],
+    "title": "Svbony SV220 3nm Filter",
+    "desc": "A 3nm dual narrowband filter, tighter than the 7nm L-eXtreme on both the Hydrogen-alpha and Oxygen-III bands. Narrower passbands mean better contrast against skyglow and a heavier penalty in signal, so it suits slower optics and longer integrations.",
+    "alt": "Svbony SV220 3nm dual narrowband filter Ha OIII",
+    "type": "filters",
+    "section": "gear",
+    "slug": "svbony-sv220-3nm-filter",
+    "hidden": true
+  },
+  {
+    "images": [
+      {
         "file": "images/gear/Celestron 2in Eyepiece Kit 1.webp",
         "alt": "Celestron 2 inch eyepiece and filter kit for visual observing 1"
       },
@@ -812,7 +827,7 @@
       }
     ],
     "title": "ZWO Seestar S30 Pro Smart Telescope",
-    "desc": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.",
+    "desc": "Keeps the S30's 30mm aperture but moves to an 8.3MP IMX585 behind a 160mm f/5.3 quadruplet, and adds a wide-angle camera for Milky Way and star-trail work. More resolution and more coverage, not more light.",
     "alt": "ZWO Seestar S30 Pro smart telescope",
     "type": "smart-telescope",
     "section": "gear",
@@ -842,7 +857,7 @@
       }
     ],
     "title": "Skywatcher Evostar 72ED Refractor",
-    "desc": "A compact 72mm ED refractor offering a good balance of aperture and portability. Useful for wide-field imaging and visual observing, with a 360mm focal length providing a comfortable f/5 ratio.",
+    "desc": "A 72mm ED doublet apochromat at 420mm focal length, f/5.8. Light enough to sit on a small mount without complaint, and short enough to frame large nebulae. Doubles as a guidescope and as a grab-and-go visual instrument.",
     "alt": "Skywatcher Evostar 72ED refractor telescope",
     "type": "telescope",
     "section": "gear",
