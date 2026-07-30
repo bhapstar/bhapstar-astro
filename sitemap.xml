@@ -628,31 +628,4 @@
       <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
     </image:image>
   </url>
-  <url>
-    <loc>https://bhapstar.com/gear/zwo-seestar-s30-pro.html</loc>
-    <lastmod>2025-04-20</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://bhapstar.com/gear/zwo-tc20-tripod-th10-fluid-head.html</loc>
-    <lastmod>2025-04-20</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://bhapstar.com/gear/skywatcher-evostar-72ed-refractor.html</loc>
-    <lastmod>2025-04-20</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Skywatcher%20Evostar%2072ED%201.webp</image:loc>
-    </image:image>
-  </url>
 </urlset>
