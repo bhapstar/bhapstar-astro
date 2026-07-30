@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Svbony Filter Drawer — Bhapstar Astrophotography</title>
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/gear/svbony-filter-drawer.html" />
+  <meta name="description" content="Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which " />
+  <meta name="author" content="Bhapinder Singh" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Svbony Filter Drawer" />
+  <meta property="og:description" content="Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which " />
+  <meta property="og:url" content="https://bhapstar.com/gear/svbony-filter-drawer.html" />
+  <meta property="og:image" content="https://bhapstar.com/images/gear/SVBony Filter drawer 1.webp" />
+  <meta name="twitter:image" content="https://bhapstar.com/images/gear/SVBony Filter drawer 1.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Svbony Filter Drawer" />
+  <meta name="twitter:description" content="Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which " />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="/styles.css" />
+  
+  <style>
+    .gear-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    .gear-header { margin-bottom: 40px; }
+    /* ── Carousel ──
+       The stage has a fixed aspect-ratio and slides are absolutely
+       positioned with object-fit: contain, so its height never changes.
+       Mixing portrait and landscape shots cannot shift the page. */
+    .gear-carousel { margin-bottom: 28px; outline: none; }
+    .gear-carousel:focus-visible .gc-stage { border-color: var(--accent); }
+    .gc-stage { position: relative; width: 100%; aspect-ratio: 3 / 2;
+                 border-radius: 16px; overflow: hidden;
+                 background: var(--bg2);
+                 border: 1px solid var(--line); }
+    .gc-slide { position: absolute; inset: 0; width: 100%; height: 100%;
+                 object-fit: contain; display: block;
+                 opacity: 0; transition: opacity 280ms ease;
+                 pointer-events: none; }
+    .gc-slide.is-active { opacity: 1; }
+
+    /* Overlay controls deliberately keep a dark scrim in both themes:
+       they sit on top of photographs, not on the page background. */
+    .gc-arrow { position: absolute; top: 50%; transform: translateY(-50%);
+                 width: 40px; height: 40px; display: grid; place-items: center;
+                 border-radius: 50%; cursor: pointer; z-index: 3;
+                 color: rgba(255,255,255,0.94);
+                 background: rgba(8,6,26,0.62);
+                 border: 1px solid rgba(167,139,250,0.28);
+                 backdrop-filter: blur(6px);
+                 transition: background 200ms ease, border-color 200ms ease,
+                             opacity 200ms ease; }
+    .gc-arrow:hover, .gc-arrow:focus-visible { background: rgba(96,165,250,0.24);
+                 border-color: rgba(96,165,250,0.6); color: #fff; }
+    .gc-arrow svg { width: 20px; height: 20px; }
+    .gc-prev { left: 12px; }
+    .gc-next { right: 12px; }
+
+    .gc-counter { position: absolute; top: 12px; right: 12px; z-index: 3;
+                   padding: 4px 10px; border-radius: 999px;
+                   font-size: 11.5px; letter-spacing: 0.06em;
+                   color: rgba(255,255,255,0.9);
+                   background: rgba(8,6,26,0.62);
+                   border: 1px solid rgba(167,139,250,0.22);
+                   backdrop-filter: blur(6px); }
+
+    /* Thumbnails sit inside the stage, along the bottom. */
+    .gc-thumbs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+                  display: flex; gap: 8px; justify-content: center;
+                  padding: 10px 12px; overflow-x: auto;
+                  scrollbar-width: none;
+                  background: linear-gradient(to top,
+                              rgba(5,4,20,0.82), rgba(5,4,20,0)); }
+    .gc-thumbs::-webkit-scrollbar { display: none; }
+    .gc-thumb { flex: 0 0 auto; width: 56px; height: 40px; padding: 0;
+                 border-radius: 7px; overflow: hidden; cursor: pointer;
+                 background: rgba(8,6,26,0.6);
+                 border: 2px solid rgba(255,255,255,0.22);
+                 opacity: 0.62;
+                 transition: opacity 200ms ease, border-color 200ms ease,
+                             transform 200ms ease; }
+    .gc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gc-thumb:hover, .gc-thumb:focus-visible { opacity: 1;
+                 border-color: rgba(96,165,250,0.8); }
+    .gc-thumb.is-active { opacity: 1; border-color: #a78bfa;
+                 transform: translateY(-2px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gc-slide { transition: none; }
+    }
+    .gear-title { font-size: 32px; font-weight: 600; margin: 0 0 16px; 
+                    background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+                    background-size: 300% 100%;
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: gradientRoll 4s linear infinite reverse; }
+    .gear-desc { font-size: 16px; line-height: 1.6; color: var(--muted); margin: 0; }
+    .gear-review { margin: 40px 0; font-size: 15px; line-height: 1.7;
+                    color: var(--text); }
+    .gear-review h2 { font-size: 20px; font-weight: 600; margin: 24px 0 12px;
+                       color: var(--text); }
+    .gear-review h3 { font-size: 17px; font-weight: 600; margin: 18px 0 10px;
+                       color: var(--text); }
+    .gear-review p { margin: 12px 0; }
+    .gear-review table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .gear-review table td, .gear-review table th { padding: 10px; text-align: left;
+                                                     border-bottom: 1px solid var(--line); }
+    .gear-review table th { background: var(--soft); font-weight: 600; }
+    .gear-buy { margin: 32px 0; padding-top: 24px; border-top: 1px solid var(--line); }
+    .gear-buy-label { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+                       color: var(--muted); margin: 0 0 12px; }
+    .gear-buy-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .gear-buy-link { display: inline-flex; align-items: center; gap: 7px;
+                      padding: 10px 14px; border-radius: 11px; font-size: 13px; font-weight: 500;
+                      text-decoration: none; color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: all 200ms ease; }
+    .gear-buy-link:hover, .gear-buy-link:focus-visible { color: #fff;
+                      border-color: rgba(96,165,250,0.55); background: rgba(96,165,250,0.14);
+                      transform: translateY(-2px); }
+    .gear-buy-link svg { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.6; }
+    .gear-buy-link:hover svg { opacity: 1; }
+    /* Disclosure text: deliberately full contrast and not tiny. An
+       affiliate disclosure that is hard to read does not count as one. */
+    .gear-buy-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.55;
+                      color: var(--text); opacity: 0.86; max-width: 60ch; }
+    /* Previous / next item. Sits above the carousel, and is labelled with
+       item names so it reads as page navigation rather than image
+       navigation, which the carousel arrows handle just below. */
+    .gear-nav { display: flex; gap: 10px; margin-bottom: 20px;
+                 align-items: stretch; }
+    .gear-nav-link { display: flex; align-items: center; gap: 10px;
+                      flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                      border-radius: 11px; text-decoration: none;
+                      color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: border-color 200ms ease, background 200ms ease,
+                                  transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible {
+                      border-color: var(--accent);
+                      background: var(--glow2);
+                      transform: translateY(-1px); }
+    .gn-next { justify-content: flex-end; text-align: right; }
+    .gn-arrow { flex: 0 0 auto; font-size: 16px; line-height: 1;
+                 color: var(--accent); }
+    .gn-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); }
+    .gn-title { font-size: 13px; font-weight: 500; line-height: 1.25;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 560px) {
+      .gn-label { display: none; }
+      .gn-title { font-size: 12px; }
+      .gear-nav-link { padding: 9px 11px; }
+    }
+    @keyframes gradientRoll {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @media (max-width: 768px) {
+      .gear-page { margin: 24px auto; padding: 0 12px; }
+      .gear-title { font-size: 24px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Svbony Filter Drawer", "description": "Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session.", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "mainEntity": {"@type": "Product", "name": "Svbony Filter Drawer", "image": "https://bhapstar.com/images/gear/SVBony Filter drawer 1.webp", "description": "Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session."}, "image": "https://bhapstar.com/images/gear/SVBony Filter drawer 1.webp"}
+  </script>
+</head>
+<body>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap gear-page">
+      <nav class="gear-nav" aria-label="Gear navigation">
+        <a class="gear-nav-link gn-prev" href="/gear/celestron-2in-eyepiece-kit.html" aria-label="Previous item: Celestron 2in Eyepiece Kit"><span class="gn-arrow" aria-hidden="true">&#8592;</span><span class="gn-text"><span class="gn-label">Previous</span><span class="gn-title">Celestron 2in Eyepiece Kit</span></span></a>
+        <a class="gear-nav-link gn-next" href="/gear/zwo-eaf-electronic-focuser.html" aria-label="Next item: ZWO EAF Electronic Focuser"><span class="gn-text"><span class="gn-label">Next</span><span class="gn-title">ZWO EAF Electronic Focuser</span></span><span class="gn-arrow" aria-hidden="true">&#8594;</span></a>
+      </nav>
+
+
+      <div class="gear-header">
+        <div class="gear-carousel" id="gearCarousel" data-count="2" tabindex="0" role="group" aria-label="Product images">
+          <div class="gc-stage">
+            <img class="gc-slide is-active" data-idx="0" src="/images/gear/SVBony Filter drawer 1.webp" alt="Svbony 2 inch filter drawer for astrophotography imaging train 1" decoding="async" draggable="false" />
+            <img class="gc-slide" data-idx="1" src="/images/gear/SVBony Filter drawer 2.webp" alt="Svbony 2 inch filter drawer for astrophotography imaging train 2" loading="lazy" decoding="async" draggable="false" />
+            <button class="gc-arrow gc-prev" type="button" aria-label="Previous image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="gc-arrow gc-next" type="button" aria-label="Next image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div class="gc-counter" aria-hidden="true"><span class="gc-current">1</span> / 2</div>
+            <div class="gc-thumbs" role="tablist" aria-label="Choose image">
+                <button class="gc-thumb is-active" type="button" data-idx="0" aria-label="Go to image 1"><img src="/images/gear/thumbs/SVBony Filter drawer 1.webp" alt="" loading="lazy" decoding="async" /></button>
+                <button class="gc-thumb" type="button" data-idx="1" aria-label="Go to image 2"><img src="/images/gear/thumbs/SVBony Filter drawer 2.webp" alt="" loading="lazy" decoding="async" /></button>
+            </div>
+          </div>
+        </div>
+        <h1 class="gear-title">Svbony Filter Drawer</h1>
+        <p class="gear-desc">Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session.</p>
+      </div>
+
+
+      <div class="gear-review">
+<!--
+  Svbony filter drawer review draft.
+  I have not quoted a thickness figure for the drawer, because it varies by
+  model and it matters for backfocus. Measure yours or take it from the spec.
+-->
+
+<h2>A small part that removes a real obstacle</h2>
+
+<p>Changing a filter in a threaded imaging train means unscrewing the camera,
+swapping the filter and screwing everything back together. In the dark, on a
+mounted telescope, that risks disturbing focus, rotating the framing, and
+dropping something. The usual consequence is that people simply do not change
+filters mid-session.</p>
+
+<p>A filter drawer holds the filter in a sliding tray that pulls out sideways.
+The imaging train stays assembled, focus is undisturbed, and the camera never
+rotates. What was a five-minute operation with real risk becomes a few seconds.</p>
+
+<h2>The backfocus point, which matters</h2>
+
+<p>The drawer occupies space in the optical train, and that space has to be
+accounted for. Every imaging train has a required distance between the flattener
+or reducer and the sensor, and getting it wrong produces elongated stars towards
+the edges of the frame that no amount of processing will fix.</p>
+
+<p>In practice this means the drawer needs to be installed once, deliberately,
+with the spacing worked out and the other spacers adjusted to compensate. It is
+not a component to add casually the night before a session.</p>
+
+<!--
+  TODO: give the actual thickness of your drawer and how you rebalanced the
+  spacing around it. This is the single most useful thing you can tell a reader,
+  because it is the step where people get it wrong, and the numbers are specific
+  to your flattener.
+-->
+
+<h2>Worth knowing</h2>
+
+<p>Check that the drawer is properly light-tight when closed, and that the tray
+seats consistently. A drawer that allows the filter to sit at a slightly
+different position each time defeats the purpose.</p>
+
+<p>Filters need to be mounted in the correct carrier for the drawer. Unmounted
+filters and cells of the wrong depth will not seat reliably.</p>
+
+<h2>Who it suits</h2>
+
+<p>Anyone who owns more than one filter. If you own exactly one and never change
+it, this solves a problem you do not have. If you own a narrowband filter for
+nebulae and a broadband filter for galaxies, it is the part that makes owning both
+practical.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+  <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
+  <script>
+    /* Carousel: arrows, thumbnails, keyboard and touch swipe.
+       All slides are already in the DOM, so changing image is only a class
+       swap. Nothing is resized or reloaded, so the page cannot shift. */
+    (function () {
+      var root = document.getElementById('gearCarousel');
+      if (!root) return;
+
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.gc-slide'));
+      var thumbs = Array.prototype.slice.call(root.querySelectorAll('.gc-thumb'));
+      var counter = root.querySelector('.gc-current');
+      var stage = root.querySelector('.gc-stage');
+      if (slides.length < 2) return;
+
+      var index = 0;
+
+      function show(next) {
+        var n = (next + slides.length) % slides.length;
+        if (n === index) return;
+        slides[index].classList.remove('is-active');
+        slides[n].classList.add('is-active');
+        if (thumbs[index]) thumbs[index].classList.remove('is-active');
+        if (thumbs[n]) thumbs[n].classList.add('is-active');
+        index = n;
+        if (counter) counter.textContent = String(n + 1);
+        if (thumbs[n] && thumbs[n].scrollIntoView) {
+          thumbs[n].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+
+      var prev = root.querySelector('.gc-prev');
+      var next = root.querySelector('.gc-next');
+      if (prev) prev.addEventListener('click', function () { show(index - 1); });
+      if (next) next.addEventListener('click', function () { show(index + 1); });
+
+      thumbs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          show(Number(t.getAttribute('data-idx')));
+        });
+      });
+
+      root.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+      });
+
+      /* Touch swipe. Only treat it as a swipe if the gesture is clearly
+         horizontal, so vertical page scrolling still works normally. */
+      var x0 = null, y0 = null;
+      stage.addEventListener('touchstart', function (e) {
+        var t = e.changedTouches[0];
+        x0 = t.clientX; y0 = t.clientY;
+      }, { passive: true });
+      stage.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - x0, dy = t.clientY - y0;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          show(dx < 0 ? index + 1 : index - 1);
+        }
+        x0 = null; y0 = null;
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
