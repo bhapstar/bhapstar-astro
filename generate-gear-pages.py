@@ -31,6 +31,11 @@ DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "gear"
 REVIEWS_DIR = "gear-reviews"
+
+# Retailer links are suppressed until there is an actual arrangement with
+# each shop. The URLs stay in site-data.json, so flipping this back to True
+# restores every link at once. No data is thrown away.
+SHOW_BUY_LINKS = False
 SITE_NAME = "Bhapstar Astrophotography"
 # Stable date. Bump by hand when a review has a real content change; do NOT
 # derive from "now", or every workflow run restamps all 12 pages.
@@ -93,7 +98,7 @@ def build_json_ld(entry, page_url, cover_src):
 
     return json.dumps(prune(schema), ensure_ascii=False)
 
-def build_page(entry, slug):
+def build_page(entry, slug, prev_entry=None, next_entry=None):
     """Build the full HTML page for one gear item."""
     title = entry.get('title', 'Gear')
     desc = entry.get('desc', '')
@@ -102,7 +107,7 @@ def build_page(entry, slug):
     cover = images[0] if images else {}
     cover_src = cover.get('file', '')
     cover_alt = cover.get('alt', title)
-    buy_links = entry.get('buy', [])
+    buy_links = entry.get('buy', []) if SHOW_BUY_LINKS else []
     
     page_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
     review_html = read_review(slug)
@@ -188,6 +193,35 @@ def build_page(entry, slug):
             f'{thumbs}'
             '          </div>\n'
             '        </div>\n'
+        )
+
+    # Previous / next item. Labelled with the item names so they cannot be
+    # confused with the carousel's image arrows just below. The chain wraps, so
+    # there is never a dead end, and hidden items are already excluded.
+    def nav_link(target, direction):
+        if not target:
+            return ''
+        arrow = '&#8592;' if direction == 'prev' else '&#8594;'
+        label = 'Previous' if direction == 'prev' else 'Next'
+        inner = (f'<span class="gn-arrow" aria-hidden="true">{arrow}</span>'
+                 f'<span class="gn-text"><span class="gn-label">{label}</span>'
+                 f'<span class="gn-title">{esc(target.get("title", ""))}</span></span>')
+        if direction == 'next':
+            inner = (f'<span class="gn-text"><span class="gn-label">{label}</span>'
+                     f'<span class="gn-title">{esc(target.get("title", ""))}</span></span>'
+                     f'<span class="gn-arrow" aria-hidden="true">{arrow}</span>')
+        return (f'        <a class="gear-nav-link gn-{direction}" '
+                f'href="/{OUT_DIR}/{esc(target.get("slug", ""))}.html" '
+                f'aria-label="{label} item: {esc(target.get("title", ""))}">'
+                f'{inner}</a>\n')
+
+    nav_html = ''
+    if prev_entry or next_entry:
+        nav_html = (
+            '      <nav class="gear-nav" aria-label="Gear navigation">\n'
+            f'{nav_link(prev_entry, "prev")}'
+            f'{nav_link(next_entry, "next")}'
+            '      </nav>\n'
         )
 
     # Render buy buttons
@@ -347,11 +381,36 @@ def build_page(entry, slug):
        affiliate disclosure that is hard to read does not count as one. */
     .gear-buy-note {{ margin: 12px 0 0; font-size: 12.5px; line-height: 1.55;
                       color: var(--text); opacity: 0.86; max-width: 60ch; }}
-    .gear-back {{ display: inline-block; margin-bottom: 20px; padding: 8px 14px;
-                  font-size: 13px; color: var(--accent); text-decoration: none;
-                  border: 1px solid var(--line); border-radius: 8px;
-                  transition: all 200ms ease; }}
-    .gear-back:hover {{ border-color: var(--accent); background: var(--soft); }}
+    /* Previous / next item. Sits above the carousel, and is labelled with
+       item names so it reads as page navigation rather than image
+       navigation, which the carousel arrows handle just below. */
+    .gear-nav {{ display: flex; gap: 10px; margin-bottom: 20px;
+                 align-items: stretch; }}
+    .gear-nav-link {{ display: flex; align-items: center; gap: 10px;
+                      flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                      border-radius: 11px; text-decoration: none;
+                      color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: border-color 200ms ease, background 200ms ease,
+                                  transform 200ms ease; }}
+    .gear-nav-link:hover, .gear-nav-link:focus-visible {{
+                      border-color: var(--accent);
+                      background: var(--glow2);
+                      transform: translateY(-1px); }}
+    .gn-next {{ justify-content: flex-end; text-align: right; }}
+    .gn-arrow {{ flex: 0 0 auto; font-size: 16px; line-height: 1;
+                 color: var(--accent); }}
+    .gn-text {{ display: flex; flex-direction: column; gap: 2px; min-width: 0; }}
+    .gn-label {{ font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); }}
+    .gn-title {{ font-size: 13px; font-weight: 500; line-height: 1.25;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+    @media (max-width: 560px) {{
+      .gn-label {{ display: none; }}
+      .gn-title {{ font-size: 12px; }}
+      .gear-nav-link {{ padding: 9px 11px; }}
+    }}
     @keyframes gradientRoll {{
       0% {{ background-position: 0% 50%; }}
       50% {{ background-position: 100% 50%; }}
@@ -375,7 +434,7 @@ def build_page(entry, slug):
 <main>
   <section class="section">
     <div class="wrap gear-page">
-      <a href="/gear.html" class="gear-back">← Back to gear</a>
+{nav_html}
 
       <div class="gear-header">
 {carousel_html}        <h1 class="gear-title">{esc(title)}</h1>
@@ -479,13 +538,18 @@ def main():
     # Create output dir
     os.makedirs(OUT_DIR, exist_ok=True)
     
-    # Generate pages for every gear item
+    # Generate pages for every gear item. Previous/next follow the order of
+    # site-data.json and wrap around, so the chain has no dead ends. With a
+    # single visible item there are no neighbours and the bar is omitted.
+    n = len(gear_items)
     generated_slugs = set()
-    for entry in gear_items:
+    for i, entry in enumerate(gear_items):
         slug = entry['slug']
         generated_slugs.add(slug)
+        prev_entry = gear_items[(i - 1) % n] if n > 1 else None
+        next_entry = gear_items[(i + 1) % n] if n > 1 else None
         filename = os.path.join(OUT_DIR, f"{slug}.html")
-        page_html = build_page(entry, slug)
+        page_html = build_page(entry, slug, prev_entry, next_entry)
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(page_html)
         print(f"✓ {filename}")
