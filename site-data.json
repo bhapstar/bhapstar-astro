@@ -626,7 +626,7 @@
       {
         "retailer": "Aliexpress",
         "url": "https://ar.aliexpress.com/",
-        "affiliate": false
+        "affiliate": true
       }
     ]
   },
