@@ -621,7 +621,14 @@
     "alt": "Juwei 14 harmonic equatorial mount lightweight astrophotography",
     "type": "mount",
     "section": "gear",
-    "slug": "juwei-14-harmonic-equatorial-mount"
+    "slug": "juwei-14-harmonic-equatorial-mount",
+    "buy": [
+      {
+        "retailer": "Aliexpress",
+        "url": "https://ar.aliexpress.com/",
+        "affiliate": false
+      }
+    ]
   },
   {
     "images": [

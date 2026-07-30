@@ -663,11 +663,11 @@
         </div>
 
         <p class="gallery-intro">
-          Every image in the gallery begins here — with this equipment, set up under the
-          night sky. These are the tools of the process: the optics that gather ancient light,
-          the mount that holds everything steady against the turning of the Earth, the camera
-          that records what the eye cannot see, and the small, unglamorous things that make
-          it all work.
+          Every image in the gallery was made with something on this page. Each item has
+          its own write-up covering what it does, what it does badly, and whether it earned
+          its place in the bag. Most of it is used from a Bortle 8 balcony in Dubai, which
+          is a harder test than most reviews are written under. Where my results differ from
+          the marketing, I have said so.
         </p>
 
         <div class="gallery-controls" role="group" aria-label="Gear controls">
@@ -716,7 +716,7 @@
           </button>
         </div>
 
-        <p class="gallery-hint">Click any image to view full-page · Arrow keys or swipe to navigate</p>
+        <p class="gallery-hint">Select any item to read the full write-up</p>
       </div>
 
       <div id="gearGrid" class="grid" aria-live="polite" aria-label="Gear gallery">
@@ -1242,9 +1242,9 @@
       const list      = getList(item);
       const count     = list.length;
 
-      const badge = count > 1
-        ? `<span class="multi-badge" aria-hidden="true"><span class="stack"></span>${count}</span>`
-        : '';
+      /* No count badge: the tile leads to a full page, so the number of
+         photographs behind it is not the useful thing to advertise. */
+      const badge = '';
 
       const thumbSrc = cover.file.replace(/^(images\/gear\/)/, '$1thumbs/');
       const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
