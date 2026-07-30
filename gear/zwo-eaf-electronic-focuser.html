@@ -167,7 +167,69 @@
 
 
       <div class="gear-review">
-<p><em>Review coming soon.</em></p>      </div>
+<!--
+  ZWO EAF review draft.
+  The critical focus zone arithmetic below is standard optical theory and holds
+  generally. I have not stated your measured focus drift, because that depends
+  on your tube material, optics and local temperature swing.
+-->
+
+<h2>Why focus will not stay put</h2>
+
+<p>Focus is not a setting you establish once. Telescope tubes expand and contract
+as temperature falls through the night, and the optical path length changes with
+them. A tube that was in focus at nine in the evening will not be at two in the
+morning.</p>
+
+<p>How much this matters depends on how much focus error the optical system
+tolerates, and fast systems tolerate very little. The usable focus zone scales
+with the square of the focal ratio, so an f/5 instrument has roughly a quarter the
+tolerance of an f/10 one. At the fast end you are working with a few tens of
+microns, which is comfortably less than a night's thermal drift.</p>
+
+<h2>What the EAF does</h2>
+
+<p>It replaces the focuser knob with a stepper motor, controlled from the ASIAIR.
+Two capabilities follow. It can run an autofocus routine, stepping through
+positions and measuring star sizes to find the best focus without you touching the
+telescope. And it can refocus automatically during a session, either at intervals
+or when the temperature has moved by a set amount.</p>
+
+<p>The second is the one that changes results. Refocusing every hour or so keeps
+the whole night's subs usable rather than accumulating a slow drift that ruins the
+last third of them.</p>
+
+<!--
+  TODO: how many focuser steps does your setup drift across a typical night, and
+  how much does the temperature fall? That pairing is genuinely useful and almost
+  nobody publishes it. Include your step size per degree if you have it.
+-->
+
+<h2>Fitting it</h2>
+
+<p>Installation means removing a focuser knob and fitting the motor bracket, which
+is straightforward on supported focusers and fiddly on others. It is worth
+confirming the bracket matches your focuser before buying, since ZWO supply
+different fittings.</p>
+
+<p>Backlash is worth checking after installation. Any mechanical focuser has some,
+and the autofocus routine handles it better if it is measured and configured
+rather than left at a default.</p>
+
+<h2>The unglamorous argument for buying one</h2>
+
+<p>Focusing manually means touching the telescope, which means vibration, which
+means waiting for it to settle, several times a night. It is also difficult to do
+well, because judging the smallest star by eye on a screen is less accurate than
+measuring it. Automating it removes a source of error and a source of irritation
+at the same time.</p>
+
+<h2>Who it suits</h2>
+
+<p>Anyone imaging at f/6 or faster, anyone whose sessions run several hours, and
+anyone imaging somewhere with a large overnight temperature swing. For short
+sessions on slow optics it is a convenience rather than a necessity.</p>
+      </div>
 
       <div class="gear-buy">
         <p class="gear-buy-label">Where to buy</p>
