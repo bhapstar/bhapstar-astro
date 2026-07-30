@@ -345,10 +345,70 @@
       color: rgba(232,230,247,0.84);
     }
     #dvBasic .dv-thumbs { justify-content: center; }
+
+    /* ══════════════════════════════════════════════════
+       WHERE TO BUY — retailer links in the info panel
+    ══════════════════════════════════════════════════ */
+    .dv-buy {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(167,139,250,0.16);
+    }
+    .dv-buy[hidden] { display: none; }
+    .dv-buy-label {
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(232,230,247,0.55);
+      margin: 0 0 11px;
+    }
+    .dv-buy-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    .dv-buy-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      color: rgba(232,230,247,0.92);
+      border: 1px solid rgba(167,139,250,0.26);
+      background: rgba(167,139,250,0.07);
+      transition: border-color 200ms ease, background 200ms ease,
+                  color 200ms ease, transform 200ms ease;
+    }
+    .dv-buy-link:hover,
+    .dv-buy-link:focus-visible {
+      color: #fff;
+      border-color: rgba(96,165,250,0.55);
+      background: rgba(96,165,250,0.14);
+      transform: translateY(-2px);
+    }
+    .dv-buy-link svg {
+      width: 11px; height: 11px;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+    .dv-buy-link:hover svg { opacity: 1; }
+    .dv-buy-note {
+      margin: 12px 0 0;
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: rgba(232,230,247,0.48);
+    }
+    .dv-buy-note[hidden] { display: none; }
+
     @media (max-width: 768px) {
       .dv-detail { padding: 14px; }
       .dv-detail-card { padding: 50px 20px 22px; max-height: 88%; }
       .dv-detail-title { font-size: 20px; }
+      .dv-buy-list { gap: 8px; }
+      .dv-buy-link { padding: 9px 12px; font-size: 12.5px; }
     }
 
     .dv-image-panel.dv-zoomed { cursor: grab; }
@@ -741,6 +801,14 @@
       <button class="dv-detail-close" id="dvBasicClose" aria-label="Close information" type="button">✕</button>
       <h2 class="dv-detail-title" id="dvTitle"></h2>
       <div class="dv-detail-desc"  id="dvDesc"></div>
+
+      <!-- Retailer links, populated from the item's "buy" array in site-data.json.
+           Stays hidden when an item has no buy links. -->
+      <div class="dv-buy" id="dvBuy" hidden>
+        <p class="dv-buy-label">Where to buy</p>
+        <div class="dv-buy-list" id="dvBuyList"></div>
+        <p class="dv-buy-note" id="dvBuyNote" hidden></p>
+      </div>
     </div>
   </div>
 
@@ -757,6 +825,9 @@
   const dvImg      = document.getElementById('dvImg');
   const dvTitle    = document.getElementById('dvTitle');
   const dvDesc     = document.getElementById('dvDesc');
+  const dvBuy      = document.getElementById('dvBuy');
+  const dvBuyList  = document.getElementById('dvBuyList');
+  const dvBuyNote  = document.getElementById('dvBuyNote');
   const dvCount    = document.getElementById('dvCount');
   const dvCaption  = document.getElementById('dvCaption');
   const dvBack     = document.getElementById('dvBack');
@@ -1014,6 +1085,58 @@
     if (dv.classList.contains('open')) fitCaption();
   });
 
+  /* ── Where to buy ──
+     Reads the optional "buy" array on a gear item. Each entry:
+       { "retailer": "High Point Scientific",
+         "url": "https://...",
+         "affiliate": false }
+     Only http(s) links are rendered. The disclosure note appears only if
+     at least one rendered link is marked affiliate: true. */
+  function getBuyLinks(item) {
+    if (!Array.isArray(item?.buy)) return [];
+    return item.buy.filter(b => {
+      if (!b || typeof b.url !== 'string' || !b.retailer) return false;
+      return /^https?:\/\//i.test(b.url.trim());
+    });
+  }
+
+  function renderBuyLinks(item) {
+    if (!dvBuy || !dvBuyList) return;
+    const links = getBuyLinks(item);
+
+    if (!links.length) {
+      dvBuy.hidden = true;
+      dvBuyList.innerHTML = '';
+      if (dvBuyNote) { dvBuyNote.hidden = true; dvBuyNote.textContent = ''; }
+      return;
+    }
+
+    const arrow = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+      + 'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" '
+      + 'aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg>';
+
+    dvBuyList.innerHTML = links.map(b => {
+      // rel="sponsored" is what search engines expect on paid links.
+      const rel = b.affiliate === true
+        ? 'sponsored noopener noreferrer'
+        : 'noopener noreferrer';
+      return `<a class="dv-buy-link"
+           href="${esc(b.url.trim())}"
+           target="_blank"
+           rel="${rel}">${esc(b.retailer)}${arrow}</a>`;
+    }).join('');
+
+    if (dvBuyNote) {
+      const paid = links.some(b => b.affiliate === true);
+      dvBuyNote.textContent = paid
+        ? 'Some links above are affiliate links. If you buy through them I may earn a small commission, at no extra cost to you. It does not affect which gear I use or recommend.'
+        : '';
+      dvBuyNote.hidden = !paid;
+    }
+
+    dvBuy.hidden = false;
+  }
+
   /* ── Show current image ── */
   function showDv() {
     zoomDisable();
@@ -1023,6 +1146,7 @@
     dvTitle.textContent = currentItem?.title || '';
     if (dvCaption) { dvCaption.textContent = currentItem?.title || ''; fitCaption(); }
     dvDesc.textContent  = cur.desc || currentItem?.desc || '';
+    renderBuyLinks(currentItem);
     dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
     if (currentItem?.title) document.title = `${currentItem.title} — Bhapstar Astrophotography`;
 
@@ -1076,6 +1200,9 @@
     document.body.classList.remove('detail-open', 'noscroll');
     dvImg.src = '';
     dvTitle.textContent = ''; dvDesc.textContent = ''; dvCount.textContent = '';
+    if (dvBuy) dvBuy.hidden = true;
+    if (dvBuyList) dvBuyList.innerHTML = '';
+    if (dvBuyNote) { dvBuyNote.hidden = true; dvBuyNote.textContent = ''; }
     if (dvCaption) dvCaption.textContent = '';
     if (dvThumbs) { dvThumbs.innerHTML = ''; dvThumbs.style.display = 'none'; }
     currentItem = null; dvList = []; dvIdx = 0; activeItemIndex = 0;
@@ -1122,8 +1249,11 @@
       const thumbSrc = cover.file.replace(/^(images\/gear\/)/, '$1thumbs/');
       const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
+      // Option B: the tile is a plain link to that item's own page.
+      const pageUrl = `/gear/${encodeURIComponent(itemSlug(item))}.html`;
+
       return `<a class="card"
-           href="${esc(cover.file)}"
+           href="${esc(pageUrl)}"
            data-idx="${idx}"
            data-active-idx="${activeIdx}"
            aria-label="${esc(item.title || cover.alt)}">
@@ -1180,13 +1310,8 @@
 
     document.getElementById('gearFilter')?.addEventListener('change', () => { render(); });
 
-    grid.addEventListener('click', (e) => {
-      const a = e.target.closest('a.card');
-      if (!a) return;
-      e.preventDefault();
-      const item = items[Number(a.dataset.idx)];
-      if (item) openDetail(item, Number(a.dataset.activeIdx));
-    });
+    /* Tiles navigate to /gear/<slug>.html. No click interception: the
+       lightbox is no longer used on this page. */
 
     addTapHandler(dvBack, closeDetail);
 
@@ -1332,14 +1457,14 @@
 
   } // end init()
 
-  /* ── Deep links: open from #slug on load, sync with Back/Forward ── */
+  /* ── Deep links: legacy gear.html#slug URLs now redirect to that item's
+        own page, so previously shared links still land somewhere useful. ── */
   function openGearFromHash() {
     const slug = decodeURIComponent((location.hash || '').replace('#', ''));
     if (!slug) return false;
     const item = items.find(it => itemSlug(it) === slug);
     if (!item) return false;
-    const i = activeSet.indexOf(item);
-    openDetail(item, i >= 0 ? i : 0, true);
+    location.replace(`/gear/${encodeURIComponent(slug)}.html`);
     return true;
   }
 

@@ -1,5 +1,5 @@
 [
-    {
+  {
     "file": "images/the_milky_way.webp",
     "title": "The Milky Way",
     "desc": "A wide-field view toward the centre of our own galaxy, where billions of distant stars are cut through by vast lanes of cold interstellar dust. The Milky Way seen from the inside, edge-on, from one of its own spiral arms.",
@@ -85,24 +85,24 @@
     }
   },
   {
-  "file": "images/cats_paw_nebula_ngc6334.webp",
-  "title": "The Cat's Paw Nebula (NGC 6334)",
-  "desc": "An emission nebula in Scorpius and one of the most active star-forming regions in the Milky Way. The rounded lobes of glowing hydrogen that give the nebula its paw-print shape mark pockets where tens of thousands of stars have formed over the past few million years (note this is a balcony shot, imaged over 2 nighta from bortle 8 skies).",
-  "alt": "Cat's Paw Nebula NGC 6334 astrophotography",
-  "type": "nebulae",
-  "slug": "cats-paw-nebula-ngc6334",
-  "date": "26-06-2026",
-  "intro": "The Cat's Paw Nebula is a large emission nebula in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.",
-  "body": "The Cat's Paw Nebula (NGC 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy - its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.\n\nThe emission is dominated by hydrogen-alpha, so it responds very well to narrowband and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest integration. At a southern declination of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.",
-  "section": "gallery",
-  "specs": {
+    "file": "images/cats_paw_nebula_ngc6334.webp",
+    "title": "The Cat's Paw Nebula (NGC 6334)",
+    "desc": "An emission nebula in Scorpius and one of the most active star-forming regions in the Milky Way. The rounded lobes of glowing hydrogen that give the nebula its paw-print shape mark pockets where tens of thousands of stars have formed over the past few million years (note this is a balcony shot, imaged over 2 nighta from bortle 8 skies).",
+    "alt": "Cat's Paw Nebula NGC 6334 astrophotography",
+    "type": "nebulae",
+    "slug": "cats-paw-nebula-ngc6334",
+    "date": "26-06-2026",
+    "intro": "The Cat's Paw Nebula is a large emission nebula in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.",
+    "body": "The Cat's Paw Nebula (NGC 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy - its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.\n\nThe emission is dominated by hydrogen-alpha, so it responds very well to narrowband and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest integration. At a southern declination of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.",
+    "section": "gallery",
+    "specs": {
       "telescope": "Askar V (80mm) native",
       "camera": "ZWO ASI585MC Air",
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Dubai, UAE"
-  }
-},
+    }
+  },
   {
     "file": "images/christmas-tree-nebula-ngc2264.webp",
     "title": "The Christmas Tree Nebula (NGC 2264)",
@@ -588,7 +588,14 @@
     "alt": "Askar V modular APO refractor telescope for astrophotography",
     "type": "telescope",
     "section": "gear",
-    "slug": "askar-v-modular-apo-refractor"
+    "slug": "askar-v-modular-apo-refractor",
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/brands/askar",
+        "affiliate": false
+      }
+    ]
   },
   {
     "images": [
@@ -636,87 +643,207 @@
     "alt": "ZWO ASI585MC Air cooled astronomy camera Sony IMX585 sensor",
     "type": "camera",
     "section": "gear",
-    "slug": "zwo-asi585mc-air-camera"
-  },
-  {
-    "images": [
+    "slug": "zwo-asi585mc-air-camera",
+    "buy": [
       {
-        "file": "images/gear/Optolong LeXtreme.webp",
-        "alt": "Optolong LeXtreme dual narrowband filter for astrophotography",
-        "desc": "An 'extreme' narrowband filter, the Optolong LeXtreme passes only the two wavelengths where emission nebulae burn brightest, the deep red of hydrogen and the blue-green of ionised oxygen, blocking almost everything else. Under a moon, under city light, it finds the faint structures that would otherwise be lost entirely in the noise. A filter for pushing further into the dark."
+        "retailer": "ZWO Store",
+        "url": "https://www.zwoastro.com/product-category/cameras/",
+        "affiliate": false
       },
       {
-        "file": "images/gear/Optolong L-Quad Enhance.webp",
-        "alt": "Optolong L-Quad Enhance light pollution filter for astrophotography",
-        "desc": "A piece of glass that quietly edits out the modern world. The L-Quad Enhance blocks the wavelengths that street lights and city glow pour into the sky, while letting the true light of nebulae and galaxies pass through unimpeded. The stars remain honest. The background becomes dark again."
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras",
+        "affiliate": false
+      },
+      {
+        "retailer": "First Light Optics",
+        "url": "https://www.firstlightoptics.com/zwo-cameras.html",
+        "affiliate": false
+      },
+      {
+        "retailer": "Agena Astro",
+        "url": "https://agenaastro.com/shop-by-brand/zwo-astronomical-cameras.html",
+        "affiliate": false
       }
-    ],
-    "title": "Optolong Filters",
-    "desc": "Two filters for two different battles with the sky.",
-    "alt": "Optolong narrowband and light pollution filters for astrophotography",
-    "type": "filters",
-    "section": "gear",
-    "slug": "optolong-filters"
+    ]
   },
   {
     "images": [
       {
         "file": "images/gear/Seestar S30 1.webp",
-        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 1"
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 1"
       },
       {
         "file": "images/gear/Seestar S30 2.webp",
-        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 2"
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 2"
       },
       {
         "file": "images/gear/Seestar S30 3.webp",
-        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 3"
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 3"
       },
       {
         "file": "images/gear/Seestar S30 4.webp",
-        "alt": "ZWO Seestar S30 smart telescope all-in-one astrophotography 4"
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 4"
       }
     ],
     "title": "ZWO Seestar S30 Smart Telescope",
-    "desc": "A telescope that fits in a bag and asks almost nothing of you. Point it roughly skyward, tap a target in the app, and it finds its own way - tracking, stacking, and slowly drawing faint light out of the dark while you stand back and watch. It is not a replacement for a full rig and patient hours, but it is something else entirely: the night sky made suddenly, genuinely accessible.",
+    "desc": "A self-contained smart telescope that plate-solves, tracks and stacks without a laptop or a mount to set up. It is the fastest route from carrying a bag outside to watching an image build on a phone screen, which makes it the one piece of kit that gets used on nights when nothing else would.",
     "alt": "ZWO Seestar S30 smart telescope portable astrophotography",
     "type": "smart-telescope",
     "section": "gear",
-    "slug": "zwo-seestar-s30-smart-telescope"
+    "slug": "zwo-seestar-s30-smart-telescope",
+    "buy": [
+      {
+        "retailer": "ZWO Store",
+        "url": "https://www.zwoastro.com/product-category/seestar/",
+        "affiliate": false
+      },
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/telescopes/smart-telescopes",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Optolong L-Quad Enhance.webp",
+        "alt": "Optolong L-Quad Enhance broadband light pollution filter for astrophotography"
+      }
+    ],
+    "title": "Optolong L-Quad Enhance Filter",
+    "desc": "A broadband light pollution filter for one-shot-colour cameras, intended for galaxies, star clusters and reflection nebulae, the targets where a dual narrowband filter is no help at all. Optolong themselves do not recommend it above Bortle 7, which makes it an interesting thing to test from a Bortle 8 balcony.",
+    "alt": "Optolong L-Quad Enhance broadband light pollution filter",
+    "type": "filters",
+    "section": "gear",
+    "slug": "optolong-l-quad-enhance-filter",
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Optolong LeXtreme.webp",
+        "alt": "Optolong L-eXtreme dual narrowband filter for astrophotography"
+      }
+    ],
+    "title": "Optolong L-eXtreme Filter",
+    "desc": "A dual narrowband filter passing 7nm bands at Hydrogen-alpha and Oxygen-III, and blocking nearly everything else, including most city skyglow. That is what makes emission nebulae workable from a Bortle 8 balcony. The trade is exposure time, because rejecting that much light means much longer sub-exposures.",
+    "alt": "Optolong L-eXtreme 7nm dual narrowband filter Ha OIII",
+    "type": "filters",
+    "section": "gear",
+    "slug": "optolong-l-extreme-filter",
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters",
+        "affiliate": false
+      }
+    ]
   },
   {
     "images": [
       {
         "file": "images/gear/Celestron 2in Eyepiece Kit 1.webp",
-        "alt": "Celestron 2-inch eyepiece kit for telescope visual astronomy 1",
-        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications - from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
+        "alt": "Celestron 2 inch eyepiece and filter kit for visual observing 1"
       },
       {
         "file": "images/gear/Celestron 2in Eyepiece Kit 2.webp",
-        "alt": "Celestron 2-inch eyepiece kit for telescope visual astronomy 2",
-        "desc": "For the nights when the camera stays in the bag. The Celestron 2-inch eyepiece kit covers a wide range of magnifications - from sweeping wide-field views that frame entire star clusters to tight, close-in looks at planetary detail. A reminder that sometimes the most honest way to experience the sky is simply to look at it."
-      },
+        "alt": "Celestron 2 inch eyepiece and filter kit for visual observing 2"
+      }
+    ],
+    "title": "Celestron 2in Eyepiece Kit",
+    "desc": "A 2 inch eyepiece and filter set kept for visual observing rather than imaging. Useful for finding and framing a target by eye before the camera goes on, and for handing the telescope to someone who would rather look through it than at a screen.",
+    "alt": "Celestron 2 inch eyepiece and filter kit for telescope",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "celestron-2in-eyepiece-kit"
+  },
+  {
+    "images": [
       {
         "file": "images/gear/SVBony Filter drawer 1.webp",
-        "alt": "SVBony filter drawer telescope accessory for quick filter swapping 1",
-        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
+        "alt": "Svbony 2 inch filter drawer for astrophotography imaging train 1"
       },
       {
         "file": "images/gear/SVBony Filter drawer 2.webp",
-        "alt": "SVBony filter drawer telescope accessory for quick filter swapping 2",
-        "desc": "A simple mechanism that removes a small but persistent frustration. The SVBony filter drawer slots between the telescope and camera, letting you swap filters in seconds without disturbing focus or alignment. One less reason to wrestle with the rig in the dark."
-      },
-      {
-        "file": "images/gear/ZWO EAF.webp",
-        "alt": "ZWO Electronic Auto Focuser motorised focuser for astrophotography",
-        "desc": "Focusing by hand is one of those things that sounds simple until you are doing it in the cold at midnight, trying not to breathe on the tube. The ZWO EAF attaches to the focuser and does it motorised and precisely, compensating for the way temperature shifts focus through the night. Touch nothing. Stay sharp."
+        "alt": "Svbony 2 inch filter drawer for astrophotography imaging train 2"
       }
     ],
-    "title": "Accessories",
-    "desc": "The small things that make the difference between a frustrating night and a productive one.",
-    "alt": "Astrophotography accessories eyepieces filter drawer auto focuser",
+    "title": "Svbony Filter Drawer",
+    "desc": "Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the imaging train apart. Focus and backfocus spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session.",
+    "alt": "Svbony 2 inch filter drawer astrophotography",
     "type": "accessories",
     "section": "gear",
-    "slug": "accessories"
+    "slug": "svbony-filter-drawer"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/ZWO EAF.webp",
+        "alt": "ZWO EAF electronic automatic focuser fitted to a telescope focuser"
+      }
+    ],
+    "title": "ZWO EAF Electronic Focuser",
+    "desc": "An electronic autofocuser that fits over the focuser knob and is driven from the ASIAIR. It refocuses as the temperature drifts through the night, which matters more than expected on a fast optical system where the usable focus tolerance is a few tens of microns.",
+    "alt": "ZWO EAF electronic automatic focuser astrophotography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "zwo-eaf-electronic-focuser",
+    "buy": [
+      {
+        "retailer": "ZWO Store",
+        "url": "https://www.zwoastro.com/product/eaf/",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Seestar S30 Pro 1.webp",
+        "alt": "ZWO Seestar S30 Pro smart telescope for astrophotography 1"
+      }
+    ],
+    "title": "ZWO Seestar S30 Pro Smart Telescope",
+    "desc": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.",
+    "alt": "ZWO Seestar S30 Pro smart telescope",
+    "type": "smart-telescope",
+    "section": "gear",
+    "slug": "zwo-seestar-s30-pro"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/ZWO TC20 1.webp",
+        "alt": "ZWO TC20 tripod and TH10 fluid head for astrophotography 1"
+      }
+    ],
+    "title": "ZWO TC20 Tripod + TH10 Fluid Head",
+    "desc": "A lightweight portable tripod paired with a smooth fluid head for smooth panning during visual observing or casual imaging. The combination is compact enough to travel but stable enough for DSLR work.",
+    "alt": "ZWO TC20 tripod TH10 fluid head astrophotography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "zwo-tc20-tripod-th10-fluid-head"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Skywatcher Evostar 72ED 1.webp",
+        "alt": "Skywatcher Evostar 72ED refractor telescope for astrophotography 1"
+      }
+    ],
+    "title": "Skywatcher Evostar 72ED Refractor",
+    "desc": "A compact 72mm ED refractor offering a good balance of aperture and portability. Useful for wide-field imaging and visual observing, with a 360mm focal length providing a comfortable f/5 ratio.",
+    "alt": "Skywatcher Evostar 72ED refractor telescope",
+    "type": "telescope",
+    "section": "gear",
+    "slug": "skywatcher-evostar-72ed-refractor"
   }
 ]

@@ -35,6 +35,8 @@ DOMAIN = "https://bhapstar.com/"
 DATA = "site-data.json"
 OUT = "sitemap.xml"
 SHARE_DIR = "share"
+GEAR_DIR = "gear"
+GEAR_REVIEWS_DIR = "gear-reviews"
 
 # (path, changefreq, priority, image_section)
 # image_section: None = no images, else the "section" whose images go here.
@@ -84,6 +86,18 @@ def collect_images(items):
             if u not in urls:
                 urls.append(u)
     return urls
+
+
+def has_cover(it):
+    """Check if entry has a cover image."""
+    return bool(it.get("file") or (it.get("images") and len(it["images"]) > 0))
+
+
+def has_review(slug):
+    """Check if gear-reviews/<slug>.html exists."""
+    import os
+    path = os.path.join(GEAR_REVIEWS_DIR, f"{slug}.html")
+    return os.path.isfile(path)
 
 
 def image_block(urls, indent="    "):
@@ -167,12 +181,26 @@ def main():
         url_entry(out, loc, lastmod, SHARE_CHANGEFREQ, SHARE_PRIORITY, img_urls)
         share_count += 1
 
+    # ── Per-gear pages (all gear items get a page) ──
+    gear_count = 0
+    for it in items:
+        if it.get("section") != "gear":
+            continue
+        slug = it.get("slug")
+        if not slug:
+            continue
+        loc = f"{DOMAIN}{GEAR_DIR}/{quote(slug)}.html"
+        lastmod = STATIC_LASTMOD  # gear pages don't track dates in site-data
+        img_urls = [DOMAIN + quote(f) for f in entry_files(it)]
+        url_entry(out, loc, lastmod, SHARE_CHANGEFREQ, SHARE_PRIORITY, img_urls)
+        gear_count += 1
+
     out.append("</urlset>")
 
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("\n".join(out) + "\n")
 
-    print(f"Wrote {OUT}: {len(PAGES)} pages + {share_count} share pages; "
+    print(f"Wrote {OUT}: {len(PAGES)} pages + {share_count} share pages + {gear_count} gear pages; "
           f"images by section: {counts}")
 
 
