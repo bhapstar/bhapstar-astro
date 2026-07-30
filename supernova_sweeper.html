@@ -307,6 +307,13 @@
     .win-card p { color: rgba(200,195,235,0.82); font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
     .win-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
 
+    /* The win / ultra / lose cards are always dark, but the shared .btn
+       uses var(--text), which flips to a dark ink in light mode and
+       leaves "Try again" / "Close" almost invisible on the dark card
+       (see uploaded screenshot). Pin these overlay button labels light
+       whatever the theme. Scoped to .page-puzzle so nothing else moves. */
+    .page-puzzle .win-actions .btn { color: rgba(240,238,250,0.96); }
+
     /* Image reveal inside win card */
     .win-img-wrap {
       width: 100%;
