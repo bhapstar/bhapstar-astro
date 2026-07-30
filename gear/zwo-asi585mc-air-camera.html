@@ -129,11 +129,36 @@
        affiliate disclosure that is hard to read does not count as one. */
     .gear-buy-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.55;
                       color: var(--text); opacity: 0.86; max-width: 60ch; }
-    .gear-back { display: inline-block; margin-bottom: 20px; padding: 8px 14px;
-                  font-size: 13px; color: var(--accent); text-decoration: none;
-                  border: 1px solid var(--line); border-radius: 8px;
-                  transition: all 200ms ease; }
-    .gear-back:hover { border-color: var(--accent); background: var(--soft); }
+    /* Previous / next item. Sits above the carousel, and is labelled with
+       item names so it reads as page navigation rather than image
+       navigation, which the carousel arrows handle just below. */
+    .gear-nav { display: flex; gap: 10px; margin-bottom: 20px;
+                 align-items: stretch; }
+    .gear-nav-link { display: flex; align-items: center; gap: 10px;
+                      flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                      border-radius: 11px; text-decoration: none;
+                      color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: border-color 200ms ease, background 200ms ease,
+                                  transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible {
+                      border-color: var(--accent);
+                      background: var(--glow2);
+                      transform: translateY(-1px); }
+    .gn-next { justify-content: flex-end; text-align: right; }
+    .gn-arrow { flex: 0 0 auto; font-size: 16px; line-height: 1;
+                 color: var(--accent); }
+    .gn-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); }
+    .gn-title { font-size: 13px; font-weight: 500; line-height: 1.25;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 560px) {
+      .gn-label { display: none; }
+      .gn-title { font-size: 12px; }
+      .gear-nav-link { padding: 9px 11px; }
+    }
     @keyframes gradientRoll {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -157,7 +182,11 @@
 <main>
   <section class="section">
     <div class="wrap gear-page">
-      <a href="/gear.html" class="gear-back">← Back to gear</a>
+      <nav class="gear-nav" aria-label="Gear navigation">
+        <a class="gear-nav-link gn-prev" href="/gear/juwei-14-harmonic-equatorial-mount.html" aria-label="Previous item: Juwei 14 Harmonic Equatorial Mount"><span class="gn-arrow" aria-hidden="true">&#8592;</span><span class="gn-text"><span class="gn-label">Previous</span><span class="gn-title">Juwei 14 Harmonic Equatorial Mount</span></span></a>
+        <a class="gear-nav-link gn-next" href="/gear/zwo-seestar-s30-smart-telescope.html" aria-label="Next item: ZWO Seestar S30 Smart Telescope"><span class="gn-text"><span class="gn-label">Next</span><span class="gn-title">ZWO Seestar S30 Smart Telescope</span></span><span class="gn-arrow" aria-hidden="true">&#8594;</span></a>
+      </nav>
+
 
       <div class="gear-header">
         <div class="gear-carousel" id="gearCarousel" data-count="3" tabindex="0" role="group" aria-label="Product images">
@@ -246,15 +275,6 @@ are paying twice for the same controller.</p>
 -->
       </div>
 
-      <div class="gear-buy">
-        <p class="gear-buy-label">Where to buy</p>
-        <div class="gear-buy-list">
-          <a class="gear-buy-link" href="https://www.zwoastro.com/product-category/cameras/" target="_blank" rel="noopener noreferrer">ZWO Store <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
-          <a class="gear-buy-link" href="https://www.highpointscientific.com/brands/zwo-astronomy-cameras" target="_blank" rel="noopener noreferrer">High Point Scientific <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
-          <a class="gear-buy-link" href="https://www.firstlightoptics.com/zwo-cameras.html" target="_blank" rel="noopener noreferrer">First Light Optics <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
-          <a class="gear-buy-link" href="https://agenaastro.com/shop-by-brand/zwo-astronomical-cameras.html" target="_blank" rel="noopener noreferrer">Agena Astro <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
-        </div>
-      </div>
     </div>
   </section>
 </main>
