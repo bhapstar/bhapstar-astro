@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Regenerate sitemap + structured data + share pages
+      - name: Regenerate sitemap + structured data + share pages + gear pages
         run: |
           python generate-sitemap.py
           python generate-schema.py
@@ -41,7 +41,7 @@ jobs:
       - name: Bump SW cache version
         run: |
           COMMIT=$(git rev-parse --short HEAD)
-          sed -i "s/const CACHE_VERSION = 'bhapstar-[^']*'/const CACHE_VERSION = 'bhapstar-${COMMIT}'/" sw.js
+          sed -i "s/const CACHE_VERSION = 'bhapstar-[^']*'/const CACHE_VERSION = 'bhapstar-${COMMIT}'/\" sw.js
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -59,11 +59,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sitemap.xml gallery.html field_notes.html sw.js share
+          git add sitemap.xml gallery.html field_notes.html sw.js share gear
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "Auto: regenerate sitemap + structured data + share pages, bump SW cache"
+            git commit -m "Auto: regenerate sitemap + structured data + share pages + gear pages, bump SW cache"
             git pull --rebase origin main
             git push
           fi
