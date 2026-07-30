@@ -166,12 +166,6 @@
       <image:loc>https://bhapstar.com/images/gear/ZWO%20ASI585MC%20Air%203.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Optolong%20LeXtreme.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Optolong%20L-Quad%20Enhance.webp</image:loc>
-    </image:image>
-    <image:image>
       <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%201.webp</image:loc>
     </image:image>
     <image:image>
@@ -182,6 +176,12 @@
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%204.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Optolong%20L-Quad%20Enhance.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Optolong%20LeXtreme.webp</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Celestron%202in%20Eyepiece%20Kit%201.webp</image:loc>
@@ -197,6 +197,15 @@
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Skywatcher%20Evostar%2072ED%201.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -491,6 +500,159 @@
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/comets-3.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/askar-v-modular-apo-refractor.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%203.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%204.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%205.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%206.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/juwei-14-harmonic-equatorial-mount.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Juwei%2014%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Juwei%2014%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Juwei%2014%203.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Juwei%2014%204.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-asi585mc-air-camera.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20ASI585MC%20Air%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20ASI585MC%20Air%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20ASI585MC%20Air%203.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-seestar-s30-smart-telescope.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%203.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%204.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/optolong-l-quad-enhance-filter.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Optolong%20L-Quad%20Enhance.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/optolong-l-extreme-filter.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Optolong%20LeXtreme.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/celestron-2in-eyepiece-kit.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Celestron%202in%20Eyepiece%20Kit%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Celestron%202in%20Eyepiece%20Kit%202.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/svbony-filter-drawer.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/SVBony%20Filter%20drawer%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/SVBony%20Filter%20drawer%202.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-eaf-electronic-focuser.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-seestar-s30-pro.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-tc20-tripod-th10-fluid-head.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/skywatcher-evostar-72ed-refractor.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Skywatcher%20Evostar%2072ED%201.webp</image:loc>
     </image:image>
   </url>
 </urlset>
