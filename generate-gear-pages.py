@@ -25,13 +25,16 @@ whose slug is no longer in site-data.json.
 import html
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "gear"
 REVIEWS_DIR = "gear-reviews"
 SITE_NAME = "Bhapstar Astrophotography"
+# Stable date. Bump by hand when a review has a real content change; do NOT
+# derive from "now", or every workflow run restamps all 12 pages.
+PUBLISHED_DATE = "2026-07-30"
 
 def esc(s):
     """Escape for HTML attribute/text context."""
@@ -57,7 +60,7 @@ def read_review(slug):
 
 def build_json_ld(entry, page_url, cover_src):
     """Build Article + Product schema."""
-    iso_date = datetime.now(datetime.UTC).isoformat() if hasattr(datetime, 'UTC') else datetime.utcnow().isoformat() + 'Z'
+    iso_date = PUBLISHED_DATE
     schema = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -83,13 +86,19 @@ def build_json_ld(entry, page_url, cover_src):
         },
         "image": url_for(cover_src) if cover_src else None
     }
-    return json.dumps(schema, ensure_ascii=False)
+    def prune(o):
+        if isinstance(o, dict):
+            return {k: prune(v) for k, v in o.items() if v is not None}
+        return o
+
+    return json.dumps(prune(schema), ensure_ascii=False)
 
 def build_page(entry, slug):
     """Build the full HTML page for one gear item."""
     title = entry.get('title', 'Gear')
     desc = entry.get('desc', '')
-    images = entry.get('images', [])
+    images = [im for im in (entry.get('images') or [])
+              if im.get('file') and os.path.isfile(im['file'])]
     cover = images[0] if images else {}
     cover_src = cover.get('file', '')
     cover_alt = cover.get('alt', title)
@@ -103,13 +112,42 @@ def build_page(entry, slug):
     thumb_strip = ''
     for i, img in enumerate(images):
         thumb_src = thumb_for(img['file'])
+        if not os.path.isfile(thumb_src):
+            thumb_src = img['file']
         thumb_alt = esc(img.get('alt', title))
         active_cls = 'active' if i == 0 else ''
         thumb_strip += (
-            f'        <img class="dv-thumb {active_cls}" data-idx="{i}" '
-            f'src="{esc(thumb_src)}" alt="{thumb_alt}" />\n'
+            f'          <img class="gear-thumb {active_cls}" data-idx="{i}" '
+            f'src="/{esc(thumb_src)}" alt="{thumb_alt}" loading="lazy" '
+            f'decoding="async" />\n'
         )
     
+    if cover_src:
+        og_image = (
+            f'  <meta property="og:image" content="{esc(url_for(cover_src))}" />\n'
+            f'  <meta name="twitter:image" content="{esc(url_for(cover_src))}" />\n'
+        )
+        twitter_card = 'summary_large_image'
+    else:
+        og_image = ''
+        twitter_card = 'summary'
+
+    hero_html = ''
+    if cover_src:
+        hero_html = (
+            f'        <div class="gear-hero">\n'
+            f'          <img id="heroImg" src="/{esc(cover_src)}" '
+            f'alt="{esc(cover_alt)}" />\n'
+            f'        </div>\n'
+        )
+
+    strip_html = ''
+    if len(images) > 1:
+        strip_html = (
+            f'      <div class="gear-thumbs" id="thumbstrip">\n'
+            f'{thumb_strip}      </div>\n'
+        )
+
     # Render buy buttons
     buy_html = ''
     has_affiliate = any(b.get('affiliate') for b in buy_links)
@@ -153,15 +191,13 @@ def build_page(entry, slug):
   <meta property="og:type" content="article" />
   <meta property="og:title" content="{esc(title)}" />
   <meta property="og:description" content="{esc(desc[:160])}" />
-  <meta property="og:image" content="{esc(url_for(cover_src))}" />
   <meta property="og:url" content="{esc(page_url)}" />
-  <meta name="twitter:card" content="summary_large_image" />
+{og_image}  <meta name="twitter:card" content="{twitter_card}" />
   <meta name="twitter:title" content="{esc(title)}" />
   <meta name="twitter:description" content="{esc(desc[:160])}" />
-  <meta name="twitter:image" content="{esc(url_for(cover_src))}" />
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}}'></script>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
   
   <style>
     .gear-page {{ max-width: 900px; margin: 40px auto; padding: 0 16px; }}
@@ -231,36 +267,40 @@ def build_page(entry, slug):
   </script>
 </head>
 <body>
-  <div id="app"></div>
-  <script src="../partials/partials.js"></script>
 
-  <main class="gear-page">
-    <a href="/gear.html" class="gear-back">← Back to gear</a>
-    
-    <div class="gear-header">
-      <div class="gear-hero">
-        <img id="heroImg" src="{esc(cover_src)}" alt="{esc(cover_alt)}" />
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap gear-page">
+      <a href="/gear.html" class="gear-back">← Back to gear</a>
+
+      <div class="gear-header">
+{hero_html}        <h1 class="gear-title">{esc(title)}</h1>
+        <p class="gear-desc">{esc(desc)}</p>
       </div>
-      <h1 class="gear-title">{esc(title)}</h1>
-      <p class="gear-desc">{esc(desc)}</p>
-    </div>
 
-    <div class="gear-thumbs" id="thumbstrip">
-{thumb_strip}    </div>
+{strip_html}
+      <div class="gear-review">
+{review_html}      </div>
 
-    <div class="gear-review">
-{review_html}    </div>
+{buy_html}    </div>
+  </section>
+</main>
 
-{buy_html}  </main>
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
 
-  <script src="../protect-images.js"></script>
+  <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
   <script>
     // Swipeable image strip: click a thumbnail to swap the hero image.
     document.querySelectorAll('.gear-thumb').forEach(thumb => {{
       thumb.addEventListener('click', () => {{
-        const idx = thumb.getAttribute('data-idx');
-        const images = {json.dumps([img['file'] for img in images])};
-        if (idx !== null && idx < images.length) {{
+        const idx = Number(thumb.getAttribute('data-idx'));
+        const images = {json.dumps(['/' + img['file'] for img in images])};
+        if (!Number.isNaN(idx) && idx >= 0 && idx < images.length) {{
           document.getElementById('heroImg').src = images[idx];
           document.querySelectorAll('.gear-thumb').forEach(t => 
             t.classList.remove('active'));
