@@ -13,15 +13,13 @@
   <meta property="og:type" content="article" />
   <meta property="og:title" content="ZWO Seestar S30 Pro Smart Telescope" />
   <meta property="og:description" content="The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it th" />
-  <meta property="og:image" content="https://bhapstar.com/images/gear/Seestar S30 Pro 1.webp" />
   <meta property="og:url" content="https://bhapstar.com/gear/zwo-seestar-s30-pro.html" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="ZWO Seestar S30 Pro Smart Telescope" />
   <meta name="twitter:description" content="The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it th" />
-  <meta name="twitter:image" content="https://bhapstar.com/images/gear/Seestar S30 Pro 1.webp" />
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
   
   <style>
     .gear-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
@@ -87,41 +85,44 @@
   </style>
 
   <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "ZWO Seestar S30 Pro Smart Telescope", "description": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-07-30T07:09:19.453386Z", "dateModified": "2026-07-30T07:09:19.453386Z", "mainEntity": {"@type": "Product", "name": "ZWO Seestar S30 Pro Smart Telescope", "image": "https://bhapstar.com/images/gear/Seestar S30 Pro 1.webp", "description": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies."}, "image": "https://bhapstar.com/images/gear/Seestar S30 Pro 1.webp"}
+{"@context": "https://schema.org", "@type": "Article", "headline": "ZWO Seestar S30 Pro Smart Telescope", "description": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "mainEntity": {"@type": "Product", "name": "ZWO Seestar S30 Pro Smart Telescope", "description": "The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies."}}
   </script>
 </head>
 <body>
-  <div id="app"></div>
-  <script src="../partials/partials.js"></script>
 
-  <main class="gear-page">
-    <a href="/gear.html" class="gear-back">← Back to gear</a>
-    
-    <div class="gear-header">
-      <div class="gear-hero">
-        <img id="heroImg" src="images/gear/Seestar S30 Pro 1.webp" alt="ZWO Seestar S30 Pro smart telescope for astrophotography 1" />
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap gear-page">
+      <a href="/gear.html" class="gear-back">← Back to gear</a>
+
+      <div class="gear-header">
+        <h1 class="gear-title">ZWO Seestar S30 Pro Smart Telescope</h1>
+        <p class="gear-desc">The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.</p>
       </div>
-      <h1 class="gear-title">ZWO Seestar S30 Pro Smart Telescope</h1>
-      <p class="gear-desc">The successor to the S30, with improved sensor and faster processing. The S30 Pro offers better light gathering and speed compared to the original, making it the goto for faster stacking sessions and fainter targets from light-polluted skies.</p>
+
+
+      <div class="gear-review">
+<p><em>Review coming soon.</em></p>      </div>
+
     </div>
+  </section>
+</main>
 
-    <div class="gear-thumbs" id="thumbstrip">
-        <img class="dv-thumb active" data-idx="0" src="images/gear/thumbs/Seestar S30 Pro 1.webp" alt="ZWO Seestar S30 Pro smart telescope for astrophotography 1" />
-    </div>
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
 
-    <div class="gear-review">
-<p><em>Review coming soon.</em></p>    </div>
-
-  </main>
-
-  <script src="../protect-images.js"></script>
+  <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
   <script>
     // Swipeable image strip: click a thumbnail to swap the hero image.
     document.querySelectorAll('.gear-thumb').forEach(thumb => {
       thumb.addEventListener('click', () => {
-        const idx = thumb.getAttribute('data-idx');
-        const images = ["images/gear/Seestar S30 Pro 1.webp"];
-        if (idx !== null && idx < images.length) {
+        const idx = Number(thumb.getAttribute('data-idx'));
+        const images = [];
+        if (!Number.isNaN(idx) && idx >= 0 && idx < images.length) {
           document.getElementById('heroImg').src = images[idx];
           document.querySelectorAll('.gear-thumb').forEach(t => 
             t.classList.remove('active'));
