@@ -36,6 +36,7 @@ jobs:
           python generate-sitemap.py
           python generate-schema.py
           python generate-share-pages.py
+          python generate-gear-pages.py
 
       - name: Bump SW cache version
         run: |
