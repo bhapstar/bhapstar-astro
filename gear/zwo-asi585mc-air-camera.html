@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZWO ASI585MC Air Camera — Bhapstar Astrophotography</title>
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/gear/zwo-asi585mc-air-camera.html" />
+  <meta name="description" content="A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and " />
+  <meta name="author" content="Bhapinder Singh" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="ZWO ASI585MC Air Camera" />
+  <meta property="og:description" content="A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and " />
+  <meta property="og:url" content="https://bhapstar.com/gear/zwo-asi585mc-air-camera.html" />
+  <meta property="og:image" content="https://bhapstar.com/images/gear/ZWO ASI585MC Air 1.webp" />
+  <meta name="twitter:image" content="https://bhapstar.com/images/gear/ZWO ASI585MC Air 1.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ZWO ASI585MC Air Camera" />
+  <meta name="twitter:description" content="A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and " />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="/styles.css" />
+  
+  <style>
+    .gear-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    .gear-header { margin-bottom: 40px; }
+    /* ── Carousel ──
+       The stage has a fixed aspect-ratio and slides are absolutely
+       positioned with object-fit: contain, so its height never changes.
+       Mixing portrait and landscape shots cannot shift the page. */
+    .gear-carousel { margin-bottom: 28px; outline: none; }
+    .gear-carousel:focus-visible .gc-stage { border-color: var(--accent); }
+    .gc-stage { position: relative; width: 100%; aspect-ratio: 3 / 2;
+                 border-radius: 16px; overflow: hidden;
+                 background: var(--bg2);
+                 border: 1px solid var(--line); }
+    .gc-slide { position: absolute; inset: 0; width: 100%; height: 100%;
+                 object-fit: contain; display: block;
+                 opacity: 0; transition: opacity 280ms ease;
+                 pointer-events: none; }
+    .gc-slide.is-active { opacity: 1; }
+
+    /* Overlay controls deliberately keep a dark scrim in both themes:
+       they sit on top of photographs, not on the page background. */
+    .gc-arrow { position: absolute; top: 50%; transform: translateY(-50%);
+                 width: 40px; height: 40px; display: grid; place-items: center;
+                 border-radius: 50%; cursor: pointer; z-index: 3;
+                 color: rgba(255,255,255,0.94);
+                 background: rgba(8,6,26,0.62);
+                 border: 1px solid rgba(167,139,250,0.28);
+                 backdrop-filter: blur(6px);
+                 transition: background 200ms ease, border-color 200ms ease,
+                             opacity 200ms ease; }
+    .gc-arrow:hover, .gc-arrow:focus-visible { background: rgba(96,165,250,0.24);
+                 border-color: rgba(96,165,250,0.6); color: #fff; }
+    .gc-arrow svg { width: 20px; height: 20px; }
+    .gc-prev { left: 12px; }
+    .gc-next { right: 12px; }
+
+    .gc-counter { position: absolute; top: 12px; right: 12px; z-index: 3;
+                   padding: 4px 10px; border-radius: 999px;
+                   font-size: 11.5px; letter-spacing: 0.06em;
+                   color: rgba(255,255,255,0.9);
+                   background: rgba(8,6,26,0.62);
+                   border: 1px solid rgba(167,139,250,0.22);
+                   backdrop-filter: blur(6px); }
+
+    /* Thumbnails sit inside the stage, along the bottom. */
+    .gc-thumbs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+                  display: flex; gap: 8px; justify-content: center;
+                  padding: 10px 12px; overflow-x: auto;
+                  scrollbar-width: none;
+                  background: linear-gradient(to top,
+                              rgba(5,4,20,0.82), rgba(5,4,20,0)); }
+    .gc-thumbs::-webkit-scrollbar { display: none; }
+    .gc-thumb { flex: 0 0 auto; width: 56px; height: 40px; padding: 0;
+                 border-radius: 7px; overflow: hidden; cursor: pointer;
+                 background: rgba(8,6,26,0.6);
+                 border: 2px solid rgba(255,255,255,0.22);
+                 opacity: 0.62;
+                 transition: opacity 200ms ease, border-color 200ms ease,
+                             transform 200ms ease; }
+    .gc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gc-thumb:hover, .gc-thumb:focus-visible { opacity: 1;
+                 border-color: rgba(96,165,250,0.8); }
+    .gc-thumb.is-active { opacity: 1; border-color: #a78bfa;
+                 transform: translateY(-2px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gc-slide { transition: none; }
+    }
+    .gear-title { font-size: 32px; font-weight: 600; margin: 0 0 16px; 
+                    background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+                    background-size: 300% 100%;
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: gradientRoll 4s linear infinite reverse; }
+    .gear-desc { font-size: 16px; line-height: 1.6; color: var(--muted); margin: 0; }
+    .gear-review { margin: 40px 0; font-size: 15px; line-height: 1.7;
+                    color: var(--text); }
+    .gear-review h2 { font-size: 20px; font-weight: 600; margin: 24px 0 12px;
+                       color: var(--text); }
+    .gear-review h3 { font-size: 17px; font-weight: 600; margin: 18px 0 10px;
+                       color: var(--text); }
+    .gear-review p { margin: 12px 0; }
+    .gear-review table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .gear-review table td, .gear-review table th { padding: 10px; text-align: left;
+                                                     border-bottom: 1px solid var(--line); }
+    .gear-review table th { background: var(--soft); font-weight: 600; }
+    .gear-buy { margin: 32px 0; padding-top: 24px; border-top: 1px solid var(--line); }
+    .gear-buy-label { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+                       color: var(--muted); margin: 0 0 12px; }
+    .gear-buy-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .gear-buy-link { display: inline-flex; align-items: center; gap: 7px;
+                      padding: 10px 14px; border-radius: 11px; font-size: 13px; font-weight: 500;
+                      text-decoration: none; color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: all 200ms ease; }
+    .gear-buy-link:hover, .gear-buy-link:focus-visible { color: #fff;
+                      border-color: rgba(96,165,250,0.55); background: rgba(96,165,250,0.14);
+                      transform: translateY(-2px); }
+    .gear-buy-link svg { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.6; }
+    .gear-buy-link:hover svg { opacity: 1; }
+    /* Disclosure text: deliberately full contrast and not tiny. An
+       affiliate disclosure that is hard to read does not count as one. */
+    .gear-buy-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.55;
+                      color: var(--text); opacity: 0.86; max-width: 60ch; }
+    /* Previous / next item. Sits above the carousel, and is labelled with
+       item names so it reads as page navigation rather than image
+       navigation, which the carousel arrows handle just below. */
+    .gear-nav { display: flex; gap: 10px; margin-bottom: 20px;
+                 align-items: stretch; }
+    .gear-nav-link { display: flex; align-items: center; gap: 10px;
+                      flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                      border-radius: 11px; text-decoration: none;
+                      color: var(--text);
+                      border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: border-color 200ms ease, background 200ms ease,
+                                  transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible {
+                      border-color: var(--accent);
+                      background: var(--glow2);
+                      transform: translateY(-1px); }
+    .gn-next { justify-content: flex-end; text-align: right; }
+    .gn-arrow { flex: 0 0 auto; font-size: 16px; line-height: 1;
+                 color: var(--accent); }
+    .gn-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); }
+    .gn-title { font-size: 13px; font-weight: 500; line-height: 1.25;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 560px) {
+      .gn-label { display: none; }
+      .gn-title { font-size: 12px; }
+      .gear-nav-link { padding: 9px 11px; }
+    }
+    @keyframes gradientRoll {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @media (max-width: 768px) {
+      .gear-page { margin: 24px auto; padding: 0 12px; }
+      .gear-title { font-size: 24px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "ZWO ASI585MC Air Camera", "description": "A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and the built-in cooling pulls heat from the chip to keep the long exposures clean and quiet. Guide camera, controller, and wireless connection are all folded in, leaving nothing between the telescope and the sky but the lens cap, before it comes off.", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "mainEntity": {"@type": "Product", "name": "ZWO ASI585MC Air Camera", "image": "https://bhapstar.com/images/gear/ZWO ASI585MC Air 1.webp", "description": "A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and the built-in cooling pulls heat from the chip to keep the long exposures clean and quiet. Guide camera, controller, and wireless connection are all folded in, leaving nothing between the telescope and the sky but the lens cap, before it comes off."}, "image": "https://bhapstar.com/images/gear/ZWO ASI585MC Air 1.webp"}
+  </script>
+</head>
+<body>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap gear-page">
+      <nav class="gear-nav" aria-label="Gear navigation">
+        <a class="gear-nav-link gn-prev" href="/gear/juwei-14-harmonic-equatorial-mount.html" aria-label="Previous item: Juwei 14 Harmonic Equatorial Mount"><span class="gn-arrow" aria-hidden="true">&#8592;</span><span class="gn-text"><span class="gn-label">Previous</span><span class="gn-title">Juwei 14 Harmonic Equatorial Mount</span></span></a>
+        <a class="gear-nav-link gn-next" href="/gear/zwo-seestar-s30-smart-telescope.html" aria-label="Next item: ZWO Seestar S30 Smart Telescope"><span class="gn-text"><span class="gn-label">Next</span><span class="gn-title">ZWO Seestar S30 Smart Telescope</span></span><span class="gn-arrow" aria-hidden="true">&#8594;</span></a>
+      </nav>
+
+
+      <div class="gear-header">
+        <div class="gear-carousel" id="gearCarousel" data-count="3" tabindex="0" role="group" aria-label="Product images">
+          <div class="gc-stage">
+            <img class="gc-slide is-active" data-idx="0" src="/images/gear/ZWO ASI585MC Air 1.webp" alt="ZWO ASI585MC Air cooled astronomy camera for astrophotography 1" decoding="async" draggable="false" />
+            <img class="gc-slide" data-idx="1" src="/images/gear/ZWO ASI585MC Air 2.webp" alt="ZWO ASI585MC Air cooled astronomy camera for astrophotography 2" loading="lazy" decoding="async" draggable="false" />
+            <img class="gc-slide" data-idx="2" src="/images/gear/ZWO ASI585MC Air 3.webp" alt="ZWO ASI585MC Air cooled astronomy camera for astrophotography 3" loading="lazy" decoding="async" draggable="false" />
+            <button class="gc-arrow gc-prev" type="button" aria-label="Previous image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="gc-arrow gc-next" type="button" aria-label="Next image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div class="gc-counter" aria-hidden="true"><span class="gc-current">1</span> / 3</div>
+            <div class="gc-thumbs" role="tablist" aria-label="Choose image">
+                <button class="gc-thumb is-active" type="button" data-idx="0" aria-label="Go to image 1"><img src="/images/gear/thumbs/ZWO ASI585MC Air 1.webp" alt="" loading="lazy" decoding="async" /></button>
+                <button class="gc-thumb" type="button" data-idx="1" aria-label="Go to image 2"><img src="/images/gear/thumbs/ZWO ASI585MC Air 2.webp" alt="" loading="lazy" decoding="async" /></button>
+                <button class="gc-thumb" type="button" data-idx="2" aria-label="Go to image 3"><img src="/images/gear/thumbs/ZWO ASI585MC Air 3.webp" alt="" loading="lazy" decoding="async" /></button>
+            </div>
+          </div>
+        </div>
+        <h1 class="gear-title">ZWO ASI585MC Air Camera</h1>
+        <p class="gear-desc">A cooled, guided, controlled imaging system compressed into a single body. The Sony IMX585 sensor at its heart is extraordinarily sensitive to faint light, and the built-in cooling pulls heat from the chip to keep the long exposures clean and quiet. Guide camera, controller, and wireless connection are all folded in, leaving nothing between the telescope and the sky but the lens cap, before it comes off.</p>
+      </div>
+
+
+      <div class="gear-review">
+<!--
+  ASI585MC Air review draft.
+  Specs here are from ZWO's published figures and were checked: IMX585,
+  8.3MP, 3840x2160, 2.9 micron pixels, 1/1.2 inch, two-stage TEC holding
+  30-35C below ambient, 2.1MP guide sensor, 256GB onboard storage.
+-->
+
+<h2>Three boxes become one</h2>
+
+<p>A conventional imaging setup needs a main camera, a guide camera with its own
+scope or off-axis guider, and a control computer, each with its own cables and
+its own power. The ASI585MC Air puts the imaging sensor, a guide sensor and a
+full ASIAIR controller in one housing.</p>
+
+<p>The result is one power lead and a wireless connection to a phone. Anyone who
+has spent a session chasing an intermittent USB fault in the dark will
+understand why that matters more than any specification on the box.</p>
+
+<h2>The sensor</h2>
+
+<p>The IMX585 is an 8.3 megapixel back-illuminated sensor, 3840 by 2160, with
+2.9 micron pixels on a 1/1.2 inch format. Small pixels suit short and medium
+focal lengths, which is what makes it a sensible partner for a scope in the
+400mm to 600mm range.</p>
+
+<p>Cooling is a two-stage thermoelectric system rated to hold the sensor 30 to
+35 degrees below ambient. In a cool climate that is a convenience. Imaging from
+Dubai it is closer to essential, because dark current roughly doubles for every
+6 to 7 degrees of sensor temperature, and summer ambient here does not
+cooperate.</p>
+
+<!--
+  TODO: the number readers will want is the sensor temperature you can actually
+  hold on a hot night, versus ambient. That is location-specific and genuinely
+  useful, because most reviews are written in temperate climates.
+-->
+
+<h2>The trade-off nobody mentions</h2>
+
+<p>A small sensor is not automatically a disadvantage, but it is a constraint.
+The 1/1.2 inch format gives a narrower field than an APS-C camera on the same
+telescope, so framing large targets means either a shorter focal length or a
+mosaic. Set against that, small sensors are less demanding of the optics at the
+edges, and there is less to go wrong with flats.</p>
+
+<p>The all-in-one design also means the components are married. If you later
+want a larger sensor, you are replacing the controller and guide camera too.</p>
+
+<h2>Who it suits</h2>
+
+<p>People who value getting started quickly over maximum configurability, and
+anyone imaging from a location where the setup has to be carried out and packed
+away every session. If you have a permanent setup and already own an ASIAIR, you
+are paying twice for the same controller.</p>
+
+<!--
+  TODO: link the images you have taken with it. Ideally pick one that shows the
+  field of view honestly on a large target, so readers can judge the framing.
+-->
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+  <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
+  <script>
+    /* Carousel: arrows, thumbnails, keyboard and touch swipe.
+       All slides are already in the DOM, so changing image is only a class
+       swap. Nothing is resized or reloaded, so the page cannot shift. */
+    (function () {
+      var root = document.getElementById('gearCarousel');
+      if (!root) return;
+
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.gc-slide'));
+      var thumbs = Array.prototype.slice.call(root.querySelectorAll('.gc-thumb'));
+      var counter = root.querySelector('.gc-current');
+      var stage = root.querySelector('.gc-stage');
+      if (slides.length < 2) return;
+
+      var index = 0;
+
+      function show(next) {
+        var n = (next + slides.length) % slides.length;
+        if (n === index) return;
+        slides[index].classList.remove('is-active');
+        slides[n].classList.add('is-active');
+        if (thumbs[index]) thumbs[index].classList.remove('is-active');
+        if (thumbs[n]) thumbs[n].classList.add('is-active');
+        index = n;
+        if (counter) counter.textContent = String(n + 1);
+        if (thumbs[n] && thumbs[n].scrollIntoView) {
+          thumbs[n].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+
+      var prev = root.querySelector('.gc-prev');
+      var next = root.querySelector('.gc-next');
+      if (prev) prev.addEventListener('click', function () { show(index - 1); });
+      if (next) next.addEventListener('click', function () { show(index + 1); });
+
+      thumbs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          show(Number(t.getAttribute('data-idx')));
+        });
+      });
+
+      root.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+      });
+
+      /* Touch swipe. Only treat it as a swipe if the gesture is clearly
+         horizontal, so vertical page scrolling still works normally. */
+      var x0 = null, y0 = null;
+      stage.addEventListener('touchstart', function (e) {
+        var t = e.changedTouches[0];
+        x0 = t.clientX; y0 = t.clientY;
+      }, { passive: true });
+      stage.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - x0, dy = t.clientY - y0;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          show(dx < 0 ? index + 1 : index - 1);
+        }
+        x0 = null; y0 = null;
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
