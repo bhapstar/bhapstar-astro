@@ -878,7 +878,7 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const all = await res.json();
       // site-data.json holds both gallery and gear entries; keep gear.
-      items = all.filter(it => (it.section || '') === 'gear');
+      items = all.filter(it => (it.section || '') === 'gear' && !it.hidden);
       init();
     } catch (err) {
       console.error('Gear data load error:', err);

@@ -816,7 +816,8 @@
     "alt": "ZWO Seestar S30 Pro smart telescope",
     "type": "smart-telescope",
     "section": "gear",
-    "slug": "zwo-seestar-s30-pro"
+    "slug": "zwo-seestar-s30-pro",
+    "hidden": true
   },
   {
     "images": [
@@ -830,7 +831,8 @@
     "alt": "ZWO TC20 tripod TH10 fluid head astrophotography",
     "type": "accessories",
     "section": "gear",
-    "slug": "zwo-tc20-tripod-th10-fluid-head"
+    "slug": "zwo-tc20-tripod-th10-fluid-head",
+    "hidden": true
   },
   {
     "images": [
@@ -844,6 +846,7 @@
     "alt": "Skywatcher Evostar 72ED refractor telescope",
     "type": "telescope",
     "section": "gear",
-    "slug": "skywatcher-evostar-72ed-refractor"
+    "slug": "skywatcher-evostar-72ed-refractor",
+    "hidden": true
   }
 ]

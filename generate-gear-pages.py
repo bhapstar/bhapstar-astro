@@ -5,7 +5,7 @@ gear/<slug>.html. Mirrors the logic of generate-share-pages.py but for gear.
 
 Each page includes:
   - Hero image (first image from entry.images)
-  - Swipeable image strip (all images, thumbnail carousel)
+  - Fixed-height carousel: arrows, in-stage thumbnails, keyboard, swipe
   - Review prose (read from gear-reviews/<slug>.html if it exists, else placeholder)
   - Buy links from the entry's buy array
   - JSON-LD Article schema
@@ -108,20 +108,6 @@ def build_page(entry, slug):
     review_html = read_review(slug)
     json_ld = build_json_ld(entry, page_url, cover_src)
     
-    # Render image strip (swipeable carousel)
-    thumb_strip = ''
-    for i, img in enumerate(images):
-        thumb_src = thumb_for(img['file'])
-        if not os.path.isfile(thumb_src):
-            thumb_src = img['file']
-        thumb_alt = esc(img.get('alt', title))
-        active_cls = 'active' if i == 0 else ''
-        thumb_strip += (
-            f'          <img class="gear-thumb {active_cls}" data-idx="{i}" '
-            f'src="/{esc(thumb_src)}" alt="{thumb_alt}" loading="lazy" '
-            f'decoding="async" />\n'
-        )
-    
     if cover_src:
         og_image = (
             f'  <meta property="og:image" content="{esc(url_for(cover_src))}" />\n'
@@ -132,20 +118,76 @@ def build_page(entry, slug):
         og_image = ''
         twitter_card = 'summary'
 
-    hero_html = ''
-    if cover_src:
-        hero_html = (
-            f'        <div class="gear-hero">\n'
-            f'          <img id="heroImg" src="/{esc(cover_src)}" '
-            f'alt="{esc(cover_alt)}" />\n'
-            f'        </div>\n'
-        )
+    # ── Carousel ──
+    # Every slide is absolutely positioned inside a stage with a fixed
+    # aspect-ratio, and images use object-fit: contain. That means the stage
+    # never changes height, so portrait and landscape shots can sit in the
+    # same carousel without the page jumping when you change slide.
+    carousel_html = ''
+    if images:
+        slides = ''
+        for i, img in enumerate(images):
+            slides += (
+                f'            <img class="gc-slide{" is-active" if i == 0 else ""}" '
+                f'data-idx="{i}" src="/{esc(img["file"])}" '
+                f'alt="{esc(img.get("alt") or title)}" '
+                f'{"" if i == 0 else "loading=\"lazy\" "}decoding="async" '
+                f'draggable="false" />\n'
+            )
 
-    strip_html = ''
-    if len(images) > 1:
-        strip_html = (
-            f'      <div class="gear-thumbs" id="thumbstrip">\n'
-            f'{thumb_strip}      </div>\n'
+        # Arrows and thumbnails are only worth rendering for multi-image items.
+        arrows = ''
+        thumbs = ''
+        counter = ''
+        if len(images) > 1:
+            arrows = (
+                '            <button class="gc-arrow gc-prev" type="button" '
+                'aria-label="Previous image">\n'
+                '              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+                'aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>\n'
+                '            </button>\n'
+                '            <button class="gc-arrow gc-next" type="button" '
+                'aria-label="Next image">\n'
+                '              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+                'aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>\n'
+                '            </button>\n'
+            )
+            counter = (
+                f'            <div class="gc-counter" aria-hidden="true">'
+                f'<span class="gc-current">1</span> / {len(images)}</div>\n'
+            )
+            tlist = ''
+            for i, img in enumerate(images):
+                t = thumb_for(img['file'])
+                if not os.path.isfile(t):
+                    t = img['file']
+                tlist += (
+                    f'                <button class="gc-thumb'
+                    f'{" is-active" if i == 0 else ""}" type="button" data-idx="{i}" '
+                    f'aria-label="Go to image {i + 1}">'
+                    f'<img src="/{esc(t)}" alt="" loading="lazy" decoding="async" />'
+                    f'</button>\n'
+                )
+            thumbs = (
+                '            <div class="gc-thumbs" role="tablist" '
+                'aria-label="Choose image">\n'
+                f'{tlist}'
+                '            </div>\n'
+            )
+
+        carousel_html = (
+            '        <div class="gear-carousel" id="gearCarousel" '
+            f'data-count="{len(images)}" tabindex="0" role="group" '
+            'aria-label="Product images">\n'
+            '          <div class="gc-stage">\n'
+            f'{slides}'
+            f'{arrows}'
+            f'{counter}'
+            f'{thumbs}'
+            '          </div>\n'
+            '        </div>\n'
         )
 
     # Render buy buttons
@@ -202,8 +244,69 @@ def build_page(entry, slug):
   <style>
     .gear-page {{ max-width: 900px; margin: 40px auto; padding: 0 16px; }}
     .gear-header {{ margin-bottom: 40px; }}
-    .gear-hero {{ margin-bottom: 32px; border-radius: 16px; overflow: hidden; }}
-    .gear-hero img {{ width: 100%; height: auto; display: block; }}
+    /* ── Carousel ──
+       The stage has a fixed aspect-ratio and slides are absolutely
+       positioned with object-fit: contain, so its height never changes.
+       Mixing portrait and landscape shots cannot shift the page. */
+    .gear-carousel {{ margin-bottom: 28px; outline: none; }}
+    .gear-carousel:focus-visible .gc-stage {{ border-color: rgba(167,139,250,0.55); }}
+    .gc-stage {{ position: relative; width: 100%; aspect-ratio: 3 / 2;
+                 border-radius: 16px; overflow: hidden;
+                 background: rgba(8,6,26,0.72);
+                 border: 1px solid rgba(167,139,250,0.16); }}
+    .gc-slide {{ position: absolute; inset: 0; width: 100%; height: 100%;
+                 object-fit: contain; display: block;
+                 opacity: 0; transition: opacity 280ms ease;
+                 pointer-events: none; }}
+    .gc-slide.is-active {{ opacity: 1; }}
+
+    .gc-arrow {{ position: absolute; top: 50%; transform: translateY(-50%);
+                 width: 40px; height: 40px; display: grid; place-items: center;
+                 border-radius: 50%; cursor: pointer; z-index: 3;
+                 color: rgba(232,230,247,0.92);
+                 background: rgba(8,6,26,0.62);
+                 border: 1px solid rgba(167,139,250,0.28);
+                 backdrop-filter: blur(6px);
+                 transition: background 200ms ease, border-color 200ms ease,
+                             opacity 200ms ease; }}
+    .gc-arrow:hover, .gc-arrow:focus-visible {{ background: rgba(96,165,250,0.24);
+                 border-color: rgba(96,165,250,0.6); color: #fff; }}
+    .gc-arrow svg {{ width: 20px; height: 20px; }}
+    .gc-prev {{ left: 12px; }}
+    .gc-next {{ right: 12px; }}
+
+    .gc-counter {{ position: absolute; top: 12px; right: 12px; z-index: 3;
+                   padding: 4px 10px; border-radius: 999px;
+                   font-size: 11.5px; letter-spacing: 0.06em;
+                   color: rgba(232,230,247,0.82);
+                   background: rgba(8,6,26,0.62);
+                   border: 1px solid rgba(167,139,250,0.22);
+                   backdrop-filter: blur(6px); }}
+
+    /* Thumbnails sit inside the stage, along the bottom. */
+    .gc-thumbs {{ position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+                  display: flex; gap: 8px; justify-content: center;
+                  padding: 10px 12px; overflow-x: auto;
+                  scrollbar-width: none;
+                  background: linear-gradient(to top,
+                              rgba(5,4,20,0.82), rgba(5,4,20,0)); }}
+    .gc-thumbs::-webkit-scrollbar {{ display: none; }}
+    .gc-thumb {{ flex: 0 0 auto; width: 56px; height: 40px; padding: 0;
+                 border-radius: 7px; overflow: hidden; cursor: pointer;
+                 background: rgba(8,6,26,0.6);
+                 border: 2px solid rgba(255,255,255,0.22);
+                 opacity: 0.62;
+                 transition: opacity 200ms ease, border-color 200ms ease,
+                             transform 200ms ease; }}
+    .gc-thumb img {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
+    .gc-thumb:hover, .gc-thumb:focus-visible {{ opacity: 1;
+                 border-color: rgba(96,165,250,0.8); }}
+    .gc-thumb.is-active {{ opacity: 1; border-color: #a78bfa;
+                 transform: translateY(-2px); }}
+
+    @media (prefers-reduced-motion: reduce) {{
+      .gc-slide {{ transition: none; }}
+    }}
     .gear-title {{ font-size: 32px; font-weight: 600; margin: 0 0 16px; 
                     background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
                     background-size: 300% 100%;
@@ -212,12 +315,6 @@ def build_page(entry, slug):
                     -webkit-text-fill-color: transparent;
                     animation: gradientRoll 4s linear infinite reverse; }}
     .gear-desc {{ font-size: 16px; line-height: 1.6; color: rgba(232,230,247,0.84); margin: 0; }}
-    .gear-thumbs {{ display: flex; gap: 8px; margin: 20px 0; overflow-x: auto; padding-bottom: 8px; }}
-    .gear-thumb {{ width: 80px; height: 60px; border-radius: 8px; cursor: pointer;
-                   border: 2px solid transparent; transition: all 200ms ease;
-                   flex-shrink: 0; object-fit: cover; }}
-    .gear-thumb.active {{ border-color: #a78bfa; }}
-    .gear-thumb:hover {{ border-color: #60a5fa; }}
     .gear-review {{ margin: 40px 0; font-size: 15px; line-height: 1.7; 
                     color: rgba(232,230,247,0.88); }}
     .gear-review h2 {{ font-size: 20px; font-weight: 600; margin: 24px 0 12px; 
@@ -277,11 +374,11 @@ def build_page(entry, slug):
       <a href="/gear.html" class="gear-back">← Back to gear</a>
 
       <div class="gear-header">
-{hero_html}        <h1 class="gear-title">{esc(title)}</h1>
+{carousel_html}        <h1 class="gear-title">{esc(title)}</h1>
         <p class="gear-desc">{esc(desc)}</p>
       </div>
 
-{strip_html}
+
       <div class="gear-review">
 {review_html}      </div>
 
@@ -295,19 +392,68 @@ def build_page(entry, slug):
   <script src="/partials/partials.js"></script>
   <script src="/protect-images.js"></script>
   <script>
-    // Swipeable image strip: click a thumbnail to swap the hero image.
-    document.querySelectorAll('.gear-thumb').forEach(thumb => {{
-      thumb.addEventListener('click', () => {{
-        const idx = Number(thumb.getAttribute('data-idx'));
-        const images = {json.dumps(['/' + img['file'] for img in images])};
-        if (!Number.isNaN(idx) && idx >= 0 && idx < images.length) {{
-          document.getElementById('heroImg').src = images[idx];
-          document.querySelectorAll('.gear-thumb').forEach(t => 
-            t.classList.remove('active'));
-          thumb.classList.add('active');
+    /* Carousel: arrows, thumbnails, keyboard and touch swipe.
+       All slides are already in the DOM, so changing image is only a class
+       swap. Nothing is resized or reloaded, so the page cannot shift. */
+    (function () {{
+      var root = document.getElementById('gearCarousel');
+      if (!root) return;
+
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.gc-slide'));
+      var thumbs = Array.prototype.slice.call(root.querySelectorAll('.gc-thumb'));
+      var counter = root.querySelector('.gc-current');
+      var stage = root.querySelector('.gc-stage');
+      if (slides.length < 2) return;
+
+      var index = 0;
+
+      function show(next) {{
+        var n = (next + slides.length) % slides.length;
+        if (n === index) return;
+        slides[index].classList.remove('is-active');
+        slides[n].classList.add('is-active');
+        if (thumbs[index]) thumbs[index].classList.remove('is-active');
+        if (thumbs[n]) thumbs[n].classList.add('is-active');
+        index = n;
+        if (counter) counter.textContent = String(n + 1);
+        if (thumbs[n] && thumbs[n].scrollIntoView) {{
+          thumbs[n].scrollIntoView({{ block: 'nearest', inline: 'nearest' }});
         }}
+      }}
+
+      var prev = root.querySelector('.gc-prev');
+      var next = root.querySelector('.gc-next');
+      if (prev) prev.addEventListener('click', function () {{ show(index - 1); }});
+      if (next) next.addEventListener('click', function () {{ show(index + 1); }});
+
+      thumbs.forEach(function (t) {{
+        t.addEventListener('click', function () {{
+          show(Number(t.getAttribute('data-idx')));
+        }});
       }});
-    }});
+
+      root.addEventListener('keydown', function (e) {{
+        if (e.key === 'ArrowLeft') {{ e.preventDefault(); show(index - 1); }}
+        else if (e.key === 'ArrowRight') {{ e.preventDefault(); show(index + 1); }}
+      }});
+
+      /* Touch swipe. Only treat it as a swipe if the gesture is clearly
+         horizontal, so vertical page scrolling still works normally. */
+      var x0 = null, y0 = null;
+      stage.addEventListener('touchstart', function (e) {{
+        var t = e.changedTouches[0];
+        x0 = t.clientX; y0 = t.clientY;
+      }}, {{ passive: true }});
+      stage.addEventListener('touchend', function (e) {{
+        if (x0 === null) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - x0, dy = t.clientY - y0;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {{
+          show(dx < 0 ? index + 1 : index - 1);
+        }}
+        x0 = null; y0 = null;
+      }}, {{ passive: true }});
+    }})();
   </script>
 </body>
 </html>'''
@@ -320,7 +466,11 @@ def main():
         items = json.load(f)
     
     # Filter: all gear items
-    gear_items = [e for e in items if e.get('section') == 'gear' and e.get('slug')]
+    # A hidden entry is one that is staged in site-data.json but not ready to
+    # publish (usually waiting on photos). It gets no tile and no page.
+    gear_items = [e for e in items
+                  if e.get('section') == 'gear' and e.get('slug')
+                  and not e.get('hidden')]
     
     # Create output dir
     os.makedirs(OUT_DIR, exist_ok=True)

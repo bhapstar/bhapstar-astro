@@ -187,7 +187,7 @@ def main():
         if it.get("section") != "gear":
             continue
         slug = it.get("slug")
-        if not slug:
+        if not slug or it.get("hidden"):
             continue
         loc = f"{DOMAIN}{GEAR_DIR}/{quote(slug)}.html"
         lastmod = STATIC_LASTMOD  # gear pages don't track dates in site-data
