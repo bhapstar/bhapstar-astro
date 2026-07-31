@@ -282,12 +282,24 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
        The stage has a fixed aspect-ratio and slides are absolutely
        positioned with object-fit: contain, so its height never changes.
        Mixing portrait and landscape shots cannot shift the page. */
-    .gear-carousel {{ margin-bottom: 28px; outline: none; }}
+    .gear-carousel {{ margin-bottom: 42px; outline: none; }}
     .gear-carousel:focus-visible .gc-stage {{ border-color: var(--accent); }}
     .gc-stage {{ position: relative; width: 100%; aspect-ratio: 3 / 2;
                  border-radius: 16px; overflow: hidden;
                  background: var(--bg2);
-                 border: 1px solid var(--line); }}
+                 border: 1px solid var(--line);
+                 /* Same lift as the gallery share pages. On #050414 a plain
+                    black shadow is invisible, so the image is raised with a
+                    deep shadow plus a violet bloom and a faint blue rim. */
+                 box-shadow: 0 24px 70px rgba(0,0,0,0.55),
+                             0 0 0 1px rgba(167,139,250,0.18),
+                             0 10px 44px rgba(167,139,250,0.28),
+                             0 4px 18px rgba(96,165,250,0.16); }}
+    /* Light theme: a soft, clearly visible drop shadow instead of the bloom.
+       Scoped to box-shadow only, so nothing else about the stage is touched. */
+    html[data-theme="light"] .gc-stage {{
+                 box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+                             0 6px 18px rgba(0,0,0,0.18); }}
     .gc-slide {{ position: absolute; inset: 0; width: 100%; height: 100%;
                  object-fit: contain; display: block;
                  opacity: 0; transition: opacity 280ms ease;
@@ -358,6 +370,29 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     .gear-review h3 {{ font-size: 17px; font-weight: 600; margin: 18px 0 10px;
                        color: var(--text); }}
     .gear-review p {{ margin: 12px 0; }}
+    .gear-review ul, .gear-review ol {{ margin: 12px 0; padding-left: 22px; }}
+    .gear-review li {{ margin: 6px 0; }}
+    /* Links carry an underline as well as colour, so they stay identifiable
+       without relying on hue alone. */
+    .gear-review a {{ color: var(--accent); text-decoration: none;
+                      border-bottom: 1px solid var(--line);
+                      transition: border-color 180ms ease, color 180ms ease; }}
+    .gear-review a:hover, .gear-review a:focus-visible {{
+                      border-bottom-color: var(--accent); }}
+    /* The dark-theme violet only reaches 2.3:1 on the light background, which
+       is washed out at body-text size. A darker shade of the same hue clears
+       4.5:1. Colour only, so nothing else about the link changes. */
+    html[data-theme="light"] .gear-review a {{ color: #6d4bd8; }}
+    html[data-theme="light"] .gear-review a:hover,
+    html[data-theme="light"] .gear-review a:focus-visible {{
+                      border-bottom-color: #6d4bd8; }}
+    /* Passband diagrams: drawn in-page as SVG rather than lifted from a
+       manufacturer's datasheet, so they follow the theme and can be corrected. */
+    .passband-fig {{ margin: 22px 0; padding: 14px 14px 10px; border-radius: 12px;
+                     background: var(--soft); border: 1px solid var(--line); }}
+    .passband-fig svg {{ width: 100%; height: auto; display: block; }}
+    .passband-fig figcaption {{ margin-top: 10px; font-size: 12px; line-height: 1.5;
+                                color: var(--muted); }}
     .gear-review table {{ width: 100%; border-collapse: collapse; margin: 16px 0; }}
     .gear-review table td, .gear-review table th {{ padding: 10px; text-align: left;
                                                      border-bottom: 1px solid var(--line); }}

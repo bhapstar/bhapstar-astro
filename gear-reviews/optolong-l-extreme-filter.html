@@ -1,63 +1,78 @@
 <!--
-  L-eXtreme review draft.
-  The 7nm Ha and OIII passbands are Optolong's published figures.
-  I have deliberately included no measured numbers. Any SNR, FWHM or star-count
-  figures must come from your own subs.
+  Optolong L-eXtreme. Checked: 7nm FWHM at Ha (656.3nm) and OIII (500.7nm).
+  Diagram is drawn in-page, not copied from Optolong's datasheet.
 -->
 
-<h2>The filter that makes a city balcony viable</h2>
+<h2>Why it works from a bright sky</h2>
 
-<p>Emission nebulae do not glow across the whole spectrum. They emit at specific
-wavelengths, principally hydrogen-alpha at 656nm and doubly-ionised oxygen at
-501nm. Skyglow, by contrast, is broadband. That asymmetry is the whole
-opportunity.</p>
+<p>Emission nebulae do not glow across the spectrum. They emit at particular
+wavelengths, mainly hydrogen-alpha at 656.3nm and doubly-ionised oxygen at
+500.7nm. Streetlighting is spread much more broadly. That asymmetry is the whole
+opportunity, and the L-eXtreme exploits it by opening two 7nm windows on those
+lines and closing everything else.</p>
 
-<p>The L-eXtreme passes two 7nm windows centred on those two lines and rejects
-almost everything else. Most of what a Bortle 8 sky throws at the sensor is
-simply not allowed through, while the signal you actually want passes largely
-intact.</p>
+<figure class="passband-fig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Diagram comparing 7nm and 3nm dual narrowband passbands against the visible spectrum, showing the OIII line at 500.7nm and the H-alpha line at 656.3nm, with the sodium streetlight band at 589nm falling between them.">
+  <defs>
+    <linearGradient id="vis" x1="0" x2="1">
+      <stop offset="0.00" stop-color="#4453d6"/><stop offset="0.20" stop-color="#3aa7d8"/>
+      <stop offset="0.38" stop-color="#43c07a"/><stop offset="0.56" stop-color="#d7d24a"/>
+      <stop offset="0.74" stop-color="#e08a3c"/><stop offset="1.00" stop-color="#c8384a"/>
+    </linearGradient>
+  </defs>
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">What the sky sends, and what each filter lets through</text>
+  <rect x="62.0" y="34" width="604.0" height="16" rx="3" fill="url(#vis)" opacity="0.85"/>
+  <text x="10" y="46" font-size="12" fill="var(--muted)">sky</text>
+  <line x1="397.8" y1="30" x2="397.8" y2="156" stroke="#e8b84b"
+        stroke-width="1.4" stroke-dasharray="3 3"/>
+  <text x="397.8" y="26" font-size="10" fill="#e8b84b" text-anchor="middle">sodium 589</text>
+  <text x="184.5" y="70" font-size="10.5" fill="#4fd1c5" text-anchor="middle">O III 500.7</text>
+  <text x="560.4" y="70" font-size="10.5" fill="#f06a7a" text-anchor="middle">H&#945; 656.3</text>
+  <text x="10" y="101" font-size="12" fill="var(--muted)">7nm</text><rect x="62.0" y="86" width="604.0" height="22" rx="3" fill="var(--soft)" stroke="var(--line)"/><rect x="176.0" y="88" width="16.9" height="18" rx="1" fill="#4fd1c5" opacity="0.95"/><rect x="552.0" y="88" width="16.9" height="18" rx="1" fill="#f06a7a" opacity="0.95"/><text x="197.9" y="101" font-size="10" fill="var(--muted)">7nm</text><text x="573.9" y="101" font-size="10" fill="var(--muted)">7nm</text><text x="10" y="143" font-size="12" fill="var(--muted)">3nm</text><rect x="62.0" y="128" width="604.0" height="22" rx="3" fill="var(--soft)" stroke="var(--line)"/><rect x="180.9" y="130" width="7.2" height="18" rx="1" fill="#4fd1c5" opacity="0.95"/><rect x="556.8" y="130" width="7.2" height="18" rx="1" fill="#f06a7a" opacity="0.95"/><text x="193.1" y="143" font-size="10" fill="var(--muted)">3nm</text><text x="569.0" y="143" font-size="10" fill="var(--muted)">3nm</text>
+  <line x1="62.0" y1="166" x2="666.0" y2="166" stroke="var(--line)"/>
+  <line x1="62.0" y1="166" x2="62.0" y2="172" stroke="var(--line)"/><text x="62.0" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">450</text><line x1="182.8" y1="166" x2="182.8" y2="172" stroke="var(--line)"/><text x="182.8" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">500</text><line x1="303.6" y1="166" x2="303.6" y2="172" stroke="var(--line)"/><text x="303.6" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">550</text><line x1="424.4" y1="166" x2="424.4" y2="172" stroke="var(--line)"/><text x="424.4" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">600</text><line x1="545.2" y1="166" x2="545.2" y2="172" stroke="var(--line)"/><text x="545.2" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">650</text><line x1="666.0" y1="166" x2="666.0" y2="172" stroke="var(--line)"/><text x="666.0" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">700</text>
+  <text x="364.0" y="199" font-size="10" fill="var(--muted)" text-anchor="middle">wavelength (nm)</text>
+</svg>
+<figcaption>Drawn to scale. The coloured bar is roughly what reaches the telescope; the slots below are all each filter permits. Sodium streetlighting at 589nm falls in the gap, which is the whole idea.</figcaption>
+</figure>
 
-<h2>What it costs you</h2>
+<p>Look at how much of the bar is shut. The sodium line at 589nm, which is a
+large part of what a city throws upward, falls neatly in the gap between the two
+windows. From my balcony this is the difference between a target being possible
+and not, and it is why almost every emission nebula in the gallery was shot
+through it, including <a href="/share/rosette-nebula-ngc2244.html">the Rosette</a>,
+<a href="/share/eagle-nebula-m16.html">the Eagle</a>,
+<a href="/share/jellyfish-nebula-ic443.html">the Jellyfish</a>,
+<a href="/share/christmas-tree-nebula-ngc2264.html">the Christmas Tree</a>,
+<a href="/share/thors-helmet-ngc2359.html">Thor's Helmet</a>,
+<a href="/share/monkey-head-nebula-ngc2174.html">the Monkey Head</a> and
+<a href="/share/cats-paw-nebula-ngc6334.html">the Cat's Paw</a>, the last of
+those from the balcony rather than the desert.</p>
 
-<p>Blocking that much light means the sensor sees far less of it. Sub-exposures
-have to get longer, and total integration time has to grow, sometimes
-substantially. A filter like this does not make imaging from a bright sky easy.
-It makes it possible, in exchange for time.</p>
+<h2>Living with it</h2>
 
-<p>It is also useless on the wrong target. Galaxies, star clusters and reflection
-nebulae shine by broadband starlight, and a dual narrowband filter throws most of
-that away. Putting an L-eXtreme in front of a galaxy is a wasted night.</p>
+<p>Rejecting that much light means less of it arrives, so sub-exposures get
+longer and total integration has to grow. It is a trade of time for contrast,
+and from a bright site it is a trade well worth making. Star colour also
+largely disappears, since only two narrow slices of the spectrum are getting
+through, which is expected rather than a fault and is dealt with in processing.</p>
+
+<p>7nm is the forgiving width. It tolerates faster optics better than a 3nm
+filter does, and it needs less integration to get there. If you are choosing a
+first dual narrowband filter, this is the one I would start with.</p>
+
+<h2>Where it will not help</h2>
+
+<p>Galaxies, star clusters and reflection nebulae shine by broadband starlight,
+so this filter throws away almost everything you came for. For those, the
+<a href="/gear/optolong-l-quad-enhance-filter.html">L-Quad Enhance</a> is the
+right tool, and <a href="/share/pleiades-m45.html">the Pleiades</a> went
+unfiltered entirely.</p>
 
 <!--
-  TODO: your numbers belong here. Same target, with and against without, matched
-  integration time, and whatever metric you trust: SNR, detected stars, or just
-  how hard you had to stretch. Report what you measured, including if the result
-  was less dramatic than expected.
+  TODO: your own numbers. Same target, matched integration, with and without.
+  Also worth noting: you shoot from Bortle 8 in Dubai, Bortle 5 at Al Qudra and
+  Bortle 2 at Al Quaa. How much the filter earns its place at each of those is a
+  comparison almost nobody else can publish.
 -->
-
-<h2>Stars go strange, and that is expected</h2>
-
-<p>A common surprise for first-time users is what happens to stars. With only two
-narrow windows of colour reaching the sensor, star colour is largely gone and
-bright stars can look bloated or oddly magenta. This is not a defect. It is the
-predictable consequence of discarding most of the spectrum, and it is normally
-handled in processing rather than at capture.</p>
-
-<h2>7nm against 3nm</h2>
-
-<p>Tighter is not automatically better. A 3nm filter rejects more skyglow and
-also cuts more signal, so it demands longer integration and is less forgiving of
-a fast optical system, where the steep light cone shifts the effective passband.
-The 7nm L-eXtreme is the more tolerant choice.</p>
-
-<!--
-  TODO: you own the Svbony SV220 at 3nm as well. A direct comparison between the
-  two on the same target is the single most valuable thing you could add to this
-  page, and very few people can write it from real data.
--->
-
-<h2>Who it suits</h2>
-
-<p>Anyone imaging emission nebulae from a light-polluted location with a colour
-camera. From genuinely dark skies the case is weaker, and broadband work will
-give better results on more target types.</p>
