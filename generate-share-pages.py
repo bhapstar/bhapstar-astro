@@ -34,6 +34,7 @@ whose slug is no longer in site-data.json.
 import html
 import json
 import os
+import re
 import sys
 from datetime import datetime
 
@@ -56,6 +57,118 @@ SPEC_ICONS = [
     ("location",    "Location",    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s4.1-3.9 4.1-7A4.1 4.1 0 0 0 8 2.9 4.1 4.1 0 0 0 3.9 7C3.9 10.1 8 14 8 14z"/><circle cx="8" cy="6.9" r="1.5"/></svg>'),
     ("date",        "Date",        '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.4" width="11" height="10.1" rx="1.4"/><path d="M2.5 6.4h11"/><path d="M5.4 2.1v2.4"/><path d="M10.6 2.1v2.4"/></svg>'),
 ]
+
+# ── Capture-detail gear linking ───────────────────────────────────────────────
+# Where a capture spec names a piece of kit that has its own gear page, the
+# value in the specs panel becomes a link to /gear/<slug>.html.
+#
+# Two sources feed the lookup:
+#   1. Every gear entry in site-data.json contributes its own title and slug as
+#      aliases automatically, so new gear links itself with no edits here.
+#   2. GEAR_ALIASES below covers the shorthand actually used in the specs
+#      fields, which rarely matches the full product title.
+#
+# Only telescope / camera / filter values are linked. Integration, location and
+# date are never gear.
+GEAR_DIR = "gear"
+LINKABLE_SPEC_KEYS = {"telescope", "camera", "filter"}
+SPEC_VALUE_SKIP = {"none", "various", "n a", "na", "tbc", "unknown"}
+
+GEAR_ALIASES = {
+    # telescopes
+    "askar v":              "askar-v-modular-apo-refractor",
+    "evostar 72ed":         "skywatcher-evostar-72ed-refractor",
+    "seestar s30 pro":      "zwo-seestar-s30-pro",
+    "seestar s30":          "zwo-seestar-s30-smart-telescope",
+    "seestar":              "zwo-seestar-s30-smart-telescope",
+    # cameras
+    "zwo asi585mc air":     "zwo-asi585mc-air-camera",
+    "asi585mc air":         "zwo-asi585mc-air-camera",
+    "asi585mc":             "zwo-asi585mc-air-camera",
+    "zwo asi585":           "zwo-asi585mc-air-camera",
+    "asi585":               "zwo-asi585mc-air-camera",
+    # filters — note the L-Quad entries in site-data.json spell it "Enance",
+    # so both spellings are covered here rather than editing the data.
+    "optolong l extreme":   "optolong-l-extreme-filter",
+    "l extreme":            "optolong-l-extreme-filter",
+    "optolong l quad enhance": "optolong-l-quad-enhance-filter",
+    "optolong l quad enance":  "optolong-l-quad-enhance-filter",
+    "l quad enhance":       "optolong-l-quad-enhance-filter",
+    "l quad enance":        "optolong-l-quad-enhance-filter",
+    "l quad":               "optolong-l-quad-enhance-filter",
+    "svbony sv220":         "svbony-sv220-3nm-filter",
+    "sv220":                "svbony-sv220-3nm-filter",
+}
+
+# Aliases shorter than this are only matched when the spec value is exactly
+# that alias, never as a fragment of a longer value.
+MIN_FRAGMENT_ALIAS = 6
+
+_GEAR_LINKS = {}        # normalised alias -> slug
+_GEAR_UNMATCHED = set()  # spec values with no gear page, for the run summary
+_GEAR_NO_PAGE = set()    # matched slugs whose gear page file is missing
+
+
+def norm_spec(value):
+    """Lowercase, strip punctuation, collapse spaces — 'Optolong L-eXtreme'
+    and 'optolong l extreme' both become 'optolong l extreme'."""
+    s = html.unescape(str(value or "")).lower()
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return " ".join(s.split())
+
+
+def build_gear_index(items):
+    """Build the alias -> slug lookup from site-data.json plus GEAR_ALIASES."""
+    gear = [e for e in items
+            if e.get("section") == "gear" and e.get("slug")]
+    slugs = {e["slug"] for e in gear}
+
+    idx = {}
+    for e in gear:
+        for cand in (e.get("title"), e["slug"].replace("-", " ")):
+            key = norm_spec(cand)
+            if key:
+                idx.setdefault(key, e["slug"])
+    for alias, slug in GEAR_ALIASES.items():
+        if slug in slugs:
+            idx[norm_spec(alias)] = slug
+        else:
+            print(f"  ! gear alias '{alias}' points at '{slug}', which is not "
+                  f"in {DATA} — ignored", file=sys.stderr)
+
+    _GEAR_LINKS.clear()
+    _GEAR_LINKS.update(idx)
+
+
+def gear_slug_for(key, value):
+    """Slug of the gear page this spec value refers to, or None."""
+    if key not in LINKABLE_SPEC_KEYS:
+        return None
+    n = norm_spec(value)
+    if not n or n in SPEC_VALUE_SKIP:
+        return None
+    if n in _GEAR_LINKS:
+        return _GEAR_LINKS[n]
+    # Longest alias first, so 'zwo seestar s30 pro' never loses to 'seestar s30'.
+    for alias in sorted(_GEAR_LINKS, key=len, reverse=True):
+        if len(alias) < MIN_FRAGMENT_ALIAS:
+            continue
+        if re.search(rf"(?<![a-z0-9]){re.escape(alias)}(?![a-z0-9])", n):
+            return _GEAR_LINKS[alias]
+    _GEAR_UNMATCHED.add(f"{key}: {value}")
+    return None
+
+
+def gear_href(slug):
+    """Root-absolute href for a gear page, or None if the page doesn't exist
+    yet (run generate-gear-pages.py first and the link appears next time)."""
+    if not slug:
+        return None
+    if not os.path.exists(os.path.join(GEAR_DIR, f"{slug}.html")):
+        _GEAR_NO_PAGE.add(slug)
+        return None
+    return f"/{GEAR_DIR}/{slug}.html"
+
 
 # Page-specific styles. Everything else comes from /styles.css so these pages
 # always match the site theme. Kept as a plain constant (not an f-string) so
@@ -198,6 +311,21 @@ PAGE_STYLE = """\
     .share-spec-val{
       font-size: 12.5px; line-height: 1.3; font-weight: 500;
       color: rgba(232,230,247,0.9);
+    }
+    /* Spec values that name gear with its own page become links. Kept subtle:
+       same text colour, faint violet underline, accent on hover. */
+    .share-spec-val a{
+      color: inherit; text-decoration: none;
+      border-bottom: 1px solid rgba(167,139,250,0.45);
+      padding-bottom: 1px;
+      transition: color .18s ease, border-color .18s ease;
+    }
+    .share-spec-val a:hover,
+    .share-spec-val a:focus-visible{
+      color: var(--accent); border-bottom-color: var(--accent);
+    }
+    html[data-theme="light"] .share-spec-val a{
+      border-bottom-color: rgba(120,90,220,0.45);
     }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
@@ -568,17 +696,23 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 
     # ── capture specs: icon tiles, identical to the viewer's info popup ──
     specs_html = ""
-    rows = [(label, specs.get(key) if key != "date" else nice_date, icon)
+    rows = [(key, label, specs.get(key) if key != "date" else nice_date, icon)
             for key, label, icon in SPEC_ICONS]
-    rows = [(label, val, icon) for label, val, icon in rows
+    rows = [(key, label, val, icon) for key, label, val, icon in rows
             if val and str(val).strip()]
     if rows:
-        tiles = "\n".join(
-            f'          <div class="share-spec" title="{a(lbl)}">'
-            f'<span class="share-spec-ico" aria-hidden="true">{icon}</span>'
-            f'<span class="share-spec-val">{t(val)}</span>'
-            f'<span class="sr-only">{t(lbl)}</span></div>'
-            for lbl, val, icon in rows)
+        tile_list = []
+        for key, lbl, val, icon in rows:
+            val_html = t(val)
+            href = gear_href(gear_slug_for(key, val))
+            if href:
+                val_html = f'<a href="{a(href)}">{val_html}</a>'
+            tile_list.append(
+                f'          <div class="share-spec" title="{a(lbl)}">'
+                f'<span class="share-spec-ico" aria-hidden="true">{icon}</span>'
+                f'<span class="share-spec-val">{val_html}</span>'
+                f'<span class="sr-only">{t(lbl)}</span></div>')
+        tiles = "\n".join(tile_list)
         specs_html = (
             '      <div class="share-specs">\n'
             "        <h2>Capture details</h2>\n"
@@ -905,6 +1039,7 @@ def main():
         sys.exit(1)
 
     os.makedirs(OUT_DIR, exist_ok=True)
+    build_gear_index(items)
 
     # First pass: which entries get a page (needed for prev/next links).
     pageable = [e for e in items
@@ -961,6 +1096,16 @@ def main():
     print(f"  Wrote {len(written)} share pages to {OUT_DIR}/"
           + (f", removed {removed} stale" if removed else "")
           + (f", skipped {skipped} (no cover image)" if skipped else ""))
+
+    if _GEAR_NO_PAGE:
+        print("  Gear matched but no page in "
+              f"{GEAR_DIR}/ yet (run generate-gear-pages.py): "
+              + ", ".join(sorted(_GEAR_NO_PAGE)))
+    if _GEAR_UNMATCHED:
+        print("  Capture values with no gear page (add to GEAR_ALIASES if "
+              "they should link):")
+        for miss in sorted(_GEAR_UNMATCHED):
+            print(f"    - {miss}")
 
 
 if __name__ == "__main__":
