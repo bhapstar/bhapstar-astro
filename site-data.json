@@ -870,5 +870,139 @@
     "section": "gear",
     "slug": "skywatcher-evostar-72ed-refractor",
     "hidden": true
+  },
+  {
+    "file": "images/milky-way-and-me-2.webp",
+    "alt": "Wide-field Milky Way over a desert horizon with a figure looking up, the kind of night-sky scene a phone can capture",
+    "title": "Photographing a Meteor Shower with the Phone in Your Pocket",
+    "desc": "No camera, no tripod, no experience. What a modern phone can and cannot do on a meteor night, the one accessory that changes everything, and the settings to use on an iPhone or an Android.",
+    "type": "meteors",
+    "category": "Meteor showers",
+    "readTime": "7 min read",
+    "section": "article",
+    "slug": "photograph-meteor-shower-phone",
+    "date": "30-07-2026"
+  },
+  {
+    "file": "images/geminids-meteor-shower.webp",
+    "alt": "Meteors streaking across a dark sky above a desert horizon during a meteor shower",
+    "title": "How to Photograph a Meteor Shower with a Camera and a Wide Lens",
+    "desc": "The Perseids peak on 12 August under a new moon, the best conditions in years. Where to point, what to set, and how to come home with a keeper rather than four hundred empty frames.",
+    "type": "meteors",
+    "category": "Meteor showers",
+    "readTime": "8 min read",
+    "section": "article",
+    "slug": "photograph-meteor-shower-camera",
+    "date": "29-07-2026"
+  },
+  {
+    "file": "images/eagle-nebula-m16-2.webp",
+    "alt": "The Eagle Nebula M16 processed from calibrated and stacked subframes",
+    "title": "Siril: From a Folder of Subframes to a Finished Image",
+    "desc": "The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.",
+    "type": "processing",
+    "category": "Processing",
+    "readTime": "9 min read",
+    "section": "article",
+    "slug": "siril-post-processing-guide",
+    "date": "24-07-2026"
+  },
+  {
+    "file": "images/gear/ZWO ASI585MC Air 1.webp",
+    "alt": "ZWO ASI585MC Air, a camera with an ASIAir controller built into the housing",
+    "title": "The ASIAir: Running a Whole Rig From Your Phone",
+    "desc": "Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.",
+    "type": "capture",
+    "category": "Capture",
+    "readTime": "7 min read",
+    "section": "article",
+    "slug": "asiair-astrophotography-control",
+    "date": "20-07-2026"
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Sony A7III 1.webp",
+        "alt": "Sony A7 III full-frame mirrorless camera body 1"
+      },
+      {
+        "file": "images/gear/Sony A7III 2.webp",
+        "alt": "Sony A7 III full-frame mirrorless camera body 2"
+      },
+      {
+        "file": "images/gear/Sony A7III 3.webp",
+        "alt": "Sony A7 III mounted on a tripod for night sky photography"
+      }
+    ],
+    "title": "Sony A7 III",
+    "desc": "A 24-megapixel full-frame mirrorless body that has aged into one of the best-value low-light cameras available. Clean at ISO 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and star trail frame in the gallery.",
+    "alt": "Sony A7 III full-frame mirrorless camera for astrophotography",
+    "type": "camera",
+    "section": "gear",
+    "slug": "sony-a7iii-full-frame-camera",
+    "hidden": true,
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Samyang 135mm 1.webp",
+        "alt": "Samyang 135mm f/2 telephoto lens for widefield deep-sky astrophotography 1"
+      },
+      {
+        "file": "images/gear/Samyang 135mm 2.webp",
+        "alt": "Samyang 135mm lens mounted on a star tracker 2"
+      }
+    ],
+    "title": "Samyang 135mm f/2",
+    "desc": "A manual telephoto with an almost unreasonable reputation among astrophotographers. Sharp corner to corner wide open, fast enough to reach faint nebulosity in minutes, and effectively a very well corrected 135mm refractor that happens to fit a camera mount.",
+    "alt": "Samyang 135mm f/2 lens used as a widefield deep-sky astrograph",
+    "type": "telescope",
+    "section": "gear",
+    "slug": "samyang-135mm-widefield-astrograph",
+    "hidden": true,
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Rokinon 18mm 1.webp",
+        "alt": "Rokinon 18mm f/2.8 ultra-wide lens for Milky Way and meteor photography 1"
+      },
+      {
+        "file": "images/gear/Samyang 14mm 1.webp",
+        "alt": "Samyang 14mm f/2.8 ultra-wide lens for Milky Way and meteor photography 1"
+      },
+      {
+        "file": "images/gear/Rokinon 18mm 2.webp",
+        "alt": "Rokinon 18mm f/2.8 lens mounted on a full-frame body on a tripod 2"
+      }
+    ],
+    "title": "Rokinon 18mm f/2.8 & Samyang 14mm f/2.8",
+    "desc": "Two manual ultra-wides that do the same job from slightly different distances: cover as much sky as possible, as fast as possible, for as little as possible. These are the meteor shower and Milky Way lenses, and neither of them needs autofocus to do it.",
+    "alt": "Rokinon 18mm and Samyang 14mm ultra-wide lenses for Milky Way and meteor photography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "rokinon-18mm-samyang-14mm-ultrawides",
+    "hidden": true,
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/",
+        "affiliate": false
+      }
+    ]
   }
 ]

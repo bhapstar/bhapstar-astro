@@ -20,6 +20,7 @@ const SHELL_ASSETS = [
   '/index.html',
   '/gallery.html',
   '/gear.html',
+  '/articles.html',
   '/prints.html',
   '/field_notes.html',
   '/quiz.html',

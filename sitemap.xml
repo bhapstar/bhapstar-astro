@@ -210,6 +210,36 @@
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Skywatcher%20Evostar%2072ED%201.webp</image:loc>
     </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Sony%20A7III%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Sony%20A7III%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Sony%20A7III%203.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Samyang%20135mm%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Samyang%20135mm%202.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Rokinon%2018mm%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Samyang%2014mm%201.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Rokinon%2018mm%202.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles.html</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bhapstar.com/prints.html</loc>
@@ -629,6 +659,42 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/photograph-meteor-shower-phone.html</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/milky-way-and-me-2.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/photograph-meteor-shower-camera.html</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/geminids-meteor-shower.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/siril-post-processing-guide.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/eagle-nebula-m16-2.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/asiair-astrophotography-control.html</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20ASI585MC%20Air%201.webp</image:loc>
     </image:image>
   </url>
 </urlset>

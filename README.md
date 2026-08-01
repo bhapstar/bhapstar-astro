@@ -8,7 +8,7 @@ Personal deep-sky astrophotography portfolio.
 
 ## What this is
 
-A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images including nebulae, galaxies, and star clusters.
+A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images including nebulae, galaxies, and star clusters, alongside equipment write-ups and practical astrophotography articles.
 
 **Pages:**
 
@@ -16,6 +16,7 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 - **Gallery** — deep-sky image collection, with a full-screen image viewer (zoom, rotate, information, like, and share grouped under an Options menu), filtering, multiple view modes, and per-image deep links
 - **Prints** — available prints for enquiry
 - **Gear** — equipment used for capture and processing
+- **Articles** — long-form write-ups on capture, processing and meteor showers, as a tiled index linking to one real page per article
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
 - **Supernova Sweeper** — supernova sweeping clearing game
@@ -27,7 +28,16 @@ Per-object write-ups (the "Field Notes" content — how each image was captured,
 
 ## Content model
 
-All gallery, gear, and write-up content is driven by a single source-of-truth file, `site-data.json`. Each entry carries its title, description, type, slug, capture specs, and detailed write-up. Pages that consume gallery data filter on the `section` field so gear entries never leak into gallery contexts.
+All gallery, gear, article, and write-up content is driven by a single source-of-truth file, `site-data.json`. Each entry carries its title, description, type, slug, capture specs, and detailed write-up. Pages that consume gallery data filter on the `section` field (`gallery`, `gear` or `article`) so entries never leak across contexts.
+
+Long-form prose lives outside the JSON, as plain HTML fragments:
+
+- `gear-reviews/<slug>.html` — the review body for a gear item
+- `article-content/<slug>.html` — the body of an article
+
+Fragments are ordinary HTML (`<h2>`, `<p>`, `<ul>`, `<table>`). Diagrams are hand-drawn inline `<svg>` inside a `<figure class="article-fig">` (or `.passband-fig` on gear reviews) rather than binary assets, so they scale, follow the light/dark theme through CSS variables, and cost nothing extra to load. An article may open with a `<div class="event-callout">` block for a dated, real-world event.
+
+An entry flagged `"hidden": true` is staged but unpublished — usually waiting on photographs. It gets no tile, no generated page and no sitemap entry. Removing the flag publishes it on the next build.
 
 ---
 
@@ -51,6 +61,8 @@ A single GitHub Actions workflow, `.github/workflows/site-postprocess.yml`, buil
 - **Regenerates the sitemap** — `generate-sitemap.py`
 - **Regenerates structured data** — `generate-schema.py` injects JSON-LD (`ImageObject` per photo, `BlogPosting` per write-up) into the page `<head>` blocks from `site-data.json`
 - **Regenerates per-image share pages** — `generate-share-pages.py` writes one small page per gallery image under `/share/<slug>.html`
+- **Regenerates per-gear pages** — `generate-gear-pages.py` writes one page per gear item under `/gear/<slug>.html`, pulling its prose from `gear-reviews/`
+- **Regenerates per-article pages** — `generate-article-pages.py` writes one page per article under `/articles/<slug>.html`, pulling its prose from `article-content/`. Both generators are idempotent and delete stale pages whose slug has left `site-data.json`
 - **Bumps the service-worker cache version** — rewrites the `CACHE_VERSION` constant in `sw.js` with the latest commit hash
 - **Deploys to Pages** and commits the regenerated files back to the repo
 
@@ -83,6 +95,8 @@ Every page carries Open Graph and Twitter Card meta tags. Because link crawlers 
 | Camera | ZWO ASI585MC Air |
 | Filters | Optolong L-Extreme (dual narrowband) / Optolong L-Quad EnHance |
 | Smart scope | ZWO Seestar S30 |
+| Camera (wide-field) | Sony A7 III |
+| Lenses | Samyang 135mm f/2 · Rokinon 18mm f/2.8 · Samyang 14mm f/2.8 |
 | Capture | ASIAir |
 | Processing | Siril |
 

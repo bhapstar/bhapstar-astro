@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Articles — Bhapstar Astrophotography</title>
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/articles.html" />
+  <meta name="description" content="Practical astrophotography guides — controlling a rig with the ASIAir, processing in Siril, and photographing a meteor shower with a camera or with the phone in your pocket." />
+  <meta name="author" content="Bhapinder Singh" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Articles — Bhapstar Astrophotography" />
+  <meta property="og:description" content="Practical astrophotography guides — capture, control, processing, and photographing a meteor shower with whatever camera you already own." />
+  <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/articles.html" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Articles — Bhapstar Astrophotography" />
+  <meta name="twitter:description" content="Practical astrophotography guides — capture, control, processing and meteor showers." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Tiles are plain links to a real page, so the images themselves are
+       inert — same treatment as the gear grid. */
+    #articleGrid img {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    /* ── Meta line on each tile (category · read time) ──
+       Sits above the title inside the caption, small and quiet, so the
+       tile reads as an article rather than a photograph. */
+    #articleGrid .card .cap .m {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      opacity: 0.95;
+    }
+    /* Captions toggle: hide the summary but keep the title and meta line,
+       in both grid and list view. */
+    #articleGrid.hide-desc .card .cap .d { display: none; }
+
+    @media (max-width: 720px) {
+      /* The base stylesheet hides .d on small screens for photo grids; for
+         articles the standfirst is the point, so bring it back in grid view. */
+      #articleGrid:not(.list-view):not(.hide-desc) .card .cap .d { display: block; }
+      #articleGrid.list-view .card .cap .m { font-size: 9px; letter-spacing: 0.12em; }
+    }
+  </style>
+
+  <link rel="manifest" href="/manifest.json" />
+</head>
+<body class="page-articles">
+
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+
+      <div class="section-head gallery-head">
+        <div class="gallery-topline">
+          <h1>Articles</h1>
+        </div>
+
+        <p class="gallery-intro">
+          Write-ups on how the images actually get made — controlling a rig from a phone, turning a night of subframes into a finished picture, and getting a decent meteor photograph out of whatever camera you already own. Written to be followed, not admired.
+        </p>
+
+        <div class="gallery-controls" role="group" aria-label="Article controls">
+          <div class="filter-select-wrap">
+            <label for="articleFilter" class="filter-select-label">Filter</label>
+            <select id="articleFilter" class="filter-select" aria-label="Filter by category">
+              <option value="all" selected>All articles</option>
+              <option value="capture">Capture</option>
+              <option value="processing">Processing</option>
+              <option value="meteors">Meteor showers</option>
+            </select>
+          </div>
+
+          <div class="view-buttons" role="group" aria-label="View mode selection">
+            <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+                <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+            <button id="viewBtnList" class="view-btn" type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="0" y="1" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="5.75" width="14" height="2.5" rx="1" fill="currentColor"/>
+                <rect x="0" y="10.5" width="14" height="2.5" rx="1" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle article titles &amp; summaries">
+            <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" fill="currentColor"/>
+            </svg>
+            <svg class="cap-icon-off" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
+            </svg>
+            <span class="caption-toggle-label">Captions</span>
+          </button>
+        </div>
+
+        <p class="gallery-hint">Select any tile to read the full article</p>
+      </div>
+
+      <div id="articleGrid" class="grid" aria-live="polite" aria-label="Articles">
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="siteFooter"></div>
+
+<script src="/partials/partials.js"></script>
+<script src="/protect-images.js"></script>
+<script>
+/* =========================================================
+   articles.html
+   ---------------------------------------------------------
+   Reads the same site-data.json as the gallery and gear pages
+   and keeps only entries tagged section === "article".
+
+   Each tile is a plain <a> to that article's own real page at
+   /articles/<slug>.html, generated by generate-article-pages.py.
+   There is no lightbox and no detail overlay here: an article is
+   a page, not an image, so the tile just navigates.
+========================================================= */
+(function () {
+  'use strict';
+
+  const grid = document.getElementById('articleGrid');
+  if (!grid) return;
+
+  let items = [];
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /* Thumbnail path. Gallery images live in images/thumbs/, gear images in
+     images/gear/thumbs/ — an article cover can borrow from either, so work
+     out which folder applies rather than assuming. */
+  function thumbFor(file) {
+    if (!file) return '';
+    if (file.indexOf('images/gear/') === 0) {
+      return file.replace('images/gear/', 'images/gear/thumbs/');
+    }
+    if (file.indexOf('images/') === 0) {
+      return file.replace('images/', 'images/thumbs/');
+    }
+    return file;
+  }
+
+  function currentFilter() {
+    return document.getElementById('articleFilter')?.value || 'all';
+  }
+
+  /* Read time is stored on the entry; fall back to a rough estimate from the
+     summary length rather than printing nothing. */
+  function metaLine(item) {
+    const bits = [];
+    if (item.category) bits.push(item.category);
+    if (item.readTime) bits.push(item.readTime);
+    return bits.join(' &middot; ');
+  }
+
+  function render() {
+    const selected = currentFilter();
+    const filtered = selected === 'all'
+      ? items
+      : items.filter(it => (it.type || 'capture') === selected);
+
+    if (!filtered.length) {
+      grid.innerHTML = '<p class="gallery-hint grid-span-all">Nothing here yet.</p>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map((item) => {
+      const cover = item.file || '';
+      const alt   = item.alt || item.title || '';
+      const media = cover
+        ? `<img src="${esc(thumbFor(cover))}" alt="${esc(alt)}" loading="lazy" decoding="async">`
+        : '';
+      const pageUrl = `/articles/${encodeURIComponent(item.slug)}.html`;
+      const meta = metaLine(item);
+
+      return `<a class="card"
+           href="${esc(pageUrl)}"
+           aria-label="${esc(item.title || '')}">
+        ${media}
+        <div class="cap">
+          ${meta ? `<div class="m">${meta}</div>` : ''}
+          <div class="t">${esc(item.title || '')}</div>
+          <div class="d">${esc(item.desc || '')}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
+  function init() {
+    const viewBtnGrid = document.getElementById('viewBtnGrid');
+    const viewBtnList = document.getElementById('viewBtnList');
+
+    function applyView(view) {
+      grid.classList.toggle('list-view', view === 'list');
+      [viewBtnGrid, viewBtnList].forEach(btn => {
+        if (!btn) return;
+        const isActive = btn.dataset.view === view;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      render();
+    }
+
+    const savedView = localStorage.getItem('articleView') || 'grid';
+    applyView(savedView === 'list' ? 'list' : 'grid');
+
+    viewBtnGrid?.addEventListener('click', () => { localStorage.setItem('articleView', 'grid'); applyView('grid'); });
+    viewBtnList?.addEventListener('click', () => { localStorage.setItem('articleView', 'list'); applyView('list'); });
+
+    /* ── Summary toggle ── */
+    const viewBtnDesc   = document.getElementById('viewBtnDesc');
+    const HIDE_DESC_KEY = 'articleHideDesc';
+    function applyDescToggle(hide) {
+      grid.classList.toggle('hide-desc', hide);
+      if (viewBtnDesc) {
+        viewBtnDesc.setAttribute('aria-pressed', hide ? 'false' : 'true');
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
+        viewBtnDesc.title = hide ? 'Show article titles & summaries'
+                                 : 'Hide article titles & summaries';
+      }
+    }
+    applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
+    viewBtnDesc?.addEventListener('click', () => {
+      const nowHidden = !grid.classList.contains('hide-desc');
+      localStorage.setItem(HIDE_DESC_KEY, nowHidden ? '1' : '0');
+      applyDescToggle(nowHidden);
+    });
+
+    document.getElementById('articleFilter')?.addEventListener('change', render);
+  }
+
+  fetch('site-data.json', { cache: 'default' })
+    .then(r => {
+      if (!r.ok) throw new Error('site-data.json (HTTP ' + r.status + ')');
+      return r.json();
+    })
+    .then(all => {
+      /* site-data.json holds gallery, gear and article entries in one file;
+         keep articles, drop anything staged but not published. */
+      items = all.filter(it => (it.section || '') === 'article'
+                            && it.slug && !it.hidden);
+
+      /* Newest first. Dates are DD-MM-YYYY, which does not sort as a string,
+         so parse before comparing. */
+      const key = d => {
+        const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(d || '');
+        return m ? `${m[3]}${m[2]}${m[1]}` : '';
+      };
+      items.sort((a, b) => key(b.date).localeCompare(key(a.date)));
+
+      init();
+    })
+    .catch(err => {
+      console.error('Articles failed to load:', err);
+      grid.innerHTML = '<p class="gallery-hint grid-span-all">Articles could not be loaded. Please refresh.</p>';
+    });
+})();
+</script>
+
+</body>
+</html>

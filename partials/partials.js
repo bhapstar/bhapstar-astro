@@ -5,7 +5,7 @@
    1. Dynamic year in footer
    2. Puzzles dropdown toggle (with double-bind + double-load guards)
    3. Active nav link highlighting
-   4. Puzzles submenu toggle + auto-open on active child
+   4. Puzzles / Articles submenu toggles + active-child highlighting
    5. Scroll reveal (with MutationObserver for dynamic cards)
    6. Hero star-particle canvas (index page only)
    7. Instagram references (footer icon + homepage panel), gated by the
@@ -266,12 +266,22 @@ const HIDE_FIELD_NOTES = true;
       }
     });
 
-    // If a puzzle page is the active page, highlight the Puzzles button —
-    // but don't force the popover open now that the nav is always visible.
-    const activeSubmenuLink = document.querySelector('.nav-submenu a.active');
-    if (activeSubmenuLink) {
-      const grp = activeSubmenuLink.closest('.nav-group');
-      grp?.querySelector('.nav-group-btn')?.classList.add('active');
+    // If a submenu child is the active page (a puzzle, or an individual
+    // article), highlight that group's button — but don't force the popover
+    // open now that the nav is always visible.
+    document.querySelectorAll('.nav-submenu a.active').forEach(a => {
+      a.closest('.nav-group')?.querySelector('.nav-group-btn')?.classList.add('active');
+    });
+
+    // Section directories: /gear/<slug>.html and /articles/<slug>.html are real
+    // pages that live one level down, so the filename match above never fires
+    // for their parent nav entry. Mark the parent active from the directory.
+    const dir = location.pathname.split('/').filter(Boolean)[0] || '';
+    if (dir === 'gear' || dir === 'articles') {
+      document.querySelectorAll(`.nav-menu a[href$="/${dir}.html"]`).forEach(a => {
+        a.classList.add('active');
+        a.setAttribute('aria-current', 'page');
+      });
     }
 
 

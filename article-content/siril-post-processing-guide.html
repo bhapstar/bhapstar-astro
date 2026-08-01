@@ -1,0 +1,210 @@
+<!--
+  Siril article. Written against Siril 1.4, released December 2025 — that is the
+  version that introduced SPCC, drizzle, ICC colour management and the ROI
+  preview. Figures drawn in-page.
+-->
+
+<h2>Why Siril</h2>
+
+<p>Siril is free, open source, runs on Windows, macOS and Linux, and will take a
+folder of raw subframes all the way to a finished image without a subscription or
+a licence key. It is not a cut-down version of anything. The stacking engine and
+the calibration are as good as the expensive alternatives; what you give up is
+polish and a certain amount of hand-holding.</p>
+
+<p>Every image in <a href="/gallery.html">the gallery</a> went through it. This is
+the route I take, in order, and the order genuinely matters — several of these
+steps stop working correctly if you do them after stretching.</p>
+
+<h2>The pipeline</h2>
+
+<figure class="article-fig">
+<svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-row flowchart. Top row: lights, darks, flats and bias frames feed into calibration, then registration, then stacking, producing a linear master. Bottom row: background extraction, colour calibration, deconvolution, stretch, star and noise work, then export.">
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">Linear work first, then the stretch, then everything else</text>
+
+  <!-- input frames -->
+  <g font-size="10.5">
+    <rect x="10" y="40"  width="92" height="26" rx="6" fill="var(--soft)" stroke="#f06a7a" stroke-width="1.3"/>
+    <text x="56" y="57" fill="var(--text)" text-anchor="middle">Lights</text>
+    <rect x="10" y="72"  width="92" height="26" rx="6" fill="var(--soft)" stroke="var(--line)"/>
+    <text x="56" y="89" fill="var(--muted)" text-anchor="middle">Darks</text>
+    <rect x="10" y="104" width="92" height="26" rx="6" fill="var(--soft)" stroke="var(--line)"/>
+    <text x="56" y="121" fill="var(--muted)" text-anchor="middle">Flats</text>
+    <rect x="10" y="136" width="92" height="26" rx="6" fill="var(--soft)" stroke="var(--line)"/>
+    <text x="56" y="153" fill="var(--muted)" text-anchor="middle">Bias</text>
+  </g>
+  <g fill="none" stroke="#60a5fa" stroke-width="1.4" opacity="0.85">
+    <path d="M102,53 C122,53 122,101 142,101"/>
+    <path d="M102,85 C122,85 122,101 142,101"/>
+    <path d="M102,117 C122,117 122,101 142,101"/>
+    <path d="M102,149 C122,149 122,101 142,101"/>
+  </g>
+
+  <!-- row 1 stages -->
+  <g>
+    <rect x="144" y="74"  width="104" height="54" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="266" y="74"  width="104" height="54" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="388" y="74"  width="104" height="54" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="510" y="74"  width="170" height="54" rx="10" fill="var(--soft)" stroke="#a78bfa" stroke-width="1.7"/>
+  </g>
+  <g font-size="11.5" fill="var(--text)" font-weight="600" text-anchor="middle">
+    <text x="196" y="97">Calibrate</text>
+    <text x="318" y="97">Register</text>
+    <text x="440" y="97">Stack</text>
+    <text x="595" y="97">Linear master</text>
+  </g>
+  <g font-size="9.5" fill="var(--muted)" text-anchor="middle">
+    <text x="196" y="114">remove sensor signal</text>
+    <text x="318" y="114">align every frame</text>
+    <text x="440" y="114">average out noise</text>
+    <text x="595" y="114">dark, flat, and correct</text>
+  </g>
+  <g fill="#60a5fa">
+    <path d="M248,96 l7,5 l-7,5 z"/><path d="M370,96 l7,5 l-7,5 z"/><path d="M492,96 l7,5 l-7,5 z"/>
+  </g>
+
+  <text x="382" y="152" font-size="10" fill="#a78bfa" text-anchor="middle">one script does this whole row</text>
+
+  <!-- drop down -->
+  <path d="M595,128 L595,176 L60,176 L60,202" fill="none" stroke="#60a5fa" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <path d="M60,208 l-5,-7 h10 z" fill="#60a5fa"/>
+
+  <!-- row 2 stages -->
+  <g>
+    <rect x="10"  y="212" width="106" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="126" y="212" width="106" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="242" y="212" width="106" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="358" y="212" width="106" height="52" rx="10" fill="var(--soft)" stroke="#e8b84b" stroke-width="1.7"/>
+    <rect x="474" y="212" width="106" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="590" y="212" width="100" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+  </g>
+  <g font-size="11" fill="var(--text)" font-weight="600" text-anchor="middle">
+    <text x="63"  y="234">Background</text>
+    <text x="179" y="234">Colour</text>
+    <text x="295" y="234">Sharpen</text>
+    <text x="411" y="234">Stretch</text>
+    <text x="527" y="234">Stars &amp; noise</text>
+    <text x="640" y="234">Export</text>
+  </g>
+  <g font-size="9.5" fill="var(--muted)" text-anchor="middle">
+    <text x="63"  y="251">gradient removal</text>
+    <text x="179" y="251">SPCC</text>
+    <text x="295" y="251">deconvolution</text>
+    <text x="411" y="251">GHS or histogram</text>
+    <text x="527" y="251">StarNet, denoise</text>
+    <text x="640" y="251">16-bit TIFF</text>
+  </g>
+  <g fill="#60a5fa">
+    <path d="M116,233 l7,5 l-7,5 z"/><path d="M232,233 l7,5 l-7,5 z"/><path d="M348,233 l7,5 l-7,5 z"/>
+    <path d="M464,233 l7,5 l-7,5 z"/><path d="M580,233 l7,5 l-7,5 z"/>
+  </g>
+  <line x1="353" y1="196" x2="353" y2="288" stroke="#e8b84b" stroke-width="1.3" stroke-dasharray="4 4"/>
+  <text x="180" y="300" font-size="10" fill="var(--muted)" text-anchor="middle">still linear &#8212; everything left of the line comes first</text>
+  <text x="530" y="300" font-size="10" fill="#e8b84b" text-anchor="middle">non-linear from the stretch onwards</text>
+</svg>
+<figcaption>The vertical dashed line is the one rule that matters. Gradient removal, colour calibration and deconvolution all assume the data is still linear, and they misbehave badly if you stretch first.</figcaption>
+</figure>
+
+<h2>The row you can automate</h2>
+
+<p>Siril ships with scripts, and for a one-shot-colour camera the
+<code>OSC_Preprocessing</code> script does the entire first row unattended. Put
+your subframes in folders named <code>lights</code>, <code>darks</code>,
+<code>flats</code> and <code>biases</code>, point Siril at the parent folder, run
+the script and go and make tea. It calibrates, demosaics, registers, rejects the
+frames that are worse than the rest, stacks, and leaves a single linear result
+behind.</p>
+
+<p>There is a drizzle variant worth knowing about. If your pixels are large
+relative to the seeing and you dithered properly during capture — which the
+<a href="/articles/asiair-astrophotography-control.html">ASIAir</a> does for free
+— drizzling recovers real resolution rather than merely resampling. If you did not
+dither, it does nothing useful.</p>
+
+<h3>What each calibration frame is for</h3>
+
+<ul>
+  <li><strong>Darks</strong> record the sensor's own signal — thermal noise and hot
+  pixels — at the same exposure, gain and temperature as your lights. A cooled camera
+  makes these reusable for months, which is one of the quieter arguments for cooling.</li>
+  <li><strong>Flats</strong> record the optical path: vignetting, dust motes, uneven
+  illumination. Shoot them at the end of the session, before anything is moved or
+  rotated. An evenly lit white screen or the dawn sky both work.</li>
+  <li><strong>Biases</strong> record the sensor's read floor. They take a fraction of
+  a second each, so take plenty.</li>
+</ul>
+
+<p>If you take nothing else, take flats. Missing darks costs you some noise. Missing
+flats costs you a corner-darkened frame with dust shadows that no amount of later
+processing will convincingly hide.</p>
+
+<h2>The stretch</h2>
+
+<p>Everything up to this point has been arithmetic. The stretch is where the image
+appears, and it is the step most worth spending time on. Astronomical data is
+overwhelmingly dark: almost every pixel sits within a whisker of black, with a
+handful of stars far out to the right. A screen cannot show that range, so you
+compress the bright end and expand the dark end until the nebula lifts clear of the
+background.</p>
+
+<figure class="article-fig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two histograms side by side. The linear histogram has all data crushed into a spike at the far left. The stretched histogram has the same data spread across the range with the background peak lifted just off black.">
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">The same data, before and after the stretch</text>
+
+  <!-- linear -->
+  <text x="30" y="44" font-size="11" fill="var(--muted)">Linear &#8212; straight out of stacking</text>
+  <rect x="30" y="52" width="300" height="96" rx="4" fill="var(--soft)" stroke="var(--line)"/>
+  <path d="M30,148 L36,148 L40,60 L46,138 L52,146 L70,148 L330,148 Z" fill="#60a5fa" opacity="0.75"/>
+  <line x1="30" y1="148" x2="330" y2="148" stroke="var(--line)"/>
+  <text x="30" y="166" font-size="9.5" fill="var(--muted)">black</text>
+  <text x="330" y="166" font-size="9.5" fill="var(--muted)" text-anchor="end">white</text>
+  <text x="180" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">everything is jammed against zero</text>
+
+  <!-- stretched -->
+  <text x="370" y="44" font-size="11" fill="var(--muted)">After a generalised hyperbolic stretch</text>
+  <rect x="370" y="52" width="300" height="96" rx="4" fill="var(--soft)" stroke="var(--line)"/>
+  <path d="M370,148 L392,148 L404,74 L418,64 L436,86 L470,116 L520,136 L580,144 L670,148 Z" fill="#a78bfa" opacity="0.8"/>
+  <line x1="370" y1="148" x2="670" y2="148" stroke="var(--line)"/>
+  <line x1="404" y1="52" x2="404" y2="152" stroke="#e8b84b" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="410" y="66" font-size="9.5" fill="#e8b84b">background, lifted just clear of black</text>
+  <text x="370" y="166" font-size="9.5" fill="var(--muted)">black</text>
+  <text x="670" y="166" font-size="9.5" fill="var(--muted)" text-anchor="end">white</text>
+  <text x="520" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">faint signal now has room to be seen</text>
+</svg>
+<figcaption>Aim to land the background peak a little way off the left wall, not against it. Pushed hard against black you have thrown away the faintest outer structure permanently; too far right and the image looks washed out and grey.</figcaption>
+</figure>
+
+<p>Siril's histogram transformation with its autostretch preview is the quick route.
+The generalised hyperbolic stretch is the better one: it gives you separate control
+over where the stretch is centred and how hard it bites, so you can lift faint nebula
+without inflating every star into a white disc.</p>
+
+<h2>The steps people get wrong</h2>
+
+<ul>
+  <li><strong>Stretching before background extraction.</strong> Gradients from
+  streetlights or moonlight are additive and roughly smooth while the data is linear.
+  Once stretched they are neither, and the extraction can no longer model them.</li>
+  <li><strong>Colour calibrating too late.</strong> Run SPCC on linear data. It
+  plate-solves the frame, looks up the actual stars in your field, and sets the
+  colour balance from real spectra rather than from what you think looks right.</li>
+  <li><strong>Too much deconvolution.</strong> It is the fastest way to make an image
+  look processed. Small amounts, on linear data, and stop before it starts ringing.</li>
+  <li><strong>Denoising early.</strong> Noise reduction is close to last. Applied
+  early it removes the faint detail you spent all night collecting.</li>
+</ul>
+
+<h2>Stars, and knowing when to stop</h2>
+
+<p>StarNet separates a stretched image into a starless version and a star mask.
+That lets you stretch the nebula hard without the stars swelling, then recombine
+them at whatever weight looks right. It is the single biggest step up in the look
+of an image once the fundamentals are in place, and it is also the easiest thing to
+overdo — a nebula with no stars in front of it stops looking like a photograph.</p>
+
+<p>The last thing to say is that more integration beats better processing, every
+time. Six hours of subframes processed carelessly will out-perform one hour
+processed brilliantly. If an image is fighting you, the answer is usually another
+night on the same target rather than another hour at the keyboard.</p>
