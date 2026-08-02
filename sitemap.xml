@@ -234,10 +234,13 @@
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Rokinon%2018mm%20F2-8_edit_411136683068317.webp</image:loc>
     </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/EcoFlow%20River%202%201.webp</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://bhapstar.com/articles.html</loc>
-    <lastmod>2026-07-30</lastmod>
+    <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -710,6 +713,15 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Rokinon%2018mm%20F2-8_edit_411136683068317.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/main-rig-tour.html</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Askar%20V%201.webp</image:loc>
     </image:image>
   </url>
   <url>
