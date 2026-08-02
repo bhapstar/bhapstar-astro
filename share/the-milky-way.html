@@ -188,6 +188,34 @@
     html[data-theme="light"] .share-spec-val a{
       border-bottom-color: rgba(120,90,220,0.45);
     }
+    /* Previous / next item, sitting above the title. Same markup and classes
+       as the gear and article pages so the three page types read alike. The
+       overlaid .share-arrow controls below still move between images. */
+    .gear-nav{ display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch; }
+    .gear-nav-link{ display: flex; align-items: center; gap: 10px;
+                    flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                    border-radius: 11px; text-decoration: none;
+                    color: var(--text);
+                    border: 1px solid var(--line);
+                    background: var(--soft);
+                    transition: border-color 200ms ease, background 200ms ease,
+                                transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible{
+                    border-color: var(--accent);
+                    background: var(--glow2);
+                    transform: translateY(-1px); }
+    .gn-next{ justify-content: flex-end; text-align: right; }
+    .gn-arrow{ flex: 0 0 auto; font-size: 16px; line-height: 1; color: var(--accent); }
+    .gn-text{ display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label{ font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+               color: var(--muted); }
+    .gn-title{ font-size: 13px; font-weight: 500; line-height: 1.25;
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 560px){
+      .gn-label{ display: none; }
+      .gn-title{ font-size: 12px; }
+      .gear-nav-link{ padding: 9px 11px; }
+    }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
       margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
@@ -352,6 +380,9 @@
 <main>
   <section class="section">
     <div class="wrap share-wrap">
+      <nav class="gear-nav" aria-label="Gallery navigation">
+        <a class="gear-nav-link gn-next" href="/share/rosette-nebula-ngc2244.html" rel="next" aria-label="Next item: The Rosette Nebula (NGC 2244)"><span class="gn-text"><span class="gn-label">Next</span><span class="gn-title">The Rosette Nebula (NGC 2244)</span></span><span class="gn-arrow" aria-hidden="true">&#8594;</span></a>
+      </nav>
       <h1>The Milky Way</h1>
 
       <figure class="share-figure">
