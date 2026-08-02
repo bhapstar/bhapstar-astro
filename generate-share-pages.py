@@ -213,43 +213,9 @@ PAGE_STYLE = """\
       margin-top: 8px; color: var(--muted); font-size: 13px;
     }
     .share-slide-cap:empty{ display: none; }
-    /* Prev / next arrows overlaid on the image. The image itself links to the
-       full-screen viewer, so the arrows sit above it on their own layer. */
-    .share-arrow{
-      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
-      width: 44px; height: 44px; border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 26px; line-height: 1; text-decoration: none;
-      color: rgba(232,230,247,0.92);
-      background: rgba(5,4,20,0.52);
-      border: 1px solid rgba(167,139,250,0.28);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      opacity: 0.75;
-      transition: background .18s ease, border-color .18s ease, opacity .18s ease;
-    }
-    .share-arrow:hover, .share-arrow:focus-visible{
-      opacity: 1; background: rgba(5,4,20,0.78);
-      border-color: rgba(167,139,250,0.6);
-    }
-    .share-arrow.prev{ left: 12px; }
-    .share-arrow.next{ right: 12px; }
-    html[data-theme="light"] .share-arrow{
-      color: #0b0a1c; background: rgba(255,255,255,0.72);
-      border-color: rgba(120,90,220,0.32);
-    }
-    html[data-theme="light"] .share-arrow:hover,
-    html[data-theme="light"] .share-arrow:focus-visible{
-      background: rgba(255,255,255,0.92);
-    }
-    @media (max-width: 620px){
-      .share-arrow{ width: 38px; height: 38px; font-size: 22px; }
-      .share-arrow.prev{ left: 8px; }
-      .share-arrow.next{ right: 8px; }
-    }
-    /* Second control: cycles this entry's own pictures. Sat at the bottom
-       centre of the image so it never collides with the page-to-page arrows
-       on the left and right edges. Only rendered when there's more than one
-       picture, and only usable with JS — hence the button elements. */
+    /* Cycles this entry's own pictures. Sits at the bottom centre of the
+       image. Only rendered when there's more than one picture, and only
+       usable with JS — hence the button elements. */
     .share-pager{
       position: absolute; left: 50%; transform: translateX(-50%);
       bottom: 14px; z-index: 3;
@@ -340,7 +306,7 @@ PAGE_STYLE = """\
     }
     /* Previous / next item, sitting above the title. Same markup and classes
        as the gear and article pages so the three page types read alike. The
-       overlaid .share-arrow controls below still move between images. */
+       pager over the image still moves between an entry's own pictures. */
     .gear-nav{ display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch; }
     .gear-nav-link{ display: flex; align-items: center; gap: 10px;
                     flex: 1 1 0; min-width: 0; padding: 10px 14px;
@@ -648,16 +614,9 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
     specs = entry.get("specs") or {}
 
     # ── figures ──
-    # Prev / next arrows, overlaid on the cover image (first figure only).
-    arrows = ""
-    if prev_link:
-        arrows += (f'\n        <a class="share-arrow prev" href="{a(prev_link[0])}"'
-                   f' rel="prev" aria-label="Previous image: {a(prev_link[1])}"'
-                   f' title="{a(prev_link[1])}">‹</a>')
-    if next_link:
-        arrows += (f'\n        <a class="share-arrow next" href="{a(next_link[0])}"'
-                   f' rel="next" aria-label="Next image: {a(next_link[1])}"'
-                   f' title="{a(next_link[1])}">›</a>')
+    # Page-to-page navigation lives in the bar above the title, not on the
+    # image. The only controls over a picture are the pager for entries with
+    # several pictures, and the lightbox arrows once one is opened.
 
     # All of an entry's pictures live in one figure as slides. With a single
     # picture that's just the picture; with several, the pager below cycles
@@ -710,7 +669,6 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
         '      <figure class="share-figure">\n'
         '        <div class="share-slides">\n'
         + "\n".join(slides)
-        + arrows.replace("\n        ", "\n          ")
         + pager
         + '\n        </div>\n'
         f'        <figcaption class="share-slide-cap">{first_cap}</figcaption>\n'
@@ -789,7 +747,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 
     # Previous / next item bar above the title, matching the gear and article
     # pages. Labelled with item titles so it reads as page navigation rather
-    # than image navigation, which the overlaid arrows handle.
+    # than picture navigation, which the pager over the image handles.
     def top_nav_link(target, direction):
         if not target:
             return ""
@@ -811,7 +769,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
                        f'{top_nav_link(next_link, "next")}'
                        '      </nav>\n')
 
-    # Keyboard support for the overlaid arrows: left / right move between images.
+    # Keyboard shortcuts for the nav bar above: left / right move between items.
     nav_html = ""
     if prev_link or next_link:
         prev_js = f'"{a(prev_link[0])}"' if prev_link else "null"
