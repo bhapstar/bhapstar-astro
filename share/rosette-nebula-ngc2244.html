@@ -63,43 +63,9 @@
       margin-top: 8px; color: var(--muted); font-size: 13px;
     }
     .share-slide-cap:empty{ display: none; }
-    /* Prev / next arrows overlaid on the image. The image itself links to the
-       full-screen viewer, so the arrows sit above it on their own layer. */
-    .share-arrow{
-      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
-      width: 44px; height: 44px; border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 26px; line-height: 1; text-decoration: none;
-      color: rgba(232,230,247,0.92);
-      background: rgba(5,4,20,0.52);
-      border: 1px solid rgba(167,139,250,0.28);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      opacity: 0.75;
-      transition: background .18s ease, border-color .18s ease, opacity .18s ease;
-    }
-    .share-arrow:hover, .share-arrow:focus-visible{
-      opacity: 1; background: rgba(5,4,20,0.78);
-      border-color: rgba(167,139,250,0.6);
-    }
-    .share-arrow.prev{ left: 12px; }
-    .share-arrow.next{ right: 12px; }
-    html[data-theme="light"] .share-arrow{
-      color: #0b0a1c; background: rgba(255,255,255,0.72);
-      border-color: rgba(120,90,220,0.32);
-    }
-    html[data-theme="light"] .share-arrow:hover,
-    html[data-theme="light"] .share-arrow:focus-visible{
-      background: rgba(255,255,255,0.92);
-    }
-    @media (max-width: 620px){
-      .share-arrow{ width: 38px; height: 38px; font-size: 22px; }
-      .share-arrow.prev{ left: 8px; }
-      .share-arrow.next{ right: 8px; }
-    }
-    /* Second control: cycles this entry's own pictures. Sat at the bottom
-       centre of the image so it never collides with the page-to-page arrows
-       on the left and right edges. Only rendered when there's more than one
-       picture, and only usable with JS — hence the button elements. */
+    /* Cycles this entry's own pictures. Sits at the bottom centre of the
+       image. Only rendered when there's more than one picture, and only
+       usable with JS — hence the button elements. */
     .share-pager{
       position: absolute; left: 50%; transform: translateX(-50%);
       bottom: 14px; z-index: 3;
@@ -190,7 +156,7 @@
     }
     /* Previous / next item, sitting above the title. Same markup and classes
        as the gear and article pages so the three page types read alike. The
-       overlaid .share-arrow controls below still move between images. */
+       pager over the image still moves between an entry's own pictures. */
     .gear-nav{ display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch; }
     .gear-nav-link{ display: flex; align-items: center; gap: 10px;
                     flex: 1 1 0; min-width: 0; padding: 10px 14px;
@@ -389,8 +355,6 @@
       <figure class="share-figure">
         <div class="share-slides">
           <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="1" href="/gallery.html#rosette-nebula-ngc2244" aria-label="Open The Rosette Nebula (NGC 2244) full screen"><img src="/images/rosette-nebula-ngc2244.webp" alt="Rosette Nebula NGC 2244 astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a></div>
-          <a class="share-arrow prev" href="/share/the-milky-way.html" rel="prev" aria-label="Previous image: The Milky Way" title="The Milky Way">‹</a>
-          <a class="share-arrow next" href="/share/eagle-nebula-m16.html" rel="next" aria-label="Next image: The Eagle Nebula (M16)" title="The Eagle Nebula (M16)">›</a>
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
