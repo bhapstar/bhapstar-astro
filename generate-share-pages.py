@@ -81,7 +81,18 @@ GEAR_ALIASES = {
     "seestar s30 pro":      "zwo-seestar-s30-pro",
     "seestar s30":          "zwo-seestar-s30-smart-telescope",
     "seestar":              "zwo-seestar-s30-smart-telescope",
+    # lenses used as astrographs
+    "samyang 135mm":        "samyang-135mm-widefield-astrograph",
+    "samyang 135":          "samyang-135mm-widefield-astrograph",
+    "rokinon 18mm":         "rokinon-18mm-samyang-14mm-ultrawides",
+    "rokinon 18":           "rokinon-18mm-samyang-14mm-ultrawides",
+    "samyang 14mm":         "rokinon-18mm-samyang-14mm-ultrawides",
+    "samyang 14":           "rokinon-18mm-samyang-14mm-ultrawides",
     # cameras
+    "sony a7 iii":          "sony-a7iii-full-frame-camera",
+    "sony a7iii":           "sony-a7iii-full-frame-camera",
+    "a7 iii":               "sony-a7iii-full-frame-camera",
+    "a7iii":                "sony-a7iii-full-frame-camera",
     "zwo asi585mc air":     "zwo-asi585mc-air-camera",
     "asi585mc air":         "zwo-asi585mc-air-camera",
     "asi585mc":             "zwo-asi585mc-air-camera",
@@ -326,6 +337,34 @@ PAGE_STYLE = """\
     }
     html[data-theme="light"] .share-spec-val a{
       border-bottom-color: rgba(120,90,220,0.45);
+    }
+    /* Previous / next item, sitting above the title. Same markup and classes
+       as the gear and article pages so the three page types read alike. The
+       overlaid .share-arrow controls below still move between images. */
+    .gear-nav{ display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch; }
+    .gear-nav-link{ display: flex; align-items: center; gap: 10px;
+                    flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                    border-radius: 11px; text-decoration: none;
+                    color: var(--text);
+                    border: 1px solid var(--line);
+                    background: var(--soft);
+                    transition: border-color 200ms ease, background 200ms ease,
+                                transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible{
+                    border-color: var(--accent);
+                    background: var(--glow2);
+                    transform: translateY(-1px); }
+    .gn-next{ justify-content: flex-end; text-align: right; }
+    .gn-arrow{ flex: 0 0 auto; font-size: 16px; line-height: 1; color: var(--accent); }
+    .gn-text{ display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label{ font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+               color: var(--muted); }
+    .gn-title{ font-size: 13px; font-weight: 500; line-height: 1.25;
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 560px){
+      .gn-label{ display: none; }
+      .gn-title{ font-size: 12px; }
+      .gear-nav-link{ padding: 9px 11px; }
     }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
@@ -748,6 +787,30 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      </script>\n"
         )
 
+    # Previous / next item bar above the title, matching the gear and article
+    # pages. Labelled with item titles so it reads as page navigation rather
+    # than image navigation, which the overlaid arrows handle.
+    def top_nav_link(target, direction):
+        if not target:
+            return ""
+        href, label_title = target
+        arrow = "&#8592;" if direction == "prev" else "&#8594;"
+        label = "Previous" if direction == "prev" else "Next"
+        text = (f'<span class="gn-text"><span class="gn-label">{label}</span>'
+                f'<span class="gn-title">{t(label_title)}</span></span>')
+        mark = f'<span class="gn-arrow" aria-hidden="true">{arrow}</span>'
+        inner = f"{mark}{text}" if direction == "prev" else f"{text}{mark}"
+        return (f'        <a class="gear-nav-link gn-{direction}" href="{a(href)}" '
+                f'rel="{direction}" aria-label="{label} item: {a(label_title)}">'
+                f'{inner}</a>\n')
+
+    topnav_html = ""
+    if prev_link or next_link:
+        topnav_html = ('      <nav class="gear-nav" aria-label="Gallery navigation">\n'
+                       f'{top_nav_link(prev_link, "prev")}'
+                       f'{top_nav_link(next_link, "next")}'
+                       '      </nav>\n')
+
     # Keyboard support for the overlaid arrows: left / right move between images.
     nav_html = ""
     if prev_link or next_link:
@@ -995,7 +1058,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 <main>
   <section class="section">
     <div class="wrap share-wrap">
-      <h1>{t(title)}</h1>
+{topnav_html}      <h1>{t(title)}</h1>
 
 {figures_html}
 
