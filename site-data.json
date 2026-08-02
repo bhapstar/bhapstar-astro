@@ -879,6 +879,18 @@
     "slug": "skywatcher-evostar-72ed-refractor"
   },
   {
+    "file": "images/gear/Askar V 1.webp",
+    "alt": "The complete astrophotography rig assembled on its tripod under a night sky",
+    "title": "The Rig: A Mount, a Refractor, and a Camera That Runs Itself",
+    "desc": "A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.",
+    "type": "gear",
+    "category": "Gear",
+    "readTime": "8 min read",
+    "section": "article",
+    "slug": "main-rig-tour",
+    "date": "02-08-2026"
+  },
+  {
     "file": "images/milky-way-and-me-2.webp",
     "alt": "Wide-field Milky Way over a desert horizon with a figure looking up, the kind of night-sky scene a phone can capture",
     "title": "Photographing a Meteor Shower with the Phone in Your Pocket",
@@ -997,6 +1009,28 @@
       {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/",
+        "affiliate": false
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/EcoFlow River 2 1.webp",
+        "alt": "EcoFlow River 2 portable power station powering an astrophotography rig in the field"
+      }
+    ],
+    "title": "EcoFlow River 2 Power Station",
+    "desc": "256Wh of lithium iron phosphate in a box the size of a shoebox, running the entire rig from one USB-C lead. A 300W AC outlet, a 60W USB-C port that works both ways, and a measured eleven-watt draw that turns a night's power into something you stop thinking about.",
+    "alt": "EcoFlow River 2 portable power station for astrophotography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "ecoflow-river-2",
+    "hidden": true,
+    "buy": [
+      {
+        "retailer": "EcoFlow",
+        "url": "https://www.ecoflow.com/",
         "affiliate": false
       }
     ]

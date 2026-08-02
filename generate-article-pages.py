@@ -258,6 +258,23 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
                     color: var(--muted); }}
     .article-fig figcaption a {{ color: var(--accent); text-decoration: none; }}
 
+    /* ── Photo and video figures ──
+       Photos use the same frame as the hand-drawn figures. Videos are Vimeo
+       embeds held in a 16:9 box so the page never reflows while the iframe
+       loads. Use .article-figrow to sit two photos side by side, which
+       collapses to a single column on narrow screens. */
+    .article-fig img {{ width: 100%; height: auto; display: block;
+                        border-radius: 9px; }}
+    .article-figrow {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }}
+    .article-video {{ position: relative; width: 100%; padding-top: 56.25%;
+                      border-radius: 9px; overflow: hidden;
+                      background: rgba(0,0,0,0.35); }}
+    .article-video iframe {{ position: absolute; inset: 0; width: 100%;
+                             height: 100%; border: 0; }}
+    @media (max-width: 560px) {{
+      .article-figrow {{ grid-template-columns: 1fr; }}
+    }}
+
     /* ── Dated event callout ──
        Deliberately loud. It is the one part of the page with a deadline. */
     .event-callout {{ margin: 0 0 30px; padding: 18px 20px; border-radius: 14px;
