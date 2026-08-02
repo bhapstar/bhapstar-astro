@@ -7,7 +7,7 @@ write-ups rather than equipment.
 Each page includes:
   - Hero image (the entry's cover), with the standfirst beneath it
   - A meta line: category, date, read time
-  - Article prose, read from article-content/<slug>.html
+  - Article prose, read from content/articles/<slug>.html
   - Previous / next article navigation (wraps, so no dead ends)
   - JSON-LD Article schema
   - Canonical URL pointing at itself
@@ -37,7 +37,7 @@ from datetime import datetime
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "articles"
-CONTENT_DIR = "article-content"
+CONTENT_DIR = "content/articles"
 SITE_NAME = "Bhapstar Astrophotography"
 
 
@@ -81,7 +81,7 @@ def pretty_date(entry):
 
 
 def read_body(slug):
-    """Read the prose fragment from article-content/<slug>.html."""
+    """Read the prose fragment from content/articles/<slug>.html."""
     path = os.path.join(CONTENT_DIR, f"{slug}.html")
     if os.path.isfile(path):
         with open(path, 'r', encoding='utf-8') as f:

@@ -27,10 +27,18 @@ Why the order matters:
               order-independent, but it belongs last as the final index of
               everything above.
 
-Every generator resolves its paths relative to the working directory, so
-this script changes to the repository root before running anything. That
-means it works from anywhere, including if it is later moved into a
-subfolder of its own.
+Layout this expects:
+
+    build.py            this file, at the repository root
+    scripts/            the five generators
+    content/articles/   hand-written article prose, one file per slug
+    content/gear/       hand-written gear review prose, one file per slug
+    site-data.json      the single source of data for all of it
+    articles/ gear/ share/   generated output, never edited by hand
+
+The generators resolve their paths relative to the working directory, so
+this script runs each one with the repository root as its working
+directory regardless of where build.py was invoked from.
 """
 
 import os
@@ -38,6 +46,8 @@ import subprocess
 import sys
 
 # Stage name -> script filename. Order here is the build order.
+SCRIPTS = "scripts"
+
 STAGES = [
     ("gear",    "generate-gear-pages.py"),
     ("article", "generate-article-pages.py"),
@@ -51,11 +61,14 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def run(name, script):
     """Run one generator. Returns True on success."""
-    print(f"\n\033[1m── {name} ── {script}\033[0m", flush=True)
-    if not os.path.exists(os.path.join(ROOT, script)):
-        print(f"  ! {script} not found, skipped", file=sys.stderr)
+    print(f"\n\033[1m── {name} ── {SCRIPTS}/{script}\033[0m", flush=True)
+    path = os.path.join(ROOT, SCRIPTS, script)
+    if not os.path.exists(path):
+        print(f"  ! {SCRIPTS}/{script} not found, skipped", file=sys.stderr)
         return False
-    result = subprocess.run([sys.executable, script], cwd=ROOT)
+    # cwd is the repo root, not scripts/, because every generator reads
+    # site-data.json and writes its output using root-relative paths.
+    result = subprocess.run([sys.executable, path], cwd=ROOT)
     if result.returncode != 0:
         print(f"  ! {script} exited with code {result.returncode}",
               file=sys.stderr)
@@ -70,7 +83,7 @@ def main():
     if "--list" in flags or "-l" in flags:
         print("Build stages, in order:")
         for i, (name, script) in enumerate(STAGES, 1):
-            print(f"  {i}. {name:<8} {script}")
+            print(f"  {i}. {name:<8} {SCRIPTS}/{script}")
         return 0
 
     if args:

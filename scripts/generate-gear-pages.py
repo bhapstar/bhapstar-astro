@@ -6,7 +6,7 @@ gear/<slug>.html. Mirrors the logic of generate-share-pages.py but for gear.
 Each page includes:
   - Hero image (first image from entry.images)
   - Fixed-height carousel: arrows, in-stage thumbnails, keyboard, swipe
-  - Review prose (read from gear-reviews/<slug>.html if it exists, else placeholder)
+  - Review prose (read from content/gear/<slug>.html if it exists, else placeholder)
   - Buy links from the entry's buy array
   - JSON-LD Article schema
   - Canonical URL pointing at itself
@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "gear"
-REVIEWS_DIR = "gear-reviews"
+REVIEWS_DIR = "content/gear"
 
 # Retailer links are suppressed until there is an actual arrangement with
 # each shop. The URLs stay in site-data.json, so flipping this back to True
@@ -56,7 +56,7 @@ def url_for(path):
     return DOMAIN + '/' + path.lstrip('/')
 
 def read_review(slug):
-    """Read review fragment from gear-reviews/<slug>.html, or return placeholder."""
+    """Read review fragment from content/gear/<slug>.html, or return placeholder."""
     path = os.path.join(REVIEWS_DIR, f"{slug}.html")
     if os.path.isfile(path):
         with open(path, 'r', encoding='utf-8') as f:

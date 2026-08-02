@@ -39,7 +39,7 @@ DATA = "site-data.json"
 OUT = "sitemap.xml"
 SHARE_DIR = "share"
 GEAR_DIR = "gear"
-GEAR_REVIEWS_DIR = "gear-reviews"
+GEAR_REVIEWS_DIR = "content/gear"
 ARTICLE_DIR = "articles"
 
 # (path, changefreq, priority, image_section)
@@ -104,7 +104,7 @@ def has_cover(it):
 
 
 def has_review(slug):
-    """Check if gear-reviews/<slug>.html exists."""
+    """Check if content/gear/<slug>.html exists."""
     import os
     path = os.path.join(GEAR_REVIEWS_DIR, f"{slug}.html")
     return os.path.isfile(path)
