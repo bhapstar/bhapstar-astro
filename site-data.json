@@ -417,8 +417,8 @@
     "body": "These images are something different from the rest of the gallery. Rather than isolating a specific deep-sky object, they place a human figure within the wider scene - the Milky Way arching overhead, the horizon grounding the composition, the gap between the cosmic and the personal collapsed into a single frame.\n\nThe core of the Milky Way, the brightest and most structured part of the band, is visible from darker sites during the summer months in the northern hemisphere. What we are seeing is the direction toward the galactic centre, some 26,000 light-years away, dense with stars, dust clouds and the glow of billions of suns.\n\nMilky Way landscape photography sits at the intersection of astrophotography and landscape photography, and the techniques differ somewhat from pure deep-sky work. Single exposures or short sequences rather than long stacked sessions, wide fast lenses, and careful attention to foreground composition all come into play.",
     "section": "gallery",
     "specs": {
-      "telescope": "Various",
-      "camera": "Various",
+      "telescope": "Samyang 14mm f/2.8 and Rokinon 18mm f/2.8",
+      "camera": "Sony A7 III",
       "filter": "None",
       "integration": "Various",
       "location": "Al Qudra, UAE"
@@ -518,8 +518,8 @@
     "body": "Star trail photography captures something that the eye alone cannot perceive - the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the celestial pole, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.\n\nThese images can be created either through a single very long exposure or by stacking many shorter exposures - the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.\n\nThe time-lapse videos in the gallery show the same phenomenon in motion - the still composites and the video sequences complement each other, the stills showing the full geometry of the night's movement and the videos making the rotation viscerally apparent.",
     "section": "gallery",
     "specs": {
-      "telescope": "Various",
-      "camera": "Various",
+      "telescope": "Rokinon 18mm f/2.8",
+      "camera": "Sony A7 III",
       "filter": "None",
       "integration": "Various",
       "location": "Al Qudra, UAE"
@@ -872,7 +872,7 @@
       }
     ],
     "title": "Skywatcher Evostar 72ED Refractor",
-    "desc": "A 72mm ED doublet apochromat at 420mm focal length, f/5.8. Light enough to sit on a small mount without complaint, and short enough to frame large nebulae. Doubles as a guidescope and as a grab-and-go visual instrument.",
+    "desc": "My first ever telescope, and the one that started all of this. A 72mm ED doublet apochromat at 420mm focal length, f/5.8. Light enough to sit on a small mount without complaint, and short enough to frame large nebulae. Doubles as a guidescope and as a grab-and-go visual instrument.",
     "alt": "Skywatcher Evostar 72ED refractor telescope",
     "type": "telescope",
     "section": "gear",
@@ -934,7 +934,7 @@
       }
     ],
     "title": "Sony A7 III",
-    "desc": "A 24-megapixel full-frame mirrorless body that has aged into one of the best-value low-light cameras available. Clean at ISO 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and star trail frame in the gallery.",
+    "desc": "The camera I got started in astrophotography with, paired with the Samyang 135mm, the Samyang 14mm and the Rokinon 18mm. A 24-megapixel full-frame mirrorless body that has aged into one of the best-value low-light cameras available. Clean at ISO 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and star trail frame in the gallery.",
     "alt": "Sony A7 III full-frame mirrorless camera for astrophotography",
     "type": "camera",
     "section": "gear",
