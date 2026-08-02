@@ -31,13 +31,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Regenerate sitemap + structured data + share, gear & article pages
-        run: |
-          python generate-sitemap.py
-          python generate-schema.py
-          python generate-share-pages.py
-          python generate-gear-pages.py
-          python generate-article-pages.py
+      # One runner, one order. build.py sequences gear -> article -> share
+      # -> schema -> sitemap, which matters because share pages only link a
+      # capture spec to a gear page if that gear page already exists on disk.
+      - name: Build site (gear, article, share, schema, sitemap)
+        run: python build.py
 
       - name: Bump SW cache version
         run: |
