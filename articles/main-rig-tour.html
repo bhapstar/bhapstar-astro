@@ -181,6 +181,189 @@
       </div>
 
       <div class="article-body">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Rig: A Mount, a Refractor, and a Camera That Runs Itself — Bhapstar Astrophotography</title>
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/articles/main-rig-tour.html" />
+  <meta name="description" content="A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing " />
+  <meta name="author" content="Bhapinder Singh" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="The Rig: A Mount, a Refractor, and a Camera That Runs Itself" />
+  <meta property="og:description" content="A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing " />
+  <meta property="og:url" content="https://bhapstar.com/articles/main-rig-tour.html" />
+  <meta property="og:image" content="https://bhapstar.com/images/gear/Full rig 3.webp" />
+  <meta name="twitter:image" content="https://bhapstar.com/images/gear/Full rig 3.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Rig: A Mount, a Refractor, and a Camera That Runs Itself" />
+  <meta name="twitter:description" content="A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing " />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* Narrower than the gear pages: this is a reading column, and a long
+       measure is the quickest way to make a long article feel like work. */
+    .article-page { max-width: 760px; margin: 40px auto; padding: 0 16px; }
+    .article-header { margin-bottom: 34px; }
+    .article-hero { margin: 0 0 26px; }
+    .article-hero img { width: 100%; height: auto; display: block;
+                         border-radius: 16px;
+                         border: 1px solid var(--line);
+                         box-shadow: 0 24px 70px rgba(0,0,0,0.55),
+                                     0 0 0 1px rgba(167,139,250,0.18),
+                                     0 10px 44px rgba(167,139,250,0.28); }
+    html[data-theme="light"] .article-hero img {
+                         box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+                                     0 6px 18px rgba(0,0,0,0.18); }
+    .article-meta { font-size: 10.5px; letter-spacing: 0.16em;
+                     text-transform: uppercase; color: var(--muted);
+                     margin: 0 0 12px; }
+    .article-title { font-size: 30px; line-height: 1.2; margin: 0 0 12px; }
+    .article-standfirst { font-size: 16.5px; line-height: 1.6; color: var(--muted);
+                           margin: 0; }
+
+    /* ── Body ── */
+    .article-body { margin: 34px 0 10px; font-size: 15.5px; line-height: 1.75;
+                     color: var(--text); }
+    .article-body h2 { font-size: 21px; font-weight: 600; margin: 34px 0 12px;
+                        line-height: 1.3; }
+    .article-body h3 { font-size: 17px; font-weight: 600; margin: 24px 0 8px; }
+    .article-body p { margin: 13px 0; }
+    .article-body ul, .article-body ol { margin: 14px 0; padding-left: 22px; }
+    .article-body li { margin: 8px 0; }
+    .article-body code { font-size: 0.92em; padding: 2px 6px; border-radius: 5px;
+                          background: var(--soft); border: 1px solid var(--line); }
+    .article-body a { color: var(--accent); text-decoration: none;
+                       border-bottom: 1px solid rgba(167,139,250,0.35); }
+    .article-body a:hover, .article-body a:focus-visible {
+                       border-bottom-color: var(--accent); }
+    html[data-theme="light"] .article-body a { color: #6d4bd8; }
+
+    /* ── Tables ── */
+    .article-body table { width: 100%; border-collapse: collapse; margin: 20px 0;
+                           font-size: 14px; }
+    .article-body th, .article-body td { padding: 10px 12px; text-align: left;
+                           border-bottom: 1px solid var(--line);
+                           vertical-align: top; }
+    .article-body th { background: var(--soft); font-weight: 600;
+                        font-size: 12px; letter-spacing: 0.06em;
+                        text-transform: uppercase; color: var(--muted); }
+    @media (max-width: 560px) {
+      .article-body table { font-size: 13px; }
+      .article-body th, .article-body td { padding: 8px 8px; }
+    }
+
+    /* ── Hand-drawn figures ──
+       The SVG is authored in the content fragment and inherits the site's
+       theme variables, so it follows light/dark without a second asset. */
+    .article-fig { margin: 26px 0; padding: 14px 14px 10px; border-radius: 12px;
+                    background: var(--soft); border: 1px solid var(--line); }
+    .article-fig svg { width: 100%; height: auto; display: block; }
+    .article-fig figcaption { margin-top: 12px; font-size: 12.5px; line-height: 1.55;
+                    color: var(--muted); }
+    .article-fig figcaption a { color: var(--accent); text-decoration: none; }
+
+    /* ── Photo and video figures ──
+       Photos use the same frame as the hand-drawn figures. Videos are Vimeo
+       embeds held in a 16:9 box so the page never reflows while the iframe
+       loads. Use .article-figrow to sit two photos side by side, which
+       collapses to a single column on narrow screens. */
+    .article-fig img { width: 100%; height: auto; display: block;
+                        border-radius: 9px; }
+    .article-figrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .article-video { position: relative; width: 100%; padding-top: 56.25%;
+                      border-radius: 9px; overflow: hidden;
+                      background: rgba(0,0,0,0.35); }
+    .article-video iframe { position: absolute; inset: 0; width: 100%;
+                             height: 100%; border: 0; }
+    @media (max-width: 560px) {
+      .article-figrow { grid-template-columns: 1fr; }
+    }
+
+    /* ── Dated event callout ──
+       Deliberately loud. It is the one part of the page with a deadline. */
+    .event-callout { margin: 0 0 30px; padding: 18px 20px; border-radius: 14px;
+                      border: 1px solid rgba(167,139,250,0.45);
+                      background: linear-gradient(135deg,
+                                  rgba(167,139,250,0.14),
+                                  rgba(96,165,250,0.10));
+                      box-shadow: 0 8px 30px rgba(167,139,250,0.14); }
+    .event-callout .ec-kicker { margin: 0 0 6px; font-size: 10px;
+                      letter-spacing: 0.2em; text-transform: uppercase;
+                      color: var(--accent); }
+    .event-callout .ec-title { margin: 0 0 10px; font-size: 17px; font-weight: 600;
+                      line-height: 1.35; color: var(--text); }
+    .event-callout .ec-body { margin: 0; font-size: 14.5px; line-height: 1.65;
+                      color: var(--text); opacity: 0.92; }
+
+    /* Previous / next reuses the gear page's chrome so the two section types
+       feel like the same site. */
+    .gear-nav { display: flex; gap: 10px; margin-bottom: 22px; align-items: stretch; }
+    .gear-nav-link { display: flex; align-items: center; gap: 10px;
+                      flex: 1 1 0; min-width: 0; padding: 10px 14px;
+                      border-radius: 11px; text-decoration: none;
+                      color: var(--text); border: 1px solid var(--line);
+                      background: var(--soft);
+                      transition: border-color 200ms ease, background 200ms ease,
+                                  transform 200ms ease; }
+    .gear-nav-link:hover, .gear-nav-link:focus-visible {
+                      border-color: var(--accent); background: var(--glow2);
+                      transform: translateY(-1px); }
+    .gn-next { justify-content: flex-end; text-align: right; }
+    .gn-arrow { flex: 0 0 auto; font-size: 16px; line-height: 1; color: var(--accent); }
+    .gn-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .gn-label { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); }
+    .gn-title { font-size: 13px; font-weight: 500; line-height: 1.25;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .article-back { display: inline-flex; align-items: center; gap: 7px;
+                     margin-top: 36px; padding-top: 22px;
+                     border-top: 1px solid var(--line);
+                     font-size: 13px; color: var(--muted); text-decoration: none; }
+    .article-back:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .article-page { margin: 24px auto; padding: 0 14px; }
+      .article-title { font-size: 24px; }
+      .article-standfirst { font-size: 15px; }
+      .gn-label { display: none; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "The Rig: A Mount, a Refractor, and a Camera That Runs Itself", "description": "A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.", "articleSection": "Gear", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-08-02", "dateModified": "2026-08-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://bhapstar.com/articles/main-rig-tour.html"}, "image": "https://bhapstar.com/images/gear/Full rig 3.webp"}
+  </script>
+</head>
+<body>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap article-page">
+      <nav class="gear-nav" aria-label="Article navigation">
+        <a class="gear-nav-link gn-prev" href="/articles/asiair-astrophotography-control.html" aria-label="Previous article: The ASIAir: Running a Whole Rig From Your Phone"><span class="gn-arrow" aria-hidden="true">&#8592;</span><span class="gn-text"><span class="gn-label">Previous</span><span class="gn-title">The ASIAir: Running a Whole Rig From Your Phone</span></span></a>
+        <a class="gear-nav-link gn-next" href="/articles/photograph-meteor-shower-phone.html" aria-label="Next article: Photographing a Meteor Shower with the Phone in Your Pocket"><span class="gn-text"><span class="gn-label">Next</span><span class="gn-title">Photographing a Meteor Shower with the Phone in Your Pocket</span></span><span class="gn-arrow" aria-hidden="true">&#8594;</span></a>
+      </nav>
+
+      <div class="article-header">
+        <figure class="article-hero">
+          <img src="/images/gear/Full rig 3.webp" alt="The Askar V refractor and Juwei 14 mount assembled as the main imaging rig" decoding="async" draggable="false" />
+        </figure>
+        <p class="article-meta">Gear <span aria-hidden="true">&middot;</span> 2 August 2026 <span aria-hidden="true">&middot;</span> 8 min read</p>
+        <h1 class="article-title">The Rig: A Mount, a Refractor, and a Camera That Runs Itself</h1>
+        <p class="article-standfirst">A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.</p>
+      </div>
+
+      <div class="article-body">
 <!--
   A tour of the main rig. Photos are the Full rig set, served from the 800px thumbs so they stay sharp
   on a retina screen without shipping full-size files. They are portrait, so
@@ -193,24 +376,30 @@
 
 <h2>One mount, one scope, one camera</h2>
 
-<p>The rig has been through several shapes since I started, and it has ended up
-smaller each time. What is on the tripod now is four things that talk to each
-other and nothing that does not need to be there. A harmonic mount, a modular
-refractor, a camera with the control computer built into it, and a filter drawer
-sitting between the last two.</p>
+<p>The rig has been through several shapes since I started. A Sony A7 III on a
+tracker, then an Evostar 72ED, then this. Each step has been bigger and heavier
+than the one before it, and that is the honest version. What has come down is
+the part count. There is no laptop, no guide scope, no separate controller, and
+far less cable than the last setup needed.</p>
 
-<p>The thing worth saying before any of the parts is that the whole assembly
-fits in a case I can carry in one hand, and it runs all night on a battery the
-size of a shoebox. That is not a small achievement. Ten years ago this
-capability came with a pier and an extension lead.</p>
+<p>What is on the tripod now is four things that talk to each other and nothing
+that does not need to be there. A harmonic mount, a modular refractor, a camera
+with the control computer built into it, and a filter drawer sitting between the
+last two.</p>
+
+<p>The thing worth saying before any of the parts is that this is a car rig, not
+a rucksack one. It travels in the boot, and a site gets chosen partly on whether
+I can park close enough to set up next to it. What it does do is run all night
+on a battery the size of a shoebox, with no mains lead and nothing to trip over.
+Ten years ago this capability came with a pier and an extension cable.</p>
 
 <figure class="article-fig">
   <img src="/images/gear/thumbs/Full%20rig%201.webp"
        alt="The complete astrophotography rig assembled on its tripod"
        loading="lazy" decoding="async" />
   <figcaption>The whole rig, assembled and balanced. Everything here runs from a
-  single <a href="/gear/ecoflow-river-2.html">EcoFlow River 2</a> over one
-  USB-C lead.</figcaption>
+  single <a href="/gear/ecoflow-river-2.html">EcoFlow River 2</a>, fed from its
+  12V car socket.</figcaption>
 </figure>
 
 <h2>The mount: Juwei 14</h2>
@@ -222,8 +411,8 @@ harmonic drive design, which means the strain wave gearing holds its load
 without a counterweight for anything this rig will ever carry.</p>
 
 <p>In practice that removes an entire ritual. No counterweight bar, no sliding
-weights along a shaft in the dark, no rebalancing when the filter drawer changes
-the moment arm. It goes on the tripod, the scope goes on it, and it is ready.</p>
+weights along a shaft in the dark, and no rebalancing every time something is
+added to the back of the imaging train. It goes on the tripod, the scope goes on it, and it is ready.</p>
 
 <figure class="article-fig">
   <img src="/images/gear/thumbs/Full%20rig%202.webp"
@@ -322,8 +511,11 @@ difference between changing approach and giving up on the target.</p>
 <h2>Power</h2>
 
 <p>All of it runs from an
-<a href="/gear/ecoflow-river-2.html">EcoFlow River 2</a> over a single USB-C
-lead. Measured with everything live, mount tracking and camera cooling, the rig
+<a href="/gear/ecoflow-river-2.html">EcoFlow River 2</a>, taken from the 12V car
+socket on the front of the unit rather than the USB-C port. A 12V DC lead is
+what the mount and the camera actually want, and running it that way avoids the
+step-up and step-down losses of going out through USB and back down again.
+Measured with everything live, mount tracking and camera cooling, the rig
 draws around eleven watts. Against 256Wh that is the whole night with room
 spare, which is the point at which power stops being something you think about.</p>
 
@@ -342,18 +534,23 @@ spare, which is the point at which power stops being something you think about.<
 </figure>
 -->
 
-<h2>What I would change</h2>
+<h2>Why this is the rig I keep</h2>
 
-<p>Nothing urgent, which is a good place to be. The obvious limit is the sensor
-format. The 1/1.2 inch chip gives a narrower field than an APS-C camera on the
-same optics, so the biggest targets need a mosaic. Moving up means replacing the
-controller and guide camera too, since they live in the same housing, and that
-is a real cost rather than an upgrade path.</p>
+<p>The thing I like most about this setup is that none of it fights me. The
+mount holds the scope without a counterweight, the scope changes focal length
+without changing telescopes, the camera runs the session without a laptop, and
+the drawer changes a filter without breaking the train. Every part removes a
+job that used to be mine.</p>
 
-<p>The other thought is a second, smaller rig running alongside this one, so a
-wide field and a narrow one can be collected on the same night. That is a
-different article, and one I will write when it exists rather than while it is
-still a browser tab.</p>
+<p>That adds up to the only measure I care about, which is how much of the night
+is spent imaging rather than setting up. Fifteen minutes from opening the boot
+to the first frame, and after that the phone tells me what is happening while I
+sit and look up. Most of my early sessions were the other way round, mostly
+fiddling with a bit of imaging at the end.</p>
+
+<p>It is heavier than what I started with and it needs a car, and I would still
+choose it every time. A rig that quietly does its job all night is worth more
+than a light one that needs watching.</p>
 
 <!--
   TODO: add the actual case and what fits in it. Nobody publishes packing
@@ -362,6 +559,20 @@ still a browser tab.</p>
   TODO: setup time, measured rather than estimated, once a timelapse exists.
 -->
 
+      </div>
+
+      <a class="article-back" href="/articles.html">&#8592; All articles</a>
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+  <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
+</body>
+</html>
       </div>
 
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
