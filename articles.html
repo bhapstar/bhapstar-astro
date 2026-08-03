@@ -47,14 +47,37 @@
       opacity: 0.95;
     }
     /* Captions toggle: hide the summary but keep the title and meta line,
-       in both grid and list view. */
-    #articleGrid.hide-desc .card .cap .d { display: none; }
+       in both grid and list view. The list-view case is spelled out on its
+       own so it always outranks the list-view rules in styles.css. */
+    #articleGrid.hide-desc .card .cap .d,
+    #articleGrid.list-view.hide-desc .card .cap .d { display: none; }
+
+    /* No filter control on this page, so the remaining controls sit at the
+       right-hand end of the row rather than being pushed apart. */
+    .page-articles .gallery-controls { justify-content: flex-end; }
 
     @media (max-width: 720px) {
       /* The base stylesheet hides .d on small screens for photo grids; for
          articles the standfirst is the point, so bring it back in grid view. */
       #articleGrid:not(.list-view):not(.hide-desc) .card .cap .d { display: block; }
       #articleGrid.list-view .card .cap .m { font-size: 9px; letter-spacing: 0.12em; }
+
+      /* styles.css also force-hides .d in mobile list view, which left the
+         Captions button with nothing to switch. Bring the summary back here,
+         clamped to two lines so rows stay compact, so the button does the same
+         thing on every screen size. */
+      #articleGrid.list-view:not(.hide-desc) .card .cap .d {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 11px;
+        line-height: 1.35;
+        margin-top: 3px;
+      }
+      /* Let the thumbnail fill the taller row instead of floating in it. */
+      #articleGrid.list-view .card { align-items: stretch; }
+      #articleGrid.list-view .card img { height: 100%; min-height: 60px; }
     }
   </style>
 
@@ -78,16 +101,6 @@
         </p>
 
         <div class="gallery-controls" role="group" aria-label="Article controls">
-          <div class="filter-select-wrap">
-            <label for="articleFilter" class="filter-select-label">Filter</label>
-            <select id="articleFilter" class="filter-select" aria-label="Filter by category">
-              <option value="all" selected>All articles</option>
-              <option value="capture">Capture</option>
-              <option value="processing">Processing</option>
-              <option value="meteors">Meteor showers</option>
-            </select>
-          </div>
-
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -178,10 +191,6 @@
     return file;
   }
 
-  function currentFilter() {
-    return document.getElementById('articleFilter')?.value || 'all';
-  }
-
   /* Read time is stored on the entry; fall back to a rough estimate from the
      summary length rather than printing nothing. */
   function metaLine(item) {
@@ -192,17 +201,12 @@
   }
 
   function render() {
-    const selected = currentFilter();
-    const filtered = selected === 'all'
-      ? items
-      : items.filter(it => (it.type || 'capture') === selected);
-
-    if (!filtered.length) {
+    if (!items.length) {
       grid.innerHTML = '<p class="gallery-hint grid-span-all">Nothing here yet.</p>';
       return;
     }
 
-    grid.innerHTML = filtered.map((item) => {
+    grid.innerHTML = items.map((item) => {
       const cover = item.file || '';
       const alt   = item.alt || item.title || '';
       const media = cover
@@ -263,8 +267,6 @@
       localStorage.setItem(HIDE_DESC_KEY, nowHidden ? '1' : '0');
       applyDescToggle(nowHidden);
     });
-
-    document.getElementById('articleFilter')?.addEventListener('change', render);
   }
 
   fetch('site-data.json', { cache: 'default' })
