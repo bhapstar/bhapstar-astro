@@ -75,9 +75,12 @@
         line-height: 1.35;
         margin-top: 3px;
       }
-      /* Let the thumbnail fill the taller row instead of floating in it. */
-      #articleGrid.list-view .card { align-items: stretch; }
-      #articleGrid.list-view .card img { height: 100%; min-height: 60px; }
+      /* Fixed row and thumbnail height so every row matches, whether the
+         summary is showing or not. height:100% on the image resolved against
+         an indefinite grid row and fell back to the intrinsic aspect ratio,
+         which made rows different heights depending on the crop. */
+      #articleGrid.list-view .card { min-height: 78px; }
+      #articleGrid.list-view .card img { height: 78px; }
     }
   </style>
 

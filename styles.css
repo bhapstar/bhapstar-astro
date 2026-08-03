@@ -2474,6 +2474,13 @@ html[data-theme="light"] .view-btn{ color: rgba(60,54,96,0.70); }
    Covers both the gallery and gear grids. */
 html[data-theme="light"] .card .cap .d{ color: rgba(224,221,242,0.82); }
 
+/* List view is the exception: the caption there has no scrim (background is
+   transparent), so the description sits straight on the page and needs the
+   same dark text as the rest of the light theme. */
+html[data-theme="light"] #galleryGrid.list-view .cap .d,
+html[data-theme="light"] #gearGrid.list-view .cap .d,
+html[data-theme="light"] #articleGrid.list-view .cap .d{ color: rgba(60,54,96,0.82); }
+
 /* 5 — Image (share) page: lead paragraph + capture-spec values. */
 html[data-theme="light"] .share-body .lead{ color: rgba(60,54,96,0.88); }
 html[data-theme="light"] .share-spec-val{ color: rgba(40,35,72,0.90); }
