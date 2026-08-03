@@ -278,6 +278,9 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     .article-fig.fig-float.fig-left {{ float: left;
                                        margin: 6px 24px 18px 0; }}
     .article-body h2, .article-body h3 {{ clear: both; }}
+    /* Full-width figures always start below any float, so a diagram or video
+       can never slide under a floated photo. */
+    .article-fig:not(.fig-float) {{ clear: both; }}
     .article-video {{ position: relative; width: 100%; padding-top: 56.25%;
                       border-radius: 9px; overflow: hidden;
                       background: rgba(0,0,0,0.35); }}
