@@ -187,6 +187,11 @@ def gear_href(slug):
 PAGE_STYLE = """\
   <style>
     .share-wrap{ max-width: 900px; margin: 0 auto; }
+    /* The gradient h1 in styles.css pads its paint box downwards and cancels
+       that padding with a negative margin, so descenders (y, g, p) end up
+       resting on whatever follows. On these pages the next thing is the
+       picture, so give the title a little clearance. */
+    .share-wrap h1{ margin-bottom: 14px; }
     .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
     .share-figure{ margin: 0 0 22px; }
     /* The image box. Both arrow sets are absolutely positioned against
