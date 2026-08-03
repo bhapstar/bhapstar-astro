@@ -186,8 +186,11 @@
   on a retina screen without shipping full-size files. They are portrait, so
   each sits in its own figure rather than paired.
 
-  VIDEO SLOTS: slot 1 (the slew) is live, Vimeo 1215155467, portrait so it
-  overrides .article-video padding-top inline. The two remaining blocks below are
+  VIDEO SLOTS: slot 1 (the slew) is live, Vimeo 1215155467. It is portrait, so
+  it sits in a 320px-wide wrapper with .article-video inside overriding
+  padding-top to 177.78%. The wrapper is required: percentage padding measures
+  against the parent's width, so without it the ratio is computed from the full
+  figure width and the box comes out far too tall on desktop. The two remaining blocks below are
   commented out. Upload the clip to Vimeo, take the numeric ID from the URL, drop
   it into VIMEO_ID and uncomment the block. Nothing else needs changing.
 -->
@@ -256,10 +259,12 @@ exist for astrophotography: it is what lets a five minute exposure record stars
 as points instead of arcs.</p>
 
 <figure class="article-fig">
-  <div class="article-video" style="max-width:320px;margin:0 auto;padding-top:177.78%;">
-    <iframe src="https://player.vimeo.com/video/1215155467?title=0&amp;byline=0&amp;portrait=0"
-            title="The Juwei 14 slewing across the meridian"
-            loading="lazy" allowfullscreen></iframe>
+  <div style="max-width:320px;margin:0 auto;">
+    <div class="article-video" style="padding-top:177.78%;">
+      <iframe src="https://player.vimeo.com/video/1215155467?title=0&amp;byline=0&amp;portrait=0"
+              title="The Juwei 14 slewing across the meridian"
+              loading="lazy" allowfullscreen></iframe>
+    </div>
   </div>
   <figcaption>Thirteen seconds, sped up, of the rig slewing from one side of the
   meridian to the other. Give it a pair of coordinates and it goes, and between
