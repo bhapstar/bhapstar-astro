@@ -287,6 +287,15 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     .article-video iframe {{ position: absolute; inset: 0; width: 100%;
                              height: 100%; border: 0; }}
 
+    /* Below this width the text column is too narrow to flow beside a 296px
+       photo: what is left is a ribbon four or five words wide. Float off, and
+       photos go back to running full width in the reading order. */
+    @media (max-width: 820px) {{
+      .article-fig.fig-float,
+      .article-fig.fig-float.fig-left {{ float: none; width: auto;
+                                         margin: 26px 0; }}
+    }}
+
     /* ── Click to enlarge ──
        Not the gallery lightbox: no chrome, no navigation, no like button.
        Just a larger copy of the same file, dismissed by clicking anywhere. */
