@@ -3,9 +3,10 @@
   on a retina screen without shipping full-size files. They are portrait, so
   each sits in its own figure rather than paired.
 
-  VIDEO SLOTS: three <figure> blocks below are commented out. Upload the clip to
-  Vimeo, take the numeric ID from the URL, drop it into VIMEO_ID and uncomment
-  the block. Nothing else needs changing.
+  VIDEO SLOTS: slot 1 (the slew) is live, Vimeo 1215155467, portrait so it
+  overrides .article-video padding-top inline. The two remaining blocks below are
+  commented out. Upload the clip to Vimeo, take the numeric ID from the URL, drop
+  it into VIMEO_ID and uncomment the block. Nothing else needs changing.
 -->
 
 <h2>One mount, one scope, one camera</h2>
@@ -56,20 +57,33 @@ added to the back of the imaging train. It goes on the tripod, the scope goes on
   argument for harmonic drive in one image.</figcaption>
 </figure>
 
-<!--
-  VIDEO SLOT 1: the mount slewing to a target. Uncomment and set VIMEO_ID.
+<p>Everything the mount does is expressed in two numbers. Right ascension and
+declination are the sky's version of longitude and latitude: declination is how
+far north or south of the celestial equator a target sits, measured in degrees,
+and right ascension is the east-west position, measured in hours because the sky
+turns. Every object has a fixed pair, so M42 is always at the same coordinates
+and the mount only has to be told where it is pointing now to work out how to get
+there.</p>
+
+<p>Equatorial means one of the two axes is tilted to line up with the Earth's own
+axis of rotation. Once that is set, following a target for hours becomes a single
+slow turn of that one axis at the rate the Earth spins, rather than a constant
+correction in two directions at once. That is the whole reason equatorial mounts
+exist for astrophotography: it is what lets a five minute exposure record stars
+as points instead of arcs.</p>
 
 <figure class="article-fig">
-  <div class="article-video">
-    <iframe src="https://player.vimeo.com/video/VIMEO_ID?title=0&amp;byline=0&amp;portrait=0"
-            title="The Juwei 14 slewing to target"
+  <div class="article-video" style="max-width:320px;margin:0 auto;padding-top:177.78%;">
+    <iframe src="https://player.vimeo.com/video/1215155467?title=0&amp;byline=0&amp;portrait=0"
+            title="The Juwei 14 slewing across the meridian"
             loading="lazy" allowfullscreen></iframe>
   </div>
-  <figcaption>A slew across the sky. The sound is the harmonic drive, and it is
-  the noisiest thing about the whole setup.</figcaption>
+  <figcaption>Thirteen seconds, sped up, of the rig slewing from one side of the
+  meridian to the other. Give it a pair of coordinates and it goes, and between
+  the two axes there is no part of the visible sky it cannot reach. This is also
+  the movement behind a meridian flip, when a target crosses from east to west
+  and the mount swings under the tripod to carry on tracking it.</figcaption>
 </figure>
--->
-
 <h2>The optics: Askar V</h2>
 
 <p>The <a href="/gear/askar-v-modular-apo-refractor.html">Askar V</a> is a
