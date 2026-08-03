@@ -94,11 +94,35 @@
     .article-fig img { width: 100%; height: auto; display: block;
                         border-radius: 9px; }
     .article-figrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── Floated photo figures ──
+       .fig-float sits a photo in the text column at a readable size and lets
+       the prose wrap around it, instead of every photo running full width.
+       Add .fig-left to flip the side. Collapses to full width on narrow
+       screens, where wrapping around a 300px image would leave unreadable
+       ribbons of text. */
+    .article-fig.fig-float { float: right; width: 296px;
+                              margin: 6px 0 18px 24px; }
+    .article-fig.fig-float.fig-left { float: left;
+                                       margin: 6px 24px 18px 0; }
+    .article-body h2, .article-body h3 { clear: both; }
     .article-video { position: relative; width: 100%; padding-top: 56.25%;
                       border-radius: 9px; overflow: hidden;
                       background: rgba(0,0,0,0.35); }
     .article-video iframe { position: absolute; inset: 0; width: 100%;
                              height: 100%; border: 0; }
+
+    /* ── Click to enlarge ──
+       Not the gallery lightbox: no chrome, no navigation, no like button.
+       Just a larger copy of the same file, dismissed by clicking anywhere. */
+    .article-fig img { cursor: zoom-in; }
+    .img-zoom { position: fixed; inset: 0; z-index: 9999; display: none;
+                 align-items: center; justify-content: center; padding: 24px;
+                 background: rgba(4,3,16,0.88); cursor: zoom-out; }
+    .img-zoom.open { display: flex; }
+    .img-zoom img { max-width: min(92vw, 900px); max-height: 92vh;
+                     border-radius: 10px;
+                     box-shadow: 0 20px 60px rgba(0,0,0,0.55); }
     @media (max-width: 560px) {
       .article-figrow { grid-template-columns: 1fr; }
     }
@@ -404,5 +428,33 @@ night on the same target rather than another hour at the keyboard.</p>
 
   <script src="/partials/partials.js"></script>
   <script src="/protect-images.js"></script>
+  <script>
+  /* Click any article photo to see it larger. protect-images.js does not
+     intercept plain clicks, so this needs no cooperation from it. */
+  (function () {
+    var ov = document.createElement('div');
+    ov.className = 'img-zoom';
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-modal', 'true');
+    var big = document.createElement('img');
+    ov.appendChild(big);
+    document.body.appendChild(ov);
+
+    document.addEventListener('click', function (e) {
+      var img = e.target.closest && e.target.closest('.article-fig img');
+      if (img) {
+        big.src = img.currentSrc || img.src;
+        big.alt = img.alt || '';
+        ov.classList.add('open');
+        return;
+      }
+      if (ov.classList.contains('open')) ov.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') ov.classList.remove('open');
+    });
+  })();
+  </script>
 </body>
 </html>

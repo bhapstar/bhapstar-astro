@@ -94,11 +94,35 @@
     .article-fig img { width: 100%; height: auto; display: block;
                         border-radius: 9px; }
     .article-figrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── Floated photo figures ──
+       .fig-float sits a photo in the text column at a readable size and lets
+       the prose wrap around it, instead of every photo running full width.
+       Add .fig-left to flip the side. Collapses to full width on narrow
+       screens, where wrapping around a 300px image would leave unreadable
+       ribbons of text. */
+    .article-fig.fig-float { float: right; width: 296px;
+                              margin: 6px 0 18px 24px; }
+    .article-fig.fig-float.fig-left { float: left;
+                                       margin: 6px 24px 18px 0; }
+    .article-body h2, .article-body h3 { clear: both; }
     .article-video { position: relative; width: 100%; padding-top: 56.25%;
                       border-radius: 9px; overflow: hidden;
                       background: rgba(0,0,0,0.35); }
     .article-video iframe { position: absolute; inset: 0; width: 100%;
                              height: 100%; border: 0; }
+
+    /* ── Click to enlarge ──
+       Not the gallery lightbox: no chrome, no navigation, no like button.
+       Just a larger copy of the same file, dismissed by clicking anywhere. */
+    .article-fig img { cursor: zoom-in; }
+    .img-zoom { position: fixed; inset: 0; z-index: 9999; display: none;
+                 align-items: center; justify-content: center; padding: 24px;
+                 background: rgba(4,3,16,0.88); cursor: zoom-out; }
+    .img-zoom.open { display: flex; }
+    .img-zoom img { max-width: min(92vw, 900px); max-height: 92vh;
+                     border-radius: 10px;
+                     box-shadow: 0 20px 60px rgba(0,0,0,0.55); }
     @media (max-width: 560px) {
       .article-figrow { grid-template-columns: 1fr; }
     }
@@ -235,7 +259,7 @@ without a counterweight for anything this rig will ever carry.</p>
 weights along a shaft in the dark, and no rebalancing every time something is
 added to the back of the imaging train. It goes on the tripod, the scope goes on it, and it is ready.</p>
 
-<figure class="article-fig">
+<figure class="article-fig fig-float">
   <img src="/images/gear/thumbs/Full%20rig%202.webp"
        alt="The Juwei 14 harmonic mount carrying the telescope, with no counterweight shaft fitted"
        loading="lazy" decoding="async" />
@@ -251,12 +275,103 @@ turns. Every object has a fixed pair, so M42 is always at the same coordinates
 and the mount only has to be told where it is pointing now to work out how to get
 there.</p>
 
+
 <p>Equatorial means one of the two axes is tilted to line up with the Earth's own
 axis of rotation. Once that is set, following a target for hours becomes a single
 slow turn of that one axis at the rate the Earth spins, rather than a constant
 correction in two directions at once. That is the whole reason equatorial mounts
 exist for astrophotography: it is what lets a five minute exposure record stars
 as points instead of arcs.</p>
+
+<figure class="article-fig">
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Diagram of the celestial sphere around the Earth. The Earth's equator extends outward to become the celestial equator, drawn as an ellipse marked 0 hours, 6 hours, 12 hours and 18 hours of right ascension. A second ellipse just below it is the minus 5 degree declination circle, with the Orion Nebula M42 sitting on it. A panel gives M42's coordinates as right ascension 5 hours 35 minutes 17 seconds and declination minus 5 degrees 23 minutes 28 seconds. A second panel shows the mount's right ascension axis tilted 25 degrees up from the horizon to match the observer's latitude.">
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">Two numbers locate anything in the sky</text>
+
+  <!-- polar axis, drawn outside the globe so it reads as emerging from the poles -->
+  <g stroke="#e8b84b" stroke-width="1.5" stroke-dasharray="6 4">
+    <line x1="250" y1="52" x2="250" y2="172"/>
+    <line x1="250" y1="264" x2="250" y2="384"/>
+  </g>
+  <text x="250" y="44" font-size="10" fill="#e8b84b" text-anchor="middle">to the celestial pole</text>
+
+  <!-- the celestial sphere -->
+  <circle cx="250" cy="218" r="150" fill="#a78bfa" opacity="0.05"/>
+  <circle cx="250" cy="218" r="150" fill="none" stroke="var(--line)"
+          stroke-dasharray="3 5" opacity="0.7"/>
+
+  <!-- declination circle for M42, parallel to the celestial equator -->
+  <ellipse cx="250" cy="240" rx="149" ry="42" fill="none" stroke="var(--muted)"
+           stroke-width="1.1" stroke-dasharray="4 4" opacity="0.75"/>
+
+  <!-- the celestial equator -->
+  <ellipse cx="250" cy="218" rx="150" ry="42" fill="none" stroke="#60a5fa"
+           stroke-width="1.4" opacity="0.85"/>
+
+  <!-- right ascension measured along the equator from the 0h reference -->
+  <path d="M 100,218 A 150,42 0 0 0 268,260" fill="none" stroke="#a78bfa"
+        stroke-width="3.4" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- Earth, opaque so the axis appears to pass behind it -->
+  <circle cx="250" cy="218" r="46" fill="var(--soft)" stroke="var(--line)" stroke-width="1.2"/>
+  <ellipse cx="250" cy="218" rx="46" ry="13" fill="none" stroke="#60a5fa"
+           stroke-width="1" opacity="0.6"/>
+  <text x="250" y="200" font-size="10.5" fill="var(--muted)" text-anchor="middle">Earth</text>
+
+  <!-- the equator extending outward into space -->
+  <g stroke="var(--muted)" stroke-dasharray="2 4" opacity="0.8">
+    <line x1="204" y1="218" x2="104" y2="218"/>
+    <line x1="296" y1="218" x2="396" y2="218"/>
+  </g>
+
+  <!-- hour references around the celestial equator -->
+  <g fill="#60a5fa">
+    <circle cx="100" cy="218" r="3.4"/><circle cx="250" cy="260" r="2.6"/>
+    <circle cx="400" cy="218" r="2.6"/><circle cx="250" cy="176" r="2.6"/>
+  </g>
+  <g font-size="9.5" fill="var(--muted)">
+    <text x="92" y="212" text-anchor="end">0h</text>
+    <text x="406" y="214">12h</text>
+    <text x="250" y="170" text-anchor="middle">18h</text>
+  </g>
+
+  <!-- M42 on its declination circle -->
+  <circle cx="268" cy="282" r="9" fill="#a78bfa" opacity="0.28"/>
+  <circle cx="268" cy="282" r="4" fill="#a78bfa"/>
+  <text x="282" y="286" font-size="10.5" fill="var(--text)" font-weight="600">M42</text>
+  <text x="236" y="276" font-size="9.5" fill="var(--muted)" text-anchor="end">6h</text>
+  <text x="104" y="276" font-size="9.5" fill="#a78bfa">right ascension</text>
+  <text x="406" y="236" font-size="9.5" fill="#60a5fa">celestial equator, 0&#176;</text>
+  <line x1="399" y1="244" x2="404" y2="258" stroke="var(--line)" stroke-dasharray="3 3"/>
+  <text x="406" y="266" font-size="9.5" fill="var(--muted)">the &#8722;5&#176; declination circle</text>
+
+  <!-- panel: the coordinates themselves -->
+  <rect x="452" y="58" width="238" height="132" rx="10" fill="none" stroke="var(--line)"/>
+  <text x="468" y="80" font-size="11" fill="var(--text)" font-weight="600">The Orion Nebula, M42</text>
+  <text x="468" y="106" font-size="13" fill="#a78bfa" font-weight="600">RA 05h 35m 17s</text>
+  <text x="468" y="121" font-size="9.5" fill="var(--muted)">how far round, measured in hours</text>
+  <text x="468" y="146" font-size="13" fill="#60a5fa" font-weight="600">Dec &#8722;05&#176; 23&#8242; 28&#8243;</text>
+  <text x="468" y="161" font-size="9.5" fill="var(--muted)">how far from the equator, in degrees</text>
+  <text x="468" y="180" font-size="9.5" fill="var(--muted)">Fixed. It was the same last year.</text>
+
+  <!-- panel: why the mount is tilted -->
+  <rect x="452" y="212" width="238" height="168" rx="10" fill="none" stroke="var(--line)"/>
+  <text x="468" y="234" font-size="11" fill="var(--text)" font-weight="600">Why the mount sits at an angle</text>
+  <line x1="474" y1="320" x2="666" y2="320" stroke="var(--text)" stroke-width="1.4"/>
+  <text x="474" y="336" font-size="9.5" fill="var(--muted)">horizon</text>
+  <line x1="474" y1="320" x2="642" y2="242" stroke="#e8b84b" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M 524,320 A 50,50 0 0 0 519,297" fill="none" stroke="var(--muted)" stroke-width="1"/>
+  <text x="534" y="312" font-size="9.5" fill="var(--muted)">25&#176;</text>
+  <text x="596" y="238" font-size="9.5" fill="#e8b84b" text-anchor="end">RA axis</text>
+  <text x="468" y="356" font-size="9.5" fill="var(--muted)">Tilt it up by your latitude and it points</text>
+  <text x="468" y="368" font-size="9.5" fill="var(--muted)">at the pole. One slow turn does the rest.</text>
+</svg>
+<figcaption>Declination works like latitude and does not move. Right ascension works
+like longitude, counted in hours because the sky turns through 24 of them a day.
+M42 sits a little south of the celestial equator, which is why it never rides
+high from northern latitudes. Align the mount's RA axis with the Earth's own and
+tracking becomes one slow turn in a single direction.</figcaption>
+</figure>
 
 <figure class="article-fig">
   <div style="max-width:320px;margin:0 auto;">
@@ -283,7 +398,7 @@ covers a range of focal lengths instead of committing to one framing forever.</p
 small galaxy want very different focal lengths, and owning both as separate
 telescopes means owning two of everything else as well.</p>
 
-<figure class="article-fig">
+<figure class="article-fig fig-float fig-left">
   <img src="/images/gear/thumbs/Full%20rig%203.webp"
        alt="The Askar V modular apochromatic refractor mounted and ready for a session"
        loading="lazy" decoding="async" />
@@ -303,7 +418,7 @@ the guide scope and its camera, and most of the cabling all left at once.</p>
 Plate solving, focusing, guiding and the imaging plan all run from the handset,
 and the night can be left to itself once the first frame comes back clean.</p>
 
-<figure class="article-fig">
+<figure class="article-fig fig-float">
   <img src="/images/gear/thumbs/Full%20rig%204.webp"
        alt="The rear of the imaging train, with the ASI585MC Air fitted behind the telescope"
        loading="lazy" decoding="async" />
@@ -336,7 +451,7 @@ which matters because breaking the train means refocusing and reframing.</p>
 <p>On a night that starts under moonlight and ends without it, that is the
 difference between changing approach and giving up on the target.</p>
 
-<figure class="article-fig">
+<figure class="article-fig fig-float fig-left">
   <img src="/images/gear/thumbs/Full%20rig%205.webp"
        alt="The imaging train showing the filter drawer between the camera and the telescope"
        loading="lazy" decoding="async" />
@@ -407,5 +522,33 @@ than a light one that needs watching.</p>
 
   <script src="/partials/partials.js"></script>
   <script src="/protect-images.js"></script>
+  <script>
+  /* Click any article photo to see it larger. protect-images.js does not
+     intercept plain clicks, so this needs no cooperation from it. */
+  (function () {
+    var ov = document.createElement('div');
+    ov.className = 'img-zoom';
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-modal', 'true');
+    var big = document.createElement('img');
+    ov.appendChild(big);
+    document.body.appendChild(ov);
+
+    document.addEventListener('click', function (e) {
+      var img = e.target.closest && e.target.closest('.article-fig img');
+      if (img) {
+        big.src = img.currentSrc || img.src;
+        big.alt = img.alt || '';
+        ov.classList.add('open');
+        return;
+      }
+      if (ov.classList.contains('open')) ov.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') ov.classList.remove('open');
+    });
+  })();
+  </script>
 </body>
 </html>
