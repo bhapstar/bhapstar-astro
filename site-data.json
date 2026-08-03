@@ -85,6 +85,25 @@
     }
   },
   {
+    "file": "images/lobster-nebula-ngc6357.webp",
+    "title": "The Lobster Nebula (NGC 6357)",
+    "desc": "A sprawling emission nebula in Scorpius, and next-door neighbour to the Cat's Paw. Cavities of ionised hydrogen are hollowed out by Pismis 24, an open cluster containing some of the most massive and luminous stars known in our galaxy.",
+    "alt": "Lobster Nebula NGC 6357 astrophotography",
+    "type": "nebulae",
+    "slug": "lobster-nebula-ngc6357",
+    "date": "31-07-2026",
+    "intro": "A vast star-forming complex in Scorpius, the Lobster Nebula is carved into shape by Pismis 24 - a cluster of extraordinarily massive young stars whose radiation is steadily hollowing out the gas that made them.",
+    "body": "NGC 6357 lies roughly 5,500 light-years away in Scorpius, immediately north of the Cat's Paw Nebula - the two sit close enough that at short focal lengths they can be framed together. It is sometimes also called the War and Peace Nebula, a name earned from its appearance in infrared surveys.\n\nWhat drives the nebula is the open cluster Pismis 24, buried near its centre. It contains several of the most massive stars known in the Milky Way, including Pismis 24-1, long thought to be a single star of well over a hundred solar masses before higher-resolution imaging resolved it into multiple components. Their combined ultraviolet output is ionising the surrounding hydrogen and blowing enormous cavities and pillars into the cloud - the same sculpting process visible in the Eagle Nebula, but on a larger and more violent scale.\n\nThis one was shot from home under Bortle 8 skies, which makes a narrow dual-band filter essential rather than optional. At 3nm the light pollution simply disappears and the hydrogen-alpha structure comes through cleanly even at four hours. The bigger constraint from this latitude is altitude - at around -34 degrees declination the nebula never climbs far, so the usable window each night is short and you are always shooting through more atmosphere than you would like. Plan for a clean southern horizon and take the transit hours.",
+    "section": "gallery",
+    "specs": {
+      "telescope": "Askar V (60mm) with reducer",
+      "camera": "ZWO ASI585MC Air",
+      "filter": "SVBony SV220 3nm Dual Narrowband",
+      "integration": "4 hours",
+      "location": "Dubai, UAE"
+    }
+  },
+  {
     "file": "images/cats_paw_nebula_ngc6334.webp",
     "title": "The Cat's Paw Nebula (NGC 6334)",
     "desc": "An emission nebula in Scorpius and one of the most active star-forming regions in the Milky Way. The rounded lobes of glowing hydrogen that give the nebula its paw-print shape mark pockets where tens of thousands of stars have formed over the past few million years (note this is a balcony shot, imaged over 2 nighta from bortle 8 skies).",
