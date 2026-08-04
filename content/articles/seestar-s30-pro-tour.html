@@ -1,22 +1,23 @@
 <!--
   A tour of the Seestar S30 Pro.
 
-  IMAGE SLOTS: every figure below is commented out and points at a filename
-  that does not exist yet. Drop the photos into the private originals repo so
-  the pipeline writes them to images/gear/, then uncomment the block. The
-  filenames the article expects are:
+  IMAGE SLOTS: the photos below are live and point at real files in
+  images/gear/. The floated figures alternate fig-float and fig-float fig-left
+  down the page, the same as the main rig tour, so the photos zigzag rather
+  than stacking down one side. Filenames are hyphenated, so no URL encoding is
+  needed in the src.
 
-      Seestar S30 Pro 1.webp   the whole thing on the TC20, set up
-      Seestar S30 Pro 2.webp   close on the dual lens window
-      Seestar S30 Pro 3.webp   packed away, next to the main rig for scale
-      Seestar S30 Pro 4.webp   on the balcony, mid-session
-      TC20 TH10 1.webp         tripod and fluid head, legs out
-      TC20 TH10 2.webp         the head, showing the wedge angle for EQ mode
+      Seestar-S30-Pro-TC20-TH10-1.webp   the whole thing on the TC20, set up
+      Seestar-S30-Pro-TC20-TH10-2.webp   front on, twin lens window visible
+      Seestar-S30-Pro-3.webp             on the bundled feet, tube tilted up
+      Seestar-S30-Pro-2.webp             parked on the bundled feet
+      Seestar-S30-Pro-1.webp             packed in the carry case
+      TH10.webp                          the head, tilt scale and level
 
-  Spaces in filenames need encoding in the src, so "Seestar S30 Pro 1.webp"
-  becomes "Seestar%20S30%20Pro%201.webp". The floated figures alternate
-  fig-float and fig-float fig-left down the page, the same as the main rig
-  tour, so the photos zigzag rather than stacking down one side.
+  STILL MISSING: a balcony shot, mid-session, at night. The slot for it is
+  commented out in the wide lens section and points at
+  Seestar-S30-Pro-4.webp. Drop that photo into the private originals repo,
+  let the pipeline write it to images/gear/, then uncomment the block.
 
   VIDEO SLOT: one block, commented out, near the end. Upload the clip to
   Vimeo, take the numeric ID from the URL, drop it into VIMEO_ID and
@@ -25,24 +26,18 @@
   delete the wrapper div and the inline style.
 
   ONE LINK TO ADD LATER: the TC20/TH10 section mentions the tripod as plain
-  text because zwo-tc20-tripod-th10-fluid-head is still hidden in
-  site-data.json, so /gear/zwo-tc20-tripod-th10-fluid-head.html does not
-  exist. Once that entry is published, wrap "TC20 carbon fibre tripod and TH10
-  fluid head" in a link to it. Same applies to zwo-seestar-s30-pro if you
-  publish that gear page.
+  text. Both zwo-tc20-tripod-th10-fluid-head and zwo-seestar-s30-pro are now
+  published, so those names can be wrapped in links to their gear pages.
 -->
-
 <h2>The whole observatory is the size of a lunchbox</h2>
 
-<!--
 <figure class="article-fig fig-float">
-  <img src="/images/gear/Seestar%20S30%20Pro%201.webp"
-       alt="The Seestar S30 Pro set up on the TC20 carbon fibre tripod"
+  <img src="/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp"
+       alt="The Seestar S30 Pro set up on the ZWO TC20 carbon fibre tripod and TH10 head"
        loading="lazy" decoding="async" />
   <figcaption>Set up and levelled. From bag to first frame is about four
   minutes, most of which is the tripod.</figcaption>
 </figure>
--->
 
 <p>My <a href="/articles/main-rig-tour.html">main rig</a> is a car rig. It lives
 in the boot, it needs a parking space near the setup spot, and getting it
@@ -65,15 +60,14 @@ gets used beats the rig that stays in the boot.</p>
 
 <h2>What is actually inside it</h2>
 
-<!--
 <figure class="article-fig fig-float fig-left">
-  <img src="/images/gear/Seestar%20S30%20Pro%202.webp"
-       alt="Close view of the twin lens window on the Seestar S30 Pro"
+  <img src="/images/gear/Seestar-S30-Pro-TC20-TH10-2.webp"
+       alt="The twin lens window on the front of the Seestar S30 Pro"
        loading="lazy" decoding="async" />
-  <figcaption>Two lenses behind one window. The small one on the right is the
-  6mm wide, and it is the reason this model is interesting.</figcaption>
+  <figcaption>Two lenses behind one window. The small one above the main
+  objective is the 6mm wide, and it is the reason this model is
+  interesting.</figcaption>
 </figure>
--->
 
 <p>The telephoto side is a 30mm aperture, 160mm focal length, f/5.3 four-element
 apochromatic lens with an ED element, feeding a Sony IMX585. That sensor is the
@@ -107,6 +101,14 @@ if I want to process it properly rather than accept the app's version.</p>
 
 <h2>Deep sky, in the time it takes to make a coffee</h2>
 
+<figure class="article-fig fig-float">
+  <img src="/images/gear/Seestar-S30-Pro-3.webp"
+       alt="The Seestar S30 Pro on its bundled feet with the optical tube tilted up"
+       loading="lazy" decoding="async" />
+  <figcaption>Slewed and tracking. Nothing here was assembled, balanced or
+  aligned by hand.</figcaption>
+</figure>
+
 <p>The workflow is genuinely three steps. Put it down roughly level, open the
 app, pick a target. It plate solves, slews, focuses, and starts stacking. The
 catalogue runs to more than 80,000 deep-sky objects and 600,000 stars, so the
@@ -129,9 +131,9 @@ and the one nobody mentions in reviews.</p>
 
 <h2>The wide lens, and why it changes the night</h2>
 
-<!--
+<!-- Waiting on the balcony photo. See the note at the top of this file.
 <figure class="article-fig fig-float">
-  <img src="/images/gear/Seestar%20S30%20Pro%204.webp"
+  <img src="/images/gear/Seestar-S30-Pro-4.webp"
        alt="The Seestar S30 Pro running a session on a balcony at night"
        loading="lazy" decoding="async" />
   <figcaption>Running unattended on the balcony. Plan mode means the session
@@ -164,15 +166,14 @@ astro-only device would.</p>
 
 <h2>The TC20 and TH10 are not optional</h2>
 
-<!--
 <figure class="article-fig fig-float fig-left">
-  <img src="/images/gear/TC20%20TH10%201.webp"
-       alt="The ZWO TC20 carbon fibre tripod with the TH10 fluid head"
+  <img src="/images/gear/TH10.webp"
+       alt="The ZWO TH10 fluid head on the TC20 tripod, showing the tilt scale and bubble level"
        loading="lazy" decoding="async" />
-  <figcaption>The TC20 with the TH10 on top. The head is what makes equatorial
-  mode workable, and it is worth having even if you never use EQ.</figcaption>
+  <figcaption>The TH10 on top of the TC20. The graduated tilt scale and the
+  level are what make equatorial mode workable, and they are worth having even
+  if you never use EQ.</figcaption>
 </figure>
--->
 
 <p>The little plastic tripod in the box is fine for a demonstration on a patio
 and not much else. The pairing that makes the S30 Pro into a real instrument is
@@ -196,6 +197,14 @@ subs.</p>
 point. The main rig needs a car and a boot. This needs a shoulder.</p>
 
 <h2>Where it falls short</h2>
+
+<figure class="article-fig fig-float">
+  <img src="/images/gear/Seestar-S30-Pro-2.webp"
+       alt="The Seestar S30 Pro parked on the small plastic feet supplied in the box"
+       loading="lazy" decoding="async" />
+  <figcaption>What is actually in the box. The supplied feet are fine for a
+  patio demonstration and not much beyond it.</figcaption>
+</figure>
 
 <p>Aperture is 30mm. Faint, small targets are not going to happen, and no amount
 of stacking changes the physics. Anything under about half a degree across is
@@ -231,15 +240,13 @@ accessories are required. That is the TH10, and it is a separate purchase.</p>
 </figure>
 -->
 
-<!--
-<figure class="article-fig fig-float">
-  <img src="/images/gear/Seestar%20S30%20Pro%203.webp"
-       alt="The Seestar S30 Pro packed away, next to the main imaging rig for scale"
+<figure class="article-fig fig-float fig-left">
+  <img src="/images/gear/Seestar-S30-Pro-1.webp"
+       alt="The Seestar S30 Pro packed flat in its carry case with the bundled feet alongside"
        loading="lazy" decoding="async" />
-  <figcaption>Next to the main rig for scale. Both take deep-sky images. Only
-  one of them fits in a shoulder bag.</figcaption>
+  <figcaption>Packed. Telescope, mount, camera and filters, in a case that
+  goes over one shoulder.</figcaption>
 </figure>
--->
 
 <p>The S30 Pro lives in the car now. Not because it is better than the main rig,
 because it is not, but because it is there. A gap in the cloud on the way home

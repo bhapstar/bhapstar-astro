@@ -776,8 +776,12 @@
   {
     "images": [
       {
-        "file": "images/gear/Svbony SV220 1.webp",
-        "alt": "Svbony SV220 3nm dual narrowband filter for astrophotography 1"
+        "file": "images/gear/SVBony-SV220-2.webp",
+        "alt": "Svbony SV220 3nm dual band filter in its case, cell engraved with the model name"
+      },
+      {
+        "file": "images/gear/SVBony-SV220-1.webp",
+        "alt": "Svbony SV220 3nm filter face on in its case, showing the coating and the 2 inch cell"
       }
     ],
     "title": "Svbony SV220 3nm Filter",
@@ -848,8 +852,24 @@
   {
     "images": [
       {
-        "file": "images/gear/Seestar S30 Pro 1.webp",
-        "alt": "ZWO Seestar S30 Pro smart telescope for astrophotography 1"
+        "file": "images/gear/Seestar-S30-Pro-3.webp",
+        "alt": "ZWO Seestar S30 Pro on its bundled feet with the optical tube tilted up"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-2.webp",
+        "alt": "ZWO Seestar S30 Pro parked on its bundled feet, rear three quarter view"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-2.webp",
+        "alt": "ZWO Seestar S30 Pro on the TC20 tripod, twin lens window facing the camera"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
+        "alt": "ZWO Seestar S30 Pro set up on the TC20 tripod and TH10 fluid head"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-1.webp",
+        "alt": "ZWO Seestar S30 Pro packed flat in its carry case with the bundled feet alongside"
       }
     ],
     "title": "ZWO Seestar S30 Pro Smart Telescope",
@@ -863,8 +883,16 @@
   {
     "images": [
       {
-        "file": "images/gear/ZWO TC20 1.webp",
-        "alt": "ZWO TC20 tripod and TH10 fluid head for astrophotography 1"
+        "file": "images/gear/TH10.webp",
+        "alt": "ZWO TH10 fluid head on the TC20 tripod, showing the tilt scale and bubble level"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
+        "alt": "ZWO TC20 tripod and TH10 head carrying a Seestar S30 Pro"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-2.webp",
+        "alt": "ZWO TC20 tripod and TH10 head with a Seestar S30 Pro, front view"
       }
     ],
     "title": "ZWO TC20 Tripod + TH10 Fluid Head",
@@ -1074,7 +1102,7 @@
     "date": "04-08-2026"
   },
   {
-    "file": "images/gear/Seestar S30 1.webp",
+    "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
     "alt": "The ZWO Seestar S30 Pro smart telescope set up on its carbon fibre tripod",
     "title": "The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag",
     "desc": "Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.",
