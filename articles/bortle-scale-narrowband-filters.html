@@ -14,8 +14,8 @@
   <meta property="og:title" content="The Bortle Scale, and What a Filter Can Actually Do About It" />
   <meta property="og:description" content="What the nine classes of the Bortle scale actually measure, what a bright sky does to an exposure, and why a 7nm dual narrowband filter turns a city balcony int" />
   <meta property="og:url" content="https://bhapstar.com/articles/bortle-scale-narrowband-filters.html" />
-  <meta property="og:image" content="https://bhapstar.com/images/rosette-nebula-ngc2244.webp" />
-  <meta name="twitter:image" content="https://bhapstar.com/images/rosette-nebula-ngc2244.webp" />
+  <meta property="og:image" content="https://bhapstar.com/images/articles/bortle-scale-eso.webp" />
+  <meta name="twitter:image" content="https://bhapstar.com/images/articles/bortle-scale-eso.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Bortle Scale, and What a Filter Can Actually Do About It" />
   <meta name="twitter:description" content="What the nine classes of the Bortle scale actually measure, what a bright sky does to an exposure, and why a 7nm dual narrowband filter turns a city balcony int" />
@@ -191,7 +191,7 @@
   </style>
 
   <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "The Bortle Scale, and What a Filter Can Actually Do About It", "description": "What the nine classes of the Bortle scale actually measure, what a bright sky does to an exposure, and why a 7nm dual narrowband filter turns a city balcony into a workable site for emission nebulae and nothing else.", "articleSection": "Capture", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-08-04", "dateModified": "2026-08-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://bhapstar.com/articles/bortle-scale-narrowband-filters.html"}, "image": "https://bhapstar.com/images/rosette-nebula-ngc2244.webp"}
+{"@context": "https://schema.org", "@type": "Article", "headline": "The Bortle Scale, and What a Filter Can Actually Do About It", "description": "What the nine classes of the Bortle scale actually measure, what a bright sky does to an exposure, and why a 7nm dual narrowband filter turns a city balcony into a workable site for emission nebulae and nothing else.", "articleSection": "Capture", "author": {"@type": "Person", "name": "Bhapinder Singh", "url": "https://bhapstar.com"}, "publisher": {"@type": "Organization", "name": "Bhapstar Astrophotography", "url": "https://bhapstar.com"}, "datePublished": "2026-08-04", "dateModified": "2026-08-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://bhapstar.com/articles/bortle-scale-narrowband-filters.html"}, "image": "https://bhapstar.com/images/articles/bortle-scale-eso.webp"}
   </script>
 </head>
 <body>
@@ -209,7 +209,7 @@
 
       <div class="article-header">
         <figure class="article-hero">
-          <img src="/images/rosette-nebula-ngc2244.webp" alt="The Rosette Nebula imaged through a dual narrowband filter from a Bortle 8 balcony in Dubai" decoding="async" draggable="false" />
+          <img src="/images/articles/bortle-scale-eso.webp" alt="The Bortle scale illustrated: the same night sky rendered from an inner-city view through to a pristine dark site" decoding="async" draggable="false" />
         </figure>
         <p class="article-meta">Capture <span aria-hidden="true">&middot;</span> 4 August 2026 <span aria-hidden="true">&middot;</span> 9 min read</p>
         <h1 class="article-title">The Bortle Scale, and What a Filter Can Actually Do About It</h1>
@@ -221,18 +221,29 @@
   Article body: the Bortle scale and what the filters actually do about it.
 
   Two third-party photographs are used, both licensed for reuse:
-    1. /images/articles/bortle-scale-eso.webp
+    1. images/articles/bortle-scale-eso.webp
        ESO/P. Horalek, M. Wallner, CC BY 4.0
        https://www.eso.org/public/images/dark-skies/
-    2. /images/articles/uae-at-night-iss.webp
+       This one is the cover, set as "file" in site-data.json, so it renders as
+       the hero and the tile rather than appearing in this fragment. The hero
+       has no caption slot, so its credit is the opening line below. CC BY 4.0
+       requires the credit to be visible and not separated from the image, so
+       that line must stay first and must not be moved further down the page.
+    2. images/articles/uae-at-night-iss.webp
        NASA Earth Observatory, ISS038-E-16335, public domain
        https://science.nasa.gov/earth/earth-observatory/united-arab-emirates-at-night-82723/
-  Both credits are in the figcaptions and must stay there. CC BY 4.0 requires
-  the credit to be visible and not separated from the image.
+       Credited in its figcaption.
 
   Two diagrams are hand-drawn inline SVG, so they theme with the site and cost
   nothing to load.
 -->
+
+<p><em>Cover image: the Bortle scale rendered across a photograph taken at
+ESO's Paranal Observatory in Chile. Credit:
+<a href="https://www.eso.org/public/images/dark-skies/" rel="noopener">ESO</a>/P.
+Horálek, M. Wallner,
+<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY
+4.0</a>.</em></p>
 
 <h2>What the scale measures</h2>
 
@@ -247,18 +258,6 @@ the faintest star you can pick out without optics. Sky Quality Meter readings
 (SQM) are measured in magnitudes per square arcsecond, and because the magnitude
 system is logarithmic, a difference of one SQM point is roughly two and a half
 times the sky brightness.</p>
-
-<figure class="article-fig">
-  <img src="/images/articles/bortle-scale-eso.webp"
-       alt="The same night sky rendered at each level of the Bortle scale, from an inner-city sky on one side to a pristine dark site on the other"
-       loading="lazy" decoding="async" />
-  <figcaption>The same patch of sky rendered across the scale. The base
-  photograph was taken at ESO's Paranal Observatory in Chile, one of the
-  darkest working sites in the world. Credit:
-  <a href="https://www.eso.org/public/images/dark-skies/" rel="noopener">ESO</a>/P.
-  Horálek, M. Wallner, <a href="https://creativecommons.org/licenses/by/4.0/"
-  rel="noopener">CC BY 4.0</a>.</figcaption>
-</figure>
 
 <table>
   <thead>
