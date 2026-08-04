@@ -2505,11 +2505,14 @@
   /* ══════════════════════════════════════
      OPEN / CLOSE DETAIL VIEW
   ══════════════════════════════════════ */
-  function openDetail(item, indexInActiveSet, fromHistory) {
+  function openDetail(item, indexInActiveSet, fromHistory, startIdx) {
     currentItem     = item;
     activeItemIndex = Number(indexInActiveSet) || 0;
     dvList  = getList(item);
-    dvIdx   = 0;
+    // startIdx picks which picture or clip inside the entry opens first.
+    // Deep links from the share pages use it; everything else omits it and
+    // lands on the first one.
+    dvIdx   = Math.min(Math.max(Number(startIdx) || 0, 0), Math.max(dvList.length - 1, 0));
     dvRotation = 0;
     resetRotation();
     showDv();
@@ -3381,13 +3384,24 @@
     });
 
     /* ── Deep links: open from #slug on load, sync with Back/Forward ── */
+    /* ?v=N, 1-based, names which picture or clip inside the entry to open.
+       Video share pages use it so each poster opens its own clip instead of
+       always the first. Missing, junk or out-of-range values fall back to 1. */
+    function mediaStartIndex(list) {
+      const raw = new URLSearchParams(location.search).get('v');
+      if (!raw) return 0;
+      const n = parseInt(raw, 10);
+      if (!Number.isFinite(n)) return 0;
+      return Math.min(Math.max(n - 1, 0), Math.max(list.length - 1, 0));
+    }
+
     function openFromHash() {
       const slug = decodeURIComponent((location.hash || '').replace('#', ''));
       if (!slug) return false;
       const item = items.find(it => itemSlug(it) === slug);
       if (!item) return false;
       const i = activeSet.indexOf(item);
-      openDetail(item, i >= 0 ? i : 0, true);
+      openDetail(item, i >= 0 ? i : 0, true, mediaStartIndex(getList(item)));
       return true;
     }
 

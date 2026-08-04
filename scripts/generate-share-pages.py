@@ -612,7 +612,8 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
     meta_desc = meta_description(entry)
     thumb_url = url_for(thumb_for(cover))
     share_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
-    viewer_url = f"/gallery.html#{slug}"
+    viewer_url_base = "/gallery.html"
+    viewer_url = f"{viewer_url_base}#{slug}"
     iso_date = to_iso(entry.get("date"))
     nice_date = display_date(entry.get("date"))
 
@@ -637,10 +638,17 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
         # the plain link so they open in the gallery viewer and actually play.
         if is_video_entry:
             # Video stills link to the gallery viewer so the clip can play.
+            # ?v=N (1-based) tells the viewer which clip to open, otherwise
+            # every poster on the page opens the first one. A viewer that does
+            # not understand the parameter ignores it and opens at clip 1,
+            # which is the old behaviour rather than a broken link.
+            clip_href = f'{viewer_url_base}?v={i + 1}#{slug}'
+            clip_label = (f'Play {title} video {i + 1} of {len(media)} in the viewer'
+                          if multi else f'Play {title} in the viewer')
             slides.append(
                 f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
                 f' data-cap="{a(cap)}">'
-                f'<a href="{a(viewer_url)}" aria-label="Play {a(title)} in the viewer">'
+                f'<a href="{a(clip_href)}" aria-label="{a(clip_label)}">'
                 f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
                 f'decoding="async" draggable="false"></a></div>'
             )
