@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# Prose fragments only. These are the raw, unstyled source text that
+# generate-article-pages.py and generate-gear-pages.py wrap into the real
+# pages under /articles/ and /gear/. They have no styling, no header and no
+# canonical, so letting them be crawled just creates duplicates competing
+# with the pages they build.
+Disallow: /content/
+
 Sitemap: https://bhapstar.com/sitemap.xml
