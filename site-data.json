@@ -1062,6 +1062,18 @@
     ]
   },
   {
+    "file": "images/rosette-nebula-ngc2244.webp",
+    "alt": "The Rosette Nebula imaged through a dual narrowband filter from a Bortle 8 balcony in Dubai",
+    "title": "The Bortle Scale, and What a Filter Can Actually Do About It",
+    "desc": "What the nine classes of the Bortle scale actually measure, what a bright sky does to an exposure, and why a 7nm dual narrowband filter turns a city balcony into a workable site for emission nebulae and nothing else.",
+    "type": "capture",
+    "category": "Capture",
+    "readTime": "9 min read",
+    "section": "article",
+    "slug": "bortle-scale-narrowband-filters",
+    "date": "04-08-2026"
+  },
+  {
     "file": "images/gear/Seestar S30 1.webp",
     "alt": "The ZWO Seestar S30 Pro smart telescope set up on its carbon fibre tripod",
     "title": "The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag",
