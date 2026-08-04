@@ -238,11 +238,16 @@
   Seestar-S30-Pro-4.webp. Drop that photo into the private originals repo,
   let the pipeline write it to images/gear/, then uncomment the block.
 
-  VIDEO SLOT: one block, commented out, near the end. Upload the clip to
-  Vimeo, take the numeric ID from the URL, drop it into VIMEO_ID and
-  uncomment. If the clip is portrait, keep the 320px wrapper and the
-  padding-top:177.78% override, as in the main rig tour. If it is landscape,
-  delete the wrapper div and the inline style.
+  VIDEO: three portrait clips, all live. Each sits in a 320px wrapper with
+  .article-video inside overriding padding-top to 177.78%. The wrapper is
+  required: percentage padding measures against the parent's width, so without
+  it the ratio is computed from the full figure width and the box comes out far
+  too tall on desktop. Any landscape clip added later drops the wrapper div and
+  the inline style.
+
+      1215559434   on the supplied alt-az feet, in the deep sky section
+      1215559433   the TH10 head moving, in the TC20/TH10 section
+      1215559435   on the TC20 and TH10, in the closing section
 
   ONE LINK TO ADD LATER: the TC20/TH10 section mentions the tripod as plain
   text. Both zwo-tc20-tripod-th10-fluid-head and zwo-seestar-s30-pro are now
@@ -348,6 +353,17 @@ Plan mode lets you schedule a target and a duration in advance, so the thing
 runs on the balcony while I am asleep. That last one is the feature I use most
 and the one nobody mentions in reviews.</p>
 
+<figure class="article-fig">
+  <div style="max-width:320px;margin:0 auto;">
+    <div class="article-video" style="padding-top:177.78%;">
+      <iframe src="https://player.vimeo.com/video/1215559434?title=0&amp;byline=0&amp;portrait=0"
+              title="The Seestar S30 Pro moving to a target on its supplied feet"
+              loading="lazy" allowfullscreen></iframe>
+    </div>
+  </div>
+  <figcaption>On the supplied feet, moving to a target. No alignment step before this, and no controller beyond a phone.</figcaption>
+</figure>
+
 <h2>The wide lens, and why it changes the night</h2>
 
 <!-- Waiting on the balcony photo. See the note at the top of this file.
@@ -415,6 +431,17 @@ subs.</p>
 <p>Packed, the S30 Pro and the TC20 go into one shoulder bag. That is the whole
 point. The main rig needs a car and a boot. This needs a shoulder.</p>
 
+<figure class="article-fig">
+  <div style="max-width:320px;margin:0 auto;">
+    <div class="article-video" style="padding-top:177.78%;">
+      <iframe src="https://player.vimeo.com/video/1215559433?title=0&amp;byline=0&amp;portrait=0"
+              title="Close view of the ZWO TH10 fluid head moving"
+              loading="lazy" allowfullscreen></iframe>
+    </div>
+  </div>
+  <figcaption>The TH10 moving under load. Damped rather than free, which is what makes a small tilt adjustment hold where you put it instead of drifting back.</figcaption>
+</figure>
+
 <h2>Where it falls short</h2>
 
 <figure class="article-fig fig-float">
@@ -445,19 +472,16 @@ accessories are required. That is the TH10, and it is a separate purchase.</p>
 
 <h2>Why it stays in the car</h2>
 
-<!--
 <figure class="article-fig">
   <div style="max-width:320px;margin:0 auto;">
     <div class="article-video" style="padding-top:177.78%;">
-      <iframe src="https://player.vimeo.com/video/VIMEO_ID?title=0&amp;byline=0&amp;portrait=0"
-              title="The Seestar S30 Pro slewing to a target"
+      <iframe src="https://player.vimeo.com/video/1215559435?title=0&amp;byline=0&amp;portrait=0"
+              title="The Seestar S30 Pro working on the TC20 tripod and TH10 head"
               loading="lazy" allowfullscreen></iframe>
     </div>
   </div>
-  <figcaption>From tap to tracking. The whole sequence, plate solve and all,
-  takes under a minute.</figcaption>
+  <figcaption>On the TC20 and TH10, working. This is the combination that lives in the car, and it goes up in about four minutes.</figcaption>
 </figure>
--->
 
 <figure class="article-fig fig-float fig-left">
   <img src="/images/gear/Seestar-S30-Pro-1.webp"
