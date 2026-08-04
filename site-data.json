@@ -786,7 +786,7 @@
     "type": "filters",
     "section": "gear",
     "slug": "svbony-sv220-3nm-filter",
-    "hidden": true
+    "hidden": false
   },
   {
     "images": [
@@ -858,7 +858,7 @@
     "type": "smart-telescope",
     "section": "gear",
     "slug": "zwo-seestar-s30-pro",
-    "hidden": true
+    "hidden": false
   },
   {
     "images": [
@@ -873,7 +873,7 @@
     "type": "accessories",
     "section": "gear",
     "slug": "zwo-tc20-tripod-th10-fluid-head",
-    "hidden": true
+    "hidden": false
   },
   {
     "images": [
@@ -1060,5 +1060,17 @@
         "affiliate": false
       }
     ]
+  },
+  {
+    "file": "images/gear/Seestar S30 1.webp",
+    "alt": "The ZWO Seestar S30 Pro smart telescope set up on its carbon fibre tripod",
+    "title": "The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag",
+    "desc": "Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.",
+    "type": "gear",
+    "category": "Gear",
+    "readTime": "8 min read",
+    "section": "article",
+    "slug": "seestar-s30-pro-tour",
+    "date": "04-08-2026"
   }
 ]
