@@ -249,7 +249,7 @@
   </url>
   <url>
     <loc>https://bhapstar.com/articles.html</loc>
-    <lastmod>2026-08-02</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -650,6 +650,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://bhapstar.com/gear/svbony-sv220-3nm-filter.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Svbony%20SV220%201.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://bhapstar.com/gear/celestron-2in-eyepiece-kit.html</loc>
     <lastmod>2025-04-20</lastmod>
     <changefreq>yearly</changefreq>
@@ -680,6 +689,24 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-seestar-s30-pro.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/gear/zwo-tc20-tripod-th10-fluid-head.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -791,6 +818,15 @@
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Asiair%201.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/articles/seestar-s30-pro-tour.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%201.webp</image:loc>
     </image:image>
   </url>
 </urlset>
