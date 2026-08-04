@@ -1,0 +1,254 @@
+<!--
+  A tour of the Seestar S30 Pro.
+
+  IMAGE SLOTS: every figure below is commented out and points at a filename
+  that does not exist yet. Drop the photos into the private originals repo so
+  the pipeline writes them to images/gear/, then uncomment the block. The
+  filenames the article expects are:
+
+      Seestar S30 Pro 1.webp   the whole thing on the TC20, set up
+      Seestar S30 Pro 2.webp   close on the dual lens window
+      Seestar S30 Pro 3.webp   packed away, next to the main rig for scale
+      Seestar S30 Pro 4.webp   on the balcony, mid-session
+      TC20 TH10 1.webp         tripod and fluid head, legs out
+      TC20 TH10 2.webp         the head, showing the wedge angle for EQ mode
+
+  Spaces in filenames need encoding in the src, so "Seestar S30 Pro 1.webp"
+  becomes "Seestar%20S30%20Pro%201.webp". The floated figures alternate
+  fig-float and fig-float fig-left down the page, the same as the main rig
+  tour, so the photos zigzag rather than stacking down one side.
+
+  VIDEO SLOT: one block, commented out, near the end. Upload the clip to
+  Vimeo, take the numeric ID from the URL, drop it into VIMEO_ID and
+  uncomment. If the clip is portrait, keep the 320px wrapper and the
+  padding-top:177.78% override, as in the main rig tour. If it is landscape,
+  delete the wrapper div and the inline style.
+
+  ONE LINK TO ADD LATER: the TC20/TH10 section mentions the tripod as plain
+  text because zwo-tc20-tripod-th10-fluid-head is still hidden in
+  site-data.json, so /gear/zwo-tc20-tripod-th10-fluid-head.html does not
+  exist. Once that entry is published, wrap "TC20 carbon fibre tripod and TH10
+  fluid head" in a link to it. Same applies to zwo-seestar-s30-pro if you
+  publish that gear page.
+-->
+
+<h2>The whole observatory is the size of a lunchbox</h2>
+
+<!--
+<figure class="article-fig fig-float">
+  <img src="/images/gear/Seestar%20S30%20Pro%201.webp"
+       alt="The Seestar S30 Pro set up on the TC20 carbon fibre tripod"
+       loading="lazy" decoding="async" />
+  <figcaption>Set up and levelled. From bag to first frame is about four
+  minutes, most of which is the tripod.</figcaption>
+</figure>
+-->
+
+<p>My <a href="/articles/main-rig-tour.html">main rig</a> is a car rig. It lives
+in the boot, it needs a parking space near the setup spot, and getting it
+running takes the better part of half an hour. That is a fine trade when the
+forecast is good and I have the whole night. It is a terrible trade when there
+is one clear hour before the cloud comes back, or when the setup spot is a
+balcony.</p>
+
+<p>The Seestar S30 Pro is the answer to that. It weighs 1.65kg, it measures
+210 x 140 x 80mm, and inside that box is a telescope, a camera, a focuser, an
+alt-azimuth mount, a filter wheel and the computer that drives all of it. There
+is nothing to assemble, nothing to balance, no polar alignment, and no cable
+except the one that charges it. It costs $699.</p>
+
+<p>I want to be clear about what this is and is not. It does not replace the
+main rig, and anyone telling you a 30mm aperture competes with an 80mm
+refractor is selling something. What it does is remove every reason not to
+image. That turns out to matter more than aperture does, because the rig that
+gets used beats the rig that stays in the boot.</p>
+
+<h2>What is actually inside it</h2>
+
+<!--
+<figure class="article-fig fig-float fig-left">
+  <img src="/images/gear/Seestar%20S30%20Pro%202.webp"
+       alt="Close view of the twin lens window on the Seestar S30 Pro"
+       loading="lazy" decoding="async" />
+  <figcaption>Two lenses behind one window. The small one on the right is the
+  6mm wide, and it is the reason this model is interesting.</figcaption>
+</figure>
+-->
+
+<p>The telephoto side is a 30mm aperture, 160mm focal length, f/5.3 four-element
+apochromatic lens with an ED element, feeding a Sony IMX585. That sensor is the
+detail worth pausing on, because it is the same one in the
+<a href="/gear/zwo-asi585mc-air-camera.html">ASI585MC Air</a> on my main rig. A
+1/1.2 inch surface, roughly four times the area of the sensor in the original
+S30. Same silicon, very different glass in front of it.</p>
+
+<p>The field of view is 4.6 degrees, which is wide. My Askar V at 495mm gives
+about 1.5 degrees. So the S30 Pro is not a detail instrument, it is a framing
+instrument. Andromeda fits. The Rosette fits with room around it. Small
+galaxies do not, and that is the honest limit.</p>
+
+<p>The second lens is the new part. A 6mm f/1.75 wide angle on a Sony IMX586,
+covering 63 degrees. That is a Milky Way lens, and having it in the same body
+as the telephoto changes what a single night looks like.</p>
+
+<p>Three filters are built in and switch automatically: a UV/IR cut, a dark
+field filter that handles long-exposure noise, and a light pollution filter
+tuned for OIII at 30nm and Ha at 20nm. From a Bortle 8 balcony in Dubai that
+third one is doing the heavy lifting, and it is doing it without me swapping
+anything in a drawer in the dark.</p>
+
+<p>The rest of the spec sheet is unglamorous and matters more than it sounds.
+128GB of onboard storage, so a session does not stop to make room. A 6000mAh
+battery good for about six hours, which covers a full night from a dark site
+and several nights from the balcony. Active anti-dew control that warms the
+lens, which in UAE humidity is not a luxury. Output is JPEG and FITS, so the
+stacked result can go straight into <a href="/articles/siril-post-processing-guide.html">Siril</a>
+if I want to process it properly rather than accept the app's version.</p>
+
+<h2>Deep sky, in the time it takes to make a coffee</h2>
+
+<p>The workflow is genuinely three steps. Put it down roughly level, open the
+app, pick a target. It plate solves, slews, focuses, and starts stacking. The
+catalogue runs to more than 80,000 deep-sky objects and 600,000 stars, so the
+limit is what is above the horizon rather than what the app knows about.</p>
+
+<p>Ten minutes of stacked exposure on a bright target gives you something worth
+keeping. Thirty gives you something good. An hour on
+<a href="/share/andromeda-galaxy-m31.html">Andromeda</a> or the
+<a href="/share/leo-triplet-m65-m66-ngc3628.html">Leo Triplet</a> is a real
+image, not a snapshot. The app also does a one-tap denoise and a dynamic
+background extraction, which is a reasonable approximation of what I would do
+manually in GraXpert and Siril, and it is done before I have packed up.</p>
+
+<p>Two features earn their place beyond the basics. Mosaic mode shoots a planned
+grid and stitches it automatically, which pushes an 8K frame out of a 4.6 degree
+field and gets around the aperture limit by widening rather than deepening. And
+Plan mode lets you schedule a target and a duration in advance, so the thing
+runs on the balcony while I am asleep. That last one is the feature I use most
+and the one nobody mentions in reviews.</p>
+
+<h2>The wide lens, and why it changes the night</h2>
+
+<!--
+<figure class="article-fig fig-float">
+  <img src="/images/gear/Seestar%20S30%20Pro%204.webp"
+       alt="The Seestar S30 Pro running a session on a balcony at night"
+       loading="lazy" decoding="async" />
+  <figcaption>Running unattended on the balcony. Plan mode means the session
+  starts and finishes without me.</figcaption>
+</figure>
+-->
+
+<p>The original S30 was a deep-sky box. The Pro is a deep-sky box that also
+shoots the <a href="/share/the-milky-way.html">Milky Way</a>, and that is the
+upgrade that justifies the name.</p>
+
+<p>An f/1.75 lens over 63 degrees on a tracking mount is a proper wide-field
+setup. It will stitch a horizontal or vertical Milky Way mosaic in one tap, and
+it will run a star trail or a timelapse without me doing the arithmetic on
+interval and count. There is also a mode that separates the foreground from the
+sky, holding the landscape sharp while the stars are tracked out, which is the
+sort of thing that takes two exposures and a mask by hand.</p>
+
+<p>What this means in practice is that one carry-out covers both jobs. Set the
+telephoto on a galaxy for an hour, and while that runs the wide lens is not
+sitting idle in a bag at home. Previously getting both meant bringing the main
+rig for the deep sky and a Sony body on a tracker for the wide field. Now it is
+one box.</p>
+
+<p>The 4.6 degree telephoto field also makes it a decent daytime instrument.
+160mm on an 8.3MP sensor with autofocus and tracking is a long lens, and it is
+happy on birds and distant landscape. That is a side benefit rather than a
+reason to buy it, but it does mean the thing leaves the house more often than an
+astro-only device would.</p>
+
+<h2>The TC20 and TH10 are not optional</h2>
+
+<!--
+<figure class="article-fig fig-float fig-left">
+  <img src="/images/gear/TC20%20TH10%201.webp"
+       alt="The ZWO TC20 carbon fibre tripod with the TH10 fluid head"
+       loading="lazy" decoding="async" />
+  <figcaption>The TC20 with the TH10 on top. The head is what makes equatorial
+  mode workable, and it is worth having even if you never use EQ.</figcaption>
+</figure>
+-->
+
+<p>The little plastic tripod in the box is fine for a demonstration on a patio
+and not much else. The pairing that makes the S30 Pro into a real instrument is
+the TC20 carbon fibre tripod and TH10 fluid head.</p>
+
+<p>The mounting thread is a standard 3/8-16, so in principle any decent tripod
+works. The reason to use ZWO's own is the TH10. It gives you fine, geared
+adjustment of the tilt, and that is what makes equatorial mode practical rather
+than a fight. In alt-az the S30 Pro tracks perfectly well but field rotation
+puts a ceiling on sub length. Tilt the whole unit over to match your latitude
+and it tracks like an equatorial, subs get longer, and stars stay round at the
+frame corners.</p>
+
+<p>The carbon legs matter for a duller reason. This is a light instrument, and
+light instruments are the ones that move when a breeze comes through or when
+someone walks past on a balcony. A stiff tripod is not about carrying weight
+here, it is about not transmitting vibration into a 160mm lens taking ten second
+subs.</p>
+
+<p>Packed, the S30 Pro and the TC20 go into one shoulder bag. That is the whole
+point. The main rig needs a car and a boot. This needs a shoulder.</p>
+
+<h2>Where it falls short</h2>
+
+<p>Aperture is 30mm. Faint, small targets are not going to happen, and no amount
+of stacking changes the physics. Anything under about half a degree across is
+going to be a smudge in the middle of a wide frame.</p>
+
+<p>Wi-Fi range is quoted at 10m and Bluetooth at 5m, which in practice means you
+stay near it. It is not a device you drive home from and check on, unless you
+use the remote network feature, which needs a connection at the site.</p>
+
+<p>The app is a closed system in the same way the
+<a href="/articles/asiair-astrophotography-control.html">ASIAir</a> is. It
+supports ASCOM Alpaca, so NINA and similar can drive it, but the default
+experience is ZWO's way or nothing. If you like that, it is seamless. If you
+want to build your own sequence logic, expect friction.</p>
+
+<p>And equatorial mode needs accessories that are not in the box. The marketing
+lists EQ mode as a headline feature and then adds a line saying additional
+accessories are required. That is the TH10, and it is a separate purchase.</p>
+
+<h2>Why it stays in the car</h2>
+
+<!--
+<figure class="article-fig">
+  <div style="max-width:320px;margin:0 auto;">
+    <div class="article-video" style="padding-top:177.78%;">
+      <iframe src="https://player.vimeo.com/video/VIMEO_ID?title=0&amp;byline=0&amp;portrait=0"
+              title="The Seestar S30 Pro slewing to a target"
+              loading="lazy" allowfullscreen></iframe>
+    </div>
+  </div>
+  <figcaption>From tap to tracking. The whole sequence, plate solve and all,
+  takes under a minute.</figcaption>
+</figure>
+-->
+
+<!--
+<figure class="article-fig fig-float">
+  <img src="/images/gear/Seestar%20S30%20Pro%203.webp"
+       alt="The Seestar S30 Pro packed away, next to the main imaging rig for scale"
+       loading="lazy" decoding="async" />
+  <figcaption>Next to the main rig for scale. Both take deep-sky images. Only
+  one of them fits in a shoulder bag.</figcaption>
+</figure>
+-->
+
+<p>The S30 Pro lives in the car now. Not because it is better than the main rig,
+because it is not, but because it is there. A gap in the cloud on the way home
+is an hour of data instead of a missed opportunity. A trip where I would not
+have packed the Askar V is a trip where I still come back with something.</p>
+
+<p>The thing that surprised me is how much the wide lens changed the calculation.
+A deep-sky box that only does deep sky is a specialist tool, and specialist
+tools stay at home on the nights when you are not sure. A box that will shoot
+Andromeda, then the Milky Way, then a star trail over the same few hours is a
+box you bring. It has quietly become the instrument that takes the most frames,
+by a wide margin, purely on the strength of being the one I actually carry.</p>
