@@ -85,6 +85,73 @@
   </style>
 
   <link rel="manifest" href="/manifest.json" />
+
+  <!-- Structured data. Written by scripts/generate-article-pages.py from
+       site-data.json; the markers below must stay put. -->
+  <!-- ARTICLE-JSONLD:START -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://bhapstar.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://bhapstar.com/articles.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Astrophotography articles",
+  "description": "Practical astrophotography guides covering gear, capture and processing.",
+  "url": "https://bhapstar.com/articles.html",
+  "numberOfItems": 5,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "url": "https://bhapstar.com/articles/main-rig-tour.html",
+      "name": "The Rig: A Mount, a Refractor, and a Camera That Runs Itself"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "url": "https://bhapstar.com/articles/photograph-meteor-shower-milky-way-phone.html",
+      "name": "Photographing the Milky Way and Meteor Showers with Your Phone"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "url": "https://bhapstar.com/articles/photograph-meteor-shower-milky-way-camera.html",
+      "name": "How to Photograph the Milky Way and Meteor Showers with a Camera"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "url": "https://bhapstar.com/articles/siril-post-processing-guide.html",
+      "name": "Siril: From a Folder of Subframes to a Finished Image"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "url": "https://bhapstar.com/articles/asiair-astrophotography-control.html",
+      "name": "The ASIAir: Running a Whole Rig From Your Phone"
+    }
+  ]
+}
+  </script>
+<!-- ARTICLE-JSONLD:END -->
 </head>
 <body class="page-articles">
 
@@ -139,11 +206,56 @@
         <p class="gallery-hint">Select any tile to read the full article</p>
       </div>
 
+      <!-- The tiles below are real links, written at build time by
+           scripts/generate-article-pages.py from site-data.json. They serve
+           two purposes: a crawler that does not run JavaScript still sees the
+           whole section, and a reader gets content instead of skeletons while
+           site-data.json loads. The script below re-renders the identical
+           markup once the JSON arrives, so the swap is invisible.
+           Do not hand-edit between the markers, and do not remove them. -->
       <div id="articleGrid" class="grid" aria-live="polite" aria-label="Articles">
-        <div class="card-skeleton" aria-hidden="true"></div>
-        <div class="card-skeleton" aria-hidden="true"></div>
-        <div class="card-skeleton" aria-hidden="true"></div>
-        <div class="card-skeleton" aria-hidden="true"></div>
+        <!-- ARTICLE-TILES:START -->
+        <a class="card" href="/articles/main-rig-tour.html" aria-label="The Rig: A Mount, a Refractor, and a Camera That Runs Itself">
+          <img src="images/gear/thumbs/Full rig 3.webp" alt="The Askar V refractor and Juwei 14 mount assembled as the main imaging rig" loading="eager" decoding="async">
+          <div class="cap">
+            <div class="m">Gear &middot; 8 min read</div>
+            <div class="t">The Rig: A Mount, a Refractor, and a Camera That Runs Itself</div>
+            <div class="d">A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.</div>
+          </div>
+        </a>
+        <a class="card" href="/articles/photograph-meteor-shower-milky-way-phone.html" aria-label="Photographing the Milky Way and Meteor Showers with Your Phone">
+          <img src="images/thumbs/milky-way-and-me-2.webp" alt="Wide-field Milky Way over a desert horizon with a figure looking up, the kind of night-sky scene a phone can capture" loading="lazy" decoding="async">
+          <div class="cap">
+            <div class="m">Milky Way and meteors &middot; 8 min read</div>
+            <div class="t">Photographing the Milky Way and Meteor Showers with Your Phone</div>
+            <div class="d">No camera and no experience needed, just a phone, a small tripod and a dark sky. How to photograph the Milky Way and catch meteors on the same night, with the settings to use on an iPhone or an Android.</div>
+          </div>
+        </a>
+        <a class="card" href="/articles/photograph-meteor-shower-milky-way-camera.html" aria-label="How to Photograph the Milky Way and Meteor Showers with a Camera">
+          <img src="images/thumbs/geminids-meteor-shower.webp" alt="Meteors streaking across a dark sky above a desert horizon during a meteor shower" loading="lazy" decoding="async">
+          <div class="cap">
+            <div class="m">Milky Way and meteors &middot; 9 min read</div>
+            <div class="t">How to Photograph the Milky Way and Meteor Showers with a Camera</div>
+            <div class="d">One wide lens on a tripod collects the Milky Way and any meteor that crosses it. Where to point, what to set, and how one night&#x27;s frames give you a meteor shot, a Milky Way and a star trail.</div>
+          </div>
+        </a>
+        <a class="card" href="/articles/siril-post-processing-guide.html" aria-label="Siril: From a Folder of Subframes to a Finished Image">
+          <img src="images/thumbs/eagle-nebula-m16-2.webp" alt="The Eagle Nebula M16 processed from calibrated and stacked subframes" loading="lazy" decoding="async">
+          <div class="cap">
+            <div class="m">Processing &middot; 9 min read</div>
+            <div class="t">Siril: From a Folder of Subframes to a Finished Image</div>
+            <div class="d">The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.</div>
+          </div>
+        </a>
+        <a class="card" href="/articles/asiair-astrophotography-control.html" aria-label="The ASIAir: Running a Whole Rig From Your Phone">
+          <img src="images/gear/thumbs/Asiair 1.webp" alt="The ASIAir app on a tablet showing a 60 second preview of the Orion Nebula, with target search, mount slew controls and exposure settings around the frame" loading="lazy" decoding="async">
+          <div class="cap">
+            <div class="m">Capture &middot; 7 min read</div>
+            <div class="t">The ASIAir: Running a Whole Rig From Your Phone</div>
+            <div class="d">Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.</div>
+          </div>
+        </a>
+<!-- ARTICLE-TILES:END -->
       </div>
 
     </div>
@@ -295,7 +407,12 @@
     })
     .catch(err => {
       console.error('Articles failed to load:', err);
-      grid.innerHTML = '<p class="gallery-hint grid-span-all">Articles could not be loaded. Please refresh.</p>';
+      /* The grid ships with a static copy of the tiles baked in at build time,
+         so a failed fetch is not fatal: the links still work. Only show the
+         error if there is genuinely nothing on screen. */
+      if (!grid.querySelector('.card')) {
+        grid.innerHTML = '<p class="gallery-hint grid-span-all">Articles could not be loaded. Please refresh.</p>';
+      }
     });
 })();
 </script>

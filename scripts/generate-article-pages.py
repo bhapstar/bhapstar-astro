@@ -23,6 +23,20 @@ are drawn by hand in the fragment rather than shipped as binary assets, so they
 scale, theme with the site and cost nothing to load. An article can also open
 with a <div class="event-callout"> block for a dated, real-world event.
 
+It also rewrites two marked blocks inside articles.html:
+
+  - The tile grid, as real <a href> links rather than an empty container the
+    browser has to fill in. articles.html builds its tiles from site-data.json
+    at runtime, which means a crawler that does not execute JavaScript sees a
+    hub page with no outbound links at all. The static block is identical to
+    what the script renders, so the JS simply replaces it with the same thing
+    once site-data.json arrives.
+  - A JSON-LD block: BreadcrumbList plus an ItemList naming every article, so
+    the section reads as a structured list rather than a loose page.
+
+Both blocks sit between marker comments and are replaced wholesale, so the
+markers must stay in articles.html. Nothing outside them is touched.
+
 Idempotent: rewrites every page each run, and deletes any stale
 articles/*.html whose slug is no longer in site-data.json.
 
@@ -38,6 +52,7 @@ DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "articles"
 CONTENT_DIR = "content/articles"
+INDEX_PAGE = "articles.html"
 SITE_NAME = "Bhapstar Astrophotography"
 
 
@@ -428,6 +443,118 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     return html_content
 
 
+def meta_line(entry):
+    """Category and read time, joined the same way articles.html joins them."""
+    bits = [b for b in (entry.get('category'), entry.get('readTime')) if b]
+    return ' &middot; '.join(esc(b) for b in bits)
+
+
+def build_index_tiles(articles):
+    """Static copy of the tile grid articles.html builds at runtime.
+
+    Markup is kept byte-for-byte equivalent to the JS in articles.html so the
+    swap is invisible: same classes, same order, same thumbnail paths. The one
+    difference is loading="lazy" on every image except the first, which is
+    above the fold on most screens."""
+    tiles = []
+    for i, entry in enumerate(articles):
+        cover = entry.get('file', '')
+        alt = entry.get('alt') or entry.get('title', '')
+        thumb = thumb_for(cover)
+        loading = 'eager' if i == 0 else 'lazy'
+        media = ''
+        if thumb:
+            media = (f'          <img src="{esc(thumb)}" alt="{esc(alt)}" '
+                     f'loading="{loading}" decoding="async">\n')
+        meta = meta_line(entry)
+        meta_div = f'            <div class="m">{meta}</div>\n' if meta else ''
+        tiles.append(
+            f'        <a class="card" href="/{OUT_DIR}/{esc(entry.get("slug", ""))}.html" '
+            f'aria-label="{esc(entry.get("title", ""))}">\n'
+            f'{media}'
+            f'          <div class="cap">\n'
+            f'{meta_div}'
+            f'            <div class="t">{esc(entry.get("title", ""))}</div>\n'
+            f'            <div class="d">{esc(entry.get("desc", ""))}</div>\n'
+            f'          </div>\n'
+            f'        </a>\n'
+        )
+    if not tiles:
+        return '        <p class="gallery-hint grid-span-all">Nothing here yet.</p>\n'
+    return ''.join(tiles)
+
+
+def build_index_json_ld(articles):
+    """BreadcrumbList plus an ItemList of every published article.
+
+    ItemList is what tells Google this page is an index of other pages rather
+    than a page that happens to have links on it."""
+    breadcrumb = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN},
+            {"@type": "ListItem", "position": 2, "name": "Articles",
+             "item": f"{DOMAIN}/{INDEX_PAGE}"},
+        ],
+    }
+    item_list = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Astrophotography articles",
+        "description": ("Practical astrophotography guides covering gear, "
+                        "capture and processing."),
+        "url": f"{DOMAIN}/{INDEX_PAGE}",
+        "numberOfItems": len(articles),
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": i,
+                "url": f"{DOMAIN}/{OUT_DIR}/{e.get('slug', '')}.html",
+                "name": e.get('title', ''),
+            }
+            for i, e in enumerate(articles, 1)
+        ],
+    }
+    blocks = []
+    for schema in (breadcrumb, item_list):
+        blocks.append('  <script type="application/ld+json">\n'
+                      + json.dumps(schema, ensure_ascii=False, indent=2)
+                      + '\n  </script>\n')
+    return ''.join(blocks)
+
+
+def inject(path, marker, block):
+    """Replace whatever sits between <!-- marker:START --> and :END.
+
+    Leaves the file alone (with a warning) if the markers are missing, rather
+    than guessing where the block should go."""
+    start = f'<!-- {marker}:START -->'
+    end = f'<!-- {marker}:END -->'
+    if not os.path.isfile(path):
+        print(f"  ! {path} not found, skipped {marker}")
+        return False
+
+    with open(path, 'r', encoding='utf-8') as f:
+        html_text = f.read()
+
+    i = html_text.find(start)
+    j = html_text.find(end)
+    if i == -1 or j == -1 or j < i:
+        print(f"  ! {marker} markers missing in {path}, skipped")
+        return False
+
+    updated = html_text[:i + len(start)] + '\n' + block + html_text[j:]
+    if updated == html_text:
+        print(f"  = {path} {marker} unchanged")
+        return True
+
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(updated)
+    print(f"✓ {path} {marker}")
+    return True
+
+
 def main():
     with open(DATA, 'r', encoding='utf-8') as f:
         items = json.load(f)
@@ -469,6 +596,11 @@ def main():
             if filename[:-5] not in generated_slugs:
                 os.remove(os.path.join(OUT_DIR, filename))
                 print(f"✗ deleted stale {OUT_DIR}/{filename}")
+
+    # The hub page. Done after the article pages so every link it writes
+    # points at a file that already exists on disk.
+    inject(INDEX_PAGE, 'ARTICLE-TILES', build_index_tiles(articles))
+    inject(INDEX_PAGE, 'ARTICLE-JSONLD', build_index_json_ld(articles))
 
     print(f"\nGenerated {len(generated_slugs)} article pages.")
 
