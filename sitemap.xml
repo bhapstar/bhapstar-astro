@@ -187,7 +187,10 @@
       <image:loc>https://bhapstar.com/images/gear/Optolong%20LeXtreme.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Svbony%20SV220%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/SVBony-SV220-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/SVBony-SV220-1.webp</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Celestron%202in%20Eyepiece%20Kit%201.webp</image:loc>
@@ -205,10 +208,22 @@
       <image:loc>https://bhapstar.com/images/gear/ZWO%20EAF.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-3.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-1.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/TH10.webp</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/gear/Evostar%2072%20ED%201.webp</image:loc>
@@ -655,7 +670,10 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Svbony%20SV220%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/SVBony-SV220-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/SVBony-SV220-1.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -697,7 +715,19 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%20Pro%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-3.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-1.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -706,7 +736,13 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/ZWO%20TC20%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/TH10.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-2.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -835,7 +871,7 @@
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://bhapstar.com/images/gear/Seestar%20S30%201.webp</image:loc>
+      <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp</image:loc>
     </image:image>
   </url>
 </urlset>
