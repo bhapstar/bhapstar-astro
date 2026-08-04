@@ -58,7 +58,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sitemap.xml gallery.html field_notes.html sw.js share gear articles
+          git add sitemap.xml gallery.html field_notes.html sw.js share gear articles articles.html
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
