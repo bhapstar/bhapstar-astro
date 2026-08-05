@@ -874,4 +874,13 @@
       <image:loc>https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://bhapstar.com/articles/calibration-frames-darks-flats-biases.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/orion-nebula-m42.webp</image:loc>
+    </image:image>
+  </url>
 </urlset>
