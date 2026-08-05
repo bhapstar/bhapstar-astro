@@ -218,144 +218,663 @@
 
       <div class="article-body">
 <!--
-  Article body: the Bortle scale and what the filters actually do about it.
+  Article body: the Bortle scale, and what a narrowband filter can do about a
+  bright sky. Rewritten for a general reader: shorter paragraphs, plainer
+  wording, and the technical detail kept but pushed into clearly-marked
+  optional sections.
 
-  Two third-party photographs are used, both licensed for reuse:
-    1. images/articles/bortle-scale-eso.webp
-       ESO/P. Horalek, M. Wallner, CC BY 4.0
-       https://www.eso.org/public/images/dark-skies/
-       This one is the cover, set as "file" in site-data.json, so it renders as
-       the hero and the tile rather than appearing in this fragment. The hero
-       has no caption slot, so its credit is the opening line below. CC BY 4.0
-       requires the credit to be visible and not separated from the image, so
-       that line must stay first and must not be moved further down the page.
-    2. images/articles/uae-at-night-iss.webp
-       NASA Earth Observatory, ISS038-E-16335, public domain
-       https://science.nasa.gov/earth/earth-observatory/united-arab-emirates-at-night-82723/
-       Credited in its figcaption.
+  Third-party photograph used, licensed for reuse:
+    images/articles/bortle-scale-eso.webp
+      ESO/P. Horalek, M. Wallner, CC BY 4.0
+      https://www.eso.org/public/images/dark-skies/
+      This now sits inside the article as a figure rather than being the page
+      hero, so its credit lives in the figcaption directly beneath it, which is
+      what CC BY 4.0 asks for. If the cover in site-data.json is ever switched
+      back to this file, the credit below still sits on the same page and the
+      licence is still satisfied.
 
-  Two diagrams are hand-drawn inline SVG, so they theme with the site and cost
-  nothing to load.
+  The NASA ISS night-lights photograph that used to sit in this article has
+  been removed. The two-panel sky comparison replaces it.
+
+  Three diagrams are hand-drawn inline SVG, so they theme with the site, scale
+  cleanly and cost nothing to load.
 -->
 
-<p><em>Cover image: the Bortle scale rendered across a photograph taken at
-ESO's Paranal Observatory in Chile. Credit:
-<a href="https://www.eso.org/public/images/dark-skies/" rel="noopener">ESO</a>/P.
-Horálek, M. Wallner,
-<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY
-4.0</a>.</em></p>
+<div class="event-callout">
+  <p class="ec-kicker">The short version</p>
+  <p class="ec-title">A city sky does not dim a nebula. It buries it.</p>
+  <p class="ec-body">The nebula sends down exactly as much light over Dubai as
+  it does over the desert. What changes is everything else arriving with it.
+  The fix is a filter that only opens two tiny windows, one on each of the two
+  colours a nebula glows in, and shuts out the rest. It works beautifully on
+  glowing gas clouds and does nothing at all for galaxies.</p>
+</div>
 
-<h2>What the scale measures</h2>
+<h2>A dozen stars, or a few thousand</h2>
 
-<p>John Bortle published the scale in <em>Sky &amp; Telescope</em> in February
-2001. It runs from Class 1, the darkest sky left on Earth, to Class 9, an
-inner-city sky. What makes it useful is that it is written in terms of what you
-can actually see rather than a meter reading. Class 1 says the Milky Way casts
-shadows. Class 8 says you can read a newspaper outside.</p>
+<p>Step onto a balcony in Dubai on a clear night and count what you can see.
+On a good night I get to about a dozen stars. The sky is a flat grey-orange,
+and in several years of looking I have never once seen the Milky Way from
+there.</p>
 
-<p>Each class also maps onto two numbers. Naked-eye limiting magnitude (NELM) is
-the faintest star you can pick out without optics. Sky Quality Meter readings
-(SQM) are measured in magnitudes per square arcsecond, and because the magnitude
-system is logarithmic, a difference of one SQM point is roughly two and a half
-times the sky brightness.</p>
+<p>Drive two hours inland and the same sky, on the same night, has thousands of
+stars in it. The Milky Way comes up as a solid band with dark dust lanes
+running through it, bright enough that you notice it before your eyes have
+finished adjusting. Nothing about the sky changed. Only the ground underneath
+it did.</p>
+
+<p>This is not a rare problem. Roughly a third of the people alive today cannot
+see the Milky Way from where they live, and most of them have never seen it at
+all.</p>
+
+<figure class="article-fig">
+<div class="article-figrow">
+<svg viewBox="0 0 340 322" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A city sky rated Bortle 8. An orange-grey glow sits above a lit skyline and only about a dozen stars are visible, with the constellation Orion just about picked out.">
+<defs>
+<clipPath id="bsAClip"><rect x="1" y="26" width="338" height="250" rx="10"/></clipPath>
+<linearGradient id="bsACity" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232838"/><stop offset="0.55" stop-color="#3a3547"/><stop offset="1" stop-color="#6d5238"/></linearGradient>
+</defs>
+<text x="170" y="16" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">Dubai balcony, Bortle 8</text>
+<g clip-path="url(#bsAClip)">
+<rect x="1" y="26" width="338" height="250" fill="url(#bsACity)"/>
+<ellipse cx="177" cy="282" rx="321" ry="118" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="311" ry="112" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="301" ry="105" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="291" ry="99" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="281" ry="92" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="270" ry="86" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="260" ry="80" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="250" ry="73" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="240" ry="67" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="230" ry="60" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="220" ry="54" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="210" ry="48" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="199" ry="41" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="189" ry="35" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="179" ry="28" fill="#ffa63c" opacity="0.032"/>
+<ellipse cx="177" cy="282" rx="169" ry="22" fill="#ffa63c" opacity="0.032"/>
+<circle cx="122.7" cy="91.0" r="6.1" fill="#fff" opacity="0.07"/><circle cx="122.7" cy="91.0" r="3.4" fill="#fff" opacity="0.13"/><circle cx="122.7" cy="91.0" r="1.8" fill="#fff" opacity="0.9"/>
+<circle cx="203.8" cy="81.0" r="5.1" fill="#fff" opacity="0.07"/><circle cx="203.8" cy="81.0" r="2.8" fill="#fff" opacity="0.13"/><circle cx="203.8" cy="81.0" r="1.5" fill="#fff" opacity="0.9"/>
+<circle cx="146.3" cy="136.0" r="4.4" fill="#fff" opacity="0.07"/><circle cx="146.3" cy="136.0" r="2.5" fill="#fff" opacity="0.13"/><circle cx="146.3" cy="136.0" r="1.3" fill="#fff" opacity="0.9"/>
+<circle cx="166.6" cy="142.2" r="4.8" fill="#fff" opacity="0.07"/><circle cx="166.6" cy="142.2" r="2.7" fill="#fff" opacity="0.13"/><circle cx="166.6" cy="142.2" r="1.4" fill="#fff" opacity="0.9"/>
+<circle cx="186.9" cy="148.5" r="4.4" fill="#fff" opacity="0.07"/><circle cx="186.9" cy="148.5" r="2.5" fill="#fff" opacity="0.13"/><circle cx="186.9" cy="148.5" r="1.3" fill="#fff" opacity="0.9"/>
+<circle cx="115.9" cy="196.0" r="6.1" fill="#fff" opacity="0.07"/><circle cx="115.9" cy="196.0" r="3.4" fill="#fff" opacity="0.13"/><circle cx="115.9" cy="196.0" r="1.8" fill="#fff" opacity="0.9"/>
+<circle cx="210.6" cy="191.0" r="4.8" fill="#fff" opacity="0.07"/><circle cx="210.6" cy="191.0" r="2.7" fill="#fff" opacity="0.13"/><circle cx="210.6" cy="191.0" r="1.4" fill="#fff" opacity="0.9"/>
+<circle cx="48.3" cy="66.0" r="3.4" fill="#fff" opacity="0.07"/><circle cx="48.3" cy="66.0" r="1.9" fill="#fff" opacity="0.13"/><circle cx="48.3" cy="66.0" r="1.0" fill="#fff" opacity="0.9"/>
+<circle cx="271.4" cy="116.0" r="3.7" fill="#fff" opacity="0.07"/><circle cx="271.4" cy="116.0" r="2.1" fill="#fff" opacity="0.13"/><circle cx="271.4" cy="116.0" r="1.1" fill="#fff" opacity="0.9"/>
+<circle cx="244.4" cy="211.0" r="3.4" fill="#fff" opacity="0.07"/><circle cx="244.4" cy="211.0" r="1.9" fill="#fff" opacity="0.13"/><circle cx="244.4" cy="211.0" r="1.0" fill="#fff" opacity="0.9"/>
+<circle cx="68.6" cy="171.0" r="3.1" fill="#fff" opacity="0.07"/><circle cx="68.6" cy="171.0" r="1.7" fill="#fff" opacity="0.13"/><circle cx="68.6" cy="171.0" r="0.9" fill="#fff" opacity="0.9"/>
+<circle cx="298.4" cy="176.0" r="3.1" fill="#fff" opacity="0.07"/><circle cx="298.4" cy="176.0" r="1.7" fill="#fff" opacity="0.13"/><circle cx="298.4" cy="176.0" r="0.9" fill="#fff" opacity="0.9"/>
+<rect x="-5" y="231" width="29" height="55" fill="#0b0a16"/>
+<rect x="18" y="238" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="0" y="258" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="18" y="258" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="31" y="232" width="27" height="54" fill="#0b0a16"/>
+<rect x="36" y="249" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="45" y="249" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="45" y="259" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="36" y="269" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="45" y="269" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="61" y="240" width="29" height="46" fill="#0b0a16"/>
+<rect x="75" y="267" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="93" y="240" width="23" height="46" fill="#0b0a16"/>
+<rect x="98" y="257" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="98" y="267" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="107" y="267" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="121" y="256" width="27" height="30" fill="#0b0a16"/>
+<rect x="126" y="273" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="135" y="273" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="151" y="236" width="30" height="50" fill="#0b0a16"/>
+<rect x="165" y="243" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="174" y="243" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="174" y="253" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="156" y="263" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="165" y="263" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="165" y="273" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="174" y="273" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="184" y="257" width="15" height="29" fill="#0b0a16"/>
+<rect x="207" y="248" width="32" height="38" fill="#0b0a16"/>
+<rect x="221" y="255" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="212" y="265" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="230" y="265" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="245" y="260" width="21" height="26" fill="#0b0a16"/>
+<rect x="250" y="267" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="273" y="259" width="24" height="27" fill="#0b0a16"/>
+<rect x="278" y="266" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="287" y="266" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="304" y="254" width="33" height="32" fill="#0b0a16"/>
+<rect x="309" y="261" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="318" y="261" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="309" y="271" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+<rect x="343" y="256" width="17" height="30" fill="#0b0a16"/>
+<rect x="348" y="263" width="3" height="4" fill="#ffd27a" opacity="0.8"/>
+</g>
+<rect x="1" y="26" width="338" height="250" rx="10" fill="none" stroke="var(--line)"/>
+<text x="170" y="300" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">About a dozen stars</text>
+<text x="170" y="318" font-size="11.5" fill="var(--muted)" text-anchor="middle">Orion is there, and not much else</text>
+</svg>
+<svg viewBox="0 0 340 322" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A desert sky rated Bortle 2. A black sky above dunes, filled with hundreds of stars, with the Milky Way running across it and Orion lost in the crowd.">
+<defs>
+<clipPath id="bsBClip"><rect x="1" y="26" width="338" height="250" rx="10"/></clipPath>
+<linearGradient id="bsBDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03030d"/><stop offset="1" stop-color="#0a0a1c"/></linearGradient>
+<linearGradient id="bsBFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.3" stop-color="#fff" stop-opacity="1"/><stop offset="0.72" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+</defs>
+<text x="170" y="16" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">Al Quaa desert, Bortle 2</text>
+<g clip-path="url(#bsBClip)">
+<rect x="1" y="26" width="338" height="250" fill="url(#bsBDark)"/>
+<g transform="rotate(-26 170 136)">
+<rect x="-129" y="76.0" width="598" height="120.0" fill="url(#bsBFade)" opacity="0.007"/>
+<rect x="-129" y="79.0" width="598" height="114.0" fill="url(#bsBFade)" opacity="0.008"/>
+<rect x="-129" y="82.0" width="598" height="108.0" fill="url(#bsBFade)" opacity="0.009"/>
+<rect x="-129" y="85.0" width="598" height="102.0" fill="url(#bsBFade)" opacity="0.010"/>
+<rect x="-129" y="88.0" width="598" height="96.0" fill="url(#bsBFade)" opacity="0.011"/>
+<rect x="-129" y="91.0" width="598" height="90.0" fill="url(#bsBFade)" opacity="0.012"/>
+<rect x="-129" y="94.0" width="598" height="84.0" fill="url(#bsBFade)" opacity="0.013"/>
+<rect x="-129" y="97.0" width="598" height="78.0" fill="url(#bsBFade)" opacity="0.014"/>
+<rect x="-129" y="100.0" width="598" height="72.0" fill="url(#bsBFade)" opacity="0.014"/>
+<rect x="-129" y="103.0" width="598" height="66.0" fill="url(#bsBFade)" opacity="0.014"/>
+<rect x="-129" y="106.0" width="598" height="60.0" fill="url(#bsBFade)" opacity="0.013"/>
+<rect x="-129" y="109.0" width="598" height="54.0" fill="url(#bsBFade)" opacity="0.012"/>
+<rect x="-129" y="112.0" width="598" height="48.0" fill="url(#bsBFade)" opacity="0.011"/>
+<rect x="-129" y="115.0" width="598" height="42.0" fill="url(#bsBFade)" opacity="0.010"/>
+<rect x="-129" y="118.0" width="598" height="36.0" fill="url(#bsBFade)" opacity="0.009"/>
+<rect x="-129" y="121.0" width="598" height="30.0" fill="url(#bsBFade)" opacity="0.008"/>
+<rect x="-129" y="124.0" width="598" height="24.0" fill="url(#bsBFade)" opacity="0.007"/>
+<rect x="-129" y="127.0" width="598" height="18.0" fill="url(#bsBFade)" opacity="0.007"/>
+<rect x="-129" y="129.0" width="598" height="18.0" fill="#05040e" opacity="0.13"/>
+<rect x="-129" y="130.6" width="598" height="14.8" fill="#05040e" opacity="0.13"/>
+<rect x="-129" y="132.2" width="598" height="11.6" fill="#05040e" opacity="0.13"/>
+<rect x="-129" y="133.8" width="598" height="8.4" fill="#05040e" opacity="0.13"/>
+<rect x="-129" y="135.4" width="598" height="5.2" fill="#05040e" opacity="0.13"/>
+</g>
+<circle cx="292.5" cy="129.9" r="0.8" fill="#dfe7ff" opacity="0.54"/>
+<circle cx="41.5" cy="57.7" r="0.7" fill="#fff" opacity="0.45"/>
+<circle cx="114.7" cy="105.7" r="0.7" fill="#cfe0ff" opacity="0.56"/>
+<circle cx="134.4" cy="106.2" r="0.6" fill="#fff" opacity="0.71"/>
+<circle cx="164.9" cy="136.2" r="1.1" fill="#dfe7ff" opacity="0.50"/>
+<circle cx="94.9" cy="47.1" r="0.8" fill="#dfe7ff" opacity="0.75"/>
+<circle cx="158.7" cy="83.2" r="0.9" fill="#dfe7ff" opacity="0.60"/>
+<circle cx="242.4" cy="158.2" r="0.7" fill="#fff" opacity="0.67"/>
+<circle cx="35.2" cy="28.2" r="0.9" fill="#dfe7ff" opacity="0.71"/>
+<circle cx="277.0" cy="147.6" r="0.8" fill="#fff" opacity="0.50"/>
+<circle cx="334.0" cy="152.2" r="0.5" fill="#dfe7ff" opacity="0.83"/>
+<circle cx="207.9" cy="142.5" r="0.5" fill="#ffe9cf" opacity="0.68"/>
+<circle cx="44.6" cy="81.8" r="0.6" fill="#fff" opacity="0.41"/>
+<circle cx="6.4" cy="97.7" r="1.1" fill="#fff" opacity="0.41"/>
+<circle cx="47.7" cy="44.0" r="0.7" fill="#fff" opacity="0.37"/>
+<circle cx="297.1" cy="168.2" r="0.6" fill="#dfe7ff" opacity="0.41"/>
+<circle cx="38.6" cy="86.1" r="0.9" fill="#dfe7ff" opacity="0.77"/>
+<circle cx="21.3" cy="102.8" r="0.8" fill="#fff" opacity="0.87"/>
+<circle cx="267.4" cy="188.2" r="0.8" fill="#ffe9cf" opacity="0.59"/>
+<circle cx="29.1" cy="132.9" r="0.7" fill="#fff" opacity="0.91"/>
+<circle cx="335.3" cy="189.3" r="0.6" fill="#ffe9cf" opacity="0.88"/>
+<circle cx="156.3" cy="102.9" r="0.6" fill="#cfe0ff" opacity="0.61"/>
+<circle cx="221.7" cy="170.8" r="0.8" fill="#fff" opacity="0.55"/>
+<circle cx="152.4" cy="104.9" r="0.7" fill="#fff" opacity="0.46"/>
+<circle cx="192.2" cy="101.7" r="0.5" fill="#fff" opacity="0.70"/>
+<circle cx="219.1" cy="157.3" r="0.5" fill="#fff" opacity="0.63"/>
+<circle cx="293.4" cy="161.8" r="0.8" fill="#fff" opacity="0.93"/>
+<circle cx="4.4" cy="112.7" r="0.5" fill="#dfe7ff" opacity="0.48"/>
+<circle cx="274.3" cy="115.1" r="0.6" fill="#fff" opacity="0.82"/>
+<circle cx="34.3" cy="199.9" r="0.9" fill="#dfe7ff" opacity="0.93"/>
+<circle cx="317.4" cy="232.8" r="1.1" fill="#fff" opacity="0.40"/>
+<circle cx="204.7" cy="150.9" r="0.7" fill="#fff" opacity="0.45"/>
+<circle cx="321.8" cy="213.7" r="0.5" fill="#fff" opacity="0.56"/>
+<circle cx="120.7" cy="129.5" r="0.5" fill="#fff" opacity="0.91"/>
+<circle cx="232.2" cy="140.4" r="1.1" fill="#cfe0ff" opacity="0.39"/>
+<circle cx="53.2" cy="180.7" r="1.1" fill="#dfe7ff" opacity="0.45"/>
+<circle cx="198.5" cy="52.0" r="0.7" fill="#fff" opacity="0.50"/>
+<circle cx="313.2" cy="198.3" r="0.7" fill="#dfe7ff" opacity="0.35"/>
+<circle cx="209.9" cy="51.0" r="0.7" fill="#fff" opacity="0.45"/>
+<circle cx="151.2" cy="98.9" r="0.8" fill="#fff" opacity="0.82"/>
+<circle cx="312.1" cy="218.1" r="0.9" fill="#fff" opacity="0.38"/>
+<circle cx="17.6" cy="43.2" r="0.5" fill="#fff" opacity="0.55"/>
+<circle cx="314.4" cy="191.2" r="0.7" fill="#dfe7ff" opacity="0.82"/>
+<circle cx="37.7" cy="98.2" r="0.7" fill="#fff" opacity="0.75"/>
+<circle cx="208.7" cy="183.5" r="0.5" fill="#ffe9cf" opacity="0.42"/>
+<circle cx="268.8" cy="184.0" r="0.5" fill="#dfe7ff" opacity="0.91"/>
+<circle cx="239.6" cy="29.0" r="0.6" fill="#fff" opacity="0.81"/>
+<circle cx="4.6" cy="121.7" r="0.7" fill="#dfe7ff" opacity="0.75"/>
+<circle cx="174.2" cy="148.7" r="0.9" fill="#fff" opacity="0.35"/>
+<circle cx="211.9" cy="144.7" r="0.9" fill="#fff" opacity="0.68"/>
+<circle cx="21.8" cy="63.3" r="0.9" fill="#fff" opacity="0.80"/>
+<circle cx="327.0" cy="213.1" r="0.5" fill="#fff" opacity="0.85"/>
+<circle cx="292.1" cy="179.7" r="0.5" fill="#fff" opacity="0.94"/>
+<circle cx="207.5" cy="159.9" r="0.9" fill="#dfe7ff" opacity="0.71"/>
+<circle cx="95.4" cy="177.4" r="0.7" fill="#fff" opacity="0.52"/>
+<circle cx="75.7" cy="112.2" r="0.7" fill="#fff" opacity="0.72"/>
+<circle cx="137.5" cy="121.2" r="0.9" fill="#ffe9cf" opacity="0.62"/>
+<circle cx="207.9" cy="146.4" r="1.1" fill="#fff" opacity="0.76"/>
+<circle cx="20.8" cy="71.5" r="0.9" fill="#fff" opacity="0.88"/>
+<circle cx="86.6" cy="84.9" r="0.9" fill="#fff" opacity="0.60"/>
+<circle cx="315.8" cy="160.3" r="0.8" fill="#ffe9cf" opacity="0.49"/>
+<circle cx="34.7" cy="87.3" r="1.1" fill="#fff" opacity="0.54"/>
+<circle cx="65.8" cy="69.6" r="0.5" fill="#ffe9cf" opacity="0.50"/>
+<circle cx="335.6" cy="109.3" r="0.7" fill="#fff" opacity="0.63"/>
+<circle cx="177.9" cy="123.5" r="0.9" fill="#fff" opacity="0.49"/>
+<circle cx="112.5" cy="175.5" r="0.9" fill="#fff" opacity="0.77"/>
+<circle cx="92.0" cy="203.5" r="0.7" fill="#fff" opacity="0.81"/>
+<circle cx="313.6" cy="203.6" r="0.9" fill="#fff" opacity="0.78"/>
+<circle cx="259.0" cy="185.2" r="0.7" fill="#fff" opacity="0.38"/>
+<circle cx="26.4" cy="73.5" r="0.7" fill="#dfe7ff" opacity="0.57"/>
+<circle cx="8.0" cy="91.0" r="0.5" fill="#ffe9cf" opacity="0.64"/>
+<circle cx="320.0" cy="180.4" r="1.1" fill="#fff" opacity="0.37"/>
+<circle cx="143.9" cy="84.7" r="1.1" fill="#ffe9cf" opacity="0.59"/>
+<circle cx="334.0" cy="181.3" r="0.5" fill="#ffe9cf" opacity="0.42"/>
+<circle cx="76.0" cy="40.0" r="0.8" fill="#dfe7ff" opacity="0.80"/>
+<circle cx="47.4" cy="100.1" r="0.6" fill="#dfe7ff" opacity="0.67"/>
+<circle cx="260.4" cy="200.6" r="0.8" fill="#cfe0ff" opacity="0.44"/>
+<circle cx="139.7" cy="113.1" r="1.1" fill="#fff" opacity="0.81"/>
+<circle cx="297.2" cy="162.5" r="0.8" fill="#fff" opacity="0.77"/>
+<circle cx="193.5" cy="140.2" r="0.7" fill="#dfe7ff" opacity="0.78"/>
+<circle cx="59.7" cy="155.1" r="0.7" fill="#ffe9cf" opacity="0.47"/>
+<circle cx="106.9" cy="102.9" r="0.8" fill="#fff" opacity="0.58"/>
+<circle cx="62.5" cy="147.5" r="0.5" fill="#fff" opacity="0.86"/>
+<circle cx="245.9" cy="136.4" r="1.1" fill="#fff" opacity="0.87"/>
+<circle cx="231.3" cy="130.3" r="0.8" fill="#ffe9cf" opacity="0.43"/>
+<circle cx="215.9" cy="168.3" r="1.1" fill="#fff" opacity="0.81"/>
+<circle cx="4.0" cy="132.8" r="0.6" fill="#cfe0ff" opacity="0.41"/>
+<circle cx="101.3" cy="109.0" r="0.5" fill="#fff" opacity="0.91"/>
+<circle cx="36.5" cy="65.8" r="0.5" fill="#ffe9cf" opacity="0.53"/>
+<circle cx="50.5" cy="100.8" r="0.5" fill="#fff" opacity="0.46"/>
+<circle cx="21.7" cy="73.7" r="0.6" fill="#fff" opacity="0.90"/>
+<circle cx="73.9" cy="236.1" r="1.1" fill="#fff" opacity="0.62"/>
+<circle cx="298.2" cy="128.3" r="0.9" fill="#fff" opacity="0.82"/>
+<circle cx="312.5" cy="216.6" r="0.7" fill="#fff" opacity="0.86"/>
+<circle cx="212.6" cy="194.7" r="0.7" fill="#ffe9cf" opacity="0.47"/>
+<circle cx="132.0" cy="54.3" r="0.5" fill="#fff" opacity="0.47"/>
+<circle cx="204.6" cy="113.6" r="0.8" fill="#fff" opacity="0.40"/>
+<circle cx="221.4" cy="101.4" r="0.6" fill="#dfe7ff" opacity="0.63"/>
+<circle cx="103.6" cy="91.6" r="0.8" fill="#ffe9cf" opacity="0.46"/>
+<circle cx="5.6" cy="43.1" r="0.7" fill="#ffe9cf" opacity="0.51"/>
+<circle cx="79.8" cy="100.0" r="0.8" fill="#fff" opacity="0.49"/>
+<circle cx="7.2" cy="92.0" r="1.1" fill="#cfe0ff" opacity="0.53"/>
+<circle cx="188.3" cy="197.1" r="0.7" fill="#dfe7ff" opacity="0.80"/>
+<circle cx="206.4" cy="161.1" r="1.1" fill="#fff" opacity="0.70"/>
+<circle cx="304.6" cy="114.5" r="0.5" fill="#fff" opacity="0.58"/>
+<circle cx="29.1" cy="273.2" r="0.7" fill="#fff" opacity="0.38"/>
+<circle cx="1.9" cy="160.0" r="0.5" fill="#dfe7ff" opacity="0.79"/>
+<circle cx="314.6" cy="128.5" r="0.6" fill="#ffe9cf" opacity="0.80"/>
+<circle cx="143.8" cy="142.1" r="0.7" fill="#dfe7ff" opacity="0.46"/>
+<circle cx="45.9" cy="79.5" r="0.6" fill="#fff" opacity="0.59"/>
+<circle cx="85.0" cy="113.0" r="0.9" fill="#ffe9cf" opacity="0.38"/>
+<circle cx="93.2" cy="123.9" r="1.1" fill="#dfe7ff" opacity="0.88"/>
+<circle cx="288.0" cy="170.5" r="0.5" fill="#dfe7ff" opacity="0.41"/>
+<circle cx="130.5" cy="67.7" r="1.1" fill="#dfe7ff" opacity="0.57"/>
+<circle cx="139.6" cy="137.3" r="0.5" fill="#fff" opacity="0.42"/>
+<circle cx="26.1" cy="137.2" r="0.7" fill="#fff" opacity="0.95"/>
+<circle cx="175.1" cy="97.4" r="0.6" fill="#fff" opacity="0.90"/>
+<circle cx="264.3" cy="211.8" r="0.6" fill="#fff" opacity="0.59"/>
+<circle cx="146.7" cy="60.2" r="0.5" fill="#dfe7ff" opacity="0.80"/>
+<circle cx="265.2" cy="127.6" r="0.6" fill="#cfe0ff" opacity="0.79"/>
+<circle cx="165.1" cy="148.3" r="0.9" fill="#fff" opacity="0.37"/>
+<circle cx="1.9" cy="39.3" r="0.9" fill="#dfe7ff" opacity="0.68"/>
+<circle cx="255.8" cy="162.2" r="0.6" fill="#fff" opacity="0.51"/>
+<circle cx="215.8" cy="101.6" r="0.9" fill="#fff" opacity="0.41"/>
+<circle cx="298.4" cy="164.3" r="0.9" fill="#fff" opacity="0.55"/>
+<circle cx="167.2" cy="140.3" r="0.8" fill="#cfe0ff" opacity="0.89"/>
+<circle cx="20.1" cy="87.7" r="0.6" fill="#fff" opacity="0.77"/>
+<circle cx="120.8" cy="88.2" r="0.5" fill="#fff" opacity="0.63"/>
+<circle cx="85.0" cy="34.7" r="0.5" fill="#ffe9cf" opacity="0.50"/>
+<circle cx="191.2" cy="151.0" r="0.8" fill="#ffe9cf" opacity="0.41"/>
+<circle cx="200.8" cy="126.7" r="0.9" fill="#fff" opacity="0.69"/>
+<circle cx="37.6" cy="115.8" r="0.6" fill="#fff" opacity="0.42"/>
+<circle cx="144.2" cy="131.3" r="0.7" fill="#ffe9cf" opacity="0.77"/>
+<circle cx="284.9" cy="175.5" r="0.6" fill="#fff" opacity="0.70"/>
+<circle cx="20.9" cy="75.7" r="0.9" fill="#dfe7ff" opacity="0.69"/>
+<circle cx="165.9" cy="147.1" r="0.7" fill="#dfe7ff" opacity="0.36"/>
+<circle cx="22.0" cy="89.1" r="0.6" fill="#ffe9cf" opacity="0.90"/>
+<circle cx="284.3" cy="177.0" r="0.9" fill="#dfe7ff" opacity="0.85"/>
+<circle cx="308.7" cy="207.1" r="0.5" fill="#dfe7ff" opacity="0.77"/>
+<circle cx="51.5" cy="131.7" r="0.7" fill="#dfe7ff" opacity="0.42"/>
+<circle cx="163.6" cy="103.2" r="0.7" fill="#fff" opacity="0.91"/>
+<circle cx="153.9" cy="175.9" r="0.7" fill="#ffe9cf" opacity="0.75"/>
+<circle cx="249.5" cy="238.8" r="0.5" fill="#cfe0ff" opacity="0.36"/>
+<circle cx="92.0" cy="97.7" r="0.5" fill="#fff" opacity="0.44"/>
+<circle cx="262.8" cy="218.5" r="0.7" fill="#cfe0ff" opacity="0.63"/>
+<circle cx="112.7" cy="51.7" r="0.5" fill="#fff" opacity="0.88"/>
+<circle cx="29.6" cy="89.6" r="0.6" fill="#fff" opacity="0.55"/>
+<circle cx="329.3" cy="193.0" r="0.5" fill="#dfe7ff" opacity="0.58"/>
+<circle cx="269.5" cy="132.4" r="0.8" fill="#fff" opacity="0.45"/>
+<circle cx="139.3" cy="134.7" r="0.9" fill="#fff" opacity="0.66"/>
+<circle cx="209.1" cy="134.2" r="1.1" fill="#fff" opacity="0.85"/>
+<circle cx="75.1" cy="140.4" r="0.6" fill="#ffe9cf" opacity="0.63"/>
+<circle cx="291.4" cy="154.3" r="0.6" fill="#fff" opacity="0.49"/>
+<circle cx="322.3" cy="189.1" r="0.9" fill="#fff" opacity="0.80"/>
+<circle cx="124.1" cy="126.3" r="1.1" fill="#cfe0ff" opacity="0.48"/>
+<circle cx="280.8" cy="130.5" r="0.7" fill="#fff" opacity="0.70"/>
+<circle cx="70.0" cy="159.1" r="0.7" fill="#fff" opacity="0.42"/>
+<circle cx="75.9" cy="96.2" r="0.8" fill="#ffe9cf" opacity="0.50"/>
+<circle cx="138.7" cy="123.1" r="0.7" fill="#fff" opacity="0.94"/>
+<circle cx="321.8" cy="248.1" r="1.1" fill="#fff" opacity="0.91"/>
+<circle cx="277.7" cy="189.5" r="0.9" fill="#cfe0ff" opacity="0.38"/>
+<circle cx="247.4" cy="188.4" r="0.5" fill="#fff" opacity="0.38"/>
+<circle cx="56.1" cy="85.0" r="0.5" fill="#fff" opacity="0.74"/>
+<circle cx="235.5" cy="147.6" r="0.6" fill="#fff" opacity="0.94"/>
+<circle cx="140.7" cy="169.1" r="0.9" fill="#fff" opacity="0.69"/>
+<circle cx="48.1" cy="256.1" r="0.5" fill="#fff" opacity="0.40"/>
+<circle cx="299.5" cy="108.5" r="0.9" fill="#fff" opacity="0.55"/>
+<circle cx="154.8" cy="69.9" r="0.7" fill="#fff" opacity="0.39"/>
+<circle cx="315.6" cy="163.6" r="1.1" fill="#fff" opacity="0.55"/>
+<circle cx="134.1" cy="94.7" r="0.7" fill="#ffe9cf" opacity="0.89"/>
+<circle cx="61.2" cy="120.2" r="0.9" fill="#cfe0ff" opacity="0.57"/>
+<circle cx="207.9" cy="148.5" r="0.8" fill="#ffe9cf" opacity="0.41"/>
+<circle cx="197.4" cy="152.0" r="0.6" fill="#dfe7ff" opacity="0.51"/>
+<circle cx="120.3" cy="132.8" r="0.9" fill="#dfe7ff" opacity="0.93"/>
+<circle cx="96.0" cy="123.1" r="1.1" fill="#dfe7ff" opacity="0.65"/>
+<circle cx="61.0" cy="121.0" r="0.7" fill="#fff" opacity="0.66"/>
+<circle cx="186.2" cy="141.4" r="0.8" fill="#fff" opacity="0.68"/>
+<circle cx="79.0" cy="136.2" r="0.9" fill="#ffe9cf" opacity="0.51"/>
+<circle cx="52.5" cy="91.2" r="0.7" fill="#dfe7ff" opacity="0.91"/>
+<circle cx="18.4" cy="197.0" r="0.7" fill="#fff" opacity="0.80"/>
+<circle cx="37.2" cy="128.2" r="0.8" fill="#dfe7ff" opacity="0.61"/>
+<circle cx="145.2" cy="157.3" r="0.8" fill="#ffe9cf" opacity="0.54"/>
+<circle cx="22.9" cy="29.2" r="1.1" fill="#fff" opacity="0.78"/>
+<circle cx="201.6" cy="150.1" r="1.1" fill="#fff" opacity="0.86"/>
+<circle cx="335.4" cy="50.6" r="0.9" fill="#fff" opacity="0.73"/>
+<circle cx="160.8" cy="112.8" r="0.9" fill="#cfe0ff" opacity="0.81"/>
+<circle cx="22.2" cy="28.0" r="0.8" fill="#fff" opacity="0.76"/>
+<circle cx="220.0" cy="152.2" r="0.7" fill="#ffe9cf" opacity="0.36"/>
+<circle cx="72.1" cy="133.6" r="1.1" fill="#fff" opacity="0.87"/>
+<circle cx="215.9" cy="191.7" r="0.8" fill="#dfe7ff" opacity="0.93"/>
+<circle cx="88.0" cy="71.4" r="0.7" fill="#ffe9cf" opacity="0.91"/>
+<circle cx="73.2" cy="89.7" r="0.5" fill="#ffe9cf" opacity="0.65"/>
+<circle cx="289.1" cy="185.9" r="0.7" fill="#ffe9cf" opacity="0.44"/>
+<circle cx="55.2" cy="147.1" r="0.8" fill="#fff" opacity="0.82"/>
+<circle cx="228.7" cy="142.6" r="0.6" fill="#fff" opacity="0.50"/>
+<circle cx="148.5" cy="136.3" r="0.6" fill="#ffe9cf" opacity="0.65"/>
+<circle cx="95.9" cy="114.8" r="0.6" fill="#ffe9cf" opacity="0.90"/>
+<circle cx="3.1" cy="205.6" r="0.9" fill="#dfe7ff" opacity="0.45"/>
+<circle cx="15.1" cy="70.7" r="1.1" fill="#ffe9cf" opacity="0.36"/>
+<circle cx="113.2" cy="228.1" r="0.5" fill="#fff" opacity="0.62"/>
+<circle cx="83.2" cy="103.5" r="0.6" fill="#ffe9cf" opacity="0.79"/>
+<circle cx="202.5" cy="137.1" r="0.6" fill="#ffe9cf" opacity="0.81"/>
+<circle cx="250.8" cy="158.7" r="0.6" fill="#ffe9cf" opacity="0.56"/>
+<circle cx="296.5" cy="87.2" r="0.9" fill="#ffe9cf" opacity="0.65"/>
+<circle cx="304.5" cy="197.7" r="1.1" fill="#cfe0ff" opacity="0.54"/>
+<circle cx="157.4" cy="114.0" r="1.1" fill="#cfe0ff" opacity="0.79"/>
+<circle cx="132.5" cy="130.0" r="1.1" fill="#fff" opacity="0.45"/>
+<circle cx="94.3" cy="165.3" r="0.8" fill="#dfe7ff" opacity="0.64"/>
+<circle cx="245.8" cy="192.4" r="0.8" fill="#dfe7ff" opacity="0.73"/>
+<circle cx="71.8" cy="56.6" r="0.5" fill="#fff" opacity="0.74"/>
+<circle cx="252.2" cy="123.4" r="0.5" fill="#fff" opacity="0.81"/>
+<circle cx="127.2" cy="116.3" r="0.5" fill="#fff" opacity="0.64"/>
+<circle cx="269.0" cy="152.6" r="0.9" fill="#cfe0ff" opacity="0.58"/>
+<circle cx="182.0" cy="84.7" r="0.9" fill="#fff" opacity="0.80"/>
+<circle cx="142.1" cy="99.0" r="0.8" fill="#ffe9cf" opacity="0.81"/>
+<circle cx="193.6" cy="55.8" r="0.7" fill="#cfe0ff" opacity="0.44"/>
+<circle cx="282.2" cy="170.3" r="0.6" fill="#fff" opacity="0.41"/>
+<circle cx="71.4" cy="78.0" r="0.7" fill="#fff" opacity="0.49"/>
+<circle cx="281.6" cy="158.2" r="0.8" fill="#ffe9cf" opacity="0.55"/>
+<circle cx="334.0" cy="163.1" r="0.5" fill="#fff" opacity="0.37"/>
+<circle cx="193.3" cy="145.4" r="0.6" fill="#fff" opacity="0.46"/>
+<circle cx="337.4" cy="135.8" r="0.5" fill="#fff" opacity="0.76"/>
+<circle cx="66.0" cy="112.7" r="1.1" fill="#dfe7ff" opacity="0.39"/>
+<circle cx="189.6" cy="223.3" r="0.5" fill="#fff" opacity="0.95"/>
+<circle cx="316.7" cy="155.6" r="1.1" fill="#ffe9cf" opacity="0.42"/>
+<circle cx="62.6" cy="86.9" r="0.7" fill="#ffe9cf" opacity="0.63"/>
+<circle cx="169.7" cy="120.6" r="0.6" fill="#cfe0ff" opacity="0.50"/>
+<circle cx="28.5" cy="74.2" r="0.8" fill="#ffe9cf" opacity="0.52"/>
+<circle cx="163.1" cy="27.2" r="0.6" fill="#fff" opacity="0.57"/>
+<circle cx="145.8" cy="136.5" r="0.5" fill="#dfe7ff" opacity="0.64"/>
+<circle cx="260.0" cy="181.3" r="0.6" fill="#fff" opacity="0.37"/>
+<circle cx="72.1" cy="69.8" r="0.8" fill="#fff" opacity="0.58"/>
+<circle cx="15.3" cy="107.5" r="1.1" fill="#fff" opacity="0.62"/>
+<circle cx="76.1" cy="71.5" r="1.1" fill="#cfe0ff" opacity="0.56"/>
+<circle cx="177.7" cy="209.0" r="0.5" fill="#fff" opacity="0.43"/>
+<circle cx="7.5" cy="103.5" r="0.7" fill="#fff" opacity="0.51"/>
+<circle cx="46.7" cy="68.2" r="0.9" fill="#fff" opacity="0.89"/>
+<circle cx="233.9" cy="135.0" r="0.7" fill="#fff" opacity="0.72"/>
+<circle cx="114.3" cy="214.8" r="0.9" fill="#fff" opacity="0.89"/>
+<circle cx="35.5" cy="104.2" r="0.6" fill="#ffe9cf" opacity="0.70"/>
+<circle cx="10.8" cy="89.0" r="0.9" fill="#fff" opacity="0.39"/>
+<circle cx="66.7" cy="63.4" r="0.7" fill="#fff" opacity="0.60"/>
+<circle cx="332.9" cy="157.5" r="0.7" fill="#cfe0ff" opacity="0.50"/>
+<circle cx="106.2" cy="175.9" r="0.7" fill="#ffe9cf" opacity="0.92"/>
+<circle cx="283.0" cy="137.8" r="1.1" fill="#dfe7ff" opacity="0.77"/>
+<circle cx="77.7" cy="90.8" r="0.5" fill="#fff" opacity="0.65"/>
+<circle cx="178.8" cy="37.2" r="0.7" fill="#fff" opacity="0.74"/>
+<circle cx="60.0" cy="127.2" r="1.1" fill="#fff" opacity="0.54"/>
+<circle cx="105.5" cy="114.7" r="0.7" fill="#ffe9cf" opacity="0.38"/>
+<circle cx="97.2" cy="143.0" r="0.8" fill="#fff" opacity="0.88"/>
+<circle cx="183.0" cy="162.3" r="0.8" fill="#cfe0ff" opacity="0.95"/>
+<circle cx="117.6" cy="263.0" r="0.8" fill="#fff" opacity="0.50"/>
+<circle cx="131.3" cy="139.3" r="0.7" fill="#fff" opacity="0.41"/>
+<circle cx="154.5" cy="142.3" r="0.5" fill="#ffe9cf" opacity="0.94"/>
+<circle cx="277.9" cy="205.0" r="0.9" fill="#ffe9cf" opacity="0.81"/>
+<circle cx="286.0" cy="203.3" r="1.1" fill="#fff" opacity="0.40"/>
+<circle cx="307.0" cy="203.9" r="1.1" fill="#ffe9cf" opacity="0.64"/>
+<circle cx="308.6" cy="193.3" r="0.7" fill="#dfe7ff" opacity="0.35"/>
+<circle cx="199.9" cy="244.4" r="1.1" fill="#fff" opacity="0.61"/>
+<circle cx="166.3" cy="122.7" r="1.1" fill="#fff" opacity="0.92"/>
+<circle cx="29.0" cy="114.3" r="0.8" fill="#ffe9cf" opacity="0.49"/>
+<circle cx="116.2" cy="109.5" r="0.9" fill="#dfe7ff" opacity="0.48"/>
+<circle cx="311.3" cy="274.9" r="0.9" fill="#fff" opacity="0.93"/>
+<circle cx="41.1" cy="78.4" r="0.5" fill="#fff" opacity="0.84"/>
+<circle cx="61.6" cy="89.9" r="0.8" fill="#fff" opacity="0.67"/>
+<circle cx="134.9" cy="141.5" r="0.8" fill="#ffe9cf" opacity="0.87"/>
+<circle cx="227.2" cy="177.2" r="0.9" fill="#fff" opacity="0.44"/>
+<circle cx="22.4" cy="77.8" r="0.9" fill="#fff" opacity="0.46"/>
+<circle cx="103.7" cy="273.2" r="0.6" fill="#fff" opacity="0.95"/>
+<circle cx="82.4" cy="168.3" r="0.6" fill="#fff" opacity="0.90"/>
+<circle cx="251.9" cy="84.8" r="0.7" fill="#dfe7ff" opacity="0.65"/>
+<circle cx="120.3" cy="152.5" r="0.7" fill="#cfe0ff" opacity="0.51"/>
+<circle cx="146.7" cy="91.0" r="1.1" fill="#cfe0ff" opacity="0.89"/>
+<circle cx="335.6" cy="177.2" r="1.1" fill="#ffe9cf" opacity="0.71"/>
+<circle cx="236.9" cy="127.1" r="0.7" fill="#ffe9cf" opacity="0.50"/>
+<circle cx="179.0" cy="139.4" r="0.7" fill="#cfe0ff" opacity="0.87"/>
+<circle cx="318.9" cy="211.1" r="0.5" fill="#dfe7ff" opacity="0.88"/>
+<circle cx="225.5" cy="153.5" r="0.8" fill="#ffe9cf" opacity="0.65"/>
+<circle cx="124.6" cy="141.4" r="0.8" fill="#fff" opacity="0.65"/>
+<circle cx="126.6" cy="164.8" r="0.5" fill="#dfe7ff" opacity="0.79"/>
+<circle cx="235.1" cy="164.1" r="0.7" fill="#ffe9cf" opacity="0.43"/>
+<circle cx="291.8" cy="171.7" r="1.1" fill="#fff" opacity="0.80"/>
+<circle cx="146.1" cy="112.9" r="0.7" fill="#ffe9cf" opacity="0.42"/>
+<circle cx="79.5" cy="70.3" r="0.8" fill="#ffe9cf" opacity="0.44"/>
+<circle cx="221.4" cy="130.4" r="0.9" fill="#cfe0ff" opacity="0.75"/>
+<circle cx="277.9" cy="229.0" r="0.9" fill="#fff" opacity="0.67"/>
+<circle cx="262.6" cy="156.0" r="0.7" fill="#fff" opacity="0.40"/>
+<circle cx="227.0" cy="90.1" r="0.6" fill="#fff" opacity="0.50"/>
+<circle cx="115.2" cy="110.8" r="0.6" fill="#fff" opacity="0.39"/>
+<circle cx="49.4" cy="210.5" r="0.6" fill="#fff" opacity="0.43"/>
+<circle cx="324.0" cy="139.0" r="1.1" fill="#fff" opacity="0.65"/>
+<circle cx="320.5" cy="226.2" r="0.9" fill="#cfe0ff" opacity="0.40"/>
+<circle cx="309.7" cy="197.1" r="0.7" fill="#fff" opacity="0.51"/>
+<circle cx="110.7" cy="171.7" r="0.9" fill="#fff" opacity="0.62"/>
+<circle cx="117.9" cy="79.2" r="1.1" fill="#cfe0ff" opacity="0.81"/>
+<circle cx="145.3" cy="141.7" r="0.5" fill="#dfe7ff" opacity="0.93"/>
+<circle cx="195.9" cy="87.0" r="0.6" fill="#ffe9cf" opacity="0.38"/>
+<circle cx="262.5" cy="155.0" r="0.5" fill="#fff" opacity="0.56"/>
+<circle cx="87.7" cy="141.8" r="0.7" fill="#fff" opacity="0.56"/>
+<circle cx="285.8" cy="131.1" r="0.5" fill="#fff" opacity="0.42"/>
+<circle cx="41.7" cy="128.9" r="0.9" fill="#ffe9cf" opacity="0.70"/>
+<circle cx="26.6" cy="55.6" r="0.7" fill="#fff" opacity="0.45"/>
+<circle cx="167.4" cy="173.9" r="0.7" fill="#cfe0ff" opacity="0.64"/>
+<circle cx="240.4" cy="162.3" r="0.6" fill="#fff" opacity="0.60"/>
+<circle cx="97.3" cy="131.2" r="0.8" fill="#fff" opacity="0.72"/>
+<circle cx="78.4" cy="242.6" r="1.1" fill="#fff" opacity="0.44"/>
+<circle cx="162.2" cy="132.0" r="0.8" fill="#dfe7ff" opacity="0.42"/>
+<circle cx="210.3" cy="158.5" r="0.9" fill="#fff" opacity="0.76"/>
+<circle cx="320.7" cy="208.3" r="0.7" fill="#fff" opacity="0.78"/>
+<circle cx="253.3" cy="133.2" r="0.7" fill="#dfe7ff" opacity="0.82"/>
+<circle cx="320.4" cy="52.7" r="1.1" fill="#cfe0ff" opacity="0.84"/>
+<circle cx="18.0" cy="80.4" r="0.8" fill="#fff" opacity="0.91"/>
+<circle cx="280.9" cy="146.1" r="0.5" fill="#fff" opacity="0.75"/>
+<circle cx="271.4" cy="157.8" r="0.6" fill="#fff" opacity="0.86"/>
+<circle cx="70.3" cy="137.1" r="0.5" fill="#dfe7ff" opacity="0.52"/>
+<circle cx="110.2" cy="73.1" r="0.5" fill="#fff" opacity="0.76"/>
+<circle cx="221.0" cy="34.1" r="1.1" fill="#fff" opacity="0.42"/>
+<circle cx="316.6" cy="147.7" r="0.8" fill="#ffe9cf" opacity="0.59"/>
+<circle cx="155.7" cy="135.9" r="0.9" fill="#dfe7ff" opacity="0.50"/>
+<circle cx="72.9" cy="118.5" r="0.6" fill="#fff" opacity="0.48"/>
+<circle cx="108.1" cy="126.3" r="0.9" fill="#dfe7ff" opacity="0.91"/>
+<circle cx="225.4" cy="168.2" r="0.7" fill="#fff" opacity="0.81"/>
+<circle cx="21.7" cy="40.6" r="0.7" fill="#cfe0ff" opacity="0.67"/>
+<circle cx="108.5" cy="129.1" r="1.1" fill="#ffe9cf" opacity="0.53"/>
+<circle cx="305.7" cy="109.3" r="1.1" fill="#fff" opacity="0.41"/>
+<circle cx="25.8" cy="45.3" r="0.9" fill="#dfe7ff" opacity="0.86"/>
+<circle cx="34.8" cy="100.9" r="0.6" fill="#fff" opacity="0.45"/>
+<circle cx="36.5" cy="91.6" r="0.5" fill="#ffe9cf" opacity="0.76"/>
+<circle cx="153.1" cy="138.4" r="0.9" fill="#dfe7ff" opacity="0.93"/>
+<circle cx="139.3" cy="264.5" r="1.1" fill="#ffe9cf" opacity="0.42"/>
+<circle cx="122.7" cy="91.0" r="8.8" fill="#fff" opacity="0.07"/><circle cx="122.7" cy="91.0" r="4.9" fill="#fff" opacity="0.13"/><circle cx="122.7" cy="91.0" r="2.6" fill="#fff"/>
+<circle cx="203.8" cy="81.0" r="7.5" fill="#fff" opacity="0.07"/><circle cx="203.8" cy="81.0" r="4.2" fill="#fff" opacity="0.13"/><circle cx="203.8" cy="81.0" r="2.2" fill="#fff"/>
+<circle cx="146.3" cy="136.0" r="6.5" fill="#fff" opacity="0.07"/><circle cx="146.3" cy="136.0" r="3.6" fill="#fff" opacity="0.13"/><circle cx="146.3" cy="136.0" r="1.9" fill="#fff"/>
+<circle cx="166.6" cy="142.2" r="6.8" fill="#fff" opacity="0.07"/><circle cx="166.6" cy="142.2" r="3.8" fill="#fff" opacity="0.13"/><circle cx="166.6" cy="142.2" r="2.0" fill="#fff"/>
+<circle cx="186.9" cy="148.5" r="6.5" fill="#fff" opacity="0.07"/><circle cx="186.9" cy="148.5" r="3.6" fill="#fff" opacity="0.13"/><circle cx="186.9" cy="148.5" r="1.9" fill="#fff"/>
+<circle cx="115.9" cy="196.0" r="8.5" fill="#fff" opacity="0.07"/><circle cx="115.9" cy="196.0" r="4.8" fill="#fff" opacity="0.13"/><circle cx="115.9" cy="196.0" r="2.5" fill="#fff"/>
+<circle cx="210.6" cy="191.0" r="6.8" fill="#fff" opacity="0.07"/><circle cx="210.6" cy="191.0" r="3.8" fill="#fff" opacity="0.13"/><circle cx="210.6" cy="191.0" r="2.0" fill="#fff"/>
+<circle cx="48.3" cy="66.0" r="5.1" fill="#fff" opacity="0.07"/><circle cx="48.3" cy="66.0" r="2.8" fill="#fff" opacity="0.13"/><circle cx="48.3" cy="66.0" r="1.5" fill="#fff"/>
+<circle cx="271.4" cy="116.0" r="5.4" fill="#fff" opacity="0.07"/><circle cx="271.4" cy="116.0" r="3.0" fill="#fff" opacity="0.13"/><circle cx="271.4" cy="116.0" r="1.6" fill="#fff"/>
+<circle cx="244.4" cy="211.0" r="4.8" fill="#fff" opacity="0.07"/><circle cx="244.4" cy="211.0" r="2.7" fill="#fff" opacity="0.13"/><circle cx="244.4" cy="211.0" r="1.4" fill="#fff"/>
+<circle cx="68.6" cy="171.0" r="4.4" fill="#fff" opacity="0.07"/><circle cx="68.6" cy="171.0" r="2.5" fill="#fff" opacity="0.13"/><circle cx="68.6" cy="171.0" r="1.3" fill="#fff"/>
+<circle cx="298.4" cy="176.0" r="4.4" fill="#fff" opacity="0.07"/><circle cx="298.4" cy="176.0" r="2.5" fill="#fff" opacity="0.13"/><circle cx="298.4" cy="176.0" r="1.3" fill="#fff"/>
+<path d="M-5,246 C71,220 131,262 201,245 C259,234 301,264 347,249 L347,284 L-5,284 Z" fill="#07050f"/>
+</g>
+<rect x="1" y="26" width="338" height="250" rx="10" fill="none" stroke="var(--line)"/>
+<text x="170" y="300" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">Thousands, and the Milky Way</text>
+<text x="170" y="318" font-size="11.5" fill="var(--muted)" text-anchor="middle">Orion is hard to pick out in the crowd</text>
+</svg>
+</div>
+<figcaption>The same stars, in the same places, on the same night. The city panel
+is not darker than the desert one, it is brighter: the glow washes the faint
+stars out until only the strongest survive.</figcaption>
+</figure>
+
+
+<h2>The Bortle scale: a score out of nine for your sky</h2>
+
+<p>John Bortle published this scale in <em>Sky &amp; Telescope</em> in 2001, and
+astronomers have used it ever since. It runs from Class 1, the darkest sky left
+anywhere on Earth, to Class 9, the middle of a big city.</p>
+
+<p>What makes it useful is that it is written in terms of what you can actually
+see, rather than a number off a meter. Class 1 says the Milky Way is bright
+enough to cast a shadow. Class 8 says there is enough skyglow to read a
+newspaper outside at midnight.</p>
+
+<figure class="article-fig">
+  <img src="/images/articles/bortle-scale-eso.webp"
+       alt="The Bortle scale illustrated across one photograph: the same view of the night sky rendered nine times, from an inner-city sky with almost no stars through to a pristine dark site with the Milky Way blazing"
+       loading="lazy" decoding="async" />
+  <figcaption>The whole scale in one picture, from inner city on one side to
+  pristine desert on the other. Select the image to open it full size, which is
+  the only way to see how much detail is in the darker end. Credit:
+  <a href="https://www.eso.org/public/images/dark-skies/" rel="noopener">ESO</a>/P.
+  Hor&aacute;lek, M. Wallner,
+  <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY
+  4.0</a>.</figcaption>
+</figure>
 
 <table>
   <thead>
-    <tr><th>Class</th><th>Sky</th><th>NELM</th><th>SQM</th><th>What it means for imaging</th></tr>
+    <tr><th>Class</th><th>Where</th><th>Looking up, you see</th><th>What you can photograph</th></tr>
   </thead>
   <tbody>
-    <tr><td>1</td><td>Excellent dark site</td><td>7.6 to 8.0</td><td>21.8 to 22.0</td><td>Anything works. Filters cost you more than they give back.</td></tr>
-    <tr><td>2</td><td>Truly dark site</td><td>7.1 to 7.5</td><td>21.6 to 21.8</td><td>Broadband colour is easy. Long integrations reach faint dust.</td></tr>
-    <tr><td>3</td><td>Rural</td><td>6.6 to 7.0</td><td>21.3 to 21.6</td><td>Galaxies and clusters look their best. Narrowband is optional.</td></tr>
-    <tr><td>4</td><td>Brighter rural</td><td>6.3 to 6.5</td><td>20.8 to 21.3</td><td>Gradients start appearing at the horizon. Still very workable.</td></tr>
-    <tr><td>5</td><td>Suburban</td><td>5.6 to 6.0</td><td>19.3 to 20.3</td><td>Narrowband starts to pay for itself on emission targets.</td></tr>
-    <tr><td>6</td><td>Bright suburban</td><td>5.1 to 5.5</td><td>18.5 to 19.3</td><td>Broadband subs saturate the background quickly.</td></tr>
-    <tr><td>7</td><td>Suburban to urban</td><td>4.6 to 5.0</td><td>18.0 to 18.5</td><td>Narrowband is the practical route to nebulae.</td></tr>
-    <tr><td>8</td><td>City</td><td>4.1 to 4.5</td><td>under 18.0</td><td>Emission nebulae only, and only through a tight filter.</td></tr>
-    <tr><td>9</td><td>Inner city</td><td>4.0 and below</td><td>under 18.0</td><td>Moon, planets, and the brightest clusters.</td></tr>
+    <tr><td>1</td><td>Almost nowhere left</td><td>A Milky Way bright enough to cast a shadow</td><td>Anything. A filter costs you more than it gives back.</td></tr>
+    <tr><td>2</td><td>Deep desert, remote mountains</td><td>The Milky Way with obvious dark lanes in it</td><td>Anything, and faint dust with enough hours.</td></tr>
+    <tr><td>3</td><td>Rural</td><td>The Milky Way clearly, with a glow over distant towns</td><td>Galaxies look their best here.</td></tr>
+    <tr><td>4</td><td>Edge of a village</td><td>The Milky Way overhead, washed out near the horizon</td><td>Still very good. Gradients start to appear.</td></tr>
+    <tr><td>5</td><td>Suburbs</td><td>A faint Milky Way, and only overhead</td><td>Filters start to earn their money on nebulae.</td></tr>
+    <tr><td>6</td><td>Bright suburbs</td><td>No real Milky Way. The sky has a colour.</td><td>Unfiltered shots fill up with skyglow fast.</td></tr>
+    <tr><td>7</td><td>Edge of a city</td><td>A grey sky and the well-known constellations</td><td>Nebulae, through a filter.</td></tr>
+    <tr><td>8</td><td>City. My balcony.</td><td>A dozen or so of the brightest stars</td><td>Glowing gas clouds only, and only through a tight filter.</td></tr>
+    <tr><td>9</td><td>Inner city</td><td>A handful of stars, if that</td><td>The Moon, the planets, the brightest clusters.</td></tr>
   </tbody>
 </table>
 
-<p>Two things about the table are worth flagging. The SQM figures are the
-commonly quoted ranges rather than anything Bortle himself specified, and
-different sources shade the boundaries slightly differently. The NELM figures
-are also optimistic. A 2014 study found that Bortle overestimated how visible
-diffuse objects are to a typical observer, and that a limiting magnitude of 6.0
-to 6.5 is a more realistic ceiling than the 7.1 the scale assigns to Class 2.
-Treat the numbers as a guide to roughly where you are, not a certificate.</p>
+<h3>If you like numbers</h3>
+
+<p>Each class also maps onto two measurements. The first is the faintest star
+you can pick out with your eyes alone, quoted as a magnitude, where bigger
+numbers mean fainter stars. The second is a Sky Quality Meter reading, which is
+a direct measurement of how much light the sky itself is giving off. One point
+on the SQM scale is about two and a half times the brightness, so small
+differences in the number are large differences in the sky.</p>
+
+<p>Treat all of it as a rough guide. A study in 2014 found Bortle was
+optimistic about what a typical person can actually see, and different sources
+draw the boundaries between classes in slightly different places. The scale
+tells you roughly where you are. It is not a certificate.</p>
 
 
-<h2>Where I actually shoot</h2>
+<h2>Work out your own number tonight</h2>
 
-<figure class="article-fig fig-float">
-  <img src="/images/articles/uae-at-night-iss.webp"
-       alt="The United Arab Emirates photographed at night from the International Space Station, showing the Dubai, Sharjah and Ajman city lights along the Gulf coast"
-       loading="lazy" decoding="async" />
-  <figcaption>The UAE from the ISS. The bright coastal band is the joined cities
-  of Dubai, Sharjah and Ajman. Credit: NASA Earth Observatory, astronaut
-  photograph
-  <a href="https://science.nasa.gov/earth/earth-observatory/united-arab-emirates-at-night-82723/"
-  rel="noopener">ISS038-E-16335</a>, public domain.</figcaption>
-</figure>
+<p>You do not need any equipment for this. Go outside, give your eyes twenty
+minutes away from screens and porch lights, then find Orion, which sits in the
+evening sky from about November to March. Four bright stars mark its corners
+and three in a line make the belt.</p>
 
-<p>Most of what is on this site was shot from a balcony in Dubai. That is
-Bortle 8, sometimes 9 depending on which way the scope is pointed. The sky
-overhead is a flat grey-orange. On an average night I can see perhaps a dozen
-stars with the naked eye, and the Milky Way has never once been visible from
-there.</p>
+<p>Now count the stars <em>inside</em> that rectangle, ignoring the four corners
+and the three belt stars. That count is a decent proxy for your sky:</p>
 
-<p>The other site is Al Quaa, about two hours inland toward the Empty Quarter.
-That is a Bortle 2 sky, and the difference is not incremental. The Milky Way
-comes up as a structured band with visible dust lanes, and the sky background in
-a sub-exposure drops by more than two orders of magnitude.</p>
+<ul>
+  <li><strong>Fewer than 5.</strong> Bortle 7 to 9. City sky.</li>
+  <li><strong>5 to 15.</strong> Bortle 5 to 6. Suburban.</li>
+  <li><strong>15 to 30.</strong> Bortle 4. You are doing well.</li>
+  <li><strong>More than 30.</strong> Bortle 3 or better. Stay there.</li>
+</ul>
 
-<p>Driving out is the best possible fix for light pollution. It is also the one
-you cannot use on a Tuesday. The filters exist because the balcony is where most
-of the clear nights get used.</p>
+<p>Outside the Orion months, the same trick works with any pattern you can
+recognise: count the faint stars between the bright ones. It is worth doing
+once from home and once on a trip somewhere dark, because the gap between the
+two numbers is the thing this whole article is about.</p>
 
 
-<h2>What light pollution does to an exposure</h2>
+<h2>Why a bright sky is such a problem</h2>
 
-<p>A common assumption is that a bright sky drowns out faint targets, in the
-sense that the target signal gets weaker. It does not. The photons from the
-nebula arrive at the sensor at exactly the same rate over Dubai as they do over
-Al Quaa. Nothing about the city changes what the nebula is doing.</p>
+<p>The obvious assumption is that city lights drown the nebula out, in the
+sense that its light gets weaker. That is not what happens. Light from the
+Rosette Nebula lands on my camera at exactly the same rate on the balcony as it
+does in the desert. Nothing a city does can reach across five thousand light
+years and turn a nebula down.</p>
 
-<p>What changes is everything arriving alongside them. Skyglow adds a large,
-even offset to every pixel, and that offset carries its own shot noise. Because
-shot noise scales with the square root of the signal, a background a hundred
-times brighter comes with ten times the noise. The nebula is still there in the
-data, sitting on top of a noisy floor that is far taller than it is. Subtracting
-the offset is trivial. Subtracting the noise it brought with it is impossible.</p>
+<p>What changes is what arrives alongside it. Skyglow lands on every pixel of
+the sensor, and it does not arrive smoothly, it arrives in a grainy flicker.
+The brighter the glow, the coarser the flicker. The nebula is still there in the
+picture, sitting on top of a noisy floor far taller than it is.</p>
 
-<p>The practical effects stack up. Sub-exposures have to be shorter or the
-background clips. Stars bloat. Colour calibration gets harder because the offset
-is not neutral. And the total integration time needed for a given result goes up
-sharply, which is the part that decides whether a target is worth attempting at
-all.</p>
+<p>Try to hear someone whispering next to a motorway. Turning the volume up does
+not help, because you turn the motorway up too. Subtracting the average level of
+the traffic is easy. Subtracting the roar is impossible, and the whisper is lost
+somewhere inside it.</p>
+
+<p>In practice that means a few things:</p>
+
+<ul>
+  <li>Exposures have to be kept short, or the sky itself fills the sensor up.</li>
+  <li>Stars swell and lose their colour.</li>
+  <li>The glow is not the same brightness across the frame, so pictures come out
+  with a slope of brightness across them.</li>
+  <li>You need far more hours of data for the same result, which is usually what
+  decides whether a target is worth trying at all.</li>
+</ul>
 
 
-<h2>Why a filter can help at all</h2>
+<h2>The trick: a nebula only glows in a few colours</h2>
 
-<p>The reason any of this is solvable comes down to a difference in spectra.</p>
+<p>Here is the loophole, and it is a good one.</p>
 
-<p>Emission nebulae glow because their gas is ionised by nearby hot stars, and
-ionised gas emits at specific wavelengths rather than across the spectrum.
-Hydrogen-alpha sits at 656.3nm in the deep red. Doubly ionised oxygen emits at
-500.7nm and 495.9nm in the blue-green. Hydrogen-beta is at 486.1nm and ionised
-sulphur at 671.6nm. Nearly all the light from the Rosette or the Lobster arrives
-in those handful of narrow spikes.</p>
+<p>A glowing nebula is not lit up like an object in daylight. Its gas is being
+energised by nearby hot stars, and energised gas behaves like a neon sign: it
+emits a few pure colours and nothing in between. Hydrogen puts out a deep red at
+656nm. Oxygen puts out a blue-green at 501nm. Almost all the light from the
+Rosette or the Orion Nebula arrives in a small number of narrow spikes like
+those.</p>
 
-<p>Skyglow does not. Sodium and mercury street lighting produce a few strong
-lines that are easy to block, which is what the old light pollution filters were
-built for. LED lighting, which is what the Gulf is now lit with, produces a broad
-white continuum with a blue peak and a long phosphor tail. It covers the whole
-visible band. There is no line to notch out.</p>
+<p>City lighting does the opposite. Old orange street lights at least had a few
+strong colours you could block, which is what the light pollution filters of the
+1990s were built for. Modern LED lighting, which is what the Gulf is lit with
+now, throws out a smooth white spread across every colour at once. There is
+nothing specific to block. It is everywhere.</p>
+
 
 <figure class="article-fig">
 <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Spectrum diagram from 480 to 690 nanometres. A broad continuum from LED street lighting spans the whole range, with a strong sodium spike at 589 nanometres. The nebula emits in narrow spikes at 486, 496, 501, 656 and 672 nanometres. Two shaded 7 nanometre windows sit over the oxygen-three and hydrogen-alpha lines, passing those and blocking everything else.">
-  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">Where the nebula emits, and where the city does</text>
+  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">The nebula glows in a few colours. The city glows in all of them.</text>
 
   <!-- filter passbands: 7nm at OIII 500.7 and Ha 656.3 -->
   <rect x="109" y="46" width="20" height="194" fill="var(--accent)" opacity="0.16"/>
@@ -408,36 +927,41 @@ visible band. There is no line to notch out.</p>
     <text x="414" y="302">what the filter lets through</text>
   </g>
 </svg>
-<figcaption>The nebula puts nearly all of its light into a few narrow spikes.
-City lighting spreads its light across everything. A dual narrowband filter
-keeps two small windows open and shuts the rest.</figcaption>
+<figcaption>The nebula puts nearly all of its light into a few narrow
+spikes. City lighting spreads its light across everything. A dual narrowband
+filter holds two small windows open and shuts the rest of the spectrum.</figcaption>
 </figure>
 
-<p>That mismatch is the whole opportunity. If the target emits in narrow lines
-and the sky emits everywhere, a filter that only opens two small windows throws
-away almost all the skyglow and keeps almost all the target.</p>
+<p>That mismatch is the entire opportunity. If the target only sends light in
+two narrow colours, and the city sends light in all of them, then a filter that
+opens two narrow windows throws away nearly all the skyglow and keeps nearly all
+the nebula.</p>
+
+<p>One aside, because it is worth sitting with. That deep red light in these
+pictures left the Rosette Nebula around five thousand years ago, before the
+pyramids were built, and it travelled the whole way at the speed of light only to
+be very nearly stopped by a car park in Dubai.</p>
 
 
-<h2>The 7nm and 3nm filters</h2>
+<h2>What the filters actually do</h2>
 
 <p>The <a href="/gear/optolong-l-extreme-filter.html">Optolong L-eXtreme</a> is
-the one that gets used most. It passes a 7nm band at hydrogen-alpha and a 7nm
-band at O III, and blocks essentially everything else. Out of the roughly 300nm
-of visible spectrum, it is open for 14nm of it.</p>
+the one I use most. It opens a 7nm window at the red hydrogen line and a 7nm
+window at the blue-green oxygen line, and blocks essentially everything else.
+Out of roughly 300nm of colour that your eye can see, it is open for 14 of them.
+It is shut for about 95% of the visible spectrum, on purpose.</p>
 
 <p>The <a href="/gear/svbony-sv220-3nm-filter.html">Svbony SV220</a> does the
-same job with 3nm windows. Halving the window width roughly halves the skyglow
-that gets through, while the emission lines themselves are narrow enough that
-most of the target signal still fits. The catch is that the line is not
-infinitely narrow, the filter's transmission curve has shoulders, and a tighter
-band is less forgiving of the light cone from a fast telescope hitting the
-coating off-axis. The Askar V at 495mm is f/6.2, which is slow enough that this
-is not a problem.</p>
+same job with windows less than half as wide. Narrower windows let through
+roughly half as much skyglow, while the nebula's colours are narrow enough that
+most of the signal still fits through. The catch is that very tight filters get
+fussy about fast telescopes, where light hits the coating at a steep angle. The
+Askar V is slow enough that this is not an issue.</p>
 
 <figure class="article-fig">
 <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Two bar charts. Without a filter, the sky background bar is roughly four times the height of the nebula signal bar. With a 7 nanometre dual narrowband filter on the same sky, the background bar collapses to a small fraction of its former height while the nebula bar drops only slightly, leaving the nebula taller than the background.">
-  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">Same sky, same target, one hour of data</text>
+  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">Same sky, same nebula, one hour of data</text>
 
   <!-- panel A -->
   <text x="185" y="42" font-size="11" fill="var(--muted)" text-anchor="middle">No filter, Bortle 8</text>
@@ -458,84 +982,92 @@ is not a problem.</p>
   <text x="475" y="192" font-size="10" fill="var(--muted)" text-anchor="middle">sky background</text>
   <text x="585" y="192" font-size="10" fill="var(--muted)" text-anchor="middle">nebula signal</text>
 
-  <text x="360" y="213" font-size="10" fill="var(--muted)" text-anchor="middle">The filter removes most of the background and a little of the signal. The ratio between them is what changes.</text>
+  <text x="360" y="213" font-size="10" fill="var(--muted)" text-anchor="middle">The filter throws away most of the skyglow and only a little of the nebula. That change in the ratio is the whole point.</text>
 </svg>
-<figcaption>Illustrative, not measured. The point is the ratio. Without a filter
-the nebula sits on a background several times its own brightness. With one, it
-sits above it.</figcaption>
+<figcaption>Illustrative, not measured. Without a filter the nebula sits
+underneath a background several times its own brightness. With one, it sits on
+top.</figcaption>
 </figure>
 
-<p>What this looks like in practice is longer subs. Under a filter that tight,
-a 300 second exposure from the balcony has a background level lower than a 30
-second unfiltered one. The sensor is no longer racing to fill up with skyglow,
-so exposures can run long enough for the faint signal to climb clear of read
-noise. Total integration still has to be generous, because the filter is
-rejecting real photons too, but the hours now go somewhere useful.</p>
+<p>What this looks like on a real night is longer exposures. Behind a 3nm filter,
+a five minute frame from the balcony has less sky in it than a thirty second
+frame without one. The sensor is no longer racing to fill up with orange glow, so
+each frame can run long enough for the faint stuff to climb clear. You still need
+plenty of hours, because the filter is throwing away real photons too, but the
+hours now go somewhere useful.</p>
 
-<p>Two side effects are worth knowing about. Bright stars can show halos, which
-is a coating artefact and varies between samples. And star colour goes strange,
-because the only star light getting through is whatever falls inside two narrow
-windows, so everything comes out magenta and teal. Both are fixable in
-processing, and the <a href="/articles/siril-post-processing-guide.html">Siril
-workflow</a> covers the star handling.</p>
+<p>Two side effects come with the territory. Bright stars can grow halos, which
+is down to the coating and varies from filter to filter. And star colour goes
+strange, because the only starlight getting through is whatever happens to fall
+in those two windows, so everything comes out magenta and teal. Both are dealt
+with in processing, and the
+<a href="/articles/siril-post-processing-guide.html">Siril guide</a> covers the
+star handling.</p>
 
 
-<h2>Where narrowband does nothing</h2>
+<h2>Where a filter does nothing at all</h2>
 
-<p>Galaxies, globular clusters and reflection nebulae do not emit in lines. They
-shine by starlight, which is a continuum, or by scattering starlight, which is
-also a continuum. A dual narrowband filter cuts a galaxy by the same proportion
-it cuts the sky, so the contrast ratio is unchanged and all you have done is
-throw away most of your photons.</p>
+<p>Galaxies, star clusters and reflection nebulae do not glow like neon signs.
+They shine with ordinary starlight, or by reflecting it, which means they emit
+every colour at once, exactly like the city does.</p>
 
-<p>This is where the
-<a href="/gear/optolong-l-quad-enhance-filter.html">L-Quad Enhance</a> comes in.
-It is a broadband filter with several wide passbands rather than two narrow
-ones, designed to notch out the worst of the artificial lines while leaving
-enough of the spectrum open that a galaxy still registers. It is a much gentler
-intervention, and correspondingly a much smaller improvement. Optolong do not
-recommend it above Bortle 7, and the balcony is Bortle 8, so it lives in the
-category of things that help a little rather than things that solve a problem.</p>
+<p>Put a narrowband filter in front of a galaxy and it cuts the galaxy by the
+same proportion it cuts the sky. The contrast between them does not improve at
+all, and you have thrown away most of your light for nothing.</p>
 
 <table>
   <thead>
-    <tr><th>Target</th><th>Emits as</th><th>Filter that helps</th></tr>
+    <tr><th>What you are shooting</th><th>How it glows</th><th>Does a narrowband filter help?</th></tr>
   </thead>
   <tbody>
-    <tr><td>Emission nebulae (M42, Rosette, Lobster)</td><td>Narrow lines</td><td>Dual narrowband, 7nm or 3nm</td></tr>
-    <tr><td>Supernova remnants (Jellyfish, Thor's Helmet)</td><td>Narrow lines</td><td>Dual narrowband, 7nm or 3nm</td></tr>
-    <tr><td>Planetary nebulae</td><td>Narrow lines, O III strong</td><td>Dual narrowband</td></tr>
-    <tr><td>Galaxies (M31, M101, Leo Triplet)</td><td>Continuum</td><td>Broadband, or drive somewhere dark</td></tr>
-    <tr><td>Star clusters (M45, M41)</td><td>Continuum</td><td>Broadband, or drive somewhere dark</td></tr>
-    <tr><td>Reflection nebulae</td><td>Scattered continuum</td><td>Broadband, or drive somewhere dark</td></tr>
-    <tr><td>Moon and planets</td><td>Bright enough not to care</td><td>None needed</td></tr>
+    <tr><td>Glowing gas clouds (Orion, Rosette, Lobster)</td><td>A few pure colours</td><td>Yes, enormously</td></tr>
+    <tr><td>Exploded star remnants (Jellyfish, Thor's Helmet)</td><td>A few pure colours</td><td>Yes</td></tr>
+    <tr><td>Planetary nebulae</td><td>Mostly the blue-green oxygen line</td><td>Yes</td></tr>
+    <tr><td>Galaxies (Andromeda, Pinwheel, Leo Triplet)</td><td>Every colour at once</td><td>No. Drive somewhere dark.</td></tr>
+    <tr><td>Star clusters (Pleiades, M41)</td><td>Every colour at once</td><td>No. Drive somewhere dark.</td></tr>
+    <tr><td>Reflection nebulae</td><td>Every colour at once, borrowed</td><td>No. Drive somewhere dark.</td></tr>
+    <tr><td>The Moon and the planets</td><td>Bright enough not to care</td><td>Not needed</td></tr>
   </tbody>
 </table>
 
+<p>This is where the
+<a href="/gear/optolong-l-quad-enhance-filter.html">L-Quad Enhance</a> comes in.
+It leaves several wide windows open rather than two narrow ones, blocking the
+worst of the artificial lines while leaving enough of the spectrum open for a
+galaxy to register. It is a much gentler intervention, and a correspondingly
+smaller improvement. Optolong do not recommend it above Bortle 7, and the balcony
+is Bortle 8, so it sits in the category of things that help a bit rather than
+things that solve a problem.</p>
 
-<h2>What a filter cannot fix</h2>
 
-<p>A narrowband filter changes which photons reach the sensor. It does not
-change anything else about a bad site.</p>
+<h2>What no filter can fix</h2>
+
+<p>A filter changes which light reaches the sensor. It does not change anything
+else about a bad site.</p>
 
 <ul>
-  <li><strong>Gradients.</strong> Skyglow is not uniform across the frame. One
-  horizon is brighter than the other, and the filter reduces that gradient
-  without flattening it. Background extraction still has work to do.</li>
-  <li><strong>Transparency.</strong> Dust and humidity scatter the light you
-  want as readily as the light you do not. In the Gulf, summer haze costs more
-  than the city does.</li>
-  <li><strong>Seeing.</strong> Turbulence sets how small a star can be. No
-  filter affects it.</li>
-  <li><strong>Continuum targets.</strong> Covered above, and it is the main
-  reason a Bortle 8 gallery ends up heavy on nebulae.</li>
+  <li><strong>Uneven skyglow.</strong> One horizon is always brighter than the
+  other. A filter reduces that slope without flattening it, so there is still
+  work to do later.</li>
+  <li><strong>Haze.</strong> Dust and humidity scatter the light you want just as
+  readily as the light you do not. In a Gulf summer, the haze costs more than the
+  city does.</li>
+  <li><strong>Turbulence.</strong> Wobbling air sets how small a star can look.
+  No filter touches it.</li>
+  <li><strong>Galaxies.</strong> Covered above, and the main reason a Bortle 8
+  gallery ends up full of nebulae.</li>
 </ul>
 
-<p>The honest summary is that a 3nm dual narrowband filter over a Bortle 8 sky
-gets emission nebulae to roughly where an unfiltered camera would get them from
-a Bortle 4 sky, and does nothing at all for anything else. That is a large win
-in a narrow lane. Every image on this site of a nebula was made in that lane.
-Every galaxy was made in the car.</p>
+
+<h2>The bottom line</h2>
+
+<p>A 3nm dual narrowband filter over a Bortle 8 city sky gets glowing nebulae to
+roughly where an ordinary camera would get them from a Bortle 4 country sky. For
+everything else it does nothing whatsoever.</p>
+
+<p>That is a big win in a narrow lane, and it is the reason this site looks the
+way it does. Every nebula here was photographed from the balcony. Every galaxy
+was photographed from the car.</p>
 
       </div>
 
