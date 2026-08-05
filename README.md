@@ -15,8 +15,8 @@ A static HTML/CSS/JS site hosted on GitHub Pages, showcasing deep-sky images inc
 - **Home** — landing page
 - **Gallery** — deep-sky image collection, with a full-screen image viewer (zoom, rotate, information, like, and share grouped under an Options menu), filtering, multiple view modes, and per-image deep links
 - **Prints** — available prints for enquiry
-- **Gear** — equipment used for capture and processing
-- **Articles** — long-form write-ups on capture, processing and meteor showers, as a tiled index linking to one real page per article
+- **Gear** — equipment used for capture and processing, as a tiled index linking to one real page per item
+- **Articles** — long-form write-ups on gear, capture, processing, light pollution and meteor showers, as a tiled index linking to one real page per article
 - **Quiz** — interactive space knowledge quiz
 - **Puzzle** — astrophoto jigsaw puzzle
 - **Supernova Sweeper** — supernova sweeping clearing game
@@ -26,18 +26,45 @@ Per-object write-ups (the "Field Notes" content — how each image was captured,
 
 ---
 
+## Repository layout
+
+```
+bhapstar-astro/                  ← this repo (PUBLIC)
+├── .github/workflows/
+│   └── site-postprocess.yml     ← the one build + deploy workflow
+├── build.py                     ← runs every generator in the right order
+├── scripts/
+│   ├── generate-gear-pages.py
+│   ├── generate-article-pages.py
+│   ├── generate-share-pages.py
+│   ├── generate-schema.py
+│   └── generate-sitemap.py
+├── content/                     ← hand-written prose, one file per slug
+│   ├── articles/<slug>.html
+│   └── gear/<slug>.html
+├── articles/  gear/  share/     ← generated output, never edited by hand
+├── partials/partials.js         ← header/footer injection + feature flags
+├── site-data.json               ← the single source of data for all of it
+├── images/                      ← full-size WebP, plus thumbs/, gear/, articles/, icons/
+├── sounds/                      ← audio cues for the game pages
+├── styles.css  sw.js  manifest.json  protect-images.js
+└── *.html                       ← the hand-maintained pages listed above
+```
+
+---
+
 ## Content model
 
-All gallery, gear, article, and write-up content is driven by a single source-of-truth file, `site-data.json`. Each entry carries its title, description, type, slug, capture specs, and detailed write-up. Pages that consume gallery data filter on the `section` field (`gallery`, `gear` or `article`) so entries never leak across contexts.
+All gallery, gear, article, and write-up content is driven by a single source-of-truth file, `site-data.json`. Each entry carries its title, description, type, slug, capture specs, and detailed write-up. Article entries also carry a `category` and a `readTime`, which appear on the tile and in the page meta line. Pages that consume gallery data filter on the `section` field (`gallery`, `gear` or `article`) so entries never leak across contexts.
 
 Long-form prose lives outside the JSON, as plain HTML fragments:
 
-- `gear-reviews/<slug>.html` — the review body for a gear item
-- `article-content/<slug>.html` — the body of an article
+- `content/gear/<slug>.html` — the review body for a gear item
+- `content/articles/<slug>.html` — the body of an article
 
-Fragments are ordinary HTML (`<h2>`, `<p>`, `<ul>`, `<table>`). Diagrams are hand-drawn inline `<svg>` inside a `<figure class="article-fig">` (or `.passband-fig` on gear reviews) rather than binary assets, so they scale, follow the light/dark theme through CSS variables, and cost nothing extra to load. An article may open with a `<div class="event-callout">` block for a dated, real-world event.
+Fragments are ordinary HTML (`<h2>`, `<p>`, `<ul>`, `<table>`). Diagrams are hand-drawn inline `<svg>` inside a `<figure class="article-fig">` (or `.passband-fig` on gear reviews) rather than binary assets, so they scale, follow the light/dark theme through CSS variables, and cost nothing extra to load. Photographs use the same `.article-fig` frame and can be floated beside the text with `.fig-float` (add `.fig-left` to flip the side), or paired two-up with `.article-figrow`, which collapses to a single column on narrow screens. Every image inside an `.article-fig` opens larger on click. Vimeo clips sit in a `.article-video` box, with a fixed-width wrapper and `padding-top: 177.78%` for portrait footage. An article may open with a `<div class="event-callout">` block for a dated, real-world event, or for a short summary above the body.
 
-An entry flagged `"hidden": true` is staged but unpublished — usually waiting on photographs. It gets no tile, no generated page and no sitemap entry. Removing the flag publishes it on the next build.
+An entry flagged `"hidden": true` is staged but unpublished — usually waiting on photographs. It gets no tile, no generated page and no sitemap entry, and both the gear and article generators delete any page whose slug has since been hidden or removed. Setting the flag back to `false` publishes it on the next build.
 
 ---
 
@@ -56,15 +83,21 @@ The standard authoring flow for a new image: name the original → the pipeline 
 
 ## Build & deploy
 
-A single GitHub Actions workflow, `.github/workflows/site-postprocess.yml`, builds and deploys the site to Pages on every push to `main`. It was consolidated from multiple workflows into one (with a `pages` concurrency group) to stop near-simultaneous runs from colliding on the same Pages environment. On each run it:
+A single GitHub Actions workflow, `.github/workflows/site-postprocess.yml`, builds and deploys the site to Pages on every push to `main`. It was consolidated from multiple workflows into one (with a `pages` concurrency group) to stop near-simultaneous runs from colliding on the same Pages environment.
 
-- **Regenerates the sitemap** — `generate-sitemap.py`
-- **Regenerates structured data** — `generate-schema.py` injects JSON-LD (`ImageObject` per photo, `BlogPosting` per write-up) into the page `<head>` blocks from `site-data.json`
-- **Regenerates per-image share pages** — `generate-share-pages.py` writes one small page per gallery image under `/share/<slug>.html`
-- **Regenerates per-gear pages** — `generate-gear-pages.py` writes one page per gear item under `/gear/<slug>.html`, pulling its prose from `gear-reviews/`
-- **Regenerates per-article pages** — `generate-article-pages.py` writes one page per article under `/articles/<slug>.html`, pulling its prose from `article-content/`. Both generators are idempotent and delete stale pages whose slug has left `site-data.json`
-- **Bumps the service-worker cache version** — rewrites the `CACHE_VERSION` constant in `sw.js` with the latest commit hash
-- **Deploys to Pages** and commits the regenerated files back to the repo
+The build itself is one command, `python build.py`, which runs the five generators in `scripts/` in a fixed order so the sequence never has to be repeated in the workflow file:
+
+1. **gear** — `generate-gear-pages.py` writes one page per gear item under `/gear/<slug>.html`, pulling its prose from `content/gear/`. First, because share pages only turn a capture spec into a link if the gear page already exists on disk
+2. **article** — `generate-article-pages.py` writes one page per article under `/articles/<slug>.html`, pulling its prose from `content/articles/`, and rewrites the tile grid and JSON-LD blocks inside `articles.html` between their marker comments
+3. **share** — `generate-share-pages.py` writes one small page per gallery image under `/share/<slug>.html`
+4. **schema** — `generate-schema.py` injects JSON-LD (`ImageObject` per photo, `BlogPosting` per write-up) into the `<head>` blocks of `gallery.html` and `field_notes.html`
+5. **sitemap** — `generate-sitemap.py` rebuilds `sitemap.xml` from `site-data.json`
+
+All the generators are idempotent, rewrite every page on each run, and delete stale pages whose slug has left `site-data.json`. `build.py --list` prints the stages, and naming stages (`python build.py gear share`) runs a subset, still in the correct order.
+
+The workflow then **bumps the service-worker cache version** (rewriting the `CACHE_VERSION` constant in `sw.js` with the latest commit hash), **deploys to Pages**, and **commits the regenerated files back** to the repo.
+
+Because everything under `articles/`, `gear/` and `share/` is regenerated on every push, a content change usually means committing only the fragment in `content/` and, where the tile or metadata changes, `site-data.json`.
 
 ---
 
@@ -80,6 +113,7 @@ Every page carries Open Graph and Twitter Card meta tags. Because link crawlers 
 - Static hosting via GitHub Pages with a custom domain
 - Progressive Web App (PWA) support via `manifest.json` and `sw.js`
 - Service-worker caching (`sw.js`): the shell — HTML, CSS, JS, and partials — is **network-first** (bypassing the HTTP cache with `no-store`, falling back to cache only when offline); `*-data.json` feeds are **stale-while-revalidate**; images are **cache-first** (long-lived); external requests (analytics, fonts, Formspree, Vimeo, likes API) are **network-only**. The SW is disabled on `localhost`/`127.0.0.1` so Live Server hot-reload works, and activating a new version reloads open tabs
+- Light and dark themes throughout, driven by CSS custom properties on `html[data-theme]`
 - Cloudflare Analytics; a Cloudflare Worker backs the image "likes" system
 - Canonical tags on all pages
 - Open Graph / Twitter Card previews, with per-image share pages (see above)
@@ -90,15 +124,20 @@ Every page carries Open Graph and Twitter Card meta tags. Because link crawlers 
 
 | Role | Gear |
 |---|---|
-| Telescopes | Askar V (60mm / 80mm objectives) |
-| Mount | Juwei 14 |
-| Camera | ZWO ASI585MC Air |
-| Filters | Optolong L-Extreme (dual narrowband) / Optolong L-Quad EnHance |
-| Smart scope | ZWO Seestar S30 |
+| Telescopes | Askar V (interchangeable 60mm / 80mm ED objectives, 270–600mm) |
+| Mount | Juwei 14 harmonic |
+| Camera | ZWO ASI585MC Air (camera, guider and ASIAir controller in one body) |
+| Focuser | ZWO EAF |
+| Filters | Optolong L-eXtreme (7nm dual narrowband) · Svbony SV220 (3nm dual narrowband) · Optolong L-Quad Enhance (broadband) |
+| Filter holder | Svbony filter drawer |
+| Power | EcoFlow River 2 |
+| Smart scopes | ZWO Seestar S30 · ZWO Seestar S30 Pro |
+| Tripod | ZWO TC20 + TH10 fluid head |
 | Camera (wide-field) | Sony A7 III |
 | Lenses | Samyang 135mm f/2 · Rokinon 18mm f/2.8 · Samyang 14mm f/2.8 |
+| Also owned | Skywatcher Evostar 72ED · Celestron 2in eyepiece kit |
 | Capture | ASIAir |
-| Processing | Siril |
+| Processing | Siril · GraXpert · GIMP |
 
 ---
 
