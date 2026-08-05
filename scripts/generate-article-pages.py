@@ -216,7 +216,16 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     .article-page {{ max-width: 760px; margin: 40px auto; padding: 0 16px; }}
     .article-header {{ margin-bottom: 34px; }}
     .article-hero {{ margin: 0 0 26px; }}
+    /* Covers come from the gallery, so they arrive in whatever shape the
+       photograph was taken in. Left to run at their natural aspect a portrait
+       cover fills 1300px of screen before the headline, which buries the
+       article. Capping the height and cropping to fill keeps every hero to
+       roughly one band: landscape covers are barely touched, portrait ones are
+       centre-cropped to the same depth. */
     .article-hero img {{ width: 100%; height: auto; display: block;
+                         max-height: 440px;
+                         object-fit: cover;
+                         object-position: center;
                          border-radius: 16px;
                          border: 1px solid var(--line);
                          box-shadow: 0 24px 70px rgba(0,0,0,0.55),
@@ -261,6 +270,9 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     @media (max-width: 560px) {{
       .article-body table {{ font-size: 13px; }}
       .article-body th, .article-body td {{ padding: 8px 8px; }}
+      /* The column is narrow here, so the same 440px band is proportionally
+         much taller. Pull it in so the headline still lands above the fold. */
+      .article-hero img {{ max-height: 320px; }}
     }}
 
     /* ── Hand-drawn figures ──
@@ -292,6 +304,12 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
                               margin: 6px 0 18px 24px; }}
     .article-fig.fig-float.fig-left {{ float: left;
                                        margin: 6px 24px 18px 0; }}
+    /* A portrait photograph at the standard 296px float width stands far
+       taller than the two or three paragraphs beside it, which leaves a
+       column of empty space before the next heading clears the float. Narrower
+       is the fix: the text column gets pushed to more lines and the two
+       heights end up close. */
+    .article-fig.fig-float.fig-portrait {{ width: 230px; }}
     .article-body h2, .article-body h3 {{ clear: both; }}
     /* Full-width figures always start below any float, so a diagram or video
        can never slide under a floated photo. */
@@ -309,6 +327,11 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
       .article-fig.fig-float,
       .article-fig.fig-float.fig-left {{ float: none; width: auto;
                                          margin: 26px 0; }}
+      /* Full width would blow a portrait photo up to well over a screen
+         height, so it stays small and sits centred instead. */
+      .article-fig.fig-float.fig-portrait {{ float: none; width: 280px;
+                                             max-width: 100%;
+                                             margin: 26px auto; }}
     }}
 
     /* ── Click to enlarge ──
