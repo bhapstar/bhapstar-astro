@@ -428,6 +428,51 @@ small galaxy want very different focal lengths, and owning both as separate
 telescopes means owning two of everything else as well.</p>
 
 
+<h2>The focuser: ZWO EAF</h2>
+<figure class="article-fig fig-float">
+  <img src="/images/gear/thumbs/ZWO%20EAF.webp"
+       alt="The ZWO EAF electronic focuser fitted to the telescope focuser in place of the focus knob"
+       loading="lazy" decoding="async" />
+  <figcaption>A stepper motor where the focus knob used to be. The
+  <a href="/gear/zwo-eaf-electronic-focuser.html">full notes on it</a> are in the
+  gear section.</figcaption>
+</figure>
+
+<p>This is the part of the rig I would push hardest on anyone buying a telescope
+for astrophotography, and it is the one people leave until last. Buy the
+<a href="/gear/zwo-eaf-electronic-focuser.html">ZWO EAF</a> at the same time as
+the scope, not two years later like I did.</p>
+
+<p>The reason is that focus does not stay where you put it. A tube contracts as
+the temperature falls through the night, and the optical path changes with it.
+Something in focus at nine in the evening is not in focus at two in the morning,
+and nothing about the picture tells you at the time.</p>
+
+<p>How much that costs you depends on the focal ratio, and it is worse than most
+people expect. The usable focus zone scales with the square of the f-number, so a
+fast instrument tolerates a small fraction of the error a slow one does. On
+something like this you are working inside a few tens of microns, which is
+comfortably less than a night's thermal drift moves the tube. The result is a
+folder where the first hour is sharp and the last two are quietly soft, and you
+find out in front of the stacking software.</p>
+
+<p>The EAF replaces the focuser knob with a stepper motor driven from the
+<a href="/articles/asiair-astrophotography-control.html">ASIAir</a>. It runs an
+autofocus routine, stepping through positions and measuring star sizes to find
+the best one, and the part that actually changes results is that it repeats: on a
+timer, or whenever the temperature has moved by a set amount. The whole night
+stays usable instead of drifting away from you.</p>
+
+<p>It also removes a source of vibration nobody counts. Focusing by hand means
+touching the telescope and waiting for it to settle, several times a night, on a
+mount that is trying to hold a target still to within an arcsecond.</p>
+
+<p>Two practical notes, since it is a mechanical fitting rather than a plug. ZWO
+supply different brackets, so confirm yours matches your focuser before ordering
+rather than after. And configure the backlash setting once it is on, because the
+autofocus routine behaves noticeably better for it.</p>
+
+
 <h2>The camera: ASI585MC Air</h2>
 <figure class="article-fig fig-float">
   <img src="/images/gear/Full%20rig%204.webp"
@@ -444,8 +489,10 @@ guide sensor and a full ASIAIR controller in one housing, which means the laptop
 the guide scope and its camera, and most of the cabling all left at once.</p>
 
 <p>What is left is one power lead into the camera and a phone in my pocket.
-Plate solving, focusing, guiding and the imaging plan all run from the handset,
-and the night can be left to itself once the first frame comes back clean.</p>
+Plate solving, focusing, guiding and the imaging plan
+<a href="/articles/asiair-astrophotography-control.html">all run from the
+handset</a>, and the night can be left to itself once the first frame comes back
+clean.</p>
 
 
 <!--
@@ -512,9 +559,9 @@ spare, which is the point at which power stops being something you think about.<
 
 <p>The thing I like most about this setup is that none of it fights me. The
 mount holds the scope without a counterweight, the scope changes focal length
-without changing telescopes, the camera runs the session without a laptop, and
-the drawer changes a filter without breaking the train. Every part removes a
-job that used to be mine.</p>
+without changing telescopes, the focuser holds focus without being touched, the
+camera runs the session without a laptop, and the drawer changes a filter without
+breaking the train. Every part removes a job that used to be mine.</p>
 
 <p>That adds up to the only measure I care about, which is how much of the night
 is spent imaging rather than setting up. Fifteen minutes from opening the boot
