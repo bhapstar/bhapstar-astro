@@ -516,7 +516,7 @@ all.</p>
 </g>
 <rect x="1" y="26" width="338" height="250" rx="10" fill="none" stroke="var(--line)"/>
 <text x="170" y="300" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">Thousands, and the Milky Way</text>
-<text x="170" y="318" font-size="11.5" fill="var(--muted)" text-anchor="middle">Orion is hard to pick out in the crowd</text>
+<text x="170" y="318" font-size="11.5" fill="var(--muted)" text-anchor="middle">The Orion Nebula is visible to the naked eye</text>
 </svg>
 </div>
 <figcaption>The same stars, in the same places, on the same night. The city panel
@@ -554,17 +554,26 @@ newspaper outside at midnight.</p>
     <tr><th>Class</th><th>Where</th><th>Looking up, you see</th><th>What you can photograph</th></tr>
   </thead>
   <tbody>
-    <tr><td>1</td><td>Almost nowhere left</td><td>A Milky Way bright enough to cast a shadow</td><td>Anything. A filter costs you more than it gives back.</td></tr>
+    <tr><td>1</td><td>Almost nowhere left</td><td>A Milky Way bright enough to cast a shadow</td><td>Anything you point at. A filter is a choice here, not a rescue.</td></tr>
     <tr><td>2</td><td>Deep desert, remote mountains</td><td>The Milky Way with obvious dark lanes in it</td><td>Anything, and faint dust with enough hours.</td></tr>
-    <tr><td>3</td><td>Rural</td><td>The Milky Way clearly, with a glow over distant towns</td><td>Galaxies look their best here.</td></tr>
-    <tr><td>4</td><td>Edge of a village</td><td>The Milky Way overhead, washed out near the horizon</td><td>Still very good. Gradients start to appear.</td></tr>
-    <tr><td>5</td><td>Suburbs</td><td>A faint Milky Way, and only overhead</td><td>Filters start to earn their money on nebulae.</td></tr>
-    <tr><td>6</td><td>Bright suburbs</td><td>No real Milky Way. The sky has a colour.</td><td>Unfiltered shots fill up with skyglow fast.</td></tr>
-    <tr><td>7</td><td>Edge of a city</td><td>A grey sky and the well-known constellations</td><td>Nebulae, through a filter.</td></tr>
-    <tr><td>8</td><td>City. My balcony.</td><td>A dozen or so of the brightest stars</td><td>Glowing gas clouds only, and only through a tight filter.</td></tr>
+    <tr><td>3</td><td>Rural</td><td>The Milky Way clearly, with a glow over distant towns</td><td>Galaxies and clusters look their best. Nebulae still gain from a filter.</td></tr>
+    <tr><td>4</td><td>Edge of a village</td><td>The Milky Way overhead, washed out near the horizon</td><td>Still very good, with a slope of brightness creeping in.</td></tr>
+    <tr><td>5</td><td>Suburbs</td><td>A faint Milky Way, and only overhead</td><td>Unfiltered shots get harder. Filtered nebulae get a lot better.</td></tr>
+    <tr><td>6</td><td>Bright suburbs</td><td>No real Milky Way. The sky has a colour.</td><td>Unfiltered frames fill with skyglow fast.</td></tr>
+    <tr><td>7</td><td>Edge of a city</td><td>A grey sky and the well-known constellations</td><td>Nebulae through a filter. Galaxies want a drive.</td></tr>
+    <tr><td>8</td><td>City. My balcony.</td><td>A dozen or so of the brightest stars</td><td>Glowing gas clouds only, and only behind a tight filter.</td></tr>
     <tr><td>9</td><td>Inner city</td><td>A handful of stars, if that</td><td>The Moon, the planets, the brightest clusters.</td></tr>
   </tbody>
 </table>
+
+<p>One thing that column can give the wrong impression about. A narrowband
+filter is not a city tool that stops being useful once you leave town. It lifts
+a glowing nebula out of its background under any sky, which is why the same
+filter goes in the car to the desert, and it is also what lets you keep working
+when the Moon is up. What the Bortle class actually decides is whether the
+filter is a choice or the only thing that works: at Class 2 it is one option
+among several, and at Class 8 it is the difference between an image and a blank
+orange frame.</p>
 
 <h3>If you like numbers</h3>
 
@@ -602,6 +611,13 @@ and the three belt stars. That count is a decent proxy for your sky:</p>
 recognise: count the faint stars between the bright ones. It is worth doing
 once from home and once on a trip somewhere dark, because the gap between the
 two numbers is the thing this whole article is about.</p>
+
+<p>Then check yourself against the satellites. Drop a pin on
+<a href="https://lightpollutionmap.app/" rel="noopener">lightpollutionmap.app</a>
+and it will give you a Bortle class and an SQM figure for that exact spot, built
+from night-time satellite data. It is also the fastest way to find out how far
+you would actually have to drive to reach a darker class, which is usually less
+far than people expect.</p>
 
 
 <h2>Why a bright sky is such a problem</h2>
@@ -655,16 +671,18 @@ nothing specific to block. It is everywhere.</p>
 <figure class="article-fig">
 <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Spectrum diagram from 480 to 690 nanometres. A broad continuum from LED street lighting spans the whole range, with a strong sodium spike at 589 nanometres. The nebula emits in narrow spikes at 486, 496, 501, 656 and 672 nanometres. Two shaded 7 nanometre windows sit over the oxygen-three and hydrogen-alpha lines, passing those and blocking everything else.">
-  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">The nebula glows in a few colours. The city glows in all of them.</text>
+  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">A few colours from the nebula, all of them from the city, 7 nm and 3 nm windows between</text>
 
   <!-- filter passbands: 7nm at OIII 500.7 and Ha 656.3 -->
   <rect x="109" y="46" width="20" height="194" fill="var(--accent)" opacity="0.16"/>
   <rect x="109" y="46" width="20" height="194" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
-  <text x="119" y="36" font-size="9" fill="var(--muted)" text-anchor="middle">7 nm window</text>
+  <rect x="114.7" y="46" width="8.6" height="194" fill="var(--accent)" opacity="0.30"/>
+  <text x="119" y="36" font-size="9" fill="var(--muted)" text-anchor="middle">7 and 3 nm</text>
 
   <rect x="554" y="46" width="20" height="194" fill="var(--accent)" opacity="0.16"/>
   <rect x="554" y="46" width="20" height="194" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
-  <text x="564" y="36" font-size="9" fill="var(--muted)" text-anchor="middle">7 nm window</text>
+  <rect x="559.7" y="46" width="8.6" height="194" fill="var(--accent)" opacity="0.30"/>
+  <text x="564" y="36" font-size="9" fill="var(--muted)" text-anchor="middle">7 and 3 nm</text>
 
   <!-- LED continuum -->
   <path d="M60,215 C120,205 200,196 300,192 C400,188 480,194 560,205 C610,212 640,218 660,222 L660,240 L60,240 Z"
@@ -704,8 +722,11 @@ nothing specific to block. It is everywhere.</p>
     <text x="84" y="302">LED street lighting</text>
     <rect x="230" y="294" width="18" height="9" fill="#34d399"/>
     <text x="254" y="302">nebula emission</text>
-    <rect x="390" y="294" width="18" height="9" fill="var(--accent)" opacity="0.35"/>
-    <text x="414" y="302">what the filter lets through</text>
+    <rect x="370" y="294" width="18" height="9" fill="var(--accent)" opacity="0.22"/>
+    <rect x="370" y="294" width="18" height="9" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+    <text x="394" y="302">7 nm window</text>
+    <rect x="492" y="294" width="8" height="9" fill="var(--accent)" opacity="0.5"/>
+    <text x="506" y="302">3 nm window</text>
   </g>
 </svg>
 <figcaption>The nebula puts nearly all of its light into a few narrow
@@ -722,6 +743,15 @@ the nebula.</p>
 pictures left the Rosette Nebula around five thousand years ago, before the
 pyramids were built, and it travelled the whole way at the speed of light only to
 be very nearly stopped by a car park in Dubai.</p>
+
+<figure class="article-fig" style="max-width: 290px; margin-left: auto; margin-right: auto;">
+  <img src="/images/rosette-nebula-ngc2244.webp"
+       alt="The Rosette Nebula, a ring of red hydrogen gas around a central star cluster, photographed from a Bortle 8 balcony in Dubai through a dual narrowband filter"
+       loading="lazy" decoding="async" />
+  <figcaption>The Rosette Nebula, from the balcony, through the narrowband
+  filter. Select it to see it larger, or open it
+  <a href="/share/rosette-nebula-ngc2244.html">in the gallery</a>.</figcaption>
+</figure>
 
 
 <h2>What the filters actually do</h2>
@@ -742,7 +772,7 @@ Askar V is slow enough that this is not an issue.</p>
 <figure class="article-fig">
 <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Two bar charts. Without a filter, the sky background bar is roughly four times the height of the nebula signal bar. With a 7 nanometre dual narrowband filter on the same sky, the background bar collapses to a small fraction of its former height while the nebula bar drops only slightly, leaving the nebula taller than the background.">
-  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">Same sky, same nebula, one hour of data</text>
+  <text x="10" y="18" font-size="12.5" fill="var(--text)" font-weight="600">Same sky, same nebula, one hour of data, with and without a 3 nm filter</text>
 
   <!-- panel A -->
   <text x="185" y="42" font-size="11" fill="var(--muted)" text-anchor="middle">No filter, Bortle 8</text>
@@ -756,9 +786,9 @@ Askar V is slow enough that this is not an issue.</p>
   <line x1="350" y1="46" x2="350" y2="196" stroke="var(--line)" stroke-dasharray="4 4"/>
 
   <!-- panel B -->
-  <text x="515" y="42" font-size="11" fill="var(--muted)" text-anchor="middle">7 nm dual narrowband</text>
-  <rect x="440" y="161" width="70" height="14" fill="#8a8fa8" opacity="0.55"/>
-  <rect x="550" y="153" width="70" height="22" fill="#f06a7a" opacity="0.85"/>
+  <text x="515" y="42" font-size="11" fill="var(--muted)" text-anchor="middle">3 nm dual narrowband</text>
+  <rect x="440" y="166" width="70" height="9" fill="#8a8fa8" opacity="0.55"/>
+  <rect x="550" y="155" width="70" height="20" fill="#f06a7a" opacity="0.85"/>
   <line x1="420" y1="175" x2="640" y2="175" stroke="var(--line)"/>
   <text x="475" y="192" font-size="10" fill="var(--muted)" text-anchor="middle">sky background</text>
   <text x="585" y="192" font-size="10" fill="var(--muted)" text-anchor="middle">nebula signal</text>
