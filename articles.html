@@ -46,6 +46,83 @@
       margin-bottom: 6px;
       opacity: 0.95;
     }
+    /* In grid view the meta line becomes a small chip, which is what makes a
+       tile read as an article rather than a photograph with a label on it.
+       List view is left exactly as it was: chips in a dense row look busy. */
+    #articleGrid:not(.list-view) .card .cap .m {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.30);
+      background: rgba(167,139,250,0.10);
+      margin-bottom: 8px;
+      opacity: 1;
+    }
+    /* ── Lead tile ──
+       The newest article runs full width with a cinematic crop, so the page
+       opens with something to look at and there is an obvious place to start.
+       Everything after it keeps the standard three-up grid. The markup is
+       identical for every tile, so this is pure CSS: the tile generator and
+       the runtime render in this page both stay untouched. */
+    #articleGrid:not(.list-view) .card:first-child { grid-column: span 12; }
+    #articleGrid:not(.list-view) .card:first-child img { aspect-ratio: 16 / 7; }
+
+    /* Scrim under the caption. The tile is one photograph rather than a
+       stack of them, so the text needs its own contrast rather than relying
+       on whatever happens to be in the bottom-left of the crop. */
+    #articleGrid:not(.list-view) .card:first-child::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 66%;
+      background: linear-gradient(to top,
+                  rgba(5,4,20,0.78) 0%,
+                  rgba(5,4,20,0.34) 46%,
+                  rgba(5,4,20,0) 100%);
+      pointer-events: none;
+    }
+    /* Decorative flag. Tiles are ordered newest first, so the first one is
+       always the latest. */
+    #articleGrid:not(.list-view) .card:first-child::before {
+      content: "Latest";
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #050414;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    }
+    /* The scrim is a generated box and paints after the caption, so the
+       caption needs lifting above it. */
+    #articleGrid:not(.list-view) .card:first-child .cap {
+      z-index: 1;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      max-width: 640px;
+      padding: 14px 18px;
+      background: rgba(5,4,20,0.42);
+    }
+    #articleGrid:not(.list-view) .card:first-child:hover .cap {
+      background: rgba(5,4,20,0.58);
+    }
+    #articleGrid:not(.list-view) .card:first-child .cap .t {
+      font-size: 14.5px;
+      letter-spacing: 0.13em;
+      line-height: 1.45;
+    }
+    #articleGrid:not(.list-view) .card:first-child .cap .d {
+      font-size: 13px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
     /* Captions toggle: hide the summary but keep the title and meta line,
        in both grid and list view. The list-view case is spelled out on its
        own so it always outranks the list-view rules in styles.css. */
@@ -61,6 +138,16 @@
          articles the standfirst is the point, so bring it back in grid view. */
       #articleGrid:not(.list-view):not(.hide-desc) .card .cap .d { display: block; }
       #articleGrid.list-view .card .cap .m { font-size: 9px; letter-spacing: 0.12em; }
+
+      /* A 16:7 crop on a phone leaves a letterbox strip with a caption
+         covering most of it, so the lead goes back to the standard shape and
+         only keeps the larger type. */
+      #articleGrid:not(.list-view) .card:first-child img { aspect-ratio: 4 / 3; }
+      #articleGrid:not(.list-view) .card:first-child .cap {
+        left: 12px; right: 12px; bottom: 11px; padding: 11px 14px;
+      }
+      #articleGrid:not(.list-view) .card:first-child .cap .t { font-size: 13px; }
+      #articleGrid:not(.list-view) .card:first-child .cap .d { font-size: 12px; }
 
       /* styles.css also force-hides .d in mobile list view, which left the
          Captions button with nothing to switch. Bring the summary back here,
