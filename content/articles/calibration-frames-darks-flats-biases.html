@@ -11,16 +11,15 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">Your camera photographs itself as well as the sky.</p>
-  <p class="ec-body">Every frame you take contains the sky plus a set of marks
+  <p class="ec-title">Your camera doesn't just capture the night sky.</p>
+  <p class="ec-body">Every frame you take contains the night sky plus a set of marks
   the camera and telescope put there on their own: dust shadows, darkened
   corners, heat, and an electrical floor. Calibration frames are pictures of
-  those marks with no sky in them, so the software can work out what to take
-  back out. It is twenty minutes of work and it is the difference between a
+  those marks with no sky in them, so the software can work out what to remove. It is twenty minutes of work and it is the difference between a
   clean picture and a blotchy one.</p>
 </div>
 
-<h2>Nothing you shoot is only the sky</h2>
+<h2>Shooting the sky means shooting artifacts as well</h2>
 
 <p>Point a camera at a nebula for five minutes and you get a frame with a
 nebula in it. You also get every speck of dust sitting on the sensor window,
@@ -41,7 +40,7 @@ frames, and there are three of them.</p>
 
 <figure class="article-fig">
 <svg viewBox="0 0 700 306" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="Four panels showing what each type of frame records. The light frame shows a nebula with darkened corners, dust shadows and a few bright hot pixels. The bias frame is an almost flat grey floor. The dark frame is black with scattered bright hot pixels and a glow in one corner. The flat frame is an evenly lit grey field showing the same darkened corners and dust shadows as the light frame. Underneath, a formula: light minus dark, divided by flat minus dark flat, leaves only the sky.">
+     aria-label="Four panels showing what each type of frame records. The light frame shows a nebula with darkened corners, dust shadows and a few bright hot pixels. The bias frame is an almost flat grey floor. The dark frame is black with scattered bright hot pixels and a glow in one corner. The flat frame is an evenly lit grey field showing the same darkened corners and dust shadows as the light frame. Underneath, a formula: light minus dark, divided by flat minus bias, leaves only the sky.">
 <defs>
 <clipPath id="cf0"><rect x="12" y="52" width="150" height="132" rx="8"/></clipPath>
 <clipPath id="cf1"><rect x="186" y="52" width="150" height="132" rx="8"/></clipPath>
@@ -157,7 +156,7 @@ frames, and there are three of them.</p>
 <circle cx="54" cy="160" r="1.5" fill="#5fff9d"/>
 </g>
 <rect x="12" y="52" width="150" height="132" rx="8" fill="none" stroke="var(--line)"/>
-<text x="87" y="204" font-size="9.5" fill="var(--muted)" text-anchor="middle">the sky, plus everything below</text>
+<text x="87" y="204" font-size="9.5" fill="var(--muted)" text-anchor="middle">the sky, plus everything else</text>
 <text x="261" y="44" font-size="11.5" fill="var(--text)" font-weight="600" text-anchor="middle">Bias</text>
 <g clip-path="url(#cf1)">
 <rect x="186" y="52" width="150" height="132" fill="#23212e"/>
@@ -259,13 +258,23 @@ frames, and there are three of them.</p>
 <rect x="534" y="52" width="150" height="132" rx="8" fill="none" stroke="var(--line)"/>
 <text x="609" y="204" font-size="9.5" fill="var(--muted)" text-anchor="middle">dust and darkened corners</text>
 <rect x="12" y="234" width="676" height="58" rx="10" fill="var(--soft)" stroke="var(--line)"/>
-<text x="350" y="259" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">( light &#8722; dark ) &#247; ( flat &#8722; dark flat )</text>
+<text x="350" y="259" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">( light &#8722; dark ) &#247; ( flat &#8722; bias )</text>
 <text x="350" y="279" font-size="10.5" fill="var(--muted)" text-anchor="middle">Subtract what the sensor added. Divide out what the optics took away. What is left is the sky.</text>
 </svg>
 <figcaption>Only the first panel is a photograph in any normal sense. The
 other three are measurements of the equipment, taken so the software knows what
 the equipment adds to every frame.</figcaption>
 </figure>
+
+
+<p>That formula is worth a second look, because Siril's own manual writes it a
+different way: image minus dark minus bias, all divided by the flat. It is the
+same arithmetic. The dark you subtract is the raw one, straight off the camera,
+and a dark already has the bias sitting inside it, so subtracting the dark takes
+both out in one pass. That leaves the flat as the only frame still carrying an
+offset of its own, which is why the bias appears once, on that side of the
+division. Siril's workflow does exactly this: it builds the master flat with the
+bias subtracted, and the master dark without.</p>
 
 
 <h2>Darks: the heat and the stuck pixels</h2>
