@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -144,15 +145,16 @@
       display:flex; justify-content:space-between; align-items:center;
       padding:15px 2px; border-top:1px solid rgba(124,92,246,.2);
       color:var(--light-tx); text-decoration:none; font-size:16.5px;
-      transition:padding-left .16s ease;
+      transition:padding-left .16s ease, background-color .18s ease, border-color .18s ease;
     }
     #vA .lnk:last-of-type{ border-bottom:1px solid rgba(124,92,246,.2) }
     #vA .lnk:active{ padding-left:6px }
-    #vA .lnk em{ font-style:normal; color:var(--light-mu); font-size:13.5px }
+    #vA .lnk em{ font-style:normal; color:var(--light-mu); font-size:13.5px; transition:color .18s ease }
     #vA .save{
       display:block; margin:26px 0 0; padding:16px; text-align:center; border-radius:12px;
       background:var(--light-tx); color:var(--light-bg); text-decoration:none;
       font-weight:500; font-size:16px;
+      transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease;
     }
     #vA .code{ margin:22px 0 0; text-align:center; font-size:13.5px; color:var(--light-mu) }
     #vA .code b{ color:#c0398c; letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
@@ -185,13 +187,16 @@
     #vB .lnk{
       display:flex; justify-content:space-between; align-items:center; padding:14px;
       color:#fff; text-decoration:none; font-size:16px; border-bottom:1px solid rgba(255,255,255,.1);
+      border-radius:10px;
+      transition:background-color .18s ease, padding-left .16s ease;
     }
     #vB .lnk:last-child{ border-bottom:0 }
-    #vB .lnk em{ font-style:normal; color:#b8b3d6; font-size:13px }
+    #vB .lnk em{ font-style:normal; color:#b8b3d6; font-size:13px; transition:color .18s ease }
     #vB .save{
       display:block; margin:15px 0 0; padding:16px; text-align:center; border-radius:13px;
       background:linear-gradient(135deg,#a78bfa,#60a5fa); color:#0b0a1c;
       font-weight:600; text-decoration:none; font-size:16px;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
     }
     #vB .code{ margin:16px 0 0; text-align:center; font-size:13px; color:#b8b3d6 }
     #vB .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
@@ -218,6 +223,8 @@
       display:flex; align-items:center; justify-content:center; padding:14px; border-radius:12px;
       border:1px solid var(--line); background:rgba(255,255,255,.045);
       color:var(--paper); text-decoration:none; font-size:15.5px;
+      transition:background-color .18s ease, border-color .18s ease,
+                 transform .18s ease, box-shadow .18s ease;
     }
     #vD .btn.wide{ grid-column:1 / -1 }
     #vD .btn.pri{
@@ -227,8 +234,61 @@
     #vD .code{ margin:18px 0 0; text-align:center; font-size:13px; color:var(--muted) }
     #vD .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
 
+    /* ─────────── Hover ───────────
+       Gated behind a real pointer. On a phone, which is where most of these
+       are opened, a plain :hover rule sticks to whatever was tapped last and
+       leaves a button looking selected after the tap. This block simply does
+       not apply there. */
+    @media (hover:hover) and (pointer:fine){
+
+      /* A · a violet wash the width of the row, and a small step to the
+         right that reuses the indent :active already had */
+      #vA .lnk:hover{
+        background-color:rgba(124,92,246,.075);
+        border-top-color:rgba(124,92,246,.42);
+        padding-left:8px;
+      }
+      #vA .lnk:hover:last-of-type{ border-bottom-color:rgba(124,92,246,.42) }
+      #vA .lnk:hover em{ color:var(--light-tx) }
+      #vA .save:hover{
+        background-color:#2a2550;
+        transform:translateY(-1px);
+        box-shadow:0 6px 18px rgba(26,23,48,.28);
+      }
+
+      /* B · the glass panel is already translucent, so the rows only need
+         to catch a little more light */
+      #vB .lnk:hover{
+        background-color:rgba(255,255,255,.11);
+        padding-left:18px;
+      }
+      #vB .lnk:hover em{ color:#e6e3f5 }
+      #vB .save:hover{
+        filter:brightness(1.08);
+        transform:translateY(-1px);
+        box-shadow:0 8px 22px rgba(167,139,250,.34);
+      }
+
+      /* D · the border does the work here, picking up the violet it is
+         already tinted with */
+      #vD .btn:hover{
+        background-color:rgba(255,255,255,.085);
+        border-color:rgba(167,139,250,.55);
+        transform:translateY(-1px);
+        box-shadow:0 6px 16px rgba(0,0,0,.28);
+      }
+      #vD .btn.pri:hover{
+        background:linear-gradient(135deg,rgba(167,139,250,.44),rgba(96,165,250,.44));
+        border-color:rgba(167,139,250,.8);
+        box-shadow:0 8px 22px rgba(167,139,250,.3);
+      }
+    }
+
     @media (prefers-reduced-motion:reduce){
       *{ transition:none !important; animation:none !important }
+      /* Colour changes on hover are fine, the movement is not */
+      #vA .save:hover, #vB .save:hover, #vD .btn:hover{ transform:none !important }
+      #vA .lnk:hover, #vB .lnk:hover{ padding-left:2px }
       /* Hold the drift layers at their mid position rather than snapping
          back to unscaled, which would show the edges of the oversized layer */
       #vA .backdrop::before, #vB .bg::before{ transform:scale(1.16) !important }
