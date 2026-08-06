@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Bhapinder Singh — bhapstar Astrophotography</title>
+  <title>Bhapinder (Bobby) Singh — bhapstar Astrophotography</title>
 
   <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
@@ -15,15 +15,17 @@
   <meta name="author" content="Bhapinder Singh" />
 
   <meta property="og:type"        content="profile" />
-  <meta property="og:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
+  <meta property="og:title"       content="Bhapinder (Bobby) Singh — bhapstar Astrophotography" />
   <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
   <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:url"         content="https://bhapstar.com/card.html" />
 
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
+  <meta name="twitter:title"       content="Bhapinder (Bobby) Singh — bhapstar Astrophotography" />
   <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+
+  <link rel="preload" as="fetch" href="site-data.json" crossorigin="anonymous" />
 
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
@@ -47,6 +49,10 @@
        Three designs live in this one file and one is picked
        at random on load. All three carry identical content,
        so whichever a visitor gets, they get everything.
+
+       Imagery is drawn from site-data.json, the same source
+       the index hero uses, so new photographs feed in on
+       their own with nothing to update here.
        ══════════════════════════════════════════════════ */
 
     @font-face{
@@ -86,7 +92,24 @@
     .rule{ height:3px; border-radius:2px; background:var(--grad) }
     a{ -webkit-tap-highlight-color:transparent }
 
+    /* Photographs fade in once site-data.json has been read, so there is
+       never a flash of the wrong picture. */
+    .photo{ opacity:0; transition:opacity .55s ease }
+    .photo.on{ opacity:1 }
+
     /* ─────────── A · Paper ─────────── */
+    #vA .backdrop{
+      position:fixed; inset:0; z-index:0;
+      background-size:cover; background-position:center;
+    }
+    #vA .veil{
+      position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:linear-gradient(180deg,
+        rgba(245,244,252,.86) 0%,
+        rgba(245,244,252,.94) 42%,
+        rgba(245,244,252,.97) 100%);
+    }
+    #vA .wrap{ position:relative; z-index:2 }
     #vA .inner{ padding:38px 24px 34px }
     #vA .rule{ width:44px; margin-bottom:20px }
     #vA .wm{ font-size:13.5px; color:var(--light-tx); margin-bottom:24px }
@@ -111,17 +134,15 @@
 
     /* ─────────── B · Immersive ─────────── */
     #vB .stage{ position:relative; min-height:100vh; min-height:100dvh }
-    #vB .bg{ position:absolute; inset:0 }
-    #vB .bg img{ width:100%; height:100%; object-fit:cover; display:block }
-    #vB .bg::after{
-      content:""; position:absolute; inset:0;
+    #vB .bg{ position:absolute; inset:0; background-size:cover; background-position:center }
+    #vB .shade{
+      position:absolute; inset:0;
       background:linear-gradient(to bottom,rgba(5,4,20,.25),rgba(5,4,20,.74) 46%,rgba(5,4,20,.96));
     }
     #vB .fg{
       position:relative; min-height:100vh; min-height:100dvh;
       padding:46px 22px 30px; display:flex; flex-direction:column; justify-content:flex-end;
     }
-    #vB .wm{ position:absolute; top:34px; left:22px; font-size:13.5px; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.85) }
     #vB h1{ font-size:32px; font-weight:300; margin:0 0 4px; letter-spacing:.01em }
     #vB .role{ color:#c9c4e4; font-size:15px; margin:0 0 24px }
     #vB .glass{
@@ -143,17 +164,18 @@
     #vB .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
 
     /* ─────────── D · Contact sheet ─────────── */
-    #vD .inner{ padding:32px 18px 30px }
+    #vD .inner{ padding:36px 18px 30px }
     #vD .top{ text-align:center; margin-bottom:22px }
-    #vD .wm{ font-size:12.5px; color:var(--paper); margin-bottom:14px }
     #vD h1{ font-size:25px; font-weight:400; margin:0 0 2px }
     #vD .role{ color:var(--muted); font-size:14px; margin:0 }
     #vD .thumbs{
       display:grid; grid-template-columns:repeat(3,1fr); gap:4px;
       margin-bottom:22px; border-radius:12px; overflow:hidden;
     }
-    #vD .thumbs a{ display:block; line-height:0 }
-    #vD .thumbs img{ width:100%; aspect-ratio:1; object-fit:cover; display:block }
+    #vD .thumbs a{
+      display:block; line-height:0; aspect-ratio:1;
+      background:rgba(255,255,255,.05) center/cover no-repeat;
+    }
     #vD .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
     #vD .btn{
       display:flex; align-items:center; justify-content:center; padding:14px; border-radius:12px;
@@ -176,10 +198,12 @@
 
 <!-- ══════════════ A · Paper ══════════════ -->
 <section class="variant" id="vA">
+  <div class="backdrop photo" id="aBg" aria-hidden="true"></div>
+  <div class="veil" aria-hidden="true"></div>
   <div class="wrap"><div class="inner">
     <div class="rule"></div>
     <span class="wm">bhapstar</span>
-    <h1>Bhapinder Singh</h1>
+    <h1>Bhapinder (Bobby) Singh</h1>
     <p class="role">Astrophotographer</p>
 
     <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
@@ -188,6 +212,7 @@
     <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
     <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
     <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
+    <a class="lnk" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee</em></a>
 
     <a class="save" href="index.html#contact">Get in touch</a>
     <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
@@ -197,10 +222,10 @@
 <!-- ══════════════ B · Immersive ══════════════ -->
 <section class="variant" id="vB">
   <div class="stage">
-    <div class="bg"><img src="images/cats_paw_nebula_ngc6334.webp" alt="" /></div>
+    <div class="bg photo" id="bBg" aria-hidden="true"></div>
+    <div class="shade" aria-hidden="true"></div>
     <div class="fg"><div class="wrap" style="width:100%">
-      <span class="wm">bhapstar</span>
-      <h1>Bhapinder Singh</h1>
+      <h1>Bhapinder (Bobby) Singh</h1>
       <p class="role">Astrophotographer</p>
       <div class="glass">
         <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
@@ -209,6 +234,7 @@
         <a class="lnk" href="star_word.html">Star Word <em>daily</em></a>
         <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
         <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
+        <a class="lnk" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>coffee</em></a>
       </div>
       <a class="save" href="index.html#contact">Get in touch</a>
       <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
@@ -220,18 +246,17 @@
 <section class="variant" id="vD">
   <div class="wrap"><div class="inner">
     <div class="top">
-      <span class="wm">bhapstar</span>
-      <h1>Bhapinder Singh</h1>
+      <h1>Bhapinder (Bobby) Singh</h1>
       <p class="role">Astrophotographer</p>
     </div>
 
-    <div class="thumbs">
-      <a href="gallery.html"><img src="images/rosette-nebula-ngc2244.webp" alt="The Rosette Nebula" /></a>
-      <a href="gallery.html"><img src="images/orion-nebula-m42.webp" alt="The Orion Nebula" /></a>
-      <a href="gallery.html"><img src="images/andromeda-galaxy-m31.webp" alt="The Andromeda Galaxy" /></a>
-      <a href="gallery.html"><img src="images/pleiades-m45.webp" alt="The Pleiades" /></a>
-      <a href="gallery.html"><img src="images/cats_paw_nebula_ngc6334.webp" alt="The Cat's Paw Nebula" /></a>
-      <a href="gallery.html"><img src="images/the_milky_way.webp" alt="The Milky Way" /></a>
+    <div class="thumbs photo" id="dGrid">
+      <a href="gallery.html" aria-label="Gallery"></a>
+      <a href="gallery.html" aria-label="Gallery"></a>
+      <a href="gallery.html" aria-label="Gallery"></a>
+      <a href="gallery.html" aria-label="Gallery"></a>
+      <a href="gallery.html" aria-label="Gallery"></a>
+      <a href="gallery.html" aria-label="Gallery"></a>
     </div>
 
     <div class="row">
@@ -249,6 +274,9 @@
       <a class="btn" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram</a>
       <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X</a>
     </div>
+    <div class="row">
+      <a class="btn wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">☕ Support my work</a>
+    </div>
 
     <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
   </div></div>
@@ -264,20 +292,65 @@
 
   // Record which variant was served, so Cloudflare shows the split.
   // Written as cv, never as v, so refreshing re-rolls rather than sticking.
-  // replaceState adds no history entry and causes no reload.
   try {
     var qs = new URLSearchParams(location.search);
     qs.set('cv', v);
     history.replaceState(null, '', location.pathname + '?' + qs.toString() + location.hash);
   } catch (e) { /* not worth breaking the page over */ }
 
-  /* Counts read live from site-data.json using exactly the rule index.html
-     uses for "By the numbers", so the two pages always agree.
-     Images in a group count individually, and so do videos. */
+  // Used only if site-data.json cannot be read, so the page is never bare
+  var FALLBACK = [
+    'images/rosette-nebula-ngc2244.webp',
+    'images/orion-nebula-m42.webp',
+    'images/andromeda-galaxy-m31.webp',
+    'images/pleiades-m45.webp',
+    'images/cats_paw_nebula_ngc6334.webp',
+    'images/the_milky_way.webp'
+  ];
+
+  function shuffle(a){
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function paint(pool){
+    if (!pool.length) pool = FALLBACK.slice();
+
+    if (v === 'a' || v === 'b') {
+      var one = pool[Math.floor(Math.random() * pool.length)];
+      var el  = document.getElementById(v === 'a' ? 'aBg' : 'bBg');
+      var pre = new Image();
+      pre.onload = function(){
+        el.style.backgroundImage = 'url("' + one + '")';
+        el.classList.add('on');
+      };
+      pre.onerror = function(){ el.classList.add('on'); };
+      pre.src = one;
+    }
+
+    if (v === 'd') {
+      var six = shuffle(pool.slice()).slice(0, 6);
+      while (six.length < 6 && pool.length) six.push(pool[six.length % pool.length]);
+      var cells = document.querySelectorAll('#dGrid a');
+      six.forEach(function(src, i){
+        if (cells[i]) cells[i].style.backgroundImage = 'url("' + src + '")';
+      });
+      document.getElementById('dGrid').classList.add('on');
+    }
+  }
+
+  /* One read of site-data.json feeds both the counts and the imagery.
+     Counts use exactly the rule index.html uses for "By the numbers",
+     so the two pages always agree. Images in a group count individually,
+     and so do videos. */
   fetch('site-data.json', { cache: 'default' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(all){
       var gal = all.filter(function(it){ return (it.section || 'gallery') === 'gallery'; });
+
       var imgs = gal.reduce(function(n, it){
         return n + ((Array.isArray(it.images) && it.images.length) ? it.images.length
                   : (Array.isArray(it.videos) && it.videos.length) ? it.videos.length
@@ -286,8 +359,21 @@
       var arts = all.filter(function(it){ return it.section === 'article'; }).length;
       Array.prototype.forEach.call(document.querySelectorAll('.n-img'), function(el){ el.textContent = imgs; });
       Array.prototype.forEach.call(document.querySelectorAll('.n-art'), function(el){ el.textContent = arts; });
+
+      // Every still in the gallery, groups flattened. Videos are skipped:
+      // their posters exist, but a still frame of a timelapse makes a poor
+      // background.
+      var pool = [];
+      gal.forEach(function(it){
+        if (Array.isArray(it.images) && it.images.length) {
+          it.images.forEach(function(im){ if (im && im.file) pool.push(im.file); });
+        } else if (it.file) {
+          pool.push(it.file);
+        }
+      });
+      paint(pool);
     })
-    .catch(function(){ /* the numbers already in the HTML stand */ });
+    .catch(function(){ paint([]); });
 })();
 </script>
 
