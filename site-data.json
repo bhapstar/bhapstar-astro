@@ -1116,8 +1116,8 @@
   {
   "file": "images/jellyfish-nebula-ic443.webp",
   "alt": "The Jellyfish Nebula, calibrated and stacked from a night of subframes",
-  "title": "Darks, Flats and Biases: The Frames That Are Not Photographs",
-  "desc": "What calibration frames actually remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.",
+  "title": "Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs",
+  "desc": "What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.",
   "type": "processing",
   "category": "Processing",
   "readTime": "7 min read",
