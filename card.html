@@ -11,24 +11,27 @@
 
   <link rel="canonical" href="https://bhapstar.com/card.html" />
 
-  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, articles and contact details in one tap." />
+  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, articles and how to get in touch, in one tap." />
   <meta name="author" content="Bhapinder Singh" />
 
   <meta property="og:type"        content="profile" />
   <meta property="og:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
-  <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints and contact details." />
+  <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
   <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:url"         content="https://bhapstar.com/card.html" />
 
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
-  <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints and contact details." />
+  <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
 
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
   <!-- The variant is chosen here, before first paint, so nothing flashes.
-       ?v=a, ?v=b or ?v=d forces a specific one, useful for showing someone. -->
+       ?v=a, ?v=b or ?v=d forces a specific one, useful for showing someone.
+       The variant actually served is written back as ?cv=, which is only a
+       record. It is deliberately a different parameter, so a refresh still
+       rolls again instead of locking onto whatever the last roll wrote. -->
   <script>
   (function(){
     var m = location.search.match(/[?&]v=([abd])(?![a-z])/i);
@@ -186,7 +189,7 @@
     <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
     <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
 
-    <a class="save" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+    <a class="save" href="index.html#contact">Get in touch</a>
     <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
   </div></div>
 </section>
@@ -207,7 +210,7 @@
         <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
         <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
       </div>
-      <a class="save" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+      <a class="save" href="index.html#contact">Get in touch</a>
       <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
     </div></div>
   </div>
@@ -232,7 +235,7 @@
     </div>
 
     <div class="row">
-      <a class="btn pri wide" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+      <a class="btn pri wide" href="index.html#contact">Get in touch</a>
     </div>
     <div class="row">
       <a class="btn" href="gallery.html">Gallery</a>
@@ -259,13 +262,13 @@
   var tc = document.getElementById('themeColor');
   if (tc && v === 'a') tc.setAttribute('content', '#f5f4fc');
 
-  // Record which variant was served in the URL, so Cloudflare shows the split.
+  // Record which variant was served, so Cloudflare shows the split.
+  // Written as cv, never as v, so refreshing re-rolls rather than sticking.
   // replaceState adds no history entry and causes no reload.
   try {
-    if (!/[?&]v=/i.test(location.search)) {
-      var sep = location.search ? '&' : '?';
-      history.replaceState(null, '', location.pathname + location.search + sep + 'v=' + v + location.hash);
-    }
+    var qs = new URLSearchParams(location.search);
+    qs.set('cv', v);
+    history.replaceState(null, '', location.pathname + '?' + qs.toString() + location.hash);
   } catch (e) { /* not worth breaking the page over */ }
 
   /* Counts read live from site-data.json using exactly the rule index.html
