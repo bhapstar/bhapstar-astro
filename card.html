@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Bhapinder Singh — bhapstar Astrophotography</title>
+
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" id="themeColor" />
+
+  <link rel="canonical" href="https://bhapstar.com/card.html" />
+
+  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, articles and contact details in one tap." />
+  <meta name="author" content="Bhapinder Singh" />
+
+  <meta property="og:type"        content="profile" />
+  <meta property="og:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
+  <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints and contact details." />
+  <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/card.html" />
+
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Bhapinder Singh — bhapstar Astrophotography" />
+  <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints and contact details." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <!-- The variant is chosen here, before first paint, so nothing flashes.
+       ?v=a, ?v=b or ?v=d forces a specific one, useful for showing someone. -->
+  <script>
+  (function(){
+    var m = location.search.match(/[?&]v=([abd])(?![a-z])/i);
+    var v = m ? m[1].toLowerCase() : ['a','b','d'][Math.floor(Math.random() * 3)];
+    document.documentElement.setAttribute('data-v', v);
+  })();
+  </script>
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       card.html — the page behind the NFC tag and the QR
+
+       Three designs live in this one file and one is picked
+       at random on load. All three carry identical content,
+       so whichever a visitor gets, they get everything.
+       ══════════════════════════════════════════════════ */
+
+    @font-face{
+      font-family:'Outfit';
+      src:url('fonts/outfit-latin-wght-normal.woff2') format('woff2-variations');
+      font-weight:100 900; font-style:normal; font-display:swap;
+      unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+
+    :root{
+      --ink:#050414; --violet:#a78bfa; --cobalt:#60a5fa; --pink:#f472b6;
+      --paper:#efedfa; --muted:#9b98b8; --line:rgba(167,139,250,.22);
+      --light-bg:#f5f4fc; --light-tx:#1a1730; --light-mu:#564f82;
+      --grad:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+      font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased;
+      min-height:100vh; min-height:100dvh; background:var(--ink); color:var(--paper);
+    }
+    html[data-v="a"] body{ background:var(--light-bg); color:var(--light-tx); }
+
+    /* Only the chosen variant is shown */
+    .variant{ display:none }
+    html[data-v="a"] #vA,
+    html[data-v="b"] #vB,
+    html[data-v="d"] #vD{ display:block }
+
+    .wrap{
+      max-width:460px; margin:0 auto;
+      padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    }
+    .wm{ font-weight:600; letter-spacing:.32em; text-transform:uppercase; display:block }
+    .rule{ height:3px; border-radius:2px; background:var(--grad) }
+    a{ -webkit-tap-highlight-color:transparent }
+
+    /* ─────────── A · Paper ─────────── */
+    #vA .inner{ padding:38px 24px 34px }
+    #vA .rule{ width:44px; margin-bottom:20px }
+    #vA .wm{ font-size:13.5px; color:var(--light-tx); margin-bottom:24px }
+    #vA h1{ font-size:29px; font-weight:400; margin:0 0 2px; letter-spacing:.01em }
+    #vA .role{ color:var(--light-mu); font-size:15px; margin:0 0 28px }
+    #vA .lnk{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 2px; border-top:1px solid rgba(124,92,246,.2);
+      color:var(--light-tx); text-decoration:none; font-size:16.5px;
+      transition:padding-left .16s ease;
+    }
+    #vA .lnk:last-of-type{ border-bottom:1px solid rgba(124,92,246,.2) }
+    #vA .lnk:active{ padding-left:6px }
+    #vA .lnk em{ font-style:normal; color:var(--light-mu); font-size:13.5px }
+    #vA .save{
+      display:block; margin:26px 0 0; padding:16px; text-align:center; border-radius:12px;
+      background:var(--light-tx); color:var(--light-bg); text-decoration:none;
+      font-weight:500; font-size:16px;
+    }
+    #vA .code{ margin:22px 0 0; text-align:center; font-size:13.5px; color:var(--light-mu) }
+    #vA .code b{ color:#c0398c; letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
+
+    /* ─────────── B · Immersive ─────────── */
+    #vB .stage{ position:relative; min-height:100vh; min-height:100dvh }
+    #vB .bg{ position:absolute; inset:0 }
+    #vB .bg img{ width:100%; height:100%; object-fit:cover; display:block }
+    #vB .bg::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(to bottom,rgba(5,4,20,.25),rgba(5,4,20,.74) 46%,rgba(5,4,20,.96));
+    }
+    #vB .fg{
+      position:relative; min-height:100vh; min-height:100dvh;
+      padding:46px 22px 30px; display:flex; flex-direction:column; justify-content:flex-end;
+    }
+    #vB .wm{ position:absolute; top:34px; left:22px; font-size:13.5px; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.85) }
+    #vB h1{ font-size:32px; font-weight:300; margin:0 0 4px; letter-spacing:.01em }
+    #vB .role{ color:#c9c4e4; font-size:15px; margin:0 0 24px }
+    #vB .glass{
+      background:rgba(255,255,255,.09); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:8px;
+    }
+    #vB .lnk{
+      display:flex; justify-content:space-between; align-items:center; padding:14px;
+      color:#fff; text-decoration:none; font-size:16px; border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    #vB .lnk:last-child{ border-bottom:0 }
+    #vB .lnk em{ font-style:normal; color:#b8b3d6; font-size:13px }
+    #vB .save{
+      display:block; margin:15px 0 0; padding:16px; text-align:center; border-radius:13px;
+      background:linear-gradient(135deg,#a78bfa,#60a5fa); color:#0b0a1c;
+      font-weight:600; text-decoration:none; font-size:16px;
+    }
+    #vB .code{ margin:16px 0 0; text-align:center; font-size:13px; color:#b8b3d6 }
+    #vB .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
+
+    /* ─────────── D · Contact sheet ─────────── */
+    #vD .inner{ padding:32px 18px 30px }
+    #vD .top{ text-align:center; margin-bottom:22px }
+    #vD .wm{ font-size:12.5px; color:var(--paper); margin-bottom:14px }
+    #vD h1{ font-size:25px; font-weight:400; margin:0 0 2px }
+    #vD .role{ color:var(--muted); font-size:14px; margin:0 }
+    #vD .thumbs{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:4px;
+      margin-bottom:22px; border-radius:12px; overflow:hidden;
+    }
+    #vD .thumbs a{ display:block; line-height:0 }
+    #vD .thumbs img{ width:100%; aspect-ratio:1; object-fit:cover; display:block }
+    #vD .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
+    #vD .btn{
+      display:flex; align-items:center; justify-content:center; padding:14px; border-radius:12px;
+      border:1px solid var(--line); background:rgba(255,255,255,.045);
+      color:var(--paper); text-decoration:none; font-size:15.5px;
+    }
+    #vD .btn.wide{ grid-column:1 / -1 }
+    #vD .btn.pri{
+      background:linear-gradient(135deg,rgba(167,139,250,.3),rgba(96,165,250,.3));
+      border-color:rgba(167,139,250,.5); font-weight:500;
+    }
+    #vD .code{ margin:18px 0 0; text-align:center; font-size:13px; color:var(--muted) }
+    #vD .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
+
+    @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important } }
+  </style>
+</head>
+
+<body>
+
+<!-- ══════════════ A · Paper ══════════════ -->
+<section class="variant" id="vA">
+  <div class="wrap"><div class="inner">
+    <div class="rule"></div>
+    <span class="wm">bhapstar</span>
+    <h1>Bhapinder Singh</h1>
+    <p class="role">Astrophotographer</p>
+
+    <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">38</span> images</em></a>
+    <a class="lnk" href="prints.html">Prints <em>every size</em></a>
+    <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
+    <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
+    <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
+    <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
+
+    <a class="save" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+    <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
+  </div></div>
+</section>
+
+<!-- ══════════════ B · Immersive ══════════════ -->
+<section class="variant" id="vB">
+  <div class="stage">
+    <div class="bg"><img src="images/cats_paw_nebula_ngc6334.webp" alt="" /></div>
+    <div class="fg"><div class="wrap" style="width:100%">
+      <span class="wm">bhapstar</span>
+      <h1>Bhapinder Singh</h1>
+      <p class="role">Astrophotographer</p>
+      <div class="glass">
+        <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">38</span> images</em></a>
+        <a class="lnk" href="prints.html">Prints <em>every size</em></a>
+        <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
+        <a class="lnk" href="star_word.html">Star Word <em>daily</em></a>
+        <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
+        <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
+      </div>
+      <a class="save" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+      <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════════ D · Contact sheet ══════════════ -->
+<section class="variant" id="vD">
+  <div class="wrap"><div class="inner">
+    <div class="top">
+      <span class="wm">bhapstar</span>
+      <h1>Bhapinder Singh</h1>
+      <p class="role">Astrophotographer</p>
+    </div>
+
+    <div class="thumbs">
+      <a href="gallery.html"><img src="images/rosette-nebula-ngc2244.webp" alt="The Rosette Nebula" /></a>
+      <a href="gallery.html"><img src="images/orion-nebula-m42.webp" alt="The Orion Nebula" /></a>
+      <a href="gallery.html"><img src="images/andromeda-galaxy-m31.webp" alt="The Andromeda Galaxy" /></a>
+      <a href="gallery.html"><img src="images/pleiades-m45.webp" alt="The Pleiades" /></a>
+      <a href="gallery.html"><img src="images/cats_paw_nebula_ngc6334.webp" alt="The Cat's Paw Nebula" /></a>
+      <a href="gallery.html"><img src="images/the_milky_way.webp" alt="The Milky Way" /></a>
+    </div>
+
+    <div class="row">
+      <a class="btn pri wide" href="contact.vcf" download="bhapinder-singh.vcf">Save my contact</a>
+    </div>
+    <div class="row">
+      <a class="btn" href="gallery.html">Gallery</a>
+      <a class="btn" href="prints.html">Prints</a>
+    </div>
+    <div class="row">
+      <a class="btn" href="articles.html">Articles</a>
+      <a class="btn" href="star_word.html">Star Word</a>
+    </div>
+    <div class="row">
+      <a class="btn" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram</a>
+      <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X</a>
+    </div>
+
+    <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
+  </div></div>
+</section>
+
+<script>
+(function(){
+  var v = document.documentElement.getAttribute('data-v');
+
+  // The light variant needs light browser chrome to match
+  var tc = document.getElementById('themeColor');
+  if (tc && v === 'a') tc.setAttribute('content', '#f5f4fc');
+
+  // Record which variant was served in the URL, so Cloudflare shows the split.
+  // replaceState adds no history entry and causes no reload.
+  try {
+    if (!/[?&]v=/i.test(location.search)) {
+      var sep = location.search ? '&' : '?';
+      history.replaceState(null, '', location.pathname + location.search + sep + 'v=' + v + location.hash);
+    }
+  } catch (e) { /* not worth breaking the page over */ }
+
+  /* Counts read live from site-data.json using exactly the rule index.html
+     uses for "By the numbers", so the two pages always agree. */
+  fetch('site-data.json', { cache: 'default' })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(all){
+      var gal = all.filter(function(it){ return (it.section || 'gallery') === 'gallery'; });
+      var imgs = gal.reduce(function(n, it){
+        return n + ((Array.isArray(it.images) && it.images.length) ? it.images.length : 1);
+      }, 0);
+      var arts = all.filter(function(it){ return it.section === 'article'; }).length;
+      Array.prototype.forEach.call(document.querySelectorAll('.n-img'), function(el){ el.textContent = imgs; });
+      Array.prototype.forEach.call(document.querySelectorAll('.n-art'), function(el){ el.textContent = arts; });
+    })
+    .catch(function(){ /* the numbers already in the HTML stand */ });
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
