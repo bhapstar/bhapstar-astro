@@ -898,7 +898,12 @@
     let total = 0;
     items.forEach(it => {
       const t = it.type || 'others';
-      const n = (Array.isArray(it.images) && it.images.length) ? it.images.length : 1;
+      // Count each image in a multi-image group, and each video in a
+      // video group. An entry with neither counts as the single image
+      // it represents.
+      const n = (Array.isArray(it.images) && it.images.length) ? it.images.length
+              : (Array.isArray(it.videos) && it.videos.length) ? it.videos.length
+              : 1;
       counts[t] = (counts[t] || 0) + n;
       total += n;
     });
@@ -917,7 +922,7 @@
     }).join('');
     html += '<div class="stat stat--total" style="--c:var(--accent); --i:' + keys.length + '">' +
               '<div class="num" data-count="' + total + '">0</div>' +
-              '<div class="label">Images captured</div></div>';
+              '<div class="label">Images and videos captured</div></div>';
     grid.innerHTML = html;
 
     // Slow, deliberate tick — one integer at a time. Small numbers stay slow

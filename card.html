@@ -179,7 +179,7 @@
     <h1>Bhapinder Singh</h1>
     <p class="role">Astrophotographer</p>
 
-    <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">38</span> images</em></a>
+    <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
     <a class="lnk" href="prints.html">Prints <em>every size</em></a>
     <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
     <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
@@ -200,7 +200,7 @@
       <h1>Bhapinder Singh</h1>
       <p class="role">Astrophotographer</p>
       <div class="glass">
-        <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">38</span> images</em></a>
+        <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
         <a class="lnk" href="prints.html">Prints <em>every size</em></a>
         <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
         <a class="lnk" href="star_word.html">Star Word <em>daily</em></a>
@@ -269,13 +269,16 @@
   } catch (e) { /* not worth breaking the page over */ }
 
   /* Counts read live from site-data.json using exactly the rule index.html
-     uses for "By the numbers", so the two pages always agree. */
+     uses for "By the numbers", so the two pages always agree.
+     Images in a group count individually, and so do videos. */
   fetch('site-data.json', { cache: 'default' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(all){
       var gal = all.filter(function(it){ return (it.section || 'gallery') === 'gallery'; });
       var imgs = gal.reduce(function(n, it){
-        return n + ((Array.isArray(it.images) && it.images.length) ? it.images.length : 1);
+        return n + ((Array.isArray(it.images) && it.images.length) ? it.images.length
+                  : (Array.isArray(it.videos) && it.videos.length) ? it.videos.length
+                  : 1);
       }, 0);
       var arts = all.filter(function(it){ return it.section === 'article'; }).length;
       Array.prototype.forEach.call(document.querySelectorAll('.n-img'), function(el){ el.textContent = imgs; });
