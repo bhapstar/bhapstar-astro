@@ -97,10 +97,34 @@
     .photo{ opacity:0; transition:opacity .55s ease }
     .photo.on{ opacity:1 }
 
+    /* Same slow drift the index hero uses, so the two pages feel related.
+       Two paths at slightly different lengths, so A and B never look like
+       the same movement. */
+    @keyframes cardDriftA{
+      0%   { transform:translate3d(-2.2%,-1.6%,0) scale(1.13); }
+      50%  { transform:translate3d( 2.0%, 2.4%,0) scale(1.19); }
+      100% { transform:translate3d(-2.2%,-1.6%,0) scale(1.13); }
+    }
+    @keyframes cardDriftB{
+      0%   { transform:translate3d( 2.3%, 1.8%,0) scale(1.14); }
+      50%  { transform:translate3d(-2.1%,-2.2%,0) scale(1.20); }
+      100% { transform:translate3d( 2.3%, 1.8%,0) scale(1.14); }
+    }
+
     /* ─────────── A · Paper ─────────── */
+    /* The picture sits on a ::before so it can be oversized and drifted
+       without the movement showing at the edges. The clipping box stays
+       pinned to the viewport; only the layer inside it moves. */
     #vA .backdrop{
-      position:fixed; inset:0; z-index:0;
-      background-size:cover; background-position:center;
+      position:fixed; inset:0; z-index:0; overflow:hidden;
+    }
+    #vA .backdrop::before{
+      content:""; position:absolute; inset:-6%;
+      background-image:var(--bg); background-size:cover; background-position:center;
+      filter:saturate(1.12) contrast(1.03) blur(3px);
+      transform:translate3d(0,0,0) scale(1.13);
+      animation:cardDriftA 44s ease-in-out infinite;
+      will-change:transform;
     }
     #vA .veil{
       position:fixed; inset:0; z-index:1; pointer-events:none;
@@ -134,8 +158,16 @@
     #vA .code b{ color:#c0398c; letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
 
     /* ─────────── B · Immersive ─────────── */
-    #vB .stage{ position:relative; min-height:100vh; min-height:100dvh }
-    #vB .bg{ position:absolute; inset:0; background-size:cover; background-position:center }
+    #vB .stage{ position:relative; min-height:100vh; min-height:100dvh; overflow:hidden }
+    #vB .bg{ position:absolute; inset:0; overflow:hidden }
+    #vB .bg::before{
+      content:""; position:absolute; inset:-6%;
+      background-image:var(--bg); background-size:cover; background-position:center;
+      filter:saturate(1.12) contrast(1.03) blur(3px);
+      transform:translate3d(0,0,0) scale(1.14);
+      animation:cardDriftB 48s ease-in-out infinite;
+      will-change:transform;
+    }
     #vB .shade{
       position:absolute; inset:0;
       background:linear-gradient(to bottom,rgba(5,4,20,.25),rgba(5,4,20,.74) 46%,rgba(5,4,20,.96));
@@ -176,7 +208,11 @@
     #vD .thumbs a{
       display:block; line-height:0; aspect-ratio:1;
       background:rgba(255,255,255,.05) center/cover no-repeat;
+      transition:opacity .62s ease;
     }
+    /* Set while a cell swaps its picture. The cell fades to the grid
+       background, changes underneath, then fades back. */
+    #vD .thumbs a.swapping{ opacity:0 }
     #vD .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
     #vD .btn{
       display:flex; align-items:center; justify-content:center; padding:14px; border-radius:12px;
@@ -191,7 +227,12 @@
     #vD .code{ margin:18px 0 0; text-align:center; font-size:13px; color:var(--muted) }
     #vD .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
 
-    @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important } }
+    @media (prefers-reduced-motion:reduce){
+      *{ transition:none !important; animation:none !important }
+      /* Hold the drift layers at their mid position rather than snapping
+         back to unscaled, which would show the edges of the oversized layer */
+      #vA .backdrop::before, #vB .bg::before{ transform:scale(1.16) !important }
+    }
   </style>
 </head>
 
@@ -325,7 +366,8 @@
       var el  = document.getElementById(v === 'a' ? 'aBg' : 'bBg');
       var pre = new Image();
       pre.onload = function(){
-        el.style.backgroundImage = 'url("' + one + '")';
+        // Read by the ::before drift layer, not by the element itself
+        el.style.setProperty('--bg', 'url("' + one + '")');
         el.classList.add('on');
       };
       pre.onerror = function(){ el.classList.add('on'); };
@@ -340,7 +382,54 @@
         if (cells[i]) cells[i].style.backgroundImage = 'url("' + src + '")';
       });
       document.getElementById('dGrid').classList.add('on');
+      cycleGrid(cells, six, pool);
     }
+  }
+
+  /* Each cell runs its own timer, so the six never move together and the
+     grid never looks like a slideshow. A cell fades out, changes picture
+     underneath, then fades back in.
+
+     Two rules keep it calm: a picture already on screen is never chosen,
+     so the same frame cannot appear twice, and the next image is fully
+     loaded before the fade starts, so a slow connection stalls the change
+     rather than showing an empty square. */
+  function cycleGrid(cells, showing, pool){
+    if (!cells.length) return;
+    if (pool.length <= cells.length) return;          // nothing spare to rotate in
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduce && reduce.matches) return;
+
+    var FADE = 620;                                    // matches the CSS transition
+
+    function wait(){ return 3000 + Math.random() * 4000; }   // 3s to 7s
+
+    function schedule(i){
+      setTimeout(function(){ swap(i); schedule(i); }, wait());
+    }
+
+    function swap(i){
+      // A hidden tab should not burn through pictures. Wait for the next turn.
+      if (document.hidden) return;
+
+      var spare = pool.filter(function(src){ return showing.indexOf(src) === -1; });
+      if (!spare.length) return;
+      var next = spare[Math.floor(Math.random() * spare.length)];
+
+      var pre = new Image();
+      pre.onload = function(){
+        var cell = cells[i];
+        cell.classList.add('swapping');
+        setTimeout(function(){
+          cell.style.backgroundImage = 'url("' + next + '")';
+          showing[i] = next;
+          cell.classList.remove('swapping');
+        }, FADE);
+      };
+      pre.src = next;                                  // a failed load just skips a turn
+    }
+
+    for (var i = 0; i < cells.length; i++) schedule(i);
   }
 
   /* One read of site-data.json feeds both the counts and the imagery.
