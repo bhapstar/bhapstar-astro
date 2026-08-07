@@ -1125,14 +1125,14 @@
   "slug": "calibration-frames-darks-flats-biases",
   "date": "27-07-2026"
 },
-    {
-    "file": "images/star-trails-1.webp",
-    "alt": "Circumpolar star trails wheeling around the north celestial pole above a line of desert pylons",
+  {
+    "file": "images/star-trails-2.webp",
+    "alt": "Star trails circling the north celestial pole in deep blue above a dark desert ridge",
     "title": "Navigating the Night Sky: Polaris, the Poles and the Lines Between Them",
-    "desc": "Where Polaris actually is, why the southern hemisphere has no pole star, and what the celestial equator and the meridian are for. The grid the whole sky hangs on, read from 25 degrees north.",
+    "desc": "The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator and the meridian actually are.",
     "type": "gear",
     "category": "Sky basics",
-    "readTime": "9 min read",
+    "readTime": "6 min read",
     "section": "article",
     "slug": "navigating-the-night-sky",
     "date": "01-08-2026"
