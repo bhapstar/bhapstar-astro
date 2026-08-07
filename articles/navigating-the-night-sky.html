@@ -211,6 +211,36 @@
       .article-standfirst { font-size: 15px; }
       .gn-label { display: none; }
     }
+
+    .article-support { margin: 44px 0 0; padding: 22px 24px;
+                       border-radius: var(--radius); border: 1px solid var(--line);
+                       background: var(--soft); }
+    .article-support h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600;
+                          letter-spacing: 0.16em; text-transform: uppercase;
+                          color: var(--muted); }
+    .article-support-intro { margin: 0 0 15px; font-size: 13.5px; line-height: 1.6;
+                             color: var(--muted); }
+    .article-support-list { display: flex; flex-wrap: wrap; gap: 9px; }
+    .article-support-link { display: inline-flex; align-items: center; gap: 7px;
+                            padding: 9px 14px; border-radius: 11px; font-size: 13px;
+                            font-weight: 500; text-decoration: none; color: var(--text);
+                            border: 1px solid rgba(var(--accent-rgb),0.26);
+                            background: rgba(var(--accent-rgb),0.07);
+                            transition: border-color 200ms ease, background 200ms ease,
+                                        transform 200ms ease; }
+    .article-support-link:hover, .article-support-link:focus-visible {
+                            border-color: rgba(var(--accent2-rgb),0.55);
+                            background: rgba(var(--accent2-rgb),0.14);
+                            transform: translateY(-2px); }
+    .article-support-link svg { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.6; }
+    .article-support-link:hover svg { opacity: 1; }
+    .article-support-note { margin: 14px 0 0; font-size: 11.5px; line-height: 1.5;
+                            color: var(--muted); opacity: 0.85; }
+    @media (max-width: 768px) {
+      .article-support { margin-top: 34px; padding: 18px 16px; }
+      .article-support-list { gap: 8px; }
+    }
+
   </style>
 
   <script type="application/ld+json">
@@ -732,6 +762,19 @@ a night, or explaining to forty people in the desert why the whole sky is quietl
 wheeling around one fairly ordinary star in the north.</p>
 
       </div>
+
+      <aside class="article-support" aria-labelledby="articleSupportHeading">
+        <h2 id="articleSupportHeading">Where I buy my gear</h2>
+        <p class="article-support-intro">
+          If this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself, not a list of everyone who pays. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
+        </p>
+        <div class="article-support-list">
+          <a class="article-support-link" href="https://www.highpointscientific.com/?rfsn=9263467.792bf8" target="_blank" rel="sponsored noopener noreferrer">High Point Scientific (US)<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+          <a class="article-support-link" href="https://amzn.to/4q14VRT" target="_blank" rel="sponsored noopener noreferrer">Amazon<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+          <a class="article-support-link" href="https://www.svbony.com/?ref=BHAPSTAR" target="_blank" rel="sponsored noopener noreferrer">Svbony<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+        </div>
+        <p class="article-support-note">These are affiliate links. If you buy through them I may earn a small commission, at no extra cost to you. It does not affect which gear I use or recommend. As an Amazon Associate I earn from qualifying purchases.</p>
+      </aside>
 
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
