@@ -1124,9 +1124,14 @@
 
     if (dvBuyNote) {
       const paid = links.some(b => b.affiliate === true);
-      dvBuyNote.textContent = paid
-        ? 'Some links above are affiliate links. If you buy through them I may earn a small commission, at no extra cost to you. It does not affect which gear I use or recommend.'
-        : '';
+      const amazon = links.some(b => b.affiliate === true
+        && /^https?:\/\/([^\/]*\.)?(amazon|amzn)(\.|\/|$)/i.test(b.url.trim()));
+      let note = '';
+      if (paid) {
+        note = 'Some links above are affiliate links. If you buy through them I may earn a small commission, at no extra cost to you. It does not affect which gear I use or recommend.';
+        if (amazon) note += ' As an Amazon Associate I earn from qualifying purchases.';
+      }
+      dvBuyNote.textContent = note;
       dvBuyNote.hidden = !paid;
     }
 

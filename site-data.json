@@ -611,8 +611,8 @@
     "buy": [
       {
         "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/brands/askar",
-        "affiliate": false
+        "url": "https://www.highpointscientific.com/brands/askar?rfsn=9263467.792bf8",
+        "affiliate": true
       }
     ]
   },
@@ -678,8 +678,8 @@
       },
       {
         "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras",
-        "affiliate": false
+        "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras?rfsn=9263467.792bf8",
+        "affiliate": true
       },
       {
         "retailer": "First Light Optics",
@@ -726,8 +726,8 @@
       },
       {
         "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/telescopes/smart-telescopes",
-        "affiliate": false
+        "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
+        "affiliate": true
       }
     ]
   },
@@ -747,8 +747,8 @@
     "buy": [
       {
         "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters",
-        "affiliate": false
+        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
       }
     ]
   },
@@ -768,8 +768,8 @@
     "buy": [
       {
         "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters",
-        "affiliate": false
+        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
       }
     ]
   },
@@ -790,7 +790,14 @@
     "type": "filters",
     "section": "gear",
     "slug": "svbony-sv220-3nm-filter",
-    "hidden": false
+    "hidden": false,
+    "buy": [
+      {
+        "retailer": "Svbony",
+        "url": "https://www.svbony.com/?ref=BHAPSTAR",
+        "affiliate": true
+      }
+    ]
   },
   {
     "images": [
@@ -808,7 +815,14 @@
     "alt": "Celestron 2 inch eyepiece and filter kit for telescope",
     "type": "accessories",
     "section": "gear",
-    "slug": "celestron-2in-eyepiece-kit"
+    "slug": "celestron-2in-eyepiece-kit",
+    "buy": [
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
   },
   {
     "images": [
@@ -826,7 +840,14 @@
     "alt": "Svbony 2 inch filter drawer astrophotography",
     "type": "accessories",
     "section": "gear",
-    "slug": "svbony-filter-drawer"
+    "slug": "svbony-filter-drawer",
+    "buy": [
+      {
+        "retailer": "Svbony",
+        "url": "https://www.svbony.com/?ref=BHAPSTAR",
+        "affiliate": true
+      }
+    ]
   },
   {
     "images": [
@@ -1000,9 +1021,9 @@
     "slug": "sony-a7iii-full-frame-camera",
     "buy": [
       {
-        "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/",
-        "affiliate": false
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -1033,9 +1054,9 @@
     "slug": "samyang-135mm-widefield-astrograph",
     "buy": [
       {
-        "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/",
-        "affiliate": false
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -1054,9 +1075,9 @@
     "slug": "rokinon-18mm-samyang-14mm-ultrawides",
     "buy": [
       {
-        "retailer": "High Point Scientific",
-        "url": "https://www.highpointscientific.com/",
-        "affiliate": false
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -1114,17 +1135,17 @@
     "date": "04-08-2026"
   },
   {
-  "file": "images/jellyfish-nebula-ic443.webp",
-  "alt": "The Jellyfish Nebula, calibrated and stacked from a night of subframes",
-  "title": "Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs",
-  "desc": "What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.",
-  "type": "processing",
-  "category": "Processing",
-  "readTime": "7 min read",
-  "section": "article",
-  "slug": "calibration-frames-darks-flats-biases",
-  "date": "27-07-2026"
-},
+    "file": "images/jellyfish-nebula-ic443.webp",
+    "alt": "The Jellyfish Nebula, calibrated and stacked from a night of subframes",
+    "title": "Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs",
+    "desc": "What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.",
+    "type": "processing",
+    "category": "Processing",
+    "readTime": "7 min read",
+    "section": "article",
+    "slug": "calibration-frames-darks-flats-biases",
+    "date": "27-07-2026"
+  },
   {
     "file": "images/star-trails-2.webp",
     "alt": "Star trails circling the north celestial pole in deep blue above a dark desert ridge",
