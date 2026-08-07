@@ -25,6 +25,7 @@ whose slug is no longer in site-data.json.
 import html
 import json
 import os
+import re
 from datetime import datetime, timezone
 
 DOMAIN = "https://bhapstar.com"
@@ -35,7 +36,7 @@ REVIEWS_DIR = "content/gear"
 # Retailer links are suppressed until there is an actual arrangement with
 # each shop. The URLs stay in site-data.json, so flipping this back to True
 # restores every link at once. No data is thrown away.
-SHOW_BUY_LINKS = False
+SHOW_BUY_LINKS = True
 SITE_NAME = "Bhapstar Astrophotography"
 # Stable date. Bump by hand when a review has a real content change; do NOT
 # derive from "now", or every workflow run restamps all 12 pages.
@@ -245,11 +246,20 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
             )
         buy_html += '        </div>\n'
         if has_affiliate:
-            buy_html += (
-                '        <p class="gear-buy-note">Some links above are affiliate links. '
-                'If you buy through them I may earn a small commission, at no extra cost '
-                'to you. It does not affect which gear I use or recommend.</p>\n'
+            # Amazon's Operating Agreement requires this exact sentence on any
+            # page carrying their links. Only added when one is present.
+            has_amazon = any(
+                b.get('affiliate') and re.match(
+                    r'^https?://([^/]*\.)?(amazon|amzn)(\.|/|$)',
+                    (b.get('url') or '').strip(), re.I)
+                for b in buy_links
             )
+            note = ('Some links above are affiliate links. '
+                    'If you buy through them I may earn a small commission, at no extra cost '
+                    'to you. It does not affect which gear I use or recommend.')
+            if has_amazon:
+                note += ' As an Amazon Associate I earn from qualifying purchases.'
+            buy_html += f'        <p class="gear-buy-note">{note}</p>\n'
         buy_html += '      </div>\n'
     
     html_content = f'''<!doctype html>
