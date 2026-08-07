@@ -2387,6 +2387,13 @@ html[data-theme="light"] .puzzle-controls select option{
   color: rgba(26,23,48,0.92);
 }
 
+/* Placeholder text: the dark value is a pale lavender at 0.32 alpha,
+   which all but disappears against the white light-theme fields. */
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder{
+  color: rgba(60,54,96,0.62);
+}
+
 /* Boxed content areas that used near-black fills */
 html[data-theme="light"] .template-box{
   background: rgba(124,92,246,0.05);
