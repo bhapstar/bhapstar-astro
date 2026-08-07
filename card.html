@@ -89,6 +89,28 @@
       padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
     }
     .wm{ font-weight:600; letter-spacing:.32em; text-transform:uppercase; display:block }
+
+    /* The rolling gradient the site uses on page titles. background-clip:text
+       crops the paint box to the content rect, which slices descenders off
+       "Bhapinder (Bobby) Singh", so padding-bottom gives the clip region room
+       and the negative margin puts the spacing back. */
+    .variant h1{
+      background:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
+      background-size:300% 100%;
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent; color:transparent;
+      animation:gradientRoll 4s linear infinite reverse;
+      padding-bottom:.12em; margin-bottom:-.12em;
+    }
+    /* Deeper stops on the light variant, since the site's pastels wash out
+       against near-white paper. */
+    html[data-v="a"] .variant h1{
+      background-image:linear-gradient(90deg,#7c5cf6,#2f7fe0,#d64a98,#2f7fe0,#7c5cf6);
+    }
+    @keyframes gradientRoll{
+      0%   { background-position:0% 50% }
+      100% { background-position:100% 50% }
+    }
     .rule{ height:3px; border-radius:2px; background:var(--grad) }
     /* Small heading that separates the site links from the social ones.
        Colour is set per variant, the shape is shared. */
@@ -143,6 +165,7 @@
     #vA .wrap{ position:relative; z-index:2 }
     #vA .inner{ padding:38px 24px 34px }
     #vA .rule{ width:44px; margin-bottom:20px }
+    #vB .rule{ width:44px; margin-bottom:20px }
     #vA .wm{ font-size:13.5px; color:var(--light-tx); margin-bottom:24px }
     #vA h1{ font-size:29px; font-weight:400; margin:0 0 2px; letter-spacing:.01em }
     #vA .role{ color:var(--light-mu); font-size:15px; margin:0 0 28px }
@@ -182,7 +205,7 @@
     }
     #vB .fg{
       position:relative; min-height:100vh; min-height:100dvh;
-      padding:46px 22px 30px; display:flex; flex-direction:column; justify-content:flex-end;
+      padding:38px 22px 34px; display:flex; flex-direction:column; justify-content:flex-start;
     }
     #vB h1{ font-size:32px; font-weight:300; margin:0 0 4px; letter-spacing:.01em }
     #vB .role{ color:#c9c4e4; font-size:15px; margin:0 0 24px }
@@ -228,12 +251,15 @@
     #vD .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
     #vD .grp-label{ color:var(--muted); margin:20px 0 9px; text-align:center }
     #vD .btn{
-      display:flex; align-items:center; justify-content:center; padding:14px; border-radius:12px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:2px; padding:12px 10px; border-radius:12px; line-height:1.25; text-align:center;
       border:1px solid var(--line); background:rgba(255,255,255,.045);
       color:var(--paper); text-decoration:none; font-size:15.5px;
       transition:background-color .18s ease, border-color .18s ease,
                  transform .18s ease, box-shadow .18s ease;
     }
+    #vD .btn em{ font-style:normal; font-size:11.5px; color:var(--muted); letter-spacing:.01em }
+    #vD .btn.pri em{ color:#cfc9ee }
     #vD .btn.wide{ grid-column:1 / -1 }
     #vD .btn.pri{
       background:linear-gradient(135deg,rgba(167,139,250,.3),rgba(96,165,250,.3));
@@ -312,15 +338,14 @@
   <div class="veil" aria-hidden="true"></div>
   <div class="wrap"><div class="inner">
     <div class="rule"></div>
-    <span class="wm">bhapstar</span>
     <h1>Bhapinder (Bobby) Singh</h1>
     <p class="role">Astrophotographer</p>
 
     <div class="grp">
       <a class="lnk" href="index.html">Home <em>bhapstar.com</em></a>
       <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
-      <a class="lnk" href="prints.html">Prints <em>every size</em></a>
-      <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
+      <a class="lnk" href="prints.html">Prints <em>high resolution</em></a>
+      <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
       <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
     </div>
 
@@ -343,13 +368,14 @@
     <div class="bg photo" id="bBg" aria-hidden="true"></div>
     <div class="shade" aria-hidden="true"></div>
     <div class="fg"><div class="wrap" style="width:100%">
+      <div class="rule"></div>
       <h1>Bhapinder (Bobby) Singh</h1>
       <p class="role">Astrophotographer</p>
       <div class="glass">
         <a class="lnk" href="index.html">Home <em>bhapstar.com</em></a>
         <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
-        <a class="lnk" href="prints.html">Prints <em>every size</em></a>
-        <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> pieces</em></a>
+        <a class="lnk" href="prints.html">Prints <em>high resolution</em></a>
+        <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
         <a class="lnk" href="star_word.html">Star Word <em>daily</em></a>
       </div>
 
@@ -384,28 +410,28 @@
     </div>
 
     <div class="row">
-      <a class="btn pri wide" href="index.html#contact">Get in touch</a>
+      <a class="btn pri wide" href="index.html">Home <em>bhapstar.com</em></a>
     </div>
     <div class="row">
-      <a class="btn" href="index.html">Home</a>
-      <a class="btn" href="gallery.html">Gallery</a>
+      <a class="btn" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
+      <a class="btn" href="prints.html">Prints <em>high resolution</em></a>
     </div>
     <div class="row">
-      <a class="btn" href="prints.html">Prints</a>
-      <a class="btn" href="articles.html">Articles</a>
+      <a class="btn" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
+      <a class="btn" href="star_word.html">Star Word <em>daily puzzle</em></a>
     </div>
     <div class="row">
-      <a class="btn wide" href="star_word.html">Star Word</a>
+      <a class="btn wide" href="index.html#contact">Get in touch <em>questions and prints</em></a>
     </div>
 
     <p class="grp-label">Socials</p>
 
     <div class="row">
-      <a class="btn" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram</a>
-      <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X</a>
+      <a class="btn" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
+      <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
     </div>
     <div class="row">
-      <a class="btn wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">☕ Support my work</a>
+      <a class="btn wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">☕ Support my work <em>buy me a coffee</em></a>
     </div>
 
     <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
