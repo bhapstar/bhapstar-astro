@@ -643,9 +643,9 @@
     "slug": "juwei-14-harmonic-equatorial-mount",
     "buy": [
       {
-        "retailer": "Aliexpress",
-        "url": "https://ar.aliexpress.com/",
-        "affiliate": false
+        "retailer": "AliExpress",
+        "url": "https://s.click.aliexpress.com/e/_c4p1a75v",
+        "affiliate": true
       }
     ]
   },
@@ -672,24 +672,9 @@
     "slug": "zwo-asi585mc-air-camera",
     "buy": [
       {
-        "retailer": "ZWO Store",
-        "url": "https://www.zwoastro.com/product-category/cameras/",
-        "affiliate": false
-      },
-      {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras?rfsn=9263467.792bf8",
         "affiliate": true
-      },
-      {
-        "retailer": "First Light Optics",
-        "url": "https://www.firstlightoptics.com/zwo-cameras.html",
-        "affiliate": false
-      },
-      {
-        "retailer": "Agena Astro",
-        "url": "https://agenaastro.com/shop-by-brand/zwo-astronomical-cameras.html",
-        "affiliate": false
       }
     ]
   },
@@ -720,13 +705,13 @@
     "slug": "zwo-seestar-s30-smart-telescope",
     "buy": [
       {
-        "retailer": "ZWO Store",
-        "url": "https://www.zwoastro.com/product-category/seestar/",
-        "affiliate": false
-      },
-      {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
         "affiliate": true
       }
     ]
@@ -749,6 +734,11 @@
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
         "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -769,6 +759,11 @@
       {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
         "affiliate": true
       }
     ]
@@ -795,6 +790,16 @@
       {
         "retailer": "Svbony",
         "url": "https://www.svbony.com/?ref=BHAPSTAR",
+        "affiliate": true
+      },
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
         "affiliate": true
       }
     ]
@@ -846,6 +851,16 @@
         "retailer": "Svbony",
         "url": "https://www.svbony.com/?ref=BHAPSTAR",
         "affiliate": true
+      },
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -864,9 +879,14 @@
     "slug": "zwo-eaf-electronic-focuser",
     "buy": [
       {
-        "retailer": "ZWO Store",
-        "url": "https://www.zwoastro.com/product/eaf/",
-        "affiliate": false
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
@@ -899,7 +919,19 @@
     "type": "smart-telescope",
     "section": "gear",
     "slug": "zwo-seestar-s30-pro",
-    "hidden": false
+    "hidden": false,
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
   },
   {
     "images": [
@@ -922,7 +954,19 @@
     "type": "accessories",
     "section": "gear",
     "slug": "zwo-tc20-tripod-th10-fluid-head",
-    "hidden": false
+    "hidden": false,
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
   },
   {
     "images": [
@@ -944,7 +988,19 @@
     "alt": "Skywatcher Evostar 72ED refractor telescope",
     "type": "telescope",
     "section": "gear",
-    "slug": "skywatcher-evostar-72ed-refractor"
+    "slug": "skywatcher-evostar-72ed-refractor",
+    "buy": [
+      {
+        "retailer": "High Point Scientific",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
   },
   {
     "file": "images/gear/Full rig 3.webp",
@@ -1104,9 +1160,9 @@
     "slug": "ecoflow-river-2",
     "buy": [
       {
-        "retailer": "EcoFlow",
-        "url": "https://www.ecoflow.com/",
-        "affiliate": false
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
       }
     ]
   },
