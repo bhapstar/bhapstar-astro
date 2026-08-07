@@ -403,6 +403,36 @@
     }
     .dv-buy-note[hidden] { display: none; }
 
+    /* Retailer block below the gear grid. Reuses .dv-buy-link and
+       .dv-buy-note so it stays visually in step with the detail view. */
+    .gear-support {
+      margin: 46px auto 0;
+      max-width: 720px;
+      padding: 22px 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(167,139,250,0.16);
+      background: rgba(167,139,250,0.04);
+    }
+    .gear-support h2 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(232,230,247,0.62);
+    }
+    .gear-support-intro {
+      margin: 0 0 15px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: rgba(232,230,247,0.66);
+    }
+    .gear-support .dv-buy-list { margin: 0; }
+    .gear-support .dv-buy-note { margin-top: 14px; }
+    @media (max-width: 768px) {
+      .gear-support { margin-top: 34px; padding: 18px 16px; }
+    }
+
     @media (max-width: 768px) {
       .dv-detail { padding: 14px; }
       .dv-detail-card { padding: 50px 20px 22px; max-height: 88%; }
@@ -723,6 +753,25 @@
         <div class="card-skeleton" aria-hidden="true"></div>
         <div class="card-skeleton" aria-hidden="true"></div>
       </div>
+
+      <!-- Retailers I actually buy from. Static markup, so this block carries
+           its own disclosure (the detail-view note is generated in JS).
+           Amazon's required wording must stay verbatim while an Amazon link
+           is present. Only add retailers with a live affiliate arrangement. -->
+      <aside class="gear-support" aria-labelledby="gearSupportHeading">
+        <h2 id="gearSupportHeading">Where I buy my gear</h2>
+        <p class="gear-support-intro">
+          If any of this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself, not a list of everyone who pays.
+        </p>
+        <div class="dv-buy-list">
+          <a class="dv-buy-link" href="https://www.highpointscientific.com/?rfsn=9263467.792bf8" target="_blank" rel="sponsored noopener noreferrer">High Point Scientific (US)<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+          <a class="dv-buy-link" href="https://amzn.to/4q14VRT" target="_blank" rel="sponsored noopener noreferrer">Amazon<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+          <a class="dv-buy-link" href="https://www.svbony.com/?ref=BHAPSTAR" target="_blank" rel="sponsored noopener noreferrer">Svbony<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
+        </div>
+        <p class="dv-buy-note">
+          These are affiliate links. If you buy through them I may earn a small commission, at no extra cost to you. It does not affect which gear I use or recommend. As an Amazon Associate I earn from qualifying purchases.
+        </p>
+      </aside>
 
     </div>
   </section>
