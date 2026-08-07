@@ -87,6 +87,15 @@
       background: rgba(52,211,153,0.07);
       color: rgba(52,211,153,0.95);
     }
+    /* The mint above is mixed for a dark background and washes out almost
+       completely on the pale one, so the light theme gets its own deeper
+       green. Same meaning, readable against lavender-white. */
+    html[data-theme="light"] .page-starword .sw-badge.streak{
+      border-color: rgba(39,105,79,0.38);
+      background: rgba(39,105,79,0.10);
+      color: #27694f;
+      opacity: 1;
+    }
 
     /* ── Prize teaser + reveal ── */
     .sw-prize-line{
