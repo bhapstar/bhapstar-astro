@@ -55,6 +55,87 @@ CONTENT_DIR = "content/articles"
 INDEX_PAGE = "articles.html"
 SITE_NAME = "Bhapstar Astrophotography"
 
+# ---------------------------------------------------------------------------
+# Retailer block appended to the foot of every article.
+#
+# KEEP IN STEP WITH gear.html, which carries a hand-written copy of the same
+# block below the gear grid. If the retailer list or the disclosure wording
+# changes in one place, change it in the other.
+#
+# Only list retailers with a live affiliate arrangement. Amazon's Operating
+# Agreement requires their sentence verbatim while an Amazon link is present.
+# All colours come from theme tokens so the block follows light mode.
+# ---------------------------------------------------------------------------
+SUPPORT_ARROW = (
+    '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" '
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg>'
+)
+
+SUPPORT_RETAILERS = [
+    ("High Point Scientific (US)", "https://www.highpointscientific.com/?rfsn=9263467.792bf8"),
+    ("Amazon", "https://amzn.to/4q14VRT"),
+    ("Svbony", "https://www.svbony.com/?ref=BHAPSTAR"),
+]
+
+SUPPORT_NOTE = (
+    "These are affiliate links. If you buy through them I may earn a small "
+    "commission, at no extra cost to you. It does not affect which gear I use "
+    "or recommend. As an Amazon Associate I earn from qualifying purchases."
+)
+
+SUPPORT_CSS = """
+    .article-support { margin: 44px 0 0; padding: 22px 24px;
+                       border-radius: var(--radius); border: 1px solid var(--line);
+                       background: var(--soft); }
+    .article-support h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600;
+                          letter-spacing: 0.16em; text-transform: uppercase;
+                          color: var(--muted); }
+    .article-support-intro { margin: 0 0 15px; font-size: 13.5px; line-height: 1.6;
+                             color: var(--muted); }
+    .article-support-list { display: flex; flex-wrap: wrap; gap: 9px; }
+    .article-support-link { display: inline-flex; align-items: center; gap: 7px;
+                            padding: 9px 14px; border-radius: 11px; font-size: 13px;
+                            font-weight: 500; text-decoration: none; color: var(--text);
+                            border: 1px solid rgba(var(--accent-rgb),0.26);
+                            background: rgba(var(--accent-rgb),0.07);
+                            transition: border-color 200ms ease, background 200ms ease,
+                                        transform 200ms ease; }
+    .article-support-link:hover, .article-support-link:focus-visible {
+                            border-color: rgba(var(--accent2-rgb),0.55);
+                            background: rgba(var(--accent2-rgb),0.14);
+                            transform: translateY(-2px); }
+    .article-support-link svg { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.6; }
+    .article-support-link:hover svg { opacity: 1; }
+    .article-support-note { margin: 14px 0 0; font-size: 11.5px; line-height: 1.5;
+                            color: var(--muted); opacity: 0.85; }
+    @media (max-width: 768px) {
+      .article-support { margin-top: 34px; padding: 18px 16px; }
+      .article-support-list { gap: 8px; }
+    }
+"""
+
+
+def build_support_block():
+    """Retailer links for the foot of an article page."""
+    links = "\n".join(
+        f'          <a class="article-support-link" href="{esc(url)}" '
+        f'target="_blank" rel="sponsored noopener noreferrer">{esc(name)}'
+        f'{SUPPORT_ARROW}</a>'
+        for name, url in SUPPORT_RETAILERS
+    )
+    return f'''      <aside class="article-support" aria-labelledby="articleSupportHeading">
+        <h2 id="articleSupportHeading">Where I buy my gear</h2>
+        <p class="article-support-intro">
+          If this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself, not a list of everyone who pays. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
+        </p>
+        <div class="article-support-list">
+{links}
+        </div>
+        <p class="article-support-note">{SUPPORT_NOTE}</p>
+      </aside>
+'''
+
 
 def esc(s):
     """Escape for HTML attribute/text context."""
@@ -398,6 +479,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
       .article-standfirst {{ font-size: 15px; }}
       .gn-label {{ display: none; }}
     }}
+{SUPPORT_CSS}
   </style>
 
   <script type="application/ld+json">
@@ -422,6 +504,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
 {body_html}
       </div>
 
+{build_support_block()}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
   </section>
