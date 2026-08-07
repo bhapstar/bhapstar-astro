@@ -200,16 +200,16 @@
       line-height: 1;
     }
     /* Same palette as the real tiles, dark theme */
-    .sw-swatch.correct{ background: #538d4e; color: #fff; }
-    .sw-swatch.present{ background: #b59f3b; color: #1a1a2e; }
+    .sw-swatch.correct{ background: #3f9070; color: #fff; }
+    .sw-swatch.present{ background: #c08a3e; color: #1a1a2e; }
     .sw-swatch.absent {
       background: rgba(120,116,150,0.22);
       color: var(--muted);
       border: 1px solid rgba(120,116,150,0.30);
     }
     /* Light theme — mirror the light-mode tile palette */
-    html[data-theme="light"] .page-starword .sw-swatch.correct{ background: #6aaa64; color: #fff; }
-    html[data-theme="light"] .page-starword .sw-swatch.present{ background: #c9b458; color: #1a1a2e; }
+    html[data-theme="light"] .page-starword .sw-swatch.correct{ background: #469e77; color: #fff; }
+    html[data-theme="light"] .page-starword .sw-swatch.present{ background: #d99b45; color: #1a1a2e; }
     html[data-theme="light"] .page-starword .sw-swatch.absent{
       background: rgba(70,64,110,0.16);
       color: rgba(70,64,110,0.78);
@@ -262,13 +262,13 @@
 
     /* Result states */
     .sw-tile.correct{
-      background: #538d4e;      /* Wordle dark-theme green */
-      border-color: #538d4e;
+      background: #3f9070;      /* correct letter, dark theme */
+      border-color: #3f9070;
       color: #fff;
     }
     .sw-tile.present{
-      background: #b59f3b;      /* Wordle dark-theme yellow */
-      border-color: #b59f3b;
+      background: #c08a3e;      /* right letter, wrong place, dark theme */
+      border-color: #c08a3e;
       color: #1a1a2e;           /* dark text — white on this yellow is unreadable */
     }
     .sw-tile.absent{
@@ -367,8 +367,8 @@
     }
     .sw-key:active{ transform: scale(0.94); }
     .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
-    .sw-key.correct{ background: #538d4e; border-color: #538d4e; color: #fff; }
-    .sw-key.present{ background: #b59f3b; border-color: #b59f3b; color: #1a1a2e; }
+    .sw-key.correct{ background: #3f9070; border-color: #3f9070; color: #fff; }
+    .sw-key.present{ background: #c08a3e; border-color: #c08a3e; color: #1a1a2e; }
     .sw-key.absent { background: #46454f; border-color: #56545f; color: #cfcede; opacity: 1; }
 
     /* ── End panel ── */
@@ -446,11 +446,10 @@
     }
 
     /* ── Light theme tweaks ──
-       Wordle itself uses a brighter green/yellow in its light theme
-       and a muted pair in its dark theme; we mirror that split so the
-       tiles read well on a pale background too. Letters are dark on
-       yellow because white on yellow fails contrast, especially on
-       the small keyboard labels.
+       The result colours run brighter here and muted in the dark theme,
+       so the tiles read well against either background. Letters are dark
+       on amber because white on amber fails contrast, especially on the
+       small keyboard labels.
 
        The blank/filled rules below are scoped with :not() on purpose.
        A bare `html[data-theme="light"] .sw-tile` selector outranks
@@ -464,13 +463,13 @@
       border-color: rgba(124,92,246,0.55);
     }
     html[data-theme="light"] .page-starword .sw-tile.correct{
-      background: #6aaa64;      /* Wordle light-theme green */
-      border-color: #6aaa64;
+      background: #469e77;      /* correct letter, light theme */
+      border-color: #469e77;
       color: #fff;
     }
     html[data-theme="light"] .page-starword .sw-tile.present{
-      background: #c9b458;      /* Wordle light-theme yellow */
-      border-color: #c9b458;
+      background: #d99b45;      /* right letter, wrong place, light theme */
+      border-color: #d99b45;
       color: #1a1a2e;
     }
     html[data-theme="light"] .page-starword .sw-tile.absent{
@@ -484,10 +483,10 @@
       border-color: rgba(124,92,246,0.20);
     }
     html[data-theme="light"] .page-starword .sw-key.correct{
-      background: #6aaa64; border-color: #6aaa64; color: #fff;
+      background: #469e77; border-color: #469e77; color: #fff;
     }
     html[data-theme="light"] .page-starword .sw-key.present{
-      background: #c9b458; border-color: #c9b458; color: #1a1a2e;
+      background: #d99b45; border-color: #d99b45; color: #1a1a2e;
     }
     html[data-theme="light"] .page-starword .sw-key.absent{
       background: #b9b7c4;
