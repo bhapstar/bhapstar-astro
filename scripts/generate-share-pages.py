@@ -199,8 +199,26 @@ PAGE_STYLE = """\
     .share-slides{ position: relative; }
     .share-slide{ display: none; }
     .share-slide.is-active{ display: block; }
+    /* The anchor shrink-wraps the picture so the "view full screen" pill sits
+       on the image corner rather than the column corner. Portrait shots are
+       narrower than the column once the height cap below kicks in. */
+    .share-slide > a{
+      display: block; position: relative;
+      width: fit-content; max-width: 100%; margin: 0 auto;
+    }
+    /* Capped by viewport height, not only by column width. The gallery is
+       mostly portrait frames (roughly 1350 x 2400), which at the 900px column
+       width came out ~1600px tall — taller than any tablet, so the picture
+       could never be seen whole and never read as something you could tap.
+       Now the whole frame plus a strip of the write-up is always in view.
+       72vh is a taste dial; lower it for more text above the fold. The svh
+       line repeats it in small-viewport units so iOS Safari's address bar
+       does not push the bottom of the picture off screen. */
     .share-figure img{
-      display: block; width: 100%; height: auto; border-radius: 14px;
+      display: block; margin: 0 auto;
+      width: auto; max-width: 100%;
+      height: auto; max-height: 72vh; max-height: 72svh;
+      border-radius: 14px;
       border: 1px solid var(--line);
       /* Dark theme: a plain black shadow is invisible on #050414, so lift the
          image with a deep shadow plus a violet bloom and a faint accent rim. */
@@ -345,7 +363,44 @@ PAGE_STYLE = """\
     .share-nav a{ color: var(--accent); text-decoration: none; max-width: 46%; }
     .share-nav a:hover{ text-decoration: underline; }
     .share-nav .nav-next{ margin-left: auto; text-align: right; }
-    .share-open{ cursor: pointer; }
+    .share-open{ cursor: zoom-in; }
+
+    /* ── "View full screen" hint ──
+       Sits on the top-right corner of the picture. Decorative (the anchor
+       already carries an aria-label), so it is aria-hidden and transparent to
+       pointer events — a tap on the pill still opens the lightbox. The label
+       is generated from data attributes so touch reads "Tap" and a mouse
+       reads "Click", with no JS and no duplicated markup. */
+    .share-hint{
+      position: absolute; top: 10px; right: 10px; z-index: 3;
+      pointer-events: none;
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 11px 6px 9px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
+      color: rgba(232,230,247,0.94);
+      background: rgba(5,4,20,0.62);
+      border: 1px solid rgba(167,139,250,0.32);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .share-hint svg{ width: 15px; height: 15px; flex: 0 0 auto; }
+    .sh-lbl::after{ content: attr(data-tap); }
+    @media (hover: hover) and (pointer: fine){
+      .sh-lbl::after{ content: attr(data-click); }
+    }
+    html[data-theme="light"] .share-hint{
+      color: #0b0a1c; background: rgba(255,255,255,0.82);
+      border-color: rgba(120,90,220,0.34);
+    }
+    @media (max-width: 620px){
+      .share-hint{ top: 8px; right: 8px; padding: 5px 9px 5px 8px; font-size: 11px; }
+      .share-hint svg{ width: 13px; height: 13px; }
+    }
+    /* Very narrow screens: keep the icon, drop the words rather than let the
+       pill run across the top of the picture. */
+    @media (max-width: 380px){
+      .sh-lbl{ display: none; }
+      .share-hint{ padding: 6px; }
+    }
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
@@ -620,6 +675,29 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
     specs = entry.get("specs") or {}
 
     # ── figures ──
+    # The corner pill telling people the picture opens. Six desert sessions
+    # showed that without it nobody worked out the photo was tappable — a
+    # picture that fills the screen reads as the page, not as a control.
+    _EXPAND_SVG = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor"'
+                   ' stroke-width="1.5" stroke-linecap="round"'
+                   ' stroke-linejoin="round" aria-hidden="true">'
+                   '<path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/>'
+                   '<path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg>')
+    _PLAY_SVG = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor"'
+                 ' stroke-width="1.5" stroke-linecap="round"'
+                 ' stroke-linejoin="round" aria-hidden="true">'
+                 '<circle cx="8" cy="8" r="6.1"/><path d="M6.6 5.5l4 2.5-4 2.5z"/></svg>')
+
+    def hint(icon, tap, click):
+        return (f'<span class="share-hint" aria-hidden="true">{icon}'
+                f'<span class="sh-lbl" data-tap="{a(tap)}"'
+                f' data-click="{a(click)}"></span></span>')
+
+    photo_hint = hint(_EXPAND_SVG, "Tap to view full screen",
+                      "Click to view full screen")
+    video_hint = hint(_PLAY_SVG, "Tap to play", "Click to play")
+
+    # ── figures ──
     # Page-to-page navigation lives in the bar above the title, not on the
     # image. The only controls over a picture are the pager for entries with
     # several pictures, and the lightbox arrows once one is opened.
@@ -650,7 +728,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
                 f' data-cap="{a(cap)}">'
                 f'<a href="{a(clip_href)}" aria-label="{a(clip_label)}">'
                 f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
-                f'decoding="async" draggable="false"></a></div>'
+                f'decoding="async" draggable="false">{video_hint}</a></div>'
             )
         else:
             # Photo opens the in-page lightbox (JS intercepts via .share-open +
@@ -662,7 +740,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
                 f'<a class="share-open" data-idx="{gidx}" href="{a(viewer_url)}"'
                 f' aria-label="Open {a(title)} full screen">'
                 f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
-                f'decoding="async" draggable="false"></a></div>'
+                f'decoding="async" draggable="false">{photo_hint}</a></div>'
             )
 
     pager = ""
@@ -888,7 +966,13 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      var moved = false;\n"
             "      img.addEventListener('click', function(){\n"
             "        if (moved) { moved = false; return; }  /* a swipe, not a tap */\n"
-            "        goToCurrent();\n"
+            "        /* Tapping the picture just closes, matching a tap on the\n"
+            "           backdrop. It used to navigate to the current photo's own\n"
+            "           page, so anyone who swiped a few frames and then tapped\n"
+            "           the image — the most natural gesture there is — triggered\n"
+            "           a full page load and lost the picture. URL syncing stays\n"
+            "           on the close button, which is the deliberate exit. */\n"
+            "        close();\n"
             "      });\n"
             "      document.addEventListener('keydown', function(e){\n"
             "        if (!box.classList.contains('is-open')) return;\n"
