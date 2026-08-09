@@ -1072,11 +1072,11 @@
    the visitor never sees the top of the page. This lands them at the top and
    then walks them down, which shows the site on the way past.
 
-   Aiming once is not enough. Lazy images and the panels above the target keep
-   loading while the scroll is running, so the section drifts further down the
-   page than wherever we aimed and the scroll stops short. This measures again
-   after the smooth pass and corrects, repeatedly, until the position holds
-   still or it runs out of attempts.
+   The trick is when to start. Measure too early and the panels above are
+   still loading images, so the target drifts down and the scroll stops short.
+   Correcting mid-flight fixes the position but you see it happen. Instead
+   this waits for the page height to stop changing, then makes one smooth
+   move that lands where it was aimed.
 
    The header is sticky, so its height comes off the target or the heading
    ends up tucked underneath it. */
@@ -1085,37 +1085,34 @@
   if (!target) return;
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  var still  = reduce && reduce.matches;
 
-  function targetY(el){
-    var header = document.querySelector('header');
-    var offset = (header ? header.getBoundingClientRect().height : 0) + 14;
-    return Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset);
-  }
-
-  function go(){
+  function scrollToTarget(){
     var el = document.getElementById(target);
     if (!el) return;
 
-    window.scrollTo({ top: targetY(el), behavior: still ? 'auto' : 'smooth' });
-    try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+    var header = document.querySelector('header');
+    var offset = (header ? header.getBoundingClientRect().height : 0) + 14;
+    var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset);
 
-    // Correction passes. The first waits out the smooth animation; the rest
-    // catch anything that shifted afterwards. Jumps this small are invisible.
-    var tries = 0;
-    (function settle(){
-      setTimeout(function(){
-        var want = targetY(el);
-        if (Math.abs(window.pageYOffset - want) > 6) {
-          window.scrollTo({ top: want, behavior: 'auto' });
-        }
-        if (++tries < 6) settle();
-      }, tries === 0 ? 900 : 350);
+    window.scrollTo({ top: y, behavior: (reduce && reduce.matches) ? 'auto' : 'smooth' });
+    try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+  }
+
+  // Poll the document height. Two identical readings means the images above
+  // have finished arriving and nothing else is about to push the page around.
+  // Gives up after about two seconds so a slow image cannot stall it forever.
+  function whenSettled(done){
+    var last = -1, same = 0, tries = 0;
+    (function check(){
+      var h = document.documentElement.scrollHeight;
+      same = (h === last) ? same + 1 : 0;
+      last = h;
+      if (same >= 2 || ++tries > 16) return done();
+      setTimeout(check, 120);
     })();
   }
 
-  // Wait for the header partial to inject and for layout to settle first.
-  window.addEventListener('load', function(){ setTimeout(go, 350); });
+  window.addEventListener('load', function(){ whenSettled(scrollToTarget); });
 })();
 </script>
 
