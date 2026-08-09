@@ -11,32 +11,33 @@
 
   <link rel="canonical" href="https://bhapstar.com/card.html" />
 
-  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, articles and how to get in touch, in one tap." />
+  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, gear, articles and how to get in touch, in one tap." />
   <meta name="author" content="Bhapinder Singh" />
 
   <meta property="og:type"        content="profile" />
   <meta property="og:title"       content="Bhapinder (Bobby) Singh — bhapstar Astrophotography" />
-  <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
+  <meta property="og:description" content="Astrophotography from the UAE. Gallery, prints, gear and articles." />
   <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:url"         content="https://bhapstar.com/card.html" />
 
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Bhapinder (Bobby) Singh — bhapstar Astrophotography" />
-  <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints and articles." />
+  <meta name="twitter:description" content="Astrophotography from the UAE. Gallery, prints, gear and articles." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
 
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
-  <!-- The variant is chosen here, before first paint, so nothing flashes.
-       ?v=a, ?v=b or ?v=d forces a specific one, useful for showing someone.
-       The variant actually served is written back as ?cv=, which is only a
-       record. It is deliberately a different parameter, so a refresh still
-       rolls again instead of locking onto whatever the last roll wrote. -->
+  <!-- Theme is chosen here, before first paint, so nothing flashes.
+       ?t=light or ?t=dark forces one, useful for showing someone.
+
+       Deliberately does not read or write localStorage. The site remembers a
+       visitor's choice under that key, and this page must not overwrite it
+       just because a coin toss came up light. -->
   <script>
   (function(){
-    var m = location.search.match(/[?&]v=([abd])(?![a-z])/i);
-    var v = m ? m[1].toLowerCase() : ['a','b','d'][Math.floor(Math.random() * 3)];
-    document.documentElement.setAttribute('data-v', v);
+    var m = location.search.match(/[?&]t=(light|dark)(?![a-z])/i);
+    var t = m ? m[1].toLowerCase() : (Math.random() < 0.5 ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', t);
   })();
   </script>
 
@@ -44,13 +45,12 @@
     /* ══════════════════════════════════════════════════
        card.html — the page behind the NFC tag and the QR
 
-       Three designs live in this one file and one is picked
-       at random on load. All three carry identical content,
-       so whichever a visitor gets, they get everything.
+       One design, in two themes. Which one you get is a coin
+       toss on load, and the header button flips it.
 
-       Imagery is drawn from site-data.json, the same source
-       the index hero uses, so new photographs feed in on
-       their own with nothing to update here.
+       Imagery comes from site-data.json, the same source the
+       index hero uses, so new photographs feed in on their
+       own with nothing to update here.
        ══════════════════════════════════════════════════ */
 
     @font-face{
@@ -60,11 +60,42 @@
       unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
     }
 
+    /* ── Dark, the default ── */
     :root{
-      --ink:#050414; --violet:#a78bfa; --cobalt:#60a5fa; --pink:#f472b6;
-      --paper:#efedfa; --muted:#9b98b8; --line:rgba(167,139,250,.22);
-      --light-bg:#f5f4fc; --light-tx:#1a1730; --light-mu:#564f82;
+      --bg:#050414;
+      --text:#efedfa;
+      --muted:#9b98b8;
+      --line:rgba(167,139,250,.22);
+      --accent:#a78bfa;
+      --tile:rgba(255,255,255,.045);
+      --tile-hover:rgba(255,255,255,.085);
+      --cell:rgba(255,255,255,.05);
+      --pri:linear-gradient(135deg,rgba(167,139,250,.3),rgba(96,165,250,.3));
+      --pri-hover:linear-gradient(135deg,rgba(167,139,250,.44),rgba(96,165,250,.44));
+      --pri-line:rgba(167,139,250,.5);
+      --pri-em:#cfc9ee;
+      --code:#f472b6;
+      --shadow:rgba(0,0,0,.28);
       --grad:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
+    }
+
+    /* ── Light, matching the site's own light theme tokens ── */
+    html[data-theme="light"]{
+      --bg:#eceaf6;
+      --text:rgba(26,23,48,.94);
+      --muted:rgba(70,64,110,.72);
+      --line:rgba(124,92,246,.28);
+      --accent:#7c5cf6;
+      --tile:rgba(255,255,255,.72);
+      --tile-hover:#ffffff;
+      --cell:rgba(124,92,246,.10);
+      --pri:linear-gradient(135deg,rgba(124,92,246,.20),rgba(47,127,224,.20));
+      --pri-hover:linear-gradient(135deg,rgba(124,92,246,.32),rgba(47,127,224,.32));
+      --pri-line:rgba(124,92,246,.5);
+      --pri-em:rgba(70,64,110,.85);
+      --code:#c0398c;
+      --shadow:rgba(26,23,48,.14);
+      --grad:linear-gradient(90deg,#7c5cf6,#2f7fe0,#d64a98,#2f7fe0,#7c5cf6);
     }
 
     *{box-sizing:border-box}
@@ -72,341 +103,142 @@
     body{
       font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
       font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased;
-      min-height:100vh; min-height:100dvh; background:var(--ink); color:var(--paper);
+      min-height:100vh; min-height:100dvh;
+      background:var(--bg); color:var(--text);
+      transition:background-color .28s ease, color .28s ease;
     }
-    html[data-v="a"] body{ background:var(--light-bg); color:var(--light-tx); }
-
-    /* Only the chosen variant is shown */
-    .variant{ display:none }
-    html[data-v="a"] #vA,
-    html[data-v="b"] #vB,
-    html[data-v="d"] #vD{ display:block }
+    a{ -webkit-tap-highlight-color:transparent }
 
     .wrap{
       max-width:460px; margin:0 auto;
       padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
     }
-    .wm{ font-weight:600; letter-spacing:.32em; text-transform:uppercase; display:block }
 
-    /* The rolling gradient the site uses on page titles. background-clip:text
-       crops the paint box to the content rect, which slices the descenders off
-       "Bhapinder (Bobby) Singh", so padding-bottom gives the clip region room
-       and the negative margin puts the spacing back. */
-    .variant h1{
-      background:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
-      background-size:300% 100%;
+    /* ─────────── Header ─────────── */
+    .bar{
+      display:flex; align-items:center; justify-content:flex-end;
+      padding:12px 18px 0;
+    }
+    .theme-toggle{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:38px; height:38px; padding:0;
+      border-radius:999px; cursor:pointer;
+      background:none; border:1px solid var(--line);
+      color:var(--accent);
+      transition:background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .theme-toggle:hover{ background:var(--tile); border-color:var(--pri-line) }
+    .theme-toggle:active{ transform:scale(.94) }
+    .theme-toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
+    .theme-toggle svg{ width:18px; height:18px }
+    .theme-toggle .icon-moon{ display:none }
+    html[data-theme="light"] .theme-toggle .icon-sun{ display:none }
+    html[data-theme="light"] .theme-toggle .icon-moon{ display:block }
+
+    /* ─────────── Identity ─────────── */
+    .inner{ padding:14px 18px 30px }
+    .top{ text-align:center; margin-bottom:22px }
+    h1{
+      font-size:25px; font-weight:400; margin:0 0 2px;
+      background:var(--grad); background-size:300% 100%;
       -webkit-background-clip:text; background-clip:text;
       -webkit-text-fill-color:transparent; color:transparent;
       animation:gradientRoll 4s linear infinite reverse;
       padding-bottom:.12em; margin-bottom:-.12em;
     }
-    /* Deeper stops on the light variant, since the site's pastels wash out
-       against near-white paper. */
-    html[data-v="a"] .variant h1{
-      background-image:linear-gradient(90deg,#7c5cf6,#2f7fe0,#d64a98,#2f7fe0,#7c5cf6);
-    }
     @keyframes gradientRoll{
       0%   { background-position:0% 50% }
       100% { background-position:100% 50% }
     }
-    .rule{ height:3px; border-radius:2px; background:var(--grad) }
-    /* Small heading that separates the site links from the social ones.
-       Colour is set per variant, the shape is shared. */
-    .grp-label{
-      font-size:11px; font-weight:500; letter-spacing:.22em; text-transform:uppercase;
-      margin:26px 0 8px;
-    }
-    a{ -webkit-tap-highlight-color:transparent }
+    .role{ color:var(--muted); font-size:14px; margin:6px 0 0 }
 
-    /* Photographs fade in once site-data.json has been read, so there is
-       never a flash of the wrong picture. */
-    .photo{ opacity:0; transition:opacity .55s ease }
-    .photo.on{ opacity:1 }
-
-    /* Same slow drift the index hero uses, so the two pages feel related.
-       Two paths at slightly different lengths, so A and B never look like
-       the same movement. */
-    @keyframes cardDriftA{
-      0%   { transform:translate3d(-2.2%,-1.6%,0) scale(1.13); }
-      50%  { transform:translate3d( 2.0%, 2.4%,0) scale(1.19); }
-      100% { transform:translate3d(-2.2%,-1.6%,0) scale(1.13); }
-    }
-    @keyframes cardDriftB{
-      0%   { transform:translate3d( 2.3%, 1.8%,0) scale(1.14); }
-      50%  { transform:translate3d(-2.1%,-2.2%,0) scale(1.20); }
-      100% { transform:translate3d( 2.3%, 1.8%,0) scale(1.14); }
-    }
-
-    /* ─────────── A · Paper ─────────── */
-    /* The picture sits on a ::before so it can be oversized and drifted
-       without the movement showing at the edges. The clipping box stays
-       pinned to the viewport; only the layer inside it moves. */
-    #vA .backdrop{
-      position:fixed; inset:0; z-index:0; overflow:hidden;
-    }
-    #vA .backdrop::before{
-      content:""; position:absolute; inset:-6%;
-      background-image:var(--bg); background-size:cover; background-position:center;
-      filter:saturate(1.12) contrast(1.03) blur(3px);
-      transform:translate3d(0,0,0) scale(1.13);
-      animation:cardDriftA 15s ease-in-out infinite;
-      will-change:transform;
-    }
-    #vA .veil{
-      position:fixed; inset:0; z-index:1; pointer-events:none;
-      background:linear-gradient(180deg,
-        rgba(245,244,252,.66) 0%, 
-        rgba(245,244,252,.82) 55%, 
-        rgba(245,244,252,.88) 100%)
-;
-    }
-    #vA .wrap{ position:relative; z-index:2 }
-    #vA .inner{ padding:38px 24px 34px }
-    #vA .rule{ width:44px; margin-bottom:20px }
-    #vB .rule{ width:44px; margin-bottom:20px }
-    #vA .wm{ font-size:13.5px; color:var(--light-tx); margin-bottom:24px }
-    #vA h1{ font-size:29px; font-weight:400; margin:0 0 2px; letter-spacing:.01em }
-    #vA .role{ color:var(--light-mu); font-size:15px; margin:0 0 28px }
-    #vA .lnk{
-      display:flex; justify-content:space-between; align-items:center;
-      padding:15px 2px; border-top:1px solid rgba(124,92,246,.2);
-      color:var(--light-tx); text-decoration:none; font-size:16.5px;
-      transition:padding-left .16s ease, background-color .18s ease, border-color .18s ease;
-    }
-    #vA .grp .lnk:last-child{ border-bottom:1px solid rgba(124,92,246,.2) }
-    #vA .grp-label{ color:var(--light-mu) }
-    #vA .lnk:active{ padding-left:6px }
-    #vA .lnk em{ font-style:normal; color:var(--light-mu); font-size:13.5px; transition:color .18s ease }
-    #vA .save{
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-      margin:26px 0 0; padding:13px 16px; text-align:center; border-radius:12px; line-height:1.25;
-      background:var(--light-tx); color:var(--light-bg); text-decoration:none;
-      font-weight:500; font-size:16px;
-      transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease;
-    }
-    #vA .save em{ font-style:normal; font-size:11.5px; font-weight:400; color:rgba(245,244,252,.72) }
-    #vA .code{ margin:22px 0 0; text-align:center; font-size:13.5px; color:var(--light-mu) }
-    #vA .code b{ color:#c0398c; letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
-
-    /* ─────────── B · Immersive ─────────── */
-    #vB .stage{ position:relative; min-height:100vh; min-height:100dvh; overflow:hidden }
-    #vB .bg{ position:absolute; inset:0; overflow:hidden }
-    #vB .bg::before{
-      content:""; position:absolute; inset:-6%;
-      background-image:var(--bg); background-size:cover; background-position:center;
-      filter:saturate(1.12) contrast(1.03) blur(3px);
-      transform:translate3d(0,0,0) scale(1.14);
-      animation:cardDriftB 16s ease-in-out infinite;
-      will-change:transform;
-    }
-    #vB .shade{
-      position:absolute; inset:0;
-      background:linear-gradient(to bottom,rgba(5,4,20,.25),rgba(5,4,20,.74) 46%,rgba(5,4,20,.96));
-    }
-    #vB .fg{
-      position:relative; min-height:100vh; min-height:100dvh;
-      padding:38px 22px 34px; display:flex; flex-direction:column; justify-content:flex-start;
-    }
-    #vB h1{ font-size:32px; font-weight:300; margin:0 0 4px; letter-spacing:.01em }
-    #vB .role{ color:#c9c4e4; font-size:15px; margin:0 0 24px }
-    #vB .glass{
-      background:rgba(255,255,255,.09); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:8px;
-    }
-    #vB .grp-label{ color:#a9a3ca; margin:18px 0 8px; padding-left:4px }
-    #vB .lnk{
-      display:flex; justify-content:space-between; align-items:center; padding:14px;
-      color:#fff; text-decoration:none; font-size:16px; border-bottom:1px solid rgba(255,255,255,.1);
-      border-radius:10px;
-      transition:background-color .18s ease, padding-left .16s ease;
-    }
-    #vB .lnk:last-child{ border-bottom:0 }
-    #vB .lnk em{ font-style:normal; color:#b8b3d6; font-size:13px; transition:color .18s ease }
-    #vB .save{
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-      margin:15px 0 0; padding:13px 16px; text-align:center; border-radius:13px; line-height:1.25;
-      background:linear-gradient(135deg,#a78bfa,#60a5fa); color:#0b0a1c;
-      font-weight:600; text-decoration:none; font-size:16px;
-      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
-    }
-    #vB .save em{ font-style:normal; font-size:11.5px; font-weight:500; color:rgba(11,10,28,.66) }
-    #vB .code{ margin:16px 0 0; text-align:center; font-size:13px; color:#b8b3d6 }
-    #vB .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
-
-    /* ─────────── D · Contact sheet ─────────── */
-    #vD .inner{ padding:36px 18px 30px }
-    #vD .top{ text-align:center; margin-bottom:22px }
-    #vD h1{ font-size:25px; font-weight:400; margin:0 0 2px }
-    #vD .role{ color:var(--muted); font-size:14px; margin:0 }
-    #vD .thumbs{
+    /* ─────────── Contact sheet ─────────── */
+    .thumbs{
       display:grid; grid-template-columns:repeat(3,1fr); gap:4px;
-      margin-bottom:22px; border-radius:12px; overflow:hidden;
+      margin:22px 0; border-radius:12px; overflow:hidden;
+      opacity:0; transition:opacity .55s ease;
     }
-    #vD .thumbs a{
+    .thumbs.on{ opacity:1 }
+    .thumbs a{
       display:block; line-height:0; aspect-ratio:1;
-      background:rgba(255,255,255,.05) center/cover no-repeat;
+      background:var(--cell) center/cover no-repeat;
       transition:opacity .62s ease;
     }
     /* Set while a cell swaps its picture. The cell fades to the grid
        background, changes underneath, then fades back. */
-    #vD .thumbs a.swapping{ opacity:0 }
-    #vD .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
-    #vD .grp-label{ color:var(--muted); margin:20px 0 9px; text-align:center }
-    #vD .btn{
+    .thumbs a.swapping{ opacity:0 }
+
+    /* ─────────── Buttons ─────────── */
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px }
+    .grp-label{
+      color:var(--muted); margin:20px 0 9px; text-align:center;
+      font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+    }
+    .btn{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       gap:2px; padding:12px 10px; border-radius:12px; line-height:1.25; text-align:center;
-      border:1px solid var(--line); background:rgba(255,255,255,.045);
-      color:var(--paper); text-decoration:none; font-size:15.5px;
+      border:1px solid var(--line); background:var(--tile);
+      color:var(--text); text-decoration:none; font-size:15.5px;
       transition:background-color .18s ease, border-color .18s ease,
                  transform .18s ease, box-shadow .18s ease;
     }
-    #vD .btn em{ font-style:normal; font-size:11.5px; color:var(--muted); letter-spacing:.01em }
-    #vD .btn.pri em{ color:#cfc9ee }
-    #vD .btn.wide{ grid-column:1 / -1 }
-    #vD .btn.pri{
-      background:linear-gradient(135deg,rgba(167,139,250,.3),rgba(96,165,250,.3));
-      border-color:rgba(167,139,250,.5); font-weight:500;
+    .btn em{ font-style:normal; font-size:11.5px; color:var(--muted); letter-spacing:.01em }
+    .btn.wide{ grid-column:1 / -1 }
+    .btn.pri{
+      background:var(--pri); border-color:var(--pri-line); font-weight:500;
     }
-    #vD .code{ margin:18px 0 0; text-align:center; font-size:13px; color:var(--muted) }
-    #vD .code b{ color:var(--pink); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
+    .btn.pri em{ color:var(--pri-em) }
+
+    .code{ margin:18px 0 0; text-align:center; font-size:13px; color:var(--muted) }
+    .code b{ color:var(--code); letter-spacing:.08em; font-weight:500; font-family:ui-monospace,Menlo,monospace }
 
     /* ─────────── Hover ───────────
        Gated behind a real pointer. On a phone, which is where most of these
        are opened, a plain :hover rule sticks to whatever was tapped last and
-       leaves a button looking selected after the tap. This block simply does
-       not apply there. */
+       leaves a button looking selected after the tap. */
     @media (hover:hover) and (pointer:fine){
-
-      /* A · a violet wash the width of the row, and a small step to the
-         right that reuses the indent :active already had */
-      #vA .lnk:hover{
-        background-color:rgba(124,92,246,.075);
-        border-top-color:rgba(124,92,246,.42);
-        padding-left:8px;
-      }
-      #vA .grp .lnk:hover:last-child{ border-bottom-color:rgba(124,92,246,.42) }
-      #vA .lnk:hover em{ color:var(--light-tx) }
-      #vA .save:hover{
-        background-color:#2a2550;
+      .btn:hover{
+        background-color:var(--tile-hover);
+        border-color:var(--pri-line);
         transform:translateY(-1px);
-        box-shadow:0 6px 18px rgba(26,23,48,.28);
+        box-shadow:0 6px 16px var(--shadow);
       }
-
-      /* B · the glass panel is already translucent, so the rows only need
-         to catch a little more light */
-      #vB .lnk:hover{
-        background-color:rgba(255,255,255,.11);
-        padding-left:18px;
-      }
-      #vB .lnk:hover em{ color:#e6e3f5 }
-      #vB .save:hover{
-        filter:brightness(1.08);
-        transform:translateY(-1px);
-        box-shadow:0 8px 22px rgba(167,139,250,.34);
-      }
-
-      /* D · the border does the work here, picking up the violet it is
-         already tinted with */
-      #vD .btn:hover{
-        background-color:rgba(255,255,255,.085);
-        border-color:rgba(167,139,250,.55);
-        transform:translateY(-1px);
-        box-shadow:0 6px 16px rgba(0,0,0,.28);
-      }
-      #vD .btn.pri:hover{
-        background:linear-gradient(135deg,rgba(167,139,250,.44),rgba(96,165,250,.44));
-        border-color:rgba(167,139,250,.8);
-        box-shadow:0 8px 22px rgba(167,139,250,.3);
+      .btn.pri:hover{
+        background:var(--pri-hover);
+        border-color:rgba(124,92,246,.8);
+        box-shadow:0 8px 22px var(--shadow);
       }
     }
 
-    @media (prefers-reduced-motion:reduce){
-      *{ transition:none !important; animation:none !important }
-      /* Colour changes on hover are fine, the movement is not */
-      #vA .save:hover, #vB .save:hover, #vD .btn:hover{ transform:none !important }
-      #vA .lnk:hover, #vB .lnk:hover{ padding-left:2px }
-      /* Hold the drift layers at their mid position rather than snapping
-         back to unscaled, which would show the edges of the oversized layer */
-      #vA .backdrop::before, #vB .bg::before{ transform:scale(1.16) !important }
-    }
+    @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important } }
   </style>
 </head>
 
 <body>
 
-<!-- ══════════════ A · Paper ══════════════ -->
-<section class="variant" id="vA">
-  <div class="backdrop photo" id="aBg" aria-hidden="true"></div>
-  <div class="backdrop photo" id="aBg2" aria-hidden="true"></div>
-  <div class="veil" aria-hidden="true"></div>
-  <div class="wrap"><div class="inner">
-    <div class="rule"></div>
-    <h1>Bhapinder (Bobby) Singh</h1>
-    <p class="role">Astrophotographer</p>
+<div class="wrap">
 
-    <div class="grp">
-      <a class="lnk" href="index.html">Home <em>bhapstar.com</em></a>
-      <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
-      <a class="lnk" href="prints.html">Prints <em>high resolution</em></a>
-      <a class="lnk" href="gear.html">Gear <em>reviews and purchase links</em></a>
-      <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
-      <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
-    </div>
-
-    <p class="grp-label">Socials</p>
-
-    <div class="grp">
-      <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
-      <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
-      <a class="lnk" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
-    </div>
-
-    <a class="save" href="index.html?goto=contact">Get in touch <em>questions and updates</em></a>
-    <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
-  </div></div>
-</section>
-
-<!-- ══════════════ B · Immersive ══════════════ -->
-<section class="variant" id="vB">
-  <div class="stage">
-    <div class="bg photo" id="bBg" aria-hidden="true"></div>
-    <div class="bg photo" id="bBg2" aria-hidden="true"></div>
-    <div class="shade" aria-hidden="true"></div>
-    <div class="fg"><div class="wrap" style="width:100%">
-      <div class="rule"></div>
-      <h1>Bhapinder (Bobby) Singh</h1>
-      <p class="role">Astrophotographer</p>
-      <div class="glass">
-        <a class="lnk" href="index.html">Home <em>bhapstar.com</em></a>
-        <a class="lnk" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
-        <a class="lnk" href="prints.html">Prints <em>high resolution</em></a>
-        <a class="lnk" href="gear.html">Gear <em>reviews and purchase links</em></a>
-        <a class="lnk" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
-        <a class="lnk" href="star_word.html">Star Word <em>daily puzzle</em></a>
-      </div>
-
-      <p class="grp-label">Socials</p>
-
-      <div class="glass">
-        <a class="lnk" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
-        <a class="lnk" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
-        <a class="lnk" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
-      </div>
-      <a class="save" href="index.html?goto=contact">Get in touch <em>questions and updates</em></a>
-      <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
-    </div></div>
+  <div class="bar">
+    <button class="theme-toggle" id="themeBtn" type="button"
+            aria-label="Toggle light or dark theme" aria-pressed="false" title="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/>
+      </svg>
+    </button>
   </div>
-</section>
 
-<!-- ══════════════ D · Contact sheet ══════════════ -->
-<section class="variant" id="vD">
-  <div class="wrap"><div class="inner">
+  <div class="inner">
+
     <div class="top">
       <h1>Bhapinder (Bobby) Singh</h1>
       <p class="role">Astrophotographer</p>
     </div>
 
-    <div class="thumbs photo" id="dGrid">
+    <div class="thumbs" id="dGrid">
       <a href="gallery.html" aria-label="Gallery"></a>
       <a href="gallery.html" aria-label="Gallery"></a>
       <a href="gallery.html" aria-label="Gallery"></a>
@@ -414,6 +246,7 @@
       <a href="gallery.html" aria-label="Gallery"></a>
       <a href="gallery.html" aria-label="Gallery"></a>
     </div>
+
     <div class="row">
       <a class="btn pri wide" href="index.html">Home <em>bhapstar.com</em></a>
     </div>
@@ -431,6 +264,7 @@
     <div class="row">
       <a class="btn wide" href="index.html?goto=contact">Get in touch <em>questions and updates</em></a>
     </div>
+
     <p class="grp-label">Socials</p>
 
     <div class="row">
@@ -442,33 +276,45 @@
     </div>
 
     <p class="code">10% off any print with <b>BHAPSTAR10</b></p>
-  </div></div>
-</section>
+
+  </div>
+</div>
 
 <script>
 (function(){
-  var v = document.documentElement.getAttribute('data-v');
+  var root = document.documentElement;
+  var meta = document.getElementById('themeColor');
+  var btn  = document.getElementById('themeBtn');
 
-  // The light variant needs light browser chrome to match
-  var tc = document.getElementById('themeColor');
-  if (tc && v === 'a') tc.setAttribute('content', '#f5f4fc');
+  function current(){ return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
 
-  // Record which variant was served, so Cloudflare shows the split.
-  // Written as cv, never as v, so refreshing re-rolls rather than sticking.
+  function apply(theme){
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#eceaf6' : '#050414');
+    if (btn)  btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+  }
+
+  apply(current());
+  if (btn) btn.addEventListener('click', function(){
+    apply(current() === 'light' ? 'dark' : 'light');
+  });
+
+  // Record which theme was served, so Cloudflare shows the split. Written as
+  // ct, never as t, so refreshing tosses the coin again rather than sticking.
   try {
     var qs = new URLSearchParams(location.search);
-    qs.set('cv', v);
+    qs.set('ct', current());
     history.replaceState(null, '', location.pathname + '?' + qs.toString() + location.hash);
   } catch (e) { /* not worth breaking the page over */ }
 
-  // Used only if site-data.json cannot be read, so the page is never bare
+  // Used only if site-data.json cannot be read, so the grid is never bare
   var FALLBACK = [
     'images/rosette-nebula-ngc2244.webp',
     'images/orion-nebula-m42.webp',
     'images/andromeda-galaxy-m31.webp',
     'images/pleiades-m45.webp',
-    'images/cats_paw_nebula_ngc6334.webp',
-    'images/the_milky_way.webp'
+    'images/jellyfish-nebula-ic443.webp',
+    'images/eagle-nebula-m16-2.webp'
   ];
 
   function shuffle(a){
@@ -482,31 +328,15 @@
   function paint(pool){
     if (!pool.length) pool = FALLBACK.slice();
 
-    if (v === 'a' || v === 'b') {
-      var base = document.getElementById(v === 'a' ? 'aBg'  : 'bBg');
-      var top  = document.getElementById(v === 'a' ? 'aBg2' : 'bBg2');
-      var one  = pool[Math.floor(Math.random() * pool.length)];
-      var pre  = new Image();
-      pre.onload = function(){
-        // Read by the ::before drift layer, not by the element itself
-        base.style.setProperty('--bg', 'url("' + one + '")');
-        base.classList.add('on');
-        cycleBackdrop(base, top, pool, one);
-      };
-      pre.onerror = function(){ base.classList.add('on'); };
-      pre.src = one;
-    }
+    var six = shuffle(pool.slice()).slice(0, 6);
+    while (six.length < 6 && pool.length) six.push(pool[six.length % pool.length]);
 
-    if (v === 'd') {
-      var six = shuffle(pool.slice()).slice(0, 6);
-      while (six.length < 6 && pool.length) six.push(pool[six.length % pool.length]);
-      var cells = document.querySelectorAll('#dGrid a');
-      six.forEach(function(src, i){
-        if (cells[i]) cells[i].style.backgroundImage = 'url("' + src + '")';
-      });
-      document.getElementById('dGrid').classList.add('on');
-      cycleGrid(cells, six, pool);
-    }
+    var cells = document.querySelectorAll('#dGrid a');
+    six.forEach(function(src, i){
+      if (cells[i]) cells[i].style.backgroundImage = 'url("' + src + '")';
+    });
+    document.getElementById('dGrid').classList.add('on');
+    cycleGrid(cells, six, pool);
   }
 
   /* Each cell runs its own timer, so the six never move together and the
@@ -517,44 +347,6 @@
      so the same frame cannot appear twice, and the next image is fully
      loaded before the fade starts, so a slow connection stalls the change
      rather than showing an empty square. */
-  /* Two stacked layers. The upper one takes the next picture and fades in
-     over the lower one. Once the fade is done the lower one is set to the
-     same picture and the upper is hidden again with its transition switched
-     off, so the handover never flickers. Both layers run their drift
-     animation from page load, so they stay in step throughout. */
-  function cycleBackdrop(base, top, pool, current){
-    if (!base || !top || pool.length < 2) return;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reduce && reduce.matches) return;
-
-    var HOLD = 5000;   // time each picture stays on screen
-    var FADE = 900;    // at least the CSS transition on .photo
-
-    setInterval(function(){
-      if (document.hidden) return;            // a background tab burns nothing
-
-      var spare = pool.filter(function(src){ return src !== current; });
-      if (!spare.length) return;
-      var next = spare[Math.floor(Math.random() * spare.length)];
-
-      var pre = new Image();
-      pre.onload = function(){
-        top.style.setProperty('--bg', 'url("' + next + '")');
-        top.classList.add('on');
-
-        setTimeout(function(){
-          base.style.setProperty('--bg', 'url("' + next + '")');
-          current = next;
-          top.style.transition = 'none';
-          top.classList.remove('on');
-          void top.offsetHeight;              // force the change to land
-          top.style.transition = '';
-        }, FADE);
-      };
-      pre.src = next;                          // a failed load just skips a turn
-    }, HOLD);
-  }
-
   function cycleGrid(cells, showing, pool){
     if (!cells.length) return;
     if (pool.length <= cells.length) return;          // nothing spare to rotate in
@@ -613,7 +405,7 @@
 
       // Every still in the gallery, groups flattened. Videos are skipped:
       // their posters exist, but a still frame of a timelapse makes a poor
-      // background.
+      // thumbnail here.
       var pool = [];
       gal.forEach(function(it){
         if (Array.isArray(it.images) && it.images.length) {
