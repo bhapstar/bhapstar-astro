@@ -665,7 +665,7 @@
         </div>
 
         <!-- Contact & Updates -->
-        <div class="panel contact-panel" id="contact">
+        <div class="panel contact-panel" id="contact" style="scroll-margin-top:96px">
           <div class="section-head section-head--inline">
             <h3>Contact &amp; Updates</h3>
           </div>
@@ -1072,30 +1072,50 @@
    the visitor never sees the top of the page. This lands them at the top and
    then walks them down, which shows the site on the way past.
 
-   The header is sticky, so its height is subtracted or the heading ends up
-   underneath it. */
+   Aiming once is not enough. Lazy images and the panels above the target keep
+   loading while the scroll is running, so the section drifts further down the
+   page than wherever we aimed and the scroll stops short. This measures again
+   after the smooth pass and corrects, repeatedly, until the position holds
+   still or it runs out of attempts.
+
+   The header is sticky, so its height comes off the target or the heading
+   ends up tucked underneath it. */
 (function(){
   var target = (location.search.match(/[?&]goto=([\w-]+)/) || [])[1];
   if (!target) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  var still  = reduce && reduce.matches;
+
+  function targetY(el){
+    var header = document.querySelector('header');
+    var offset = (header ? header.getBoundingClientRect().height : 0) + 14;
+    return Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset);
+  }
 
   function go(){
     var el = document.getElementById(target);
     if (!el) return;
 
-    var header = document.querySelector('header');
-    var offset = (header ? header.getBoundingClientRect().height : 0) + 12;
-    var y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-    window.scrollTo({ top: y, behavior: (reduce && reduce.matches) ? 'auto' : 'smooth' });
-
-    // Tidy the address bar without adding a history entry
+    window.scrollTo({ top: targetY(el), behavior: still ? 'auto' : 'smooth' });
     try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+
+    // Correction passes. The first waits out the smooth animation; the rest
+    // catch anything that shifted afterwards. Jumps this small are invisible.
+    var tries = 0;
+    (function settle(){
+      setTimeout(function(){
+        var want = targetY(el);
+        if (Math.abs(window.pageYOffset - want) > 6) {
+          window.scrollTo({ top: want, behavior: 'auto' });
+        }
+        if (++tries < 6) settle();
+      }, tries === 0 ? 900 : 350);
+    })();
   }
 
-  // Wait for the header partial to inject and for layout to settle, or the
-  // measured position is taken against a page that then grows underneath it.
-  window.addEventListener('load', function(){ setTimeout(go, 450); });
+  // Wait for the header partial to inject and for layout to settle first.
+  window.addEventListener('load', function(){ setTimeout(go, 350); });
 })();
 </script>
 
