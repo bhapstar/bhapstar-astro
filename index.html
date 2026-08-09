@@ -614,7 +614,10 @@
             src="images/me/bobby.jpg"
             alt="Portrait of Bhapinder (Bobby) Singh"
             class="about-photo"
+            width="130"
+            height="130"
             loading="lazy"
+            decoding="async"
           />
         </div>
 
@@ -1072,11 +1075,15 @@
    the visitor never sees the top of the page. This lands them at the top and
    then walks them down, which shows the site on the way past.
 
-   The trick is when to start. Measure too early and the panels above are
-   still loading images, so the target drifts down and the scroll stops short.
-   Correcting mid-flight fixes the position but you see it happen. Instead
-   this waits for the page height to stop changing, then makes one smooth
-   move that lands where it was aimed.
+   Getting it to land squarely takes some care, because three things above the
+   contact panel arrive late and push it further down the page: the portrait
+   is lazily loaded with no reserved height, and the stats grid and Instagram
+   carousel are both filled by script after load. Measure before those settle
+   and the scroll stops a whole panel short.
+
+   So: force the lazy images above the target to load now, wait for them and
+   for the page height to hold still, and only then make one smooth move. A
+   single gentle correction at the end covers anything that still shifted.
 
    The header is sticky, so its height comes off the target or the heading
    ends up tucked underneath it. */
@@ -1085,22 +1092,36 @@
   if (!target) return;
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  var still  = reduce && reduce.matches;
 
-  function scrollToTarget(){
-    var el = document.getElementById(target);
-    if (!el) return;
-
+  function targetY(el){
     var header = document.querySelector('header');
     var offset = (header ? header.getBoundingClientRect().height : 0) + 14;
-    var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset);
-
-    window.scrollTo({ top: y, behavior: (reduce && reduce.matches) ? 'auto' : 'smooth' });
-    try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+    return Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset);
   }
 
-  // Poll the document height. Two identical readings means the images above
-  // have finished arriving and nothing else is about to push the page around.
-  // Gives up after about two seconds so a slow image cannot stall it forever.
+  // Lazy images only fetch as they near the viewport, which here means during
+  // the scroll itself. Promote them so they load and take up their space now.
+  function loadImagesAbove(el, done){
+    var cut = el.getBoundingClientRect().top + window.pageYOffset;
+    var imgs = Array.prototype.filter.call(document.images, function(img){
+      return (img.getBoundingClientRect().top + window.pageYOffset) < cut;
+    });
+    imgs.forEach(function(img){ if (img.loading === 'lazy') img.loading = 'eager'; });
+
+    var pending = imgs.filter(function(img){ return !img.complete; });
+    if (!pending.length) return done();
+
+    var left = pending.length, finished = false;
+    function tick(){ if (!--left && !finished) { finished = true; done(); } }
+    pending.forEach(function(img){
+      img.addEventListener('load', tick, { once: true });
+      img.addEventListener('error', tick, { once: true });
+    });
+    setTimeout(function(){ if (!finished) { finished = true; done(); } }, 2000);
+  }
+
+  // Two identical height readings means nothing else is about to move.
   function whenSettled(done){
     var last = -1, same = 0, tries = 0;
     (function check(){
@@ -1112,7 +1133,28 @@
     })();
   }
 
-  window.addEventListener('load', function(){ whenSettled(scrollToTarget); });
+  function run(){
+    var el = document.getElementById(target);
+    if (!el) return;
+
+    loadImagesAbove(el, function(){
+      whenSettled(function(){
+        window.scrollTo({ top: targetY(el), behavior: still ? 'auto' : 'smooth' });
+        try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+
+        // One gentle catch-up once the animation is done. The threshold is high
+        // enough that it stays silent unless something genuinely moved.
+        setTimeout(function(){
+          var want = targetY(el);
+          if (Math.abs(window.pageYOffset - want) > 60) {
+            window.scrollTo({ top: want, behavior: still ? 'auto' : 'smooth' });
+          }
+        }, 1000);
+      });
+    });
+  }
+
+  window.addEventListener('load', run);
 })();
 </script>
 
