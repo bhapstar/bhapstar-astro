@@ -49,8 +49,26 @@
     .share-slides{ position: relative; }
     .share-slide{ display: none; }
     .share-slide.is-active{ display: block; }
+    /* The anchor shrink-wraps the picture so the "view full screen" pill sits
+       on the image corner rather than the column corner. Portrait shots are
+       narrower than the column once the height cap below kicks in. */
+    .share-slide > a{
+      display: block; position: relative;
+      width: fit-content; max-width: 100%; margin: 0 auto;
+    }
+    /* Capped by viewport height, not only by column width. The gallery is
+       mostly portrait frames (roughly 1350 x 2400), which at the 900px column
+       width came out ~1600px tall — taller than any tablet, so the picture
+       could never be seen whole and never read as something you could tap.
+       Now the whole frame plus a strip of the write-up is always in view.
+       72vh is a taste dial; lower it for more text above the fold. The svh
+       line repeats it in small-viewport units so iOS Safari's address bar
+       does not push the bottom of the picture off screen. */
     .share-figure img{
-      display: block; width: 100%; height: auto; border-radius: 14px;
+      display: block; margin: 0 auto;
+      width: auto; max-width: 100%;
+      height: auto; max-height: 72vh; max-height: 72svh;
+      border-radius: 14px;
       border: 1px solid var(--line);
       /* Dark theme: a plain black shadow is invisible on #050414, so lift the
          image with a deep shadow plus a violet bloom and a faint accent rim. */
@@ -195,7 +213,44 @@
     .share-nav a{ color: var(--accent); text-decoration: none; max-width: 46%; }
     .share-nav a:hover{ text-decoration: underline; }
     .share-nav .nav-next{ margin-left: auto; text-align: right; }
-    .share-open{ cursor: pointer; }
+    .share-open{ cursor: zoom-in; }
+
+    /* ── "View full screen" hint ──
+       Sits on the top-right corner of the picture. Decorative (the anchor
+       already carries an aria-label), so it is aria-hidden and transparent to
+       pointer events — a tap on the pill still opens the lightbox. The label
+       is generated from data attributes so touch reads "Tap" and a mouse
+       reads "Click", with no JS and no duplicated markup. */
+    .share-hint{
+      position: absolute; top: 10px; right: 10px; z-index: 3;
+      pointer-events: none;
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 11px 6px 9px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
+      color: rgba(232,230,247,0.94);
+      background: rgba(5,4,20,0.62);
+      border: 1px solid rgba(167,139,250,0.32);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .share-hint svg{ width: 15px; height: 15px; flex: 0 0 auto; }
+    .sh-lbl::after{ content: attr(data-tap); }
+    @media (hover: hover) and (pointer: fine){
+      .sh-lbl::after{ content: attr(data-click); }
+    }
+    html[data-theme="light"] .share-hint{
+      color: #0b0a1c; background: rgba(255,255,255,0.82);
+      border-color: rgba(120,90,220,0.34);
+    }
+    @media (max-width: 620px){
+      .share-hint{ top: 8px; right: 8px; padding: 5px 9px 5px 8px; font-size: 11px; }
+      .share-hint svg{ width: 13px; height: 13px; }
+    }
+    /* Very narrow screens: keep the icon, drop the words rather than let the
+       pill run across the top of the picture. */
+    @media (max-width: 380px){
+      .sh-lbl{ display: none; }
+      .share-hint{ padding: 6px; }
+    }
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
@@ -359,7 +414,7 @@
 
       <figure class="share-figure">
         <div class="share-slides">
-          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="11" href="/gallery.html#andromeda-galaxy-m31" aria-label="Open The Andromeda Galaxy (M31) full screen"><img src="/images/andromeda-galaxy-m31.webp" alt="Andromeda Galaxy M31 spiral galaxy astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"></a></div>
+          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="11" href="/gallery.html#andromeda-galaxy-m31" aria-label="Open The Andromeda Galaxy (M31) full screen"><img src="/images/andromeda-galaxy-m31.webp" alt="Andromeda Galaxy M31 spiral galaxy astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
@@ -468,7 +523,13 @@
       var moved = false;
       img.addEventListener('click', function(){
         if (moved) { moved = false; return; }  /* a swipe, not a tap */
-        goToCurrent();
+        /* Tapping the picture just closes, matching a tap on the
+           backdrop. It used to navigate to the current photo's own
+           page, so anyone who swiped a few frames and then tapped
+           the image — the most natural gesture there is — triggered
+           a full page load and lost the picture. URL syncing stays
+           on the close button, which is the deliberate exit. */
+        close();
       });
       document.addEventListener('keydown', function(e){
         if (!box.classList.contains('is-open')) return;
