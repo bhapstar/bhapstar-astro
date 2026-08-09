@@ -1066,6 +1066,40 @@
      gated by the HIDE_INSTAGRAM flag at the top of that file. -->
 
 <script>
+/* Arriving from card.html as ?goto=contact.
+
+   A plain #contact hash makes the browser jump straight to the section, so
+   the visitor never sees the top of the page. This lands them at the top and
+   then walks them down, which shows the site on the way past.
+
+   The header is sticky, so its height is subtracted or the heading ends up
+   underneath it. */
+(function(){
+  var target = (location.search.match(/[?&]goto=([\w-]+)/) || [])[1];
+  if (!target) return;
+
+  function go(){
+    var el = document.getElementById(target);
+    if (!el) return;
+
+    var header = document.querySelector('header');
+    var offset = (header ? header.getBoundingClientRect().height : 0) + 12;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    window.scrollTo({ top: y, behavior: (reduce && reduce.matches) ? 'auto' : 'smooth' });
+
+    // Tidy the address bar without adding a history entry
+    try { history.replaceState(null, '', location.pathname + '#' + target); } catch (e) {}
+  }
+
+  // Wait for the header partial to inject and for layout to settle, or the
+  // measured position is taken against a page that then grows underneath it.
+  window.addEventListener('load', function(){ setTimeout(go, 450); });
+})();
+</script>
+
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
