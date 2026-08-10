@@ -472,8 +472,10 @@ PAGE_STYLE = """\
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch (or trackpad / browser zoom) to zoom — there is no click-to-zoom.
-       The arrows cycle through every photo in the gallery. */
+       Pinch to zoom, one finger to pan once zoomed, tap the picture to open
+       its own page. The arrows cycle through every photo in the gallery.
+       Swipe-to-navigate is deliberately gone: it competed with one-finger
+       panning for the same gesture, and the arrows are unambiguous. */
     .share-lightbox{
       position: fixed; inset: 0; z-index: 1000;
       display: none; align-items: center; justify-content: center;
@@ -485,18 +487,53 @@ PAGE_STYLE = """\
     .slb-stage{
       position: relative; display: grid; place-items: center;
       max-width: 100vw; max-height: 100vh;
-      touch-action: pinch-zoom;   /* two-finger pinch zooms; one-finger swipe navigates */
+      /* none, not pinch-zoom. Handing pinch to the browser zooms the visual
+         viewport, and a zoomed visual viewport only pans on two fingers.
+         Doing the zoom ourselves with a transform keeps it inside the page,
+         which is what frees one finger up to pan. */
+      touch-action: none;
     }
     .slb-img{
       max-width: 96vw; max-height: 92vh; width: auto; height: auto;
       display: block; border-radius: 8px;
       user-select: none; -webkit-user-select: none;
+      transform-origin: center center;
+      transition: transform .18s ease;
+      will-change: transform;
       box-shadow: 0 24px 70px rgba(0,0,0,0.55),
                   0 0 0 1px rgba(167,139,250,0.18),
                   0 10px 44px rgba(167,139,250,0.28);
     }
     html[data-theme="light"] .slb-img{
       box-shadow: 0 22px 55px rgba(0,0,0,0.45);
+    }
+    /* No easing mid-gesture: the picture must track the finger exactly. The
+       transition above is only there for the snap back to fit. */
+    .slb-img.is-gesturing{ transition: none; }
+
+    /* ── Idle fade ──
+       The controls show themselves when you arrive or move, then step back
+       out of the picture. Anything that counts as attention brings them
+       straight back, so nothing is ever actually lost. */
+    .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+    .share-lightbox .slb-share, .share-lightbox .slb-count{
+      opacity: 1; transition: opacity .5s ease, background .18s ease,
+                              border-color .18s ease, color .18s ease;
+    }
+    .share-lightbox.slb-dim .slb-close, .share-lightbox.slb-dim .slb-arrow,
+    .share-lightbox.slb-dim .slb-share, .share-lightbox.slb-dim .slb-count{
+      opacity: 0.1;
+    }
+    .share-lightbox.slb-dim .slb-close:hover,
+    .share-lightbox.slb-dim .slb-arrow:hover,
+    .share-lightbox.slb-dim .slb-share:hover,
+    .share-lightbox.slb-dim .slb-close:focus-visible,
+    .share-lightbox.slb-dim .slb-arrow:focus-visible,
+    .share-lightbox.slb-dim .slb-share:focus-visible{ opacity: 1; }
+    @media (prefers-reduced-motion: reduce){
+      .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+      .share-lightbox .slb-share, .share-lightbox .slb-count,
+      .slb-img{ transition: none; }
     }
     .slb-close, .slb-arrow, .slb-share{
       position: fixed; z-index: 2; appearance: none; cursor: pointer;
@@ -998,15 +1035,33 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        box.setAttribute('aria-hidden', 'false');\n"
             "        document.body.classList.add('slb-lock');\n"
             "        var c = box.querySelector('.slb-close'); if (c) c.focus();\n"
+            "        resetZoom(); wake();\n"
             "      }\n"
             "      function close(){\n"
             "        box.classList.remove('is-open');\n"
             "        box.setAttribute('aria-hidden', 'true');\n"
             "        document.body.classList.remove('slb-lock');\n"
+            "        if (dimT) { clearTimeout(dimT); dimT = null; }\n"
+            "        box.classList.remove('slb-dim');\n"
+            "        resetZoom();\n"
             "        img.src = '';\n"
             "        if (lastFocus && lastFocus.focus) lastFocus.focus();\n"
             "      }\n"
-            "      function step(d){ if (multi){ i = (i + d + media.length) % media.length; render(); } }\n"
+            "      function step(d){\n"
+            "        if (!multi) return;\n"
+            "        i = (i + d + media.length) % media.length;\n"
+            "        render(); resetZoom(); wake();\n"
+            "      }\n"
+            "      /* Controls rest visible, then fade back so the picture is the\n"
+            "         only thing on screen. Any touch, drag or key brings them back. */\n"
+            "      var dimT = null;\n"
+            "      function wake(){\n"
+            "        box.classList.remove('slb-dim');\n"
+            "        if (dimT) clearTimeout(dimT);\n"
+            "        dimT = setTimeout(function(){\n"
+            "          if (box.classList.contains('is-open')) box.classList.add('slb-dim');\n"
+            "        }, 2600);\n"
+            "      }\n"
             "      var opens = document.querySelectorAll('a.share-open');\n"
             "      for (var k = 0; k < opens.length; k++){\n"
             "        opens[k].addEventListener('click', function(e){\n"
@@ -1026,16 +1081,14 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      var pb = box.querySelector('.slb-arrow.prev'); if (pb) pb.addEventListener('click', function(){ step(-1); });\n"
             "      var nb = box.querySelector('.slb-arrow.next'); if (nb) nb.addEventListener('click', function(){ step(1); });\n"
             "      box.addEventListener('click', function(e){ if (e.target === box) close(); });\n"
-            "      var moved = false;\n"
+            "      /* Tapping the picture opens the page for whatever is on screen.\n"
+            "         Guarded twice: a tap that followed a drag is a pan finishing,\n"
+            "         and a tap while zoomed in is someone inspecting detail. Only\n"
+            "         a clean tap at fit-to-screen counts as 'take me to this one'. */\n"
             "      img.addEventListener('click', function(){\n"
-            "        if (moved) { moved = false; return; }  /* a swipe, not a tap */\n"
-            "        /* Tapping the picture just closes, matching a tap on the\n"
-            "           backdrop. It used to navigate to the current photo's own\n"
-            "           page, so anyone who swiped a few frames and then tapped\n"
-            "           the image — the most natural gesture there is — triggered\n"
-            "           a full page load and lost the picture. URL syncing stays\n"
-            "           on the close button, which is the deliberate exit. */\n"
-            "        close();\n"
+            "        if (dragged) { dragged = false; return; }\n"
+            "        if (scale > 1.02) return;\n"
+            "        goToCurrent();\n"
             "      });\n"
             "      document.addEventListener('keydown', function(e){\n"
             "        if (!box.classList.contains('is-open')) return;\n"
@@ -1043,21 +1096,82 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'ArrowRight'){\n"
             "          e.preventDefault(); e.stopPropagation();\n"
             "        }\n"
+            "        wake();\n"
             "        if (e.key === 'Escape') close();\n"
             "        else if (e.key === 'ArrowLeft') step(-1);\n"
             "        else if (e.key === 'ArrowRight') step(1);\n"
             "      }, true);\n"
-            "      var sx = 0, sy = 0, swiping = false;\n"
-            "      stage.addEventListener('touchstart', function(e){\n"
-            "        if (e.touches.length !== 1){ swiping = false; return; }\n"
-            "        sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true;\n"
-            "      }, { passive: true });\n"
-            "      stage.addEventListener('touchend', function(e){\n"
-            "        if (!swiping) return; swiping = false;\n"
-            "        var tt = e.changedTouches[0];\n"
-            "        var dx = tt.clientX - sx, dy = tt.clientY - sy;\n"
-            "        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }\n"
-            "      }, { passive: true });\n"
+            "      /* ── Zoom and pan ──\n"
+            "         Swipe-to-navigate is gone on purpose. It claimed the same\n"
+            "         one-finger drag that panning needs, and you cannot have both.\n"
+            "         The arrows do the cycling and say so; panning gets the finger. */\n"
+            "      var scale = 1, tx = 0, ty = 0, MAXS = 4;\n"
+            "      var pts = {}, nPts = 0, startDist = 0, startScale = 1;\n"
+            "      var panning = false, dragged = false;\n"
+            "      var ox = 0, oy = 0, otx = 0, oty = 0;\n"
+            "      function applyT(){\n"
+            "        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';\n"
+            "        img.style.cursor = scale > 1.02 ? 'grab' : '';\n"
+            "      }\n"
+            "      function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }\n"
+            "      /* Keep the picture covering the screen: you can never drag it\n"
+            "         so far that empty space appears at an edge. */\n"
+            "      function clampT(){\n"
+            "        var w = img.clientWidth * scale, h = img.clientHeight * scale;\n"
+            "        var mx = Math.max(0, (w - window.innerWidth) / 2);\n"
+            "        var my = Math.max(0, (h - window.innerHeight) / 2);\n"
+            "        tx = Math.min(mx, Math.max(-mx, tx));\n"
+            "        ty = Math.min(my, Math.max(-my, ty));\n"
+            "      }\n"
+            "      function spread(){\n"
+            "        var k = Object.keys(pts); if (k.length < 2) return 0;\n"
+            "        var a = pts[k[0]], b = pts[k[1]];\n"
+            "        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));\n"
+            "      }\n"
+            "      function anchorOne(){\n"
+            "        var k = Object.keys(pts); if (!k.length) return;\n"
+            "        ox = pts[k[0]].x; oy = pts[k[0]].y; otx = tx; oty = ty;\n"
+            "        panning = scale > 1.02;\n"
+            "      }\n"
+            "      stage.addEventListener('pointerdown', function(e){\n"
+            "        if (e.pointerType === 'mouse' && e.button !== 0) return;\n"
+            "        pts[e.pointerId] = { x: e.clientX, y: e.clientY }; nPts++;\n"
+            "        img.classList.add('is-gesturing');\n"
+            "        wake();\n"
+            "        if (nPts === 1){ dragged = false; anchorOne(); }\n"
+            "        else if (nPts === 2){ panning = false; startDist = spread(); startScale = scale; }\n"
+            "      });\n"
+            "      stage.addEventListener('pointermove', function(e){\n"
+            "        if (!(e.pointerId in pts)) { wake(); return; }\n"
+            "        pts[e.pointerId] = { x: e.clientX, y: e.clientY };\n"
+            "        if (nPts >= 2){\n"
+            "          if (startDist > 0){\n"
+            "            scale = Math.min(MAXS, Math.max(1, startScale * (spread() / startDist)));\n"
+            "            if (scale <= 1.02){ tx = 0; ty = 0; }\n"
+            "            dragged = true; clampT(); applyT();\n"
+            "          }\n"
+            "        } else if (panning){\n"
+            "          var dx = e.clientX - ox, dy = e.clientY - oy;\n"
+            "          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragged = true;\n"
+            "          tx = otx + dx; ty = oty + dy; clampT(); applyT();\n"
+            "        }\n"
+            "      });\n"
+            "      function endPt(e){\n"
+            "        if (!(e.pointerId in pts)) return;\n"
+            "        delete pts[e.pointerId]; nPts = Math.max(0, nPts - 1);\n"
+            "        if (nPts < 2) startDist = 0;\n"
+            "        if (nPts === 0){\n"
+            "          panning = false; img.classList.remove('is-gesturing');\n"
+            "          /* Let go just above fit and it settles back, so the picture\n"
+            "             cannot be left a hair off centre. */\n"
+            "          if (scale <= 1.02) resetZoom(); else { clampT(); applyT(); }\n"
+            "          wake();\n"
+            "        } else { anchorOne(); }   /* second finger lifted, carry on panning */\n"
+            "      }\n"
+            "      stage.addEventListener('pointerup', endPt);\n"
+            "      stage.addEventListener('pointercancel', endPt);\n"
+            "      stage.addEventListener('dragstart', function(e){ e.preventDefault(); });\n"
+            "      box.addEventListener('pointermove', wake);\n"
             "      var shareBtn = box.querySelector('.slb-share');\n"
             "      if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); if(window.openShareMenu){ window.openShareMenu({url:(media[i].share||media[i].page||location.href), title:(media[i].alt||document.title), image:media[i].src}); } });\n"
             "    })();\n"
