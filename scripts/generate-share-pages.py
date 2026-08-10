@@ -199,27 +199,27 @@ PAGE_STYLE = """\
        is the loudest they could possibly be. The lightbox does keep a light
        set, because there its backdrop really does go pale. */
     .share-wrap{
-      --ov-bg:      rgba(5,4,20,0.30);
-      --ov-bg-hi:   rgba(5,4,20,0.66);
-      --ov-line:    rgba(232,230,247,0.13);
-      --ov-line-hi: rgba(167,139,250,0.48);
-      --ov-ink:     rgba(232,230,247,0.56);
+      --ov-bg:      rgba(5,4,20,0.14);
+      --ov-bg-hi:   rgba(5,4,20,0.70);
+      --ov-line:    rgba(232,230,247,0.05);
+      --ov-line-hi: rgba(167,139,250,0.50);
+      --ov-ink:     rgba(232,230,247,0.32);
       --ov-ink-hi:  rgba(232,230,247,0.96);
     }
     .share-lightbox{
-      --ov-bg:      rgba(5,4,20,0.26);
-      --ov-bg-hi:   rgba(5,4,20,0.68);
-      --ov-line:    rgba(232,230,247,0.12);
-      --ov-line-hi: rgba(167,139,250,0.48);
-      --ov-ink:     rgba(232,230,247,0.52);
+      --ov-bg:      rgba(5,4,20,0.12);
+      --ov-bg-hi:   rgba(5,4,20,0.72);
+      --ov-line:    rgba(232,230,247,0.045);
+      --ov-line-hi: rgba(167,139,250,0.50);
+      --ov-ink:     rgba(232,230,247,0.28);
       --ov-ink-hi:  rgba(232,230,247,0.96);
     }
     html[data-theme="light"] .share-lightbox{
-      --ov-bg:      rgba(255,255,255,0.32);
-      --ov-bg-hi:   rgba(255,255,255,0.86);
-      --ov-line:    rgba(20,18,44,0.09);
-      --ov-line-hi: rgba(120,90,220,0.42);
-      --ov-ink:     rgba(20,18,44,0.52);
+      --ov-bg:      rgba(255,255,255,0.14);
+      --ov-bg-hi:   rgba(255,255,255,0.90);
+      --ov-line:    rgba(20,18,44,0.04);
+      --ov-line-hi: rgba(120,90,220,0.44);
+      --ov-ink:     rgba(20,18,44,0.32);
       --ov-ink-hi:  rgba(11,10,28,0.94);
     }
     /* Keyboard users still get an unmistakable ring, whatever the opacity. */
@@ -286,7 +286,7 @@ PAGE_STYLE = """\
       padding: 4px 6px; border-radius: 999px;
       background: var(--ov-bg);
       border: 1px solid var(--ov-line);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       transition: background .2s ease, border-color .2s ease;
     }
     /* Pointing at the picture brings the pager back to full strength, so it
@@ -426,7 +426,7 @@ PAGE_STYLE = """\
       color: var(--ov-ink);
       background: var(--ov-bg);
       border: 1px solid var(--ov-line);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       transition: color .2s ease, background .2s ease, border-color .2s ease;
     }
     /* Hovering the picture confirms it is a control. Touch has no hover, so
@@ -436,6 +436,25 @@ PAGE_STYLE = """\
       border-color: var(--ov-line-hi);
     }
     .share-hint svg{ width: 15px; height: 15px; flex: 0 0 auto; }
+    /* At these opacities the plate is gone, so the glyphs carry themselves.
+       A soft shadow keeps them readable over a bright lunar limb or a dense
+       star field without putting a visible rectangle back on the picture. */
+    .share-hint, .share-pager-btn, .share-pager-count,
+    .slb-close, .slb-arrow, .slb-share, .slb-count{
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .share-hint svg, .slb-share svg{
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+    html[data-theme="light"] .share-lightbox .slb-close,
+    html[data-theme="light"] .share-lightbox .slb-arrow,
+    html[data-theme="light"] .share-lightbox .slb-share,
+    html[data-theme="light"] .share-lightbox .slb-count{
+      text-shadow: 0 1px 3px rgba(255,255,255,0.55);
+    }
+    html[data-theme="light"] .share-lightbox .slb-share svg{
+      filter: drop-shadow(0 1px 2px rgba(255,255,255,0.55));
+    }
     .sh-lbl::after{ content: attr(data-tap); }
     @media (hover: hover) and (pointer: fine){
       .sh-lbl::after{ content: attr(data-click); }
@@ -485,7 +504,7 @@ PAGE_STYLE = """\
       color: var(--ov-ink);
       background: var(--ov-bg);
       border: 1px solid var(--ov-line);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       transition: background .18s ease, border-color .18s ease, color .18s ease;
     }
     .slb-close{ top: 16px; right: 16px; width: 44px; height: 44px;
