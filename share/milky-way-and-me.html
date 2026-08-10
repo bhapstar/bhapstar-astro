@@ -322,7 +322,8 @@
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch to zoom, one finger to pan once zoomed, tap the picture to open
+       Pinch to zoom on touch, double-click on a mouse, one finger to pan once
+       zoomed, and a single tap or click on the picture opens
        its own page. The arrows cycle through every photo in the gallery.
        Swipe-to-navigate is deliberately gone: it competed with one-finger
        panning for the same gesture, and the arrows are unambiguous. */
@@ -676,6 +677,7 @@
         box.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('slb-lock');
         if (dimT) { clearTimeout(dimT); dimT = null; }
+        if (clickT) { clearTimeout(clickT); clickT = null; }
         box.classList.remove('slb-dim');
         resetZoom();
         img.src = '';
@@ -684,6 +686,7 @@
       function step(d){
         if (!multi) return;
         i = (i + d + media.length) % media.length;
+        if (clickT) { clearTimeout(clickT); clickT = null; }
         render(); resetZoom(); wake();
       }
       /* Controls rest visible, then fade back so the picture is the
@@ -719,10 +722,28 @@
          Guarded twice: a tap that followed a drag is a pan finishing,
          and a tap while zoomed in is someone inspecting detail. Only
          a clean tap at fit-to-screen counts as 'take me to this one'. */
-      img.addEventListener('click', function(){
+      var clickT = null;
+      img.addEventListener('click', function(e){
         if (dragged) { dragged = false; return; }
-        if (scale > 1.02) return;
-        goToCurrent();
+        if (scale > 1.02) return;   /* zoomed in: inspecting, not leaving */
+        if (!fine){ goToCurrent(); return; }   /* touch: no double-click to wait for */
+        /* A mouse has to prove it is not halfway through a double-click
+           before we navigate, so the first half cannot take the page away
+           before the second half arrives. e.detail is the click count,
+           which catches the second click even on a slow double-click
+           setting, well before the timer would have fired. */
+        if (e.detail > 1){
+          if (clickT){ clearTimeout(clickT); clickT = null; }
+          zoomAt(e.clientX, e.clientY);
+          return;
+        }
+        if (clickT) return;
+        clickT = setTimeout(function(){ clickT = null; goToCurrent(); }, 300);
+      });
+      img.addEventListener('dblclick', function(e){
+        e.preventDefault();
+        if (clickT){ clearTimeout(clickT); clickT = null; }
+        zoomAt(e.clientX, e.clientY);
       });
       document.addEventListener('keydown', function(e){
         if (!box.classList.contains('is-open')) return;
@@ -745,9 +766,28 @@
       var ox = 0, oy = 0, otx = 0, oty = 0;
       function applyT(){
         img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-        img.style.cursor = scale > 1.02 ? 'grab' : '';
+        img.style.cursor = fine ? (scale > 1.02 ? 'zoom-out' : 'zoom-in') : '';
       }
       function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }
+      /* Double-click zoom, desktop only. A mouse has one pointer, so it
+         can never pinch, which left the desktop with no zoom at all. */
+      var fine = !!(window.matchMedia &&
+        window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+      var DBLS = 2.5;
+      function zoomAt(cx, cy){
+        if (scale > 1.02){ resetZoom(); return; }
+        /* The lightbox centres the picture in the viewport, so the
+           untransformed centre is simply the middle of the window.
+           Shift by the amount that keeps whatever is under the cursor
+           under the cursor, otherwise zooming throws you off target. */
+        var midX = window.innerWidth / 2 + tx;
+        var midY = window.innerHeight / 2 + ty;
+        var k = DBLS / scale;
+        tx += (cx - midX) - (cx - midX) * k;
+        ty += (cy - midY) - (cy - midY) * k;
+        scale = DBLS;
+        clampT(); applyT(); wake();
+      }
       /* Keep the picture covering the screen: you can never drag it
          so far that empty space appears at an edge. */
       function clampT(){
