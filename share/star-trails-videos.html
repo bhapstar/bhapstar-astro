@@ -362,9 +362,11 @@
        transition above is only there for the snap back to fit. */
     .slb-img.is-gesturing{ transition: none; }
     /* The script keeps this in step with the zoom state, but set it here too
-       so the very first frame is right, before any handler has run. */
+       so the very first frame is right, before any handler has run.
+       all-scroll is the browser's own "this responds to the wheel" cursor,
+       the one autoscroll uses. A pointing finger promised a click instead. */
     @media (hover: hover) and (pointer: fine){
-      .slb-img{ cursor: pointer; }
+      .slb-img{ cursor: all-scroll; }
     }
 
     /* ── Idle fade ──
