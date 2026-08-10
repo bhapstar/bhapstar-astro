@@ -472,8 +472,8 @@ PAGE_STYLE = """\
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch to zoom on touch, double-click on a mouse, one finger to pan once
-       zoomed, and a single tap or click on the picture opens
+       Pinch to zoom on touch, wheel to zoom on a mouse, one finger or a drag
+       to pan once zoomed, and a single tap or click on the picture opens
        its own page. The arrows cycle through every photo in the gallery.
        Swipe-to-navigate is deliberately gone: it competed with one-finger
        panning for the same gesture, and the arrows are unambiguous. */
@@ -511,6 +511,11 @@ PAGE_STYLE = """\
     /* No easing mid-gesture: the picture must track the finger exactly. The
        transition above is only there for the snap back to fit. */
     .slb-img.is-gesturing{ transition: none; }
+    /* The script keeps this in step with the zoom state, but set it here too
+       so the very first frame is right, before any handler has run. */
+    @media (hover: hover) and (pointer: fine){
+      .slb-img{ cursor: pointer; }
+    }
 
     /* ── Idle fade ──
        The controls show themselves when you arrive or move, then step back
@@ -1043,7 +1048,6 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        box.setAttribute('aria-hidden', 'true');\n"
             "        document.body.classList.remove('slb-lock');\n"
             "        if (dimT) { clearTimeout(dimT); dimT = null; }\n"
-            "        if (clickT) { clearTimeout(clickT); clickT = null; }\n"
             "        box.classList.remove('slb-dim');\n"
             "        resetZoom();\n"
             "        img.src = '';\n"
@@ -1052,7 +1056,6 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      function step(d){\n"
             "        if (!multi) return;\n"
             "        i = (i + d + media.length) % media.length;\n"
-            "        if (clickT) { clearTimeout(clickT); clickT = null; }\n"
             "        render(); resetZoom(); wake();\n"
             "      }\n"
             "      /* Controls rest visible, then fade back so the picture is the\n"
@@ -1088,28 +1091,12 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "         Guarded twice: a tap that followed a drag is a pan finishing,\n"
             "         and a tap while zoomed in is someone inspecting detail. Only\n"
             "         a clean tap at fit-to-screen counts as 'take me to this one'. */\n"
-            "      var clickT = null;\n"
-            "      img.addEventListener('click', function(e){\n"
+            "      /* No waiting any more. Zoom moved to the wheel, so a click can\n"
+            "         never be the first half of something else and fires at once. */\n"
+            "      img.addEventListener('click', function(){\n"
             "        if (dragged) { dragged = false; return; }\n"
             "        if (scale > 1.02) return;   /* zoomed in: inspecting, not leaving */\n"
-            "        if (!fine){ goToCurrent(); return; }   /* touch: no double-click to wait for */\n"
-            "        /* A mouse has to prove it is not halfway through a double-click\n"
-            "           before we navigate, so the first half cannot take the page away\n"
-            "           before the second half arrives. e.detail is the click count,\n"
-            "           which catches the second click even on a slow double-click\n"
-            "           setting, well before the timer would have fired. */\n"
-            "        if (e.detail > 1){\n"
-            "          if (clickT){ clearTimeout(clickT); clickT = null; }\n"
-            "          zoomAt(e.clientX, e.clientY);\n"
-            "          return;\n"
-            "        }\n"
-            "        if (clickT) return;\n"
-            "        clickT = setTimeout(function(){ clickT = null; goToCurrent(); }, 300);\n"
-            "      });\n"
-            "      img.addEventListener('dblclick', function(e){\n"
-            "        e.preventDefault();\n"
-            "        if (clickT){ clearTimeout(clickT); clickT = null; }\n"
-            "        zoomAt(e.clientX, e.clientY);\n"
+            "        goToCurrent();\n"
             "      });\n"
             "      document.addEventListener('keydown', function(e){\n"
             "        if (!box.classList.contains('is-open')) return;\n"
@@ -1132,28 +1119,47 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      var ox = 0, oy = 0, otx = 0, oty = 0;\n"
             "      function applyT(){\n"
             "        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';\n"
-            "        img.style.cursor = fine ? (scale > 1.02 ? 'zoom-out' : 'zoom-in') : '';\n"
+            "        /* Not a magnifier. At fit, a click opens the page, so the hand\n"
+            "           pointer is the honest cursor. Zoomed in, the picture is\n"
+            "           something you take hold of and move, so it is grab. */\n"
+            "        img.style.cursor = fine ? (scale > 1.02 ? (panning ? 'grabbing' : 'grab') : 'pointer') : '';\n"
             "      }\n"
             "      function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }\n"
-            "      /* Double-click zoom, desktop only. A mouse has one pointer, so it\n"
-            "         can never pinch, which left the desktop with no zoom at all. */\n"
             "      var fine = !!(window.matchMedia &&\n"
             "        window.matchMedia('(hover: hover) and (pointer: fine)').matches);\n"
-            "      var DBLS = 2.5;\n"
-            "      function zoomAt(cx, cy){\n"
-            "        if (scale > 1.02){ resetZoom(); return; }\n"
-            "        /* The lightbox centres the picture in the viewport, so the\n"
-            "           untransformed centre is simply the middle of the window.\n"
-            "           Shift by the amount that keeps whatever is under the cursor\n"
-            "           under the cursor, otherwise zooming throws you off target. */\n"
+            "      /* ── Wheel zoom ──\n"
+            "         A mouse has one pointer and so can never pinch. Double-click was\n"
+            "         the first attempt and it was a poor one: it fought the click that\n"
+            "         opens the page, which forced a delay onto every click, and it only\n"
+            "         offered one zoom step. The wheel is continuous, needs no timing,\n"
+            "         and is what people already reach for. */\n"
+            "      var wheelT = null;\n"
+            "      stage.addEventListener('wheel', function(e){\n"
+            "        e.preventDefault();\n"
+            "        var d = e.deltaY;\n"
+            "        /* deltaMode 1 is lines and 2 is pages; without this a mouse that\n"
+            "           reports lines would zoom about sixteen times too slowly. */\n"
+            "        if (e.deltaMode === 1) d *= 16;\n"
+            "        else if (e.deltaMode === 2) d *= window.innerHeight;\n"
+            "        var ns = Math.min(MAXS, Math.max(1, scale * Math.exp(-d * 0.0022)));\n"
+            "        if (ns === scale) return;\n"
+            "        /* Keep whatever is under the cursor under the cursor. The picture\n"
+            "           is centred in the viewport, so its untransformed centre is just\n"
+            "           the middle of the window, offset by the current pan. */\n"
             "        var midX = window.innerWidth / 2 + tx;\n"
             "        var midY = window.innerHeight / 2 + ty;\n"
-            "        var k = DBLS / scale;\n"
-            "        tx += (cx - midX) - (cx - midX) * k;\n"
-            "        ty += (cy - midY) - (cy - midY) * k;\n"
-            "        scale = DBLS;\n"
+            "        var r = ns / scale;\n"
+            "        tx += (e.clientX - midX) - (e.clientX - midX) * r;\n"
+            "        ty += (e.clientY - midY) - (e.clientY - midY) * r;\n"
+            "        scale = ns;\n"
+            "        if (scale <= 1.02){ scale = 1; tx = 0; ty = 0; }\n"
             "        clampT(); applyT(); wake();\n"
-            "      }\n"
+            "        /* Easing fights a wheel: each notch would lag behind the last.\n"
+            "           Suspend it, and put it back once the wheel goes quiet. */\n"
+            "        img.classList.add('is-gesturing');\n"
+            "        if (wheelT) clearTimeout(wheelT);\n"
+            "        wheelT = setTimeout(function(){ img.classList.remove('is-gesturing'); }, 160);\n"
+            "      }, { passive: false });\n"
             "      /* Keep the picture covering the screen: you can never drag it\n"
             "         so far that empty space appears at an edge. */\n"
             "      function clampT(){\n"
@@ -1172,6 +1178,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "        var k = Object.keys(pts); if (!k.length) return;\n"
             "        ox = pts[k[0]].x; oy = pts[k[0]].y; otx = tx; oty = ty;\n"
             "        panning = scale > 1.02;\n"
+            "        applyT();   /* show 'grabbing' on press, not on first move */\n"
             "      }\n"
             "      stage.addEventListener('pointerdown', function(e){\n"
             "        if (e.pointerType === 'mouse' && e.button !== 0) return;\n"
