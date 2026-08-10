@@ -1051,8 +1051,8 @@
     "date": "24-07-2026"
   },
   {
-    "file": "images/gear/Asiair 1.webp",
-    "alt": "The ASIAir app on a tablet showing a 60 second preview of the Orion Nebula, with target search, mount slew controls and exposure settings around the frame",
+    "file": "images/articles/asiair-app-tile.webp",
+    "alt": "The ASIAir app running on a tablet, showing a live preview of the Orion Nebula with the target search, mount slew pad and exposure controls around the frame",
     "title": "The ASIAir: Running a Whole Rig From Your Phone",
     "desc": "Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.",
     "type": "capture",
