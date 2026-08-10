@@ -187,6 +187,46 @@ def gear_href(slug):
 PAGE_STYLE = """\
   <style>
     .share-wrap{ max-width: 900px; margin: 0 auto; }
+
+    /* ── Overlay chrome dials ──
+       Everything that floats on top of a picture reads from these: the hint
+       pill, the picture pager, and the lightbox buttons. One place to turn if
+       the controls end up too faint to find outdoors, or still too loud.
+
+       Deliberately NOT themed on the share page. These sit on a photograph,
+       not on the page, and the photographs are dark in either theme, so the
+       old light-mode rule painted them near-solid white on a black sky, which
+       is the loudest they could possibly be. The lightbox does keep a light
+       set, because there its backdrop really does go pale. */
+    .share-wrap{
+      --ov-bg:      rgba(5,4,20,0.30);
+      --ov-bg-hi:   rgba(5,4,20,0.66);
+      --ov-line:    rgba(232,230,247,0.13);
+      --ov-line-hi: rgba(167,139,250,0.48);
+      --ov-ink:     rgba(232,230,247,0.56);
+      --ov-ink-hi:  rgba(232,230,247,0.96);
+    }
+    .share-lightbox{
+      --ov-bg:      rgba(5,4,20,0.26);
+      --ov-bg-hi:   rgba(5,4,20,0.68);
+      --ov-line:    rgba(232,230,247,0.12);
+      --ov-line-hi: rgba(167,139,250,0.48);
+      --ov-ink:     rgba(232,230,247,0.52);
+      --ov-ink-hi:  rgba(232,230,247,0.96);
+    }
+    html[data-theme="light"] .share-lightbox{
+      --ov-bg:      rgba(255,255,255,0.32);
+      --ov-bg-hi:   rgba(255,255,255,0.86);
+      --ov-line:    rgba(20,18,44,0.09);
+      --ov-line-hi: rgba(120,90,220,0.42);
+      --ov-ink:     rgba(20,18,44,0.52);
+      --ov-ink-hi:  rgba(11,10,28,0.94);
+    }
+    /* Keyboard users still get an unmistakable ring, whatever the opacity. */
+    .share-pager-btn:focus-visible,
+    .slb-close:focus-visible, .slb-arrow:focus-visible, .slb-share:focus-visible{
+      outline: 2px solid var(--ov-line-hi); outline-offset: 2px;
+    }
     /* The gradient h1 in styles.css pads its paint box downwards and cancels
        that padding with a negative margin, so descenders (y, g, p) end up
        resting on whatever follows. On these pages the next thing is the
@@ -244,33 +284,39 @@ PAGE_STYLE = """\
       bottom: 14px; z-index: 3;
       display: flex; align-items: center; gap: 2px;
       padding: 4px 6px; border-radius: 999px;
-      background: rgba(5,4,20,0.58);
-      border: 1px solid rgba(167,139,250,0.28);
+      background: var(--ov-bg);
+      border: 1px solid var(--ov-line);
       backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: background .2s ease, border-color .2s ease;
     }
+    /* Pointing at the picture brings the pager back to full strength, so it
+       is quiet while you are looking and clear the moment you reach for it. */
+    .share-slide > a:hover ~ .share-pager,
+    .share-pager:hover, .share-pager:focus-within{
+      background: var(--ov-bg-hi); border-color: var(--ov-line-hi);
+    }
+    .share-pager:hover .share-pager-btn,
+    .share-pager:focus-within .share-pager-btn,
+    .share-pager:hover .share-pager-count,
+    .share-pager:focus-within .share-pager-count{ color: var(--ov-ink-hi); }
     .share-pager-btn{
       appearance: none; background: none; border: 0; cursor: pointer;
       width: 30px; height: 30px; border-radius: 50%;
       display: grid; place-items: center;
       font: inherit; font-size: 20px; line-height: 1;
-      color: rgba(232,230,247,0.92);
+      color: var(--ov-ink);
       transition: background .18s ease, color .18s ease;
     }
     .share-pager-btn:hover, .share-pager-btn:focus-visible{
-      background: rgba(167,139,250,0.22);
+      background: rgba(167,139,250,0.22); color: var(--ov-ink-hi);
     }
     .share-pager-count{
       min-width: 42px; text-align: center;
       font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
-      color: rgba(232,230,247,0.8);
+      color: var(--ov-ink);
       font-variant-numeric: tabular-nums;
+      transition: color .18s ease;
     }
-    html[data-theme="light"] .share-pager{
-      background: rgba(255,255,255,0.78);
-      border-color: rgba(120,90,220,0.32);
-    }
-    html[data-theme="light"] .share-pager-btn{ color: #0b0a1c; }
-    html[data-theme="light"] .share-pager-count{ color: rgba(20,18,44,0.75); }
     @media (max-width: 620px){
       .share-pager{ bottom: 10px; }
       .share-pager-btn{ width: 26px; height: 26px; font-size: 18px; }
@@ -377,19 +423,22 @@ PAGE_STYLE = """\
       display: flex; align-items: center; gap: 6px;
       padding: 6px 11px 6px 9px; border-radius: 999px;
       font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-      color: rgba(232,230,247,0.94);
-      background: rgba(5,4,20,0.62);
-      border: 1px solid rgba(167,139,250,0.32);
+      color: var(--ov-ink);
+      background: var(--ov-bg);
+      border: 1px solid var(--ov-line);
       backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: color .2s ease, background .2s ease, border-color .2s ease;
+    }
+    /* Hovering the picture confirms it is a control. Touch has no hover, so
+       the resting state above is the one that has to do the teaching. */
+    .share-slide > a:hover .share-hint{
+      color: var(--ov-ink-hi); background: var(--ov-bg-hi);
+      border-color: var(--ov-line-hi);
     }
     .share-hint svg{ width: 15px; height: 15px; flex: 0 0 auto; }
     .sh-lbl::after{ content: attr(data-tap); }
     @media (hover: hover) and (pointer: fine){
       .sh-lbl::after{ content: attr(data-click); }
-    }
-    html[data-theme="light"] .share-hint{
-      color: #0b0a1c; background: rgba(255,255,255,0.82);
-      border-color: rgba(120,90,220,0.34);
     }
     @media (max-width: 620px){
       .share-hint{ top: 8px; right: 8px; padding: 5px 9px 5px 8px; font-size: 11px; }
@@ -433,40 +482,35 @@ PAGE_STYLE = """\
     .slb-close, .slb-arrow, .slb-share{
       position: fixed; z-index: 2; appearance: none; cursor: pointer;
       display: grid; place-items: center; line-height: 1;
-      color: rgba(232,230,247,0.92);
-      background: rgba(5,4,20,0.55);
-      border: 1px solid rgba(167,139,250,0.30);
+      color: var(--ov-ink);
+      background: var(--ov-bg);
+      border: 1px solid var(--ov-line);
       backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      transition: background .18s ease, border-color .18s ease;
+      transition: background .18s ease, border-color .18s ease, color .18s ease;
     }
     .slb-close{ top: 16px; right: 16px; width: 44px; height: 44px;
       border-radius: 50%; font-size: 20px; }
     .slb-share{ top: 16px; left: 16px; width: 44px; height: 44px; border-radius: 50%; }
     .slb-share svg{ width: 20px; height: 20px; }
-    .slb-share.copied{ color: #34d399; border-color: rgba(52,211,153,0.6); }
+    .slb-share.copied{ color: #34d399; border-color: rgba(52,211,153,0.6);
+      background: var(--ov-bg-hi); }
     .slb-arrow{ top: 50%; transform: translateY(-50%);
       width: 52px; height: 52px; border-radius: 50%; font-size: 30px; }
     .slb-arrow.prev{ left: 16px; }
     .slb-arrow.next{ right: 16px; }
     .slb-close:hover, .slb-arrow:hover, .slb-share:hover,
     .slb-close:focus-visible, .slb-arrow:focus-visible, .slb-share:focus-visible{
-      background: rgba(5,4,20,0.82); border-color: rgba(167,139,250,0.6);
+      background: var(--ov-bg-hi); border-color: var(--ov-line-hi);
+      color: var(--ov-ink-hi);
     }
     .slb-count{
       position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
       z-index: 2; font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
-      color: rgba(232,230,247,0.82); font-variant-numeric: tabular-nums;
+      color: var(--ov-ink); font-variant-numeric: tabular-nums;
       padding: 5px 12px; border-radius: 999px;
-      background: rgba(5,4,20,0.55); border: 1px solid rgba(167,139,250,0.24);
+      background: var(--ov-bg); border: 1px solid var(--ov-line);
     }
     html[data-theme="light"] .share-lightbox{ background: rgba(245,244,255,0.96); }
-    html[data-theme="light"] .slb-close,
-    html[data-theme="light"] .slb-arrow,
-    html[data-theme="light"] .slb-share,
-    html[data-theme="light"] .slb-count{
-      color: #0b0a1c; background: rgba(255,255,255,0.80);
-      border-color: rgba(120,90,220,0.32);
-    }
     @media (max-width: 620px){
       .slb-arrow{ width: 42px; height: 42px; font-size: 26px; }
       .slb-arrow.prev{ left: 8px; } .slb-arrow.next{ right: 8px; }
