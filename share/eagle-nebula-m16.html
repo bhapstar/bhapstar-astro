@@ -322,8 +322,10 @@
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch (or trackpad / browser zoom) to zoom — there is no click-to-zoom.
-       The arrows cycle through every photo in the gallery. */
+       Pinch to zoom, one finger to pan once zoomed, tap the picture to open
+       its own page. The arrows cycle through every photo in the gallery.
+       Swipe-to-navigate is deliberately gone: it competed with one-finger
+       panning for the same gesture, and the arrows are unambiguous. */
     .share-lightbox{
       position: fixed; inset: 0; z-index: 1000;
       display: none; align-items: center; justify-content: center;
@@ -335,18 +337,53 @@
     .slb-stage{
       position: relative; display: grid; place-items: center;
       max-width: 100vw; max-height: 100vh;
-      touch-action: pinch-zoom;   /* two-finger pinch zooms; one-finger swipe navigates */
+      /* none, not pinch-zoom. Handing pinch to the browser zooms the visual
+         viewport, and a zoomed visual viewport only pans on two fingers.
+         Doing the zoom ourselves with a transform keeps it inside the page,
+         which is what frees one finger up to pan. */
+      touch-action: none;
     }
     .slb-img{
       max-width: 96vw; max-height: 92vh; width: auto; height: auto;
       display: block; border-radius: 8px;
       user-select: none; -webkit-user-select: none;
+      transform-origin: center center;
+      transition: transform .18s ease;
+      will-change: transform;
       box-shadow: 0 24px 70px rgba(0,0,0,0.55),
                   0 0 0 1px rgba(167,139,250,0.18),
                   0 10px 44px rgba(167,139,250,0.28);
     }
     html[data-theme="light"] .slb-img{
       box-shadow: 0 22px 55px rgba(0,0,0,0.45);
+    }
+    /* No easing mid-gesture: the picture must track the finger exactly. The
+       transition above is only there for the snap back to fit. */
+    .slb-img.is-gesturing{ transition: none; }
+
+    /* ── Idle fade ──
+       The controls show themselves when you arrive or move, then step back
+       out of the picture. Anything that counts as attention brings them
+       straight back, so nothing is ever actually lost. */
+    .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+    .share-lightbox .slb-share, .share-lightbox .slb-count{
+      opacity: 1; transition: opacity .5s ease, background .18s ease,
+                              border-color .18s ease, color .18s ease;
+    }
+    .share-lightbox.slb-dim .slb-close, .share-lightbox.slb-dim .slb-arrow,
+    .share-lightbox.slb-dim .slb-share, .share-lightbox.slb-dim .slb-count{
+      opacity: 0.1;
+    }
+    .share-lightbox.slb-dim .slb-close:hover,
+    .share-lightbox.slb-dim .slb-arrow:hover,
+    .share-lightbox.slb-dim .slb-share:hover,
+    .share-lightbox.slb-dim .slb-close:focus-visible,
+    .share-lightbox.slb-dim .slb-arrow:focus-visible,
+    .share-lightbox.slb-dim .slb-share:focus-visible{ opacity: 1; }
+    @media (prefers-reduced-motion: reduce){
+      .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+      .share-lightbox .slb-share, .share-lightbox .slb-count,
+      .slb-img{ transition: none; }
     }
     .slb-close, .slb-arrow, .slb-share{
       position: fixed; z-index: 2; appearance: none; cursor: pointer;
@@ -596,15 +633,33 @@
         box.setAttribute('aria-hidden', 'false');
         document.body.classList.add('slb-lock');
         var c = box.querySelector('.slb-close'); if (c) c.focus();
+        resetZoom(); wake();
       }
       function close(){
         box.classList.remove('is-open');
         box.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('slb-lock');
+        if (dimT) { clearTimeout(dimT); dimT = null; }
+        box.classList.remove('slb-dim');
+        resetZoom();
         img.src = '';
         if (lastFocus && lastFocus.focus) lastFocus.focus();
       }
-      function step(d){ if (multi){ i = (i + d + media.length) % media.length; render(); } }
+      function step(d){
+        if (!multi) return;
+        i = (i + d + media.length) % media.length;
+        render(); resetZoom(); wake();
+      }
+      /* Controls rest visible, then fade back so the picture is the
+         only thing on screen. Any touch, drag or key brings them back. */
+      var dimT = null;
+      function wake(){
+        box.classList.remove('slb-dim');
+        if (dimT) clearTimeout(dimT);
+        dimT = setTimeout(function(){
+          if (box.classList.contains('is-open')) box.classList.add('slb-dim');
+        }, 2600);
+      }
       var opens = document.querySelectorAll('a.share-open');
       for (var k = 0; k < opens.length; k++){
         opens[k].addEventListener('click', function(e){
@@ -624,16 +679,14 @@
       var pb = box.querySelector('.slb-arrow.prev'); if (pb) pb.addEventListener('click', function(){ step(-1); });
       var nb = box.querySelector('.slb-arrow.next'); if (nb) nb.addEventListener('click', function(){ step(1); });
       box.addEventListener('click', function(e){ if (e.target === box) close(); });
-      var moved = false;
+      /* Tapping the picture opens the page for whatever is on screen.
+         Guarded twice: a tap that followed a drag is a pan finishing,
+         and a tap while zoomed in is someone inspecting detail. Only
+         a clean tap at fit-to-screen counts as 'take me to this one'. */
       img.addEventListener('click', function(){
-        if (moved) { moved = false; return; }  /* a swipe, not a tap */
-        /* Tapping the picture just closes, matching a tap on the
-           backdrop. It used to navigate to the current photo's own
-           page, so anyone who swiped a few frames and then tapped
-           the image — the most natural gesture there is — triggered
-           a full page load and lost the picture. URL syncing stays
-           on the close button, which is the deliberate exit. */
-        close();
+        if (dragged) { dragged = false; return; }
+        if (scale > 1.02) return;
+        goToCurrent();
       });
       document.addEventListener('keydown', function(e){
         if (!box.classList.contains('is-open')) return;
@@ -641,21 +694,82 @@
         if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
           e.preventDefault(); e.stopPropagation();
         }
+        wake();
         if (e.key === 'Escape') close();
         else if (e.key === 'ArrowLeft') step(-1);
         else if (e.key === 'ArrowRight') step(1);
       }, true);
-      var sx = 0, sy = 0, swiping = false;
-      stage.addEventListener('touchstart', function(e){
-        if (e.touches.length !== 1){ swiping = false; return; }
-        sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true;
-      }, { passive: true });
-      stage.addEventListener('touchend', function(e){
-        if (!swiping) return; swiping = false;
-        var tt = e.changedTouches[0];
-        var dx = tt.clientX - sx, dy = tt.clientY - sy;
-        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { moved = true; step(dx < 0 ? 1 : -1); }
-      }, { passive: true });
+      /* ── Zoom and pan ──
+         Swipe-to-navigate is gone on purpose. It claimed the same
+         one-finger drag that panning needs, and you cannot have both.
+         The arrows do the cycling and say so; panning gets the finger. */
+      var scale = 1, tx = 0, ty = 0, MAXS = 4;
+      var pts = {}, nPts = 0, startDist = 0, startScale = 1;
+      var panning = false, dragged = false;
+      var ox = 0, oy = 0, otx = 0, oty = 0;
+      function applyT(){
+        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+        img.style.cursor = scale > 1.02 ? 'grab' : '';
+      }
+      function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }
+      /* Keep the picture covering the screen: you can never drag it
+         so far that empty space appears at an edge. */
+      function clampT(){
+        var w = img.clientWidth * scale, h = img.clientHeight * scale;
+        var mx = Math.max(0, (w - window.innerWidth) / 2);
+        var my = Math.max(0, (h - window.innerHeight) / 2);
+        tx = Math.min(mx, Math.max(-mx, tx));
+        ty = Math.min(my, Math.max(-my, ty));
+      }
+      function spread(){
+        var k = Object.keys(pts); if (k.length < 2) return 0;
+        var a = pts[k[0]], b = pts[k[1]];
+        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+      }
+      function anchorOne(){
+        var k = Object.keys(pts); if (!k.length) return;
+        ox = pts[k[0]].x; oy = pts[k[0]].y; otx = tx; oty = ty;
+        panning = scale > 1.02;
+      }
+      stage.addEventListener('pointerdown', function(e){
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        pts[e.pointerId] = { x: e.clientX, y: e.clientY }; nPts++;
+        img.classList.add('is-gesturing');
+        wake();
+        if (nPts === 1){ dragged = false; anchorOne(); }
+        else if (nPts === 2){ panning = false; startDist = spread(); startScale = scale; }
+      });
+      stage.addEventListener('pointermove', function(e){
+        if (!(e.pointerId in pts)) { wake(); return; }
+        pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+        if (nPts >= 2){
+          if (startDist > 0){
+            scale = Math.min(MAXS, Math.max(1, startScale * (spread() / startDist)));
+            if (scale <= 1.02){ tx = 0; ty = 0; }
+            dragged = true; clampT(); applyT();
+          }
+        } else if (panning){
+          var dx = e.clientX - ox, dy = e.clientY - oy;
+          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragged = true;
+          tx = otx + dx; ty = oty + dy; clampT(); applyT();
+        }
+      });
+      function endPt(e){
+        if (!(e.pointerId in pts)) return;
+        delete pts[e.pointerId]; nPts = Math.max(0, nPts - 1);
+        if (nPts < 2) startDist = 0;
+        if (nPts === 0){
+          panning = false; img.classList.remove('is-gesturing');
+          /* Let go just above fit and it settles back, so the picture
+             cannot be left a hair off centre. */
+          if (scale <= 1.02) resetZoom(); else { clampT(); applyT(); }
+          wake();
+        } else { anchorOne(); }   /* second finger lifted, carry on panning */
+      }
+      stage.addEventListener('pointerup', endPt);
+      stage.addEventListener('pointercancel', endPt);
+      stage.addEventListener('dragstart', function(e){ e.preventDefault(); });
+      box.addEventListener('pointermove', wake);
       var shareBtn = box.querySelector('.slb-share');
       if (shareBtn) shareBtn.addEventListener('click', function(e){ e.stopPropagation(); if(window.openShareMenu){ window.openShareMenu({url:(media[i].share||media[i].page||location.href), title:(media[i].alt||document.title), image:media[i].src}); } });
     })();

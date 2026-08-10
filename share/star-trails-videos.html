@@ -322,8 +322,10 @@
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch (or trackpad / browser zoom) to zoom — there is no click-to-zoom.
-       The arrows cycle through every photo in the gallery. */
+       Pinch to zoom, one finger to pan once zoomed, tap the picture to open
+       its own page. The arrows cycle through every photo in the gallery.
+       Swipe-to-navigate is deliberately gone: it competed with one-finger
+       panning for the same gesture, and the arrows are unambiguous. */
     .share-lightbox{
       position: fixed; inset: 0; z-index: 1000;
       display: none; align-items: center; justify-content: center;
@@ -335,18 +337,53 @@
     .slb-stage{
       position: relative; display: grid; place-items: center;
       max-width: 100vw; max-height: 100vh;
-      touch-action: pinch-zoom;   /* two-finger pinch zooms; one-finger swipe navigates */
+      /* none, not pinch-zoom. Handing pinch to the browser zooms the visual
+         viewport, and a zoomed visual viewport only pans on two fingers.
+         Doing the zoom ourselves with a transform keeps it inside the page,
+         which is what frees one finger up to pan. */
+      touch-action: none;
     }
     .slb-img{
       max-width: 96vw; max-height: 92vh; width: auto; height: auto;
       display: block; border-radius: 8px;
       user-select: none; -webkit-user-select: none;
+      transform-origin: center center;
+      transition: transform .18s ease;
+      will-change: transform;
       box-shadow: 0 24px 70px rgba(0,0,0,0.55),
                   0 0 0 1px rgba(167,139,250,0.18),
                   0 10px 44px rgba(167,139,250,0.28);
     }
     html[data-theme="light"] .slb-img{
       box-shadow: 0 22px 55px rgba(0,0,0,0.45);
+    }
+    /* No easing mid-gesture: the picture must track the finger exactly. The
+       transition above is only there for the snap back to fit. */
+    .slb-img.is-gesturing{ transition: none; }
+
+    /* ── Idle fade ──
+       The controls show themselves when you arrive or move, then step back
+       out of the picture. Anything that counts as attention brings them
+       straight back, so nothing is ever actually lost. */
+    .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+    .share-lightbox .slb-share, .share-lightbox .slb-count{
+      opacity: 1; transition: opacity .5s ease, background .18s ease,
+                              border-color .18s ease, color .18s ease;
+    }
+    .share-lightbox.slb-dim .slb-close, .share-lightbox.slb-dim .slb-arrow,
+    .share-lightbox.slb-dim .slb-share, .share-lightbox.slb-dim .slb-count{
+      opacity: 0.1;
+    }
+    .share-lightbox.slb-dim .slb-close:hover,
+    .share-lightbox.slb-dim .slb-arrow:hover,
+    .share-lightbox.slb-dim .slb-share:hover,
+    .share-lightbox.slb-dim .slb-close:focus-visible,
+    .share-lightbox.slb-dim .slb-arrow:focus-visible,
+    .share-lightbox.slb-dim .slb-share:focus-visible{ opacity: 1; }
+    @media (prefers-reduced-motion: reduce){
+      .share-lightbox .slb-close, .share-lightbox .slb-arrow,
+      .share-lightbox .slb-share, .share-lightbox .slb-count,
+      .slb-img{ transition: none; }
     }
     .slb-close, .slb-arrow, .slb-share{
       position: fixed; z-index: 2; appearance: none; cursor: pointer;
