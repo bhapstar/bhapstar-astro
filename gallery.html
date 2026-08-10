@@ -2921,12 +2921,26 @@
       }
     }
 
-    const isMobile    = window.matchMedia('(max-width:720px)').matches;
-    const savedView   = localStorage.getItem('galleryView') || 'grid';
-    const restoredView = savedView === 'chaos' ? 'chaos'
-                       : (savedView === 'list' || isMobile) ? 'grid'
-                       : 'list';
-    applyView(restoredView, true);
+    /* ── View and captions always start from the same place ──
+       Grid, captions off, on every load. The toggles still work, they just
+       do not outlive the visit. These pages get shown on a tablet at outreach
+       events and handed round, so whatever the last person left them set to
+       must not greet the next one.
+
+       This also retires an inverted condition that used to live here: a saved
+       value of 'list' restored grid and a saved 'grid' restored list, so the
+       desktop gallery opened in list view and every choice came back as its
+       opposite. Chaos view is still reachable from the button, it just no
+       longer survives a reload.
+
+       Nothing is written to localStorage now; the lines below clear what
+       earlier versions saved, so a returning visitor is not left carrying a
+       preference that no longer does anything. */
+    try {
+      localStorage.removeItem('galleryView');
+      localStorage.removeItem('galleryHideDesc');
+    } catch (e) {}
+    applyView('grid', true);
 
     if (currentView === 'chaos') { renderChaos(); }
     else { render(); if (window.Likes) window.Likes.hydrate(); }
@@ -2938,21 +2952,20 @@
 
     viewBtnGrid?.addEventListener('click', () => {
       if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
-      localStorage.setItem('galleryView','grid'); applyView('grid');
+      applyView('grid');
     });
     viewBtnList?.addEventListener('click', () => {
       if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
-      localStorage.setItem('galleryView','list'); applyView('list');
+      applyView('list');
     });
     viewBtnChaos?.addEventListener('click', () => {
-      localStorage.setItem('galleryView','chaos'); applyView('chaos');
+      applyView('chaos');
     });
 
     /* ── Caption toggle (title + description + like in grid view) ──
        aria-pressed now reflects whether captions are SHOWN (the default),
        so the pill reads as an on/off switch. CSS keys off aria-pressed. */
     const viewBtnDesc   = document.getElementById('viewBtnDesc');
-    const HIDE_DESC_KEY = 'galleryHideDesc';
     function applyDescToggle(hide) {
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
@@ -2962,11 +2975,9 @@
                                  : 'Hide image titles, descriptions & likes';
       }
     }
-    applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
+    applyDescToggle(true);
     viewBtnDesc?.addEventListener('click', () => {
-      const nowHidden = !grid.classList.contains('hide-desc');
-      localStorage.setItem(HIDE_DESC_KEY, nowHidden ? '1' : '0');
-      applyDescToggle(nowHidden);
+      applyDescToggle(!grid.classList.contains('hide-desc'));
     });
 
     /* Card click → the image's own page (share/<slug>.html).

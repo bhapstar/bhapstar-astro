@@ -546,15 +546,25 @@
       render();
     }
 
-    const savedView = localStorage.getItem('articleView') || 'grid';
-    applyView(savedView === 'list' ? 'list' : 'grid');
+    /* ── View and captions always start from the same place ──
+       Grid, captions off, on every load. The toggles still work, they just
+       do not outlive the visit. The pages are shown on a tablet at outreach
+       events and handed round, so whatever the last person left them set to
+       must not greet the next one. Nothing is written to localStorage now;
+       the two lines below clear what earlier versions saved, so a returning
+       visitor is not left carrying a preference that no longer does
+       anything. */
+    try {
+      localStorage.removeItem('articleView');
+      localStorage.removeItem('articleHideDesc');
+    } catch (e) {}
+    applyView('grid');
 
-    viewBtnGrid?.addEventListener('click', () => { localStorage.setItem('articleView', 'grid'); applyView('grid'); });
-    viewBtnList?.addEventListener('click', () => { localStorage.setItem('articleView', 'list'); applyView('list'); });
+    viewBtnGrid?.addEventListener('click', () => { applyView('grid'); });
+    viewBtnList?.addEventListener('click', () => { applyView('list'); });
 
     /* ── Summary toggle ── */
     const viewBtnDesc   = document.getElementById('viewBtnDesc');
-    const HIDE_DESC_KEY = 'articleHideDesc';
     function applyDescToggle(hide) {
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
@@ -564,11 +574,9 @@
                                  : 'Hide article titles & summaries';
       }
     }
-    applyDescToggle(localStorage.getItem(HIDE_DESC_KEY) === '1');
+    applyDescToggle(true);
     viewBtnDesc?.addEventListener('click', () => {
-      const nowHidden = !grid.classList.contains('hide-desc');
-      localStorage.setItem(HIDE_DESC_KEY, nowHidden ? '1' : '0');
-      applyDescToggle(nowHidden);
+      applyDescToggle(!grid.classList.contains('hide-desc'));
     });
   }
 
