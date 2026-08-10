@@ -512,9 +512,11 @@ PAGE_STYLE = """\
        transition above is only there for the snap back to fit. */
     .slb-img.is-gesturing{ transition: none; }
     /* The script keeps this in step with the zoom state, but set it here too
-       so the very first frame is right, before any handler has run. */
+       so the very first frame is right, before any handler has run.
+       all-scroll is the browser's own "this responds to the wheel" cursor,
+       the one autoscroll uses. A pointing finger promised a click instead. */
     @media (hover: hover) and (pointer: fine){
-      .slb-img{ cursor: pointer; }
+      .slb-img{ cursor: all-scroll; }
     }
 
     /* ── Idle fade ──
@@ -1119,10 +1121,10 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
             "      var ox = 0, oy = 0, otx = 0, oty = 0;\n"
             "      function applyT(){\n"
             "        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';\n"
-            "        /* Not a magnifier. At fit, a click opens the page, so the hand\n"
-            "           pointer is the honest cursor. Zoomed in, the picture is\n"
-            "           something you take hold of and move, so it is grab. */\n"
-            "        img.style.cursor = fine ? (scale > 1.02 ? (panning ? 'grabbing' : 'grab') : 'pointer') : '';\n"
+            "        /* Two cursors, two jobs. At fit the wheel is what the picture\n"
+            "           wants, so all-scroll. Zoomed in it becomes something you take\n"
+            "           hold of and move, so grab, then grabbing while you hold it. */\n"
+            "        img.style.cursor = fine ? (scale > 1.02 ? (panning ? 'grabbing' : 'grab') : 'all-scroll') : '';\n"
             "      }\n"
             "      function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }\n"
             "      var fine = !!(window.matchMedia &&\n"
