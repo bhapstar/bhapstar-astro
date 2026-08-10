@@ -361,12 +361,23 @@
     /* No easing mid-gesture: the picture must track the finger exactly. The
        transition above is only there for the snap back to fit. */
     .slb-img.is-gesturing{ transition: none; }
-    /* The script keeps this in step with the zoom state, but set it here too
-       so the very first frame is right, before any handler has run.
-       all-scroll is the browser's own "this responds to the wheel" cursor,
-       the one autoscroll uses. A pointing finger promised a click instead. */
+    /* Cursors live here rather than in the script, so the first frame is
+       already right and the data URI is written once instead of being
+       threaded through JavaScript. The script only toggles the classes.
+
+       At fit: a drawn mouse with its wheel marked. No operating system ships
+       a "scroll to zoom" cursor, and every keyword that came close meant
+       something else to somebody: a pointing finger promised a click,
+       all-scroll reads as panning. Drawing it removes the guesswork and
+       looks identical on every platform. White body over a heavy dark
+       outline, because a dark cursor disappears against a night sky and a
+       plain white one would disappear against the light-theme backdrop.
+       The trailing keyword is the fallback for anything that will not take
+       an SVG cursor. */
     @media (hover: hover) and (pointer: fine){
-      .slb-img{ cursor: all-scroll; }
+      .slb-img{ cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cg fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='3' width='11' height='20' rx='5.5'/%3E%3Cline x1='13.5' y1='7' x2='13.5' y2='11'/%3E%3C/g%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='3' width='11' height='20' rx='5.5'/%3E%3Cline x1='13.5' y1='7' x2='13.5' y2='11'/%3E%3C/g%3E%3C/svg%3E") 13 13, default; }
+      .slb-img.is-zoomed{ cursor: grab; }
+      .slb-img.is-panning{ cursor: grabbing; }
     }
 
     /* ── Idle fade ──
@@ -719,10 +730,12 @@
       var ox = 0, oy = 0, otx = 0, oty = 0;
       function applyT(){
         img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-        /* Two cursors, two jobs. At fit the wheel is what the picture
-           wants, so all-scroll. Zoomed in it becomes something you take
-           hold of and move, so grab, then grabbing while you hold it. */
-        img.style.cursor = fine ? (scale > 1.02 ? (panning ? 'grabbing' : 'grab') : 'all-scroll') : '';
+        /* Cursors are three CSS rules; this only says which applies.
+           Zoomed in, the picture becomes something you take hold of and
+           move, so grab, then grabbing while you actually hold it. */
+        var zin = scale > 1.02;
+        img.classList.toggle('is-zoomed', zin);
+        img.classList.toggle('is-panning', zin && !!panning);
       }
       function resetZoom(){ scale = 1; tx = 0; ty = 0; applyT(); }
       var fine = !!(window.matchMedia &&
