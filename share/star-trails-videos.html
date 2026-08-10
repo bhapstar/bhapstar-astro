@@ -322,8 +322,8 @@
 
     /* ── Full-screen lightbox ──────────────────────────────────────────────
        Opens in place when a photo is clicked; the page URL never changes.
-       Pinch to zoom on touch, double-click on a mouse, one finger to pan once
-       zoomed, and a single tap or click on the picture opens
+       Pinch to zoom on touch, wheel to zoom on a mouse, one finger or a drag
+       to pan once zoomed, and a single tap or click on the picture opens
        its own page. The arrows cycle through every photo in the gallery.
        Swipe-to-navigate is deliberately gone: it competed with one-finger
        panning for the same gesture, and the arrows are unambiguous. */
@@ -361,6 +361,11 @@
     /* No easing mid-gesture: the picture must track the finger exactly. The
        transition above is only there for the snap back to fit. */
     .slb-img.is-gesturing{ transition: none; }
+    /* The script keeps this in step with the zoom state, but set it here too
+       so the very first frame is right, before any handler has run. */
+    @media (hover: hover) and (pointer: fine){
+      .slb-img{ cursor: pointer; }
+    }
 
     /* ── Idle fade ──
        The controls show themselves when you arrive or move, then step back
