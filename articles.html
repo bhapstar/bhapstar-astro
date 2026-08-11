@@ -35,15 +35,18 @@
       pointer-events: none;
     }
 
-    /* ── Meta line on each tile (category · read time) ──
-       Sits above the title inside the caption, small and quiet, so the
-       tile reads as an article rather than a photograph. */
+    /* ── Meta line on each tile (read time) ──
+       Sits below the title inside the caption, small and quiet, so the
+       tile reads as an article rather than a photograph. Margin is on the
+       top now that the title comes first; the summary below keeps its own
+       margin-top from styles.css. */
     #articleGrid .card .cap .m {
       font-size: 10px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 6px;
+      margin-top: 6px;
+      margin-bottom: 0;
       opacity: 0.95;
     }
     /* In grid view the meta line becomes a small chip, which is what makes a
@@ -55,7 +58,8 @@
       border-radius: 999px;
       border: 1px solid rgba(167,139,250,0.30);
       background: rgba(167,139,250,0.10);
-      margin-bottom: 8px;
+      margin-top: 7px;
+      margin-bottom: 0;
       opacity: 1;
     }
     /* ── Lead tile ──
@@ -359,72 +363,72 @@
         <a class="card" href="/articles/bortle-scale-narrowband-filters.html" aria-label="The Bortle Scale of Night-Sky Brightness and Light Pollution">
           <img src="images/articles/thumbs/bortle-scale-eso.webp" alt="The Bortle scale illustrated: the same night sky rendered from an inner-city view through to a pristine dark site" loading="eager" decoding="async">
           <div class="cap">
-            <div class="m">Capture &middot; 9 min read</div>
             <div class="t">The Bortle Scale of Night-Sky Brightness and Light Pollution</div>
+            <div class="m">9 min read</div>
             <div class="d">Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm narrowband filters really do about it.</div>
           </div>
         </a>
         <a class="card" href="/articles/seestar-s30-pro-tour.html" aria-label="The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag">
           <img src="images/gear/thumbs/Seestar-S30-Pro-TC20-TH10-1.webp" alt="The ZWO Seestar S30 Pro smart telescope set up on its carbon fibre tripod" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Gear &middot; 8 min read</div>
             <div class="t">The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag</div>
+            <div class="m">8 min read</div>
             <div class="d">Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.</div>
           </div>
         </a>
         <a class="card" href="/articles/main-rig-tour.html" aria-label="The Rig: A Mount, a Refractor, and a Camera That Runs Itself">
           <img src="images/gear/thumbs/Full rig 3.webp" alt="The Askar V refractor and Juwei 14 mount assembled as the main imaging rig" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Gear &middot; 8 min read</div>
             <div class="t">The Rig: A Mount, a Refractor, and a Camera That Runs Itself</div>
+            <div class="m">8 min read</div>
             <div class="d">A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.</div>
           </div>
         </a>
         <a class="card" href="/articles/navigating-the-night-sky.html" aria-label="Navigating the Night Sky: Polaris, the Poles and the Lines Between Them">
           <img src="images/thumbs/star-trails-2.webp" alt="Star trails circling the north celestial pole in deep blue above a dark desert ridge" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Sky basics &middot; 6 min read</div>
             <div class="t">Navigating the Night Sky: Polaris, the Poles and the Lines Between Them</div>
+            <div class="m">6 min read</div>
             <div class="d">The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator and the meridian actually are.</div>
           </div>
         </a>
         <a class="card" href="/articles/photograph-meteor-shower-milky-way-phone.html" aria-label="Photographing the Milky Way and Meteor Showers with Your Phone">
           <img src="images/articles/thumbs/milky-way-phone-mockup.webp" alt="A phone held up to the Milky Way over the desert, its screen showing the same view it is capturing" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Milky Way and meteors &middot; 8 min read</div>
             <div class="t">Photographing the Milky Way and Meteor Showers with Your Phone</div>
+            <div class="m">8 min read</div>
             <div class="d">No camera and no experience needed, just a phone, a small tripod and a dark sky. How to photograph the Milky Way and catch meteors on the same night, with the settings to use on an iPhone or an Android.</div>
           </div>
         </a>
         <a class="card" href="/articles/photograph-meteor-shower-milky-way-camera.html" aria-label="How to Photograph the Milky Way and Meteor Showers with a Camera">
           <img src="images/articles/thumbs/meteor-shower-camera-mockup.webp" alt="A camera back against a meteor shower over the desert, its rear screen showing the same view it is capturing" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Milky Way and meteors &middot; 9 min read</div>
             <div class="t">How to Photograph the Milky Way and Meteor Showers with a Camera</div>
+            <div class="m">9 min read</div>
             <div class="d">One wide lens on a tripod collects the Milky Way and any meteor that crosses it. Where to point, what to set, and how one night&#x27;s frames give you a meteor shot, a Milky Way and a star trail.</div>
           </div>
         </a>
         <a class="card" href="/articles/calibration-frames-darks-flats-biases.html" aria-label="Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs">
           <img src="images/thumbs/jellyfish-nebula-ic443.webp" alt="The Jellyfish Nebula, calibrated and stacked from a night of subframes" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Processing &middot; 7 min read</div>
             <div class="t">Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs</div>
+            <div class="m">7 min read</div>
             <div class="d">What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.</div>
           </div>
         </a>
         <a class="card" href="/articles/siril-post-processing-guide.html" aria-label="Siril: From a Folder of Subframes to a Finished Image">
           <img src="images/thumbs/eagle-nebula-m16-2.webp" alt="The Eagle Nebula M16 processed from calibrated and stacked subframes" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Processing &middot; 9 min read</div>
             <div class="t">Siril: From a Folder of Subframes to a Finished Image</div>
+            <div class="m">9 min read</div>
             <div class="d">The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.</div>
           </div>
         </a>
         <a class="card" href="/articles/asiair-astrophotography-control.html" aria-label="The ASIAir: Running a Whole Rig From Your Phone">
           <img src="images/articles/thumbs/asiair-app-tile.webp" alt="The ASIAir app running on a tablet, showing a live preview of the Orion Nebula with the target search, mount slew pad and exposure controls around the frame" loading="lazy" decoding="async">
           <div class="cap">
-            <div class="m">Capture &middot; 7 min read</div>
             <div class="t">The ASIAir: Running a Whole Rig From Your Phone</div>
+            <div class="m">7 min read</div>
             <div class="d">Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.</div>
           </div>
         </a>
@@ -434,9 +438,10 @@
       <aside class="gear-support" aria-labelledby="articlesSupportHeading">
         <h2 id="articlesSupportHeading">Where I buy my gear</h2>
         <p class="gear-support-intro">
-          If any of this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself, not a list of everyone who pays. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
+          If any of this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
         </p>
         <div class="gear-support-list">
+          <a class="gear-support-link" href="https://www.zwoastro.com/?ref=sfbuvxv1" target="_blank" rel="sponsored noopener noreferrer">ZWO<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
           <a class="gear-support-link" href="https://www.highpointscientific.com/?rfsn=9263467.792bf8" target="_blank" rel="sponsored noopener noreferrer">High Point Scientific (US)<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
           <a class="gear-support-link" href="https://amzn.to/4q14VRT" target="_blank" rel="sponsored noopener noreferrer">Amazon<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
           <a class="gear-support-link" href="https://www.svbony.com/?ref=BHAPSTAR" target="_blank" rel="sponsored noopener noreferrer">Svbony<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5L8.5 3.5"/><path d="M4.5 3.5h4v4"/></svg></a>
@@ -503,13 +508,13 @@
     return file;
   }
 
-  /* Read time is stored on the entry; fall back to a rough estimate from the
-     summary length rather than printing nothing. */
+  /* Read time only. The category is still carried in site-data.json and used
+     on the article pages and in the schema, it just does not appear on the
+     tiles: the standfirst already says what the piece is about, and a row of
+     one-word labels only competed with the titles. Must stay in step with
+     meta_line() in scripts/generate-article-pages.py. */
   function metaLine(item) {
-    const bits = [];
-    if (item.category) bits.push(item.category);
-    if (item.readTime) bits.push(item.readTime);
-    return bits.join(' &middot; ');
+    return item.readTime ? esc(item.readTime) : '';
   }
 
   function render() {
@@ -532,8 +537,8 @@
            aria-label="${esc(item.title || '')}">
         ${media}
         <div class="cap">
-          ${meta ? `<div class="m">${meta}</div>` : ''}
           <div class="t">${esc(item.title || '')}</div>
+          ${meta ? `<div class="m">${meta}</div>` : ''}
           <div class="d">${esc(item.desc || '')}</div>
         </div>
       </a>`;

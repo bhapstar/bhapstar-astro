@@ -584,9 +584,14 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
 
 
 def meta_line(entry):
-    """Category and read time, joined the same way articles.html joins them."""
-    bits = [b for b in (entry.get('category'), entry.get('readTime')) if b]
-    return ' &middot; '.join(esc(b) for b in bits)
+    """Read time for a tile on articles.html.
+
+    Category is deliberately not included. It is still written to the article
+    page itself and to articleSection in the JSON-LD, it just does not appear
+    on the tiles. Must stay in step with metaLine() in articles.html, which
+    replaces these tiles once site-data.json arrives.
+    """
+    return esc(entry.get('readTime') or '')
 
 
 def build_index_tiles(articles):
@@ -613,8 +618,8 @@ def build_index_tiles(articles):
             f'aria-label="{esc(entry.get("title", ""))}">\n'
             f'{media}'
             f'          <div class="cap">\n'
-            f'{meta_div}'
             f'            <div class="t">{esc(entry.get("title", ""))}</div>\n'
+            f'{meta_div}'
             f'            <div class="d">{esc(entry.get("desc", ""))}</div>\n'
             f'          </div>\n'
             f'        </a>\n'
