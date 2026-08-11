@@ -74,11 +74,25 @@ GLOSS_VOID_TAGS = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
 
 
 def load_glossary():
-    """Read content/glossary.json into a list of (regex, term, definition).
+    """Read the JSON into a list of terms, each with its forms compiled.
 
-    Sorted longest first so 'dual narrowband' is matched before 'narrowband'
-    and 'meridian flip' before 'meridian'. Missing file is not an error: the
-    articles simply build without explainers.
+    Shape of each item:
+
+        {'term': 'reducer', 'def': '...', 'except': {...},
+         'res': [<compiled 'reducers'>, <compiled 'reducer'>]}
+
+    Two different orderings are at work here and mixing them up is the easy
+    mistake:
+
+      - BETWEEN terms, longest first, so 'dual narrowband' claims its span
+        before plain 'narrowband' can, and 'meridian flip' before 'meridian'.
+        A term is ranked on its longest form.
+      - WITHIN a term, no ordering at all. Every form is searched and the
+        EARLIEST match in the page wins. Rank the forms by length instead and
+        'reducers' beats 'reducer', so a plural three paragraphs down gets the
+        explainer while the plain singular in the opening sentence goes bare.
+
+    Missing file is not an error: pages simply build without explainers.
     """
     if not os.path.isfile(GLOSSARY_FILE):
         print(f"  ! {GLOSSARY_FILE} not found, no glossary terms marked")
@@ -87,39 +101,50 @@ def load_glossary():
     with open(GLOSSARY_FILE, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    entries = []
+    terms = []
     for item in data.get('terms', []):
         term = (item.get('term') or '').strip()
         definition = (item.get('def') or '').strip()
         if not term or not definition:
             continue
         forms = [term] + [a for a in item.get('aliases', []) if a]
-        excluded = set(item.get('except', []))
-        for form in forms:
-            entries.append({
-                'form': form,
-                'term': term,
-                'def': definition,
-                'except': excluded,
-            })
+        terms.append({
+            'term': term,
+            'def': definition,
+            'except': set(item.get('except', [])),
+            # Phrases the word must not be marked inside. 'triplet' is a lens
+            # made of three elements, and it is also the second half of 'Leo
+            # Triplet', a group of galaxies. An except list cannot separate
+            # those two: they turn up on the same page.
+            'avoid': [re.compile(r'(?<![\w/-])' + re.escape(a).replace(r'\ ', r'\s+')
+                                 + r'(?![\w/-])', re.IGNORECASE)
+                      for a in item.get('avoid', [])],
+            'forms': forms,
+            'res': [_compile_form(f) for f in forms],
+            'rank': max(len(f) for f in forms),
+        })
 
-    entries.sort(key=lambda e: len(e['form']), reverse=True)
+    terms.sort(key=lambda t: t['rank'], reverse=True)
+    return terms
 
-    for e in entries:
-        # A term written with a capital in it is an acronym or a name, and is
-        # matched case-sensitively: otherwise FITS catches the verb 'fits' and
-        # RAW catches 'a raw dark'. An all-lowercase term is matched either
-        # way, so it is still found at the start of a sentence.
-        flags = 0 if any(c.isupper() for c in e['form']) else re.IGNORECASE
-        # \b is wrong here: it treats a hyphen as a boundary, so 'deep sky'
-        # would match inside 'deep-sky-object' and 'APO' inside 'APO-chromat'.
-        # Look-arounds on the word characters plus hyphen and slash are exact.
-        # The escaped space becomes \s+ so a term split over two lines in the
-        # source still matches.
-        e['re'] = re.compile(r'(?<![\w/-])'
-                             + re.escape(e['form']).replace(r'\ ', r'\s+')
-                             + r'(?![\w/-])', flags)
-    return entries
+
+def _compile_form(form):
+    """Compile one spelling of a term into a matcher.
+
+    A form written with a capital in it is an acronym or a name, and is
+    matched case-sensitively: otherwise FITS catches the verb 'fits' and RAW
+    catches 'a raw dark'. An all-lowercase form is matched either way, so it
+    is still found at the start of a sentence.
+
+    \\b is wrong here: it treats a hyphen as a boundary, so 'deep sky' would
+    match inside 'deep-sky-object' and 'APO' inside 'APO-chromat'. Look-arounds
+    on the word characters plus hyphen and slash are exact. The escaped space
+    becomes \\s+ so a term split over two lines in the source still matches.
+    """
+    flags = 0 if any(c.isupper() for c in form) else re.IGNORECASE
+    return re.compile(r'(?<![\w/-])'
+                      + re.escape(form).replace(r'\ ', r'\s+')
+                      + r'(?![\w/-])', flags)
 
 
 class _TextNodeFinder(HTMLParser):
@@ -166,7 +191,7 @@ class _TextNodeFinder(HTMLParser):
 
 
 def annotate_glossary(body_html, slug, glossary):
-    """Mark the first mention of each glossary term in one article body.
+    """Mark the first mention of each glossary term in one page body.
 
     Returns (html, count). Replacements are applied back to front so that every
     offset gathered from the original string stays valid.
@@ -183,38 +208,70 @@ def annotate_glossary(body_html, slug, glossary):
         print(f"  ! {slug}: could not parse for glossary ({exc})")
         return body_html, 0
 
-    edits = []          # (start, end, replacement)
-    claimed = []        # spans already taken, so terms cannot overlap
-    used_terms = set()
+    edits = []          # (start, end, term, definition)
+    claimed = []        # spans already taken, so two terms cannot overlap
+
+    def free(a, b):
+        return not any(a < cb and ca < b for ca, cb in claimed)
+
+    def blocked(entry, a, b):
+        """True if this match sits inside one of the term's avoid phrases."""
+        for rx in entry['avoid']:
+            # Only the immediate neighbourhood can contain the phrase.
+            lo = max(0, a - 60)
+            for m in rx.finditer(body_html, lo, b + 60):
+                if m.start() <= a and m.end() >= b:
+                    return True
+        return False
 
     for entry in glossary:
-        if entry['term'] in used_terms or slug in entry['except']:
+        if slug in entry['except']:
             continue
+
+        # Earliest match anywhere in the page, across every spelling of this
+        # term. Searching form by form and stopping at the first hit would
+        # let a plural late in the page beat the singular in the opening line.
+        best = None
         for start, end in finder.spans:
-            match = entry['re'].search(body_html, start, end)
-            if not match:
-                continue
-            a, b = match.span()
-            if any(a < cb and ca < b for ca, cb in claimed):
-                continue
-            idx = len(edits) + 1
-            ref = f"gl-{slug}-{idx}"
-            edits.append((a, b, (
-                f'<span class="gl" role="button" tabindex="0" '
-                f'aria-describedby="{ref}" data-gl-term="{esc(entry["term"])}">'
-                f'{match.group(0)}</span>'
-                f'<span class="gl-def" id="{ref}" hidden>{esc(entry["def"])}</span>'
-            )))
-            claimed.append((a, b))
-            used_terms.add(entry['term'])
-            break
+            for rx in entry['res']:
+                pos = start
+                while pos < end:
+                    m = rx.search(body_html, pos, end)
+                    if not m:
+                        break
+                    a, b = m.span()
+                    if free(a, b) and not blocked(entry, a, b):
+                        if best is None or a < best[0]:
+                            best = (a, b)
+                        break
+                    # Overlaps something already marked, or sits inside a
+                    # proper name. Keep looking further along THIS text node
+                    # rather than abandoning it: the next sentence may hold a
+                    # clean occurrence.
+                    pos = b
+            if best is not None and best[0] < start:
+                break               # nothing later can beat this
+        if best is None:
+            continue
+
+        a, b = best
+        edits.append((a, b, entry['term'], entry['def']))
+        claimed.append((a, b))
 
     if not edits:
         return body_html, 0
 
+    # Numbered in reading order, so the ids on the page run top to bottom.
+    edits.sort(key=lambda e: e[0])
     out = body_html
-    for a, b, replacement in sorted(edits, key=lambda e: e[0], reverse=True):
-        out = out[:a] + replacement + out[b:]
+    for idx, (a, b, term, definition) in reversed(list(enumerate(edits, 1))):
+        ref = f"gl-{slug}-{idx}"
+        out = out[:a] + (
+            f'<span class="gl" role="button" tabindex="0" '
+            f'aria-describedby="{ref}" data-gl-term="{esc(term)}">'
+            f'{out[a:b]}</span>'
+            f'<span class="gl-def" id="{ref}" hidden>{esc(definition)}</span>'
+        ) + out[b:]
     return out, len(edits)
 
 

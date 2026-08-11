@@ -47,7 +47,12 @@
     },
     {
       "term": "focal ratio",
-      "def": "The focal length divided by the width of the lens, written like f/6.2. Smaller numbers collect light faster, so you need less time on the target."
+      "def": "The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical.",
+      "aliases": [
+        "f-number",
+        "f number",
+        "f/number"
+      ]
     },
     {
       "term": "focal length",
@@ -243,7 +248,7 @@
         "apochromatic",
         "APO"
       ],
-      "def": "A lens design that brings the different colours of light to the same point of focus. Without it, bright stars pick up a purple halo."
+      "def": "A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo."
     },
     {
       "term": "refractor",
@@ -279,6 +284,9 @@
       "def": "A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.",
       "except": [
         "bortle-scale-narrowband-filters"
+      ],
+      "avoid": [
+        "John Bortle"
       ]
     },
     {
@@ -523,11 +531,14 @@
       "def": "A lens made of three pieces of glass. More expensive, but it brings the colours together more completely than a doublet.",
       "aliases": [
         "triplets"
+      ],
+      "avoid": [
+        "Leo Triplet"
       ]
     },
     {
       "term": "ED",
-      "def": "Extra-low dispersion glass. It bends the different colours of light by more similar amounts, which is what stops bright stars picking up a coloured halo.",
+      "def": "Extra-low dispersion glass, a specific type of glass used in better lenses. It keeps the different colours of light travelling together, which is how a two-element lens gets close to the colour correction of a three-element one.",
       "aliases": [
         "ED element",
         "ED glass"
@@ -632,13 +643,6 @@
       ]
     },
     {
-      "term": "f-number",
-      "def": "The focal length divided by the width of the lens, written like f/5.8. Smaller numbers gather light faster.",
-      "aliases": [
-        "f number"
-      ]
-    },
-    {
       "term": "stop down",
       "def": "Making the lens opening smaller, from f/2 to f/2.8 for instance. The corners of the picture get tidier and less light comes in.",
       "aliases": [
@@ -734,7 +738,7 @@
     },
     {
       "term": "micron",
-      "def": "A thousandth of a millimetre, the unit sensor pixels are measured in. Larger pixels catch more light each, which matters more than the megapixel count at night.",
+      "def": "A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter.",
       "aliases": [
         "microns"
       ]
