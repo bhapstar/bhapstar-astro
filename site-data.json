@@ -672,6 +672,11 @@
     "slug": "zwo-asi585mc-air-camera",
     "buy": [
       {
+        "retailer": "ZWO",
+        "url": "https://www.zwoastro.com/product/asi585air/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras?rfsn=9263467.792bf8",
         "affiliate": true
@@ -704,6 +709,11 @@
     "section": "gear",
     "slug": "zwo-seestar-s30-smart-telescope",
     "buy": [
+      {
+        "retailer": "ZWO",
+        "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
+        "affiliate": true
+      },
       {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
@@ -879,6 +889,11 @@
     "slug": "zwo-eaf-electronic-focuser",
     "buy": [
       {
+        "retailer": "ZWO",
+        "url": "https://www.zwoastro.com/product/eaf/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
         "affiliate": true
@@ -922,6 +937,11 @@
     "hidden": false,
     "buy": [
       {
+        "retailer": "ZWO",
+        "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
         "affiliate": true
@@ -956,6 +976,16 @@
     "slug": "zwo-tc20-tripod-th10-fluid-head",
     "hidden": false,
     "buy": [
+      {
+        "retailer": "ZWO TC20",
+        "url": "https://www.zwoastro.com/product/tc20-carbon-fiber-tripod-for-seestar-smart-telescopes/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
+        "retailer": "ZWO TH10",
+        "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
+        "affiliate": true
+      },
       {
         "retailer": "High Point Scientific",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
