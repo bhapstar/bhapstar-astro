@@ -480,11 +480,20 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  /* Thumbnail path. Gallery images live in images/thumbs/, gear images in
-     images/gear/thumbs/ — an article cover can borrow from either, so work
-     out which folder applies rather than assuming. */
+  /* Thumbnail path. Three conventions: article and gear images keep their
+     thumbs in a thumbs/ folder beside them, gallery images keep theirs in a
+     single images/thumbs/ at the top. An article cover can borrow from any of
+     the three, so work out which applies rather than assuming.
+
+     Order matters. Both specific prefixes have to be tested before the general
+     one, or 'images/articles/x.webp' matches 'images/' first and gets sent to
+     images/thumbs/articles/. This must stay in step with thumb_for() in
+     scripts/generate-article-pages.py, which does the same job at build time. */
   function thumbFor(file) {
     if (!file) return '';
+    if (file.indexOf('images/articles/') === 0) {
+      return file.replace('images/articles/', 'images/articles/thumbs/');
+    }
     if (file.indexOf('images/gear/') === 0) {
       return file.replace('images/gear/', 'images/gear/thumbs/');
     }

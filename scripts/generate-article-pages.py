@@ -148,9 +148,22 @@ def url_for(path):
 
 
 def thumb_for(file):
-    """Gallery images thumb to images/thumbs/, gear images to images/gear/thumbs/."""
+    """Work out where a cover's thumbnail lives.
+
+    Three conventions, and the order of these checks is what makes them work.
+    Article and gear images keep their thumbs in a thumbs/ folder beside them
+    (images/articles/thumbs/, images/gear/thumbs/); gallery images keep theirs
+    in a single images/thumbs/ at the top. Both of the specific prefixes must
+    be tested before the general one, or 'images/articles/x.webp' would match
+    'images/' first and be sent to images/thumbs/articles/ instead.
+
+    A wrong answer here fails silently: the caller checks os.path.isfile() and
+    simply omits the image, with no build warning. So if covers start vanishing
+    from the tiles, look here first."""
     if not file:
         return None
+    if file.startswith('images/articles/'):
+        return file.replace('images/articles/', 'images/articles/thumbs/', 1)
     if file.startswith('images/gear/'):
         return file.replace('images/gear/', 'images/gear/thumbs/', 1)
     if file.startswith('images/'):
