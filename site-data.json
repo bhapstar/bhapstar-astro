@@ -1150,8 +1150,8 @@
     ]
   },
   {
-    "file": "images/eagle-nebula-m16-2.webp",
-    "alt": "The Eagle Nebula M16 processed from calibrated and stacked subframes",
+    "file": "images/articles/siril-interface-eagle-nebula.webp",
+    "alt": "The Siril interface with the Eagle Nebula M16 open in the preview pane after calibration and stacking",
     "title": "Siril: From a Folder of Subframes to a Finished Image",
     "desc": "The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.",
     "type": "processing",
