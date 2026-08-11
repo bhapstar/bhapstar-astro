@@ -249,7 +249,14 @@ GLOSSARY_CSS = """
     .gl-pop { position: fixed; z-index: 9998; width: 300px;
               max-width: calc(100vw - 24px); padding: 13px 15px;
               border-radius: 12px; border: 1px solid var(--line);
-              background: var(--soft);
+              /* --soft is a 7% tint. That is correct for a block sitting in
+                 the page flow, and useless for a panel floating over text,
+                 which shows straight through it. The tint is applied as a
+                 gradient layer over an opaque base instead, so the panel
+                 looks the same as the rest of the site and is solid. */
+              background: linear-gradient(rgba(var(--accent-rgb),0.07),
+                                          rgba(var(--accent-rgb),0.07)),
+                          var(--bg2);
               box-shadow: 0 14px 40px rgba(0,0,0,0.45);
               opacity: 0; transform: translateY(-4px); pointer-events: none;
               transition: opacity 160ms ease, transform 160ms ease; }
