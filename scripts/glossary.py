@@ -124,7 +124,12 @@ def load_glossary():
             'rank': max(len(f) for f in forms),
         })
 
-    terms.sort(key=lambda t: t['rank'], reverse=True)
+    # Longest first, so 'dual narrowband' claims its span before plain
+    # 'narrowband' can. The term name is a tiebreak purely so the ordering is
+    # decided by content and never by position in the file: that leaves the
+    # JSON free to be kept in alphabetical order for editing, with no risk of
+    # rearranging it quietly changing which word gets marked on a page.
+    terms.sort(key=lambda t: (-t['rank'], t['term'].lower()))
     return terms
 
 
