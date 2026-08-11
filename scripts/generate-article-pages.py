@@ -116,13 +116,34 @@ SUPPORT_CSS = """
 """
 
 
-def build_support_block():
-    """Retailer links for the foot of an article page."""
+def build_support_block(entry=None):
+    """Retailer links for the foot of an article page.
+
+    An article may carry its own "buy" array in site-data.json, using the same
+    {retailer, url, affiliate} shape as the gear entries. Those are product
+    pages rather than storefronts, so they go first: ZWO attributes a referral
+    only when the visitor lands and orders in the same session, and a deep link
+    converts far better than a homepage drop. SUPPORT_RETAILERS follows as the
+    general fallback and is always present.
+    """
+    pairs = []
+    seen = set()
+    for item in (entry or {}).get("buy") or []:
+        url = item.get("url")
+        name = item.get("retailer")
+        if url and name and url not in seen:
+            seen.add(url)
+            pairs.append((name, url))
+    for name, url in SUPPORT_RETAILERS:
+        if url not in seen:
+            seen.add(url)
+            pairs.append((name, url))
+
     links = "\n".join(
         f'          <a class="article-support-link" href="{esc(url)}" '
         f'target="_blank" rel="sponsored noopener noreferrer">{esc(name)}'
         f'{SUPPORT_ARROW}</a>'
-        for name, url in SUPPORT_RETAILERS
+        for name, url in pairs
     )
     return f'''      <aside class="article-support" aria-labelledby="articleSupportHeading">
         <h2 id="articleSupportHeading">Where I buy my gear</h2>
@@ -517,7 +538,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
 {body_html}
       </div>
 
-{build_support_block()}
+{build_support_block(entry)}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
   </section>
