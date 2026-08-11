@@ -39,7 +39,13 @@
        Sits at the end of the caption, after the summary, pushed to the right
        so it reads as a footnote to the blurb rather than a second heading.
        It is tied to the Captions toggle below: with captions off a tile is
-       the title and nothing else. */
+       the title and nothing else.
+
+       max-height and opacity rather than display, because display cannot be
+       transitioned and the toggle is meant to slide. Padding and border widths
+       collapse too, or the pill would leave an 8px sliver behind at zero
+       height. Left and right padding and border are untouched: they do not
+       affect height. */
     #articleGrid .card .cap .m {
       font-size: 10px;
       letter-spacing: 0.16em;
@@ -48,15 +54,20 @@
       margin-top: 6px;
       margin-bottom: 0;
       text-align: right;
+      overflow: hidden;
+      max-height: 3em;
       opacity: 0.95;
+      transition: max-height    320ms cubic-bezier(0.16,1,0.3,1),
+                  opacity       240ms ease,
+                  margin-top    280ms ease,
+                  padding-top   280ms ease,
+                  padding-bottom 280ms ease;
     }
     /* In grid view the meta line becomes a small chip. A chip cannot be
        right-aligned by text-align because it is its own box, so it is a block
        shrunk to its contents with the left margin taking up the slack.
-       :not(.hide-desc) keeps this off the hide rule's toes: the two selectors
-       would otherwise weigh the same and the outcome would rest on source
-       order. List view is left as plain text: chips in a dense row look busy. */
-    #articleGrid:not(.list-view):not(.hide-desc) .card .cap .m {
+       List view is left as plain text: chips in a dense row look busy. */
+    #articleGrid:not(.list-view) .card .cap .m {
       display: block;
       width: -moz-fit-content;
       width: fit-content;
@@ -68,6 +79,24 @@
       margin-top: 7px;
       margin-bottom: 0;
       opacity: 1;
+      transition: max-height    320ms cubic-bezier(0.16,1,0.3,1),
+                  opacity       240ms ease,
+                  margin-top    280ms ease,
+                  padding-top   280ms ease,
+                  padding-bottom 280ms ease,
+                  border-top-width    280ms ease,
+                  border-bottom-width 280ms ease;
+    }
+
+    /* The summary collapses the same way. 8em clears the longest standfirst
+       at every breakpoint, including the one-column layout under 560px. */
+    #articleGrid .card .cap .d {
+      overflow: hidden;
+      max-height: 8em;
+      opacity: 1;
+      transition: max-height 320ms cubic-bezier(0.16,1,0.3,1),
+                  opacity    240ms ease,
+                  margin-top 280ms ease;
     }
     /* ── Lead tile ──
        The newest article runs full width with a cinematic crop, so the page
@@ -135,13 +164,31 @@
     }
 
     /* Captions toggle: with captions off a tile shows the title alone, so the
-       read time goes with the summary rather than surviving on its own. The
-       list-view case is spelled out separately so it always outranks the
-       list-view rules in styles.css. */
-    #articleGrid.hide-desc .card .cap .d,
-    #articleGrid.hide-desc .card .cap .m,
-    #articleGrid.list-view.hide-desc .card .cap .d,
-    #articleGrid.list-view.hide-desc .card .cap .m { display: none; }
+       read time goes with the summary rather than surviving on its own.
+       gear.html and gallery.html slide the whole caption pill out of the tile;
+       here the title stays put in both states, so only these two collapse.
+
+       Grid and list are spelled out separately at five classes each so these
+       always outrank the pill rule above and the list-view rules in
+       styles.css. The one remaining tie is the lead tile's own margin-top on
+       .d, which weighs the same and is resolved by these rules coming later
+       in the file. Keep them below it. */
+    #articleGrid.hide-desc:not(.list-view) .card .cap .d,
+    #articleGrid.list-view.hide-desc .card .cap .d {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+    }
+    #articleGrid.hide-desc:not(.list-view) .card .cap .m,
+    #articleGrid.list-view.hide-desc .card .cap .m {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-width: 0;
+      border-bottom-width: 0;
+    }
 
     /* No filter control on this page, so the remaining controls sit at the
        right-hand end of the row rather than being pushed apart. */
@@ -149,8 +196,11 @@
 
     @media (max-width: 720px) {
       /* The base stylesheet hides .d on small screens for photo grids; for
-         articles the standfirst is the point, so bring it back in grid view. */
-      #articleGrid:not(.list-view):not(.hide-desc) .card .cap .d { display: block; }
+         articles the standfirst is the point, so bring it back in grid view.
+         This is unconditional now: hiding is done by collapsing max-height,
+         so .d has to stay displayed for the toggle to have anything to
+         animate. */
+      #articleGrid:not(.list-view) .card .cap .d { display: block; }
       #articleGrid.list-view .card .cap .m { font-size: 9px; letter-spacing: 0.12em; }
 
       /* A 16:7 crop on a phone leaves a letterbox strip with a caption
@@ -166,8 +216,10 @@
       /* styles.css also force-hides .d in mobile list view, which left the
          Captions button with nothing to switch. Bring the summary back here,
          clamped to two lines so rows stay compact, so the button does the same
-         thing on every screen size. */
-      #articleGrid.list-view:not(.hide-desc) .card .cap .d {
+         thing on every screen size. Unconditional for the same reason as the
+         grid rule above, with max-height brought down to the clamped height so
+         the collapse has no dead travel to cross. */
+      #articleGrid.list-view .card .cap .d {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -175,6 +227,7 @@
         font-size: 11px;
         line-height: 1.35;
         margin-top: 3px;
+        max-height: 3.2em;
       }
       /* Fixed row and thumbnail height so every row matches, whether the
          summary is showing or not. height:100% on the image resolved against
@@ -346,7 +399,7 @@
             </button>
           </div>
 
-          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle article titles &amp; summaries">
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide summaries" title="Toggle article summaries">
             <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
               <circle cx="8" cy="8" r="2" fill="currentColor"/>
@@ -593,9 +646,9 @@
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
         viewBtnDesc.setAttribute('aria-pressed', hide ? 'false' : 'true');
-        viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
-        viewBtnDesc.title = hide ? 'Show article titles & summaries'
-                                 : 'Hide article titles & summaries';
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show summaries' : 'Hide summaries');
+        viewBtnDesc.title = hide ? 'Show article summaries'
+                                 : 'Hide article summaries';
       }
     }
     applyDescToggle(true);
