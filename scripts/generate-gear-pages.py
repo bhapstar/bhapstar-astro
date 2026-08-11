@@ -28,6 +28,11 @@ import os
 import re
 from datetime import datetime, timezone
 
+# Shared with generate-article-pages.py. sys.path[0] is this script's own
+# folder, so scripts/glossary.py is importable without any path juggling.
+from glossary import (GLOSSARY_CSS, GLOSSARY_JS, annotate_glossary,
+                      load_glossary)
+
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "gear"
@@ -99,7 +104,7 @@ def build_json_ld(entry, page_url, cover_src):
 
     return json.dumps(prune(schema), ensure_ascii=False)
 
-def build_page(entry, slug, prev_entry=None, next_entry=None):
+def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     """Build the full HTML page for one gear item."""
     title = entry.get('title', 'Gear')
     desc = entry.get('desc', '')
@@ -112,6 +117,14 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     
     page_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
     review_html = read_review(slug)
+
+    # Glossary explainers on the first mention of each technical word. A page
+    # with none carries neither the styles nor the script.
+    review_html, gloss_count = annotate_glossary(review_html, slug,
+                                                 glossary or [])
+    gloss_css = GLOSSARY_CSS if gloss_count else ''
+    gloss_js = GLOSSARY_JS if gloss_count else ''
+    build_page.last_gloss_count = gloss_count
     json_ld = build_json_ld(entry, page_url, cover_src)
     
     if cover_src:
@@ -474,6 +487,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
       .gear-page {{ margin: 24px auto; padding: 0 12px; }}
       .gear-title {{ font-size: 24px; }}
     }}
+{gloss_css}
   </style>
 
   <script type="application/ld+json">
@@ -572,6 +586,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
       }}, {{ passive: true }});
     }})();
   </script>
+{gloss_js}
 </body>
 </html>'''
     
@@ -591,22 +606,27 @@ def main():
     
     # Create output dir
     os.makedirs(OUT_DIR, exist_ok=True)
+
+    glossary = load_glossary()
     
     # Generate pages for every gear item. Previous/next follow the order of
     # site-data.json and wrap around, so the chain has no dead ends. With a
     # single visible item there are no neighbours and the bar is omitted.
     n = len(gear_items)
     generated_slugs = set()
+    gloss_total = 0
     for i, entry in enumerate(gear_items):
         slug = entry['slug']
         generated_slugs.add(slug)
         prev_entry = gear_items[(i - 1) % n] if n > 1 else None
         next_entry = gear_items[(i + 1) % n] if n > 1 else None
         filename = os.path.join(OUT_DIR, f"{slug}.html")
-        page_html = build_page(entry, slug, prev_entry, next_entry)
+        page_html = build_page(entry, slug, prev_entry, next_entry, glossary)
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(page_html)
-        print(f"✓ {filename}")
+        marked = getattr(build_page, 'last_gloss_count', 0)
+        gloss_total += marked
+        print(f"✓ {filename}" + (f"  ({marked} explained)" if marked else ""))
     
     # Clean up stale files (whose slug is no longer in site-data.json)
     for filename in os.listdir(OUT_DIR):
@@ -618,7 +638,8 @@ def main():
             os.remove(filepath)
             print(f"✗ deleted stale {filepath}")
     
-    print(f"\nGenerated {len(generated_slugs)} gear pages.")
+    print(f"\nGenerated {len(generated_slugs)} gear pages, "
+          f"{gloss_total} glossary explainers.")
 
 if __name__ == '__main__':
     main()

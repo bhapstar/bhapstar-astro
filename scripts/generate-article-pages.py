@@ -8,6 +8,11 @@ Each page includes:
   - Hero image (the entry's cover), with the standfirst beneath it
   - A meta line: category, date, read time
   - Article prose, read from content/articles/<slug>.html
+  - Glossary explainers: the first mention of each technical word in the body
+    is marked and gets a hover (desktop) or tap (touch) definition. The words
+    live in content/glossary.json and the machinery in scripts/glossary.py,
+    shared with the gear pages. The prose fragments stay clean; nothing is
+    marked by hand.
   - Previous / next article navigation (wraps, so no dead ends)
   - JSON-LD Article schema
   - Canonical URL pointing at itself
@@ -47,6 +52,11 @@ import html
 import json
 import os
 from datetime import datetime
+
+# Shared with generate-gear-pages.py. sys.path[0] is this script's own folder,
+# so scripts/glossary.py is importable without any path juggling.
+from glossary import (GLOSSARY_CSS, GLOSSARY_JS, annotate_glossary,
+                      load_glossary)
 
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
@@ -244,7 +254,7 @@ def build_json_ld(entry, page_url, cover_src):
     return json.dumps(prune(schema), ensure_ascii=False)
 
 
-def build_page(entry, slug, prev_entry=None, next_entry=None):
+def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     """Build the full HTML page for one article."""
     title = entry.get('title', 'Article')
     desc = entry.get('desc', '')
@@ -253,6 +263,13 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     page_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
     body_html = read_body(slug)
     json_ld = build_json_ld(entry, page_url, cover_src)
+
+    # Glossary. An article with no marked words carries neither the styles nor
+    # the script, so nothing is paid for on a page that cannot use it.
+    body_html, gloss_count = annotate_glossary(body_html, slug, glossary or [])
+    gloss_css = GLOSSARY_CSS if gloss_count else ''
+    gloss_js = GLOSSARY_JS if gloss_count else ''
+    build_page.last_gloss_count = gloss_count
 
     if cover_src:
         og_image = (
@@ -513,7 +530,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
       .article-standfirst {{ font-size: 15px; }}
       .gn-label {{ display: none; }}
     }}
-{SUPPORT_CSS}
+{SUPPORT_CSS}{gloss_css}
   </style>
 
   <script type="application/ld+json">
@@ -577,6 +594,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None):
     }});
   }})();
   </script>
+{gloss_js}
 </body>
 </html>'''
 
@@ -721,8 +739,11 @@ def main():
 
     os.makedirs(OUT_DIR, exist_ok=True)
 
+    glossary = load_glossary()
+
     n = len(articles)
     generated_slugs = set()
+    gloss_total = 0
     for i, entry in enumerate(articles):
         slug = entry['slug']
         generated_slugs.add(slug)
@@ -730,8 +751,11 @@ def main():
         next_entry = articles[(i + 1) % n] if n > 1 else None
         filename = os.path.join(OUT_DIR, f"{slug}.html")
         with open(filename, 'w', encoding='utf-8') as f:
-            f.write(build_page(entry, slug, prev_entry, next_entry))
-        print(f"✓ {filename}")
+            f.write(build_page(entry, slug, prev_entry, next_entry, glossary))
+        marked = getattr(build_page, 'last_gloss_count', 0)
+        gloss_total += marked
+        print(f"✓ {filename}"
+              + (f"  ({marked} explained)" if marked else ""))
 
     # Clean up stale files (whose slug is no longer in site-data.json)
     if os.path.isdir(OUT_DIR):
@@ -747,7 +771,9 @@ def main():
     inject(INDEX_PAGE, 'ARTICLE-TILES', build_index_tiles(articles))
     inject(INDEX_PAGE, 'ARTICLE-JSONLD', build_index_json_ld(articles))
 
-    print(f"\nGenerated {len(generated_slugs)} article pages.")
+    print(f"\nGenerated {len(generated_slugs)} article pages, "
+          f"{gloss_total} glossary explainers from "
+          f"{len(set(e['term'] for e in glossary))} terms.")
 
 
 if __name__ == '__main__':
