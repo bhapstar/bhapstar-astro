@@ -212,6 +212,56 @@
       .gear-page { margin: 24px auto; padding: 0 12px; }
       .gear-title { font-size: 24px; }
     }
+
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -267,7 +317,7 @@
 
 <h2>Three boxes in one</h2>
 
-<p>A conventional imaging setup needs a main camera, a guide camera with its own
+<p>A conventional imaging setup needs a main camera, a <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-6" data-gl-term="guide camera">guide camera</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-6" hidden>A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working.</span> with its own
 optics, and a control computer, each with cables and power of its own. The
 ASI585MC Air puts the imaging sensor, a 2.1MP guide sensor and a full ASIAIR
 controller inside one housing.</p>
@@ -278,22 +328,22 @@ matters more than any figure on the box.</p>
 
 <h2>The sensor</h2>
 
-<p>The IMX585 is an 8.3 megapixel back-illuminated STARVIS 2 sensor, 3840 by
-2160, with 2.9 micron pixels on a 1/1.2 inch format and peak quantum efficiency
+<p>The IMX585 is an 8.3 megapixel <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-2" data-gl-term="back-illuminated">back-illuminated</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-2" hidden>A sensor built with its wiring behind the light-sensitive layer rather than in front of it, so less of the incoming light is blocked on the way in.</span> STARVIS 2 sensor, 3840 by
+2160, with 2.9 <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-9" data-gl-term="micron">micron</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-9" hidden>A thousandth of a millimetre, the unit sensor pixels are measured in. Larger pixels catch more light each, which matters more than the megapixel count at night.</span> pixels on a 1/1.2 inch format and peak <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-1" data-gl-term="quantum efficiency">quantum efficiency</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-1" hidden>How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost.</span>
 around 88%. Small pixels suit short and medium focal lengths, which makes it a
 natural partner for the
 <a href="/gear/askar-v-modular-apo-refractor.html">Askar V</a> across most of its
 range.</p>
 
-<p>Cooling is a two-stage thermoelectric system rated to hold the sensor 30 to 35
+<p>Cooling is a two-stage <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-3" data-gl-term="thermoelectric">thermoelectric</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-3" hidden>Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise.</span> system rated to hold the sensor 30 to 35
 degrees below ambient. In a temperate climate that is a convenience. Imaging
 through a Gulf summer it is the feature that makes long exposures viable at all,
-since dark current roughly doubles for every 6 to 7 degrees the sensor gains.</p>
+since <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-7" data-gl-term="dark current">dark current</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-7" hidden>Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled.</span> roughly doubles for every 6 to 7 degrees the sensor gains.</p>
 
 <h2>Framing, and what the format means</h2>
 
-<p>The 1/1.2 inch format gives a narrower field than an APS-C camera on the same
-telescope, so the largest targets want a shorter focal length or a mosaic. In
+<p>The 1/1.2 inch format gives a narrower field than an <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-10" data-gl-term="APS-C">APS-C</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-10" hidden>A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers.</span> camera on the same
+telescope, so the largest targets want a shorter <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-5" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-5" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> or a <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-8" data-gl-term="mosaic">mosaic</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-8" hidden>Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.</span>. In
 exchange, a small sensor asks much less of the optics at the edges and makes
 flats considerably less troublesome. Most of the recent gallery was shot with it,
 including <a href="/share/orion-nebula-m42.html">Orion</a> and
@@ -302,7 +352,7 @@ including <a href="/share/orion-nebula-m42.html">Orion</a> and
 <p>It works well with the
 <a href="/gear/svbony-filter-drawer.html">filter drawer</a> and the
 <a href="/gear/zwo-eaf-electronic-focuser.html">EAF</a>, which between them mean
-a filter change or a refocus does not involve touching the imaging train. One
+a filter change or a refocus does not involve touching the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-4" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-4" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span>. One
 consequence of the all-in-one design is that the parts are married, so moving to
 a larger sensor later means replacing the controller and guide camera too.</p>
 
@@ -404,5 +454,118 @@ it.</p>
       }, { passive: true });
     })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

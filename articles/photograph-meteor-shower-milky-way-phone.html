@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -286,7 +335,7 @@
   neither of them is the phone: something to hold it still, and a sky dark
   enough to be worth pointing at. Meteors come free, because the setup that
   collects the Milky Way catches anything bright that crosses the frame while
-  the shutter is open.</p>
+  the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-9" data-gl-term="shutter">shutter</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-9" hidden>How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.</span> is open.</p>
 </div>
 
 <h2>Your phone is better at this than you think</h2>
@@ -333,14 +382,14 @@ you have never seen in it before.</p>
 
 <p>For meteors you can get away with a lot, because a bright fireball punches
 through most skies. The Milky Way is different, and this is the part worth
-planning around: it needs a genuinely dark site. From a city balcony the sky glow
+planning around: it needs a genuinely dark site. From a city balcony the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-7" data-gl-term="skyglow">sky glow</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-7" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span>
 is brighter than the galaxy, and no amount of clever processing recovers
 something the sensor never saw. From a properly dark site, the same phone in the
 same hands produces something you will want to print.</p>
 
 <p>The good news is that dark is closer than people assume. An hour or so out of
 most cities is usually enough to make the difference, and the change is dramatic
-rather than subtle. Check a light pollution map, pick a direction away from the
+rather than subtle. Check a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-1" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-1" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map, pick a direction away from the
 nearest town, and give your eyes twenty minutes to adjust once you arrive. The
 Milky Way often becomes visible to the naked eye while you are still setting up,
 which is the moment most people remember from their first proper dark-sky
@@ -391,7 +440,7 @@ night.</p>
 
 <p>There is no dedicated astro mode, but the path to a good frame is short. Open
 the camera, use the main wide lens rather than the ultra-wide or the zoom, since
-it has the biggest sensor and the fastest aperture, and put the phone on the
+it has the biggest sensor and the fastest <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-6" data-gl-term="aperture">aperture</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-6" hidden>The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light.</span>, and put the phone on the
 tripod. The moon icon appears automatically in the dark, and on models up to the
 iPhone 16 the exposure slider then runs out to around 30 seconds once the phone
 knows it is not being held. Drag it to the maximum and tap the shutter.</p>
@@ -408,7 +457,7 @@ to brighten later, rather than a processed JPEG that has already decided what th
 sky should look like. For the Milky Way in particular, this is where a lot of the
 detail comes from.</p>
 
-<p>The bigger step up is a third-party manual camera app. Several expose ISO,
+<p>The bigger step up is a third-party manual camera app. Several expose <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-11" data-gl-term="ISO">ISO</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-11" hidden>How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.</span>,
 shutter and manual focus directly, and at least one has a mode built specifically
 for meteors that watches the frame and keeps only the exposures where something
 changed. That is exactly the right tool for this job, and it costs less than a
@@ -419,7 +468,7 @@ coffee.</p>
 <p>If you have a Pixel, you already have the best automatic option on any phone.
 Open the camera, switch to Night Sight, put the phone on the tripod and leave it
 alone. After a moment the mode relabels itself as astrophotography and offers an
-exposure of up to about four minutes, taking a long series of frames and stacking
+exposure of up to about four minutes, taking a long series of frames and <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-8" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-8" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>
 them internally. For the Milky Way this is close to magic. Point it, press the
 button, and walk away.</p>
 
@@ -430,7 +479,7 @@ along with manual ISO and focus, which is enough for both subjects. What most
 people miss is that Samsung also ships a dedicated astrophotography mode, and it
 is buried two menus deep.</p>
 
-<p>It lives in Expert RAW, a free download from the Galaxy Store rather than
+<p>It lives in Expert <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-12" data-gl-term="RAW">RAW</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-12" hidden>The camera&#x27;s unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture.</span>, a free download from the Galaxy Store rather than
 something preinstalled. Open Expert RAW, tap the settings icon, and turn on
 Special photo options. An astrophotography icon then appears on the shooting
 screen alongside a multiple exposure mode. It only shows up at 12MP resolution,
@@ -438,15 +487,15 @@ so if you cannot find it, check that first. Samsung lists astro mode as supporte
 on the S22 and S23 series onwards, with Expert RAW itself running on the S20 and
 later.</p>
 
-<p>Inside astro mode you set the shooting duration and control focus and white
-balance yourself, and the phone stacks the frames for you. There is also a Sky
+<p>Inside astro mode you set the shooting duration and control focus and <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-3" data-gl-term="white balance">white
+balance</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-3" hidden>The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other.</span> yourself, and the phone stacks the frames for you. There is also a Sky
 Guide overlay that draws the constellations over the live preview, which is
 genuinely useful for framing when you are standing in the dark trying to work out
 where Cygnus is.</p>
 
 <h3>Star trails, hiding in the hyperlapse menu</h3>
 
-<p>Samsung also has a star trails mode, and it is somewhere nobody would think to
+<p>Samsung also has a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-4" data-gl-term="star trail">star trails</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-4" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> mode, and it is somewhere nobody would think to
 look: the Hyperlapse mode in the normal camera app. Switch to Hyperlapse, set the
 speed to 300x (it is marked with a small star icon), and a star trails toggle
 appears at the bottom of the screen. Switch the resolution to UHD while you are
@@ -465,7 +514,7 @@ handsets have found the toggle does nothing.</p>
             loading="lazy" allowfullscreen></iframe>
   </div>
   <figcaption>About an hour of sky, played back in a few seconds, shot exactly
-  as described above on a Samsung Galaxy S23 Ultra. No telescope, no tracker and
+  as described above on a Samsung Galaxy S23 Ultra. No telescope, no <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-10" data-gl-term="star tracker">tracker</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-10" hidden>A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens.</span> and
   no processing afterwards: a phone clamped to a tripod, left running. There are
   more of these in the <a href="/gallery.html#star-trails-videos">gallery</a>.</figcaption>
 </figure>
@@ -568,7 +617,7 @@ pay for the whole session.</p>
 
 <p>This is the trick behind almost every meteor picture you have seen. One
 exposure is a lottery ticket, thirty is a decent chance, and a couple of hours is
-how people come home with the shot. If your phone has a timelapse or interval
+how people come home with the shot. If your phone has a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-5" data-gl-term="timelapse">timelapse</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-5" hidden>Hundreds of still frames played back one after another as a short video, so hours of sky movement pass in seconds.</span> or interval
 option that keeps the individual frames, set it going and forget about it. If
 not, tapping the shutter each time the last frame finishes works perfectly well
 and costs nothing but a little attention.</p>
@@ -596,7 +645,7 @@ frame, or line them up in order and you have a timelapse of the sky turning.</p>
   <li><strong>Bring a power bank.</strong> Long exposures and screen-on time drain
   a phone quickly, and a spare charge is the difference between stopping at
   midnight and staying for the best hours.</li>
-  <li><strong>Watch for dew.</strong> On a humid night, condensation creeps onto
+  <li><strong>Watch for <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-13" data-gl-term="dew">dew</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-13" hidden>Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off.</span>.</strong> On a humid night, condensation creeps onto
   the lens gradually. If everything suddenly looks soft, give it a wipe and carry
   on.</li>
 </ul>
@@ -606,7 +655,7 @@ frame, or line them up in order and you have a timelapse of the sky turning.</p>
 <p>Edit on the phone itself, which is more than good enough. Lift the shadows,
 pull the highlights down, add a little contrast, and lower the temperature slider
 until the sky reads neutral rather than orange. If you shot RAW there is far more
-room in the file than you expect, and the Milky Way core usually comes up with
+room in the file than you expect, and the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-phone-2" data-gl-term="Milky Way core">Milky Way core</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-phone-2" hidden>The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer.</span> usually comes up with
 one gentle push of the shadows. Keep it restrained: a slightly dark, clean sky
 looks better than a bright, noisy one.</p>
 
@@ -672,5 +721,118 @@ guide</a> covers the next step.</p>
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

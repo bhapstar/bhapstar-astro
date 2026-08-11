@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -293,11 +342,11 @@
 <p>A wide lens on a tripod pointed at a dark sky is the whole technique, and it
 gives you two things at once. Left running, it builds a Milky Way image frame by
 frame, and it catches any meteor bright enough to cross the field while the
-shutter is open. You are not choosing between them. You set up once and collect
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-13" data-gl-term="shutter">shutter</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-13" hidden>How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.</span> is open. You are not choosing between them. You set up once and collect
 both.</p>
 
 <p>That combination is why summer nights are worth the drive. From roughly April
-to September the Milky Way core rises in the south-east after dark and arcs
+to September the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-4" data-gl-term="Milky Way core">Milky Way core</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-4" hidden>The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer.</span> rises in the south-east after dark and arcs
 across the southern sky, and the calendar drops several good showers into the
 same months. The Perseids are the pick of them, and 2026 is a particularly good
 year, but nothing on this page needs a shower to be worthwhile. The same settings
@@ -386,31 +435,31 @@ lens and the same settings produce a completely different photograph.</p>
 
 <p>It also pays off for the meteors, because a dark sky lets the fainter ones
 register instead of vanishing into the background. One decision, both subjects
-improved. A light pollution map and a bit of planning is all it takes, and it is
+improved. A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-1" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-1" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map and a bit of planning is all it takes, and it is
 the highest-value hour you will spend on the whole night.</p>
 
 <h2>What to bring</h2>
 
-<p>A camera that shoots manual and RAW, the widest and fastest lens you own, and
-a tripod that will not creep. That is genuinely it. A full-frame body like the
-Sony A7&nbsp;III makes life easier because it holds ISO&nbsp;3200 comfortably,
+<p>A camera that shoots manual and <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-15" data-gl-term="RAW">RAW</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-15" hidden>The camera&#x27;s unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture.</span>, the widest and fastest lens you own, and
+a tripod that will not creep. That is genuinely it. A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-7" data-gl-term="full-frame">full-frame</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-7" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> body like the
+Sony A7&nbsp;III makes life easier because it holds <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-14" data-gl-term="ISO">ISO</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-14" hidden>How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.</span>&nbsp;3200 comfortably,
 but any camera with manual control will give you both a bright Perseid and a
 recognisable Milky Way. There is more on the bodies and lenses I use over on the
 <a href="/gear.html">gear pages</a>.</p>
 
 <p>Lens choice is about coverage. A meteor lands somewhere random in the sky, so
-the more sky you have in frame the better your odds, and a fast aperture matters
+the more sky you have in frame the better your odds, and a fast <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-9" data-gl-term="aperture">aperture</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-9" hidden>The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light.</span> matters
 because the streak is over in a fraction of a second. A 14mm or 18mm at f/2.8 is
 close to ideal: wide enough to cover a large slice of sky, fast enough to record
 the meteor, and inexpensive in manual-focus form. It also happens to be the right
-focal length for fitting the whole Milky Way arc above a landscape. The rest of
-the kit is small: a spare battery or two, a remote release that locks on, and a
-lens cloth for the dew.</p>
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-6" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-6" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> for fitting the whole Milky Way arc above a landscape. The rest of
+the kit is small: a spare battery or two, a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-3" data-gl-term="remote release">remote release</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-3" hidden>A cable or wireless button that fires the shutter for you. Pressing the camera itself shakes it, and at these exposure lengths that is enough to smear the stars.</span> that locks on, and a
+lens cloth for the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-16" data-gl-term="dew">dew</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-16" hidden>Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off.</span>.</p>
 
 <h2>Settings</h2>
 
 <p>Set everything manually and then leave it alone. Autofocus, auto ISO and auto
-white balance all hunt in the dark, and a consistent set of frames is what lets
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-5" data-gl-term="white balance">white balance</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-5" hidden>The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other.</span> all hunt in the dark, and a consistent set of frames is what lets
 you stack them later.</p>
 
 <table>
@@ -418,9 +467,9 @@ you stack them later.</p>
   <tr><td>Mode</td><td>Manual</td><td>Nothing should change between frames</td></tr>
   <tr><td>File</td><td>RAW</td><td>You will lift shadows heavily later</td></tr>
   <tr><td>Aperture</td><td>f/2.8, wide open</td><td>The meteor is instantaneous, so light gathered per instant is what counts</td></tr>
-  <tr><td>ISO</td><td>3200 dark site, 1600&#8211;2500 suburban</td><td>High enough to record faint trails, low enough to keep the sky from clipping</td></tr>
+  <tr><td>ISO</td><td>3200 dark site, 1600&#8211;2500 suburban</td><td>High enough to record faint trails, low enough to keep the sky from <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-10" data-gl-term="clipping">clipping</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-10" hidden>When part of the picture is so bright it records as pure white, with no detail left in it. Nothing can bring that detail back afterwards.</span></td></tr>
   <tr><td>Shutter</td><td>20s at 14mm, 15s at 18mm</td><td>Long enough to be efficient, short enough that stars stay points</td></tr>
-  <tr><td>Focus</td><td>Manual, on a bright star</td><td>Magnify to 100&#215; in live view and nail it, since the infinity mark is not reliable</td></tr>
+  <tr><td>Focus</td><td>Manual, on a bright star</td><td>Magnify to 100&#215; in <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-8" data-gl-term="live view">live view</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-8" hidden>The camera&#x27;s rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp.</span> and nail it, since the infinity mark is not reliable</td></tr>
   <tr><td>White balance</td><td>Manual, around 4000K</td><td>Consistent colour across hundreds of frames</td></tr>
   <tr><td>Long exposure NR</td><td>Off</td><td>It doubles your dead time, and every gap is a meteor missed</td></tr>
   <tr><td>Stabilisation</td><td>Off</td><td>On a tripod it introduces drift rather than removing it</td></tr>
@@ -430,7 +479,7 @@ you stack them later.</p>
 <h3>How long an exposure before stars trail?</h3>
 
 <p>The old rule of thumb divides 500 by the focal length. It dates from film and
-it is generous for a modern sensor viewed at full size. The NPF rule accounts for
+it is generous for a modern sensor viewed at full size. The <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-11" data-gl-term="NPF rule">NPF rule</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-11" hidden>A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule.</span> accounts for
 aperture and pixel size and gives a stricter answer. Both are plotted below for a
 24-megapixel full-frame body at f/2.8.</p>
 
@@ -498,7 +547,7 @@ you keep, so those five minutes are the most valuable of the night. In summer,
 framing south gives you the Milky Way core rising through the scene while the
 meteors fall across it.</p>
 
-<p>Then start the intervalometer and stop looking at the camera. Lie back and
+<p>Then start the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-2" data-gl-term="intervalometer">intervalometer</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-2" hidden>A timer that presses the camera&#x27;s shutter over and over on its own, so you can take hundreds of frames without touching it. Many cameras have one built into the menus, and if yours does not, a small plug-in remote does the same job.</span> and stop looking at the camera. Lie back and
 watch. The camera collects while you enjoy the shower, which is the best trade in
 photography. Most individual frames will be pure sky, and that is exactly as
 expected, because they are all quietly contributing to the Milky Way stack.
@@ -513,7 +562,7 @@ Pick the best meteor frame and process it as a wide-field night shot. Composite
 several meteors onto one sky, which is completely legitimate as long as you say
 that is what you did. Or stack the whole run into a
 <a href="/share/star-trails-stills.html">star trail</a>, a free second image from
-files you already have. Stacking the frames also cleans up the Milky Way
+files you already have. <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-meteor-shower-milky-way-camera-12" data-gl-term="stacking">Stacking</span><span class="gl-def" id="gl-photograph-meteor-shower-milky-way-camera-12" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> the frames also cleans up the Milky Way
 enormously, since averaging many exposures is what removes noise.</p>
 
 <p>All of it processes happily in
@@ -579,5 +628,118 @@ have on the night is the phone in your pocket, that
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

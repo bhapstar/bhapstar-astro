@@ -212,6 +212,56 @@
       .gear-page { margin: 24px auto; padding: 0 12px; }
       .gear-title { font-size: 24px; }
     }
+
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -268,27 +318,27 @@
 
 <p>A tripod is the last thing people consider and often the first thing that
 limits them. One that flexes turns every gust into trailed stars, and no amount
-of guiding rescues a support that is moving. That alone would justify a page.</p>
+of <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-11" data-gl-term="guiding">guiding</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-11" hidden>A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures.</span> rescues a support that is moving. That alone would justify a page.</p>
 
 <p>The TC20 and TH10 work as a pair. The tripod provides a stable base, the head
 provides smooth damped movement on top of it. But filing the TH10 under
 "accessory" undersells it badly, because on a
 <a href="/gear/zwo-seestar-s30-smart-telescope.html">Seestar</a> it is the part
-that unlocks equatorial mode.</p>
+that unlocks <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-2" data-gl-term="EQ mode">equatorial mode</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-2" hidden>Tilting an ordinary up-down, left-right telescope so one axis lines up with Earth&#x27;s axis. The view then stops slowly rotating, which allows much longer exposures.</span>.</p>
 
 <h2>Equatorial mode is the reason to own the TH10</h2>
 
-<p>In alt-az mode the S30 and S30 Pro track perfectly well. The problem is not
-tracking, it is that the field slowly rotates during the exposure. That puts a
-ceiling on sub length: 10, 20 or 30 seconds depending on where the target sits
+<p>In <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-14" data-gl-term="alt-az">alt-az</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-14" hidden>A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure.</span> mode the S30 and S30 Pro track perfectly well. The problem is not
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-10" data-gl-term="tracking">tracking</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-10" hidden>The mount turning slowly to cancel out Earth&#x27;s rotation, so a star stays in the same spot on the sensor instead of drifting into a line.</span>, it is that the field slowly rotates during the exposure. That puts a
+ceiling on <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-6" data-gl-term="subframe">sub length</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-6" hidden>One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data.</span>: 10, 20 or 30 seconds depending on where the target sits
 and how much corner trailing you will accept. Push past it and the stars at the
 frame edges smear into arcs while the ones at the centre stay round, which is
 the signature of rotation rather than bad tracking.</p>
 
-<p>Tilt the whole unit over so its azimuth axis points at the celestial pole,
+<p>Tilt the whole unit over so its <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-12" data-gl-term="azimuth">azimuth</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-12" hidden>The compass direction of something, measured round the horizon from north. Due east is 90 degrees.</span> axis points at the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-3" data-gl-term="celestial pole">celestial pole</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-3" hidden>The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.</span>,
 roughly 25 degrees above the horizon from Dubai, and the rotation stops. The
-Seestar is then turning on one axis at sidereal rate, the way an equatorial
-mount does. Sub length goes up to 60 seconds with round stars right into the
+Seestar is then turning on one axis at <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-4" data-gl-term="sidereal rate">sidereal rate</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-4" hidden>The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate.</span>, the way an <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-1" data-gl-term="equatorial mount">equatorial
+mount</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-1" hidden>A mount with one axis tilted to line up with Earth&#x27;s own axis. That lets a single slow turn follow the stars, instead of two motors constantly correcting.</span> does. Sub length goes up to 60 seconds with round stars right into the
 corners.</p>
 
 <p>The TH10 is what makes that tilt practical rather than a fight. It has a
@@ -298,11 +348,11 @@ drifting back under the weight of the telescope. Any 3/8-16 head will bolt a
 Seestar on. Very few will let you dial in a latitude angle and trust it to stay
 there for three hours.</p>
 
-<p>Sixty second subs are worth the setup. For the same total integration you
-stack fewer frames, so less read noise accumulates, less time is lost to
+<p>Sixty second subs are worth the setup. For the same total <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-5" data-gl-term="integration">integration</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-5" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span> you
+stack fewer frames, so less <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-7" data-gl-term="read noise">read noise</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-7" hidden>A small amount of unavoidable grain added each time a frame is read off the sensor. Fewer, longer frames collect it fewer times.</span> accumulates, less time is lost to
 readout between exposures, and faint signal in a nebula's outer structure has
 four to six times longer to build per frame than it does at 10 seconds. On a
-30mm aperture working from a bright city, that difference is the difference
+30mm <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-9" data-gl-term="aperture">aperture</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-9" hidden>The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light.</span> working from a bright city, that difference is the difference
 between a target being reachable and not.</p>
 
 <p>Worth knowing before you buy: ZWO list EQ mode as a headline feature of the
@@ -316,7 +366,7 @@ practice in the
 <p>Smooth continuous motion. That suits visual sweeping, terrestrial and
 wildlife use, framing a landscape with a smart telescope on top, and any video
 work. In practice this also carries a camera for wide-field and star-trail work,
-and a small refractor for visual use.</p>
+and a small <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-8" data-gl-term="refractor">refractor</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-8" hidden>A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead.</span> for visual use.</p>
 
 <p>None of that makes it an equatorial mount. The TH10 has no motors and does
 not track anything. It is a wedge with a damping mechanism: it sets the angle
@@ -330,7 +380,7 @@ for.</p>
 
 <p>Two things decide whether one is genuinely stable: how quickly vibration damps
 out after you touch it, and whether the leg locks hold under load without
-creeping. Both are easy to test at home with the payload mounted, and both tell
+creeping. Both are easy to test at home with the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-tc20-tripod-th10-fluid-head-13" data-gl-term="payload">payload</span><span class="gl-def" id="gl-zwo-tc20-tripod-th10-fluid-head-13" hidden>The weight a mount is built to carry. Loading one near its limit works, but everything about it behaves worse than it does at half.</span> mounted, and both tell
 you more than a load rating does.</p>
 
 <p>The carbon legs matter for a duller reason than load capacity. A Seestar is
@@ -443,5 +493,118 @@ you already own replaces the tilt scale.</p>
       }, { passive: true });
     })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

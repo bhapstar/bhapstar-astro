@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -302,7 +351,7 @@ numbers over.</p>
 
 <p>None of that is a problem while the picture is dark, because you cannot see
 any of it. It becomes a problem the moment you stretch, which is the step that
-takes an almost-black frame and pulls the faint stuff up into view. Stretching
+takes an almost-black frame and pulls the faint stuff up into view. <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-7" data-gl-term="stretch">Stretching</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-7" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>
 does not know which faint stuff you wanted. It lifts the dust shadows and the
 dark corners just as enthusiastically as it lifts the nebula.</p>
 
@@ -611,7 +660,7 @@ the equipment adds to every frame.</figcaption>
 </figure>
 
 
-<p>That formula is worth a second look, because Siril's own manual writes it a
+<p>That formula is worth a second look, because <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-15" data-gl-term="Siril">Siril</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-15" hidden>A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.</span>'s own manual writes it a
 different way: image minus dark minus bias, all divided by the flat. It is the
 same arithmetic. The dark you subtract is the raw one, straight off the camera,
 and a dark already has the bias sitting inside it, so subtracting the dark takes
@@ -624,14 +673,14 @@ bias subtracted, and the master dark without.</p>
 <h2>Darks: the heat and the stuck pixels</h2>
 
 <p>A camera sensor produces a signal from warmth as well as from light. Leave
-the shutter open for five minutes and some pixels quietly fill up on their own,
+the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-12" data-gl-term="shutter">shutter</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-12" hidden>How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.</span> open for five minutes and some pixels quietly fill up on their own,
 and a handful of them are stuck bright permanently. That pattern is repeatable,
 which is the useful part: photograph it once and you can subtract it from every
 frame.</p>
 
 <p>A dark is simply a frame taken with no light reaching the sensor at all. Cap
 the telescope, or leave the lens cap on, and take the same exposure at the same
-gain and the same sensor temperature as your real frames. Everything has to
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-16" data-gl-term="gain">gain</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-16" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and the same sensor temperature as your real frames. Everything has to
 match, because the amount of heat signal depends on all three.</p>
 
 <p>Twenty to thirty is plenty. If your camera is cooled it will hold the same
@@ -649,7 +698,7 @@ every pixel so the readings never go below zero. It is not noise so much as a
 starting number, and it is in every frame you take, including the darks and the
 flats.</p>
 
-<p>A bias frame is the shortest exposure your camera will physically take, with
+<p>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-5" data-gl-term="bias frame">bias frame</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-5" hidden>The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame.</span> is the shortest exposure your camera will physically take, with
 the cap on. A thousandth of a second, in the dark. They cost nothing, so take
 fifty or a hundred.</p>
 
@@ -1165,16 +1214,16 @@ an even background.</p>
 <text x="230" y="134" font-size="20" fill="var(--accent)" text-anchor="middle" font-weight="600">&#247;</text>
 <text x="470" y="134" font-size="20" fill="var(--accent)" text-anchor="middle" font-weight="600">=</text>
 </svg>
-<figcaption>Vignetting and dust are multiplied into the frame rather than
-added to it, which is why dividing by a flat works and why gradient removal
+<figcaption><span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-6" data-gl-term="vignetting">Vignetting</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-6" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span> and dust are multiplied into the frame rather than
+added to it, which is why dividing by a flat works and why <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-11" data-gl-term="gradient">gradient</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-11" hidden>An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out.</span> removal
 later cannot substitute for one.</figcaption>
 </figure>
 
 <p>To take one, point the telescope at something evenly lit and photograph it
-through the whole imaging train exactly as it stands. The dawn or dusk sky
+through the whole <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-2" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-2" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> exactly as it stands. The dawn or dusk sky
 works. So does a white T-shirt stretched over the front of the tube with a
 tablet screen behind it, and a proper flat panel is not expensive. Set the
-exposure so the histogram peak lands somewhere around the middle, not up
+exposure so the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-8" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-8" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> peak lands somewhere around the middle, not up
 against either end, and take thirty or so.</p>
 
 <h3>The rules people break</h3>
@@ -1184,7 +1233,7 @@ always for the same handful of reasons.</p>
 
 <ul>
   <li><strong>Take them before you take anything apart.</strong> The moment the
-  camera rotates in the focuser, even slightly, the dust shadows move and that
+  camera rotates in the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-13" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-13" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span>, even slightly, the dust shadows move and that
   night's flats stop matching. This is the single most common mistake, and it
   costs you the whole session's worth of flats. The
   <a href="/articles/asiair-astrophotography-control.html">ASIAir</a> makes it a
@@ -1193,12 +1242,12 @@ always for the same handful of reasons.</p>
   position. A flat taken at a different focus point removes the wrong
   shapes.</li>
   <li><strong>One set per filter.</strong> Each filter has its own dust and its
-  own transmission, so a flat through the
+  own <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-3" data-gl-term="transmission">transmission</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-3" hidden>How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for.</span>, so a flat through the
   <a href="/gear/optolong-l-extreme-filter.html">L-eXtreme</a> is not a flat
   through the <a href="/gear/svbony-sv220-3nm-filter.html">SV220</a>. A
   <a href="/articles/main-rig-tour.html">filter drawer</a> makes changing filters
   quick, but it does not exempt you from re-shooting the flats.</li>
-  <li><strong>Narrowband flats take longer than you expect.</strong> A 3nm
+  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-4" data-gl-term="narrowband">Narrowband</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> flats take longer than you expect.</strong> A 3nm
   filter blocks nearly everything, so a panel bright enough for an unfiltered
   flat will give you a nearly black one through narrowband. Dim the panel and
   extend the exposure rather than the other way round.</li>
@@ -1227,14 +1276,14 @@ always for the same handful of reasons.</p>
 <h2>What it costs you to skip them</h2>
 
 <p>Skipping darks costs you some noise and leaves coloured speckles behind.
-It is survivable, and if you dithered during capture, nudging the mount a few
-pixels between frames, the stacking software will reject most of the hot pixels
+It is survivable, and if you <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-9" data-gl-term="dithering">dithered</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-9" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> during capture, nudging the mount a few
+pixels between frames, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-10" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-10" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software will reject most of the hot pixels
 anyway.</p>
 
 <p>Skipping flats is different, and it is the one that ruins pictures. Dark
 corners and dust doughnuts are multiplied into the frame, not added to it, so
-the background extraction you run later cannot model them properly. It is built
-for the additive kind of unevenness, the skyglow gradient you get from
+the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-1" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-1" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span> you run later cannot model them properly. It is built
+for the additive kind of unevenness, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-14" data-gl-term="skyglow">skyglow</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-14" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> gradient you get from
 <a href="/articles/bortle-scale-narrowband-filters.html">a bright sky</a>. Ask
 it to flatten a vignette as well and you will get an image that looks nearly
 right and is subtly wrong everywhere.</p>
@@ -1316,5 +1365,118 @@ with the telescope still pointing where it was.</p>
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

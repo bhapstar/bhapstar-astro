@@ -212,6 +212,56 @@
       .gear-page { margin: 24px auto; padding: 0 12px; }
       .gear-title { font-size: 24px; }
     }
+
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -269,8 +319,8 @@
 
 <p>The Evostar 72ED appears in more "first serious telescope" recommendations
 than almost anything else, and the reasons are all practical. Seventy-two
-millimetres at 420mm focal length, f/5.8, using an air-spaced doublet with an ED
-element, and a tube weighing around two kilograms.</p>
+millimetres at 420mm <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-2" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-2" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span>, f/5.8, using an air-spaced <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-10" data-gl-term="doublet">doublet</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-10" hidden>A lens made of two pieces of glass. Cheaper and lighter than three, at the cost of slightly less perfect colour correction.</span> with an <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-4" data-gl-term="ED">ED
+element</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-4" hidden>Extra-low dispersion glass. It bends the different colours of light by more similar amounts, which is what stops bright stars picking up a coloured halo.</span>, and a tube weighing around two kilograms.</p>
 
 <p>That combination lands somewhere useful. 420mm frames most large nebulae
 comfortably on a small sensor. f/5.8 gathers signal well without demanding the
@@ -284,24 +334,24 @@ Qudra is this telescope's work, through the
 
 <p>Two elements instead of three means less glass, less weight, lower cost and
 slightly less complete colour correction. At f/5.8 a good ED doublet controls
-false colour well enough that it is not the limiting factor in a deep-sky image,
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-3" data-gl-term="false colour">false colour</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-3" hidden>A coloured fringe, usually purple, around bright stars. It happens when a lens cannot quite bring every colour of light to the same point of focus.</span> well enough that it is not the limiting factor in a <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-7" data-gl-term="deep-sky">deep-sky</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-7" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span> image,
 with any residual showing first around bright stars. The money not spent on a
 third element is money available for the mount, which will affect your results
 more.</p>
 
 <h2>What you will want alongside it</h2>
 
-<p>A field flattener, which is the part that catches people out. A fast doublet
+<p>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-1" data-gl-term="field flattener">field flattener</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-1" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span>, which is the part that catches people out. A fast doublet
 does not deliver a flat field to the corners on its own, and stars towards the
-edges elongate without one. It is an extra purchase and it changes the backfocus
+edges elongate without one. It is an extra purchase and it changes the <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-6" data-gl-term="backfocus">backfocus</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-6" hidden>The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.</span>
 arithmetic, so plan the
 <a href="/gear/svbony-filter-drawer.html">filter drawer</a> spacing around it at
 the same time.</p>
 
-<p>The supplied focuser is a 2 inch dual-speed Crayford with 10:1 fine focus,
+<p>The supplied <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-9" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-9" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> is a 2 inch dual-speed <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-8" data-gl-term="Crayford">Crayford</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-8" hidden>A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves.</span> with 10:1 fine focus,
 genuinely good at this price, and it takes the
 <a href="/gear/zwo-eaf-electronic-focuser.html">EAF</a> without complaint. At
-420mm and two kilograms it also makes a capable guidescope and a pleasant
+420mm and two kilograms it also makes a capable <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-5" data-gl-term="guidescope">guidescope</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-5" hidden>The small telescope the guide camera looks through, riding alongside the main one.</span> and a pleasant
 grab-and-go visual instrument, and a scope with three uses is easier to justify
 than one with a single purpose.</p>
 
@@ -400,5 +450,118 @@ weight internationally can add a substantial fraction of its price.</p>
       }, { passive: true });
     })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

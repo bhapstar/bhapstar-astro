@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -318,7 +367,7 @@ Leave a camera running for an hour and you can see it happen. The stars stop
 being dots and turn into curved streaks.</p>
 
 <p>Because the sky looks like a dome with lights stuck to it, that is the easiest
-way to think about it. Astronomers call it the celestial sphere. Imagine a huge
+way to think about it. Astronomers call it the <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-2" data-gl-term="celestial sphere">celestial sphere</span><span class="gl-def" id="gl-navigating-the-night-sky-2" hidden>A useful pretend picture: the sky as a giant ball with Earth at the centre and everything painted on the inside of it.</span>. Imagine a huge
 hollow ball with the stars painted on the inside and Earth sitting right in the
 centre.</p>
 
@@ -425,8 +474,8 @@ centre.</p>
   </svg>
   <figcaption>Take the globe you already know, with its poles and its equator,
   and blow it up like a balloon until it reaches the sky. That is the whole idea.
-  Earth's poles become the celestial poles, Earth's equator becomes the celestial
-  equator, and the map lines come along for the ride.</figcaption>
+  Earth's poles become the <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-5" data-gl-term="celestial pole">celestial poles</span><span class="gl-def" id="gl-navigating-the-night-sky-5" hidden>The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.</span>, Earth's equator becomes the <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-1" data-gl-term="celestial equator">celestial
+  equator</span><span class="gl-def" id="gl-navigating-the-night-sky-1" hidden>Earth&#x27;s equator projected out onto the sky, exactly halfway between the two celestial poles.</span>, and the map lines come along for the ride.</figcaption>
 </figure>
 
 <h2>The two spots that never move</h2>
@@ -439,7 +488,7 @@ celestial poles.</p>
 <p>Everything else circles around them once a day. The poles themselves stay
 still.</p>
 
-<p>This is exactly what a star trail photograph shows you. Point a camera at the
+<p>This is exactly what a <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-8" data-gl-term="star trail">star trail</span><span class="gl-def" id="gl-navigating-the-night-sky-8" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> photograph shows you. Point a camera at the
 pole and the trails come out as neat circles inside one another. Point it
 somewhere else and you get long sweeping arcs instead.</p>
 
@@ -578,7 +627,7 @@ why so much is reachable from here.</p>
 
 <h2>The meridian</h2>
 
-<p>The meridian is the line that starts at due north on your horizon, goes
+<p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-9" data-gl-term="meridian">meridian</span><span class="gl-def" id="gl-navigating-the-night-sky-9" hidden>The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line.</span> is the line that starts at due north on your horizon, goes
 straight up over your head, and comes back down at due south.</p>
 
 <p>It is not stuck to the sky. It is stuck to you. Drive a few miles east and you
@@ -691,11 +740,11 @@ murk. It stays on the list of things worth travelling for.</p>
 <p>Once you have the poles and the equator, giving anything an address is easy.
 It works like latitude and longitude, with two new names.</p>
 
-<p><strong>Declination</strong> is latitude. How far north or south of the
+<p><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-7" data-gl-term="declination">Declination</span><span class="gl-def" id="gl-navigating-the-night-sky-7" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span></strong> is latitude. How far north or south of the
 celestial equator something is, in degrees. Zero at the equator, 90 at the
 poles.</p>
 
-<p><strong>Right ascension</strong> is longitude, and it is the one oddity: it is
+<p><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-4" data-gl-term="right ascension">Right ascension</span><span class="gl-def" id="gl-navigating-the-night-sky-4" hidden>The sky&#x27;s version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h.</span></strong> is longitude, and it is the one oddity: it is
 measured in hours rather than degrees. There are 24 hours all the way round the
 sky, so one hour is 15 degrees.</p>
 
@@ -710,10 +759,10 @@ lands, planning a night stops being guesswork.</p>
   <tbody>
     <tr><td>Celestial pole</td><td>The spot the whole sky turns around. One north, one south.</td><td>The sky</td></tr>
     <tr><td>Celestial equator</td><td>Earth's equator projected onto the sky. Rises due east, sets due west.</td><td>The sky</td></tr>
-    <tr><td>Ecliptic</td><td>The path the Sun traces over a year. The Moon and planets stay close to it.</td><td>The sky</td></tr>
+    <tr><td><span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-10" data-gl-term="ecliptic">Ecliptic</span><span class="gl-def" id="gl-navigating-the-night-sky-10" hidden>The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it.</span></td><td>The path the Sun traces over a year. The Moon and planets stay close to it.</td><td>The sky</td></tr>
     <tr><td>Declination</td><td>How far north or south of the celestial equator, in degrees.</td><td>The sky</td></tr>
     <tr><td>Right ascension</td><td>How far round the sky, in hours. 24 hours all the way round.</td><td>The sky</td></tr>
-    <tr><td>Zenith</td><td>The point straight above your head.</td><td>You</td></tr>
+    <tr><td><span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-11" data-gl-term="zenith">Zenith</span><span class="gl-def" id="gl-navigating-the-night-sky-11" hidden>The point straight up above your head.</span></td><td>The point straight above your head.</td><td>You</td></tr>
     <tr><td>Meridian</td><td>North horizon, over your head, down to the south horizon. Things are highest crossing it.</td><td>You</td></tr>
   </tbody>
 </table>
@@ -730,11 +779,11 @@ lands, planning a night stops being guesswork.</p>
 
 <p>All of this turns up the moment you put a telescope on a tripod.</p>
 
-<p>An equatorial mount, like my
+<p>An <span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-3" data-gl-term="equatorial mount">equatorial mount</span><span class="gl-def" id="gl-navigating-the-night-sky-3" hidden>A mount with one axis tilted to line up with Earth&#x27;s own axis. That lets a single slow turn follow the stars, instead of two motors constantly correcting.</span>, like my
 <a href="/gear/juwei-14-harmonic-equatorial-mount.html">Juwei 14</a>, has one
 axis deliberately lined up with Earth's own. Aim that axis at the celestial pole
 and a single slow motor cancels out the sky's rotation completely. That is what
-polar alignment is, and it is why the mount has a latitude setting on it. Here it
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-navigating-the-night-sky-6" data-gl-term="polar alignment">polar alignment</span><span class="gl-def" id="gl-navigating-the-night-sky-6" hidden>Lining a mount&#x27;s main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.</span> is, and it is why the mount has a latitude setting on it. Here it
 gets set to 25.</p>
 
 <p>It also explains something that catches people out with smart telescopes. Left
@@ -819,5 +868,118 @@ wheeling around one fairly ordinary star in the north.</p>
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

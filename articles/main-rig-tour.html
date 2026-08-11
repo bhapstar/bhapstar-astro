@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -287,10 +336,10 @@
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
   <p class="ec-title">Four things that talk to each other, and nothing that does not need to be there.</p>
-  <p class="ec-body">A harmonic mount that carries the scope with no counterweight, a modular
-  refractor that changes focal length without changing telescopes, a camera
+  <p class="ec-body">A harmonic mount that carries the scope with no <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-7" data-gl-term="counterweight">counterweight</span><span class="gl-def" id="gl-main-rig-tour-7" hidden>The heavy block on the far end of a traditional mount&#x27;s shaft. It balances the weight of the telescope so the motors are not fighting gravity.</span>, a modular
+  <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-18" data-gl-term="refractor">refractor</span><span class="gl-def" id="gl-main-rig-tour-18" hidden>A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead.</span> that changes <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-10" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-main-rig-tour-10" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> without changing telescopes, a camera
   with the control computer built into it, and a filter drawer between the
-  two. No laptop, no guide scope, no mains lead: the whole thing runs all
+  two. No laptop, no <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-15" data-gl-term="guidescope">guide scope</span><span class="gl-def" id="gl-main-rig-tour-15" hidden>The small telescope the guide camera looks through, riding alongside the main one.</span>, no mains lead: the whole thing runs all
   night off a battery the size of a shoebox. The trade is that it is a car rig
   rather than a rucksack one.</p>
 </div>
@@ -307,7 +356,7 @@
 
 
 <p>The rig has been through several shapes since I started. A Sony A7 III on a
-tracker, then an Evostar 72ED, then this. Each step has been bigger and heavier
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-27" data-gl-term="star tracker">tracker</span><span class="gl-def" id="gl-main-rig-tour-27" hidden>A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens.</span>, then an Evostar 72ED, then this. Each step has been bigger and heavier
 than the one before it, and that is the honest version. What has come down is
 the part count. There is no laptop, no guide scope, no separate controller, and
 far less cable than the last setup needed.</p>
@@ -330,24 +379,24 @@ Ten years ago this capability came with a pier and an extension cable.</p>
        alt="The Juwei 14 harmonic mount carrying the telescope, with no counterweight shaft fitted"
        loading="lazy" decoding="async" />
   <figcaption>No counterweight shaft anywhere in the picture. That is the whole
-  argument for harmonic drive in one image.</figcaption>
+  argument for <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-5" data-gl-term="harmonic drive">harmonic drive</span><span class="gl-def" id="gl-main-rig-tour-5" hidden>A very compact gearbox that can hold a heavy telescope with no counterweight. It is the reason a mount this small can carry this much.</span> in one image.</figcaption>
 </figure>
 
 
 <p>The mount is the part that decides whether a night produces data or a folder
 of streaks, and it is the part people underspend on. The
 <a href="/gear/juwei-14-harmonic-equatorial-mount.html">Juwei 14</a> is a
-harmonic drive design, which means the strain wave gearing holds its load
+harmonic drive design, which means the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-14" data-gl-term="strain wave">strain wave</span><span class="gl-def" id="gl-main-rig-tour-14" hidden>The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package.</span> gearing holds its load
 without a counterweight for anything this rig will ever carry.</p>
 
 <p>In practice that removes an entire ritual. No counterweight bar, no sliding
 weights along a shaft in the dark, and no rebalancing every time something is
-added to the back of the imaging train. It goes on the tripod, the scope goes on it, and it is ready.</p>
+added to the back of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-9" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-main-rig-tour-9" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span>. It goes on the tripod, the scope goes on it, and it is ready.</p>
 
 
-<p>Everything the mount does is expressed in two numbers. Right ascension and
-declination are the sky's version of longitude and latitude: declination is how
-far north or south of the celestial equator a target sits, measured in degrees,
+<p>Everything the mount does is expressed in two numbers. <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-3" data-gl-term="right ascension">Right ascension</span><span class="gl-def" id="gl-main-rig-tour-3" hidden>The sky&#x27;s version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h.</span> and
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-13" data-gl-term="declination">declination</span><span class="gl-def" id="gl-main-rig-tour-13" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> are the sky's version of longitude and latitude: declination is how
+far north or south of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-1" data-gl-term="celestial equator">celestial equator</span><span class="gl-def" id="gl-main-rig-tour-1" hidden>Earth&#x27;s equator projected out onto the sky, exactly halfway between the two celestial poles.</span> a target sits, measured in degrees,
 and right ascension is the east-west position, measured in hours because the sky
 turns. Every object has a fixed pair, so M42 is always at the same coordinates
 and the mount only has to be told where it is pointing now to work out how to get
@@ -357,7 +406,7 @@ there.</p>
 <p>Equatorial means one of the two axes is tilted to line up with the Earth's own
 axis of rotation. Once that is set, following a target for hours becomes a single
 slow turn of that one axis at the rate the Earth spins, rather than a constant
-correction in two directions at once. That is the whole reason equatorial mounts
+correction in two directions at once. That is the whole reason <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-2" data-gl-term="equatorial mount">equatorial mounts</span><span class="gl-def" id="gl-main-rig-tour-2" hidden>A mount with one axis tilted to line up with Earth&#x27;s own axis. That lets a single slow turn follow the stars, instead of two motors constantly correcting.</span>
 exist for astrophotography: it is what lets a five minute exposure record stars
 as points instead of arcs.</p>
 
@@ -450,7 +499,7 @@ as points instead of arcs.</p>
   <text x="468" y="376" font-size="9.5" fill="var(--muted)">at the pole. One slow turn does the rest.</text>
 </svg>
 <figcaption>The axis is tilted because the Earth's is: point the mount's RA axis at
-the celestial pole and tracking becomes one slow turn in a single direction.
+the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-4" data-gl-term="celestial pole">celestial pole</span><span class="gl-def" id="gl-main-rig-tour-4" hidden>The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.</span> and <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-20" data-gl-term="tracking">tracking</span><span class="gl-def" id="gl-main-rig-tour-20" hidden>The mount turning slowly to cancel out Earth&#x27;s rotation, so a star stays in the same spot on the sensor instead of drifting into a line.</span> becomes one slow turn in a single direction.
 Declination works like latitude and never changes. Right ascension works like
 longitude, counted in hours because the sky turns through 24 of them a day. Orion
 sits a little south of the celestial equator, which is why it never rides high
@@ -465,10 +514,10 @@ from northern latitudes.</figcaption>
               loading="lazy" allowfullscreen></iframe>
     </div>
   </div>
-  <figcaption>Thirteen seconds, sped up, of the rig slewing from one side of the
-  meridian to the other. Give it a pair of coordinates and it goes, and between
+  <figcaption>Thirteen seconds, sped up, of the rig <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-24" data-gl-term="slew">slewing</span><span class="gl-def" id="gl-main-rig-tour-24" hidden>The mount moving quickly from one part of the sky to another.</span> from one side of the
+  <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-19" data-gl-term="meridian">meridian</span><span class="gl-def" id="gl-main-rig-tour-19" hidden>The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line.</span> to the other. Give it a pair of coordinates and it goes, and between
   the two axes there is no part of the visible sky it cannot reach. This is also
-  the movement behind a meridian flip, when a target crosses from east to west
+  the movement behind a <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-6" data-gl-term="meridian flip">meridian flip</span><span class="gl-def" id="gl-main-rig-tour-6" hidden>As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again.</span>, when a target crosses from east to west
   and the mount swings under the tripod to carry on tracking it.</figcaption>
 </figure>
 <h2>The optics: Askar V</h2>
@@ -483,7 +532,7 @@ from northern latitudes.</figcaption>
 
 
 <p>The <a href="/gear/askar-v-modular-apo-refractor.html">Askar V</a> is a
-modular apochromat, which is the reason it is here rather than a fixed
+modular <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-16" data-gl-term="apochromat">apochromat</span><span class="gl-def" id="gl-main-rig-tour-16" hidden>A lens design that brings the different colours of light to the same point of focus. Without it, bright stars pick up a purple halo.</span>, which is the reason it is here rather than a fixed
 refractor. The optical configuration changes with the module fitted, so one tube
 covers a range of focal lengths instead of committing to one framing forever.</p>
 
@@ -512,15 +561,15 @@ the temperature falls through the night, and the optical path changes with it.
 Something in focus at nine in the evening is not in focus at two in the morning,
 and nothing about the picture tells you at the time.</p>
 
-<p>How much that costs you depends on the focal ratio, and it is worse than most
-people expect. The usable focus zone scales with the square of the f-number, so a
+<p>How much that costs you depends on the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-12" data-gl-term="focal ratio">focal ratio</span><span class="gl-def" id="gl-main-rig-tour-12" hidden>The focal length divided by the width of the lens, written like f/6.2. Smaller numbers collect light faster, so you need less time on the target.</span>, and it is worse than most
+people expect. The usable focus zone scales with the square of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-23" data-gl-term="f-number">f-number</span><span class="gl-def" id="gl-main-rig-tour-23" hidden>The focal length divided by the width of the lens, written like f/5.8. Smaller numbers gather light faster.</span>, so a
 fast instrument tolerates a small fraction of the error a slow one does. On
-something like this you are working inside a few tens of microns, which is
+something like this you are working inside a few tens of <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-28" data-gl-term="micron">microns</span><span class="gl-def" id="gl-main-rig-tour-28" hidden>A thousandth of a millimetre, the unit sensor pixels are measured in. Larger pixels catch more light each, which matters more than the megapixel count at night.</span>, which is
 comfortably less than a night's thermal drift moves the tube. The result is a
 folder where the first hour is sharp and the last two are quietly soft, and you
-find out in front of the stacking software.</p>
+find out in front of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-21" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-main-rig-tour-21" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software.</p>
 
-<p>The EAF replaces the focuser knob with a stepper motor driven from the
+<p>The EAF replaces the <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-26" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-main-rig-tour-26" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> knob with a stepper motor driven from the
 <a href="/articles/asiair-astrophotography-control.html">ASIAir</a>. It runs an
 autofocus routine, stepping through positions and measuring star sizes to find
 the best one, and the part that actually changes results is that it repeats: on a
@@ -529,7 +578,7 @@ stays usable instead of drifting away from you.</p>
 
 <p>It also removes a source of vibration nobody counts. Focusing by hand means
 touching the telescope and waiting for it to settle, several times a night, on a
-mount that is trying to hold a target still to within an arcsecond.</p>
+mount that is trying to hold a target still to within an <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-17" data-gl-term="arcsecond">arcsecond</span><span class="gl-def" id="gl-main-rig-tour-17" hidden>A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across.</span>.</p>
 
 
 <h2>The camera: ASI585MC Air</h2>
@@ -544,11 +593,11 @@ mount that is trying to hold a target still to within an arcsecond.</p>
 
 <p>The <a href="/gear/zwo-asi585mc-air-camera.html">ASI585MC Air</a> is the piece
 that collapsed the rig down to its current size. It is a cooled colour camera, a
-guide sensor and a full ASIAIR controller in one housing, which means the laptop,
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-11" data-gl-term="guide camera">guide sensor</span><span class="gl-def" id="gl-main-rig-tour-11" hidden>A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working.</span> and a full ASIAIR controller in one housing, which means the laptop,
 the guide scope and its camera, and most of the cabling all left at once.</p>
 
 <p>What is left is one power lead into the camera and a phone in my pocket.
-Plate solving, focusing, guiding and the imaging plan
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-8" data-gl-term="plate solving">Plate solving</span><span class="gl-def" id="gl-main-rig-tour-8" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span>, focusing, <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-25" data-gl-term="guiding">guiding</span><span class="gl-def" id="gl-main-rig-tour-25" hidden>A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures.</span> and the imaging plan
 <a href="/articles/asiair-astrophotography-control.html">all run from the
 handset</a>, and the night can be left to itself once the first frame comes back
 clean.</p>
@@ -589,9 +638,9 @@ which matters because breaking the train means refocusing and reframing.</p>
 difference between changing approach and giving up on the target.</p>
 
 <p>The photo shows what that selectivity actually looks like. Light outside the
-passband is reflected rather than absorbed, so under room lights the glass
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-22" data-gl-term="passband">passband</span><span class="gl-def" id="gl-main-rig-tour-22" hidden>The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts.</span> is reflected rather than absorbed, so under room lights the glass
 behaves like a mirror and the mount one foot behind it does not show through.
-The same rejection is what keeps streetlights out of a Bortle 8 frame.</p>
+The same rejection is what keeps streetlights out of a <span class="gl" role="button" tabindex="0" aria-describedby="gl-main-rig-tour-29" data-gl-term="Bortle">Bortle</span><span class="gl-def" id="gl-main-rig-tour-29" hidden>A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.</span> 8 frame.</p>
 
 <p>Read the articles here and see the gear reviews on what makes these filters so special<br>
   <a href="/articles/bortle-scale-narrowband-filters.html">The Bortle Scale of Night-Sky Brightness and Light Pollution</a><br>
@@ -709,5 +758,118 @@ than a light one that needs watching.</p>
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

@@ -212,6 +212,56 @@
       .gear-page { margin: 24px auto; padding: 0 12px; }
       .gear-title { font-size: 24px; }
     }
+
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -263,7 +313,7 @@
 
 <h2>A small part that removes a real obstacle</h2>
 
-<p>Changing a filter in a threaded imaging train means unscrewing the camera,
+<p>Changing a filter in a threaded <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-2" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-svbony-filter-drawer-2" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> means unscrewing the camera,
 swapping the filter and reassembling. In the dark, on a mounted telescope, that
 risks disturbing focus, rotating the framing and dropping something expensive.
 The usual result is that people stop changing filters mid-session.</p>
@@ -276,13 +326,13 @@ minute operation becomes a few seconds.</p>
 
 <p>It is the part that makes owning more than one filter practical. Swapping
 between the <a href="/gear/optolong-l-extreme-filter.html">L-eXtreme</a> for an
-emission nebula and the
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-1" data-gl-term="emission nebula">emission nebula</span><span class="gl-def" id="gl-svbony-filter-drawer-1" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> and the
 <a href="/gear/optolong-l-quad-enhance-filter.html">L-Quad Enhance</a> for a
 galaxy is a decision about what to point at, not a decision about whether it is
 worth dismantling the imaging train.</p>
 
 <p>The <a href="/gear/svbony-sv220-3nm-filter.html">SV220</a> adds a second
-narrowband option at 3nm, and the choice between it and the 7nm L-eXtreme is less
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-3" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-svbony-filter-drawer-3" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> option at 3nm, and the choice between it and the 7nm L-eXtreme is less
 about the target than about the night: how much moon is up, and how many hours I
 am likely to get. Without a drawer that decision gets made once, at the start,
 and lived with. With one I can open on the 3nm, fall back to the 7nm if
@@ -292,7 +342,7 @@ separately.</p>
 <h2>Getting the spacing right</h2>
 
 <p>The drawer occupies space in the optical path and that space has to be
-accounted for. Every imaging train has a required distance between flattener and
+accounted for. Every imaging train has a required distance between <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-4" data-gl-term="field flattener">flattener</span><span class="gl-def" id="gl-svbony-filter-drawer-4" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span> and
 sensor, and getting it wrong gives elongated stars towards the frame edges that
 no processing will rescue. So it is worth installing once, deliberately, with the
 other spacers adjusted to compensate, rather than adding it the night before a
@@ -399,5 +449,118 @@ would quietly break your spacing.</p>
       }, { passive: true });
     })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>

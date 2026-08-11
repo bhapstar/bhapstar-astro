@@ -241,6 +241,55 @@
       .article-support-list { gap: 8px; }
     }
 
+    /* ── Glossary explainers ──
+       The marked word is a <span role="button">, not a <button>, for one
+       practical reason: a real button is an inline-block and will not break
+       across a line, so a two word term at the end of a line pushes itself
+       whole onto the next one and leaves a gap. A span wraps like the prose
+       around it and behaves as a button for the keyboard and screen readers.
+
+       Dotted rather than solid, and no accent colour on the text itself, so
+       it cannot be mistaken for a link: links here are solid-underlined and
+       coloured, and the two must not look alike. */
+    .gl { cursor: help; border-bottom: 1px dotted rgba(var(--accent-rgb),0.75);
+          transition: background 180ms ease, border-color 180ms ease; }
+    .gl:hover, .gl:focus-visible, .gl.gl-on {
+          background: rgba(var(--accent-rgb),0.14);
+          border-bottom-color: var(--accent); border-radius: 3px; }
+    .gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* On a touch screen there is no hover to hint with, so the word has to
+       look tappable while sitting still. */
+    @media (hover: none) {
+      .gl { border-bottom-width: 2px; background: rgba(var(--accent-rgb),0.10);
+            border-radius: 3px; padding: 0 2px; }
+    }
+    /* Definitions live in the page rather than in an attribute, so a screen
+       reader can reach them and they are in the HTML a crawler sees. Hidden
+       from view: the panel takes its text from here. */
+    .gl-def { display: none; }
+
+    .gl-pop { position: fixed; z-index: 9998; width: 300px;
+              max-width: calc(100vw - 24px); padding: 13px 15px;
+              border-radius: 12px; border: 1px solid var(--line);
+              background: var(--soft);
+              box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+              opacity: 0; transform: translateY(-4px); pointer-events: none;
+              transition: opacity 160ms ease, transform 160ms ease; }
+    html[data-theme="light"] .gl-pop {
+              box-shadow: 0 12px 30px rgba(0,0,0,0.20); }
+    .gl-pop.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .gl-pop-term { font-size: 10.5px; letter-spacing: 0.16em;
+                   text-transform: uppercase; color: var(--accent);
+                   margin: 0 0 6px; padding-right: 18px; }
+    .gl-pop-def { font-size: 13.5px; line-height: 1.6; color: var(--text);
+                  margin: 0; }
+    .gl-pop-close { position: absolute; top: 7px; right: 8px; display: none;
+                    width: 26px; height: 26px; padding: 0; border: 0;
+                    border-radius: 50%; background: transparent; cursor: pointer;
+                    color: var(--muted); font-size: 17px; line-height: 26px; }
+    /* Nothing to hover away from on touch, so give it a way out. */
+    @media (hover: none) { .gl-pop-close { display: block; } }
+
   </style>
 
   <script type="application/ld+json">
@@ -278,11 +327,11 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">A folder of raw subframes goes in, a finished image comes out, and the order matters.</p>
-  <p class="ec-body">Siril is free, open source, and as good at calibrating and stacking as the
+  <p class="ec-title">A folder of raw <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-7" data-gl-term="subframe">subframes</span><span class="gl-def" id="gl-siril-post-processing-guide-7" hidden>One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data.</span> goes in, a finished image comes out, and the order matters.</p>
+  <p class="ec-body">Siril is free, open source, and as good at calibrating and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-12" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-siril-post-processing-guide-12" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> as the
   paid alternatives. That first half runs unattended from a script. The work
   you do by hand comes afterwards, and several of those steps only behave
-  correctly while the data is still linear, which is why the order on this
+  correctly while the data is still <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-14" data-gl-term="linear">linear</span><span class="gl-def" id="gl-siril-post-processing-guide-14" hidden>How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched.</span>, which is why the order on this
   page matters more than any single step in it.</p>
 </div>
 
@@ -296,7 +345,7 @@ polish and a certain amount of hand-holding.</p>
 
 <p>Every image in <a href="/gallery.html">the gallery</a> went through it. This is
 the route I take, in order, and the order genuinely matters — several of these
-steps stop working correctly if you do them after stretching.</p>
+steps stop working correctly if you do them after <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-6" data-gl-term="stretch">stretching</span><span class="gl-def" id="gl-siril-post-processing-guide-6" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>.</p>
 
 <p>You can download it from
 <a href="https://siril.org/" rel="noopener">siril.org</a>, which is also where the
@@ -617,7 +666,7 @@ frame while you work on it.</figcaption>
   <text x="180" y="300" font-size="10" fill="var(--muted)" text-anchor="middle">still linear &#8212; everything left of the line comes first</text>
   <text x="530" y="300" font-size="10" fill="#e8b84b" text-anchor="middle">non-linear from the stretch onwards</text>
 </svg>
-<figcaption>The vertical dashed line is the one rule that matters. Gradient removal, colour calibration and deconvolution all assume the data is still linear, and they misbehave badly if you stretch first.</figcaption>
+<figcaption>The vertical dashed line is the one rule that matters. Gradient removal, colour calibration and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-2" data-gl-term="deconvolution">deconvolution</span><span class="gl-def" id="gl-siril-post-processing-guide-2" hidden>A sharpening step that tries to undo the blurring added by the air and the optics, using the shape of the stars to work out how much blur there was.</span> all assume the data is still linear, and they misbehave badly if you stretch first.</figcaption>
 </figure>
 
 <h2>The row you can automate</h2>
@@ -631,18 +680,18 @@ frames that are worse than the rest, stacks, and leaves a single linear result
 behind.</p>
 
 <p>There is a drizzle variant worth knowing about. If your pixels are large
-relative to the seeing and you dithered properly during capture — which the
+relative to the seeing and you <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-11" data-gl-term="dithering">dithered</span><span class="gl-def" id="gl-siril-post-processing-guide-11" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> properly during capture — which the
 <a href="/articles/asiair-astrophotography-control.html">ASIAir</a> does for free
-— drizzling recovers real resolution rather than merely resampling. If you did not
+— <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-10" data-gl-term="drizzle">drizzling</span><span class="gl-def" id="gl-siril-post-processing-guide-10" hidden>A stacking method that uses the tiny shifts between frames to recover a little more real detail than a single frame holds.</span> recovers real resolution rather than merely resampling. If you did not
 dither, it does nothing useful.</p>
 
 <h3>What each calibration frame is for</h3>
 
 <ul>
   <li><strong>Darks</strong> record the sensor's own signal — thermal noise and hot
-  pixels — at the same exposure, gain and temperature as your lights. A cooled camera
+  pixels — at the same exposure, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-15" data-gl-term="gain">gain</span><span class="gl-def" id="gl-siril-post-processing-guide-15" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and temperature as your lights. A cooled camera
   makes these reusable for months, which is one of the quieter arguments for cooling.</li>
-  <li><strong>Flats</strong> record the optical path: vignetting, dust motes, uneven
+  <li><strong>Flats</strong> record the optical path: <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-5" data-gl-term="vignetting">vignetting</span><span class="gl-def" id="gl-siril-post-processing-guide-5" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span>, dust motes, uneven
   illumination. Shoot them at the end of the session, before anything is moved or
   rotated. An evenly lit white screen or the dawn sky both work.</li>
   <li><strong>Biases</strong> record the sensor's read floor. They take a fraction of
@@ -693,7 +742,7 @@ background.</p>
 <figcaption>Aim to land the background peak a little way off the left wall, not against it. Pushed hard against black you have thrown away the faintest outer structure permanently; too far right and the image looks washed out and grey.</figcaption>
 </figure>
 
-<p>Siril's histogram transformation with its autostretch preview is the quick route.
+<p>Siril's <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-8" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-siril-post-processing-guide-8" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> transformation with its autostretch preview is the quick route.
 The generalised hyperbolic stretch is the better one: it gives you separate control
 over where the stretch is centred and how hard it bites, so you can lift faint nebula
 without inflating every star into a white disc.</p>
@@ -701,11 +750,11 @@ without inflating every star into a white disc.</p>
 <h2>The steps people get wrong</h2>
 
 <ul>
-  <li><strong>Stretching before background extraction.</strong> Gradients from
+  <li><strong>Stretching before <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-1" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-siril-post-processing-guide-1" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span>.</strong> <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-9" data-gl-term="gradient">Gradients</span><span class="gl-def" id="gl-siril-post-processing-guide-9" hidden>An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out.</span> from
   streetlights or moonlight are additive and roughly smooth while the data is linear.
   Once stretched they are neither, and the extraction can no longer model them.</li>
-  <li><strong>Colour calibrating too late.</strong> Run SPCC on linear data. It
-  plate-solves the frame, looks up the actual stars in your field, and sets the
+  <li><strong>Colour calibrating too late.</strong> Run <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-16" data-gl-term="SPCC">SPCC</span><span class="gl-def" id="gl-siril-post-processing-guide-16" hidden>Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste.</span> on linear data. It
+  <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-3" data-gl-term="plate solving">plate-solves</span><span class="gl-def" id="gl-siril-post-processing-guide-3" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span> the frame, looks up the actual stars in your field, and sets the
   colour balance from real spectra rather than from what you think looks right.</li>
   <li><strong>Too much deconvolution.</strong> It is the fastest way to make an image
   look processed. Small amounts, on linear data, and stop before it starts ringing.</li>
@@ -715,13 +764,13 @@ without inflating every star into a white disc.</p>
 
 <h2>Stars, and knowing when to stop</h2>
 
-<p>StarNet separates a stretched image into a starless version and a star mask.
+<p><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-13" data-gl-term="StarNet">StarNet</span><span class="gl-def" id="gl-siril-post-processing-guide-13" hidden>A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together.</span> separates a stretched image into a starless version and a star mask.
 That lets you stretch the nebula hard without the stars swelling, then recombine
 them at whatever weight looks right. It is the single biggest step up in the look
 of an image once the fundamentals are in place, and it is also the easiest thing to
 overdo — a nebula with no stars in front of it stops looking like a photograph.</p>
 
-<p>The last thing to say is that more integration beats better processing, every
+<p>The last thing to say is that more <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-4" data-gl-term="integration">integration</span><span class="gl-def" id="gl-siril-post-processing-guide-4" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span> beats better processing, every
 time. Six hours of subframes processed carelessly will out-perform one hour
 processed brilliantly. If an image is fighting you, the answer is usually another
 night on the same target rather than another hour at the keyboard.</p>
@@ -784,5 +833,118 @@ night on the same target rather than another hour at the keyboard.</p>
     });
   })();
   </script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 </body>
 </html>
