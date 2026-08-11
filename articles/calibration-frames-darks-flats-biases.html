@@ -357,8 +357,8 @@ faint electrical offset the sensor adds to everything before it hands the
 numbers over.</p>
 
 <p>None of that is a problem while the picture is dark, because you cannot see
-any of it. It becomes a problem the moment you stretch, which is the step that
-takes an almost-black frame and pulls the faint stuff up into view. <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-7" data-gl-term="stretch">Stretching</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-7" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>
+any of it. It becomes a problem the moment you <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-1" data-gl-term="stretch">stretch</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-1" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>, which is the step that
+takes an almost-black frame and pulls the faint stuff up into view. Stretching
 does not know which faint stuff you wanted. It lifts the dust shadows and the
 dark corners just as enthusiastically as it lifts the nebula.</p>
 
@@ -667,7 +667,7 @@ the equipment adds to every frame.</figcaption>
 </figure>
 
 
-<p>That formula is worth a second look, because <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-15" data-gl-term="Siril">Siril</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-15" hidden>A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.</span>'s own manual writes it a
+<p>That formula is worth a second look, because <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-2" data-gl-term="Siril">Siril</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-2" hidden>A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.</span>'s own manual writes it a
 different way: image minus dark minus bias, all divided by the flat. It is the
 same arithmetic. The dark you subtract is the raw one, straight off the camera,
 and a dark already has the bias sitting inside it, so subtracting the dark takes
@@ -680,14 +680,14 @@ bias subtracted, and the master dark without.</p>
 <h2>Darks: the heat and the stuck pixels</h2>
 
 <p>A camera sensor produces a signal from warmth as well as from light. Leave
-the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-12" data-gl-term="shutter">shutter</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-12" hidden>How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.</span> open for five minutes and some pixels quietly fill up on their own,
+the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-3" data-gl-term="shutter">shutter</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-3" hidden>How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.</span> open for five minutes and some pixels quietly fill up on their own,
 and a handful of them are stuck bright permanently. That pattern is repeatable,
 which is the useful part: photograph it once and you can subtract it from every
 frame.</p>
 
 <p>A dark is simply a frame taken with no light reaching the sensor at all. Cap
 the telescope, or leave the lens cap on, and take the same exposure at the same
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-16" data-gl-term="gain">gain</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-16" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and the same sensor temperature as your real frames. Everything has to
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-4" data-gl-term="gain">gain</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-4" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and the same sensor temperature as your real frames. Everything has to
 match, because the amount of heat signal depends on all three.</p>
 
 <p>Twenty to thirty is plenty. If your camera is cooled it will hold the same
@@ -1222,15 +1222,15 @@ an even background.</p>
 <text x="470" y="134" font-size="20" fill="var(--accent)" text-anchor="middle" font-weight="600">=</text>
 </svg>
 <figcaption><span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-6" data-gl-term="vignetting">Vignetting</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-6" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span> and dust are multiplied into the frame rather than
-added to it, which is why dividing by a flat works and why <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-11" data-gl-term="gradient">gradient</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-11" hidden>An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out.</span> removal
+added to it, which is why dividing by a flat works and why <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-7" data-gl-term="gradient">gradient</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-7" hidden>An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out.</span> removal
 later cannot substitute for one.</figcaption>
 </figure>
 
 <p>To take one, point the telescope at something evenly lit and photograph it
-through the whole <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-2" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-2" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> exactly as it stands. The dawn or dusk sky
+through the whole <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-8" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-8" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> exactly as it stands. The dawn or dusk sky
 works. So does a white T-shirt stretched over the front of the tube with a
 tablet screen behind it, and a proper flat panel is not expensive. Set the
-exposure so the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-8" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-8" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> peak lands somewhere around the middle, not up
+exposure so the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-9" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-9" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> peak lands somewhere around the middle, not up
 against either end, and take thirty or so.</p>
 
 <h3>The rules people break</h3>
@@ -1240,7 +1240,7 @@ always for the same handful of reasons.</p>
 
 <ul>
   <li><strong>Take them before you take anything apart.</strong> The moment the
-  camera rotates in the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-13" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-13" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span>, even slightly, the dust shadows move and that
+  camera rotates in the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-10" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-10" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span>, even slightly, the dust shadows move and that
   night's flats stop matching. This is the single most common mistake, and it
   costs you the whole session's worth of flats. The
   <a href="/articles/asiair-astrophotography-control.html">ASIAir</a> makes it a
@@ -1249,12 +1249,12 @@ always for the same handful of reasons.</p>
   position. A flat taken at a different focus point removes the wrong
   shapes.</li>
   <li><strong>One set per filter.</strong> Each filter has its own dust and its
-  own <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-3" data-gl-term="transmission">transmission</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-3" hidden>How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for.</span>, so a flat through the
+  own <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-11" data-gl-term="transmission">transmission</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-11" hidden>How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for.</span>, so a flat through the
   <a href="/gear/optolong-l-extreme-filter.html">L-eXtreme</a> is not a flat
   through the <a href="/gear/svbony-sv220-3nm-filter.html">SV220</a>. A
   <a href="/articles/main-rig-tour.html">filter drawer</a> makes changing filters
   quick, but it does not exempt you from re-shooting the flats.</li>
-  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-4" data-gl-term="narrowband">Narrowband</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> flats take longer than you expect.</strong> A 3nm
+  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-12" data-gl-term="narrowband">Narrowband</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-12" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> flats take longer than you expect.</strong> A 3nm
   filter blocks nearly everything, so a panel bright enough for an unfiltered
   flat will give you a nearly black one through narrowband. Dim the panel and
   extend the exposure rather than the other way round.</li>
@@ -1283,14 +1283,14 @@ always for the same handful of reasons.</p>
 <h2>What it costs you to skip them</h2>
 
 <p>Skipping darks costs you some noise and leaves coloured speckles behind.
-It is survivable, and if you <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-9" data-gl-term="dithering">dithered</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-9" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> during capture, nudging the mount a few
-pixels between frames, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-10" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-10" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software will reject most of the hot pixels
+It is survivable, and if you <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-13" data-gl-term="dithering">dithered</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-13" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> during capture, nudging the mount a few
+pixels between frames, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-14" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-14" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software will reject most of the hot pixels
 anyway.</p>
 
 <p>Skipping flats is different, and it is the one that ruins pictures. Dark
 corners and dust doughnuts are multiplied into the frame, not added to it, so
-the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-1" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-1" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span> you run later cannot model them properly. It is built
-for the additive kind of unevenness, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-14" data-gl-term="skyglow">skyglow</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-14" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> gradient you get from
+the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-15" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-15" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span> you run later cannot model them properly. It is built
+for the additive kind of unevenness, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-calibration-frames-darks-flats-biases-16" data-gl-term="skyglow">skyglow</span><span class="gl-def" id="gl-calibration-frames-darks-flats-biases-16" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> gradient you get from
 <a href="/articles/bortle-scale-narrowband-filters.html">a bright sky</a>. Ask
 it to flatten a vignette as well and you will get an image that looks nearly
 right and is subtly wrong everywhere.</p>
