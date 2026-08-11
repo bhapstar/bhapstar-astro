@@ -619,8 +619,8 @@ def build_index_tiles(articles):
             f'{media}'
             f'          <div class="cap">\n'
             f'            <div class="t">{esc(entry.get("title", ""))}</div>\n'
-            f'{meta_div}'
             f'            <div class="d">{esc(entry.get("desc", ""))}</div>\n'
+            f'{meta_div}'
             f'          </div>\n'
             f'        </a>\n'
         )
