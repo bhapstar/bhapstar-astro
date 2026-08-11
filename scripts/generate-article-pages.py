@@ -148,7 +148,7 @@ def build_support_block(entry=None):
     return f'''      <aside class="article-support" aria-labelledby="articleSupportHeading">
         <h2 id="articleSupportHeading">Where I buy my gear</h2>
         <p class="article-support-intro">
-          If this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself, not a list of everyone who pays. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
+          If this has been useful and you are buying something, going through one of these costs you nothing and helps keep the site running. These are the retailers I use myself. The Amazon links work for anything, not just astronomy gear, so they count even if you are buying something completely unrelated.
         </p>
         <div class="article-support-list">
 {links}
