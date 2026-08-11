@@ -1,112 +1,130 @@
 {
   "_comment": [
-    "Plain-English definitions for the technical words used in the articles.",
-    "generate-article-pages.py marks the FIRST occurrence of each term in each",
-    "article body and attaches a hover/tap explainer. Nothing else is touched,",
-    "so the prose fragments in content/articles/ stay clean.",
+    "Plain-English definitions for the technical words used in the articles and",
+    "gear reviews. scripts/glossary.py marks the FIRST mention of each term on a",
+    "page and attaches a hover/tap explainer. Nothing is marked by hand, so the",
+    "prose in content/articles/ and content/gear/ stays clean.",
     "",
-    "  term    the word as it should be matched. Case-insensitive. The word as",
-    "          written in the article is what appears on the page.",
-    "  aliases other spellings or plurals that should match the same definition.",
-    "  def     one or two short sentences. Written for someone who has never",
-    "          done this before, including children. No em dashes.",
-    "  except  slugs where this term should NOT be marked, normally because the",
-    "          article itself is the explanation of it.",
+    "Entries are kept in alphabetical order for easy lookup. The order in this",
+    "file has no effect on the output: glossary.py sorts terms itself, longest",
+    "first, so rearranging this list is always safe.",
     "",
-    "To add a term: add an entry, run python build.py article, done. Longer",
+    "  term    the word to match, case-insensitive. A term written WITH a capital",
+    "          (FITS, RAW, OIII) is matched case-sensitively instead, so FITS",
+    "          does not catch the verb 'fits'. Whatever case the page uses is",
+    "          what appears on the page.",
+    "  aliases other spellings and plurals meaning the same thing. The earliest",
+    "          of them on a page is the one marked, so a plural further down",
+    "          never beats the singular in the opening line.",
+    "  def     one or two short sentences, for someone who has never done this",
+    "          before, including children. No em dashes.",
+    "  avoid   phrases the word must NOT be marked inside, for when a term is",
+    "          also part of a name: 'triplet' avoids 'Leo Triplet'.",
+    "  except  slugs where the term should not be marked, normally because the",
+    "          page itself is the explanation of it.",
+    "",
+    "To add a term: add an entry anywhere, run python build.py, done. Longer",
     "terms win over shorter ones, so 'dual narrowband' beats 'narrowband'."
   ],
   "terms": [
     {
-      "term": "intervalometer",
+      "term": "alt-az",
       "aliases": [
-        "intervalometers"
+        "altazimuth",
+        "alt-azimuth"
       ],
-      "def": "A timer that presses the camera's shutter over and over on its own, so you can take hundreds of frames without touching it. Many cameras have one built into the menus, and if yours does not, a small plug-in remote does the same job."
-    },
-    {
-      "term": "remote release",
-      "def": "A cable or wireless button that fires the shutter for you. Pressing the camera itself shakes it, and at these exposure lengths that is enough to smear the stars."
-    },
-    {
-      "term": "ISO",
-      "def": "How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky."
-    },
-    {
-      "term": "gain",
-      "def": "The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.",
-      "except": [
-        "bortle-scale-narrowband-filters",
-        "optolong-l-quad-enhance-filter",
-        "zwo-seestar-s30-pro"
-      ]
+      "def": "A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure."
     },
     {
       "term": "aperture",
       "def": "The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light."
     },
     {
-      "term": "focal ratio",
-      "def": "The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical.",
+      "term": "apochromat",
       "aliases": [
-        "f-number",
-        "f number",
-        "f/number"
+        "apochromatic",
+        "APO"
+      ],
+      "def": "A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo."
+    },
+    {
+      "term": "apparent field",
+      "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw."
+    },
+    {
+      "term": "APS-C",
+      "def": "A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers."
+    },
+    {
+      "term": "arcsecond",
+      "aliases": [
+        "arcseconds"
+      ],
+      "def": "A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across."
+    },
+    {
+      "term": "ASCOM",
+      "aliases": [
+        "Alpaca"
+      ],
+      "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
+    },
+    {
+      "term": "azimuth",
+      "def": "The compass direction of something, measured round the horizon from north. Due east is 90 degrees."
+    },
+    {
+      "term": "back-illuminated",
+      "aliases": [
+        "back illuminated"
+      ],
+      "def": "A sensor built with its wiring behind the light-sensitive layer rather than in front of it, so less of the incoming light is blocked on the way in."
+    },
+    {
+      "term": "backfocus",
+      "aliases": [
+        "back focus"
+      ],
+      "def": "The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it."
+    },
+    {
+      "term": "background extraction",
+      "def": "The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target."
+    },
+    {
+      "term": "backlash",
+      "def": "The small amount of free play in a gear or a focuser before it starts moving. Measuring it once lets the software allow for it."
+    },
+    {
+      "term": "bias frame",
+      "aliases": [
+        "bias frames"
+      ],
+      "def": "The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame."
+    },
+    {
+      "term": "Bortle",
+      "def": "A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.",
+      "avoid": [
+        "John Bortle"
+      ],
+      "except": [
+        "bortle-scale-narrowband-filters"
       ]
     },
     {
-      "term": "focal length",
-      "def": "How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one."
+      "term": "broadband",
+      "def": "A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few."
     },
     {
-      "term": "full-frame",
+      "term": "calibration frame",
       "aliases": [
-        "full frame"
+        "calibration frames"
       ],
-      "def": "A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark."
-    },
-    {
-      "term": "RAW",
-      "def": "The camera's unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture."
-    },
-    {
-      "term": "white balance",
-      "def": "The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other."
-    },
-    {
-      "term": "live view",
-      "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp."
-    },
-    {
-      "term": "clipping",
-      "def": "When part of the picture is so bright it records as pure white, with no detail left in it. Nothing can bring that detail back afterwards."
-    },
-    {
-      "term": "NPF rule",
-      "def": "A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule."
-    },
-    {
-      "term": "shutter",
-      "def": "How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved."
-    },
-    {
-      "term": "dew heater",
-      "aliases": [
-        "dew heaters"
-      ],
-      "def": "A low-power heater strip wrapped round the front of the telescope. Holding the glass a degree or two above the air temperature is enough to stop dew ever forming on it."
-    },
-    {
-      "term": "dew",
-      "def": "Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off."
-    },
-    {
-      "term": "right ascension",
-      "def": "The sky's version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h."
-    },
-    {
-      "term": "declination",
-      "def": "The sky's version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees."
+      "def": "Extra frames that are not pictures of anything. They record what the camera and the optics add to every shot, so it can be measured and taken back out.",
+      "except": [
+        "calibration-frames-darks-flats-biases"
+      ]
     },
     {
       "term": "celestial equator",
@@ -124,20 +142,128 @@
       "def": "A useful pretend picture: the sky as a giant ball with Earth at the centre and everything painted on the inside of it."
     },
     {
-      "term": "meridian flip",
-      "def": "As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again."
+      "term": "clipping",
+      "def": "When part of the picture is so bright it records as pure white, with no detail left in it. Nothing can bring that detail back afterwards."
     },
     {
-      "term": "meridian",
-      "def": "The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line."
+      "term": "coma",
+      "def": "A fault that makes stars near the corners of the frame grow small wings, so they look like tiny comets rather than points."
     },
     {
-      "term": "zenith",
-      "def": "The point straight up above your head."
+      "term": "continuum",
+      "def": "Light spread smoothly across every colour, which is how stars and galaxies shine. Glowing gas clouds do the opposite and emit at a few exact colours."
+    },
+    {
+      "term": "counterweight",
+      "aliases": [
+        "counterweights"
+      ],
+      "def": "The heavy block on the far end of a traditional mount's shaft. It balances the weight of the telescope so the motors are not fighting gravity."
+    },
+    {
+      "term": "Crayford",
+      "def": "A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves."
+    },
+    {
+      "term": "dark current",
+      "def": "Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled."
+    },
+    {
+      "term": "dark frame",
+      "aliases": [
+        "dark frames"
+      ],
+      "def": "An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted."
+    },
+    {
+      "term": "declination",
+      "def": "The sky's version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees."
+    },
+    {
+      "term": "deconvolution",
+      "def": "A sharpening step that tries to undo the blurring added by the air and the optics, using the shape of the stars to work out how much blur there was."
+    },
+    {
+      "term": "deep-sky",
+      "aliases": [
+        "deep sky"
+      ],
+      "def": "Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures."
+    },
+    {
+      "term": "dew",
+      "def": "Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off."
+    },
+    {
+      "term": "dew heater",
+      "aliases": [
+        "dew heaters"
+      ],
+      "def": "A low-power heater strip wrapped round the front of the telescope. Holding the glass a degree or two above the air temperature is enough to stop dew ever forming on it."
+    },
+    {
+      "term": "dithering",
+      "aliases": [
+        "dither",
+        "dithered"
+      ],
+      "def": "Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack."
+    },
+    {
+      "term": "doublet",
+      "aliases": [
+        "doublets"
+      ],
+      "def": "A lens made of two pieces of glass. Cheaper and lighter than three, at the cost of slightly less perfect colour correction."
+    },
+    {
+      "term": "drizzle",
+      "aliases": [
+        "drizzling",
+        "drizzled"
+      ],
+      "def": "A stacking method that uses the tiny shifts between frames to recover a little more real detail than a single frame holds."
+    },
+    {
+      "term": "dual gain",
+      "def": "A sensor with two amplifier settings built in. At the point it switches, the grain drops sharply, so one particular ISO is quieter than several lower ones."
+    },
+    {
+      "term": "dual narrowband",
+      "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once."
     },
     {
       "term": "ecliptic",
       "def": "The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it."
+    },
+    {
+      "term": "ED",
+      "aliases": [
+        "ED element",
+        "ED glass"
+      ],
+      "def": "Extra-low dispersion glass, a specific type of glass used in better lenses. It keeps the different colours of light travelling together, which is how a two-element lens gets close to the colour correction of a three-element one."
+    },
+    {
+      "term": "emission line",
+      "aliases": [
+        "emission lines"
+      ],
+      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one, oxygen a blue-green one, and filters are built around their positions."
+    },
+    {
+      "term": "emission nebula",
+      "aliases": [
+        "emission nebulae"
+      ],
+      "def": "A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for."
+    },
+    {
+      "term": "EQ mode",
+      "aliases": [
+        "equatorial mode"
+      ],
+      "def": "Tilting an ordinary up-down, left-right telescope so one axis lines up with Earth's axis. The view then stops slowly rotating, which allows much longer exposures."
     },
     {
       "term": "equatorial mount",
@@ -145,6 +271,125 @@
         "equatorial mounts"
       ],
       "def": "A mount with one axis tilted to line up with Earth's own axis. That lets a single slow turn follow the stars, instead of two motors constantly correcting."
+    },
+    {
+      "term": "extender",
+      "def": "The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky."
+    },
+    {
+      "term": "eye relief",
+      "def": "How far your eye can sit from an eyepiece and still see the whole view. Generous eye relief matters if you wear glasses."
+    },
+    {
+      "term": "false colour",
+      "aliases": [
+        "chromatic aberration"
+      ],
+      "def": "A coloured fringe, usually purple, around bright stars. It happens when a lens cannot quite bring every colour of light to the same point of focus."
+    },
+    {
+      "term": "fast optics",
+      "aliases": [
+        "fast optic"
+      ],
+      "def": "A telescope or lens with a small f number, which gathers light quickly. It is more demanding: focus is more critical and narrow filters work less well."
+    },
+    {
+      "term": "field flattener",
+      "aliases": [
+        "flattener",
+        "flatteners"
+      ],
+      "def": "A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle."
+    },
+    {
+      "term": "field of view",
+      "def": "How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy."
+    },
+    {
+      "term": "FITS",
+      "def": "The file format astronomy cameras and software use. As well as the picture it stores a record of how the frame was taken, such as the exposure and the temperature."
+    },
+    {
+      "term": "flat frame",
+      "aliases": [
+        "flat frames"
+      ],
+      "def": "A shot of an evenly lit blank surface, taken through the same telescope. It maps the dust shadows and darkened corners so they can be divided out."
+    },
+    {
+      "term": "focal length",
+      "def": "How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one."
+    },
+    {
+      "term": "focal ratio",
+      "aliases": [
+        "f-number",
+        "f number",
+        "f/number"
+      ],
+      "def": "The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical."
+    },
+    {
+      "term": "focuser",
+      "aliases": [
+        "focusers"
+      ],
+      "def": "The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command."
+    },
+    {
+      "term": "full-frame",
+      "aliases": [
+        "full frame"
+      ],
+      "def": "A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark."
+    },
+    {
+      "term": "gain",
+      "def": "The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.",
+      "except": [
+        "bortle-scale-narrowband-filters",
+        "optolong-l-quad-enhance-filter",
+        "zwo-seestar-s30-pro"
+      ]
+    },
+    {
+      "term": "goto",
+      "def": "A mount that will drive itself to any object you name, once it knows where it is pointing."
+    },
+    {
+      "term": "gradient",
+      "aliases": [
+        "gradients"
+      ],
+      "def": "An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out."
+    },
+    {
+      "term": "GraXpert",
+      "def": "A free tool that specialises in removing uneven background glow from an image, and in reducing grain."
+    },
+    {
+      "term": "guide camera",
+      "aliases": [
+        "guide cameras",
+        "guide sensor"
+      ],
+      "def": "A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working."
+    },
+    {
+      "term": "guidescope",
+      "aliases": [
+        "guide scope",
+        "guidescopes"
+      ],
+      "def": "The small telescope the guide camera looks through, riding alongside the main one."
+    },
+    {
+      "term": "guiding",
+      "aliases": [
+        "autoguiding"
+      ],
+      "def": "A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures."
     },
     {
       "term": "harmonic drive",
@@ -155,15 +400,152 @@
       "def": "A very compact gearbox that can hold a heavy telescope with no counterweight. It is the reason a mount this small can carry this much."
     },
     {
-      "term": "strain wave",
-      "def": "The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package."
+      "term": "histogram",
+      "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right."
     },
     {
-      "term": "counterweight",
+      "term": "hydrogen-alpha",
       "aliases": [
-        "counterweights"
+        "hydrogen alpha",
+        "H-alpha",
+        "Ha"
       ],
-      "def": "The heavy block on the far end of a traditional mount's shaft. It balances the weight of the telescope so the motors are not fighting gravity."
+      "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud."
+    },
+    {
+      "term": "imaging train",
+      "def": "The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter."
+    },
+    {
+      "term": "integration",
+      "def": "The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute."
+    },
+    {
+      "term": "intervalometer",
+      "aliases": [
+        "intervalometers"
+      ],
+      "def": "A timer that presses the camera's shutter over and over on its own, so you can take hundreds of frames without touching it. Many cameras have one built into the menus, and if yours does not, a small plug-in remote does the same job."
+    },
+    {
+      "term": "inverter",
+      "def": "The part of a power station that turns its battery power into mains power for a normal plug. It uses some power itself just by being switched on."
+    },
+    {
+      "term": "ISO",
+      "def": "How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky."
+    },
+    {
+      "term": "LiFePO4",
+      "aliases": [
+        "lithium iron phosphate",
+        "LFP"
+      ],
+      "def": "A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground."
+    },
+    {
+      "term": "light pollution",
+      "def": "Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint."
+    },
+    {
+      "term": "linear",
+      "def": "How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched."
+    },
+    {
+      "term": "live view",
+      "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp."
+    },
+    {
+      "term": "magnitude",
+      "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times."
+    },
+    {
+      "term": "meridian",
+      "def": "The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line."
+    },
+    {
+      "term": "meridian flip",
+      "def": "As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again."
+    },
+    {
+      "term": "micron",
+      "aliases": [
+        "microns"
+      ],
+      "def": "A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter."
+    },
+    {
+      "term": "Milky Way core",
+      "def": "The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer."
+    },
+    {
+      "term": "mosaic",
+      "aliases": [
+        "mosaics"
+      ],
+      "def": "Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view."
+    },
+    {
+      "term": "nanometre",
+      "aliases": [
+        "nanometres",
+        "nanometer"
+      ],
+      "def": "A billionth of a metre, the unit colours of light are measured in. A 7nm filter opens a window seven of those wide."
+    },
+    {
+      "term": "narrowband",
+      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not."
+    },
+    {
+      "term": "nebulosity",
+      "def": "The faint glowing gas itself, as opposed to the stars in front of it. Fainter than it looks in a finished picture, which is why it takes hours to record."
+    },
+    {
+      "term": "neutral density",
+      "def": "A filter that dims everything evenly without changing the colours. On the Moon it simply makes the view comfortable to look at."
+    },
+    {
+      "term": "NINA",
+      "def": "A free Windows program that runs an imaging session from a laptop, controlling the mount, camera and focuser through the night."
+    },
+    {
+      "term": "NPF rule",
+      "def": "A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule."
+    },
+    {
+      "term": "objective",
+      "aliases": [
+        "objectives"
+      ],
+      "def": "The main lens at the front of a refractor. Its width is the telescope's aperture, and it is the part that does the real work."
+    },
+    {
+      "term": "OD",
+      "def": "Optical density, the measure of how hard a filter blocks. Each step of one blocks ten times more, so OD5 stops all but about one part in a hundred thousand."
+    },
+    {
+      "term": "OIII",
+      "aliases": [
+        "O III"
+      ],
+      "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around."
+    },
+    {
+      "term": "passband",
+      "aliases": [
+        "passbands",
+        "bandpass"
+      ],
+      "def": "The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts."
+    },
+    {
+      "term": "payload",
+      "def": "The weight a mount is built to carry. Loading one near its limit works, but everything about it behaves worse than it does at half."
+    },
+    {
+      "term": "periodic error",
+      "def": "A small tracking error that repeats every turn of the mount's gears, because no gear is perfectly round. Guiding corrects it."
     },
     {
       "term": "plate solving",
@@ -177,8 +559,83 @@
       "def": "The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target."
     },
     {
-      "term": "goto",
-      "def": "A mount that will drive itself to any object you name, once it knows where it is pointing."
+      "term": "polar alignment",
+      "aliases": [
+        "polar align",
+        "polar aligned",
+        "polar aligning"
+      ],
+      "def": "Lining a mount's main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night."
+    },
+    {
+      "term": "quantum efficiency",
+      "def": "How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost."
+    },
+    {
+      "term": "RAW",
+      "def": "The camera's unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture."
+    },
+    {
+      "term": "read noise",
+      "def": "A small amount of unavoidable grain added each time a frame is read off the sensor. Fewer, longer frames collect it fewer times."
+    },
+    {
+      "term": "reducer",
+      "aliases": [
+        "reducers"
+      ],
+      "def": "An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time."
+    },
+    {
+      "term": "reflection nebula",
+      "aliases": [
+        "reflection nebulae"
+      ],
+      "def": "A cloud of dust that has no light of its own and simply reflects the light of nearby stars, usually a soft blue. A narrowband filter blocks it almost completely."
+    },
+    {
+      "term": "refractor",
+      "aliases": [
+        "refractors"
+      ],
+      "def": "A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead."
+    },
+    {
+      "term": "registration",
+      "def": "Lining every frame up on the same stars before stacking, so nothing is blurred by the small drifts between them."
+    },
+    {
+      "term": "remote release",
+      "def": "A cable or wireless button that fires the shutter for you. Pressing the camera itself shakes it, and at these exposure lengths that is enough to smear the stars."
+    },
+    {
+      "term": "right ascension",
+      "def": "The sky's version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h."
+    },
+    {
+      "term": "shutter",
+      "def": "How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved."
+    },
+    {
+      "term": "sidereal rate",
+      "aliases": [
+        "sidereal"
+      ],
+      "def": "The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate."
+    },
+    {
+      "term": "Siril",
+      "def": "A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.",
+      "except": [
+        "siril-post-processing-guide"
+      ]
+    },
+    {
+      "term": "skyglow",
+      "aliases": [
+        "sky glow"
+      ],
+      "def": "The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black."
     },
     {
       "term": "slew",
@@ -190,165 +647,16 @@
       "def": "The mount moving quickly from one part of the sky to another."
     },
     {
-      "term": "tracking",
-      "def": "The mount turning slowly to cancel out Earth's rotation, so a star stays in the same spot on the sensor instead of drifting into a line."
+      "term": "SPCC",
+      "def": "Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste."
     },
     {
-      "term": "guiding",
-      "aliases": [
-        "autoguiding"
-      ],
-      "def": "A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures."
-    },
-    {
-      "term": "dithering",
-      "aliases": [
-        "dither",
-        "dithered"
-      ],
-      "def": "Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack."
-    },
-    {
-      "term": "EQ mode",
-      "def": "Tilting an ordinary up-down, left-right telescope so one axis lines up with Earth's axis. The view then stops slowly rotating, which allows much longer exposures.",
-      "aliases": [
-        "equatorial mode"
-      ]
-    },
-    {
-      "term": "alt-az",
-      "aliases": [
-        "altazimuth",
-        "alt-azimuth"
-      ],
-      "def": "A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure."
-    },
-    {
-      "term": "azimuth",
-      "def": "The compass direction of something, measured round the horizon from north. Due east is 90 degrees."
-    },
-    {
-      "term": "field of view",
-      "def": "How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy."
-    },
-    {
-      "term": "arcsecond",
-      "aliases": [
-        "arcseconds"
-      ],
-      "def": "A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across."
-    },
-    {
-      "term": "magnitude",
-      "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times."
-    },
-    {
-      "term": "apochromat",
-      "aliases": [
-        "apochromatic",
-        "APO"
-      ],
-      "def": "A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo."
-    },
-    {
-      "term": "refractor",
-      "aliases": [
-        "refractors"
-      ],
-      "def": "A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead."
-    },
-    {
-      "term": "focuser",
-      "aliases": [
-        "focusers"
-      ],
-      "def": "The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command."
-    },
-    {
-      "term": "V-curve",
-      "def": "Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus."
-    },
-    {
-      "term": "light pollution",
-      "def": "Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint."
-    },
-    {
-      "term": "skyglow",
-      "aliases": [
-        "sky glow"
-      ],
-      "def": "The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black."
-    },
-    {
-      "term": "Bortle",
-      "def": "A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.",
-      "except": [
-        "bortle-scale-narrowband-filters"
-      ],
-      "avoid": [
-        "John Bortle"
-      ]
+      "term": "spectrum",
+      "def": "The full spread of colours light can be, from deep blue through to deep red and beyond at both ends."
     },
     {
       "term": "SQM",
       "def": "Sky quality meter, a proper measurement of how bright the night sky is. Higher numbers mean a darker sky."
-    },
-    {
-      "term": "dual narrowband",
-      "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once."
-    },
-    {
-      "term": "narrowband",
-      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not."
-    },
-    {
-      "term": "OIII",
-      "aliases": [
-        "O III"
-      ],
-      "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around."
-    },
-    {
-      "term": "UV/IR",
-      "def": "Ultraviolet and infrared, the light just outside what our eyes can see. Camera sensors pick it up, lenses cannot focus it properly, so a filter blocks it."
-    },
-    {
-      "term": "calibration frame",
-      "aliases": [
-        "calibration frames"
-      ],
-      "def": "Extra frames that are not pictures of anything. They record what the camera and the optics add to every shot, so it can be measured and taken back out.",
-      "except": [
-        "calibration-frames-darks-flats-biases"
-      ]
-    },
-    {
-      "term": "bias frame",
-      "aliases": [
-        "bias frames"
-      ],
-      "def": "The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame."
-    },
-    {
-      "term": "dark frame",
-      "aliases": [
-        "dark frames"
-      ],
-      "def": "An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted."
-    },
-    {
-      "term": "flat frame",
-      "aliases": [
-        "flat frames"
-      ],
-      "def": "A shot of an evenly lit blank surface, taken through the same telescope. It maps the dust shadows and darkened corners so they can be divided out."
-    },
-    {
-      "term": "vignetting",
-      "aliases": [
-        "vignette"
-      ],
-      "def": "The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor."
     },
     {
       "term": "stacking",
@@ -356,6 +664,45 @@
         "stacked"
       ],
       "def": "Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays."
+    },
+    {
+      "term": "star tracker",
+      "aliases": [
+        "star trackers",
+        "tracker"
+      ],
+      "def": "A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens."
+    },
+    {
+      "term": "star trail",
+      "aliases": [
+        "star trails"
+      ],
+      "def": "A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end."
+    },
+    {
+      "term": "StarNet",
+      "def": "A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together."
+    },
+    {
+      "term": "stop down",
+      "aliases": [
+        "stopping down",
+        "stopped down"
+      ],
+      "def": "Making the lens opening smaller, from f/2 to f/2.8 for instance. The corners of the picture get tidier and less light comes in."
+    },
+    {
+      "term": "strain wave",
+      "def": "The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package."
+    },
+    {
+      "term": "stretch",
+      "aliases": [
+        "stretched",
+        "stretching"
+      ],
+      "def": "Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame."
     },
     {
       "term": "subframe",
@@ -369,84 +716,11 @@
       "def": "One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data."
     },
     {
-      "term": "integration",
-      "def": "The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute."
-    },
-    {
-      "term": "registration",
-      "def": "Lining every frame up on the same stars before stacking, so nothing is blurred by the small drifts between them."
-    },
-    {
-      "term": "linear",
-      "def": "How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched."
-    },
-    {
-      "term": "stretch",
+      "term": "thermoelectric",
       "aliases": [
-        "stretched",
-        "stretching"
+        "thermoelectric cooling"
       ],
-      "def": "Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame."
-    },
-    {
-      "term": "histogram",
-      "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right."
-    },
-    {
-      "term": "gradient",
-      "aliases": [
-        "gradients"
-      ],
-      "def": "An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out."
-    },
-    {
-      "term": "background extraction",
-      "def": "The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target."
-    },
-    {
-      "term": "deconvolution",
-      "def": "A sharpening step that tries to undo the blurring added by the air and the optics, using the shape of the stars to work out how much blur there was."
-    },
-    {
-      "term": "SPCC",
-      "def": "Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste."
-    },
-    {
-      "term": "StarNet",
-      "def": "A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together."
-    },
-    {
-      "term": "drizzle",
-      "aliases": [
-        "drizzling",
-        "drizzled"
-      ],
-      "def": "A stacking method that uses the tiny shifts between frames to recover a little more real detail than a single frame holds."
-    },
-    {
-      "term": "FITS",
-      "def": "The file format astronomy cameras and software use. As well as the picture it stores a record of how the frame was taken, such as the exposure and the temperature."
-    },
-    {
-      "term": "mosaic",
-      "aliases": [
-        "mosaics"
-      ],
-      "def": "Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view."
-    },
-    {
-      "term": "deep-sky",
-      "aliases": [
-        "deep sky"
-      ],
-      "def": "Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures."
-    },
-    {
-      "term": "star trail",
-      "aliases": [
-        "star trails"
-      ],
-      "def": "A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end."
+      "def": "Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise."
     },
     {
       "term": "timelapse",
@@ -457,319 +731,55 @@
       "def": "Hundreds of still frames played back one after another as a short video, so hours of sky movement pass in seconds."
     },
     {
-      "term": "Milky Way core",
-      "def": "The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer."
+      "term": "tracking",
+      "def": "The mount turning slowly to cancel out Earth's rotation, so a star stays in the same spot on the sensor instead of drifting into a line."
     },
     {
-      "term": "Siril",
-      "def": "A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.",
-      "except": [
-        "siril-post-processing-guide"
-      ]
-    },
-    {
-      "term": "GraXpert",
-      "def": "A free tool that specialises in removing uneven background glow from an image, and in reducing grain."
-    },
-    {
-      "term": "NINA",
-      "def": "A free Windows program that runs an imaging session from a laptop, controlling the mount, camera and focuser through the night."
-    },
-    {
-      "term": "ASCOM",
+      "term": "transmission",
       "aliases": [
-        "Alpaca"
+        "transmittance"
       ],
-      "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
-    },
-    {
-      "term": "imaging train",
-      "def": "The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter."
-    },
-    {
-      "term": "backfocus",
-      "def": "The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.",
-      "aliases": [
-        "back focus"
-      ]
-    },
-    {
-      "term": "field flattener",
-      "def": "A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.",
-      "aliases": [
-        "flattener",
-        "flatteners"
-      ]
-    },
-    {
-      "term": "reducer",
-      "def": "An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time.",
-      "aliases": [
-        "reducers"
-      ]
-    },
-    {
-      "term": "extender",
-      "def": "The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky."
-    },
-    {
-      "term": "objective",
-      "def": "The main lens at the front of a refractor. Its width is the telescope's aperture, and it is the part that does the real work.",
-      "aliases": [
-        "objectives"
-      ]
-    },
-    {
-      "term": "doublet",
-      "def": "A lens made of two pieces of glass. Cheaper and lighter than three, at the cost of slightly less perfect colour correction.",
-      "aliases": [
-        "doublets"
-      ]
+      "def": "How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for."
     },
     {
       "term": "triplet",
-      "def": "A lens made of three pieces of glass. More expensive, but it brings the colours together more completely than a doublet.",
       "aliases": [
         "triplets"
       ],
+      "def": "A lens made of three pieces of glass. More expensive, but it brings the colours together more completely than a doublet.",
       "avoid": [
         "Leo Triplet"
       ]
     },
     {
-      "term": "ED",
-      "def": "Extra-low dispersion glass, a specific type of glass used in better lenses. It keeps the different colours of light travelling together, which is how a two-element lens gets close to the colour correction of a three-element one.",
+      "term": "UV/IR",
+      "def": "Ultraviolet and infrared, the light just outside what our eyes can see. Camera sensors pick it up, lenses cannot focus it properly, so a filter blocks it."
+    },
+    {
+      "term": "V-curve",
+      "def": "Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus."
+    },
+    {
+      "term": "vignetting",
       "aliases": [
-        "ED element",
-        "ED glass"
-      ]
-    },
-    {
-      "term": "false colour",
-      "def": "A coloured fringe, usually purple, around bright stars. It happens when a lens cannot quite bring every colour of light to the same point of focus.",
-      "aliases": [
-        "chromatic aberration"
-      ]
-    },
-    {
-      "term": "coma",
-      "def": "A fault that makes stars near the corners of the frame grow small wings, so they look like tiny comets rather than points."
-    },
-    {
-      "term": "nebulosity",
-      "def": "The faint glowing gas itself, as opposed to the stars in front of it. Fainter than it looks in a finished picture, which is why it takes hours to record."
-    },
-    {
-      "term": "emission nebula",
-      "def": "A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.",
-      "aliases": [
-        "emission nebulae"
-      ]
-    },
-    {
-      "term": "reflection nebula",
-      "def": "A cloud of dust that has no light of its own and simply reflects the light of nearby stars, usually a soft blue. A narrowband filter blocks it almost completely.",
-      "aliases": [
-        "reflection nebulae"
-      ]
-    },
-    {
-      "term": "emission line",
-      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one, oxygen a blue-green one, and filters are built around their positions.",
-      "aliases": [
-        "emission lines"
-      ]
-    },
-    {
-      "term": "hydrogen-alpha",
-      "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.",
-      "aliases": [
-        "hydrogen alpha",
-        "H-alpha",
-        "Ha"
-      ]
+        "vignette"
+      ],
+      "def": "The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor."
     },
     {
       "term": "wavelength",
-      "def": "What colour a piece of light is, written as a number in nanometres. Around 400 is deep blue, around 700 is deep red.",
       "aliases": [
         "wavelengths"
-      ]
+      ],
+      "def": "What colour a piece of light is, written as a number in nanometres. Around 400 is deep blue, around 700 is deep red."
     },
     {
-      "term": "nanometre",
-      "def": "A billionth of a metre, the unit colours of light are measured in. A 7nm filter opens a window seven of those wide.",
-      "aliases": [
-        "nanometres",
-        "nanometer"
-      ]
+      "term": "white balance",
+      "def": "The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other."
     },
     {
-      "term": "broadband",
-      "def": "A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few."
-    },
-    {
-      "term": "continuum",
-      "def": "Light spread smoothly across every colour, which is how stars and galaxies shine. Glowing gas clouds do the opposite and emit at a few exact colours."
-    },
-    {
-      "term": "spectrum",
-      "def": "The full spread of colours light can be, from deep blue through to deep red and beyond at both ends."
-    },
-    {
-      "term": "passband",
-      "def": "The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts.",
-      "aliases": [
-        "passbands",
-        "bandpass"
-      ]
-    },
-    {
-      "term": "transmission",
-      "def": "How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for.",
-      "aliases": [
-        "transmittance"
-      ]
-    },
-    {
-      "term": "OD",
-      "def": "Optical density, the measure of how hard a filter blocks. Each step of one blocks ten times more, so OD5 stops all but about one part in a hundred thousand."
-    },
-    {
-      "term": "fast optics",
-      "def": "A telescope or lens with a small f number, which gathers light quickly. It is more demanding: focus is more critical and narrow filters work less well.",
-      "aliases": [
-        "fast optic"
-      ]
-    },
-    {
-      "term": "stop down",
-      "def": "Making the lens opening smaller, from f/2 to f/2.8 for instance. The corners of the picture get tidier and less light comes in.",
-      "aliases": [
-        "stopping down",
-        "stopped down"
-      ]
-    },
-    {
-      "term": "polar alignment",
-      "def": "Lining a mount's main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.",
-      "aliases": [
-        "polar align",
-        "polar aligned",
-        "polar aligning"
-      ]
-    },
-    {
-      "term": "sidereal rate",
-      "def": "The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate.",
-      "aliases": [
-        "sidereal"
-      ]
-    },
-    {
-      "term": "periodic error",
-      "def": "A small tracking error that repeats every turn of the mount's gears, because no gear is perfectly round. Guiding corrects it."
-    },
-    {
-      "term": "payload",
-      "def": "The weight a mount is built to carry. Loading one near its limit works, but everything about it behaves worse than it does at half."
-    },
-    {
-      "term": "guide camera",
-      "def": "A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working.",
-      "aliases": [
-        "guide cameras",
-        "guide sensor"
-      ]
-    },
-    {
-      "term": "guidescope",
-      "def": "The small telescope the guide camera looks through, riding alongside the main one.",
-      "aliases": [
-        "guide scope",
-        "guidescopes"
-      ]
-    },
-    {
-      "term": "backlash",
-      "def": "The small amount of free play in a gear or a focuser before it starts moving. Measuring it once lets the software allow for it."
-    },
-    {
-      "term": "star tracker",
-      "def": "A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens.",
-      "aliases": [
-        "star trackers",
-        "tracker"
-      ]
-    },
-    {
-      "term": "Crayford",
-      "def": "A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves."
-    },
-    {
-      "term": "read noise",
-      "def": "A small amount of unavoidable grain added each time a frame is read off the sensor. Fewer, longer frames collect it fewer times."
-    },
-    {
-      "term": "dark current",
-      "def": "Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled."
-    },
-    {
-      "term": "quantum efficiency",
-      "def": "How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost."
-    },
-    {
-      "term": "thermoelectric",
-      "def": "Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise.",
-      "aliases": [
-        "thermoelectric cooling"
-      ]
-    },
-    {
-      "term": "back-illuminated",
-      "def": "A sensor built with its wiring behind the light-sensitive layer rather than in front of it, so less of the incoming light is blocked on the way in.",
-      "aliases": [
-        "back illuminated"
-      ]
-    },
-    {
-      "term": "dual gain",
-      "def": "A sensor with two amplifier settings built in. At the point it switches, the grain drops sharply, so one particular ISO is quieter than several lower ones."
-    },
-    {
-      "term": "micron",
-      "def": "A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter.",
-      "aliases": [
-        "microns"
-      ]
-    },
-    {
-      "term": "APS-C",
-      "def": "A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers."
-    },
-    {
-      "term": "eye relief",
-      "def": "How far your eye can sit from an eyepiece and still see the whole view. Generous eye relief matters if you wear glasses."
-    },
-    {
-      "term": "apparent field",
-      "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw."
-    },
-    {
-      "term": "neutral density",
-      "def": "A filter that dims everything evenly without changing the colours. On the Moon it simply makes the view comfortable to look at."
-    },
-    {
-      "term": "inverter",
-      "def": "The part of a power station that turns its battery power into mains power for a normal plug. It uses some power itself just by being switched on."
-    },
-    {
-      "term": "LiFePO4",
-      "def": "A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground.",
-      "aliases": [
-        "lithium iron phosphate",
-        "LFP"
-      ]
+      "term": "zenith",
+      "def": "The point straight up above your head."
     }
   ]
 }
