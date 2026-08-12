@@ -264,9 +264,17 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     body_html = read_body(slug)
     json_ld = build_json_ld(entry, page_url, cover_src)
 
-    # Glossary. An article with no marked words carries neither the styles nor
-    # the script, so nothing is paid for on a page that cannot use it.
-    body_html, gloss_count = annotate_glossary(body_html, slug, glossary or [])
+    # Glossary. The standfirst is passed in alongside the body, in reading
+    # order, so a word used in both is marked once, in the standfirst, rather
+    # than twice. It is escaped first and inserted raw below, because the
+    # marks are HTML. site-data.json itself is never touched: the same desc
+    # string also feeds the meta description, og:description, the JSON-LD and
+    # the index tiles, and all of those must stay plain text.
+    (standfirst_html, body_html), gloss_count = annotate_glossary(
+        [esc(desc), body_html], slug, glossary or [])
+
+    # An article with no marked words carries neither the styles nor the
+    # script, so nothing is paid for on a page that cannot use it.
     gloss_css = GLOSSARY_CSS if gloss_count else ''
     gloss_js = GLOSSARY_JS if gloss_count else ''
     build_page.last_gloss_count = gloss_count
@@ -548,7 +556,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 {nav_html}
       <div class="article-header">
 {hero_html}{meta_html}        <h1 class="article-title">{esc(title)}</h1>
-        <p class="article-standfirst">{esc(desc)}</p>
+        <p class="article-standfirst">{standfirst_html}</p>
       </div>
 
       <div class="article-body">

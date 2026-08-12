@@ -118,10 +118,16 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     page_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
     review_html = read_review(slug)
 
-    # Glossary explainers on the first mention of each technical word. A page
-    # with none carries neither the styles nor the script.
-    review_html, gloss_count = annotate_glossary(review_html, slug,
-                                                 glossary or [])
+    # Glossary explainers on the first mention of each technical word. The
+    # description is passed in alongside the review, in reading order, so a
+    # word used in both is marked once rather than twice. It is escaped first
+    # and inserted raw below, because the marks are HTML. site-data.json is
+    # never touched: the same desc string also feeds the meta description,
+    # og:description, the JSON-LD and the index tiles, which must stay plain.
+    (desc_html, review_html), gloss_count = annotate_glossary(
+        [esc(desc), review_html], slug, glossary or [])
+
+    # A page with none carries neither the styles nor the script.
     gloss_css = GLOSSARY_CSS if gloss_count else ''
     gloss_js = GLOSSARY_JS if gloss_count else ''
     build_page.last_gloss_count = gloss_count
@@ -506,7 +512,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 
       <div class="gear-header">
 {carousel_html}        <h1 class="gear-title">{esc(title)}</h1>
-        <p class="gear-desc">{esc(desc)}</p>
+        <p class="gear-desc">{desc_html}</p>
       </div>
 
 

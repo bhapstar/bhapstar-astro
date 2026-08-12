@@ -195,14 +195,33 @@ class _TextNodeFinder(HTMLParser):
         self.spans.append((start, start + len(data)))
 
 
-def annotate_glossary(body_html, slug, glossary):
-    """Mark the first mention of each glossary term in one page body.
+# Joins the fragments of one page into a single document for annotation.
+# An HTML comment because the parser reports comments separately from text, so
+# no text node ever spans the join: a term cannot be matched across it, and
+# nothing can be marked inside it.
+_PART_SEP = '\n<!--glossary-part-boundary-->\n'
 
-    Returns (html, count). Replacements are applied back to front so that every
-    offset gathered from the original string stays valid.
+
+def annotate_glossary(parts, slug, glossary):
+    """Mark the first mention of each glossary term across one page.
+
+    `parts` is either a single HTML string, or an ordered list of the page's
+    fragments in READING ORDER, which is how the standfirst and the body are
+    passed in. Returns (annotated, count) with `annotated` matching the shape
+    that was given.
+
+    The list form matters. Annotating the standfirst and the body in two
+    separate calls would give each its own idea of a first mention, so a word
+    used in both gets marked twice: once in the opening line and again three
+    paragraphs later. Joined into one document, the standfirst simply comes
+    first, the body follows, and every term is marked exactly once, at its
+    earliest appearance on the page.
     """
+    many = not isinstance(parts, str)
+    body_html = _PART_SEP.join(parts) if many else parts
+
     if not glossary or not body_html:
-        return body_html, 0
+        return parts, 0
 
     finder = _TextNodeFinder(body_html)
     try:
@@ -211,7 +230,7 @@ def annotate_glossary(body_html, slug, glossary):
     except Exception as exc:                       # pragma: no cover
         # A malformed fragment should cost the explainers, not the page.
         print(f"  ! {slug}: could not parse for glossary ({exc})")
-        return body_html, 0
+        return parts, 0
 
     edits = []          # (start, end, term, definition)
     claimed = []        # spans already taken, so two terms cannot overlap
@@ -264,7 +283,7 @@ def annotate_glossary(body_html, slug, glossary):
         claimed.append((a, b))
 
     if not edits:
-        return body_html, 0
+        return parts, 0
 
     # Numbered in reading order, so the ids on the page run top to bottom.
     edits.sort(key=lambda e: e[0])
@@ -277,7 +296,8 @@ def annotate_glossary(body_html, slug, glossary):
             f'{out[a:b]}</span>'
             f'<span class="gl-def" id="{ref}" hidden>{esc(definition)}</span>'
         ) + out[b:]
-    return out, len(edits)
+
+    return (out.split(_PART_SEP) if many else out), len(edits)
 
 
 GLOSSARY_CSS = """
