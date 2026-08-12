@@ -322,7 +322,7 @@
         </figure>
         <p class="article-meta">Processing <span aria-hidden="true">&middot;</span> 24 July 2026 <span aria-hidden="true">&middot;</span> 9 min read</p>
         <h1 class="article-title">Siril: From a Folder of Subframes to a Finished Image</h1>
-        <p class="article-standfirst">The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.</p>
+        <p class="article-standfirst">The free, open-source route from raw data to a finished picture. Calibration, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-1" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-siril-post-processing-guide-1" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>, and the one rule about <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-2" data-gl-term="stretch">stretching</span><span class="gl-def" id="gl-siril-post-processing-guide-2" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span> that quietly ruins images when it is broken.</p>
       </div>
 
       <div class="article-body">
@@ -334,11 +334,11 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">A folder of raw <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-1" data-gl-term="subframe">subframes</span><span class="gl-def" id="gl-siril-post-processing-guide-1" hidden>One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data.</span> goes in, a finished image comes out, and the order matters.</p>
-  <p class="ec-body">Siril is free, open source, and as good at calibrating and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-2" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-siril-post-processing-guide-2" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> as the
+  <p class="ec-title">A folder of raw <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-3" data-gl-term="subframe">subframes</span><span class="gl-def" id="gl-siril-post-processing-guide-3" hidden>One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data.</span> goes in, a finished image comes out, and the order matters.</p>
+  <p class="ec-body">Siril is free, open source, and as good at calibrating and stacking as the
   paid alternatives. That first half runs unattended from a script. The work
   you do by hand comes afterwards, and several of those steps only behave
-  correctly while the data is still <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-3" data-gl-term="linear">linear</span><span class="gl-def" id="gl-siril-post-processing-guide-3" hidden>How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched.</span>, which is why the order on this
+  correctly while the data is still <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-4" data-gl-term="linear">linear</span><span class="gl-def" id="gl-siril-post-processing-guide-4" hidden>How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched.</span>, which is why the order on this
   page matters more than any single step in it.</p>
 </div>
 
@@ -352,7 +352,7 @@ polish and a certain amount of hand-holding.</p>
 
 <p>Every image in <a href="/gallery.html">the gallery</a> went through it. This is
 the route I take, in order, and the order genuinely matters — several of these
-steps stop working correctly if you do them after <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-4" data-gl-term="stretch">stretching</span><span class="gl-def" id="gl-siril-post-processing-guide-4" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>.</p>
+steps stop working correctly if you do them after stretching.</p>
 
 <p>You can download it from
 <a href="https://siril.org/" rel="noopener">siril.org</a>, which is also where the
