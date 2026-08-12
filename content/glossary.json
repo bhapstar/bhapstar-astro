@@ -69,6 +69,14 @@
       ],
       "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
     },
+     {
+      "term": "autofocus",
+            "aliases": [
+        "autofocuser",
+        "auto focuser"
+      ],
+      "def": "A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals."
+    },
     {
       "term": "azimuth",
       "def": "The compass direction of something, measured round the horizon from north. Due east is 90 degrees."
