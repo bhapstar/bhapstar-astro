@@ -203,6 +203,21 @@
     }
     .btn.pri em{ color:var(--pri-em) }
 
+    /* Rolling gradient on a button's headline. Same gradient, timing and
+       direction as the name at the top of the card, so the eye reads them as
+       the same treatment rather than two similar ones. Only the span takes
+       it: the em underneath keeps its muted grey, which is what stops the
+       button turning into a block of moving colour.
+       The padding/margin pair is the same descender fix used on the h1 —
+       background-clip:text crops the tails off p and y without it. */
+    .btn .grad{
+      background:var(--grad); background-size:300% 100%;
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent; color:transparent;
+      animation:gradientRoll 4s linear infinite reverse;
+      padding-bottom:.12em; margin-bottom:-.12em;
+    }
+
 
     /* ─────────── Hover ───────────
        Gated behind a real pointer. On a phone, which is where most of these
@@ -296,7 +311,7 @@
       <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
     </div>
     <div class="row">
-      <a class="btn wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
+      <a class="btn wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer"><span class="grad">Support my work</span> <em>buy me a coffee ☕</em></a>
     </div>
 
   </div>
