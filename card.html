@@ -336,6 +336,43 @@
     apply(current() === 'light' ? 'dark' : 'light');
   });
 
+  /* ── Tap counter ──
+     Cloudflare Web Analytics deliberately discards query strings, so ?src=nfc
+     never reaches it and card.html shows as one undifferentiated page. This
+     records the source instead, to a small Worker of its own.
+
+     It reads location.search before the replaceState below rewrites the URL,
+     it only ever fires for a source we recognise, and it is fire and forget:
+     if the Worker is down or the request is blocked, the page does not care.
+
+     The visitor id is the same key the gallery likes module uses, so a device
+     that already has one is not given a second. It exists so the stats can
+     report distinct devices as well as raw taps, which is what separates a
+     hundred of your own test taps from a hundred people at an event. */
+  try {
+    var TAP_URL   = 'https://bhapstar-taps.bhapindersingh.workers.dev/tap';
+    var TAP_SRCS  = { nfc: 1, qr: 1 };
+    var tapSrc    = new URLSearchParams(location.search).get('src');
+
+    if (tapSrc && TAP_SRCS[tapSrc]) {
+      var uid = localStorage.getItem('_bhap_uid');
+      if (!uid) {
+        uid = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : String(Date.now()) + '-' + String(Math.random()).slice(2);
+        localStorage.setItem('_bhap_uid', uid);
+      }
+      // text/plain keeps this a simple request, so there is no CORS preflight
+      // and the tap costs one round trip rather than two.
+      fetch(TAP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ src: tapSrc, uid: uid }),
+        keepalive: true
+      }).catch(function(){ /* a missed tap is not worth a broken page */ });
+    }
+  } catch (e) { /* localStorage can throw in locked-down browsers */ }
+
   // Record which theme was served, so Cloudflare shows the split. Written as
   // ct, never as t, so refreshing tosses the coin again rather than sticking.
   try {
