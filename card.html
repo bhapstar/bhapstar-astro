@@ -351,7 +351,7 @@
      hundred of your own test taps from a hundred people at an event. */
   try {
     var TAP_URL   = 'https://bhapstar-taps.bhapindersingh.workers.dev/tap';
-    var TAP_SRCS  = { nfc: 1, qr: 1 };
+    var TAP_SRCS  = { nfc: 1, qr: 1, card: 1 };
     var tapSrc    = new URLSearchParams(location.search).get('src');
 
     if (tapSrc && TAP_SRCS[tapSrc]) {
