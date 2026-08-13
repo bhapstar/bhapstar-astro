@@ -1661,6 +1661,33 @@ details.faq-item p{
 .about-me-panel .section-head{ margin-top: 0; }
 .about-me-panel p:last-child{ margin-bottom: 0; }
 
+/* Inline links inside body prose. The base rule sets links to inherit the
+   text colour, so without this they read as plain text mid-sentence. */
+.about-panel p a,
+.stats-sub a,
+.instagram-intro a,
+.contact-intro a{
+  color: rgba(var(--accent-rgb), 0.92);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: color .18s ease;
+}
+.about-panel p a:hover,
+.stats-sub a:hover,
+.instagram-intro a:hover,
+.contact-intro a:hover{ color: var(--accent); opacity: 1; }
+
+/* Violet at full lightness is weak on the pale background, so darken it. */
+html[data-theme="light"] .about-panel p a,
+html[data-theme="light"] .stats-sub a,
+html[data-theme="light"] .instagram-intro a,
+html[data-theme="light"] .contact-intro a{ color: rgba(124,92,246,0.95); }
+html[data-theme="light"] .about-panel p a:hover,
+html[data-theme="light"] .stats-sub a:hover,
+html[data-theme="light"] .instagram-intro a:hover,
+html[data-theme="light"] .contact-intro a:hover{ color: #6d4ae0; }
+
 /* Footer */
 footer{
   padding: 28px 0 48px;
