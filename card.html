@@ -344,14 +344,25 @@
     history.replaceState(null, '', location.pathname + '?' + qs.toString() + location.hash);
   } catch (e) { /* not worth breaking the page over */ }
 
+  /* The contact sheet squares are about 145px wide, so they are fed the
+     thumbnails rather than the full gallery files. Every gallery image has
+     one, at images/thumbs/ mirroring its path. Full-size frames average
+     around 240 KB against roughly 29 KB for a thumbnail, and the grid keeps
+     swapping pictures for as long as the page is open, so this is the
+     difference between a card that costs a few hundred kilobytes and one
+     that quietly runs into megabytes on a phone in the field. */
+  function thumb(file){
+    return String(file).replace(/^images\//, 'images/thumbs/');
+  }
+
   // Used only if site-data.json cannot be read, so the grid is never bare
   var FALLBACK = [
-    'images/rosette-nebula-ngc2244.webp',
-    'images/orion-nebula-m42.webp',
-    'images/andromeda-galaxy-m31.webp',
-    'images/pleiades-m45.webp',
-    'images/jellyfish-nebula-ic443.webp',
-    'images/eagle-nebula-m16-2.webp'
+    'images/thumbs/rosette-nebula-ngc2244.webp',
+    'images/thumbs/orion-nebula-m42.webp',
+    'images/thumbs/andromeda-galaxy-m31.webp',
+    'images/thumbs/pleiades-m45.webp',
+    'images/thumbs/jellyfish-nebula-ic443.webp',
+    'images/thumbs/eagle-nebula-m16-2.webp'
   ];
 
   function shuffle(a){
@@ -446,9 +457,9 @@
       var pool = [];
       gal.forEach(function(it){
         if (Array.isArray(it.images) && it.images.length) {
-          it.images.forEach(function(im){ if (im && im.file) pool.push(im.file); });
+          it.images.forEach(function(im){ if (im && im.file) pool.push(thumb(im.file)); });
         } else if (it.file) {
-          pool.push(it.file);
+          pool.push(thumb(it.file));
         }
       });
       paint(pool);
