@@ -1627,6 +1627,40 @@ details.faq-item p{
   }
 }
 
+/* Inner tiles — same accent line and hover glow as the support and
+   contact panels, so every tile inside the about panel behaves alike. */
+.stats-panel,
+.instagram-panel,
+.about-me-panel{ position: relative; overflow: hidden; }
+.stats-panel::before,
+.instagram-panel::before,
+.about-me-panel::before{
+  content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
+  background: linear-gradient(
+    90deg, transparent,
+    rgba(167,139,250,0.60), rgba(96,165,250,0.70),
+    rgba(52,211,153,0.55), transparent
+  );
+  opacity: 0.60;
+}
+@media (hover:hover){
+  .stats-panel,
+  .instagram-panel,
+  .about-me-panel{ transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
+  .stats-panel:hover,
+  .instagram-panel:hover,
+  .about-me-panel:hover{
+    border-color: rgba(167,139,250,0.32);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.10), 0 14px 44px rgba(0,0,0,0.50);
+    transform: translateY(-2px);
+  }
+}
+
+/* About Me tile */
+.about-me-panel{ margin: 28px 0; }
+.about-me-panel .section-head{ margin-top: 0; }
+.about-me-panel p:last-child{ margin-bottom: 0; }
+
 /* Footer */
 footer{
   padding: 28px 0 48px;
