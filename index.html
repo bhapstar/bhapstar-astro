@@ -741,8 +741,9 @@
     if (!form.checkValidity()) { form.reportValidity(); return; }
 
     const btn = form.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
-    btn.textContent = 'Sending…';
+    const label = btn.querySelector('span') || btn;
+    const originalText = label.textContent;
+    label.textContent = 'Sending…';
     btn.disabled = true;
 
     try {
@@ -757,7 +758,7 @@
     } catch {
       showToast('Something went wrong — please try again or contact me directly.');
     } finally {
-      btn.textContent = originalText;
+      label.textContent = originalText;
       btn.disabled = false;
     }
   });
