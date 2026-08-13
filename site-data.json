@@ -1486,44 +1486,5 @@
         "affiliate": true
       }
     ]
-  },
-    {
-    "file": "images/star-trails-2.webp",
-    "alt": "Star trails circling the north celestial pole in deep blue above a dark desert ridge",
-    "title": "How I Plan Every Astrophotography Session Using Stellarium",
-    "desc": "A practical guide detailing how to use the planetarium software Stellarium to efficiently scout locations, frame targets, time celestial events, and organize a successful night of astrophotography.",
-    "type": "gear",
-    "category": "Sky basics",
-    "readTime": "6 min read",
-    "section": "article",
-    "slug": "how-i-plan-every-astrophotography-session-using-stellarium",
-    "date": "01-08-2026",
-    "buy": [
-      {
-        "retailer": "ZWO ASI585MC Air",
-        "url": "https://www.zwoastro.com/product/asi585air/?ref=sfbuvxv1",
-        "affiliate": true
-      },
-      {
-        "retailer": "ZWO Seestar S30 Pro",
-        "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
-        "affiliate": true
-      },
-      {
-        "retailer": "ZWO EAF",
-        "url": "https://www.zwoastro.com/product/eaf/?ref=sfbuvxv1",
-        "affiliate": true
-      },
-      {
-        "retailer": "ZWO TC20",
-        "url": "https://www.zwoastro.com/product/tc20-carbon-fiber-tripod-for-seestar-smart-telescopes/?ref=sfbuvxv1",
-        "affiliate": true
-      },
-      {
-        "retailer": "ZWO TH10",
-        "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
-        "affiliate": true
-      }
-    ]
   }
 ]
