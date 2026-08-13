@@ -1150,6 +1150,30 @@
     ]
   },
   {
+    "file": "images/articles/stellarium-desktop.webp",
+    "alt": "Stellarium Web showing the whole sky above Dubai just before two in the morning, with Saturn and Uranus labelled and the azimuthal grid drawn over the horizon",
+    "title": "Stellarium: Planning the Night Before You Pack the Car",
+    "desc": "The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.",
+    "type": "capture",
+    "category": "Capture",
+    "readTime": "9 min read",
+    "section": "article",
+    "slug": "how-i-plan-every-astrophotography-session-using-stellarium",
+    "date": "13-08-2026",
+    "buy": [
+      {
+        "retailer": "ZWO ASI585MC Air",
+        "url": "https://www.zwoastro.com/product/asi585air/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
+        "retailer": "ZWO Seestar S30 Pro",
+        "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
+        "affiliate": true
+      }
+    ]
+  },
+  {
     "file": "images/articles/siril-interface-eagle-nebula.webp",
     "alt": "The Siril interface with the Eagle Nebula M16 open in the preview pane after calibration and stacking",
     "title": "Siril: From a Folder of Subframes to a Finished Image",

@@ -36,6 +36,10 @@
       "def": "A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure."
     },
     {
+      "term": "altitude",
+      "def": "How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through."
+    },
+    {
       "term": "aperture",
       "def": "The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light."
     },
@@ -50,6 +54,10 @@
     {
       "term": "apparent field",
       "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw."
+    },
+    {
+      "term": "apparent size",
+      "def": "How big something looks from Earth, rather than how big it really is. Measured as an angle, so the Moon and the Sun have almost the same apparent size even though one is vastly larger."
     },
     {
       "term": "APS-C",
@@ -69,9 +77,16 @@
       ],
       "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
     },
-     {
+    {
+      "term": "astronomical darkness",
+      "aliases": [
+        "astronomical twilight"
+      ],
+      "def": "The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly."
+    },
+    {
       "term": "autofocus",
-            "aliases": [
+      "aliases": [
         "autofocuser",
         "auto focuser"
       ],
@@ -171,6 +186,15 @@
     {
       "term": "Crayford",
       "def": "A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves."
+    },
+    {
+      "term": "culmination",
+      "aliases": [
+        "culminate",
+        "culminates",
+        "culminating"
+      ],
+      "def": "The moment an object reaches its highest point in the sky before it starts back down. It is the best time to photograph something, because that is when you are looking through the least air."
     },
     {
       "term": "dark current",
@@ -554,6 +578,14 @@
     {
       "term": "periodic error",
       "def": "A small tracking error that repeats every turn of the mount's gears, because no gear is perfectly round. Guiding corrects it."
+    },
+    {
+      "term": "planetarium software",
+      "aliases": [
+        "planetarium app",
+        "planetarium program"
+      ],
+      "def": "A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside."
     },
     {
       "term": "plate solving",
