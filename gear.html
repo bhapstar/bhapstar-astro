@@ -604,18 +604,136 @@
                   margin-top 280ms ease;
     }
 
-    /* Caption toggle — grid view slides the whole pill (title + desc) down and
-       out of the tile. The card clips overflow, so it's a clean slide. Mirrors
-       the gallery page. */
-    #gearGrid .card .cap {
-      transition: background 220ms ease,
-                  opacity    260ms ease,
-                  transform  340ms cubic-bezier(0.16,1,0.3,1);
+    /* ── Grid tiles ──
+       The gear grid no longer floats its caption over the photograph. Each
+       tile now carries the title, the description, a link to the write-up and
+       the retailer links, so the caption is a real block of content sitting
+       under the image rather than a glass pill on top of it. The gallery and
+       articles grids are untouched: every rule below is scoped to #gearGrid. */
+    #gearGrid:not(.list-view) .card {
+      display: flex;
+      flex-direction: column;
     }
-    #gearGrid.hide-desc:not(.list-view) .card .cap {
+    #gearGrid:not(.list-view) .card .cap {
+      position: static;
+      left: auto; right: auto; bottom: auto;
+      display: flex; flex-direction: column;
+      flex: 1;
+      padding: 11px 13px 13px;
+      border: 0;
+      border-top: 1px solid rgba(167,139,250,0.10);
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+    }
+    /* The hover darkening belonged to the glass pill; it has nothing to sit
+       on now, so it is cancelled in grid view only. */
+    #gearGrid:not(.list-view) .card:hover .cap {
+      background: transparent;
+      border-color: rgba(167,139,250,0.10);
+    }
+    /* Descriptions were light-on-scrim, which no longer applies once the
+       caption sits on the card surface. */
+    html[data-theme="light"] #gearGrid:not(.list-view) .card .cap .d {
+      color: rgba(60,54,96,0.82);
+    }
+
+    /* Caption toggle — now collapses the description only, in both views. The
+       title, write-up link and retailer links stay put, so the toggle means
+       the same thing everywhere: description on or off. */
+    #gearGrid .card .cap {
+      transition: background 220ms ease, border-color 220ms ease;
+    }
+    #gearGrid.hide-desc:not(.list-view) .card .cap .d {
+      max-height: 0;
       opacity: 0;
-      transform: translateY(calc(100% + 16px));
-      pointer-events: none;
+      margin-top: 0;
+    }
+
+    /* ── Tile size ──
+       Four across on a wide screen instead of three. styles.css sets
+       span 4 for every grid, so this only narrows the gear one. */
+    #gearGrid:not(.list-view) .card,
+    #gearGrid .card-skeleton { grid-column: span 3; }
+    @media (max-width: 1100px) {
+      #gearGrid:not(.list-view) .card,
+      #gearGrid .card-skeleton { grid-column: span 4; }
+    }
+    @media (max-width: 820px) {
+      #gearGrid:not(.list-view) .card,
+      #gearGrid .card-skeleton { grid-column: span 6; }
+    }
+    @media (max-width: 560px) {
+      #gearGrid:not(.list-view) .card,
+      #gearGrid .card-skeleton { grid-column: span 12; }
+    }
+
+    /* ── Whole-tile click target ──
+       The tile used to be one big anchor. It cannot be, now that it contains
+       links of its own, so an absolutely positioned overlay carries the click
+       instead. It is hidden from assistive tech and skipped by the keyboard:
+       the write-up link below points at the same page and is the real
+       navigation. */
+    .card-hit {
+      position: absolute; inset: 0; z-index: 1;
+      border-radius: inherit;
+    }
+
+    /* ── Tile actions: write-up link, then retailer links ── */
+    .card-acts {
+      position: relative; z-index: 2;
+      margin-top: auto; padding-top: 10px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 7px;
+    }
+    .card-writeup {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11.5px; letter-spacing: 0.02em;
+      color: rgba(200,195,235,0.72);
+      transition: color 160ms ease, gap 160ms ease;
+    }
+    .card-writeup svg { width: 10px; height: 10px; flex-shrink: 0; }
+    .card-writeup:hover { color: #a78bfa; gap: 9px; }
+    html[data-theme="light"] .card-writeup { color: rgba(70,64,110,0.78); }
+    html[data-theme="light"] .card-writeup:hover { color: #7c5cf6; }
+
+    .card-buys { display: flex; flex-wrap: wrap; gap: 5px; }
+    .card-buy {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 999px;
+      border: 1px solid rgba(167,139,250,0.26);
+      background: rgba(167,139,250,0.08);
+      color: rgba(210,205,240,0.88);
+      font-size: 11px; line-height: 1.65; letter-spacing: 0.01em;
+      white-space: nowrap;
+      transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    .card-buy svg { width: 9px; height: 9px; opacity: 0.7; flex-shrink: 0; }
+    .card-buy:hover {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.5);
+      color: #fff;
+    }
+    html[data-theme="light"] .card-buy {
+      border-color: rgba(124,92,246,0.30);
+      background: rgba(124,92,246,0.07);
+      color: rgba(60,54,96,0.88);
+    }
+    html[data-theme="light"] .card-buy:hover {
+      background: rgba(124,92,246,0.14);
+      border-color: rgba(124,92,246,0.5);
+      color: #4c3aa8;
+    }
+    @media (max-width: 560px) {
+      .card-buy { font-size: 11.5px; padding: 3px 9px; }
+      .card-writeup { font-size: 12px; }
+    }
+
+    /* List view centres its caption vertically, so the auto top margin that
+       pins the actions to the bottom of a grid tile is dropped here. */
+    #gearGrid.list-view .card-acts { margin-top: 10px; padding-top: 0; }
+    /* The compact mobile list is a 60px row: title only, no room for actions. */
+    @media (max-width: 720px) {
+      #gearGrid.list-view .card-acts { display: none; }
     }
 
     /* List view keeps the layout but collapses only the description */
@@ -640,38 +758,19 @@
       }
     }
 
-    /* ── Filter dropdown ── (mirrors gallery) */
-    .filter-select-wrap {
-      display: inline-flex; align-items: center; gap: 9px;
-      margin-right: auto; /* keep view controls pushed to the right */
+    /* ── Filter pills ──
+       The dropdown is gone. .filter-pill / .filter-pills already live in
+       styles.css (the gallery used them before), so only the count badge is
+       new here. The pills themselves are built in JS from site-data.json, so
+       a category can never appear with nothing behind it. */
+    #gearFilterPills { margin-right: auto; }
+    .filter-pill .fpill-n {
+      margin-left: 7px; font-size: 10.5px; letter-spacing: 0;
+      font-variant-numeric: tabular-nums; opacity: 0.65;
     }
-    .filter-select-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(200,195,235,0.55);
-    }
-    .filter-select {
-      appearance: none; -webkit-appearance: none;
-      height: 34px; padding: 0 34px 0 13px;
-      border-radius: 8px;
-      border: 1px solid rgba(167,139,250,0.30);
-      background-color: rgba(167,139,250,0.06);
-      color: rgba(230,226,250,0.95);
-      font: inherit; font-size: 13px; font-weight: 600;
-      letter-spacing: 0.02em; cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a78bfa' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 13px center;
-      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
-    }
-    .filter-select:hover {
-      background-color: rgba(167,139,250,0.13);
-      border-color: rgba(167,139,250,0.45);
-    }
-    .filter-select:focus-visible {
-      outline: 2px solid rgba(167,139,250,0.6); outline-offset: 2px;
-    }
-    .filter-select option {
-      background: #0a0820; color: #e6e2fa;
+    @media (max-width: 720px) {
+      .filter-pill { height: 30px; padding: 0 11px; font-size: 11.5px; }
+      .filter-pill .fpill-n { margin-left: 5px; font-size: 10px; }
     }
 
     /* ── Caption toggle pill ── (mirrors gallery) */
@@ -736,18 +835,9 @@
         </p>
 
         <div class="gallery-controls" role="group" aria-label="Gear controls">
-          <div class="filter-select-wrap">
-            <label for="gearFilter" class="filter-select-label">Filter</label>
-            <select id="gearFilter" class="filter-select" aria-label="Filter by category">
-              <option value="all" selected>All gear</option>
-              <option value="telescope">Telescope</option>
-              <option value="smart-telescope">Smart Telescope</option>
-              <option value="mount">Mount</option>
-              <option value="camera">Camera</option>
-              <option value="filters">Filters</option>
-              <option value="accessories">Accessories</option>
-            </select>
-          </div>
+          <!-- Filter pills are rendered by JS once site-data.json is in, so
+               the counts are real and empty categories are dropped. -->
+          <div id="gearFilterPills" class="filter-pills" role="group" aria-label="Filter gear by category"></div>
 
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
@@ -767,7 +857,7 @@
             </button>
           </div>
 
-          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle item titles & descriptions">
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide descriptions" title="Toggle item descriptions">
             <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
               <circle cx="8" cy="8" r="2" fill="currentColor"/>
@@ -777,7 +867,7 @@
               <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
               <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
             </svg>
-            <span class="caption-toggle-label">Captions</span>
+            <span class="caption-toggle-label">Description</span>
           </button>
         </div>
 
@@ -949,12 +1039,66 @@
   }
   let infoVisible     = true;
 
+  /* ── Filter pills ──
+     CATEGORY_ORDER fixes the order they appear in; anything in the data with
+     a type not listed here falls into Accessories, which is what render()
+     already assumed. */
+  const CATEGORY_ORDER = [
+    ['telescope',       'Telescopes'],
+    ['smart-telescope', 'Smart telescopes'],
+    ['mount',           'Mounts'],
+    ['camera',          'Cameras'],
+    ['filters',         'Filters'],
+    ['accessories',     'Accessories']
+  ];
+
+  function itemType(item) {
+    return item.type || 'accessories';
+  }
+
   function getActiveFilter() {
-    return document.getElementById('gearFilter')?.value || 'all';
+    return document.querySelector('#gearFilterPills .filter-pill.active')?.dataset.filter || 'all';
   }
   function setActiveFilter(value) {
-    const sel = document.getElementById('gearFilter');
-    if (sel) sel.value = value;
+    document.querySelectorAll('#gearFilterPills .filter-pill').forEach(btn => {
+      const on = btn.dataset.filter === value;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  /* Every item is counted into its category up front, so each pill shows how
+     much sits behind it and a category with nothing in it is never offered. */
+  function buildFilterPills() {
+    const host = document.getElementById('gearFilterPills');
+    if (!host) return;
+
+    const counts = new Map();
+    items.forEach(it => {
+      const t = itemType(it);
+      counts.set(t, (counts.get(t) || 0) + 1);
+    });
+
+    const buttons = [
+      { value: 'all', label: 'All gear', n: items.length }
+    ];
+    CATEGORY_ORDER.forEach(([value, label]) => {
+      const n = counts.get(value) || 0;
+      if (n > 0) buttons.push({ value, label, n });
+    });
+
+    host.innerHTML = buttons.map((b, i) => `
+      <button type="button"
+              class="filter-pill${i === 0 ? ' active' : ''}"
+              data-filter="${esc(b.value)}"
+              aria-pressed="${i === 0 ? 'true' : 'false'}">${esc(b.label)}<span class="fpill-n">${b.n}</span></button>`).join('');
+
+    host.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-pill');
+      if (!btn || !host.contains(btn)) return;
+      setActiveFilter(btn.dataset.filter);
+      render();
+    });
   }
 
   async function loadData() {
@@ -1321,42 +1465,60 @@
     const selected = getActiveFilter();
     const filtered = selected === 'all'
       ? items
-      : items.filter(it => (it.type || 'accessories') === selected);
+      : items.filter(it => itemType(it) === selected);
 
     activeSet = filtered;
+
+    const outArrow = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+      + 'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
+      + 'aria-hidden="true"><path d="M3.6 8.4L8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg>';
+    const onArrow = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+      + 'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
+      + 'aria-hidden="true"><path d="M2.5 6h7"/><path d="M6.5 3l3 3-3 3"/></svg>';
 
     grid.innerHTML = filtered.map((item) => {
       const idx       = items.indexOf(item);
       const activeIdx = filtered.indexOf(item);
       const cover     = getCover(item);
-      const list      = getList(item);
-      const count     = list.length;
-
-      /* No count badge: the tile leads to a full page, so the number of
-         photographs behind it is not the useful thing to advertise. */
-      const badge = '';
 
       const thumbSrc = cover.file.replace(/^(images\/gear\/)/, '$1thumbs/');
       const media = `<img src="${esc(thumbSrc)}" alt="${esc(cover.alt)}" loading="lazy" decoding="async">`;
 
-      // Option B: the tile is a plain link to that item's own page.
       const pageUrl = `/gear/${encodeURIComponent(itemSlug(item))}.html`;
 
-      return `<a class="card"
-           href="${esc(pageUrl)}"
+      /* Every retailer on the item, not just the first — the same list the
+         detail page shows, built by the same rules. */
+      const buys = getBuyLinks(item).map(b => {
+        const rel = b.affiliate === true
+          ? 'sponsored noopener noreferrer'
+          : 'noopener noreferrer';
+        return `<a class="card-buy" href="${esc(b.url.trim())}" target="_blank" rel="${rel}">${esc(b.retailer)}${outArrow}</a>`;
+      }).join('');
+
+      const buyBlock = buys ? `<div class="card-buys">${buys}</div>` : '';
+
+      return `<article class="card"
            data-idx="${idx}"
-           data-active-idx="${activeIdx}"
-           aria-label="${esc(item.title || cover.alt)}">
-        ${badge}${media}
+           data-active-idx="${activeIdx}">
+        <a class="card-hit" href="${esc(pageUrl)}" tabindex="-1" aria-hidden="true"></a>
+        ${media}
         <div class="cap">
           <div class="t">${esc(item.title || '')}</div>
           <div class="d">${esc(item.desc || '')}</div>
+          <div class="card-acts">
+            <a class="card-writeup" href="${esc(pageUrl)}">Read the full write-up${onArrow}</a>
+            ${buyBlock}
+          </div>
         </div>
-      </a>`;
+      </article>`;
     }).join('');
   }
 
   function init() {
+    /* Pills first: applyView() below calls render(), which reads the active
+       pill to decide what to show. */
+    buildFilterPills();
+
     const viewBtnGrid = document.getElementById('viewBtnGrid');
     const viewBtnList = document.getElementById('viewBtnList');
     let currentView = 'grid';
@@ -1396,9 +1558,9 @@
       grid.classList.toggle('hide-desc', hide);
       if (viewBtnDesc) {
         viewBtnDesc.setAttribute('aria-pressed', hide ? 'false' : 'true');
-        viewBtnDesc.setAttribute('aria-label', hide ? 'Show captions' : 'Hide captions');
-        viewBtnDesc.title = hide ? 'Show item titles & descriptions'
-                                 : 'Hide item titles & descriptions';
+        viewBtnDesc.setAttribute('aria-label', hide ? 'Show descriptions' : 'Hide descriptions');
+        viewBtnDesc.title = hide ? 'Show item descriptions'
+                                 : 'Hide item descriptions';
       }
     }
     applyDescToggle(true);
@@ -1406,7 +1568,7 @@
       applyDescToggle(!grid.classList.contains('hide-desc'));
     });
 
-    document.getElementById('gearFilter')?.addEventListener('change', () => { render(); });
+    /* Filter pill clicks are bound inside buildFilterPills(). */
 
     /* Tiles navigate to /gear/<slug>.html. No click interception: the
        lightbox is no longer used on this page. */
