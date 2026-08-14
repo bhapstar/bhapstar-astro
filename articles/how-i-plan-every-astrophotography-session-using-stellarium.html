@@ -149,8 +149,11 @@
 
     /* ── Click to enlarge ──
        Not the gallery lightbox: no chrome, no navigation, no like button.
-       Just a larger copy of the same file, dismissed by clicking anywhere. */
-    .article-fig img { cursor: zoom-in; }
+       Just a larger copy of the same file, dismissed by clicking anywhere.
+       Covers the hero as well as the body figures. The hero is centre-cropped
+       to a 440px band on the page, so opening it is the only way to see the
+       whole frame. */
+    .article-fig img, .article-hero img { cursor: zoom-in; }
     .img-zoom { position: fixed; inset: 0; z-index: 9999; display: none;
                  align-items: center; justify-content: center; padding: 24px;
                  background: rgba(4,3,16,0.88); cursor: zoom-out; }
@@ -328,8 +331,8 @@
       <div class="article-body">
 <!--
   Article body: how a session gets planned indoors, before anything is packed.
-  Written for someone who has a telescope, has had a few disappointing nights,
-  and has not yet worked out that the fix happens at a desk.
+  Written for someone who has a telescope and wants more of their clear nights
+  to come back with something on the card.
 
   Photographs rather than diagrams here, because the whole subject is what the
   software looks like. Two of the three are phone screenshots in portrait, so
@@ -343,25 +346,25 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">The clear night is not the scarce thing. The planning is.</p>
+  <p class="ec-title">Ten minutes of planning is what makes a clear night count.</p>
   <p class="ec-body">Stellarium shows you the sky from your own balcony, on any
   date, at any time, running as fast or as slow as you like. Ten minutes with it
-  tells you what is up tonight, how high it gets, when it is highest, whether the
-  Moon is going to ruin it, and whether the thing you want will even fit inside
-  your camera frame. All of that happens indoors, in the warm, before anything
-  comes out of the bag.</p>
+  tells you what is up tonight, how high it gets, when it is highest, where the
+  Moon will be, and whether the thing you want will fit inside your camera frame.
+  All of that happens indoors, in the warm, before anything comes out of the
+  bag.</p>
 </div>
 
-<h2>Most wasted nights are lost before you go outside</h2>
+<h2>The best nights are decided indoors</h2>
 
-<p>Here is the pattern. The forecast is clear, you get everything set up, you
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-1" data-gl-term="polar alignment">polar align</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-1" hidden>Lining a mount&#x27;s main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.</span>, you pick a target, and forty minutes later you realise it is sitting
-twelve degrees above the rooftops and going down. Or it fills half your frame
-with nothing left for the edges. Or the Moon comes up at midnight and washes out
-the second half of the session.</p>
+<p>There are a handful of things worth knowing before the gear comes out. How
+high your target will climb. How much of the frame it will fill. When the sky
+goes properly dark, and where the Moon will be while you are working.</p>
 
-<p>None of that is a skill problem. It is a planning problem, and every part of
-it is knowable in advance.</p>
+<p>Every one of those is knowable in advance, and checking them takes minutes.
+That is the whole trick. It is not a skill you build at the telescope, it is a
+habit you build at a desk, and it pays back on the first clear night you
+use it.</p>
 
 <p>I open Stellarium before every session. Not sometimes. Before every one,
 whether I am shooting from the balcony in Dubai or driving out to Al Quaa. It is
@@ -370,7 +373,7 @@ look like before I have carried anything downstairs.</p>
 
 <h2>What it actually is</h2>
 
-<p>Stellarium is <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-2" data-gl-term="planetarium software">planetarium software</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-2" hidden>A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside.</span>. You tell it where you are, you give it a
+<p>Stellarium is <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-1" data-gl-term="planetarium software">planetarium software</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-1" hidden>A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside.</span>. You tell it where you are, you give it a
 date and a time, and it draws the sky exactly as it will appear above you. Not an
 artist's impression. The real positions.</p>
 
@@ -408,9 +411,9 @@ It answers the ordinary ones perfectly well:</p>
   <li>When does proper darkness begin?</li>
 </ul>
 
-<p>That last one catches people out. Sunset is not darkness. There is a long
+<p>That last one is worth knowing properly. Sunset is not darkness. There is a long
 gap afterwards while the sky is still bright enough to spoil an exposure, and
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-3" data-gl-term="astronomical darkness">astronomical darkness</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-3" hidden>The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly.</span>, the point where it stops mattering, arrives later than
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-2" data-gl-term="astronomical darkness">astronomical darkness</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-2" hidden>The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly.</span>, the point where it stops mattering, arrives later than
 most people assume. How much later changes through the year and with how far
 north or south you are.</p>
 
@@ -421,17 +424,17 @@ north or south you are.</p>
 <p><strong>What is visible.</strong> Not what is technically above the horizon,
 but what is high enough to be worth pointing at.</p>
 
-<p><strong>How high it gets.</strong> The <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-4" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-4" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> a target reaches decides how
+<p><strong>How high it gets.</strong> The <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-3" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-3" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> a target reaches decides how
 much atmosphere you are shooting through. Low down you are looking through a much
 thicker, dirtier slice of air, and from a city that slice is full of light.</p>
 
 <p><strong>When it is highest.</strong> Every object reaches a highest point and
-then starts back down. That moment is <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-5" data-gl-term="culmination">culmination</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-5" hidden>The moment an object reaches its highest point in the sky before it starts back down. It is the best time to photograph something, because that is when you are looking through the least air.</span>, and it is the middle of your
+then starts back down. That moment is <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-4" data-gl-term="culmination">culmination</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-4" hidden>The moment an object reaches its highest point in the sky before it starts back down. It is the best time to photograph something, because that is when you are looking through the least air.</span>, and it is the middle of your
 best window.</p>
 
 <p><strong>What the Moon is doing.</strong> Phase and position, both. A bright
-Moon on the other side of the sky is survivable. A bright Moon forty degrees from
-your target is not, at least not without a <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-6" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-6" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filter, which is a whole
+Moon on the far side of the sky leaves you plenty to work with. Once it is within
+forty degrees of your target you will want a <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-5" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-5" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filter, which is a whole
 subject of its own that I have written about in
 <a href="/articles/bortle-scale-narrowband-filters.html">the piece on Bortle skies
 and narrowband filters</a>.</p>
@@ -448,8 +451,8 @@ attempting.</p>
 reason I stopped guessing.</p>
 
 <p>The software can draw your actual camera and telescope onto the sky as a
-rectangle. Give it your <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-7" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-7" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> and your sensor size and it works out the
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-8" data-gl-term="field of view">field of view</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-8" hidden>How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy.</span> for that pairing, then shows you, to scale, precisely what will
+rectangle. Give it your <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-6" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-6" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> and your sensor size and it works out the
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-7" data-gl-term="field of view">field of view</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-7" hidden>How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy.</span> for that pairing, then shows you, to scale, precisely what will
 land on the chip. No arithmetic, no comparing angular
 sizes on a web page and hoping.</p>
 
@@ -460,9 +463,9 @@ would fit in one exposure took about four seconds, and
 <a href="/share/flame-horsehead-nebulae.html">this is how the photograph came
 out</a>.</p>
 
-<p>Before I had this I framed by trial and error, which on a target that only
-clears the rooftops for two hours means finding out you were wrong on the one
-night you had.</p>
+<p>Before this I framed by trial and error. Now the composition is settled
+before I leave the flat, which counts for a lot on a target that only clears the
+rooftops for a couple of hours.</p>
 
 <p>Worth being clear about what costs money, because the naming is
 confusing. Stellarium on a computer is free and open source, and it
@@ -486,8 +489,8 @@ an hour and enter every combination you own. After that it is permanent.</p>
 
 <p>Mine currently holds nine. The
 <a href="/gear/askar-v-modular-apo-refractor.html">Askar V</a> is a modular
-scope, so it accounts for six of them on its own: the <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-9" data-gl-term="reducer">reducer</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-9" hidden>An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time.</span>, native and
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-10" data-gl-term="extender">extender</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-10" hidden>The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky.</span> configurations, each at 60mm and 80mm of <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-11" data-gl-term="aperture">aperture</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-11" hidden>The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light.</span>. Then the two
+scope, so it accounts for six of them on its own: the <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-8" data-gl-term="reducer">reducer</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-8" hidden>An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time.</span>, native and
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-9" data-gl-term="extender">extender</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-9" hidden>The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky.</span> configurations, each at 60mm and 80mm of <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-10" data-gl-term="aperture">aperture</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-10" hidden>The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light.</span>. Then the two
 <a href="/gear/zwo-seestar-s30-pro.html">Seestar</a> units, and the
 <a href="/gear/samyang-135mm-widefield-astrograph.html">Samyang 135mm</a> for wide
 work. Every one of those rectangles is drawn for the sensor in the
@@ -499,12 +502,12 @@ rectangle changes with it.</p>
 becomes "which of these nine frames it best", and that is a question you can
 answer by tapping through them while the kettle boils.</p>
 
-<h2>The target picks the telescope, not the other way round</h2>
+<h2>Let the target choose the telescope</h2>
 
-<p><span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-12" data-gl-term="deep-sky">Deep-sky</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-12" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span> objects vary in <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-13" data-gl-term="apparent size">apparent size</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-13" hidden>How big something looks from Earth, rather than how big it really is. Measured as an angle, so the Moon and the Sun have almost the same apparent size even though one is vastly larger.</span> far more than people expect. Andromeda
+<p><span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-11" data-gl-term="deep-sky">Deep-sky</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-11" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span> objects vary in <span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-12" data-gl-term="apparent size">apparent size</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-12" hidden>How big something looks from Earth, rather than how big it really is. Measured as an angle, so the Moon and the Sun have almost the same apparent size even though one is vastly larger.</span> far more than people expect. Andromeda
 is six times the width of the full Moon. The Ring Nebula is about a twentieth of
-that width. There is no focal length that suits both, and no amount of skill at the
-telescope rescues a target that does not fit.</p>
+that width. No single focal length suits both, which is exactly why it is worth
+matching the scope to the target before you set up.</p>
 
 <p>Take the Crescent Nebula. I can lay my 270mm frame over it, then 384mm with
 the reducer, then 500mm, then 600mm, then the Seestar, then the 135mm lens, and
@@ -530,12 +533,12 @@ it somewhere different.</p>
 <p>For the dark site trips out to Al Quaa it does a different job. Those nights
 are long and there is no obstruction, so the plan becomes a running order:
 this one while it is high, that one after it culminates, the wide field once the
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-14" data-gl-term="Milky Way core">Milky Way core</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-14" hidden>The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer.</span> is up. Nothing is decided in the dark at two in the morning, which
-is when I make my worst decisions.</p>
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-how-i-plan-every-astrophotography-session-using-stellarium-13" data-gl-term="Milky Way core">Milky Way core</span><span class="gl-def" id="gl-how-i-plan-every-astrophotography-session-using-stellarium-13" hidden>The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer.</span> is up. Everything is decided in the warm, in advance, so the night
+itself is just working through the list.</p>
 
-<h2>It has taught me the sky, which I did not expect</h2>
+<h2>It teaches you the sky along the way</h2>
 
-<p>The unplanned benefit is that I now know where things are. Not from
+<p>The bonus I did not plan for is that I now know where things are. Not from
 memorising a chart, but from watching the same sky wheel round the same way a few
 hundred times at ten thousand times normal speed.</p>
 
@@ -559,9 +562,9 @@ on a computer that feature is free.</p>
 
 <p>The summary is that Stellarium has changed my hit rate more than any
 single piece of hardware I have bought. Not because it makes the pictures better,
-but because it stops me spending clear nights on targets that were never going to
-work. Given how few genuinely good nights there are in a year here, that turns
-out to matter more than almost anything else in
+but because it puts me on targets that were always going to work. Given how few
+genuinely good nights there are in a year here, that turns out to matter more
+than almost anything else in
 <a href="/articles/main-rig-tour.html">the rest of the setup</a>.</p>
 
       </div>
@@ -604,7 +607,8 @@ out to matter more than almost anything else in
     document.body.appendChild(ov);
 
     document.addEventListener('click', function (e) {
-      var img = e.target.closest && e.target.closest('.article-fig img');
+      var img = e.target.closest &&
+                e.target.closest('.article-fig img, .article-hero img');
       if (img) {
         big.src = img.currentSrc || img.src;
         big.alt = img.alt || '';

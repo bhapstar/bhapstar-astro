@@ -149,8 +149,11 @@
 
     /* ── Click to enlarge ──
        Not the gallery lightbox: no chrome, no navigation, no like button.
-       Just a larger copy of the same file, dismissed by clicking anywhere. */
-    .article-fig img { cursor: zoom-in; }
+       Just a larger copy of the same file, dismissed by clicking anywhere.
+       Covers the hero as well as the body figures. The hero is centre-cropped
+       to a 440px band on the page, so opening it is the only way to see the
+       whole frame. */
+    .article-fig img, .article-hero img { cursor: zoom-in; }
     .img-zoom { position: fixed; inset: 0; z-index: 9999; display: none;
                  align-items: center; justify-content: center; padding: 24px;
                  background: rgba(4,3,16,0.88); cursor: zoom-out; }
@@ -713,7 +716,8 @@ guide</a> covers the next step.</p>
     document.body.appendChild(ov);
 
     document.addEventListener('click', function (e) {
-      var img = e.target.closest && e.target.closest('.article-fig img');
+      var img = e.target.closest &&
+                e.target.closest('.article-fig img, .article-hero img');
       if (img) {
         big.src = img.currentSrc || img.src;
         big.alt = img.alt || '';
