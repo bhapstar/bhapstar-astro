@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#050414" id="themeColor" />
+  <script>
+  (function(){
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <title>Bhapstar — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Dark is the default. Every value below has a light counterpart in the
+         block underneath, so nothing in this file hardcodes a colour. */
+      --bg:         #050414;
+      --bg2:        #0a0720;
+      --accent:     #a78bfa;
+      --accent2:    #60a5fa;
+      --accent3:    #34d399;
+      --accent4:    #f472b6;
+      --accent5:    #fb923c;
+      --text:       rgba(255,255,255,0.95);
+      --muted:      rgba(200,195,235,0.60);
+      --dim:        rgba(200,195,235,0.38);
+      --dimmer:     rgba(200,195,235,0.25);
+      --line:       rgba(167,139,250,0.15);
+
+      --panel:      rgba(167,139,250,0.04);
+      --input-bg:   rgba(255,255,255,0.05);
+      --focus-line: rgba(167,139,250,0.45);
+      --th-bg:      rgba(167,139,250,0.07);
+      --row-line:   rgba(167,139,250,0.07);
+      --row-hover:  rgba(167,139,250,0.03);
+      --track:      rgba(167,139,250,0.10);
+      --pill-bg:    rgba(167,139,250,0.12);
+      --pill-line:  rgba(167,139,250,0.35);
+      --btn2-line:  rgba(96,165,250,0.25);
+      --btn2-bg:    rgba(96,165,250,0.10);
+      --btn3-line:  rgba(52,211,153,0.25);
+      --btn3-bg:    rgba(52,211,153,0.10);
+      --glow1:      rgba(167,139,250,0.07);
+      --glow2:      rgba(96,165,250,0.05);
+      --err:        #f87171;
+
+      --font:       'Outfit', ui-sans-serif, system-ui, sans-serif;
+      --radius:     14px;
+      --ease:       cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Light. Accents shift to the darker variants the site's own light theme
+       uses, because #a78bfa on white is too pale to read as a heading. */
+    html[data-theme="light"] {
+      --bg:         #eceaf6;
+      --bg2:        #f5f4fc;
+      --accent:     #7c5cf6;
+      --accent2:    #2f7fe0;
+      --accent3:    #0f9f76;
+      --accent4:    #d64a98;
+      --accent5:    #d97a2b;
+      --text:       rgba(26,23,48,0.94);
+      /* Alphas raised from the dark theme's equivalents. The faint greys that
+         read fine as light-on-dark fall under 3:1 on white, so the whole
+         muted scale is pushed up until each step still reads. */
+      --muted:      rgba(70,64,110,0.84);
+      --dim:        rgba(70,64,110,0.72);
+      --dimmer:     rgba(70,64,110,0.62);
+      --line:       rgba(124,92,246,0.24);
+
+      --panel:      #ffffff;
+      --input-bg:   #ffffff;
+      --focus-line: rgba(124,92,246,0.55);
+      --th-bg:      rgba(124,92,246,0.07);
+      --row-line:   rgba(124,92,246,0.11);
+      --row-hover:  rgba(124,92,246,0.045);
+      --track:      rgba(124,92,246,0.14);
+      --pill-bg:    rgba(124,92,246,0.12);
+      --pill-line:  rgba(124,92,246,0.42);
+      --btn2-line:  rgba(47,127,224,0.34);
+      --btn2-bg:    rgba(47,127,224,0.10);
+      --btn3-line:  rgba(15,159,118,0.34);
+      --btn3-bg:    rgba(15,159,118,0.10);
+      --glow1:      rgba(124,92,246,0.10);
+      --glow2:      rgba(47,127,224,0.07);
+      --err:        #d33b3b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      transition: background-color 280ms ease, color 280ms ease;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Background glow ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, var(--glow1) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 80% 70%, var(--glow2) 0%, transparent 70%);
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+    }
+    .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .logo-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent4);
+      box-shadow: 0 0 12px rgba(244,114,182,0.6);
+      transition: background 200ms ease, box-shadow 200ms ease;
+    }
+    /* The dot takes the colour of whichever dashboard is showing: pink for
+       likes, green for taps. Cheap way to know which tab you are on. */
+    .logo-dot.taps {
+      background: var(--accent3);
+      box-shadow: 0 0 12px rgba(52,211,153,0.6);
+    }
+    h1 {
+      font-size: 22px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 13px; color: var(--muted); letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Login panel ── */
+    #loginPanel {
+      margin-top: 60px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 36px;
+      max-width: 460px;
+    }
+    #loginPanel h2 {
+      font-size: 15px; font-weight: 600; margin-bottom: 6px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+    }
+    #loginPanel p { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    input[type="password"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 180ms ease;
+    }
+    input[type="password"]:focus { border-color: var(--focus-line); }
+    .field-error {
+      margin-top: 6px; font-size: 11.5px; color: var(--err); display: none;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-family: var(--font);
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 180ms ease, transform 180ms ease;
+      white-space: nowrap;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .error-msg { margin-top: 14px; font-size: 12px; color: var(--err); display: none; }
+
+    /* ── Tabs ── */
+    #tabBar {
+      display: none;
+      align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+    .tab-btn {
+      padding: 8px 18px; border-radius: 20px;
+      border: 1px solid var(--line); background: transparent;
+      color: var(--muted); font-family: var(--font);
+      font-size: 11.5px; font-weight: 600;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      cursor: pointer; transition: all 180ms ease;
+    }
+    .tab-btn:hover:not(:disabled) {
+      background: var(--pill-bg); border-color: var(--pill-line); color: var(--text);
+    }
+    .tab-btn.active {
+      background: var(--pill-bg); border-color: var(--pill-line); color: var(--text);
+    }
+    .tab-btn:disabled { opacity: 0.35; cursor: default; }
+    .signout-btn {
+      margin-left: auto;
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--line); background: transparent;
+      color: var(--dim); font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 180ms ease;
+    }
+    .signout-btn:hover { color: var(--err); border-color: var(--err); }
+
+    /* ── Panels ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Stats bar (shared) ── */
+    .stats-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+    .stat-card {
+      flex: 1; min-width: 140px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-label {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 28px; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent4), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-note { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+    /* ── Controls (shared) ── */
+    .controls {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .controls-left { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .range-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--line); background: transparent;
+      color: var(--muted); font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 180ms ease;
+    }
+    .range-btn.active, .range-btn:hover {
+      background: var(--pill-bg);
+      border-color: var(--pill-line);
+      color: var(--text);
+    }
+    .refresh-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--btn2-line); background: transparent;
+      color: var(--accent2); font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 180ms ease;
+    }
+    .refresh-btn:hover { background: var(--btn2-bg); }
+    .export-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--btn3-line); background: transparent;
+      color: var(--accent3); font-family: var(--font);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 180ms ease;
+    }
+    .export-btn:hover { background: var(--btn3-bg); }
+
+    /* ── Tables (shared) ── */
+    .section-title {
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); margin: 32px 0 12px;
+    }
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--th-bg); }
+    th {
+      padding: 12px 16px; text-align: left;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); font-weight: 600;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    th.sortable {
+      cursor: pointer; user-select: none;
+      transition: color 150ms ease;
+    }
+    th.sortable:hover { color: var(--accent); }
+    th.sortable.active { color: var(--accent); }
+    .sort-arrow { font-size: 9px; margin-left: 4px; opacity: 0.5; }
+    th.sortable.active .sort-arrow { opacity: 1; color: var(--accent4); }
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--th-bg);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--row-hover); }
+
+    /* ── Likes cells ── */
+    .title-cell {
+      font-weight: 500; color: var(--text);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .thumb-img {
+      width: 48px; height: 36px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      background: var(--panel);
+    }
+    .count-cell {
+      font-size: 18px; font-weight: 700;
+      color: var(--accent4);
+      text-align: center;
+    }
+    .voters-cell { text-align: center; color: var(--accent2); font-size: 13px; }
+    .location-cell { font-size: 12px; color: var(--muted); }
+    .time-cell { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+    .flag { font-size: 16px; margin-right: 5px; }
+    .no-data { color: var(--dim); font-size: 12px; font-style: italic; }
+
+    /* ── Taps cells ──
+       A coloured dot per source, so the eye finds the tag rows without
+       reading every label. */
+    .src-cell { display: flex; align-items: center; gap: 9px; font-weight: 500; }
+    .src-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .src-nfc  { background: var(--accent4); box-shadow: 0 0 8px rgba(244,114,182,0.55); }
+    .src-card { background: var(--accent2); box-shadow: 0 0 8px rgba(96,165,250,0.55); }
+    .src-qr   { background: var(--accent3); box-shadow: 0 0 8px rgba(52,211,153,0.55); }
+    .num-cell { text-align: center; font-weight: 700; font-size: 16px; color: var(--accent4); }
+    .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
+    .day-cell { white-space: nowrap; }
+    .day-sub  { font-size: 11px; color: var(--dim); }
+
+    /* The busiest day gets a bar behind it, scaled to the biggest day in
+       the window. Cheap to draw and it makes an event night obvious. */
+    .bar-cell { width: 32%; min-width: 90px; }
+    .bar-track {
+      height: 6px; border-radius: 999px;
+      background: var(--track); overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+    }
+
+    /* ── Loading / empty ── */
+    .loading {
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: 13px; letter-spacing: 0.08em;
+    }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid var(--line);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty {
+      text-align: center; padding: 40px 20px;
+      color: var(--dim); font-size: 12.5px; font-style: italic;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top: 32px; text-align: center;
+      font-size: 11px; color: var(--dimmer);
+      letter-spacing: 0.08em;
+    }
+    .page-footer a { color: var(--dim); text-decoration: none; }
+    .page-footer a:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      body { padding: 28px 14px 60px; }
+      .stat-value { font-size: 22px; }
+      th, td { padding: 10px 11px; }
+      .bar-cell { display: none; }
+    }
+
+    /* ── Theme toggle ──
+       Fixed rather than sitting in the header, because the header is hidden
+       until you have logged in and the button has to work on the key prompt
+       too. Same shape and icons as the one on card.html. */
+    .theme-toggle {
+      position: fixed; top: 18px; right: 18px; z-index: 20;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; padding: 0;
+      border-radius: 999px; cursor: pointer;
+      background: var(--panel); border: 1px solid var(--line);
+      color: var(--accent);
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+    .theme-toggle:hover { border-color: var(--pill-line); }
+    .theme-toggle:active { transform: scale(0.94); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .icon-moon { display: none; }
+    html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+    html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+    @media (max-width: 600px) {
+      .theme-toggle { top: 12px; right: 12px; width: 34px; height: 34px; }
+      .theme-toggle svg { width: 16px; height: 16px; }
+    }
+
+    /* A glow reads as something luminous on a dark surface. On light it just
+       looks like a smudge, so the status dots go flat instead. */
+    html[data-theme="light"] .logo-dot,
+    html[data-theme="light"] .src-dot { box-shadow: none; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <button class="theme-toggle" id="themeBtn" type="button"
+          aria-label="Toggle light or dark theme" aria-pressed="false" title="Toggle theme">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5 5.8 5.8 0 1 0 13.5 9.6Z"/>
+    </svg>
+  </button>
+
+  <header id="siteHeader" style="display:none">
+    <div class="header-top">
+      <div class="logo-dot" id="logoDot"></div>
+      <h1>Bhapstar Admin</h1>
+    </div>
+    <div class="subtitle" id="subtitle">Gallery engagement dashboard</div>
+  </header>
+
+  <!-- Login: one panel, one key per Worker. Leave either blank to skip
+       that dashboard. -->
+  <div id="loginPanel">
+    <h2>Admin Access</h2>
+    <p>Enter your keys. Either field can be left blank if you only want one dashboard.</p>
+
+    <div class="field">
+      <label for="likesKeyInput">Likes admin key</label>
+      <input type="password" id="likesKeyInput" placeholder="Admin key…" autocomplete="off" />
+      <div class="field-error" id="likesKeyError">Not accepted.</div>
+    </div>
+
+    <div class="field">
+      <label for="tapsKeyInput">Taps stats key</label>
+      <input type="password" id="tapsKeyInput" placeholder="Stats key…" autocomplete="off" />
+      <div class="field-error" id="tapsKeyError">Not accepted.</div>
+    </div>
+
+    <button class="btn" id="loginBtn">View</button>
+    <div class="error-msg" id="errorMsg">Neither key was accepted — please try again.</div>
+
+    <div style="margin-top:20px;font-size:12px;">
+      <a href="https://bhapstar.com" style="color:var(--muted);text-decoration:none;letter-spacing:0.04em;">← bhapstar.com</a>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div id="tabBar">
+    <button class="tab-btn active" id="tabLikes" data-tab="likes" type="button">Likes</button>
+    <button class="tab-btn" id="tabTaps" data-tab="taps" type="button">Taps</button>
+    <button class="signout-btn" id="signoutBtn" type="button">Sign out</button>
+  </div>
+
+  <!-- ══ Likes panel ══ -->
+  <div class="panel" id="panelLikes">
+    <div class="stats-bar" id="lkStatsBar"></div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <span style="font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;">Click any column header to sort</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="export-btn" id="lkExportBtn">⬇ Export CSV</button>
+        <button class="refresh-btn" id="lkRefreshBtn">↺ Refresh</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="lkLoadingMsg">
+        <div class="spinner"></div>
+        Loading likes data…
+      </div>
+      <table id="lkTable" style="display:none">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="title">Image <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="count" style="text-align:center">Likes <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="voters" style="text-align:center">Unique visitors <span class="sort-arrow"></span></th>
+            <th class="sortable" data-col="location">Last liked from <span class="sort-arrow"></span></th>
+            <th class="sortable active" data-col="time">Last liked at <span class="sort-arrow">▼</span></th>
+          </tr>
+        </thead>
+        <tbody id="lkTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">bhapstar.com · private admin · do not share this page</div>
+  </div>
+
+  <!-- ══ Taps panel ══ -->
+  <div class="panel" id="panelTaps">
+    <div class="stats-bar" id="tpStatsBar"></div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <button class="range-btn" data-days="7">7 days</button>
+        <button class="range-btn" data-days="30">30 days</button>
+        <button class="range-btn active" data-days="60">60 days</button>
+        <button class="range-btn" data-days="365">Year</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="export-btn" id="tpExportBtn">⬇ Export CSV</button>
+        <button class="refresh-btn" id="tpRefreshBtn">↺ Refresh</button>
+      </div>
+    </div>
+
+    <div class="loading" id="tpLoadingMsg">
+      <div class="spinner"></div>
+      Loading tap data…
+    </div>
+
+    <div id="tpContent" style="display:none">
+      <div class="section-title">By source</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th style="text-align:center">Taps</th>
+              <th style="text-align:center">Devices</th>
+              <th class="bar-cell">Share</th>
+            </tr>
+          </thead>
+          <tbody id="tpSrcBody"></tbody>
+        </table>
+      </div>
+
+      <div class="section-title" id="tpDayTitle">By day</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Source</th>
+              <th style="text-align:center">Taps</th>
+              <th style="text-align:center">Devices</th>
+              <th class="bar-cell">Busiest</th>
+            </tr>
+          </thead>
+          <tbody id="tpDayBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      Data from <span id="tpGenTime">—</span> · <a href="https://bhapstar.com/card.html?src=nfc">open the card</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  /* ══════════════════════════════════════════════════════════════════
+     Two dashboards, two Workers, two keys. Each module below owns its
+     own fetch, render and export, and exposes load(key) returning true
+     or false so the shared login can try both at once.
+     Keys live in sessionStorage only, so they survive a tab switch and
+     a reload but not closing the browser tab.
+     ══════════════════════════════════════════════════════════════════ */
+
+  const SS_LIKES = 'bhapstar_admin_likes_key';
+  const SS_TAPS  = 'bhapstar_admin_taps_key';
+
+  function ssGet(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+
+  function esc(s) {
+    return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ═══════════════════ Likes module ═══════════════════ */
+  const Likes = (function () {
+    const WORKER_URL = 'https://bhapstar-likes.bhapindersingh.workers.dev';
+
+    const statsBar   = document.getElementById('lkStatsBar');
+    const loadingMsg = document.getElementById('lkLoadingMsg');
+    const likesTable = document.getElementById('lkTable');
+    const tableBody  = document.getElementById('lkTableBody');
+    const refreshBtn = document.getElementById('lkRefreshBtn');
+    const exportBtn  = document.getElementById('lkExportBtn');
+
+    let adminKey = '';
+    let allRows  = [];
+    let thumbMap = {}; // slug → thumb URL, built from site-data.json
+    let titleMap = {}; // slug → real display title, built from site-data.json
+    let sortCol  = 'time';
+    let sortAsc  = false; // newest first
+
+    /* ── Slugify (mirrors gallery.html) ── */
+    function slugify(str) {
+      return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+
+    /* ── Load site-data.json and build slug→thumb map ── */
+    async function loadThumbMap() {
+      try {
+        const r = await fetch('https://bhapstar.com/site-data.json');
+        if (!r.ok) return;
+        const items = await r.json();
+        items.forEach(item => {
+          const slug = slugify(item.title || '');
+          if (!slug) return;
+          titleMap[slug] = item.title || '';
+          // Determine the cover file (first image or video poster)
+          let file = item.file;
+          if (!file && item.images?.length) file = item.images[0].file;
+          if (!file && item.videos?.length)  file = item.videos[0].poster;
+          if (!file) return;
+          // Mirror the gallery's thumb path logic: images/ → images/thumbs/
+          const thumb = file.replace(/^(images\/)/, '$1thumbs/');
+          thumbMap[slug] = 'https://bhapstar.com/' + thumb;
+        });
+      } catch (e) { /* silently skip — thumbs just won't show */ }
+    }
+
+    /* ── Country code → flag emoji ── */
+    function flag(code) {
+      if (!code || code === 'unknown' || code.length !== 2) return '';
+      try {
+        const chars = [...code.toUpperCase()].map(c =>
+          String.fromCodePoint(c.codePointAt(0) + 127397)
+        );
+        return chars.join('');
+      } catch (e) { return code; }
+    }
+
+    /* ── Slug → readable title ── */
+    function unslug(slug) {
+      return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    /* ── Real gallery title if known, else prettified slug ── */
+    function displayTitle(slug) {
+      return titleMap[slug] || unslug(slug);
+    }
+
+    /* ── Fetch data from Worker ── */
+    async function fetchData() {
+      loadingMsg.style.display = 'block';
+      likesTable.style.display = 'none';
+      try {
+        const r = await fetch(`${WORKER_URL}/admin?key=${encodeURIComponent(adminKey)}`);
+        if (r.status === 401) return false;
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        allRows = data.rows || [];
+        await loadThumbMap();
+        renderStats();
+        renderTable();
+        updateHeaders();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /* ── Stats bar ── */
+    function renderStats() {
+      const totalLikes    = allRows.reduce((s, r) => s + (r.count || 0), 0);
+      const totalVisitors = allRows.reduce((s, r) => s + (r.voters || 0), 0);
+      const imagesLiked   = allRows.filter(r => (r.count || 0) > 0).length;
+      const topImage      = allRows[0];
+
+      statsBar.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Total likes</div>
+          <div class="stat-value">${totalLikes}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique visitors who liked</div>
+          <div class="stat-value">${totalVisitors}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Images liked</div>
+          <div class="stat-value">${imagesLiked}</div>
+        </div>
+        <div class="stat-card" style="display:flex;align-items:center;gap:14px">
+          ${topImage && thumbMap[topImage.slug] ? `<img src="${thumbMap[topImage.slug]}" alt="" onerror="this.style.display='none'" style="width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--line);flex-shrink:0;background:var(--panel)">` : ''}
+          <div>
+            <div class="stat-label">Most liked</div>
+            <div class="stat-value" style="font-size:14px;padding-top:4px">
+              ${topImage ? esc(displayTitle(topImage.slug).substring(0, 28) + (displayTitle(topImage.slug).length > 28 ? '…' : '')) : '—'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── Parse "DD/MM/YYYY HH:MM:SS" → epoch ms (0 if missing/unparseable) ── */
+    function parseTime(s) {
+      const m = String(s || '').match(/^(\d{2})\/(\d{2})\/(\d{4})[ T](\d{2}):(\d{2}):(\d{2})/);
+      if (!m) return 0;
+      return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5], +m[6]).getTime();
+    }
+
+    /* ── Sort ── */
+    function sorted(rows) {
+      const dir = sortAsc ? 1 : -1;
+      return [...rows].sort((a, b) => {
+        switch (sortCol) {
+          case 'title':
+          case 'slug':     return dir * a.slug.localeCompare(b.slug);
+          case 'count':    return dir * ((a.count || 0) - (b.count || 0));
+          case 'voters':   return dir * ((a.voters || 0) - (b.voters || 0));
+          case 'location': return dir * ((a.last_liked?.country || '').localeCompare(b.last_liked?.country || ''));
+          case 'time':     return dir * (parseTime(a.last_liked?.time) - parseTime(b.last_liked?.time));
+          default:         return 0;
+        }
+      });
+    }
+
+    /* ── Update header arrows ── */
+    function updateHeaders() {
+      document.querySelectorAll('#lkTable th.sortable').forEach(th => {
+        const arrow = th.querySelector('.sort-arrow');
+        if (th.dataset.col === sortCol) {
+          th.classList.add('active');
+          arrow.textContent = sortAsc ? '▲' : '▼';
+        } else {
+          th.classList.remove('active');
+          arrow.textContent = '';
+        }
+      });
+    }
+
+    /* ── Table ── */
+    function renderTable() {
+      loadingMsg.style.display = 'none';
+      likesTable.style.display = 'table';
+      const rows = sorted(allRows);
+
+      tableBody.innerHTML = rows.map(row => {
+        const ll       = row.last_liked;
+        const country  = ll?.country || '';
+        const city     = ll?.city    || '';
+        const time     = ll?.time    || '';
+        const location = country && country !== 'unknown'
+          ? `<span class="flag">${flag(country)}</span>${city && city !== 'unknown' ? esc(city) + ', ' : ''}${esc(country)}`
+          : '<span class="no-data">—</span>';
+
+        const thumbUrl = thumbMap[row.slug] || '';
+        return `<tr>
+          <td class="title-cell">${thumbUrl ? `<img class="thumb-img" src="${thumbUrl}" alt="" onerror="this.style.display='none'">` : ''}<span>${esc(displayTitle(row.slug))}</span></td>
+          <td class="count-cell">${row.count || 0}</td>
+          <td class="voters-cell">${row.voters || 0}</td>
+          <td class="location-cell">${location}</td>
+          <td class="time-cell">${time ? esc(time) : '<span class="no-data">—</span>'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    /* ── Column header sort ── */
+    document.querySelectorAll('#lkTable th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        if (sortCol === th.dataset.col) {
+          sortAsc = !sortAsc; // same column — toggle direction
+        } else {
+          sortCol = th.dataset.col;
+          // numbers default high→low, text defaults A→Z
+          sortAsc = ['title', 'location', 'time'].includes(sortCol);
+        }
+        updateHeaders();
+        renderTable();
+      });
+    });
+
+    /* ── Refresh ── */
+    refreshBtn.addEventListener('click', () => fetchData());
+
+    /* ── Export CSV ── */
+    exportBtn.addEventListener('click', () => {
+      const rows = sorted(allRows);
+      const header = ['Image', 'Slug', 'Likes', 'Unique Visitors', 'Last Country', 'Last City', 'Last Liked At'];
+      const lines  = rows.map(r => [
+        `"${displayTitle(r.slug).replace(/"/g, '""')}"`,
+        r.slug,
+        r.count || 0,
+        r.voters || 0,
+        r.last_liked?.country || '',
+        r.last_liked?.city    || '',
+        `"${r.last_liked?.time || ''}"`,
+      ].join(','));
+      const csv  = [header.join(','), ...lines].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const a    = document.createElement('a');
+      a.href     = URL.createObjectURL(blob);
+      a.download = `bhapstar-likes-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    });
+
+    return {
+      async load(key) {
+        adminKey = key;
+        const ok = await fetchData();
+        if (!ok) adminKey = '';
+        return ok;
+      }
+    };
+  })();
+
+  /* ═══════════════════ Taps module ═══════════════════ */
+  const Taps = (function () {
+    const WORKER_URL = 'https://bhapstar-taps.bhapindersingh.workers.dev';
+
+    /* How each stored source is labelled and coloured. The keys must match the
+       VALID_SRC list in the Worker. 'card' is the QR printed on the physical
+       cards; 'qr' is any QR made after the counter existed. */
+    const SOURCES = {
+      nfc:  { label: 'NFC tag',         cls: 'src-nfc'  },
+      card: { label: 'Printed card QR', cls: 'src-card' },
+      qr:   { label: 'QR code',         cls: 'src-qr'   }
+    };
+
+    const loadingMsg = document.getElementById('tpLoadingMsg');
+    const content    = document.getElementById('tpContent');
+    const statsBar   = document.getElementById('tpStatsBar');
+    const srcBody    = document.getElementById('tpSrcBody');
+    const dayBody    = document.getElementById('tpDayBody');
+    const dayTitle   = document.getElementById('tpDayTitle');
+    const genTime    = document.getElementById('tpGenTime');
+
+    let statsKey = '';
+    let days     = 60;
+    let data     = null;
+
+    function srcInfo(src) {
+      return SOURCES[src] || { label: src, cls: 'src-qr' };
+    }
+
+    /* Dates come back as YYYY-MM-DD in UTC. Shown as a readable date with the
+       weekday underneath, because an event is a Friday or a Saturday and that
+       is usually what you are looking for. */
+    function prettyDay(day) {
+      const d = new Date(day + 'T00:00:00Z');
+      if (isNaN(d)) return { main: day, sub: '' };
+      return {
+        main: d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }),
+        sub:  d.toLocaleDateString(undefined, { weekday: 'long', timeZone: 'UTC' })
+      };
+    }
+
+    function prettyStamp(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return isNaN(d) ? '—' : d.toLocaleString(undefined, {
+        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function bar(value, max) {
+      const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+      return `<div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+    }
+
+    /* ── Fetch ── */
+    async function fetchData() {
+      loadingMsg.style.display = 'block';
+      content.style.display = 'none';
+      try {
+        const r = await fetch(`${WORKER_URL}/stats?key=${encodeURIComponent(statsKey)}&days=${days}`);
+        if (r.status === 401) return false;
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        data = await r.json();
+        render();
+        return true;
+      } catch (err) {
+        console.error(err);
+        return false;
+      } finally {
+        loadingMsg.style.display = 'none';
+      }
+    }
+
+    /* ── Render ── */
+    function render() {
+      if (!data) return;
+      content.style.display = 'block';
+
+      const overall = data.overall || {};
+      const bySrc   = data.by_source || [];
+      const byDay   = data.by_day || [];
+
+      /* Devices is the honest headline. Taps counts every time the tag is
+         touched, so a phone tested twenty times is twenty taps but one
+         device. Reach is the second number. */
+      statsBar.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Total taps</div>
+          <div class="stat-value">${overall.taps || 0}</div>
+          <div class="stat-note">every touch and scan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Devices reached</div>
+          <div class="stat-value">${overall.devices || 0}</div>
+          <div class="stat-note">repeat taps counted once</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">First tap</div>
+          <div class="stat-value" style="font-size:15px;padding-top:8px">${esc(prettyStamp(overall.first))}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Most recent</div>
+          <div class="stat-value" style="font-size:15px;padding-top:8px">${esc(prettyStamp(overall.last))}</div>
+        </div>`;
+
+      // By source
+      if (!bySrc.length) {
+        srcBody.innerHTML = `<tr><td colspan="4"><div class="empty">No taps recorded yet.</div></td></tr>`;
+      } else {
+        const maxSrc = Math.max(...bySrc.map(r => r.taps || 0));
+        srcBody.innerHTML = bySrc
+          .slice()
+          .sort((a, b) => (b.taps || 0) - (a.taps || 0))
+          .map(r => {
+            const info = srcInfo(r.src);
+            return `<tr>
+              <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
+              <td class="num-cell">${r.taps || 0}</td>
+              <td class="dev-cell">${r.devices || 0}</td>
+              <td class="bar-cell">${bar(r.taps || 0, maxSrc)}</td>
+            </tr>`;
+          }).join('');
+      }
+
+      // By day
+      dayTitle.textContent = `By day · last ${data.window_days || days} days`;
+      if (!byDay.length) {
+        dayBody.innerHTML = `<tr><td colspan="5"><div class="empty">Nothing in this window.</div></td></tr>`;
+      } else {
+        const maxDay = Math.max(...byDay.map(r => r.taps || 0));
+        dayBody.innerHTML = byDay.map(r => {
+          const info = srcInfo(r.src);
+          const d = prettyDay(r.day);
+          return `<tr>
+            <td class="day-cell">${esc(d.main)}<div class="day-sub">${esc(d.sub)}</div></td>
+            <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
+            <td class="num-cell">${r.taps || 0}</td>
+            <td class="dev-cell">${r.devices || 0}</td>
+            <td class="bar-cell">${bar(r.taps || 0, maxDay)}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      genTime.textContent = prettyStamp(data.generated);
+    }
+
+    /* ── Range buttons ── */
+    document.querySelectorAll('#panelTaps .range-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#panelTaps .range-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        days = parseInt(btn.dataset.days, 10) || 60;
+        fetchData();
+      });
+    });
+
+    document.getElementById('tpRefreshBtn').addEventListener('click', fetchData);
+
+    /* ── CSV ── */
+    document.getElementById('tpExportBtn').addEventListener('click', () => {
+      if (!data) return;
+      const rows = [['day', 'source', 'taps', 'devices']];
+      (data.by_day || []).forEach(r => {
+        rows.push([r.day, srcInfo(r.src).label, r.taps || 0, r.devices || 0]);
+      });
+      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bhapstar-taps-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    return {
+      async load(key) {
+        statsKey = key;
+        const ok = await fetchData();
+        if (!ok) statsKey = '';
+        return ok;
+      }
+    };
+  })();
+
+  /* ═══════════════════ Shared login and tabs ═══════════════════ */
+  const loginPanel  = document.getElementById('loginPanel');
+  const siteHeader  = document.getElementById('siteHeader');
+  const subtitle    = document.getElementById('subtitle');
+  const logoDot     = document.getElementById('logoDot');
+  const tabBar      = document.getElementById('tabBar');
+  const tabLikes    = document.getElementById('tabLikes');
+  const tabTaps     = document.getElementById('tabTaps');
+  const panelLikes  = document.getElementById('panelLikes');
+  const panelTaps   = document.getElementById('panelTaps');
+  const likesInput  = document.getElementById('likesKeyInput');
+  const tapsInput   = document.getElementById('tapsKeyInput');
+  const likesError  = document.getElementById('likesKeyError');
+  const tapsError   = document.getElementById('tapsKeyError');
+  const loginBtn    = document.getElementById('loginBtn');
+  const errorMsg    = document.getElementById('errorMsg');
+  const signoutBtn  = document.getElementById('signoutBtn');
+
+  const SUBTITLES = {
+    likes: 'Gallery engagement dashboard',
+    taps:  'NFC tag and QR card scans'
+  };
+
+  let ready = { likes: false, taps: false };
+
+  function showTab(which) {
+    if (!ready[which]) return;
+    const isLikes = which === 'likes';
+    panelLikes.classList.toggle('active', isLikes);
+    panelTaps.classList.toggle('active', !isLikes);
+    tabLikes.classList.toggle('active', isLikes);
+    tabTaps.classList.toggle('active', !isLikes);
+    logoDot.classList.toggle('taps', !isLikes);
+    subtitle.textContent = SUBTITLES[which];
+    try { sessionStorage.setItem('bhapstar_admin_tab', which); } catch (e) {}
+  }
+
+  tabLikes.addEventListener('click', () => showTab('likes'));
+  tabTaps.addEventListener('click', () => showTab('taps'));
+
+  /* Whichever dashboards authenticated get their tab enabled. If only one
+     came back, its panel opens straight away and the other tab is greyed. */
+  function enterDashboard() {
+    loginPanel.style.display = 'none';
+    siteHeader.style.display = 'block';
+    tabBar.style.display = 'flex';
+
+    tabLikes.disabled = !ready.likes;
+    tabTaps.disabled  = !ready.taps;
+    tabLikes.title = ready.likes ? '' : 'No valid likes key for this session';
+    tabTaps.title  = ready.taps  ? '' : 'No valid stats key for this session';
+
+    let wanted = 'likes';
+    try { wanted = sessionStorage.getItem('bhapstar_admin_tab') || 'likes'; } catch (e) {}
+    if (!ready[wanted]) wanted = ready.likes ? 'likes' : 'taps';
+    showTab(wanted);
+  }
+
+  async function attempt(likesKey, tapsKey, opts) {
+    const silent = opts && opts.silent;
+    likesError.style.display = 'none';
+    tapsError.style.display  = 'none';
+    errorMsg.style.display   = 'none';
+
+    if (!likesKey && !tapsKey) return;
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = '…';
+
+    const [likesOk, tapsOk] = await Promise.all([
+      likesKey ? Likes.load(likesKey) : Promise.resolve(false),
+      tapsKey  ? Taps.load(tapsKey)   : Promise.resolve(false)
+    ]);
+
+    ready.likes = likesOk;
+    ready.taps  = tapsOk;
+
+    if (likesOk) ssSet(SS_LIKES, likesKey); else ssDel(SS_LIKES);
+    if (tapsOk)  ssSet(SS_TAPS,  tapsKey);  else ssDel(SS_TAPS);
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'View';
+
+    if (likesOk || tapsOk) {
+      enterDashboard();
+      return;
+    }
+
+    // Nothing worked. Say which field was rejected rather than a blanket error.
+    if (!silent) {
+      if (likesKey) likesError.style.display = 'block';
+      if (tapsKey)  tapsError.style.display  = 'block';
+      errorMsg.style.display = 'block';
+    }
+  }
+
+  function login() {
+    attempt(likesInput.value.trim(), tapsInput.value.trim(), { silent: false });
+  }
+
+  [likesInput, tapsInput].forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  });
+  loginBtn.addEventListener('click', login);
+
+  signoutBtn.addEventListener('click', () => {
+    ssDel(SS_LIKES);
+    ssDel(SS_TAPS);
+    try { sessionStorage.removeItem('bhapstar_admin_tab'); } catch (e) {}
+    location.reload();
+  });
+
+  /* Reload inside the same tab picks the keys back up, so a refresh does not
+     mean typing them again. */
+  const savedLikes = ssGet(SS_LIKES);
+  const savedTaps  = ssGet(SS_TAPS);
+  if (savedLikes || savedTaps) {
+    attempt(savedLikes, savedTaps, { silent: true });
+  }
+})();
+</script>
+
+<script>
+/* Theme toggle. Writes to the same 'theme' key the rest of the site uses, so
+   a choice made here follows you to bhapstar.com and back. */
+(function () {
+  var root = document.documentElement;
+  var btn  = document.getElementById('themeBtn');
+  var meta = document.getElementById('themeColor');
+  if (!btn) return;
+
+  function current() {
+    return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  }
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+    btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#eceaf6' : '#050414');
+  }
+
+  apply(current());
+  btn.addEventListener('click', function () {
+    apply(current() === 'light' ? 'dark' : 'light');
+  });
+})();
+</script>
+</body>
+</html>
