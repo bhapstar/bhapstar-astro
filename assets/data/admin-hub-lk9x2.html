@@ -220,7 +220,13 @@
     .tab-btn.active {
       background: var(--pill-bg); border-color: var(--pill-line); color: var(--text);
     }
-    .tab-btn:disabled { opacity: 0.35; cursor: default; }
+    /* Locked means no key yet, not unavailable. It stays clickable and opens
+       a key prompt inside the panel, so you never have to sign out to add
+       the other dashboard. */
+    .tab-btn.locked { opacity: 0.5; }
+    .tab-btn.locked::after {
+      content: '·'; margin-left: 7px; opacity: 0.8;
+    }
     .signout-btn {
       margin-left: auto;
       padding: 6px 14px; border-radius: 20px;
@@ -234,6 +240,23 @@
     /* ── Panels ── */
     .panel { display: none; }
     .panel.active { display: block; }
+
+    /* ── Inline unlock (shown when a tab has no key yet) ── */
+    .unlock {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px;
+      max-width: 420px;
+    }
+    .unlock h3 {
+      font-size: 14px; font-weight: 600; margin-bottom: 6px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+    }
+    .unlock p { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .unlock-row { display: flex; gap: 10px; }
+    .unlock-row input[type="password"] { flex: 1; width: auto; }
 
     /* ── Stats bar (shared) ── */
     .stats-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
@@ -467,7 +490,7 @@
        that dashboard. -->
   <div id="loginPanel">
     <h2>Admin Access</h2>
-    <p>Enter your keys. Either field can be left blank if you only want one dashboard.</p>
+    <p>Enter your keys. Either field can be left blank — the other dashboard can be unlocked later from its own tab.</p>
 
     <div class="field">
       <label for="likesKeyInput">Likes admin key</label>
@@ -498,6 +521,18 @@
 
   <!-- ══ Likes panel ══ -->
   <div class="panel" id="panelLikes">
+
+    <div class="unlock" id="lkUnlock">
+      <h3>Likes dashboard locked</h3>
+      <p>Enter the likes admin key to load it without leaving this page.</p>
+      <div class="unlock-row">
+        <input type="password" id="lkUnlockInput" placeholder="Admin key…" autocomplete="off" />
+        <button class="btn" id="lkUnlockBtn">Unlock</button>
+      </div>
+      <div class="field-error" id="lkUnlockError">Not accepted.</div>
+    </div>
+
+    <div id="lkBody">
     <div class="stats-bar" id="lkStatsBar"></div>
 
     <div class="controls">
@@ -530,10 +565,23 @@
     </div>
 
     <div class="page-footer">bhapstar.com · private admin · do not share this page</div>
+    </div>
   </div>
 
   <!-- ══ Taps panel ══ -->
   <div class="panel" id="panelTaps">
+
+    <div class="unlock" id="tpUnlock">
+      <h3>Taps dashboard locked</h3>
+      <p>Enter the taps stats key to load it without leaving this page.</p>
+      <div class="unlock-row">
+        <input type="password" id="tpUnlockInput" placeholder="Stats key…" autocomplete="off" />
+        <button class="btn" id="tpUnlockBtn">Unlock</button>
+      </div>
+      <div class="field-error" id="tpUnlockError">Not accepted.</div>
+    </div>
+
+    <div id="tpBody">
     <div class="stats-bar" id="tpStatsBar"></div>
 
     <div class="controls">
@@ -589,6 +637,7 @@
 
     <div class="page-footer">
       Data from <span id="tpGenTime">—</span> · <a href="https://bhapstar.com/card.html?src=nfc">open the card</a>
+    </div>
     </div>
   </div>
 
@@ -1053,40 +1102,96 @@
     taps:  'NFC tag and QR card scans'
   };
 
+  const lkUnlock      = document.getElementById('lkUnlock');
+  const tpUnlock      = document.getElementById('tpUnlock');
+  const lkBody        = document.getElementById('lkBody');
+  const tpBody        = document.getElementById('tpBody');
+  const lkUnlockInput = document.getElementById('lkUnlockInput');
+  const tpUnlockInput = document.getElementById('tpUnlockInput');
+  const lkUnlockBtn   = document.getElementById('lkUnlockBtn');
+  const tpUnlockBtn   = document.getElementById('tpUnlockBtn');
+  const lkUnlockError = document.getElementById('lkUnlockError');
+  const tpUnlockError = document.getElementById('tpUnlockError');
+
   let ready = { likes: false, taps: false };
 
+  /* A locked tab still opens. It shows a key prompt in place of the
+     dashboard, so the other half can be added at any point in the session. */
   function showTab(which) {
-    if (!ready[which]) return;
     const isLikes = which === 'likes';
     panelLikes.classList.toggle('active', isLikes);
     panelTaps.classList.toggle('active', !isLikes);
     tabLikes.classList.toggle('active', isLikes);
     tabTaps.classList.toggle('active', !isLikes);
     logoDot.classList.toggle('taps', !isLikes);
-    subtitle.textContent = SUBTITLES[which];
+    subtitle.textContent = ready[which] ? SUBTITLES[which] : 'Key needed for this dashboard';
+
+    lkUnlock.style.display = ready.likes ? 'none'  : 'block';
+    lkBody.style.display   = ready.likes ? 'block' : 'none';
+    tpUnlock.style.display = ready.taps  ? 'none'  : 'block';
+    tpBody.style.display   = ready.taps  ? 'block' : 'none';
+
+    if (!ready[which]) {
+      (isLikes ? lkUnlockInput : tpUnlockInput).focus();
+    }
     try { sessionStorage.setItem('bhapstar_admin_tab', which); } catch (e) {}
   }
 
   tabLikes.addEventListener('click', () => showTab('likes'));
   tabTaps.addEventListener('click', () => showTab('taps'));
 
-  /* Whichever dashboards authenticated get their tab enabled. If only one
-     came back, its panel opens straight away and the other tab is greyed. */
+  function markTabs() {
+    tabLikes.classList.toggle('locked', !ready.likes);
+    tabTaps.classList.toggle('locked', !ready.taps);
+    tabLikes.title = ready.likes ? '' : 'No key yet — click to enter one';
+    tabTaps.title  = ready.taps  ? '' : 'No key yet — click to enter one';
+  }
+
   function enterDashboard() {
     loginPanel.style.display = 'none';
     siteHeader.style.display = 'block';
     tabBar.style.display = 'flex';
-
-    tabLikes.disabled = !ready.likes;
-    tabTaps.disabled  = !ready.taps;
-    tabLikes.title = ready.likes ? '' : 'No valid likes key for this session';
-    tabTaps.title  = ready.taps  ? '' : 'No valid stats key for this session';
+    markTabs();
 
     let wanted = 'likes';
     try { wanted = sessionStorage.getItem('bhapstar_admin_tab') || 'likes'; } catch (e) {}
-    if (!ready[wanted]) wanted = ready.likes ? 'likes' : 'taps';
+    if (!ready[wanted]) wanted = ready.likes ? 'likes' : (ready.taps ? 'taps' : wanted);
     showTab(wanted);
   }
+
+  /* ── Inline unlock ── */
+  async function unlock(which) {
+    const isLikes = which === 'likes';
+    const input   = isLikes ? lkUnlockInput : tpUnlockInput;
+    const btn     = isLikes ? lkUnlockBtn   : tpUnlockBtn;
+    const err     = isLikes ? lkUnlockError : tpUnlockError;
+    const key     = input.value.trim();
+    if (!key) return;
+
+    err.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    const ok = isLikes ? await Likes.load(key) : await Taps.load(key);
+
+    btn.disabled = false;
+    btn.textContent = 'Unlock';
+
+    if (ok) {
+      ready[which] = true;
+      ssSet(isLikes ? SS_LIKES : SS_TAPS, key);
+      input.value = '';
+      markTabs();
+      showTab(which);
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  lkUnlockBtn.addEventListener('click', () => unlock('likes'));
+  tpUnlockBtn.addEventListener('click', () => unlock('taps'));
+  lkUnlockInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock('likes'); });
+  tpUnlockInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock('taps'); });
 
   async function attempt(likesKey, tapsKey, opts) {
     const silent = opts && opts.silent;
