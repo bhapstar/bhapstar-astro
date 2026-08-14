@@ -162,10 +162,12 @@ scope, so it accounts for six of them on its own: the reducer, native and
 extender configurations, each at 60mm and 80mm of aperture. Then the two
 <a href="/gear/zwo-seestar-s30-pro.html">Seestar</a> units, and the
 <a href="/gear/samyang-135mm-widefield-astrograph.html">Samyang 135mm</a> for wide
-work. Every one of those rectangles is drawn for the sensor in the
-<a href="/gear/zwo-asi585mc-air-camera.html">ASI585MC Air</a>, because the frame
-is a product of the scope and the chip together. Change the camera and every
-rectangle changes with it.</p>
+work. The six Askar frames are drawn for the
+<a href="/gear/zwo-asi585mc-air-camera.html">ASI585MC Air</a>, the two Seestars
+carry their own sensors, and the Samyang is paired with the full-frame
+<a href="/gear/sony-a7iii-full-frame-camera.html">Sony A7 III</a>. The frame is
+always a product of the optics and the chip together, so changing the camera
+changes every rectangle that uses it.</p>
 
 <p>Once they exist, the question changes. It stops being "will this fit" and
 becomes "which of these nine frames it best", and that is a question you can
@@ -178,13 +180,186 @@ is six times the width of the full Moon. The Ring Nebula is about a twentieth of
 that width. No single focal length suits both, which is exactly why it is worth
 matching the scope to the target before you set up.</p>
 
-<p>Take the Crescent Nebula. I can lay my 270mm frame over it, then 384mm with
-the reducer, then 500mm, then 600mm, then the Seestar, then the 135mm lens, and
-see all six compositions inside a minute. One of them will have the nebula
-sitting properly in the frame with room to breathe. That is the one I take out.</p>
+<p>The Flame and Horsehead nebulae are a good example, because they are a pair
+and they have to be kept together. Below is every one of my nine profiles laid
+over them in turn. Same target, same evening, so the only thing that really
+changes is the rectangle. The 135mm view is pulled back, because that frame
+covers far too much sky to show at the same zoom as the rest.</p>
+
+<figure class="article-fig fov-compare">
+<style>
+/* Nine-frame comparison. All nine screenshots are the same sky at the same
+   scale, so crossfading between them isolates the one thing that changes:
+   the rectangle. Driven by radio inputs, so it needs no script and the
+   arrow keys work on their own. */
+.fov-viewer{display:grid;gap:16px;align-items:start}
+.fov-radio{position:absolute;width:1px;height:1px;opacity:0;margin:0;
+           pointer-events:none}
+.fov-stage{position:relative;aspect-ratio:1071/2400;height:min(58vh,470px);
+           max-width:100%;margin:0 auto;border-radius:12px;overflow:hidden;
+           border:1px solid var(--line);background:var(--soft)}
+/* Beats .article-fig img on specificity, which sets height:auto. */
+.fov-stage .fov-shot{position:absolute;inset:0;width:100%;height:100%;
+          display:block;object-fit:cover;border-radius:0;opacity:0;
+          pointer-events:none;transition:opacity .28s ease;cursor:zoom-in}
+.fov-panel{min-width:0}
+.fov-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.fov-pill{display:inline-block;padding:5px 10px;border-radius:999px;
+          font-size:12px;line-height:1.2;white-space:nowrap;cursor:pointer;
+          color:var(--muted);background:var(--soft);
+          border:1px solid var(--line);
+          transition:background .18s ease,color .18s ease,border-color .18s ease}
+.fov-pill:hover{color:var(--text)}
+.fov-notes{display:grid}
+.fov-note{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .28s ease}
+.fov-notes .fov-note p{margin:0 0 8px}
+.fov-notes .fov-note-title{font-weight:600;color:var(--text)}
+.fov-notes .fov-note-body{font-size:14px;line-height:1.6;color:var(--muted)}
+.fov-hint{margin:12px 0 0;font-size:11.5px;letter-spacing:.04em;
+          color:var(--muted);opacity:.8}
+@media (min-width:660px){
+  .fov-viewer{grid-template-columns:auto 1fr;gap:22px}
+  .fov-stage{margin:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .fov-stage .fov-shot,.fov-note{transition:none}
+}
+/* Active frame */
+#fov-a:checked ~ .fov-stage .fov-shot.fs-a,
+#fov-b:checked ~ .fov-stage .fov-shot.fs-b,
+#fov-c:checked ~ .fov-stage .fov-shot.fs-c,
+#fov-d:checked ~ .fov-stage .fov-shot.fs-d,
+#fov-e:checked ~ .fov-stage .fov-shot.fs-e,
+#fov-f:checked ~ .fov-stage .fov-shot.fs-f,
+#fov-g:checked ~ .fov-stage .fov-shot.fs-g,
+#fov-h:checked ~ .fov-stage .fov-shot.fs-h,
+#fov-i:checked ~ .fov-stage .fov-shot.fs-i{opacity:1;pointer-events:auto}
+#fov-a:checked ~ .fov-panel .fov-note.fn-a,
+#fov-b:checked ~ .fov-panel .fov-note.fn-b,
+#fov-c:checked ~ .fov-panel .fov-note.fn-c,
+#fov-d:checked ~ .fov-panel .fov-note.fn-d,
+#fov-e:checked ~ .fov-panel .fov-note.fn-e,
+#fov-f:checked ~ .fov-panel .fov-note.fn-f,
+#fov-g:checked ~ .fov-panel .fov-note.fn-g,
+#fov-h:checked ~ .fov-panel .fov-note.fn-h,
+#fov-i:checked ~ .fov-panel .fov-note.fn-i{opacity:1;visibility:visible}
+#fov-a:checked ~ .fov-panel .fov-pill.fp-a,
+#fov-b:checked ~ .fov-panel .fov-pill.fp-b,
+#fov-c:checked ~ .fov-panel .fov-pill.fp-c,
+#fov-d:checked ~ .fov-panel .fov-pill.fp-d,
+#fov-e:checked ~ .fov-panel .fov-pill.fp-e,
+#fov-f:checked ~ .fov-panel .fov-pill.fp-f,
+#fov-g:checked ~ .fov-panel .fov-pill.fp-g,
+#fov-h:checked ~ .fov-panel .fov-pill.fp-h,
+#fov-i:checked ~ .fov-panel .fov-pill.fp-i{color:#fff;background:var(--accent);border-color:var(--accent)}
+
+/* Keyboard focus ring, since the real input is visually hidden */
+#fov-a:focus-visible ~ .fov-panel .fov-pill.fp-a,
+#fov-b:focus-visible ~ .fov-panel .fov-pill.fp-b,
+#fov-c:focus-visible ~ .fov-panel .fov-pill.fp-c,
+#fov-d:focus-visible ~ .fov-panel .fov-pill.fp-d,
+#fov-e:focus-visible ~ .fov-panel .fov-pill.fp-e,
+#fov-f:focus-visible ~ .fov-panel .fov-pill.fp-f,
+#fov-g:focus-visible ~ .fov-panel .fov-pill.fp-g,
+#fov-h:focus-visible ~ .fov-panel .fov-pill.fp-h,
+#fov-i:focus-visible ~ .fov-panel .fov-pill.fp-i{outline:2px solid var(--accent2);outline-offset:2px}
+</style>
+  <div class="fov-viewer">
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-a" checked />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-b" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-c" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-d" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-e" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-f" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-g" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-h" />
+    <input class="fov-radio" type="radio" name="fovpick" id="fov-i" />
+    <div class="fov-stage">
+      <img class="fov-shot fs-a" src="/images/articles/stellarium-app-fov-single-9.webp"
+           alt="The Stellarium app with a red camera frame at 135mm f/2 covering almost the whole of Orion, from Bellatrix across the Belt down to Saiph, with the Flame Nebula reduced to a marker near the centre" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-b" src="/images/articles/stellarium-app-fov-single-8.webp"
+           alt="The Stellarium app with a red camera frame labelled S30 Pro covering the Flame and Horsehead nebulae with the Orion Nebula and NGC 1981 crowding the far corner" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-c" src="/images/articles/stellarium-app-fov-single-1.webp"
+           alt="The Stellarium app with a red camera frame labelled 60mm f/4.5 around the Flame and Horsehead nebulae, with clear space on every side" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-d" src="/images/articles/stellarium-app-fov-single-7.webp"
+           alt="The Stellarium app with a red camera frame labelled S30 around the Flame and Horsehead nebulae with a little room to spare" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-e" src="/images/articles/stellarium-app-fov-single-2.webp"
+           alt="The Stellarium app with a red camera frame labelled 60mm f/6.0 around the Flame and Horsehead nebulae, tighter than the reducer frame" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-f" src="/images/articles/stellarium-app-fov-single-4.webp"
+           alt="The Stellarium app with a red camera frame labelled 80mm f/4.8 around the Flame and Horsehead nebulae" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-g" src="/images/articles/stellarium-app-fov-single-3.webp"
+           alt="The Stellarium app with a red camera frame labelled 60mm f/7.4 around the Flame and Horsehead nebulae, filling most of the frame" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-h" src="/images/articles/stellarium-app-fov-single-5.webp"
+           alt="The Stellarium app with a red camera frame labelled 80mm f/6.25 around the Flame and Horsehead nebulae, with the Horsehead close to the edge" loading="lazy" decoding="async" />
+      <img class="fov-shot fs-i" src="/images/articles/stellarium-app-fov-single-6.webp"
+           alt="The Stellarium app with a red camera frame labelled 80mm f/7.5 tight on the Flame Nebula, with the Horsehead at the edge of the frame" loading="lazy" decoding="async" />
+    </div>
+    <div class="fov-panel">
+      <div class="fov-pills">
+        <label class="fov-pill fp-a" for="fov-a">135mm f/2</label>
+        <label class="fov-pill fp-b" for="fov-b">S30 Pro</label>
+        <label class="fov-pill fp-c" for="fov-c">60mm f/4.5</label>
+        <label class="fov-pill fp-d" for="fov-d">S30</label>
+        <label class="fov-pill fp-e" for="fov-e">60mm f/6</label>
+        <label class="fov-pill fp-f" for="fov-f">80mm f/4.8</label>
+        <label class="fov-pill fp-g" for="fov-g">60mm f/7.4</label>
+        <label class="fov-pill fp-h" for="fov-h">80mm f/6.25</label>
+        <label class="fov-pill fp-i" for="fov-i">80mm f/7.5</label>
+      </div>
+      <div class="fov-notes">
+        <div class="fov-note fn-a">
+          <p class="fov-note-title">Samyang 135mm f/2 on the Sony A7 III</p>
+          <p class="fov-note-body">Almost the whole constellation. Betelgeuse sits off one corner, Rigel off the other, and the Flame is a speck beside the Belt. This is the frame for Orion as a subject in its own right, or for the enormous faint arcs that run across it. It is not the frame for the Horsehead.</p>
+        </div>
+        <div class="fov-note fn-b">
+          <p class="fov-note-title">Seestar S30 Pro</p>
+          <p class="fov-note-body">Wide enough to hold the whole southern end of the Belt. The Flame and the Horsehead sit well inside, and the Orion Nebula crowds the far corner. A good frame when the subject is the region rather than one object.</p>
+        </div>
+        <div class="fov-note fn-c">
+          <p class="fov-note-title">Askar V, 60mm with the reducer (270mm)</p>
+          <p class="fov-note-body">The widest of the Askar frames. Both nebulae sit together with space on every side and Alnitak comfortably inside. This is the forgiving one: room for a framing error, and room for the fainter dust that surrounds the pair.</p>
+        </div>
+        <div class="fov-note fn-d">
+          <p class="fov-note-title">Seestar S30</p>
+          <p class="fov-note-body">Almost the same coverage as the 270mm frame. The whole region fits with a little to spare, which is a large part of why the S30 is such a good grab-and-go for this target.</p>
+        </div>
+        <div class="fov-note fn-e">
+          <p class="fov-note-title">Askar V, 60mm native (360mm)</p>
+          <p class="fov-note-body">Tighter. The pair still fits, but the surrounding space has gone. Worth choosing when the tracking is behaving and the framing is deliberate.</p>
+        </div>
+        <div class="fov-note fn-f">
+          <p class="fov-note-title">Askar V, 80mm with the reducer (384mm)</p>
+          <p class="fov-note-body">Near enough the same coverage as the 360mm, but at f/4.8 rather than f/6, so it gathers light faster. When two configurations frame a target the same way, the faster one wins. This is the one I took out, and <a href="/share/flame-horsehead-nebulae.html">this is how it came out</a>.</p>
+        </div>
+        <div class="fov-note fn-g">
+          <p class="fov-note-title">Askar V, 60mm with the extender (444mm)</p>
+          <p class="fov-note-body">The pair now runs corner to corner. Nothing is cut off, but there is no margin left, so the centring has to be right on the night.</p>
+        </div>
+        <div class="fov-note fn-h">
+          <p class="fov-note-title">Askar V, 80mm native (500mm)</p>
+          <p class="fov-note-body">Both are still in, just. Over a few hours any drift starts pushing the Horsehead towards the edge, so this one asks more of the mount than it gives back on this particular target.</p>
+        </div>
+        <div class="fov-note fn-i">
+          <p class="fov-note-title">Askar V, 80mm with the extender (600mm)</p>
+          <p class="fov-note-body">The close-up. The Flame fills the frame and the Horsehead is pushed to the edge. This is the right choice for the Flame on its own, and the wrong one for the pair.</p>
+        </div>
+      </div>
+      <p class="fov-hint">Ordered widest to tightest. Tap the picture to see it full size.</p>
+    </div>
+  </div>
+  <figcaption>The same corner of Orion on the same evening, with each of the nine saved profiles laid over it in turn. Holding everything else still is what makes the comparison useful when you are deciding what to carry outside.</figcaption>
+</figure>
+
+<p>Step through them and the decision makes itself. The 135mm is a different
+picture altogether, one of Orion rather than of the nebulae. The 600mm is a
+portrait of the Flame with the Horsehead half out of shot. Somewhere in between
+sit three or four frames that all hold the pair properly, and at that point the
+tie is broken on speed: the 80mm at f/4.8 covers the same sky as the 60mm at
+f/6 and collects light faster, so that is the one that goes out.</p>
 
 <p>The same process works in reverse when a scope is already set up and I want to
-know what suits it tonight.</p>
+know what suits it tonight. Pick the frame, then scroll the sky for something
+shaped to fit it.</p>
 
 <h2>Planning around a balcony</h2>
 
