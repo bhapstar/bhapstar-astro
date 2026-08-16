@@ -385,6 +385,9 @@
     .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
     .day-cell { white-space: nowrap; }
     .day-sub  { font-size: 11px; color: var(--dim); }
+    .times-cell { white-space: nowrap; font-size: 12.5px; color: var(--muted); }
+    .time-single { color: var(--accent2); font-variant-numeric: tabular-nums; }
+    .time-sep { color: var(--dim); font-size: 11px; }
 
     /* The busiest day gets a bar behind it, scaled to the biggest day in
        the window. Cheap to draw and it makes an event night obvious. */
@@ -590,6 +593,7 @@
         <button class="range-btn" data-days="30">30 days</button>
         <button class="range-btn active" data-days="60">60 days</button>
         <button class="range-btn" data-days="365">Year</button>
+        <button class="range-btn" data-days="36500">All time</button>
       </div>
       <div style="display:flex;gap:8px">
         <button class="export-btn" id="tpExportBtn">⬇ Export CSV</button>
@@ -625,6 +629,7 @@
             <tr>
               <th>Day</th>
               <th>Source</th>
+              <th>Times</th>
               <th style="text-align:center">Taps</th>
               <th style="text-align:center">Devices</th>
               <th class="bar-cell">Busiest</th>
@@ -944,6 +949,25 @@
       });
     }
 
+    /* Clock time only, in your own timezone rather than the UTC the Worker
+       stores. A tap logged at 19:40 UTC reads as 23:40 in Dubai. */
+    function prettyTime(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return isNaN(d) ? '' : d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    }
+
+    /* The Worker sends first and last per day and source once it has been
+       updated. Until then these are absent and the column shows a dash, so
+       the page keeps working against the current Worker. */
+    function timeRange(row) {
+      const a = prettyTime(row.first);
+      const b = prettyTime(row.last);
+      if (!a && !b) return '<span class="no-data">—</span>';
+      if (!b || a === b) return `<span class="time-single">${esc(a || b)}</span>`;
+      return `<span class="time-single">${esc(a)}</span><span class="time-sep"> to </span><span class="time-single">${esc(b)}</span>`;
+    }
+
     function bar(value, max) {
       const pct = max > 0 ? Math.round((value / max) * 100) : 0;
       return `<div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>`;
@@ -1020,9 +1044,12 @@
       }
 
       // By day
-      dayTitle.textContent = `By day · last ${data.window_days || days} days`;
+      const allTime = (data.window_days || days) >= 3650;
+      dayTitle.textContent = allTime
+        ? 'By day · all time'
+        : `By day · last ${data.window_days || days} days`;
       if (!byDay.length) {
-        dayBody.innerHTML = `<tr><td colspan="5"><div class="empty">Nothing in this window.</div></td></tr>`;
+        dayBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nothing in this window.</div></td></tr>`;
       } else {
         const maxDay = Math.max(...byDay.map(r => r.taps || 0));
         dayBody.innerHTML = byDay.map(r => {
@@ -1031,6 +1058,7 @@
           return `<tr>
             <td class="day-cell">${esc(d.main)}<div class="day-sub">${esc(d.sub)}</div></td>
             <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
+            <td class="times-cell">${timeRange(r)}</td>
             <td class="num-cell">${r.taps || 0}</td>
             <td class="dev-cell">${r.devices || 0}</td>
             <td class="bar-cell">${bar(r.taps || 0, maxDay)}</td>
@@ -1056,9 +1084,9 @@
     /* ── CSV ── */
     document.getElementById('tpExportBtn').addEventListener('click', () => {
       if (!data) return;
-      const rows = [['day', 'source', 'taps', 'devices']];
+      const rows = [['day', 'source', 'first tap', 'last tap', 'taps', 'devices']];
       (data.by_day || []).forEach(r => {
-        rows.push([r.day, srcInfo(r.src).label, r.taps || 0, r.devices || 0]);
+        rows.push([r.day, srcInfo(r.src).label, prettyTime(r.first), prettyTime(r.last), r.taps || 0, r.devices || 0]);
       });
       const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
