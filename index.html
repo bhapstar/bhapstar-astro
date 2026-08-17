@@ -927,6 +927,9 @@
 ───────────────────────────────────────── -->
 <script>
 (function () {
+  const SUBSCRIBE_ENDPOINT =
+    'https://bhapstar-subscribe.bhapindersingh.workers.dev/subscribe';
+
   const form  = document.querySelector('form.contact-form');
   const toast = document.getElementById('toast');
   if (!form || !toast) return;
@@ -948,18 +951,80 @@
     label.textContent = 'Sending…';
     btn.disabled = true;
 
-    try {
+    /* Two separate jobs from one form.
+
+       The message goes to Formspree, which relays it to my inbox. That is
+       what Formspree is good at and Brevo cannot do at all.
+
+       The newsletter tick goes to the subscribe Worker, which adds the
+       person to the Brevo list. Brevo is the list, so that is where an
+       address has to end up to be any use.
+
+       They are sent independently on purpose. Someone who only wants the
+       newsletter leaves the message empty, and a hiccup at one service
+       should not lose the other. */
+    const wantsUpdates = form.querySelector('[name="keep_me_updated"]')?.checked;
+    const messageText  = (form.querySelector('[name="message"]')?.value || '').trim();
+
+    async function sendMessage() {
+      if (!messageText) return 'skipped';
       const res = await fetch(form.action, {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
         body: new FormData(form),
       });
-      if (!res.ok) throw new Error('Bad response');
+      if (!res.ok) throw new Error('message failed');
+      return 'sent';
+    }
+
+    async function subscribe() {
+      if (!wantsUpdates) return 'skipped';
+      const res = await fetch(SUBSCRIBE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:  form.querySelector('[name="name"]')?.value || '',
+          email: form.querySelector('[name="email"]')?.value || '',
+          trap:  form.querySelector('[name="_gotcha"]')?.value || '',
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error('subscribe failed');
+      return data.pending ? 'pending' : 'subscribed';
+    }
+
+    const [msg, sub] = await Promise.allSettled([sendMessage(), subscribe()]);
+    const msgOk = msg.status === 'fulfilled';
+    const subOk = sub.status === 'fulfilled';
+
+    if (msgOk && subOk) {
       form.reset();
-      showToast('Thank you — your message has been sent. I\'ll get back to you as soon as possible.');
-    } catch {
+      const sentMsg = msg.value === 'sent';
+      const pending = sub.value === 'pending';
+
+      if (sentMsg && sub.value !== 'skipped') {
+        showToast(pending
+          ? 'Message sent. Check your email to confirm your newsletter signup.'
+          : 'Thank you — message sent and you are on the list.');
+      } else if (sentMsg) {
+        showToast('Thank you — your message has been sent. I\'ll get back to you as soon as possible.');
+      } else if (pending) {
+        showToast('Almost there — check your email and click the confirmation link.');
+      } else if (sub.value === 'subscribed') {
+        showToast('Thank you — you are on the list.');
+      } else {
+        showToast('Add a message, or tick the box to get updates.');
+      }
+    } else if (msgOk && !subOk) {
+      // The message got through, so do not clear what they wrote.
+      showToast('Message sent, but the newsletter signup did not go through. Please try that again.');
+    } else if (!msgOk && subOk) {
+      showToast('You are on the list, but your message did not send. Please try again.');
+    } else {
       showToast('Something went wrong — please try again or contact me directly.');
-    } finally {
+    }
+
+    {
       label.textContent = originalText;
       btn.disabled = false;
     }

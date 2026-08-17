@@ -109,7 +109,14 @@ SUPPORT_NOTE = (
 
 # Swap this for your own Formspree form ID. Until it is set, the signup
 # block is left out entirely and only the download button renders.
-FORMSPREE_ENDPOINT = "https://formspree.io/f/mkjwqjlk"
+# The newsletter signup posts here, and this Worker adds the person to the
+# Brevo list. It is not Formspree: Formspree relays a message to an inbox,
+# which is the right tool for the contact and prints forms but the wrong one
+# for a mailing list, because the list would only ever live in your inbox.
+#
+# The Brevo API key cannot go in this page. The site is static, so anything
+# here is public. The key is a secret on the Worker instead.
+SUBSCRIBE_ENDPOINT = "https://bhapstar-subscribe.bhapindersingh.workers.dev/subscribe"
 
 DOWNLOAD_ICON = (
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" '
@@ -264,13 +271,26 @@ SIGNUP_TEMPLATE = """      <aside class="article-signup-block" aria-labelledby="
 
             fetch(form.action, {
               method: 'POST',
-              body: new FormData(form),
-              headers: { 'Accept': 'application/json' }
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: (form.querySelector('[name=name]') || {}).value || '',
+                email: (form.querySelector('[name=email]') || {}).value || '',
+                trap: (form.querySelector('[name=_gotcha]') || {}).value || ''
+              })
             })
               .then(function (r) {
-                if (!r.ok) throw new Error('bad response');
+                return r.json().then(function (d) {
+                  if (!r.ok || !d.ok) throw new Error('rejected');
+                  return d;
+                });
+              })
+              .then(function (d) {
                 form.reset();
-                status.textContent = 'Thank you, you are on the list.';
+                /* Double opt-in means they are not on the list yet, so say so
+                   rather than letting them wonder why nothing arrives. */
+                status.textContent = d.pending
+                  ? 'Almost there. Check your email and click the confirmation link.'
+                  : 'Thank you, you are on the list.';
                 status.setAttribute('data-state', 'ok');
               })
               .catch(function () {
@@ -365,12 +385,12 @@ def build_signup_block(entry=None):
     The hidden source field records which article the person signed up from,
     which is more useful than knowing only that they signed up.
     """
-    if not FORMSPREE_ENDPOINT or "YOUR_FORM_ID" in FORMSPREE_ENDPOINT:
+    if not SUBSCRIBE_ENDPOINT or "YOUR_WORKER" in SUBSCRIBE_ENDPOINT:
         return ''
 
     slug = (entry or {}).get("slug") or "article"
     return (SIGNUP_TEMPLATE
-            .replace("__ENDPOINT__", esc(FORMSPREE_ENDPOINT))
+            .replace("__ENDPOINT__", esc(SUBSCRIBE_ENDPOINT))
             .replace("__SOURCE__", esc(slug)))
 
 
