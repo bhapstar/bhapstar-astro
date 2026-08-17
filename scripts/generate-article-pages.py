@@ -141,10 +141,28 @@ DOWNLOAD_CSS = """
     .article-download-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
     .article-download-meta { margin: 10px 0 0; font-size: 11.5px; color: var(--muted);
                              opacity: 0.85; }
+    @media (prefers-reduced-motion: reduce) {
+      .article-download-btn { animation: none; }
+      .article-download-btn:hover { transform: none; }
+    }
+    @media (max-width: 768px) {
+      .article-download { margin-top: 32px; padding: 18px 16px; }
+      .article-download-btn { width: 100%; justify-content: center; }
+    }
+"""
 
+SIGNUP_CSS = """
+    /* The mailing list is its own panel now, so it needs panel styling of its
+       own rather than borrowing the download block's. It renders on every
+       article, which is why these rules are not conditional. */
+    .article-signup-block { margin: 40px 0 0; padding: 22px 24px;
+                        border-radius: var(--radius); border: 1px solid var(--line);
+                        background: var(--soft); }
+    .article-signup-block h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600;
+                        letter-spacing: 0.16em; text-transform: uppercase;
+                        color: var(--muted); }
     /* Optional mailing list, kept visually quieter than the download itself. */
-    .article-signup { margin: 20px 0 0; padding: 18px 0 0;
-                      border-top: 1px solid var(--line); }
+    .article-signup { margin: 0; padding: 0; }
     .article-signup-title { margin: 0 0 4px; font-size: 14px; font-weight: 600;
                             color: var(--text); }
     .article-signup-sub { margin: 0 0 14px; font-size: 12.5px; line-height: 1.55;
@@ -194,17 +212,16 @@ DOWNLOAD_CSS = """
     html[data-theme="light"] .article-signup-status[data-state="ok"] { color: #15803d; }
     html[data-theme="light"] .article-signup-status[data-state="error"] { color: #be123c; }
     @media (prefers-reduced-motion: reduce) {
-      .article-download-btn { animation: none; }
-      .article-download-btn:hover, .article-signup-btn:hover { transform: none; }
+      .article-signup-btn:hover { transform: none; }
     }
     @media (max-width: 768px) {
-      .article-download { margin-top: 32px; padding: 18px 16px; }
-      .article-download-btn { width: 100%; justify-content: center; }
+      .article-signup-block { margin-top: 32px; padding: 18px 16px; }
       .article-signup-btn { width: 100%; }
     }
 """
 
-SIGNUP_TEMPLATE = """
+SIGNUP_TEMPLATE = """      <aside class="article-signup-block" aria-labelledby="articleSignupHeading">
+        <h2 id="articleSignupHeading">Stay in the loop</h2>
         <div class="article-signup">
           <p class="article-signup-title">Want to know when there is something new?</p>
           <p class="article-signup-sub">
@@ -274,6 +291,8 @@ SIGNUP_TEMPLATE = """
           });
         })();
         </script>
+      </aside>
+
 """
 
 DOWNLOAD_TEMPLATE = """      <aside class="article-download" aria-labelledby="articleDownloadHeading">
@@ -283,7 +302,7 @@ DOWNLOAD_TEMPLATE = """      <aside class="article-download" aria-labelledby="ar
           __ICON__<span>__LABEL__ (PDF)</span>
         </a>
         <p class="article-download-meta">Free, no sign-up needed. Opens or saves straight away.</p>
-__SIGNUP__      </aside>
+      </aside>
 
 """
 
@@ -340,18 +359,30 @@ def build_download_block(entry=None):
     label = dl.get("label", "Printable field card")
     note = dl.get("note", "One page, A4, ready to print.")
 
-    signup = ''
-    if FORMSPREE_ENDPOINT and "YOUR_FORM_ID" not in FORMSPREE_ENDPOINT:
-        signup = (SIGNUP_TEMPLATE
-                  .replace("__ENDPOINT__", esc(FORMSPREE_ENDPOINT))
-                  .replace("__SOURCE__", esc(os.path.basename(path))))
-
     return (DOWNLOAD_TEMPLATE
             .replace("__NOTE__", esc(note))
             .replace("__PATH__", esc(path))
             .replace("__ICON__", DOWNLOAD_ICON)
-            .replace("__LABEL__", esc(label))
-            .replace("__SIGNUP__", signup))
+            .replace("__LABEL__", esc(label)))
+
+def build_signup_block(entry=None):
+    """Mailing list panel for the foot of every article page.
+
+    Separate from the field card block on purpose. The download is a one-off
+    that only two articles carry; the mailing list belongs at the end of
+    anything someone has just finished reading.
+
+    The hidden source field records which article the person signed up from,
+    which is more useful than knowing only that they signed up.
+    """
+    if not FORMSPREE_ENDPOINT or "YOUR_FORM_ID" in FORMSPREE_ENDPOINT:
+        return ''
+
+    slug = (entry or {}).get("slug") or "article"
+    return (SIGNUP_TEMPLATE
+            .replace("__ENDPOINT__", esc(FORMSPREE_ENDPOINT))
+            .replace("__SOURCE__", esc(slug)))
+
 
 def build_support_block(entry=None):
     """Retailer links for the foot of an article page.
@@ -509,6 +540,10 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     # carries neither the block nor the styles for it.
     download_html = build_download_block(entry)
     download_css = DOWNLOAD_CSS if download_html else ''
+
+    # The mailing list goes on every article, so its CSS is unconditional.
+    signup_html = build_signup_block(entry)
+    signup_css = SIGNUP_CSS if signup_html else ''
     build_page.last_gloss_count = gloss_count
 
     if cover_src:
@@ -773,7 +808,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
       .article-standfirst {{ font-size: 15px; }}
       .gn-label {{ display: none; }}
     }}
-{download_css}{SUPPORT_CSS}{gloss_css}
+{download_css}{signup_css}{SUPPORT_CSS}{gloss_css}
   </style>
 
   <script type="application/ld+json">
@@ -798,7 +833,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 {body_html}
       </div>
 
-{download_html}{build_support_block(entry)}
+{download_html}{signup_html}{build_support_block(entry)}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
   </section>
