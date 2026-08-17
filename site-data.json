@@ -1,16 +1,16 @@
 [
   {
-      "section": "_divider",
-      "_bar": "==================================================================",
-      "_section": "GALLERY",
-      "_count": "25 entries",
-      "_note": [
-          "Photographs. Shown on gallery.html and index.html, and rotated",
-          "through the six thumbnails on card.html.",
-          "generate-share-pages.py builds one share/<slug>.html per",
-          "entry, and generate-sitemap.py lists them."
-      ],
-      "_bar_end": "=================================================================="
+    "section": "_divider",
+    "_bar": "==================================================================",
+    "_section": "GALLERY",
+    "_count": "25 entries",
+    "_note": [
+      "Photographs. Shown on gallery.html and index.html, and rotated",
+      "through the six thumbnails on card.html.",
+      "generate-share-pages.py builds one share/<slug>.html per",
+      "entry, and generate-sitemap.py lists them."
+    ],
+    "_bar_end": "=================================================================="
   },
   {
     "file": "images/the_milky_way.webp",
@@ -589,17 +589,17 @@
     }
   },
   {
-      "section": "_divider",
-      "_bar": "==================================================================",
-      "_section": "GEAR",
-      "_count": "17 entries",
-      "_note": [
-          "Equipment. Shown on gear.html. generate-gear-pages.py builds",
-          "one gear/<slug>.html per entry. Retailer links live in \"buy\";",
-          "set \"affiliate\": true so the generated link gets",
-          "rel=\"sponsored\"."
-      ],
-      "_bar_end": "=================================================================="
+    "section": "_divider",
+    "_bar": "==================================================================",
+    "_section": "GEAR",
+    "_count": "17 entries",
+    "_note": [
+      "Equipment. Shown on gear.html. generate-gear-pages.py builds",
+      "one gear/<slug>.html per entry. Retailer links live in \"buy\";",
+      "set \"affiliate\": true so the generated link gets",
+      "rel=\"sponsored\"."
+    ],
+    "_bar_end": "=================================================================="
   },
   {
     "images": [
@@ -1163,17 +1163,17 @@
     ]
   },
   {
-      "section": "_divider",
-      "_bar": "==================================================================",
-      "_section": "ARTICLES",
-      "_count": "10 entries",
-      "_note": [
-          "Long-form write-ups. Shown on articles.html.",
-          "generate-article-pages.py builds one articles/<slug>.html per",
-          "entry, pairing it with the prose in",
-          "content/articles/<slug>.html. \"file\" is the hero image."
-      ],
-      "_bar_end": "=================================================================="
+    "section": "_divider",
+    "_bar": "==================================================================",
+    "_section": "ARTICLES",
+    "_count": "10 entries",
+    "_note": [
+      "Long-form write-ups. Shown on articles.html.",
+      "generate-article-pages.py builds one articles/<slug>.html per",
+      "entry, pairing it with the prose in",
+      "content/articles/<slug>.html. \"file\" is the hero image."
+    ],
+    "_bar_end": "=================================================================="
   },
   {
     "file": "images/gear/Full rig 3.webp",
@@ -1251,7 +1251,12 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "download": {
+      "file": "downloads/meteors-milky-way-phone-field-card.pdf",
+      "label": "Phone settings field card",
+      "note": "Every setting on this page on one side of A4: iPhone, Samsung and Pixel, the Pro mode numbers, and the checklist. Print it, fold it, take it out with you."
+    }
   },
   {
     "file": "images/articles/meteor-shower-camera-mockup.webp",
@@ -1290,7 +1295,12 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "download": {
+      "file": "downloads/meteors-milky-way-camera-field-card.pdf",
+      "label": "Camera settings field card",
+      "note": "The full settings table, the shutter limits by focal length and the aiming notes, on one side of A4. Print it, fold it, take it out with you."
+    }
   },
   {
     "file": "images/articles/stellarium-app-fov-single.webp",
