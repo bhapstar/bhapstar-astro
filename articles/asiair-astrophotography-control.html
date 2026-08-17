@@ -240,11 +240,6 @@
                           transition: border-color 200ms ease, background 200ms ease; }
     .article-signup input:focus { border-color: rgba(var(--accent-rgb),0.55);
                           background: rgba(167,139,250,0.09); }
-    .article-signup-check { display: flex; align-items: flex-start; gap: 9px;
-                          margin: 13px 0 0; font-size: 12.5px; line-height: 1.5;
-                          color: var(--muted); cursor: pointer; }
-    .article-signup-check input { margin: 1px 0 0; flex-shrink: 0;
-                          accent-color: #a78bfa; width: 15px; height: 15px; }
     .article-signup-btn { padding: 10px 20px; border-radius: 11px; font: inherit;
                           font-size: 13.5px; font-weight: 600; cursor: pointer;
                           color: var(--text); background: rgba(var(--accent-rgb),0.10);
@@ -653,11 +648,6 @@ it. Once the sequence is running the work moves indoors, which is where
               <input type="email" id="signupEmail" name="email" placeholder="Email address"
                      autocomplete="email" required />
             </div>
-            <label class="article-signup-check" for="signupUpdates">
-              <input type="checkbox" id="signupUpdates" name="keep_me_updated"
-                     value="yes" checked />
-              <span>Keep me up to date when new images, gear or articles are added.</span>
-            </label>
             <div class="article-signup-hp" aria-hidden="true">
               <label for="signupCompany">Leave this field empty</label>
               <input type="text" id="signupCompany" name="_gotcha" tabindex="-1" autocomplete="off" />
