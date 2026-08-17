@@ -238,10 +238,26 @@
     .article-download-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
     .article-download-meta { margin: 10px 0 0; font-size: 11.5px; color: var(--muted);
                              opacity: 0.85; }
+    @media (prefers-reduced-motion: reduce) {
+      .article-download-btn { animation: none; }
+      .article-download-btn:hover { transform: none; }
+    }
+    @media (max-width: 768px) {
+      .article-download { margin-top: 32px; padding: 18px 16px; }
+      .article-download-btn { width: 100%; justify-content: center; }
+    }
 
+    /* The mailing list is its own panel now, so it needs panel styling of its
+       own rather than borrowing the download block's. It renders on every
+       article, which is why these rules are not conditional. */
+    .article-signup-block { margin: 40px 0 0; padding: 22px 24px;
+                        border-radius: var(--radius); border: 1px solid var(--line);
+                        background: var(--soft); }
+    .article-signup-block h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600;
+                        letter-spacing: 0.16em; text-transform: uppercase;
+                        color: var(--muted); }
     /* Optional mailing list, kept visually quieter than the download itself. */
-    .article-signup { margin: 20px 0 0; padding: 18px 0 0;
-                      border-top: 1px solid var(--line); }
+    .article-signup { margin: 0; padding: 0; }
     .article-signup-title { margin: 0 0 4px; font-size: 14px; font-weight: 600;
                             color: var(--text); }
     .article-signup-sub { margin: 0 0 14px; font-size: 12.5px; line-height: 1.55;
@@ -291,12 +307,10 @@
     html[data-theme="light"] .article-signup-status[data-state="ok"] { color: #15803d; }
     html[data-theme="light"] .article-signup-status[data-state="error"] { color: #be123c; }
     @media (prefers-reduced-motion: reduce) {
-      .article-download-btn { animation: none; }
-      .article-download-btn:hover, .article-signup-btn:hover { transform: none; }
+      .article-signup-btn:hover { transform: none; }
     }
     @media (max-width: 768px) {
-      .article-download { margin-top: 32px; padding: 18px 16px; }
-      .article-download-btn { width: 100%; justify-content: center; }
+      .article-signup-block { margin-top: 32px; padding: 18px 16px; }
       .article-signup-btn { width: 100%; }
     }
 
@@ -668,7 +682,10 @@ works too</a>.</p>
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="M4.5 7L8 10.5 11.5 7"/><path d="M2.5 13h11"/></svg><span>Camera settings field card (PDF)</span>
         </a>
         <p class="article-download-meta">Free, no sign-up needed. Opens or saves straight away.</p>
+      </aside>
 
+      <aside class="article-signup-block" aria-labelledby="articleSignupHeading">
+        <h2 id="articleSignupHeading">Stay in the loop</h2>
         <div class="article-signup">
           <p class="article-signup-title">Want to know when there is something new?</p>
           <p class="article-signup-sub">
@@ -693,7 +710,7 @@ works too</a>.</p>
               <label for="signupCompany">Leave this field empty</label>
               <input type="text" id="signupCompany" name="_gotcha" tabindex="-1" autocomplete="off" />
             </div>
-            <input type="hidden" name="source" value="meteors-milky-way-camera-field-card.pdf" />
+            <input type="hidden" name="source" value="photograph-meteor-shower-milky-way-camera" />
             <div class="article-signup-actions">
               <button class="article-signup-btn" type="submit" id="signupBtn">Sign me up</button>
               <p class="article-signup-status" id="signupStatus" role="status" aria-live="polite"></p>
