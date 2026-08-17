@@ -208,8 +208,7 @@ SIGNUP_TEMPLATE = """
         <div class="article-signup">
           <p class="article-signup-title">Want to know when there is something new?</p>
           <p class="article-signup-sub">
-            Entirely optional, and nothing to do with the download above. I send a note
-            when new images, gear write-ups or articles go up, and nothing else.
+            Signup below and recieve a newsletter whenever new images, gear write-ups or articles go up.
           </p>
           <form class="article-signup-form" id="signupForm"
                 action="__ENDPOINT__" method="POST">
@@ -236,8 +235,7 @@ SIGNUP_TEMPLATE = """
               <p class="article-signup-status" id="signupStatus" role="status" aria-live="polite"></p>
             </div>
             <p class="article-signup-privacy">
-              Your address is used only to send those updates. It is not shared or sold,
-              and every message has an unsubscribe link.
+              Your email address is used only to send those updates and will never be shared or sold.
             </p>
           </form>
         </div>
