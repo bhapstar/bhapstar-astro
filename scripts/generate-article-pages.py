@@ -94,6 +94,202 @@ SUPPORT_NOTE = (
     "or recommend. As an Amazon Associate I earn from qualifying purchases."
 )
 
+# ── Field card download ────────────────────────────────────────────────
+# An article may carry a "download" object in site-data.json:
+#
+#   "download": {
+#     "file":  "downloads/meteors-milky-way-phone-field-card.pdf",
+#     "label": "Phone settings field card",
+#     "note":  "One page, A4. Everything on this page, ready to print."
+#   }
+#
+# The file downloads directly, with no form in the way, because the whole
+# point of a field card is having it before you drive out to a dark site.
+# The mailing list sits underneath as a separate, optional ask.
+
+# Swap this for your own Formspree form ID. Until it is set, the signup
+# block is left out entirely and only the download button renders.
+FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID"
+
+DOWNLOAD_ICON = (
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" '
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M8 2v8"/><path d="M4.5 7L8 10.5 11.5 7"/><path d="M2.5 13h11"/></svg>'
+)
+
+DOWNLOAD_CSS = """
+    .article-download { margin: 40px 0 0; padding: 22px 24px;
+                        border-radius: var(--radius); border: 1px solid var(--line);
+                        background: var(--soft); }
+    .article-download h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600;
+                           letter-spacing: 0.16em; text-transform: uppercase;
+                           color: var(--muted); }
+    .article-download-intro { margin: 0 0 16px; font-size: 13.5px; line-height: 1.6;
+                              color: var(--muted); }
+    .article-download-btn { display: inline-flex; align-items: center; gap: 9px;
+                            padding: 12px 20px; border-radius: 12px;
+                            font-size: 14px; font-weight: 600; text-decoration: none;
+                            color: #fff; border: 1px solid transparent;
+                            background: linear-gradient(90deg, #a78bfa, #60a5fa,
+                                        #f472b6, #60a5fa, #a78bfa);
+                            background-size: 300% 100%;
+                            animation: gradientRoll 5s linear infinite;
+                            transition: transform 200ms ease, box-shadow 200ms ease; }
+    .article-download-btn:hover, .article-download-btn:focus-visible {
+                            transform: translateY(-2px);
+                            box-shadow: 0 10px 30px rgba(167,139,250,0.32); }
+    .article-download-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .article-download-meta { margin: 10px 0 0; font-size: 11.5px; color: var(--muted);
+                             opacity: 0.85; }
+
+    /* Optional mailing list, kept visually quieter than the download itself. */
+    .article-signup { margin: 20px 0 0; padding: 18px 0 0;
+                      border-top: 1px solid var(--line); }
+    .article-signup-title { margin: 0 0 4px; font-size: 14px; font-weight: 600;
+                            color: var(--text); }
+    .article-signup-sub { margin: 0 0 14px; font-size: 12.5px; line-height: 1.55;
+                          color: var(--muted); }
+    .article-signup-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .article-signup input[type="text"],
+    .article-signup input[type="email"] {
+                          flex: 1 1 190px; min-width: 0; padding: 10px 13px;
+                          border-radius: 11px; font: inherit; font-size: 13.5px;
+                          color: var(--text); background: rgba(167,139,250,0.05);
+                          border: 1px solid var(--line); outline: none;
+                          transition: border-color 200ms ease, background 200ms ease; }
+    .article-signup input:focus { border-color: rgba(var(--accent-rgb),0.55);
+                          background: rgba(167,139,250,0.09); }
+    .article-signup-check { display: flex; align-items: flex-start; gap: 9px;
+                          margin: 13px 0 0; font-size: 12.5px; line-height: 1.5;
+                          color: var(--muted); cursor: pointer; }
+    .article-signup-check input { margin: 1px 0 0; flex-shrink: 0;
+                          accent-color: #a78bfa; width: 15px; height: 15px; }
+    .article-signup-btn { padding: 10px 20px; border-radius: 11px; font: inherit;
+                          font-size: 13.5px; font-weight: 600; cursor: pointer;
+                          color: var(--text); background: rgba(var(--accent-rgb),0.10);
+                          border: 1px solid rgba(var(--accent-rgb),0.30);
+                          transition: border-color 200ms ease, background 200ms ease,
+                                      transform 200ms ease; }
+    .article-signup-btn:hover, .article-signup-btn:focus-visible {
+                          border-color: rgba(var(--accent2-rgb),0.55);
+                          background: rgba(var(--accent2-rgb),0.16);
+                          transform: translateY(-2px); }
+    .article-signup-btn[disabled] { opacity: 0.55; cursor: default;
+                          transform: none; }
+    .article-signup-actions { display: flex; align-items: center; gap: 14px;
+                          flex-wrap: wrap; margin: 14px 0 0; }
+    .article-signup-status { font-size: 12.5px; margin: 0; }
+    .article-signup-status[data-state="ok"] { color: #4ade80; }
+    .article-signup-status[data-state="error"] { color: #fb7185; }
+    .article-signup-privacy { margin: 12px 0 0; font-size: 11.5px; line-height: 1.5;
+                          color: var(--muted); opacity: 0.85; }
+    .article-signup-hp { position: absolute; left: -9999px; width: 1px; height: 1px;
+                          overflow: hidden; }
+    /* styles.css has no .sr-only, so the visually-hidden helper the form
+       labels rely on is defined here, scoped to this block. */
+    .article-signup .sr-only { position: absolute; width: 1px; height: 1px;
+                          padding: 0; margin: -1px; overflow: hidden;
+                          clip: rect(0 0 0 0); clip-path: inset(50%);
+                          white-space: nowrap; border: 0; }
+    html[data-theme="light"] .article-signup-status[data-state="ok"] { color: #15803d; }
+    html[data-theme="light"] .article-signup-status[data-state="error"] { color: #be123c; }
+    @media (prefers-reduced-motion: reduce) {
+      .article-download-btn { animation: none; }
+      .article-download-btn:hover, .article-signup-btn:hover { transform: none; }
+    }
+    @media (max-width: 768px) {
+      .article-download { margin-top: 32px; padding: 18px 16px; }
+      .article-download-btn { width: 100%; justify-content: center; }
+      .article-signup-btn { width: 100%; }
+    }
+"""
+
+SIGNUP_TEMPLATE = """
+        <div class="article-signup">
+          <p class="article-signup-title">Want to know when there is something new?</p>
+          <p class="article-signup-sub">
+            Entirely optional, and nothing to do with the download above. I send a note
+            when new images, gear write-ups or articles go up, and nothing else.
+          </p>
+          <form class="article-signup-form" id="signupForm"
+                action="__ENDPOINT__" method="POST">
+            <div class="article-signup-row">
+              <label class="sr-only" for="signupName">Name</label>
+              <input type="text" id="signupName" name="name" placeholder="Name"
+                     autocomplete="name" required />
+              <label class="sr-only" for="signupEmail">Email address</label>
+              <input type="email" id="signupEmail" name="email" placeholder="Email address"
+                     autocomplete="email" required />
+            </div>
+            <label class="article-signup-check" for="signupUpdates">
+              <input type="checkbox" id="signupUpdates" name="keep_me_updated"
+                     value="yes" checked />
+              <span>Keep me up to date when new images, gear or articles are added.</span>
+            </label>
+            <div class="article-signup-hp" aria-hidden="true">
+              <label for="signupCompany">Leave this field empty</label>
+              <input type="text" id="signupCompany" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </div>
+            <input type="hidden" name="source" value="__SOURCE__" />
+            <div class="article-signup-actions">
+              <button class="article-signup-btn" type="submit" id="signupBtn">Sign me up</button>
+              <p class="article-signup-status" id="signupStatus" role="status" aria-live="polite"></p>
+            </div>
+            <p class="article-signup-privacy">
+              Your address is used only to send those updates. It is not shared or sold,
+              and every message has an unsubscribe link.
+            </p>
+          </form>
+        </div>
+
+        <script>
+        /* Post the signup in the background so the reader is never taken off
+           the article. If fetch is unavailable the form submits normally. */
+        (function () {
+          var form = document.getElementById('signupForm');
+          if (!form || !window.fetch) return;
+          var btn = document.getElementById('signupBtn');
+          var status = document.getElementById('signupStatus');
+
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            status.textContent = 'Sending...';
+            status.removeAttribute('data-state');
+            btn.disabled = true;
+
+            fetch(form.action, {
+              method: 'POST',
+              body: new FormData(form),
+              headers: { 'Accept': 'application/json' }
+            })
+              .then(function (r) {
+                if (!r.ok) throw new Error('bad response');
+                form.reset();
+                status.textContent = 'Thank you, you are on the list.';
+                status.setAttribute('data-state', 'ok');
+              })
+              .catch(function () {
+                status.textContent = 'That did not go through. Please try again shortly.';
+                status.setAttribute('data-state', 'error');
+                btn.disabled = false;
+              });
+          });
+        })();
+        </script>
+"""
+
+DOWNLOAD_TEMPLATE = """      <aside class="article-download" aria-labelledby="articleDownloadHeading">
+        <h2 id="articleDownloadHeading">Take it with you</h2>
+        <p class="article-download-intro">__NOTE__</p>
+        <a class="article-download-btn" href="/__PATH__" download>
+          __ICON__<span>__LABEL__ (PDF)</span>
+        </a>
+        <p class="article-download-meta">Free, no sign-up needed. Opens or saves straight away.</p>
+__SIGNUP__      </aside>
+
+"""
+
+
 SUPPORT_CSS = """
     .article-support { margin: 44px 0 0; padding: 22px 24px;
                        border-radius: var(--radius); border: 1px solid var(--line);
@@ -125,6 +321,39 @@ SUPPORT_CSS = """
     }
 """
 
+
+def build_download_block(entry=None):
+    """Printable field card for the foot of an article page.
+
+    Returns '' unless the entry carries a "download" object, so articles
+    without a card are untouched. The PDF is a plain link with the download
+    attribute: no form, no gate, no wait. Someone reading this on a phone at
+    a dark site gets the file immediately, which is the only version of this
+    that is actually useful.
+
+    The mailing list underneath is a separate, optional ask. It posts to
+    Formspree over fetch so the reader stays on the article.
+    """
+    dl = (entry or {}).get("download") or {}
+    path = dl.get("file")
+    if not path:
+        return ''
+
+    label = dl.get("label", "Printable field card")
+    note = dl.get("note", "One page, A4, ready to print.")
+
+    signup = ''
+    if FORMSPREE_ENDPOINT and "YOUR_FORM_ID" not in FORMSPREE_ENDPOINT:
+        signup = (SIGNUP_TEMPLATE
+                  .replace("__ENDPOINT__", esc(FORMSPREE_ENDPOINT))
+                  .replace("__SOURCE__", esc(os.path.basename(path))))
+
+    return (DOWNLOAD_TEMPLATE
+            .replace("__NOTE__", esc(note))
+            .replace("__PATH__", esc(path))
+            .replace("__ICON__", DOWNLOAD_ICON)
+            .replace("__LABEL__", esc(label))
+            .replace("__SIGNUP__", signup))
 
 def build_support_block(entry=None):
     """Retailer links for the foot of an article page.
@@ -277,6 +506,11 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     # script, so nothing is paid for on a page that cannot use it.
     gloss_css = GLOSSARY_CSS if gloss_count else ''
     gloss_js = GLOSSARY_JS if gloss_count else ''
+
+    # Same reasoning for the field card: an article without a download
+    # carries neither the block nor the styles for it.
+    download_html = build_download_block(entry)
+    download_css = DOWNLOAD_CSS if download_html else ''
     build_page.last_gloss_count = gloss_count
 
     if cover_src:
@@ -541,7 +775,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
       .article-standfirst {{ font-size: 15px; }}
       .gn-label {{ display: none; }}
     }}
-{SUPPORT_CSS}{gloss_css}
+{download_css}{SUPPORT_CSS}{gloss_css}
   </style>
 
   <script type="application/ld+json">
@@ -566,7 +800,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 {body_html}
       </div>
 
-{build_support_block(entry)}
+{download_html}{build_support_block(entry)}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
   </section>
