@@ -432,4 +432,57 @@ const HIDE_FIELD_NOTES = true;
     console.error('[partials] failed:', err);
   }
 
+  /* ── Tap counter ──
+     Cloudflare Web Analytics discards query strings, so ?src=... never reaches
+     it. This records the source to the taps Worker instead.
+
+     It lives here rather than in card.html so that any page can be the target
+     of a tag, a printed QR code or a link, not just the card. It only fires
+     for a source in the list below, and it is fire and forget: if the Worker
+     is down or the request is blocked, the page does not care.
+
+     The visitor id is the same key the gallery likes module uses, so a device
+     that already has one is not given a second. It exists so the stats can
+     report distinct devices as well as raw taps. */
+  try {
+    var TAP_URL  = 'https://bhapstar-taps.bhapindersingh.workers.dev/tap';
+    var TAP_SRCS = {
+      nfc: 1,          // NFC business card
+      qr: 1,           // generic printed QR
+      card: 1,         // printed QR cards
+      x: 1,            // links posted on X
+      'pdf-phone': 1,  // QR on the phone field card
+      'pdf-camera': 1  // QR on the camera field card
+    };
+    var tapSrc = new URLSearchParams(location.search).get('src');
+
+    if (tapSrc && TAP_SRCS[tapSrc]) {
+      var uid = localStorage.getItem('_bhap_uid');
+      if (!uid) {
+        uid = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : String(Date.now()) + '-' + String(Math.random()).slice(2);
+        localStorage.setItem('_bhap_uid', uid);
+      }
+      // text/plain keeps this a simple request, so there is no CORS preflight
+      // and the tap costs one round trip rather than two.
+      fetch(TAP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ src: tapSrc, uid: uid }),
+        keepalive: true
+      }).catch(function () { /* a missed tap is not worth a broken page */ });
+
+      // Tidy the address bar so a shared or bookmarked link does not carry the
+      // source with it and count a second time.
+      try {
+        var qs = new URLSearchParams(location.search);
+        qs.delete('src');
+        var rest = qs.toString();
+        history.replaceState(null, '',
+          location.pathname + (rest ? '?' + rest : '') + location.hash);
+      } catch (e) { /* not worth breaking the page over */ }
+    }
+  } catch (e) { /* localStorage can throw in locked-down browsers */ }
+
 })();

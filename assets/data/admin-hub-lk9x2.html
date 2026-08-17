@@ -381,6 +381,8 @@
     .src-nfc  { background: var(--accent4); box-shadow: 0 0 8px rgba(244,114,182,0.55); }
     .src-card { background: var(--accent2); box-shadow: 0 0 8px rgba(96,165,250,0.55); }
     .src-qr   { background: var(--accent3); box-shadow: 0 0 8px rgba(52,211,153,0.55); }
+    .src-x    { background: var(--accent1); box-shadow: 0 0 8px rgba(167,139,250,0.55); }
+    .src-pdf  { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.55); }
     .num-cell { text-align: center; font-weight: 700; font-size: 16px; color: var(--accent4); }
     .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
     .day-cell { white-space: nowrap; }
@@ -908,9 +910,12 @@
        VALID_SRC list in the Worker. 'card' is the QR printed on the physical
        cards; 'qr' is any QR made after the counter existed. */
     const SOURCES = {
-      nfc:  { label: 'NFC tag',         cls: 'src-nfc'  },
-      card: { label: 'Printed card QR', cls: 'src-card' },
-      qr:   { label: 'QR code',         cls: 'src-qr'   }
+      nfc:          { label: 'NFC tag',            cls: 'src-nfc'  },
+      card:         { label: 'Printed card QR',    cls: 'src-card' },
+      qr:           { label: 'QR code',            cls: 'src-qr'   },
+      x:            { label: 'Link posted on X',   cls: 'src-x'    },
+      'pdf-phone':  { label: 'Phone field card',   cls: 'src-pdf'  },
+      'pdf-camera': { label: 'Camera field card',  cls: 'src-pdf'  }
     };
 
     const loadingMsg = document.getElementById('tpLoadingMsg');
