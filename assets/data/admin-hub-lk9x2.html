@@ -1057,7 +1057,20 @@
         dayBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nothing in this window.</div></td></tr>`;
       } else {
         const maxDay = Math.max(...byDay.map(r => r.taps || 0));
-        dayBody.innerHTML = byDay.map(r => {
+
+        // Sort by date first (newest first), then by the latest tap
+        // within each day (newest first). This prevents the display order
+        // from depending on the order returned by the Worker.
+        const sortedByDay = byDay.slice().sort((a, b) => {
+          const dayCompare = String(b.day || '').localeCompare(String(a.day || ''));
+          if (dayCompare !== 0) return dayCompare;
+
+          const timeA = a.last ? new Date(a.last).getTime() : 0;
+          const timeB = b.last ? new Date(b.last).getTime() : 0;
+          return timeB - timeA;
+        });
+
+        dayBody.innerHTML = sortedByDay.map(r => {
           const info = srcInfo(r.src);
           const d = prettyDay(r.day);
           return `<tr>
@@ -1090,7 +1103,19 @@
     document.getElementById('tpExportBtn').addEventListener('click', () => {
       if (!data) return;
       const rows = [['day', 'source', 'first tap', 'last tap', 'taps', 'devices']];
-      (data.by_day || []).forEach(r => {
+
+      // Keep the CSV in the same chronological order as the dashboard:
+      // newest date first, then newest tap within each day.
+      const sortedByDay = (data.by_day || []).slice().sort((a, b) => {
+        const dayCompare = String(b.day || '').localeCompare(String(a.day || ''));
+        if (dayCompare !== 0) return dayCompare;
+
+        const timeA = a.last ? new Date(a.last).getTime() : 0;
+        const timeB = b.last ? new Date(b.last).getTime() : 0;
+        return timeB - timeA;
+      });
+
+      sortedByDay.forEach(r => {
         rows.push([r.day, srcInfo(r.src).label, prettyTime(r.first), prettyTime(r.last), r.taps || 0, r.devices || 0]);
       });
       const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
