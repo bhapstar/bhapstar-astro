@@ -385,6 +385,65 @@
     transform: translateY(-2px);
   }
 }
+
+/* ── Latest articles (compact list above the Instagram carousel) ────────
+   Deliberately quiet: no cover images, no cards. Three plain links so the
+   homepage gains real crawlable routes into /articles/ without adding
+   another block of visual weight. */
+.latest-articles-intro{ margin: 0 0 14px !important; }
+
+.latest-articles-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.latest-articles-list li{ border-bottom: 1px solid var(--line); }
+
+.latest-articles-list a{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.la-title{
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.la-meta{
+  flex: none;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px){
+  .latest-articles-list a{
+    display: block;
+    padding: 11px 2px;
+  }
+  .la-meta{ display: block; margin-top: 4px; white-space: normal; }
+}
+
+@media (hover:hover){
+  .latest-articles-list a{ transition: color .22s ease, padding-left .22s ease; }
+  .latest-articles-list a:hover{ color: #a78bfa; padding-left: 8px; }
+  html[data-theme="light"] .latest-articles-list a:hover{ color: rgba(124,92,246,0.95); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .latest-articles-list a{ transition: none; }
+  .latest-articles-list a:hover{ padding-left: 2px; }
+}
 </style>
 
 <script>
@@ -504,6 +563,104 @@
           </div>
           <p class="stats-sub">A running tally of every image in the <a href="/gallery.html">gallery</a>.</p>
           <div class="stats-grid" id="statsGrid" aria-live="polite"></div>
+        </div>
+
+        <!-- Latest articles -->
+        <div class="latest-articles-section">
+          <div class="astro-divider" aria-hidden="true">
+            <span>&#10022; &#10022; &#10022;</span>
+          </div>
+
+          <div class="panel latest-articles-panel">
+            <div class="section-head section-head--inline">
+              <h3>Latest articles</h3>
+            </div>
+            <p class="stats-sub latest-articles-intro">
+              Guides, gear notes and field write-ups. <a href="/articles.html">Read all articles</a>.
+            </p>
+
+            <!-- The three entries below are the current newest. The script
+                 underneath refreshes them from site-data.json on load, so this
+                 markup only needs to be a sensible fallback, not maintained
+                 by hand. It is kept static so crawlers see real links. -->
+            <ul class="latest-articles-list" id="latestArticlesList">
+              <li>
+                <a href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html">
+                  <span class="la-title">How I Plan Every Astrophotography Session Using Stellarium</span>
+                  <span class="la-meta">Capture &middot; 9 min read</span>
+                </a>
+              </li>
+              <li>
+                <a href="/articles/bortle-scale-narrowband-filters.html">
+                  <span class="la-title">The Bortle Scale of Night-Sky Brightness and Light Pollution</span>
+                  <span class="la-meta">Capture &middot; 9 min read</span>
+                </a>
+              </li>
+              <li>
+                <a href="/articles/seestar-s30-pro-tour.html">
+                  <span class="la-title">The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag</span>
+                  <span class="la-meta">Gear &middot; 8 min read</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <script>
+          /* Latest articles: rewrite the three links above from site-data.json
+             so the homepage follows the articles index without a manual edit.
+             If the fetch fails the static markup simply stays as it is. */
+          (function () {
+            var list = document.getElementById('latestArticlesList');
+            if (!list) return;
+
+            var SHOW = 3;
+
+            function parseDate(s) {
+              var m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(s || '');
+              return m ? new Date(+m[3], +m[2] - 1, +m[1]).getTime() : 0;
+            }
+
+            fetch('site-data.json')
+              .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+              .then(function (items) {
+                if (!Array.isArray(items)) return;
+
+                var articles = items.filter(function (e) {
+                  return e && e.section === 'article' && e.slug && !e.hidden;
+                });
+                if (articles.length < SHOW) return;
+
+                articles.sort(function (a, b) {
+                  return parseDate(b.date) - parseDate(a.date);
+                });
+
+                var frag = document.createDocumentFragment();
+
+                articles.slice(0, SHOW).forEach(function (a) {
+                  var li = document.createElement('li');
+                  var link = document.createElement('a');
+                  link.href = '/articles/' + a.slug + '.html';
+
+                  var title = document.createElement('span');
+                  title.className = 'la-title';
+                  title.textContent = a.title || a.slug;
+
+                  var meta = document.createElement('span');
+                  meta.className = 'la-meta';
+                  meta.textContent = [a.category, a.readTime]
+                    .filter(Boolean).join(' \u00b7 ');
+
+                  link.appendChild(title);
+                  if (meta.textContent) link.appendChild(meta);
+                  li.appendChild(link);
+                  frag.appendChild(li);
+                });
+
+                list.replaceChildren(frag);
+              })
+              .catch(function () { /* keep the static fallback */ });
+          })();
+          </script>
         </div>
 
         <!-- Latest from Instagram (carousel) -->
