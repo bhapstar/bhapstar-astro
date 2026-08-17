@@ -208,7 +208,7 @@ SIGNUP_TEMPLATE = """
         <div class="article-signup">
           <p class="article-signup-title">Want to know when there is something new?</p>
           <p class="article-signup-sub">
-            Signup below and recieve a newsletter whenever new images, gear write-ups or articles go up.
+            Signup below and receive a newsletter whenever new images, gear write-ups or articles go up.
           </p>
           <form class="article-signup-form" id="signupForm"
                 action="__ENDPOINT__" method="POST">
