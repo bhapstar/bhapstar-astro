@@ -446,35 +446,41 @@
 }
 
 /* ── Contact form: newsletter opt-in ──────────────────────────────────
-   Matches the checkbox on the article pages so the two read as one thing.
-   The message box is optional now, because someone who only wants the
-   newsletter has nothing to write in it. */
-.label-optional{ font-weight: 400; color: var(--muted); font-size: 12px; }
-
+   Sits under Email, because the newsletter is about the address rather
+   than the message. styles.css turns every span inside .contact-form into
+   a small uppercase field label, which is right for Name and Email and
+   wrong for a sentence, so the checkbox text opts out of all of it. */
 .contact-check{
   display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin: 4px 0 0;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--muted);
+  align-items: center;
+  gap: 10px;
+  margin: -0.5rem 0 1rem;
   cursor: pointer;
 }
 .contact-check input{
-  margin: 1px 0 0;
   flex-shrink: 0;
   accent-color: #a78bfa;
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+.contact-form .contact-check span{
+  display: inline;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--muted);
 }
 
+.index-about-section .about-panel .contact-privacy,
 .contact-privacy{
-  margin: 10px 0 4px;
-  font-size: 11.5px;
+  margin: -0.35rem 0 1.25rem;
+  font-size: 11px;
   line-height: 1.5;
   color: var(--muted);
-  opacity: 0.85;
+  opacity: 0.72;
 }
 </style>
 
@@ -877,11 +883,6 @@
               <input type="email" name="email" required autocomplete="email" />
             </label>
 
-            <label>
-              <span>Message <span class="label-optional">(optional if you are just signing up)</span></span>
-              <textarea name="message" rows="5"></textarea>
-            </label>
-
             <label class="contact-check" for="contactUpdates">
               <input type="checkbox" id="contactUpdates" name="keep_me_updated"
                      value="yes" checked />
@@ -892,6 +893,11 @@
               Your email address is used only to send those updates and will never be
               shared or sold.
             </p>
+
+            <label>
+              <span>Message (optional)</span>
+              <textarea name="message" rows="5"></textarea>
+            </label>
 
             <button type="submit" class="btn primary">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
