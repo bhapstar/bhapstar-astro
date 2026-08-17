@@ -109,7 +109,7 @@ SUPPORT_NOTE = (
 
 # Swap this for your own Formspree form ID. Until it is set, the signup
 # block is left out entirely and only the download button renders.
-FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID"
+FORMSPREE_ENDPOINT = "https://formspree.io/f/mkjwqjlk"
 
 DOWNLOAD_ICON = (
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" '
