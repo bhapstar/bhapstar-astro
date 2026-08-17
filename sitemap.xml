@@ -830,6 +830,12 @@
     </image:image>
   </url>
   <url>
+    <loc>https://bhapstar.com/downloads/meteors-milky-way-phone-field-card.pdf</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://bhapstar.com/articles/photograph-meteor-shower-milky-way-camera.html</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>yearly</changefreq>
@@ -837,6 +843,12 @@
     <image:image>
       <image:loc>https://bhapstar.com/images/articles/meteor-shower-camera-mockup.webp</image:loc>
     </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/downloads/meteors-milky-way-camera-field-card.pdf</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</loc>
