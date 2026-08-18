@@ -318,7 +318,10 @@
 <!--
   Skywatcher Evostar 72ED. Verified: 72mm aperture, 420mm focal length, f/5.8,
   air-spaced ED doublet, 2 inch dual-speed Crayford focuser (1:10), tube weight
-  around 1.96kg, supplied with rings, dovetail and case.
+  around 1.96kg, supplied with rings, dovetail and case. Focuser output M54.
+  Reducer specs verified from the FLO product page: StellaMira 2 inch 0.8x
+  reducer / field flattener, M48 adapter, optimised f/5 to f/7, 55mm backfocus,
+  M54 female thread under the 2 inch nosepiece.
   Currently hidden in site-data.json pending a photograph.
 -->
 
@@ -346,21 +349,144 @@ with any residual showing first around bright stars. The money not spent on a
 third element is money available for the mount, which will affect your results
 more.</p>
 
-<h2>What you will want alongside it</h2>
+<h2>The reducer and flattener, and why it matters</h2>
 
-<p>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-8" data-gl-term="field flattener">field flattener</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-8" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span>, which is the part that catches people out. A fast doublet
-does not deliver a flat field to the corners on its own, and stars towards the
-edges elongate without one. It is an extra purchase and it changes the <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-9" data-gl-term="backfocus">backfocus</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-9" hidden>The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.</span>
-arithmetic, so plan the
-<a href="/gear/svbony-filter-drawer.html">filter drawer</a> spacing around it at
-the same time.</p>
+<p>I bought mine with a
+<a href="https://www.firstlightoptics.com/stellamira-telescopes/stellamira-2-0-8x-reducer-field-flattener-with-m48-adapter/ref/bhapstar/"
+   target="_blank" rel="sponsored noopener noreferrer">StellaMira 2 inch 0.8x
+reducer and field flattener</a>, and it is worth explaining what that piece of
+glass actually does, because the name describes two separate jobs.</p>
 
-<p>The supplied <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-10" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-10" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> is a 2 inch dual-speed <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-11" data-gl-term="Crayford">Crayford</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-11" hidden>A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves.</span> with 10:1 fine focus,
+<p><strong>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-8" data-gl-term="field flattener">flattener</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-8" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span> half.</strong> A lens does not bring light to focus on a
+flat surface. It focuses onto a gently curved one, a little like the inside of a
+very shallow bowl. Your eye copes with that without noticing. A camera sensor
+cannot, because a sensor is rigidly flat. Put a flat sensor against a curved
+focal surface and the centre can be sharp while the corners are not, which shows
+up as stars that smear outwards towards the edges of the frame. The flattener
+adds glass that bends the outer light back into line, so the surface the
+telescope focuses onto matches the surface the sensor occupies.</p>
+
+<p><strong>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-9" data-gl-term="reducer">reducer</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-9" hidden>An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time.</span> half.</strong> The same glass also shortens the effective
+focal length, in this case to eight tenths of the original. That has two
+consequences worth knowing.</p>
+
+<figure class="passband-fig">
+  <svg viewBox="0 0 640 372" xmlns="http://www.w3.org/2000/svg"
+       role="img" aria-labelledby="reducerTitle reducerDesc">
+    <title id="reducerTitle">How a 0.8x reducer and flattener changes the light path</title>
+    <desc id="reducerDesc">Two diagrams. In the upper one the telescope focuses
+      onto a gently curved surface, so the centre of the frame lands on the flat
+      sensor while the edges focus just short of it and stars there smear. In the
+      lower one a reducer element steepens the converging beam, shortening the
+      focal length and straightening the focal surface so the whole frame lands
+      on the sensor together.</desc>
+
+    <text x="8" y="20" font-size="13" font-weight="600" fill="var(--text)">Without a reducer or flattener</text>
+
+    <path d="M70,46 C80,60 80,112 70,126 C60,112 60,60 70,46 Z"
+          fill="rgba(96,165,250,0.22)" stroke="var(--accent2)" stroke-width="1.6"/>
+    <text x="70" y="142" font-size="10" fill="var(--muted)" text-anchor="middle">72mm objective</text>
+
+    <path d="M70,50 L470,86 L70,122 Z" fill="rgba(167,139,250,0.10)"/>
+    <line x1="70" y1="50" x2="470" y2="86" stroke="var(--accent)" stroke-width="1.6"/>
+    <line x1="70" y1="122" x2="470" y2="86" stroke="var(--accent)" stroke-width="1.6"/>
+
+    <path d="M452,50 Q470,86 452,122" fill="none" stroke="#f472b6"
+          stroke-width="1.8" stroke-dasharray="5 3"/>
+    <line x1="470" y1="44" x2="470" y2="128" stroke="var(--text)" stroke-width="3"/>
+
+    <ellipse cx="470" cy="52" rx="2.5" ry="7" fill="#f472b6"/>
+    <circle cx="470" cy="86" r="3" fill="var(--text)"/>
+    <ellipse cx="470" cy="120" rx="2.5" ry="7" fill="#f472b6"/>
+
+    <line x1="452" y1="52" x2="466" y2="52" stroke="#f472b6" stroke-width="1"/>
+    <line x1="452" y1="120" x2="466" y2="120" stroke="#f472b6" stroke-width="1"/>
+
+    <text x="484" y="60" font-size="10" fill="#f472b6">edges focus short</text>
+    <text x="484" y="90" font-size="12" font-weight="600" fill="var(--text)">420mm, f/5.8</text>
+    <text x="484" y="106" font-size="10" fill="var(--muted)">centre sharp, corners smear</text>
+    <text x="484" y="134" font-size="10" fill="var(--muted)">flat sensor</text>
+
+    <line x1="8" y1="172" x2="632" y2="172" stroke="var(--line)" stroke-width="1"/>
+
+    <text x="8" y="204" font-size="13" font-weight="600" fill="var(--text)">With the 0.8x reducer and flattener</text>
+
+    <path d="M70,236 C80,250 80,302 70,316 C60,302 60,250 70,236 Z"
+          fill="rgba(96,165,250,0.22)" stroke="var(--accent2)" stroke-width="1.6"/>
+    <text x="70" y="332" font-size="10" fill="var(--muted)" text-anchor="middle">72mm objective</text>
+
+    <path d="M70,240 L330,263 L330,289 L70,312 Z" fill="rgba(167,139,250,0.10)"/>
+    <line x1="70" y1="240" x2="330" y2="263" stroke="var(--accent)" stroke-width="1.6"/>
+    <line x1="70" y1="312" x2="330" y2="289" stroke="var(--accent)" stroke-width="1.6"/>
+
+    <path d="M330,252 C337,262 337,290 330,300 C323,290 323,262 330,252 Z"
+          fill="rgba(96,165,250,0.34)" stroke="var(--accent2)" stroke-width="1.6"/>
+    <text x="330" y="244" font-size="10" fill="var(--accent2)" text-anchor="middle">reducer</text>
+
+    <path d="M330,263 L410,276 L330,289 Z" fill="rgba(167,139,250,0.20)"/>
+    <line x1="330" y1="263" x2="410" y2="276" stroke="var(--accent)" stroke-width="1.6"/>
+    <line x1="330" y1="289" x2="410" y2="276" stroke="var(--accent)" stroke-width="1.6"/>
+
+    <line x1="410" y1="234" x2="410" y2="318" stroke="var(--text)" stroke-width="3"/>
+    <circle cx="410" cy="242" r="3" fill="var(--text)"/>
+    <circle cx="410" cy="276" r="3" fill="var(--text)"/>
+    <circle cx="410" cy="310" r="3" fill="var(--text)"/>
+
+    <line x1="330" y1="330" x2="410" y2="330" stroke="var(--muted)" stroke-width="1"/>
+    <line x1="330" y1="326" x2="330" y2="334" stroke="var(--muted)" stroke-width="1"/>
+    <line x1="410" y1="326" x2="410" y2="334" stroke="var(--muted)" stroke-width="1"/>
+    <text x="370" y="346" font-size="10" fill="var(--muted)" text-anchor="middle">55mm backfocus</text>
+
+    <text x="426" y="264" font-size="12" font-weight="600" fill="var(--text)">336mm, f/4.7</text>
+    <text x="426" y="280" font-size="10" fill="var(--muted)">sharp across the frame</text>
+    <text x="426" y="294" font-size="10" fill="var(--muted)">wider field, less exposure time</text>
+  </svg>
+  <figcaption>Exaggerated for clarity. The reducer steepens the converging beam,
+  which shortens the focal length and brings focus closer, and at the same time
+  straightens the focal surface so it matches the flat sensor. The 55mm spacing
+  between the reducer and the sensor is what makes both effects work.</figcaption>
+</figure>
+
+<p>First, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-10" data-gl-term="field of view">field of view</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-10" hidden>How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy.</span> widens by a quarter, so 420mm becomes an effective
+336mm. Targets that were tight in the frame get room around them.</p>
+
+<p>Second, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-11" data-gl-term="focal ratio">focal ratio</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-11" hidden>The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical.</span> drops from f/5.8 to about f/4.7. Because light
+gathering scales with the square of that ratio, the system collects signal
+roughly one and a half times faster, so a given amount of signal arrives in about
+a third less time. On a night with a narrow window before the target sets, or
+from a balcony where every extra minute of <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-12" data-gl-term="skyglow">sky glow</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-12" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> works against you, that is a
+real difference rather than a specification.</p>
+
+<p>What you give up is a little resolution, since the same detail now falls on
+fewer pixels. On a small sensor at 420mm, that trade usually favours the reducer.</p>
+
+<h2>Getting the spacing right</h2>
+
+<p>The number that matters is 55mm. That is the distance the StellaMira needs
+between the back of the reducer and the sensor itself, and it is not a suggestion.
+Too long or too short by a couple of millimetres and stars in the corners start
+to <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-13" data-gl-term="stretch">stretch</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-13" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span>, which looks exactly like the problem the flattener was bought to fix.
+Camera, adapters and spacer rings all count towards that 55mm, so it is worth
+working the arithmetic out on paper before ordering anything.</p>
+
+<p>Two details make this easier on the 72ED specifically. The reducer carries an
+integrated M48 camera thread, and removing its 2 inch nosepiece reveals an M54
+female thread, which matches the M54 output on the Evostar's <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-14" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-14" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span>. Threaded
+connections hold spacing far more reliably than a compression fit, and they do
+not let anything rotate slightly during a long session.</p>
+
+<h2>What else you will want</h2>
+
+<p>The supplied focuser is a 2 inch dual-speed <span class="gl" role="button" tabindex="0" aria-describedby="gl-skywatcher-evostar-72ed-refractor-15" data-gl-term="Crayford">Crayford</span><span class="gl-def" id="gl-skywatcher-evostar-72ed-refractor-15" hidden>A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves.</span> with 10:1 fine focus,
 genuinely good at this price, and it takes the
-<a href="/gear/zwo-eaf-electronic-focuser.html">EAF</a> without complaint. At
-420mm and two kilograms it also makes a capable guidescope and a pleasant
-grab-and-go visual instrument, and a scope with three uses is easier to justify
-than one with a single purpose.</p>
+<a href="/gear/zwo-eaf-electronic-focuser.html">EAF</a> without complaint. Plan
+the <a href="/gear/svbony-filter-drawer.html">filter drawer</a> into the spacing
+arithmetic from the start rather than adding it afterwards, since it sits in the
+same 55mm and changes the sums.</p>
+
+<p>At 420mm and two kilograms it also makes a pleasant grab-and-go visual
+instrument, which is easier to justify than a telescope that only ever does one
+job.</p>
 
 <h2>Getting one in the UAE</h2>
 
@@ -370,9 +496,9 @@ For a telescope that is a real advantage, since shipping something this size and
 weight internationally can add a substantial fraction of its price.</p>
 
 <!--
-  TODO: say which flattener you used and what backfocus spacing worked. It is the
-  most searched-for detail about this telescope and the answers online are
-  inconsistent.
+  TODO: add the measured spacer stack that worked with the camera you used, and
+  a corner crop before and after the flattener. It is the most searched-for
+  detail about this telescope and the answers online are inconsistent.
 -->
       </div>
 
