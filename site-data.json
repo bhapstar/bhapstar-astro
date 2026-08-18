@@ -636,8 +636,13 @@
     "slug": "askar-v-modular-apo-refractor",
     "buy": [
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/brands/askar?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/askar-telescopes/askar-v-apo-modular-telescope-outfit/ref/bhapstar/",
         "affiliate": true
       }
     ]
@@ -703,8 +708,13 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/brands/zwo-astronomy-cameras?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       }
     ]
@@ -741,8 +751,13 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -767,8 +782,13 @@
     "slug": "optolong-l-quad-enhance-filter",
     "buy": [
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/optolong-filters/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -793,8 +813,13 @@
     "slug": "optolong-l-extreme-filter",
     "buy": [
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/optolong-filters/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -829,7 +854,7 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
         "affiliate": true
       },
@@ -858,6 +883,11 @@
     "section": "gear",
     "slug": "celestron-2in-eyepiece-kit",
     "buy": [
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
+        "affiliate": true
+      },
       {
         "retailer": "Amazon",
         "url": "https://amzn.to/4q14VRT",
@@ -889,7 +919,7 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
         "affiliate": true
       },
@@ -920,8 +950,13 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -968,8 +1003,13 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/telescopes/smart-telescopes?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/beginner-telescopes/zwo_seestar_s30_pro/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -1013,8 +1053,13 @@
         "affiliate": true
       },
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -1047,8 +1092,13 @@
     "slug": "skywatcher-evostar-72ed-refractor",
     "buy": [
       {
-        "retailer": "High Point Scientific",
+        "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/telescopes-in-stock/sky-watcher-evostar-72ed-ds-pro-ota/ref/bhapstar/",
         "affiliate": true
       },
       {

@@ -83,7 +83,9 @@ SUPPORT_ARROW = (
 )
 
 SUPPORT_RETAILERS = [
+    ("ZWO", "https://www.zwoastro.com/?ref=sfbuvxv1"),
     ("High Point Scientific (US)", "https://www.highpointscientific.com/?rfsn=9263467.792bf8"),
+    ("First Light Optics (UK)", "https://www.firstlightoptics.com/index/ref/bhapstar/"),
     ("Amazon", "https://amzn.to/4q14VRT"),
     ("Svbony", "https://www.svbony.com/?ref=BHAPSTAR"),
 ]
