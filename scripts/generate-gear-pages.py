@@ -286,7 +286,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{esc(title)} — Bhapstar Astrophotography</title>
+  <title>{esc(title)} | Bhapstar</title>
   <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />

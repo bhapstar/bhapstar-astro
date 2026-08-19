@@ -534,6 +534,12 @@ def build_json_ld(entry, page_url, cover_src):
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": entry.get('title', ''),
+        "alternativeHeadline": (
+            entry.get('seoTitle', '').strip()
+            if (entry.get('seoTitle') or '').strip()
+            and entry.get('seoTitle', '').strip() != entry.get('title', '')
+            else None
+        ),
         "description": entry.get('desc', ''),
         "articleSection": entry.get('category', ''),
         "author": {"@type": "Person", "name": "Bhapinder Singh", "url": DOMAIN},
@@ -622,6 +628,12 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
                articles=None):
     """Build the full HTML page for one article."""
     title = entry.get('title', 'Article')
+    # The headline on the page and the headline in a search result are doing
+    # two different jobs. The first should read well; the second has to match
+    # what someone actually types into Google. An optional "seoTitle" in
+    # site-data.json splits them. Without one, nothing changes: the display
+    # title is used for both, exactly as before.
+    seo_title = (entry.get('seoTitle') or '').strip() or title
     desc = entry.get('desc', '')
     cover_src = entry.get('file', '')
     cover_alt = entry.get('alt', title)
@@ -711,7 +723,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{esc(title)} — Bhapstar Astrophotography</title>
+  <title>{esc(seo_title)} | Bhapstar</title>
   <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />

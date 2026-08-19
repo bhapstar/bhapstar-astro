@@ -1264,7 +1264,8 @@
       }
     ],
     "stage": "gear",
-    "stageOrder": 1
+    "stageOrder": 1,
+    "seoTitle": "My Deep-Sky Astrophotography Setup"
   },
   {
     "file": "images/articles/milky-way-phone-mockup.webp",
@@ -1310,7 +1311,8 @@
       "note": "Everything on this page on one side of A4: which mode to use on each phone, the Pro mode numbers, and what to change if a meteor shower is on."
     },
     "stage": "capture",
-    "stageOrder": 1
+    "stageOrder": 1,
+    "seoTitle": "How to Photograph the Milky Way with a Phone"
   },
   {
     "file": "images/articles/meteor-shower-camera-mockup.webp",
@@ -1356,7 +1358,8 @@
       "note": "The full settings table, how long the shutter can stay open at each focal length, and what to change if a meteor shower is on. One side of A4."
     },
     "stage": "capture",
-    "stageOrder": 2
+    "stageOrder": 2,
+    "seoTitle": "How to Photograph the Milky Way with a Camera"
   },
   {
     "file": "images/articles/stellarium-app-fov-single.webp",
@@ -1382,7 +1385,8 @@
       }
     ],
     "stage": "plan",
-    "stageOrder": 3
+    "stageOrder": 3,
+    "seoTitle": "How to Use Stellarium for Astrophotography"
   },
   {
     "file": "images/articles/siril-interface-eagle-nebula.webp",
@@ -1423,7 +1427,8 @@
       }
     ],
     "stage": "process",
-    "stageOrder": 2
+    "stageOrder": 2,
+    "seoTitle": "Siril Tutorial: Stack and Process Astrophotos"
   },
   {
     "file": "images/articles/asiair-app-tile.webp",
@@ -1464,7 +1469,8 @@
       }
     ],
     "stage": "capture",
-    "stageOrder": 4
+    "stageOrder": 4,
+    "seoTitle": "ZWO ASIAIR Guide: Control Your Rig by Phone"
   },
   {
     "file": "images/articles/bortle-scale-eso.webp",
@@ -1505,7 +1511,8 @@
       }
     ],
     "stage": "plan",
-    "stageOrder": 2
+    "stageOrder": 2,
+    "seoTitle": "Bortle Scale Explained: Light Pollution Levels"
   },
   {
     "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
@@ -1546,7 +1553,8 @@
       }
     ],
     "stage": "capture",
-    "stageOrder": 3
+    "stageOrder": 3,
+    "seoTitle": "ZWO Seestar S30 Pro: Hands-On Tour"
   },
   {
     "file": "images/articles/calibration-frames-tile.webp",
@@ -1587,7 +1595,8 @@
       }
     ],
     "stage": "process",
-    "stageOrder": 1
+    "stageOrder": 1,
+    "seoTitle": "Calibration Frames: Darks, Flats and Biases"
   },
   {
     "file": "images/star-trails-2.webp",
@@ -1628,6 +1637,7 @@
       }
     ],
     "stage": "plan",
-    "stageOrder": 1
+    "stageOrder": 1,
+    "seoTitle": "How to Find Polaris and Navigate the Night Sky"
   }
 ]
