@@ -1639,5 +1639,20 @@
     "stage": "plan",
     "stageOrder": 1,
     "seoTitle": "How to Find Polaris and Navigate the Night Sky"
+  },
+  {
+    "file": "images/gear/Full rig 2.webp",
+    "alt": "The imaging rig set up and running, as used from a city balcony",
+    "title": "Imaging Deep Sky from a Bortle 8 Balcony",
+    "desc": "Most city astrophotography advice assumes a garden. A balcony takes away your view of Polaris, most of the sky, and half the night. Here is how to work with all three, and why it is still worth doing.",
+    "type": "guide",
+    "category": "Capture",
+    "readTime": "7 min read",
+    "section": "article",
+    "slug": "imaging-from-a-city-balcony",
+    "date": "19-08-2026",
+    "stage": "capture",
+    "stageOrder": 5,
+    "seoTitle": "Astrophotography from a City Balcony"
   }
 ]

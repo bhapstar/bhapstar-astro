@@ -1,0 +1,235 @@
+<!--
+  Article body: deep-sky imaging from a Bortle 8 city balcony.
+
+  The angle: everyone writes about filters and target choice under light
+  pollution. Almost nobody writes about the physical constraints of a balcony,
+  which are the ones that actually stop people. No view of Polaris, a narrow
+  slot of visible sky, and a target that leaves that slot after an hour.
+
+  All artwork is hand-drawn inline SVG, themed with the site tokens, so there
+  are no photographs to license and nothing extra to load. Two diagrams:
+    1. the balcony sky window
+    2. why all-sky polar alignment works without a view of the pole
+
+  Places marked LOOK HERE below are where a personal detail would land well.
+  They read fine as written, so nothing is broken if they stay as they are.
+-->
+
+<div class="event-callout">
+  <p class="ec-kicker">The short version</p>
+  <p class="ec-title">A balcony does not stop you imaging. It just decides what you image.</p>
+  <p class="ec-body">Three things change on a balcony. You usually cannot see
+  Polaris, so the mount has to be aligned another way. You can only see a slice
+  of sky, so the target picks itself. And the sky is bright, so a filter does
+  the heavy lifting. None of these are dead ends. They are just a different set
+  of rules, and once you know them a balcony becomes a place you can image from
+  most clear nights of the year.</p>
+</div>
+
+<h2>The problem nobody warns you about</h2>
+
+<p>Most advice about imaging under city light concentrates on light pollution
+itself. Use a filter, pick bright targets, take more frames. All true, and I
+will come to it.</p>
+
+<p>But that advice quietly assumes you are standing in a garden with the whole
+sky above you. On a balcony you are not. You are standing in a concrete box
+with one side missing, and that changes the practical side of a session far
+more than the sky glow does.</p>
+
+<p>Here is what my balcony actually gives me. A wall on one side, a ceiling
+overhead, the building itself blocking a good part of the horizon, and one open
+direction. Everything else about the night has to fit through that gap.</p>
+
+<figure class="article-fig">
+<svg viewBox="0 0 340 250" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A diagram of a balcony seen from the side. The floor, ceiling and side wall block most of the sky, leaving a wedge of open sky roughly between thirty and seventy degrees above the horizon in one direction.">
+<defs>
+  <linearGradient id="balSky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#1b2136"/>
+    <stop offset="1" stop-color="#4a3a44"/>
+  </linearGradient>
+</defs>
+
+<text x="170" y="16" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">What a balcony can actually see</text>
+
+<!-- sky backdrop -->
+<rect x="20" y="28" width="300" height="170" rx="8" fill="url(#balSky)"/>
+
+<!-- the visible wedge -->
+<path d="M 70 198 L 300 60 L 300 150 L 70 198 Z" fill="var(--accent)" opacity="0.26"/>
+<path d="M 70 198 L 300 60" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.85" fill="none"/>
+<path d="M 70 198 L 300 150" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.85" fill="none"/>
+
+<!-- ceiling slab -->
+<rect x="20" y="28" width="180" height="26" fill="#2b2b3d"/>
+<text x="110" y="46" font-size="10" fill="#c9c6d8" text-anchor="middle">ceiling above</text>
+
+<!-- side wall -->
+<rect x="20" y="28" width="26" height="170" fill="#2b2b3d"/>
+
+<!-- floor -->
+<rect x="20" y="192" width="300" height="14" fill="#2b2b3d"/>
+<text x="170" y="202" font-size="9.5" fill="#c9c6d8" text-anchor="middle">balcony floor</text>
+
+<!-- railing -->
+<rect x="60" y="160" width="4" height="34" fill="#4a4a63"/>
+<rect x="46" y="158" width="34" height="4" fill="#4a4a63"/>
+
+<!-- scope -->
+<circle cx="70" cy="192" r="4" fill="var(--accent)"/>
+<line x1="70" y1="192" x2="104" y2="172" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+
+<text x="240" y="108" font-size="11" fill="#efeaff" text-anchor="middle" font-weight="600">usable sky</text>
+<text x="240" y="122" font-size="9" fill="#c9c6d8" text-anchor="middle">roughly one wedge</text>
+
+<text x="170" y="224" font-size="10" fill="var(--muted)" text-anchor="middle">Everything outside the wedge is behind concrete.</text>
+<text x="170" y="238" font-size="10" fill="var(--muted)" text-anchor="middle">A target crosses it, then it is gone until tomorrow.</text>
+</svg>
+<figcaption>The wedge is the whole observatory. Its shape depends on which way
+your building faces, and it is worth measuring before you buy anything.</figcaption>
+</figure>
+
+<h2>Polar alignment when you cannot see Polaris</h2>
+
+<p>If your mount is going to follow the sky for hours, its axis has to be lined
+up with the axis the Earth turns on. The usual way to do that is to point it at
+Polaris, because Polaris happens to sit almost exactly on that line.</p>
+
+<p>From a balcony, Polaris is very often behind a wall. Mine faces the wrong
+way for it. For a long time I assumed that was simply the end of the
+conversation, and if you search the forums you will find a steady stream of
+people arriving at the same conclusion and asking whether their balcony is
+useless. It is not.</p>
+
+<p>The way around it is a feature called all-sky polar alignment. On my setup
+that lives in the ASIAir, and the idea behind it is worth understanding even if
+you use something else, because it explains why the wall stops mattering.</p>
+
+<figure class="article-fig">
+<svg viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A diagram showing a telescope taking a photograph of one patch of sky, rotating, then photographing a second patch. From how the star pattern shifts between the two, the software works out where the pole is, even though the pole itself is never photographed.">
+<text x="170" y="16" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">Finding the pole without looking at it</text>
+
+<!-- first frame -->
+<rect x="24" y="34" width="86" height="66" rx="6" fill="#1b2136" stroke="var(--line)"/>
+<circle cx="44" cy="52" r="1.8" fill="#fff"/>
+<circle cx="72" cy="46" r="2.4" fill="#fff"/>
+<circle cx="60" cy="72" r="1.6" fill="#fff"/>
+<circle cx="92" cy="82" r="2" fill="#fff"/>
+<circle cx="36" cy="86" r="1.4" fill="#fff"/>
+<text x="67" y="114" font-size="10" fill="var(--muted)" text-anchor="middle">1. one photo</text>
+
+<!-- arrow -->
+<path d="M 118 67 L 142 67" stroke="var(--accent)" stroke-width="1.6" fill="none"/>
+<path d="M 142 67 l -6 -4 l 0 8 z" fill="var(--accent)"/>
+<text x="130" y="56" font-size="9" fill="var(--muted)" text-anchor="middle">rotate</text>
+
+<!-- second frame -->
+<rect x="150" y="34" width="86" height="66" rx="6" fill="#1b2136" stroke="var(--line)"/>
+<circle cx="176" cy="58" r="1.8" fill="#fff"/>
+<circle cx="202" cy="50" r="2.4" fill="#fff"/>
+<circle cx="188" cy="78" r="1.6" fill="#fff"/>
+<circle cx="220" cy="86" r="2" fill="#fff"/>
+<circle cx="166" cy="88" r="1.4" fill="#fff"/>
+<text x="193" y="114" font-size="10" fill="var(--muted)" text-anchor="middle">2. another photo</text>
+
+<!-- result -->
+<path d="M 244 67 L 268 67" stroke="var(--accent)" stroke-width="1.6" fill="none"/>
+<path d="M 268 67 l -6 -4 l 0 8 z" fill="var(--accent)"/>
+
+<circle cx="300" cy="67" r="28" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="300" cy="67" r="3.4" fill="var(--accent)"/>
+<text x="300" y="114" font-size="10" fill="var(--muted)" text-anchor="middle">3. the pole</text>
+
+<text x="170" y="150" font-size="10.5" fill="var(--text)" text-anchor="middle">The software never photographs the pole.</text>
+<text x="170" y="168" font-size="10.5" fill="var(--text)" text-anchor="middle">It identifies the stars in each photo, sees exactly how</text>
+<text x="170" y="184" font-size="10.5" fill="var(--text)" text-anchor="middle">the view swung between them, and works backwards</text>
+<text x="170" y="200" font-size="10.5" fill="var(--text)" text-anchor="middle">to the point everything is swinging around.</text>
+<text x="170" y="220" font-size="10" fill="var(--muted)" text-anchor="middle">Any clear patch of sky will do.</text>
+</svg>
+<figcaption>Rotating the mount and comparing two star fields is enough to
+locate the pole. That is why a wall in the way stops being a problem.</figcaption>
+</figure>
+
+<p>In practice it takes a couple of minutes. Point the telescope at whatever
+clear sky you have, start the routine, and the mount swings itself between two
+positions while the software reads the star fields. Then it tells you how far
+out you are and in which direction, and you nudge the two adjustment bolts
+until the number comes down.</p>
+
+<p>A word of honesty about it. This works because the software can recognise
+the stars it photographs, so it needs enough of them to get a match. Through a
+gap in tall buildings, or with a tree branch across half the frame, it can fail
+and want another try. Giving it the most open piece of sky you have, rather
+than the piece nearest your target, makes it far more reliable.</p>
+
+<h2>The sky window picks your target</h2>
+
+<p>In a garden you choose a target and then wait for it. On a balcony it works
+the other way round. You look at what is going to cross your wedge of sky
+tonight, and you choose from that list.</p>
+
+<p>This sounds like a restriction, and it is, but it turns planning into a much
+simpler job. Instead of the whole sky you are looking at a narrow strip, and
+the question becomes what is passing through it and for how long. Planning
+software makes short work of this, and I have written separately about how I
+work that out before a session.</p>
+
+<p>The second half of it is time. A target crosses the gap, and when it reaches
+the wall the night is over for that object whether or not you have enough
+frames. From a dark site you might collect everything you need in one go. From
+a balcony you collect an hour or two, then come back the next clear night and
+add to it, and again after that. The total is what matters, not how it was
+gathered, and stacking software does not care that the frames came from six
+different evenings.</p>
+
+<p>This turns out to suit a balcony very well. The gear lives a few steps from
+where you sleep. There is no drive, no packing, and no decision about whether
+tonight is worth the trip. Twenty minutes of setup on a weeknight is a
+perfectly reasonable thing to do when the telescope is already on the other
+side of the door.</p>
+
+<h2>Now the light pollution</h2>
+
+<p>With the practical problems out of the way, the bright sky is the part left,
+and it is the part with the cleanest answer.</p>
+
+<p>A nebula that glows sends down exactly as much light over a city as it does
+over a desert. Nothing dims it. What changes is the amount of other light
+arriving alongside it, and city light arrives in enormous quantities. The
+nebula is still there in your frames, sitting underneath a thick layer of
+orange glow.</p>
+
+<p>Many glowing nebulae emit most of their light at just two specific colours.
+A narrowband filter opens a very narrow window at each of those two colours and
+blocks nearly everything else, which throws away most of the city glow while
+keeping most of what you came for. I use a 7nm dual-band filter for this and it
+is the single piece of kit that makes my balcony worth using.</p>
+
+<p>The important honesty here is what it does not do. Galaxies and star
+clusters shine across all colours rather than at two, so a narrowband filter
+blocks their light along with everything else. From a bright balcony, glowing
+gas is your friend and faint galaxies are a fight you will probably lose. That
+is not a failure of technique. It is just where the line sits, and knowing
+where it sits saves a lot of wasted nights.</p>
+
+<!-- LOOK HERE: a sentence naming one or two objects you have actually caught
+     from the balcony would land really well right here, and it is the kind of
+     specific that no amount of general advice replaces. -->
+
+<h2>What I would tell someone starting on a balcony</h2>
+
+<p>Go outside tonight and look at what you can actually see. Which direction is
+open, how high the ceiling cuts you off, and whether the pole is visible. Ten
+minutes of this tells you more about what your setup should be than any amount
+of reading.</p>
+
+<p>Then take the constraints seriously rather than fighting them. A balcony is
+not a compromised dark site. It is its own kind of place, with its own list of
+things that work, and the list is longer than most people expect.</p>
+
+<p>I have imaged from proper dark desert skies, and there is no argument about
+which produces better data. But the desert is a planned trip a couple of times
+a month, and the balcony is available on a Tuesday. Over a year, the place you
+can reach in thirty seconds collects a surprising amount.</p>
