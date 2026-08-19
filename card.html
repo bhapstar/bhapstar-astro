@@ -378,10 +378,19 @@
 
   // Record which theme was served, so Cloudflare shows the split. Written as
   // ct, never as t, so refreshing tosses the coin again rather than sticking.
+  //
+  // This also strips ?src=. It has already been read and counted above, and
+  // leaving it in the address bar means the tap gets counted again on every
+  // later load of the same URL: a pull-to-refresh, a back navigation, or the
+  // service worker re-navigating open tabs when a new version activates. One
+  // scan was landing as several taps. Removing it here makes a tap mean one
+  // arrival, which is what the dashboard is meant to be counting.
   try {
     var qs = new URLSearchParams(location.search);
+    qs.delete('src');
     qs.set('ct', current());
-    history.replaceState(null, '', location.pathname + '?' + qs.toString() + location.hash);
+    var query = qs.toString();
+    history.replaceState(null, '', location.pathname + (query ? '?' + query : '') + location.hash);
   } catch (e) { /* not worth breaking the page over */ }
 
   /* The contact sheet squares are about 145px wide, so they are fed the
