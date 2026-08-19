@@ -26,7 +26,9 @@ Why the order matters:
   5. sitemap  Built from site-data.json rather than from disk, so it is
               order-independent, but it belongs last as the final index of
               everything above.
-  6. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
+  6. starthere  start-here.html, the guided path. Built after the article
+              pages so every link it writes points at a file already on disk.
+  7. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
               is order-independent too, but it runs last for the same reason
               as the sitemap: it describes everything above it.
 
@@ -57,6 +59,7 @@ STAGES = [
     ("share",   "generate-share-pages.py"),
     ("schema",  "generate-schema.py"),
     ("sitemap", "generate-sitemap.py"),
+    ("starthere", "generate-start-here.py"),
     ("feed",    "generate-feed.py"),
 ]
 

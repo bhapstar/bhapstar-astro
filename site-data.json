@@ -1262,7 +1262,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "gear",
+    "stageOrder": 1
   },
   {
     "file": "images/articles/milky-way-phone-mockup.webp",
@@ -1306,7 +1308,9 @@
       "file": "downloads/meteors-milky-way-phone-field-card.pdf",
       "label": "Phone settings field card",
       "note": "Everything on this page on one side of A4: which mode to use on each phone, the Pro mode numbers, and what to change if a meteor shower is on."
-    }
+    },
+    "stage": "capture",
+    "stageOrder": 1
   },
   {
     "file": "images/articles/meteor-shower-camera-mockup.webp",
@@ -1350,7 +1354,9 @@
       "file": "downloads/meteors-milky-way-camera-field-card.pdf",
       "label": "Camera settings field card",
       "note": "The full settings table, how long the shutter can stay open at each focal length, and what to change if a meteor shower is on. One side of A4."
-    }
+    },
+    "stage": "capture",
+    "stageOrder": 2
   },
   {
     "file": "images/articles/stellarium-app-fov-single.webp",
@@ -1374,7 +1380,9 @@
         "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "plan",
+    "stageOrder": 3
   },
   {
     "file": "images/articles/siril-interface-eagle-nebula.webp",
@@ -1413,7 +1421,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "process",
+    "stageOrder": 2
   },
   {
     "file": "images/articles/asiair-app-tile.webp",
@@ -1452,7 +1462,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "capture",
+    "stageOrder": 4
   },
   {
     "file": "images/articles/bortle-scale-eso.webp",
@@ -1491,7 +1503,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "plan",
+    "stageOrder": 2
   },
   {
     "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
@@ -1530,7 +1544,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "capture",
+    "stageOrder": 3
   },
   {
     "file": "images/articles/calibration-frames-tile.webp",
@@ -1569,7 +1585,9 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "process",
+    "stageOrder": 1
   },
   {
     "file": "images/star-trails-2.webp",
@@ -1608,6 +1626,8 @@
         "url": "https://www.zwoastro.com/product/seestar-th10-fluid-tripod-head/?ref=sfbuvxv1",
         "affiliate": true
       }
-    ]
+    ],
+    "stage": "plan",
+    "stageOrder": 1
   }
 ]
