@@ -456,57 +456,146 @@ sky above you. On a balcony you are not. You are standing in a concrete box
 with one side missing, and that changes the practical side of a session far
 more than the <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-2" data-gl-term="skyglow">sky glow</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-2" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> does.</p>
 
-<p>Here is what my balcony actually gives me. A wall on one side, a ceiling
-overhead, the building itself blocking a good part of the horizon, and one open
-direction. Everything else about the night has to fit through that gap.</p>
+<p>Here is what my balcony actually gives me. It faces south. A tower block
+stands to one side and another to the other, so anything east of south-east or
+west of south-west is behind concrete. The ceiling overhead cuts everything off
+above roughly thirty-five degrees. What is left is a letterbox of sky, and
+every single frame I have taken from home came through it.</p>
 
 <figure class="article-fig">
-<svg viewBox="0 0 340 250" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="A diagram of a balcony seen from the side. The floor, ceiling and side wall block most of the sky, leaving a wedge of open sky roughly between thirty and seventy degrees above the horizon in one direction.">
+<svg viewBox="0 0 340 292" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A view of the southern sky from a balcony in Dubai. A tall building on the left blocks everything east of south-east and a second building on the right blocks everything west of south-west. The balcony ceiling cuts the sky off above thirty-five degrees. What is left is a window of sky from the horizon to thirty-five degrees up, between south-east and south-west, with an equatorial grid drawn across it. A refractor on a tripod stands on the balcony floor pointing south.">
 <defs>
-  <linearGradient id="balSky" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#1b2136"/>
-    <stop offset="1" stop-color="#4a3a44"/>
+  <linearGradient id="balGlow" x1="0" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="#c86a24"/>
+    <stop offset="0.18" stop-color="#8f5030"/>
+    <stop offset="0.45" stop-color="#453450"/>
+    <stop offset="1" stop-color="#141a2e"/>
   </linearGradient>
+  <radialGradient id="balDome" cx="0.5" cy="1" r="0.75">
+    <stop offset="0" stop-color="#ffb15e" stop-opacity="0.55"/>
+    <stop offset="1" stop-color="#ffb15e" stop-opacity="0"/>
+  </radialGradient>
+  <clipPath id="balClip"><rect x="20" y="28" width="280" height="170"/></clipPath>
 </defs>
 
-<text x="170" y="16" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">What a balcony can actually see</text>
+<text x="170" y="15" font-size="13" fill="var(--text)" text-anchor="middle" font-weight="600">What a balcony can actually see</text>
 
-<!-- sky backdrop -->
-<rect x="20" y="28" width="300" height="170" rx="8" fill="url(#balSky)"/>
+<g clip-path="url(#balClip)">
+  <rect x="20" y="28" width="280" height="170" fill="url(#balGlow)"/>
+  <ellipse cx="160" cy="198" rx="150" ry="72" fill="url(#balDome)"/>
 
-<!-- the visible wedge -->
-<path d="M 70 198 L 300 60 L 300 150 L 70 198 Z" fill="var(--accent)" opacity="0.26"/>
-<path d="M 70 198 L 300 60" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.85" fill="none"/>
-<path d="M 70 198 L 300 150" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.85" fill="none"/>
+  <!-- stars: sparse and dim low down, where the glow drowns them -->
+  <g fill="#ffffff">
+    <circle cx="112" cy="118" r="1.5" opacity="0.9"/>
+    <circle cx="141" cy="106" r="1.1" opacity="0.75"/>
+    <circle cx="176" cy="112" r="1.7" opacity="0.95"/>
+    <circle cx="203" cy="104" r="1.2" opacity="0.8"/>
+    <circle cx="127" cy="134" r="1.2" opacity="0.6"/>
+    <circle cx="190" cy="131" r="1.4" opacity="0.65"/>
+    <circle cx="215" cy="124" r="1" opacity="0.6"/>
+    <circle cx="160" cy="143" r="1.1" opacity="0.45"/>
+    <circle cx="101" cy="152" r="1" opacity="0.3"/>
+    <circle cx="222" cy="150" r="1" opacity="0.3"/>
+    <circle cx="146" cy="163" r="0.9" opacity="0.22"/>
+  </g>
 
-<!-- ceiling slab -->
-<rect x="20" y="28" width="180" height="26" fill="#2b2b3d"/>
-<text x="110" y="46" font-size="10" fill="#c9c6d8" text-anchor="middle">ceiling above</text>
+  <!-- equatorial grid: declination arcs and hour circles -->
+  <g fill="none" stroke="#8fc7ff" stroke-width="1" opacity="0.4">
+    <path d="M 105 198 Q 96 110 80 28"/>
+    <path d="M 160 198 L 160 28"/>
+    <path d="M 215 198 Q 225 110 241 28"/>
+  </g>
+  <g fill="none" stroke="#8fc7ff" stroke-width="1.1" opacity="0.45" stroke-dasharray="5 4">
+    <path d="M 20 198 Q 160 -57 300 198"/>
+    <path d="M 55 198 Q 160 113 265 198"/>
+  </g>
+  <path d="M 20 198 Q 160 28 300 198" fill="none" stroke="#7ee0c0" stroke-width="1.8"/>
+</g>
 
-<!-- side wall -->
-<rect x="20" y="28" width="26" height="170" fill="#2b2b3d"/>
+<!-- obstructions, drawn over the sky so only the gap survives -->
+<rect x="20" y="28" width="280" height="71" fill="#22222f"/>
+<text x="160" y="70" font-size="10.5" fill="#b9b6c9" text-anchor="middle">balcony ceiling overhead</text>
 
-<!-- floor -->
-<rect x="20" y="192" width="300" height="14" fill="#2b2b3d"/>
-<text x="170" y="202" font-size="9.5" fill="#c9c6d8" text-anchor="middle">balcony floor</text>
+<g fill="#1d1d29">
+  <rect x="20" y="99" width="70" height="99"/>
+  <rect x="230" y="99" width="70" height="99"/>
+</g>
+<g fill="#3d3b52" opacity="0.9">
+  <rect x="28" y="107" width="8" height="7"/><rect x="42" y="107" width="8" height="7"/><rect x="56" y="107" width="8" height="7"/><rect x="70" y="107" width="8" height="7"/>
+  <rect x="28" y="124" width="8" height="7"/><rect x="42" y="124" width="8" height="7"/><rect x="70" y="124" width="8" height="7"/>
+  <rect x="28" y="141" width="8" height="7"/><rect x="56" y="141" width="8" height="7"/><rect x="70" y="141" width="8" height="7"/>
+  <rect x="42" y="158" width="8" height="7"/><rect x="56" y="158" width="8" height="7"/>
+  <rect x="28" y="175" width="8" height="7"/><rect x="56" y="175" width="8" height="7"/><rect x="70" y="175" width="8" height="7"/>
+  <rect x="238" y="112" width="8" height="7"/><rect x="252" y="112" width="8" height="7"/><rect x="280" y="112" width="8" height="7"/>
+  <rect x="238" y="129" width="8" height="7"/><rect x="266" y="129" width="8" height="7"/><rect x="280" y="129" width="8" height="7"/>
+  <rect x="252" y="146" width="8" height="7"/><rect x="266" y="146" width="8" height="7"/>
+  <rect x="238" y="163" width="8" height="7"/><rect x="266" y="163" width="8" height="7"/><rect x="280" y="163" width="8" height="7"/>
+  <rect x="252" y="180" width="8" height="7"/><rect x="280" y="180" width="8" height="7"/>
+</g>
 
-<!-- railing -->
-<rect x="60" y="160" width="4" height="34" fill="#4a4a63"/>
-<rect x="46" y="158" width="34" height="4" fill="#4a4a63"/>
+<!-- the 35 degree edge -->
+<line x1="90" y1="99" x2="230" y2="99" stroke="#7ee0c0" stroke-width="1.4"/>
+<text x="160" y="93" font-size="9.5" fill="#7ee0c0" text-anchor="middle" font-weight="600">35° and everything above is roof</text>
 
-<!-- scope -->
-<circle cx="70" cy="192" r="4" fill="var(--accent)"/>
-<line x1="70" y1="192" x2="104" y2="172" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+<!-- altitude scale, outside the sky panel -->
+<g stroke="var(--muted)" stroke-width="1" opacity="0.7">
+  <line x1="300" y1="198" x2="306" y2="198"/>
+  <line x1="300" y1="155" x2="306" y2="155"/>
+  <line x1="300" y1="113" x2="306" y2="113"/>
+  <line x1="300" y1="99" x2="306" y2="99"/>
+</g>
+<g font-size="8.5" fill="var(--muted)">
+  <text x="309" y="201">0°</text>
+  <text x="309" y="158">15°</text>
+  <text x="309" y="116">30°</text>
+  <text x="309" y="90">35°</text>
+</g>
 
-<text x="240" y="108" font-size="11" fill="#efeaff" text-anchor="middle" font-weight="600">usable sky</text>
-<text x="240" y="122" font-size="9" fill="#c9c6d8" text-anchor="middle">roughly one wedge</text>
+<!-- the equator label, sitting up in the roof where it belongs -->
+<text x="160" y="46" font-size="9" fill="#8fc7ff" text-anchor="middle" opacity="0.85">celestial equator transits at 65°, behind the ceiling</text>
 
-<text x="170" y="224" font-size="10" fill="var(--muted)" text-anchor="middle">Everything outside the wedge is behind concrete.</text>
-<text x="170" y="238" font-size="10" fill="var(--muted)" text-anchor="middle">A target crosses it, then it is gone until tomorrow.</text>
+<!-- horizon and floor -->
+<line x1="20" y1="198" x2="300" y2="198" stroke="#6b6880" stroke-width="1.2"/>
+<rect x="20" y="198" width="280" height="40" fill="#26262f"/>
+<line x1="20" y1="238" x2="300" y2="238" stroke="var(--line)" stroke-width="1"/>
+
+<!-- refractor on a tripod, pointing south -->
+<g stroke="#cfcbe4" stroke-width="2.6" stroke-linecap="round" fill="none">
+  <line x1="160" y1="212" x2="142" y2="236"/>
+  <line x1="160" y1="212" x2="160" y2="236"/>
+  <line x1="160" y1="212" x2="178" y2="236"/>
+</g>
+<rect x="153" y="203" width="14" height="11" rx="2" fill="#cfcbe4"/>
+<g transform="rotate(-31 160 203)">
+  <rect x="158" y="197" width="44" height="12" rx="3" fill="#b7b2d0"/>
+  <rect x="200" y="194" width="16" height="18" rx="3" fill="#cfcbe4"/>
+  <rect x="146" y="199" width="13" height="8" rx="2" fill="#9a95b5"/>
+  <rect x="170" y="190" width="18" height="6" rx="2" fill="#9a95b5"/>
+</g>
+<path d="M 196 176 l 14 -9" stroke="#7ee0c0" stroke-width="1.4" fill="none"/>
+<path d="M 210 167 l -6 0 l 3 5 z" fill="#7ee0c0"/>
+
+<!-- compass -->
+<g font-size="10" fill="var(--text)" text-anchor="middle" font-weight="600">
+  <text x="90" y="253">SE</text>
+  <text x="160" y="253">S</text>
+  <text x="230" y="253">SW</text>
+</g>
+<line x1="90" y1="240" x2="230" y2="240" stroke="#7ee0c0" stroke-width="1.4"/>
+<line x1="90" y1="236" x2="90" y2="244" stroke="#7ee0c0" stroke-width="1.4"/>
+<line x1="230" y1="236" x2="230" y2="244" stroke="#7ee0c0" stroke-width="1.4"/>
+<text x="46" y="253" font-size="9" fill="var(--muted)" text-anchor="middle">building</text>
+<text x="274" y="253" font-size="9" fill="var(--muted)" text-anchor="middle">building</text>
+
+<text x="170" y="272" font-size="10" fill="var(--muted)" text-anchor="middle">The green line is roughly 35° south declination. Everything I</text>
+<text x="170" y="285" font-size="10" fill="var(--muted)" text-anchor="middle">shoot has to cross inside that box, and it does not linger.</text>
 </svg>
-<figcaption>The wedge is the whole observatory. Its shape depends on which way
-your building faces, and it is worth measuring before you buy anything.</figcaption>
+<figcaption>The gap is the whole observatory. From this latitude the <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-3" data-gl-term="celestial equator">celestial
+equator</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-3" hidden>Earth&#x27;s equator projected out onto the sky, exactly halfway between the two celestial poles.</span> crosses the <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-4" data-gl-term="meridian">meridian</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-4" hidden>The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line.</span> at about 65 degrees, so the ceiling hides it
+completely. Targets around 35 degrees south <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-5" data-gl-term="declination">declination</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> transit near 30
+degrees, which lands them squarely in the opening. That is not a coincidence in
+what I image, it is the opening choosing for me.</figcaption>
 </figure>
 
 <h2>Polar alignment when you cannot see Polaris</h2>
@@ -521,7 +610,7 @@ conversation, and if you search the forums you will find a steady stream of
 people arriving at the same conclusion and asking whether their balcony is
 useless. It is not.</p>
 
-<p>The way around it is a feature called all-sky <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-3" data-gl-term="polar alignment">polar alignment</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-3" hidden>Lining a mount&#x27;s main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.</span>. On my setup
+<p>The way around it is a feature called all-sky <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-6" data-gl-term="polar alignment">polar alignment</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-6" hidden>Lining a mount&#x27;s main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.</span>. On my setup
 that lives in the ASIAir, and the idea behind it is worth understanding even if
 you use something else, because it explains why the wall stops mattering.</p>
 
@@ -586,7 +675,7 @@ than the piece nearest your target, makes it far more reliable.</p>
 <h2>The sky window picks your target</h2>
 
 <p>In a garden you choose a target and then wait for it. On a balcony it works
-the other way round. You look at what is going to cross your wedge of sky
+the other way round. You look at what is going to cross your opening of sky
 tonight, and you choose from that list.</p>
 
 <p>This sounds like a restriction, and it is, but it turns planning into a much
@@ -600,7 +689,7 @@ the wall the night is over for that object whether or not you have enough
 frames. From a dark site you might collect everything you need in one go. From
 a balcony you collect an hour or two, then come back the next clear night and
 add to it, and again after that. The total is what matters, not how it was
-gathered, and <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-4" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-4" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software does not care that the frames came from six
+gathered, and <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-7" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-7" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> software does not care that the frames came from six
 different evenings.</p>
 
 <p>This turns out to suit a balcony very well. The gear lives a few steps from
@@ -621,7 +710,7 @@ nebula is still there in your frames, sitting underneath a thick layer of
 orange glow.</p>
 
 <p>Many glowing nebulae emit most of their light at just two specific colours.
-A <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-5" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-5" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filter opens a very narrow window at each of those two colours and
+A <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-8" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-8" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filter opens a very narrow window at each of those two colours and
 blocks nearly everything else, which throws away most of the city glow while
 keeping most of what you came for. I use a 7nm dual-band filter for this and it
 is the single piece of kit that makes my balcony worth using.</p>
@@ -642,7 +731,7 @@ what a dual-band filter is built for, and both came from a sky where I can
 count the visible stars on my fingers.</p>
 
 <p>They also make the point about the sky window better than my diagram does.
-Both of them sit around thirty-five degrees south of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-imaging-from-a-city-balcony-6" data-gl-term="celestial equator">celestial equator</span><span class="gl-def" id="gl-imaging-from-a-city-balcony-6" hidden>Earth&#x27;s equator projected out onto the sky, exactly halfway between the two celestial poles.</span>,
+Both of them sit around thirty-five degrees south of the celestial equator,
 which from this latitude means they never climb high. They cross low, they
 cross briefly, and the whole time you are looking through far more atmosphere
 than you would choose to. That is the balcony question in miniature. Not
