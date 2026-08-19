@@ -8,6 +8,7 @@
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
   <link rel="canonical" href="https://bhapstar.com/articles/navigating-the-night-sky.html" />
+  <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
   <meta name="description" content="The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator and the m" />
   <meta name="author" content="Bhapinder Singh" />
   <meta property="og:type" content="article" />
@@ -276,6 +277,31 @@
       .article-signup-block { margin-top: 32px; padding: 18px 16px; }
       .article-signup-btn { width: 100%; }
     }
+
+    /* Related reading. Text-only cards on purpose: article covers are still
+       full-size files, so three thumbnails here would cost more than the
+       article itself. Swap in images once images/thumbs/articles/ exists. */
+    .related {{ margin: 40px 0 0; padding-top: 26px;
+                border-top: 1px solid var(--line); }}
+    .related h2 {{ font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+                   color: var(--muted); font-weight: 600; margin: 0 0 16px; }}
+    .related-grid {{ display: grid; gap: 10px;
+                     grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+    .related-card {{ display: flex; flex-direction: column; gap: 6px;
+                     padding: 13px 15px; border-radius: 12px;
+                     border: 1px solid var(--line); background: var(--soft);
+                     text-decoration: none; color: var(--text);
+                     transition: border-color 200ms ease, background 200ms ease,
+                                 transform 200ms ease; }}
+    .related-card:hover, .related-card:focus-visible {{
+                     border-color: var(--accent); background: var(--glow2);
+                     transform: translateY(-1px); }}
+    .related-kicker {{ font-size: 9.5px; letter-spacing: 0.16em;
+                       text-transform: uppercase; color: var(--muted); }}
+    .related-title {{ font-size: 13.5px; font-weight: 500; line-height: 1.35; }}
+    @media (max-width: 700px) {{
+      .related-grid {{ grid-template-columns: 1fr; }}
+    }}
 
     .article-support { margin: 44px 0 0; padding: 22px 24px;
                        border-radius: var(--radius); border: 1px solid var(--line);
@@ -884,6 +910,14 @@ wheeling around one fairly ordinary star in the north.</p>
 
       </div>
 
+      <section class="related" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading">Related reading</h2>
+        <div class="related-grid">
+          <a class="related-card" href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"><span class="related-kicker">Capture <span aria-hidden="true">&middot;</span> 9 min read</span><span class="related-title">How I Plan Every Astrophotography Session Using Stellarium</span></a>
+          <a class="related-card" href="/articles/bortle-scale-narrowband-filters.html"><span class="related-kicker">Capture <span aria-hidden="true">&middot;</span> 9 min read</span><span class="related-title">The Bortle Scale of Night-Sky Brightness and Light Pollution</span></a>
+          <a class="related-card" href="/articles/seestar-s30-pro-tour.html"><span class="related-kicker">Gear <span aria-hidden="true">&middot;</span> 8 min read</span><span class="related-title">The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag</span></a>
+        </div>
+      </section>
       <aside class="article-signup-block" aria-labelledby="articleSignupHeading">
         <h2 id="articleSignupHeading">Stay in the loop</h2>
         <div class="article-signup">
