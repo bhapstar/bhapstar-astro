@@ -7,13 +7,22 @@
     <language>en-gb</language>
     <copyright>Bhapinder Singh</copyright>
     <managingEditor>Bhapinder Singh</managingEditor>
-    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://bhapstar.com/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://bhapstar.com/images/icons/apple-touch-icon.png</url>
       <title>Fragments of the Universe — Bhapstar Astrophotography</title>
       <link>https://bhapstar.com/</link>
     </image>
+    <item>
+      <title>Imaging Deep Sky from a Bortle 8 Balcony</title>
+      <link>https://bhapstar.com/articles/imaging-from-a-city-balcony.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/imaging-from-a-city-balcony.html</guid>
+      <pubDate>Wed, 19 Aug 2026 00:00:00 +0000</pubDate>
+      <description>Most city astrophotography advice assumes a garden. A balcony takes away your view of Polaris, most of the sky, and half the night. Here is how to work with all three, and why it is still worth doing.</description>
+      <category>Capture</category>
+      <enclosure url="https://bhapstar.com/images/gear/Full%20rig%202.webp" length="88716" type="image/webp" />
+    </item>
     <item>
       <title>How I Plan Every Astrophotography Session Using Stellarium</title>
       <link>https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</link>
