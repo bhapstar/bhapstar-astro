@@ -126,6 +126,34 @@ DOWNLOAD_ICON = (
     '<path d="M8 2v8"/><path d="M4.5 7L8 10.5 11.5 7"/><path d="M2.5 13h11"/></svg>'
 )
 
+RELATED_CSS = """
+    /* Related reading. Text-only cards on purpose: article covers are still
+       full-size files, so three thumbnails here would cost more than the
+       article itself. Swap in images once images/thumbs/articles/ exists. */
+    .related {{ margin: 40px 0 0; padding-top: 26px;
+                border-top: 1px solid var(--line); }}
+    .related h2 {{ font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+                   color: var(--muted); font-weight: 600; margin: 0 0 16px; }}
+    .related-grid {{ display: grid; gap: 10px;
+                     grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+    .related-card {{ display: flex; flex-direction: column; gap: 6px;
+                     padding: 13px 15px; border-radius: 12px;
+                     border: 1px solid var(--line); background: var(--soft);
+                     text-decoration: none; color: var(--text);
+                     transition: border-color 200ms ease, background 200ms ease,
+                                 transform 200ms ease; }}
+    .related-card:hover, .related-card:focus-visible {{
+                     border-color: var(--accent); background: var(--glow2);
+                     transform: translateY(-1px); }}
+    .related-kicker {{ font-size: 9.5px; letter-spacing: 0.16em;
+                       text-transform: uppercase; color: var(--muted); }}
+    .related-title {{ font-size: 13.5px; font-weight: 500; line-height: 1.35; }}
+    @media (max-width: 700px) {{
+      .related-grid {{ grid-template-columns: 1fr; }}
+    }}
+"""
+
+
 DOWNLOAD_CSS = """
     .article-download { margin: 40px 0 0; padding: 22px 24px;
                         border-radius: var(--radius); border: 1px solid var(--line);
@@ -524,7 +552,74 @@ def build_json_ld(entry, page_url, cover_src):
     return json.dumps(prune(schema), ensure_ascii=False)
 
 
-def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
+def pick_related(entry, articles, limit=3):
+    """Choose the articles most worth reading next.
+
+    Scoring, highest first:
+      - a shared tag from the optional "tags" array in site-data.json  (3 each)
+      - the same "category"                                            (2)
+    Ties fall back to publication order, which arrives newest first. If
+    scoring finds fewer than `limit`, the list is topped up with the most
+    recent other articles so the block is never half empty.
+    """
+    slug = entry.get('slug')
+    tags = {t.strip().lower() for t in entry.get('tags', []) if t and t.strip()}
+    category = (entry.get('category') or '').strip().lower()
+
+    scored = []
+    for other in articles:
+        if other.get('slug') == slug:
+            continue
+        other_tags = {t.strip().lower()
+                      for t in other.get('tags', []) if t and t.strip()}
+        score = 3 * len(tags & other_tags)
+        if category and (other.get('category') or '').strip().lower() == category:
+            score += 2
+        scored.append((score, other))
+
+    picked = [o for score, o in scored if score > 0][:limit]
+    if len(picked) < limit:
+        picked_slugs = {o.get('slug') for o in picked}
+        for _, other in scored:
+            if len(picked) >= limit:
+                break
+            if other.get('slug') not in picked_slugs:
+                picked.append(other)
+                picked_slugs.add(other.get('slug'))
+    return picked[:limit]
+
+
+def build_related_block(entry, articles):
+    """Three text cards pointing at the nearest neighbours of this article."""
+    related = pick_related(entry, articles)
+    if not related:
+        return ''
+
+    cards = []
+    for other in related:
+        kicker_bits = [b for b in (other.get('category'), other.get('readTime')) if b]
+        sep = ' <span aria-hidden="true">&middot;</span> '
+        kicker = ''
+        if kicker_bits:
+            kicker = ('<span class="related-kicker">'
+                      + sep.join(esc(b) for b in kicker_bits) + '</span>')
+        cards.append(
+            f'          <a class="related-card" '
+            f'href="/{OUT_DIR}/{esc(other.get("slug", ""))}.html">'
+            f'{kicker}'
+            f'<span class="related-title">{esc(other.get("title", ""))}</span>'
+            f'</a>\n')
+
+    return ('      <section class="related" aria-labelledby="relatedHeading">\n'
+            '        <h2 id="relatedHeading">Related reading</h2>\n'
+            '        <div class="related-grid">\n'
+            + ''.join(cards)
+            + '        </div>\n'
+              '      </section>\n')
+
+
+def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
+               articles=None):
     """Build the full HTML page for one article."""
     title = entry.get('title', 'Article')
     desc = entry.get('desc', '')
@@ -556,6 +651,11 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     # The mailing list goes on every article, so its CSS is unconditional.
     signup_html = build_signup_block(entry)
     signup_css = SIGNUP_CSS if signup_html else ''
+
+    # Related reading. A site with one article has no neighbours, so both the
+    # block and its styles drop out rather than rendering an empty heading.
+    related_html = build_related_block(entry, articles or [])
+    related_css = RELATED_CSS if related_html else ''
     build_page.last_gloss_count = gloss_count
 
     if cover_src:
@@ -616,6 +716,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
   <link rel="canonical" href="{esc(page_url)}" />
+  <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
   <meta name="description" content="{esc(desc[:160])}" />
   <meta name="author" content="Bhapinder Singh" />
   <meta property="og:type" content="article" />
@@ -820,7 +921,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
       .article-standfirst {{ font-size: 15px; }}
       .gn-label {{ display: none; }}
     }}
-{download_css}{signup_css}{SUPPORT_CSS}{gloss_css}
+{download_css}{signup_css}{related_css}{SUPPORT_CSS}{gloss_css}
   </style>
 
   <script type="application/ld+json">
@@ -845,7 +946,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 {body_html}
       </div>
 
-{download_html}{signup_html}{build_support_block(entry)}
+{related_html}{download_html}{signup_html}{build_support_block(entry)}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
   </section>
@@ -1042,7 +1143,8 @@ def main():
         next_entry = articles[(i + 1) % n] if n > 1 else None
         filename = os.path.join(OUT_DIR, f"{slug}.html")
         with open(filename, 'w', encoding='utf-8') as f:
-            f.write(build_page(entry, slug, prev_entry, next_entry, glossary))
+            f.write(build_page(entry, slug, prev_entry, next_entry, glossary,
+                               articles))
         marked = getattr(build_page, 'last_gloss_count', 0)
         gloss_total += marked
         print(f"✓ {filename}"

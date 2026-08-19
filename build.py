@@ -26,6 +26,9 @@ Why the order matters:
   5. sitemap  Built from site-data.json rather than from disk, so it is
               order-independent, but it belongs last as the final index of
               everything above.
+  6. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
+              is order-independent too, but it runs last for the same reason
+              as the sitemap: it describes everything above it.
 
 Layout this expects:
 
@@ -54,6 +57,7 @@ STAGES = [
     ("share",   "generate-share-pages.py"),
     ("schema",  "generate-schema.py"),
     ("sitemap", "generate-sitemap.py"),
+    ("feed",    "generate-feed.py"),
 ]
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
