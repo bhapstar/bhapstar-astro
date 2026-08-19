@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Start Here — Bhapstar Astrophotography</title>
+  <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+  <link rel="canonical" href="https://bhapstar.com/start-here.html" />
+  <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
+  <meta name="description" content="A guided path through astrophotography, from finding your way around the night sky to processing your first deep-sky image. Written for anyone starting out, with no equipment assumed." />
+  <meta name="author" content="Bhapinder Singh" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Start Here — Bhapstar Astrophotography" />
+  <meta property="og:description" content="A guided path through astrophotography, from finding your way around the night sky to processing your first deep-sky image. Written for anyone starting out, with no equipment assumed." />
+  <meta property="og:url" content="https://bhapstar.com/start-here.html" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Start Here — Bhapstar Astrophotography" />
+  <meta name="twitter:description" content="A guided path through astrophotography, from finding your way around the night sky to processing your first deep-sky image. Written for anyone starting out, with no equipment assumed." />
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+
+    .sh-page { max-width: 820px; margin: 40px auto; padding: 0 16px; }
+    .sh-header { margin-bottom: 40px; }
+    .sh-kicker { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+                 color: var(--muted); margin: 0 0 12px; }
+    .sh-title-main { font-size: 32px; line-height: 1.2; margin: 0 0 14px; }
+    .sh-intro { font-size: 16.5px; line-height: 1.65; color: var(--muted); margin: 0; }
+
+    .sh-stage { margin: 0 0 44px; }
+    .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
+                      margin: 0 0 6px; }
+    .sh-stage-lede { font-size: 14.5px; line-height: 1.6; color: var(--muted);
+                     margin: 0 0 18px; }
+    .sh-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .sh-card { display: flex; gap: 14px; align-items: flex-start;
+               padding: 15px 17px; border-radius: 13px;
+               border: 1px solid var(--line); background: var(--soft);
+               text-decoration: none; color: var(--text);
+               transition: border-color 200ms ease, background 200ms ease,
+                           transform 200ms ease; }
+    .sh-card:hover, .sh-card:focus-visible {
+               border-color: var(--accent); background: var(--glow2);
+               transform: translateY(-1px); }
+    .sh-num { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 12px; font-weight: 600; color: var(--accent);
+              border: 1px solid var(--line); background: var(--bg); }
+    .sh-text { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .sh-title { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
+    .sh-desc { font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+    .sh-meta { font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+               color: var(--muted); }
+
+    .sh-more { display: inline-flex; align-items: center; gap: 7px;
+               margin-top: 4px; padding: 12px 16px; border-radius: 11px;
+               border: 1px dashed var(--line); background: transparent;
+               font-size: 13.5px; color: var(--muted); text-decoration: none;
+               transition: border-color 200ms ease, color 200ms ease; }
+    .sh-more:hover, .sh-more:focus-visible {
+               border-color: var(--accent); color: var(--accent); }
+
+    .sh-outro { margin-top: 10px; padding-top: 26px;
+                border-top: 1px solid var(--line); }
+    .sh-outro p { font-size: 14.5px; line-height: 1.65; color: var(--muted);
+                  margin: 0 0 14px; }
+    .sh-outro a { color: var(--accent); text-decoration: none;
+                  border-bottom: 1px solid rgba(167,139,250,0.35); }
+    .sh-outro a:hover { border-bottom-color: var(--accent); }
+    html[data-theme="light"] .sh-outro a { color: #6d4bd8; }
+
+    @media (max-width: 560px) {
+      .sh-title-main { font-size: 26px; }
+      .sh-card { padding: 13px 14px; gap: 11px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "ItemList", "name": "Start Here: a guided path through astrophotography", "description": "A guided path through astrophotography, from finding your way around the night sky to processing your first deep-sky image. Written for anyone starting out, with no equipment assumed.", "url": "https://bhapstar.com/start-here.html", "numberOfItems": 10, "itemListOrder": "https://schema.org/ItemListOrderAscending", "itemListElement": [{"@type": "ListItem", "position": 1, "url": "https://bhapstar.com/articles/navigating-the-night-sky.html", "name": "Navigating the Night Sky: Polaris, the Poles and the Lines Between Them"}, {"@type": "ListItem", "position": 2, "url": "https://bhapstar.com/articles/bortle-scale-narrowband-filters.html", "name": "The Bortle Scale of Night-Sky Brightness and Light Pollution"}, {"@type": "ListItem", "position": 3, "url": "https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html", "name": "How I Plan Every Astrophotography Session Using Stellarium"}, {"@type": "ListItem", "position": 4, "url": "https://bhapstar.com/articles/photograph-meteor-shower-milky-way-phone.html", "name": "How to Photograph the Milky Way with Your Phone"}, {"@type": "ListItem", "position": 5, "url": "https://bhapstar.com/articles/photograph-meteor-shower-milky-way-camera.html", "name": "How to Photograph the Milky Way with a Camera"}, {"@type": "ListItem", "position": 6, "url": "https://bhapstar.com/articles/seestar-s30-pro-tour.html", "name": "The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag"}, {"@type": "ListItem", "position": 7, "url": "https://bhapstar.com/articles/asiair-astrophotography-control.html", "name": "The ASIAir: Running a Whole Rig From Your Phone"}, {"@type": "ListItem", "position": 8, "url": "https://bhapstar.com/articles/calibration-frames-darks-flats-biases.html", "name": "Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs"}, {"@type": "ListItem", "position": 9, "url": "https://bhapstar.com/articles/siril-post-processing-guide.html", "name": "Siril: From a Folder of Subframes to a Finished Image"}, {"@type": "ListItem", "position": 10, "url": "https://bhapstar.com/articles/main-rig-tour.html", "name": "The Rig: A Mount, a Refractor, and a Camera That Runs Itself"}]}
+  </script>
+</head>
+<body>
+
+<!-- ── Header (injected by partials.js) ── -->
+<div id="siteHeader"></div>
+
+<main>
+  <section class="section">
+    <div class="wrap sh-page">
+
+      <div class="sh-header">
+        <p class="sh-kicker">Start Here</p>
+        <h1 class="sh-title-main">New to all of this? Read in this order.</h1>
+        <p class="sh-intro">If you have just found this site, this page is the place to begin. Everything below is arranged in the order the work actually happens: you plan a night, you capture what you can, and then you process what you caught. You do not need a telescope to start. The first few pieces assume nothing more than your eyes and a phone.</p>
+      </div>
+
+      <section class="sh-stage">
+        <h2 class="sh-stage-title">1. Plan the night</h2>
+        <p class="sh-stage-lede">Half of a good image is decided before anything is switched on. Knowing what is up, how dark your sky really is, and where to point.</p>
+        <div class="sh-list">
+          <a class="sh-card" href="/articles/navigating-the-night-sky.html">
+            <span class="sh-num" aria-hidden="true">1</span>
+            <span class="sh-text">
+              <span class="sh-title">Navigating the Night Sky: Polaris, the Poles and the Lines Between Them</span>
+              <span class="sh-desc">The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator</span>
+              <span class="sh-meta">Sky basics <span aria-hidden="true">&middot;</span> 6 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/bortle-scale-narrowband-filters.html">
+            <span class="sh-num" aria-hidden="true">2</span>
+            <span class="sh-text">
+              <span class="sh-title">The Bortle Scale of Night-Sky Brightness and Light Pollution</span>
+              <span class="sh-desc">Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm narrowband filters real</span>
+              <span class="sh-meta">Capture <span aria-hidden="true">&middot;</span> 9 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html">
+            <span class="sh-num" aria-hidden="true">3</span>
+            <span class="sh-text">
+              <span class="sh-title">How I Plan Every Astrophotography Session Using Stellarium</span>
+              <span class="sh-desc">The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.</span>
+              <span class="sh-meta">Capture <span aria-hidden="true">&middot;</span> 9 min read</span>
+            </span>
+          </a>
+        </div>
+      </section>
+      <section class="sh-stage">
+        <h2 class="sh-stage-title">2. Capture the image</h2>
+        <p class="sh-stage-lede">From a phone on a wall to a rig running itself all night. Start with whatever you already own.</p>
+        <div class="sh-list">
+          <a class="sh-card" href="/articles/photograph-meteor-shower-milky-way-phone.html">
+            <span class="sh-num" aria-hidden="true">1</span>
+            <span class="sh-text">
+              <span class="sh-title">How to Photograph the Milky Way with Your Phone</span>
+              <span class="sh-desc">No camera and no experience needed, just a phone, a small tripod and a dark sky. Where to look, which mode to use on an iPhone, Pixel or Samsung, and </span>
+              <span class="sh-meta">Milky Way <span aria-hidden="true">&middot;</span> 7 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/photograph-meteor-shower-milky-way-camera.html">
+            <span class="sh-num" aria-hidden="true">2</span>
+            <span class="sh-text">
+              <span class="sh-title">How to Photograph the Milky Way with a Camera</span>
+              <span class="sh-desc">One wide lens on a tripod, set to manual, pointed at a dark sky. The settings to use, how long the shutter can stay open before stars trail, and what </span>
+              <span class="sh-meta">Milky Way <span aria-hidden="true">&middot;</span> 5 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/seestar-s30-pro-tour.html">
+            <span class="sh-num" aria-hidden="true">3</span>
+            <span class="sh-text">
+              <span class="sh-title">The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag</span>
+              <span class="sh-desc">Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.</span>
+              <span class="sh-meta">Gear <span aria-hidden="true">&middot;</span> 8 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/asiair-astrophotography-control.html">
+            <span class="sh-num" aria-hidden="true">4</span>
+            <span class="sh-text">
+              <span class="sh-title">The ASIAir: Running a Whole Rig From Your Phone</span>
+              <span class="sh-desc">Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, an</span>
+              <span class="sh-meta">Capture <span aria-hidden="true">&middot;</span> 7 min read</span>
+            </span>
+          </a>
+        </div>
+      </section>
+      <section class="sh-stage">
+        <h2 class="sh-stage-title">3. Process what you caught</h2>
+        <p class="sh-stage-lede">The part that surprises most people. A finished image is built from hundreds of frames, and some of those frames are not photographs at all.</p>
+        <div class="sh-list">
+          <a class="sh-card" href="/articles/calibration-frames-darks-flats-biases.html">
+            <span class="sh-num" aria-hidden="true">1</span>
+            <span class="sh-text">
+              <span class="sh-title">Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs</span>
+              <span class="sh-desc">What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minut</span>
+              <span class="sh-meta">Processing <span aria-hidden="true">&middot;</span> 7 min read</span>
+            </span>
+          </a>
+          <a class="sh-card" href="/articles/siril-post-processing-guide.html">
+            <span class="sh-num" aria-hidden="true">2</span>
+            <span class="sh-text">
+              <span class="sh-title">Siril: From a Folder of Subframes to a Finished Image</span>
+              <span class="sh-desc">The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images wh</span>
+              <span class="sh-meta">Processing <span aria-hidden="true">&middot;</span> 9 min read</span>
+            </span>
+          </a>
+        </div>
+      </section>
+      <section class="sh-stage">
+        <h2 class="sh-stage-title">4. The gear behind it</h2>
+        <p class="sh-stage-lede">What I actually use, and why. Useful once you know what you want a piece of kit to do for you.</p>
+        <div class="sh-list">
+          <a class="sh-card" href="/articles/main-rig-tour.html">
+            <span class="sh-num" aria-hidden="true">1</span>
+            <span class="sh-text">
+              <span class="sh-title">The Rig: A Mount, a Refractor, and a Camera That Runs Itself</span>
+              <span class="sh-desc">A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the wh</span>
+              <span class="sh-meta">Gear <span aria-hidden="true">&middot;</span> 8 min read</span>
+            </span>
+          </a>
+          <a class="sh-more" href="/gear.html">Every piece of gear I use <span aria-hidden="true">&#8594;</span></a>
+        </div>
+      </section>
+
+      <section class="sh-outro">
+        <p>That is the path. When you want the full list rather than a route through it, <a href="/articles.html">every article lives here</a>, newest first, and the <a href="/gallery.html">gallery</a> has the images these guides were written from.</p>
+        <p>If you would rather hear when something new goes up, there is a monthly newsletter you can join from the <a href="/index.html">home page</a>.</p>
+      </section>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── Footer (injected by partials.js) ── -->
+<div id="siteFooter"></div>
+
+  <script src="/partials/partials.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fragments of the Universe — Bhapstar Astrophotography</title>
+    <link>https://bhapstar.com/</link>
+    <description>Astrophotography from a Dubai balcony and the dark skies of the UAE desert. Deep-sky images, gear notes and guides for anyone starting out under the stars.</description>
+    <language>en-gb</language>
+    <copyright>Bhapinder Singh</copyright>
+    <managingEditor>Bhapinder Singh</managingEditor>
+    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://bhapstar.com/feed.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>https://bhapstar.com/images/icons/apple-touch-icon.png</url>
+      <title>Fragments of the Universe — Bhapstar Astrophotography</title>
+      <link>https://bhapstar.com/</link>
+    </image>
+    <item>
+      <title>How I Plan Every Astrophotography Session Using Stellarium</title>
+      <link>https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</guid>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <description>The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.</description>
+      <category>Capture</category>
+      <enclosure url="https://bhapstar.com/images/articles/stellarium-app-fov-single.webp" length="131964" type="image/webp" />
+    </item>
+    <item>
+      <title>The Bortle Scale of Night-Sky Brightness and Light Pollution</title>
+      <link>https://bhapstar.com/articles/bortle-scale-narrowband-filters.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/bortle-scale-narrowband-filters.html</guid>
+      <pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+      <description>Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm narrowband filters really do about it.</description>
+      <category>Capture</category>
+      <enclosure url="https://bhapstar.com/images/articles/bortle-scale-eso.webp" length="163464" type="image/webp" />
+    </item>
+    <item>
+      <title>The Seestar S30 Pro: A Whole Observatory in a Shoulder Bag</title>
+      <link>https://bhapstar.com/articles/seestar-s30-pro-tour.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/seestar-s30-pro-tour.html</guid>
+      <pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+      <description>Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.</description>
+      <category>Gear</category>
+      <enclosure url="https://bhapstar.com/images/gear/Seestar-S30-Pro-TC20-TH10-1.webp" length="115032" type="image/webp" />
+    </item>
+    <item>
+      <title>The Rig: A Mount, a Refractor, and a Camera That Runs Itself</title>
+      <link>https://bhapstar.com/articles/main-rig-tour.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/main-rig-tour.html</guid>
+      <pubDate>Sun, 02 Aug 2026 00:00:00 +0000</pubDate>
+      <description>A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.</description>
+      <category>Gear</category>
+      <enclosure url="https://bhapstar.com/images/gear/Full%20rig%203.webp" length="152994" type="image/webp" />
+    </item>
+    <item>
+      <title>Navigating the Night Sky: Polaris, the Poles and the Lines Between Them</title>
+      <link>https://bhapstar.com/articles/navigating-the-night-sky.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/navigating-the-night-sky.html</guid>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+      <description>The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator and the meridian actually are.</description>
+      <category>Sky basics</category>
+      <enclosure url="https://bhapstar.com/images/star-trails-2.webp" length="97498" type="image/webp" />
+    </item>
+    <item>
+      <title>How to Photograph the Milky Way with Your Phone</title>
+      <link>https://bhapstar.com/articles/photograph-meteor-shower-milky-way-phone.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-meteor-shower-milky-way-phone.html</guid>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 +0000</pubDate>
+      <description>No camera and no experience needed, just a phone, a small tripod and a dark sky. Where to look, which mode to use on an iPhone, Pixel or Samsung, and what to change if a meteor shower is on.</description>
+      <category>Milky Way</category>
+      <enclosure url="https://bhapstar.com/images/articles/milky-way-phone-mockup.webp" length="207314" type="image/webp" />
+    </item>
+    <item>
+      <title>How to Photograph the Milky Way with a Camera</title>
+      <link>https://bhapstar.com/articles/photograph-meteor-shower-milky-way-camera.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-meteor-shower-milky-way-camera.html</guid>
+      <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
+      <description>One wide lens on a tripod, set to manual, pointed at a dark sky. The settings to use, how long the shutter can stay open before stars trail, and what to change if a meteor shower is on.</description>
+      <category>Milky Way</category>
+      <enclosure url="https://bhapstar.com/images/articles/meteor-shower-camera-mockup.webp" length="110988" type="image/webp" />
+    </item>
+    <item>
+      <title>Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs</title>
+      <link>https://bhapstar.com/articles/calibration-frames-darks-flats-biases.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/calibration-frames-darks-flats-biases.html</guid>
+      <pubDate>Mon, 27 Jul 2026 00:00:00 +0000</pubDate>
+      <description>What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.</description>
+      <category>Processing</category>
+      <enclosure url="https://bhapstar.com/images/articles/calibration-frames-tile.webp" length="87884" type="image/webp" />
+    </item>
+    <item>
+      <title>Siril: From a Folder of Subframes to a Finished Image</title>
+      <link>https://bhapstar.com/articles/siril-post-processing-guide.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/siril-post-processing-guide.html</guid>
+      <pubDate>Fri, 24 Jul 2026 00:00:00 +0000</pubDate>
+      <description>The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.</description>
+      <category>Processing</category>
+      <enclosure url="https://bhapstar.com/images/articles/siril-interface-eagle-nebula.webp" length="207464" type="image/webp" />
+    </item>
+    <item>
+      <title>The ASIAir: Running a Whole Rig From Your Phone</title>
+      <link>https://bhapstar.com/articles/asiair-astrophotography-control.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/asiair-astrophotography-control.html</guid>
+      <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
+      <description>Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.</description>
+      <category>Capture</category>
+      <enclosure url="https://bhapstar.com/images/articles/asiair-app-tile.webp" length="215520" type="image/webp" />
+    </item>
+  </channel>
+</rss>
