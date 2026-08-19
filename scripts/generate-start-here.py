@@ -51,6 +51,8 @@ PAGE_DESC = ("A guided path through astrophotography, from finding your way "
              "around the night sky to processing your first deep-sky image. "
              "Written for anyone starting out, with no equipment assumed.")
 
+SUBTITLE = "New to all of this? Read in this order."
+
 INTRO = (
     "If you have just found this site, this page is the place to begin. "
     "Everything below is arranged in the order the work actually happens: "
@@ -187,12 +189,15 @@ def build_json_ld(by_stage):
 
 
 CSS = """
-    .sh-page { max-width: 820px; margin: 40px auto; padding: 0 16px; }
-    .sh-header { margin-bottom: 40px; }
-    .sh-kicker { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
-                 color: var(--muted); margin: 0 0 12px; }
-    .sh-title-main { font-size: 32px; line-height: 1.2; margin: 0 0 14px; }
-    .sh-intro { font-size: 16.5px; line-height: 1.65; color: var(--muted); margin: 0; }
+    /* The page header follows the site convention: the wrapper is a plain
+       .wrap and the title is an h1 inside .section-head, which already
+       supplies the letterspaced gradient roll. Only the subtitle and the
+       intro paragraph need styling here. */
+    .sh-header { margin-bottom: 34px; }
+    .sh-subtitle { font-size: 24px; line-height: 1.28; font-weight: 600;
+                   color: var(--text); margin: 16px 0 0; }
+    .sh-intro { font-size: 14px; line-height: 1.72; color: var(--muted);
+                margin: 14px 0 0; }
 
     .sh-stage { margin: 0 0 44px; }
     .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
@@ -238,7 +243,7 @@ CSS = """
     html[data-theme="light"] .sh-outro a { color: #6d4bd8; }
 
     @media (max-width: 560px) {
-      .sh-title-main { font-size: 26px; }
+      .sh-subtitle { font-size: 20px; }
       .sh-card { padding: 13px 14px; gap: 11px; }
     }
 """
@@ -289,18 +294,20 @@ def build_page(by_stage):
 {build_json_ld(by_stage)}
   </script>
 </head>
-<body>
+<body class="page-start-here">
 
 <!-- ── Header (injected by partials.js) ── -->
 <div id="siteHeader"></div>
 
 <main>
   <section class="section">
-    <div class="wrap sh-page">
+    <div class="wrap">
 
-      <div class="sh-header">
-        <p class="sh-kicker">Start Here</p>
-        <h1 class="sh-title-main">New to all of this? Read in this order.</h1>
+      <div class="section-head gallery-head sh-header">
+        <div class="gallery-topline">
+          <h1>{esc(PAGE_TITLE)}</h1>
+        </div>
+        <p class="sh-subtitle">{esc(SUBTITLE)}</p>
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
