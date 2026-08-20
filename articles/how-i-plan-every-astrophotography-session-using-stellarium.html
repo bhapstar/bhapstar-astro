@@ -281,15 +281,17 @@
     /* Related reading. Text-only cards on purpose: article covers are still
        full-size files, so three thumbnails here would cost more than the
        article itself. Swap in images once images/thumbs/articles/ exists. */
-    .related { margin: 40px 0 0; padding-top: 26px;
-                border-top: 1px solid var(--line); }
-    .related h2 { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    .related { margin: 40px 0 0; padding: 22px 24px;
+                border-radius: var(--radius); border: 1px solid var(--line);
+                background: var(--soft); }
+    .related h2 { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
                    color: var(--muted); font-weight: 600; margin: 0 0 16px; }
     .related-grid { display: grid; gap: 10px;
                      grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .related-card { display: flex; flex-direction: column; gap: 6px;
                      padding: 13px 15px; border-radius: 12px;
-                     border: 1px solid var(--line); background: var(--soft);
+                     border: 1px solid rgba(var(--accent-rgb),0.26);
+                     background: rgba(var(--accent-rgb),0.12);
                      text-decoration: none; color: var(--text);
                      transition: border-color 200ms ease, background 200ms ease,
                                  transform 200ms ease; }
@@ -300,6 +302,7 @@
                        text-transform: uppercase; color: var(--muted); }
     .related-title { font-size: 13.5px; font-weight: 500; line-height: 1.35; }
     @media (max-width: 700px) {
+      .related { padding: 18px 16px; }
       .related-grid { grid-template-columns: 1fr; }
     }
 
