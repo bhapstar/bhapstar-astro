@@ -1177,8 +1177,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
    Index page — About + Contact sections
    Centred, wider, fluid on all viewports
 ========================= */
-.index-about-section .cols,
-.index-contact-section .cols{
+.index-about-section .cols{
   grid-template-columns: 1fr;
   justify-items: center;
 }
@@ -1199,48 +1198,11 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   margin-left: auto;
   margin-right: auto;
 }
-.index-contact-section .contact-panel{
-  max-width: 860px;
-  width: 100%;
-  padding: 36px 40px;
-}
-.index-contact-section .contact-form,
-.index-contact-section .contact-intro{
-  max-width: 100%;
-}
 @media (max-width: 760px){
-  .index-about-section .about-panel,
-  .index-contact-section .contact-panel{
-    padding: 24px 20px;
-  }
+  .index-about-section .about-panel{ padding: 24px 20px; }
 }
 @media (max-width: 480px){
-  .index-about-section .about-panel,
-  .index-contact-section .contact-panel{
-    padding: 18px 14px;
-  }
-}
-
-.contact-panel{
-  position: relative; max-width: 720px; margin: 0 auto; padding: 28px 30px;
-}
-.contact-panel::before{
-  content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
-  background: linear-gradient(
-    90deg, transparent,
-    rgba(167,139,250,0.55), rgba(96,165,250,0.65),
-    rgba(52,211,153,0.45), transparent
-  );
-  opacity: 0.55;
-}
-@media (hover:hover){
-  .contact-panel{ transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
-  .contact-panel:hover{
-    border-color: rgba(167,139,250,0.24);
-    box-shadow: 0 0 0 1px rgba(167,139,250,0.07), 0 14px 40px rgba(0,0,0,0.44),
-                0 0 50px rgba(167,139,250,0.06);
-    transform: translateY(-2px);
-  }
+  .index-about-section .about-panel{ padding: 18px 14px; }
 }
 
 .contact-form{ max-width: 520px; }
@@ -1268,8 +1230,8 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 
 .hidden{ display: none; }
 
-/* Support panels */
-.support-panel--about{ margin: 28px 0; }
+/* Support panels. Tile margin/padding for the homepage variant lives in the
+   HOMEPAGE TILES block further down, not here. */
 .page-about .section .panel{ max-width: 800px; }
 
 .support-wrap{ padding-top: 10px; }
@@ -1328,8 +1290,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   .support-mini{ text-align: left; }
 }
 
-/* Instagram panel */
-.instagram-panel{ margin: 28px 0; }
+/* Instagram panel. Tile margin/padding lives in the HOMEPAGE TILES block. */
 .instagram-intro{ margin: 0 0 18px !important; }
 .instagram-grid{
   display: grid; grid-template-columns: 1fr; gap: 22px;
@@ -1607,7 +1568,17 @@ details.faq-item p{
 .faq-link:hover{ opacity: 0.85; }
 #pNotes{ min-height: 4.5em; resize: vertical; }
 
-/* About panel */
+/* ==========================================================================
+   HOMEPAGE TILES — single source of truth
+   --------------------------------------------------------------------------
+   Every tile inside the about panel on index.html: By the numbers, Latest
+   articles, Latest from Instagram, About Me, Support my work, Contact &
+   Updates. Box geometry, accent hairline, hover glow and heading position
+   are all set here and nowhere else. Change a value once and all six tiles
+   move together. Do not add tile rules to index.html.
+   ========================================================================== */
+
+/* Outer panel that holds the six tiles. */
 .about-panel{ position: relative; overflow: hidden; }
 .about-panel::before{
   content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
@@ -1627,14 +1598,33 @@ details.faq-item p{
   }
 }
 
-/* Inner tiles — same accent line and hover glow as the support and
-   contact panels, so every tile inside the about panel behaves alike. */
-.stats-panel,
-.instagram-panel,
-.about-me-panel{ position: relative; overflow: hidden; }
-.stats-panel::before,
-.instagram-panel::before,
-.about-me-panel::before{
+/* Tile box. max-width is pinned to none on purpose: several of these class
+   names carry width caps from older layouts, and without this one tile ends
+   up narrower than its neighbours. */
+.index-about-section .stats-panel,
+.index-about-section .latest-articles-panel,
+.index-about-section .instagram-panel,
+.index-about-section .about-me-panel,
+.index-about-section .support-panel--about,
+.index-about-section .contact-panel{
+  margin: 28px 0;
+  padding: 24px;
+  max-width: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Heading sits flush against the tile padding. .support-title is already
+   margin 0, so this brings the other five into line with it. */
+.index-about-section .section-head--inline{ margin-top: 0; }
+
+/* Accent hairline across the top of every tile. */
+.index-about-section .stats-panel::before,
+.index-about-section .latest-articles-panel::before,
+.index-about-section .instagram-panel::before,
+.index-about-section .about-me-panel::before,
+.index-about-section .support-panel--about::before,
+.index-about-section .contact-panel::before{
   content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
   background: linear-gradient(
     90deg, transparent,
@@ -1643,23 +1633,127 @@ details.faq-item p{
   );
   opacity: 0.60;
 }
+
+/* Hover lift and glow. */
 @media (hover:hover){
-  .stats-panel,
-  .instagram-panel,
-  .about-me-panel{ transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
-  .stats-panel:hover,
-  .instagram-panel:hover,
-  .about-me-panel:hover{
+  .index-about-section .stats-panel,
+  .index-about-section .latest-articles-panel,
+  .index-about-section .instagram-panel,
+  .index-about-section .about-me-panel,
+  .index-about-section .support-panel--about,
+  .index-about-section .contact-panel{
+    transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease;
+  }
+  .index-about-section .stats-panel:hover,
+  .index-about-section .latest-articles-panel:hover,
+  .index-about-section .instagram-panel:hover,
+  .index-about-section .about-me-panel:hover,
+  .index-about-section .support-panel--about:hover,
+  .index-about-section .contact-panel:hover{
     border-color: rgba(167,139,250,0.32);
     box-shadow: 0 0 0 1px rgba(167,139,250,0.10), 0 14px 44px rgba(0,0,0,0.50);
     transform: translateY(-2px);
   }
 }
 
-/* About Me tile */
-.about-me-panel{ margin: 28px 0; }
-.about-me-panel .section-head{ margin-top: 0; }
 .about-me-panel p:last-child{ margin-bottom: 0; }
+
+/* ── Tile content: Latest articles ──────────────────────────────────────
+   Text-only list on purpose, so the homepage gains crawlable routes into
+   /articles/ without another block of visual weight. */
+.latest-articles-intro{ margin: 0 0 14px !important; }
+
+.latest-articles-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.latest-articles-list li{ border-bottom: 1px solid var(--line); }
+
+.latest-articles-list a{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.la-title{
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.la-meta{
+  flex: none;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px){
+  .latest-articles-list a{
+    display: block;
+    padding: 11px 2px;
+  }
+  .la-meta{ display: block; margin-top: 4px; white-space: normal; }
+}
+
+@media (hover:hover){
+  .latest-articles-list a{ transition: color .22s ease, padding-left .22s ease; }
+  .latest-articles-list a:hover{ color: #a78bfa; padding-left: 8px; }
+  html[data-theme="light"] .latest-articles-list a:hover{ color: rgba(124,92,246,0.95); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .latest-articles-list a{ transition: none; }
+  .latest-articles-list a:hover{ padding-left: 2px; }
+}
+
+/* ── Tile content: Contact newsletter opt-in ────────────────────────────
+   Sits under Email, because the newsletter is about the address rather
+   than the message. The base rule turns every span inside .contact-form
+   into a small uppercase field label, which is right for Name and Email
+   and wrong for a sentence, so the checkbox text opts out of all of it. */
+.contact-check{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -0.5rem 0 1rem;
+  cursor: pointer;
+}
+.contact-check input{
+  flex-shrink: 0;
+  accent-color: #a78bfa;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+.contact-form .contact-check span{
+  display: inline;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.index-about-section .about-panel .contact-privacy,
+.contact-privacy{
+  margin: -0.35rem 0 1.25rem;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  opacity: 0.72;
+}
+/* ===================== END HOMEPAGE TILES ============================== */
 
 /* Inline links inside body prose. The base rule sets links to inherit the
    text colour, so without this they read as plain text mid-sentence. */
@@ -2267,7 +2361,7 @@ a[href="prints.html"], a[href*="prints"] {
 @media (min-width:1000px){ .ig-carousel .instagram-embed-wrap{ flex-basis:31%; } }
 
 /* ── Gallery counter ── */
-.stats-panel{ margin:28px 0; }
+/* Tile margin/padding lives in the HOMEPAGE TILES block. */
 .stats-sub{ margin:0 0 22px; color:var(--muted); font-size:14px; line-height:1.6; }
 .stats-grid{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px;
