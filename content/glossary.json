@@ -87,10 +87,7 @@
         "ASIAir Plus",
         "ASIAIR Plus"
       ],
-      "def": "A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.",
-      "except": [
-        "asiair-astrophotography-control"
-      ]
+      "def": "A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope."
     },
     {
       "term": "astronomical darkness",
