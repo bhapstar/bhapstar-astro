@@ -369,6 +369,9 @@
       font-size: 13px;
       font-weight: 600;
       text-transform: uppercase;
+      padding: 0 2px;
+      white-space: nowrap;
+      overflow: hidden;
       cursor: pointer;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -376,6 +379,24 @@
     }
     .sw-key:active{ transform: scale(0.94); }
     .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
+    .sw-key.util{ flex: 1.45 1 auto; font-size: clamp(8.5px, 2.3vw, 11px); letter-spacing: 0; }
+
+    /* Action keys (Enter, backspace, clear) sit apart from the letters:
+       stronger accent fill and border so they read as controls rather
+       than as another 26 letters. They never take correct/present/absent,
+       so there is no risk of clashing with the scoring colours. */
+    .sw-key.action{
+      background: rgba(167,139,250,0.22);
+      border-color: rgba(167,139,250,0.58);
+      color: #efe9ff;
+      font-weight: 700;
+    }
+    .sw-key.action:hover{ background: rgba(167,139,250,0.30); }
+    /* Clear dims when the row is already empty — the key stays in place
+       so the keyboard never reflows, it just stops inviting a tap. */
+    .sw-key.action.dim{ opacity: .42; cursor: default; }
+    .sw-key.action.dim:hover{ background: rgba(167,139,250,0.22); }
+
     .sw-key.correct{ background: #3f9070; border-color: #3f9070; color: #fff; }
     .sw-key.present{ background: #c08a3e; border-color: #c08a3e; color: #1a1a2e; }
     .sw-key.absent { background: #46454f; border-color: #56545f; color: #cfcede; opacity: 1; }
@@ -490,6 +511,17 @@
     html[data-theme="light"] .page-starword .sw-key:not(.correct):not(.present):not(.absent){
       background: rgba(124,92,246,0.07);
       border-color: rgba(124,92,246,0.20);
+    }
+    html[data-theme="light"] .page-starword .sw-key.action{
+      background: rgba(124,92,246,0.18);
+      border-color: rgba(124,92,246,0.48);
+      color: #3f2a91;
+    }
+    html[data-theme="light"] .page-starword .sw-key.action:hover{
+      background: rgba(124,92,246,0.26);
+    }
+    html[data-theme="light"] .page-starword .sw-key.action.dim:hover{
+      background: rgba(124,92,246,0.18);
     }
     html[data-theme="light"] .page-starword .sw-key.correct{
       background: #469e77; border-color: #469e77; color: #fff;
@@ -1153,8 +1185,11 @@ function buildBoard(){
 const KEY_ROWS = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
-  ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL'])
+  ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL', 'CLEAR'])
 ];
+
+const KEY_LABEL = { DEL: '⌫', CLEAR: 'CLEAR' };
+const KEY_ARIA  = { DEL: 'Delete last letter', CLEAR: 'Clear the whole row', ENTER: 'Enter' };
 
 function buildKeyboard(){
   keyboard.innerHTML = '';
@@ -1164,21 +1199,33 @@ function buildKeyboard(){
     rowKeys.forEach(function(k){
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = 'sw-key' + (k.length > 1 ? ' wide' : '');
-      b.textContent = k === 'DEL' ? '⌫' : k;
+      let cls = 'sw-key';
+      if(k.length > 1) cls += ' action';
+      if(k === 'ENTER') cls += ' wide';
+      if(k === 'DEL' || k === 'CLEAR') cls += ' util';
+      b.className = cls;
+      b.textContent = KEY_LABEL[k] || k;
       b.dataset.key = k;
-      b.setAttribute('aria-label', k === 'DEL' ? 'Delete' : k);
+      b.setAttribute('aria-label', KEY_ARIA[k] || k);
       b.addEventListener('click', function(){ handleKey(k); });
       row.appendChild(b);
     });
     keyboard.appendChild(row);
   });
+  syncClearKey();
+}
+
+// Clear is only useful with letters on the row, so it dims when empty.
+function syncClearKey(){
+  const b = keyboard.querySelector('[data-key="CLEAR"]');
+  if(b) b.classList.toggle('dim', current.length === 0);
 }
 
 function rowEl(r){ return board.children[r]; }
 function tileEl(r, c){ return rowEl(r).children[c]; }
 
 function renderCurrent(){
+  syncClearKey();
   const r = guesses.length;
   if(r >= ROWS) return;
   for(let c = 0; c < COLS; c++){
@@ -1248,6 +1295,10 @@ function handleKey(k){
     if(current.length){ current = current.slice(0, -1); renderCurrent(); playDelete(); }
     return;
   }
+  if(k === 'CLEAR'){
+    if(current.length){ current = ''; renderCurrent(); playDelete(); }
+    return;
+  }
   if(/^[A-Z]$/.test(k) && current.length < COLS){
     current += k;
     renderCurrent();
@@ -1261,6 +1312,7 @@ document.addEventListener('keydown', function(e){
   if(tag === 'INPUT' || tag === 'TEXTAREA') return;
   if(e.key === 'Enter'){ e.preventDefault(); handleKey('ENTER'); return; }
   if(e.key === 'Backspace'){ e.preventDefault(); handleKey('DEL'); return; }
+  if(e.key === 'Escape'){ e.preventDefault(); handleKey('CLEAR'); return; }
   const ch = e.key.toUpperCase();
   if(/^[A-Z]$/.test(ch) && ch.length === 1) handleKey(ch);
 });
