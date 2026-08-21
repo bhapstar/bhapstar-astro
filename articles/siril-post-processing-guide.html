@@ -789,10 +789,10 @@ dither, it does nothing useful.</p>
 <h3>What each calibration frame is for</h3>
 
 <ul>
-  <li><strong>Darks</strong> record the sensor's own signal — thermal noise and hot
-  pixels — at the same exposure, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-9" data-gl-term="gain">gain</span><span class="gl-def" id="gl-siril-post-processing-guide-9" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and temperature as your lights. A cooled camera
+  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-9" data-gl-term="dark frame">Darks</span><span class="gl-def" id="gl-siril-post-processing-guide-9" hidden>An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted.</span></strong> record the sensor's own signal — thermal noise and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-10" data-gl-term="hot pixel">hot
+  pixels</span><span class="gl-def" id="gl-siril-post-processing-guide-10" hidden>A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later.</span> — at the same exposure, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-11" data-gl-term="gain">gain</span><span class="gl-def" id="gl-siril-post-processing-guide-11" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and temperature as your lights. A cooled camera
   makes these reusable for months, which is one of the quieter arguments for cooling.</li>
-  <li><strong>Flats</strong> record the optical path: <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-10" data-gl-term="vignetting">vignetting</span><span class="gl-def" id="gl-siril-post-processing-guide-10" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span>, dust motes, uneven
+  <li><strong>Flats</strong> record the optical path: <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-12" data-gl-term="vignetting">vignetting</span><span class="gl-def" id="gl-siril-post-processing-guide-12" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span>, dust motes, uneven
   illumination. Shoot them at the end of the session, before anything is moved or
   rotated. An evenly lit white screen or the dawn sky both work.</li>
   <li><strong>Biases</strong> record the sensor's read floor. They take a fraction of
@@ -843,7 +843,7 @@ background.</p>
 <figcaption>Aim to land the background peak a little way off the left wall, not against it. Pushed hard against black you have thrown away the faintest outer structure permanently; too far right and the image looks washed out and grey.</figcaption>
 </figure>
 
-<p>Siril's <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-11" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-siril-post-processing-guide-11" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> transformation with its autostretch preview is the quick route.
+<p>Siril's <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-13" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-siril-post-processing-guide-13" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> transformation with its autostretch preview is the quick route.
 The generalised hyperbolic stretch is the better one: it gives you separate control
 over where the stretch is centred and how hard it bites, so you can lift faint nebula
 without inflating every star into a white disc.</p>
@@ -851,11 +851,11 @@ without inflating every star into a white disc.</p>
 <h2>The steps people get wrong</h2>
 
 <ul>
-  <li><strong>Stretching before <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-12" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-siril-post-processing-guide-12" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span>.</strong> Gradients from
+  <li><strong>Stretching before <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-14" data-gl-term="background extraction">background extraction</span><span class="gl-def" id="gl-siril-post-processing-guide-14" hidden>The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.</span>.</strong> Gradients from
   streetlights or moonlight are additive and roughly smooth while the data is linear.
   Once stretched they are neither, and the extraction can no longer model them.</li>
-  <li><strong>Colour calibrating too late.</strong> Run <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-13" data-gl-term="SPCC">SPCC</span><span class="gl-def" id="gl-siril-post-processing-guide-13" hidden>Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste.</span> on linear data. It
-  <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-14" data-gl-term="plate solving">plate-solves</span><span class="gl-def" id="gl-siril-post-processing-guide-14" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span> the frame, looks up the actual stars in your field, and sets the
+  <li><strong>Colour calibrating too late.</strong> Run <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-15" data-gl-term="SPCC">SPCC</span><span class="gl-def" id="gl-siril-post-processing-guide-15" hidden>Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste.</span> on linear data. It
+  <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-16" data-gl-term="plate solving">plate-solves</span><span class="gl-def" id="gl-siril-post-processing-guide-16" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span> the frame, looks up the actual stars in your field, and sets the
   colour balance from real spectra rather than from what you think looks right.</li>
   <li><strong>Too much deconvolution.</strong> It is the fastest way to make an image
   look processed. Small amounts, on linear data, and stop before it starts ringing.</li>
@@ -865,13 +865,13 @@ without inflating every star into a white disc.</p>
 
 <h2>Stars, and knowing when to stop</h2>
 
-<p><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-15" data-gl-term="StarNet">StarNet</span><span class="gl-def" id="gl-siril-post-processing-guide-15" hidden>A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together.</span> separates a stretched image into a starless version and a star mask.
+<p><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-17" data-gl-term="StarNet">StarNet</span><span class="gl-def" id="gl-siril-post-processing-guide-17" hidden>A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together.</span> separates a stretched image into a starless version and a star mask.
 That lets you stretch the nebula hard without the stars swelling, then recombine
 them at whatever weight looks right. It is the single biggest step up in the look
 of an image once the fundamentals are in place, and it is also the easiest thing to
 overdo — a nebula with no stars in front of it stops looking like a photograph.</p>
 
-<p>The last thing to say is that more <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-16" data-gl-term="integration">integration</span><span class="gl-def" id="gl-siril-post-processing-guide-16" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span> beats better processing, every
+<p>The last thing to say is that more <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-18" data-gl-term="integration">integration</span><span class="gl-def" id="gl-siril-post-processing-guide-18" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span> beats better processing, every
 time. Six hours of subframes processed carelessly will out-perform one hour
 processed brilliantly. If an image is fighting you, the answer is usually another
 night on the same target rather than another hour at the keyboard.</p>
