@@ -1,3 +1,5 @@
+<!-- Styles for this fragment live in /styles.css under
+     "ARTICLE CONTENT FRAGMENTS". Do not add a <style> block here. -->
 <!--
   Article body: how a session gets planned indoors, before anything is packed.
   Written for someone who has a telescope and wants more of their clear nights
@@ -62,83 +64,6 @@ rectangle. The 135mm view is pulled back, because that frame covers far too much
 sky to show at the same zoom as the rest.</p>
 
 <figure class="article-fig fov-compare" id="fovCompare">
-<style>
-/* Nine-frame comparison. All nine screenshots are the same sky at the same
-   scale, so crossfading between them isolates the one thing that changes:
-   the rectangle. Driven by radio inputs, so it needs no script and the
-   arrow keys work on their own. */
-.fov-viewer{display:grid;gap:16px;align-items:start}
-.fov-radio{position:absolute;width:1px;height:1px;opacity:0;margin:0;
-           pointer-events:none}
-.fov-stage{position:relative;aspect-ratio:1071/2400;height:min(58vh,470px);
-           max-width:100%;margin:0 auto;border-radius:12px;overflow:hidden;
-           border:1px solid var(--line);background:var(--soft)}
-/* Beats .article-fig img on specificity, which sets height:auto. */
-.fov-stage .fov-shot{position:absolute;inset:0;width:100%;height:100%;
-          display:block;object-fit:cover;border-radius:0;opacity:0;
-          pointer-events:none;transition:opacity .28s ease;cursor:zoom-in}
-.fov-panel{min-width:0}
-.fov-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
-.fov-pill{display:inline-block;padding:5px 10px;border-radius:999px;
-          font-size:12px;line-height:1.2;white-space:nowrap;cursor:pointer;
-          color:var(--muted);background:var(--soft);
-          border:1px solid var(--line);
-          transition:background .18s ease,color .18s ease,border-color .18s ease}
-.fov-pill:hover{color:var(--text)}
-.fov-notes{display:grid}
-.fov-note{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .28s ease}
-.fov-notes .fov-note p{margin:0 0 8px}
-.fov-notes .fov-note-title{font-weight:600;color:var(--text)}
-.fov-notes .fov-note-body{font-size:14px;line-height:1.6;color:var(--muted)}
-.fov-hint{margin:0 0 14px;font-size:11.5px;letter-spacing:.04em;
-          color:var(--muted);opacity:.8}
-@media (min-width:660px){
-  .fov-viewer{grid-template-columns:auto 1fr;gap:22px}
-  .fov-stage{margin:0}
-}
-@media (prefers-reduced-motion:reduce){
-  .fov-stage .fov-shot,.fov-note{transition:none}
-}
-/* Active frame */
-#fov-a:checked ~ .fov-stage .fov-shot.fs-a,
-#fov-b:checked ~ .fov-stage .fov-shot.fs-b,
-#fov-c:checked ~ .fov-stage .fov-shot.fs-c,
-#fov-d:checked ~ .fov-stage .fov-shot.fs-d,
-#fov-e:checked ~ .fov-stage .fov-shot.fs-e,
-#fov-f:checked ~ .fov-stage .fov-shot.fs-f,
-#fov-g:checked ~ .fov-stage .fov-shot.fs-g,
-#fov-h:checked ~ .fov-stage .fov-shot.fs-h,
-#fov-i:checked ~ .fov-stage .fov-shot.fs-i{opacity:1;pointer-events:auto}
-#fov-a:checked ~ .fov-panel .fov-note.fn-a,
-#fov-b:checked ~ .fov-panel .fov-note.fn-b,
-#fov-c:checked ~ .fov-panel .fov-note.fn-c,
-#fov-d:checked ~ .fov-panel .fov-note.fn-d,
-#fov-e:checked ~ .fov-panel .fov-note.fn-e,
-#fov-f:checked ~ .fov-panel .fov-note.fn-f,
-#fov-g:checked ~ .fov-panel .fov-note.fn-g,
-#fov-h:checked ~ .fov-panel .fov-note.fn-h,
-#fov-i:checked ~ .fov-panel .fov-note.fn-i{opacity:1;visibility:visible}
-#fov-a:checked ~ .fov-panel .fov-pill.fp-a,
-#fov-b:checked ~ .fov-panel .fov-pill.fp-b,
-#fov-c:checked ~ .fov-panel .fov-pill.fp-c,
-#fov-d:checked ~ .fov-panel .fov-pill.fp-d,
-#fov-e:checked ~ .fov-panel .fov-pill.fp-e,
-#fov-f:checked ~ .fov-panel .fov-pill.fp-f,
-#fov-g:checked ~ .fov-panel .fov-pill.fp-g,
-#fov-h:checked ~ .fov-panel .fov-pill.fp-h,
-#fov-i:checked ~ .fov-panel .fov-pill.fp-i{color:#fff;background:var(--accent);border-color:var(--accent)}
-
-/* Keyboard focus ring, since the real input is visually hidden */
-#fov-a:focus-visible ~ .fov-panel .fov-pill.fp-a,
-#fov-b:focus-visible ~ .fov-panel .fov-pill.fp-b,
-#fov-c:focus-visible ~ .fov-panel .fov-pill.fp-c,
-#fov-d:focus-visible ~ .fov-panel .fov-pill.fp-d,
-#fov-e:focus-visible ~ .fov-panel .fov-pill.fp-e,
-#fov-f:focus-visible ~ .fov-panel .fov-pill.fp-f,
-#fov-g:focus-visible ~ .fov-panel .fov-pill.fp-g,
-#fov-h:focus-visible ~ .fov-panel .fov-pill.fp-h,
-#fov-i:focus-visible ~ .fov-panel .fov-pill.fp-i{outline:2px solid var(--accent2);outline-offset:2px}
-</style>
   <p class="fov-hint">Ordered widest to tightest. It cycles on its own, and
   stops as soon as you pick a frame. Tap the picture to see it full size.</p>
   <div class="fov-viewer">

@@ -37,88 +37,12 @@
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
 
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* ── Sound toggle (compact icon button) ── */
-    .sound-toggle { font-size: 16px; line-height: 1; }
-
-    /* ── Multiverse win card ── */
-    .win-card--normal    { display: block; }
-    .win-card--multiverse{ display: none; }
-
-    .win-overlay.multiverse .win-card--normal     { display: none; }
-    .win-overlay.multiverse .win-card--multiverse { display: block; }
-
-    .win-card--multiverse {
-      text-align: center;
-      border: 1px solid rgba(167,139,250,0.45);
-      background: linear-gradient(160deg, rgba(10,8,40,0.98), rgba(30,10,60,0.98));
-      box-shadow: 0 0 60px rgba(167,139,250,0.25), 0 0 120px rgba(96,165,250,0.12);
-    }
-    .win-badge {
-      font-size: 56px;
-      line-height: 1;
-      margin-bottom: 10px;
-      animation: pulse-badge 1.8s ease-in-out infinite;
-    }
-    @keyframes pulse-badge {
-      0%,100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(167,139,250,0.5));  }
-      50%      { transform: scale(1.12); filter: drop-shadow(0 0 24px rgba(167,139,250,0.9)); }
-    }
-    @keyframes gradient-shift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes pulse-title {
-      0%,100% { transform: scale(1);    filter: drop-shadow(0 0 6px rgba(167,139,250,0.5));  }
-      50%      { transform: scale(1.04); filter: drop-shadow(0 0 18px rgba(167,139,250,0.9)); }
-    }
-    .win-card--multiverse h3 {
-      font-size: clamp(18px, 3vw, 26px);
-      letter-spacing: 0.12em;
-      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa, #a78bfa);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 12px;
-      display: inline-block;
-      animation: gradient-shift 3s ease infinite, pulse-title 2s ease-in-out infinite;
-    }
-    .win-sub { font-size: 15px; color: rgba(200,195,235,0.85); margin-bottom: 6px; }
-    .win-sub--small { font-size: 13px; color: rgba(167,139,250,0.65); margin-bottom: 18px; }
-    /* Override global prints-link display rule inside the win card */
-    .win-card a { display: inline !important; }
-
-    /* The win card sits on the shared always-dark surface, but the title
-       (h3) and .btn labels follow var(--text), which flips to a dark ink
-       in light mode and nearly vanishes on the dark card. Pin them light
-       whatever the theme. The multiverse h3 is gradient-filled, so its
-       -webkit text-fill wins and this leaves it untouched. */
-    .page-puzzle .win-card h3,
-    .page-puzzle .win-actions .btn { color: rgba(240,238,250,0.96); }
-    /* Multiverse teaser gradient */
-    @keyframes mv-prize-gradient {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .mv-prize-line {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #a78bfa);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: mv-prize-gradient 4s ease infinite;
-    }
-  </style>
+  <!-- Page CSS lives in /styles.css under the
+       "PAGE: Jigsaw (jigsaw.html)" section. Do not add a <style> block here. -->
   <link rel="manifest" href="/manifest.json" />
 </head>
 
-<body class="page-puzzle">
+<body class="page-puzzle page-jigsaw">
 
 <!-- =========================
      Header / navigation

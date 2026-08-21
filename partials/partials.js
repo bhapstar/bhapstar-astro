@@ -35,12 +35,19 @@ const HIDE_FIELD_NOTES = true;
      header toggle (wired further below) flips it live.
   ───────────────────────────────────────── */
   (function initThemeEarly(){
+    var theme = 'dark';
     try {
       var saved = localStorage.getItem('theme');
       if (saved === 'light' || saved === 'dark') {
+        theme = saved;
         document.documentElement.setAttribute('data-theme', saved);
       }
     } catch (e) {}
+    /* The <meta name="theme-color"> in every page is hardcoded to the dark
+       value, so a returning light-theme visitor used to get a dark browser
+       chrome bar until they toggled. Set it here as well as in applyTheme. */
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#eceaf6' : '#050414');
   })();
 
   /* ─────────────────────────────────────────

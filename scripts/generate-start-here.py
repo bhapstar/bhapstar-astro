@@ -331,112 +331,7 @@ def build_json_ld(by_stage):
     return json.dumps(schema, ensure_ascii=False)
 
 
-CSS = """
-    /* The page header follows the site convention: the wrapper is a plain
-       .wrap and the title is an h1 inside .section-head, which already
-       supplies the letterspaced gradient roll. Only the subtitle and the
-       intro paragraph need styling here. */
-    .sh-header { margin-bottom: 34px; }
-    .sh-subtitle { font-size: 24px; line-height: 1.28; font-weight: 600;
-                   color: var(--text); margin: 16px 0 0; }
-    .sh-intro { font-size: 14px; line-height: 1.72; color: var(--muted);
-                margin: 14px 0 0; }
-
-    /* Route chooser. Hidden in the markup and revealed by the script, so a
-       reader without JS never sees a control that cannot do anything. */
-    .sh-chooser { margin: 0 0 40px; padding: 18px 20px; border-radius: 14px;
-                  border: 1px solid var(--line); background: var(--soft); }
-    .sh-chooser[hidden] { display: none; }
-    .sh-chooser-q { font-size: 15px; font-weight: 600; color: var(--text);
-                    margin: 0 0 12px; }
-    .sh-chooser-help { font-size: 12.5px; line-height: 1.6; color: var(--muted);
-                       margin: 12px 0 0; }
-    .sh-route-all { margin-left: auto; }
-
-    /* Per-route closing line, revealed by the script. */
-    .sh-route-note { font-size: 14.5px; line-height: 1.65; color: var(--muted);
-                     margin: -18px 0 40px; padding: 16px 18px; border-radius: 13px;
-                     border: 1px dashed var(--line); background: transparent; }
-    .sh-route-note[hidden] { display: none; }
-    .sh-route-jump { font: inherit; color: var(--accent); background: none;
-                     border: 0; border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
-                     padding: 0; cursor: pointer;
-                     transition: border-color 200ms ease; }
-    .sh-route-jump:hover { border-bottom-color: var(--accent); }
-
-    .sh-stage { margin: 0 0 44px; }
-    .sh-stage[hidden] { display: none; }
-    .sh-card[hidden] { display: none; }
-
-    /* Route switching. Everything on the path fades and drops a few pixels,
-       the visibility changes are committed while it is invisible, then it
-       slides back up. Doing the reflow at zero opacity is what stops the
-       page snapping to a new height in front of the reader. */
-    .sh-stage, .sh-route-note {
-      transition: opacity 180ms var(--ease-in-out),
-                  transform 180ms var(--ease-in-out);
-    }
-    .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
-      opacity: 0; transform: translateY(10px);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .sh-stage, .sh-route-note { transition: none; }
-      .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
-        opacity: 1; transform: none;
-      }
-    }
-
-    .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
-                      margin: 0 0 6px; }
-    .sh-stage-num { color: var(--accent); }
-    .sh-stage-lede { font-size: 14.5px; line-height: 1.6; color: var(--muted);
-                     margin: 0 0 18px; }
-    .sh-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .sh-card { display: flex; gap: 14px; align-items: flex-start;
-               padding: 15px 17px; border-radius: 13px;
-               border: 1px solid var(--line); background: var(--soft);
-               text-decoration: none; color: var(--text);
-               transition: border-color 200ms ease, background 200ms ease,
-                           transform 200ms ease; }
-    .sh-card:hover, .sh-card:focus-visible {
-               border-color: var(--accent); background: var(--glow2);
-               transform: translateY(-1px); }
-    .sh-num { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
-              display: flex; align-items: center; justify-content: center;
-              font-size: 12px; font-weight: 600; color: var(--accent);
-              border: 1px solid var(--line); background: var(--bg); }
-    .sh-text { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-    .sh-title { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
-    .sh-desc { font-size: 13.5px; line-height: 1.55; color: var(--muted); }
-    .sh-meta { font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
-               color: var(--muted); }
-
-    .sh-more { display: inline-flex; align-items: center; gap: 7px;
-               margin-top: 4px; padding: 12px 16px; border-radius: 11px;
-               border: 1px dashed var(--line); background: transparent;
-               font-size: 13.5px; color: var(--muted); text-decoration: none;
-               transition: border-color 200ms ease, color 200ms ease; }
-    .sh-more:hover, .sh-more:focus-visible {
-               border-color: var(--accent); color: var(--accent); }
-
-    .sh-outro { margin-top: 10px; padding-top: 26px;
-                border-top: 1px solid var(--line); }
-    .sh-outro p { font-size: 14.5px; line-height: 1.65; color: var(--muted);
-                  margin: 0 0 14px; }
-    .sh-outro a { color: var(--accent); text-decoration: none;
-                  border-bottom: 1px solid rgba(167,139,250,0.35); }
-    .sh-outro a:hover { border-bottom-color: var(--accent); }
-    html[data-theme="light"] .sh-outro a { color: #6d4bd8; }
-
-    @media (max-width: 560px) {
-      .sh-subtitle { font-size: 20px; }
-      .sh-card { padding: 13px 14px; gap: 11px; }
-      .sh-chooser { padding: 15px 16px; }
-      .sh-route-all { margin-left: 0; }
-    }
-"""
+CSS = ""   # moved to /styles.css (PAGE: Start Here)
 
 SCRIPT = """
 (function () {
@@ -608,8 +503,7 @@ def build_page(by_stage):
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}}'></script>
   <link rel="stylesheet" href="/styles.css" />
 
-  <style>
-{CSS}  </style>
+  <!-- Page CSS lives in /styles.css under "PAGE: Start Here". -->
 
   <script type="application/ld+json">
 {build_json_ld(by_stage)}
