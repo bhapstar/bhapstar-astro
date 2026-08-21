@@ -75,8 +75,20 @@
   /* Deep saturated background */
   --bg:          #050414;           /* deep indigo-black */
   --bg2:         #0a0720;
-  --header:      rgba(5,4,20,0.90);
-  --header-solid:#08051a;
+  --header:      rgba(34,28,68,0.90);   /* lifted violet-slate: reads as a surface, not black */
+  --header-solid:#171232;
+
+  /* Header/footer chrome: hairline + separation shadow.
+     Both are re-declared in the light-theme block further down. */
+  --chrome-line: rgba(167,139,250,0.16);
+  --chrome-shadow-down:
+    0 1px 0 rgba(167,139,250,0.20),
+    0 4px 14px rgba(0,0,0,0.55),
+    0 14px 40px rgba(0,0,0,0.42);
+  --chrome-shadow-up:
+    0 -1px 0 rgba(167,139,250,0.20),
+    0 -4px 14px rgba(0,0,0,0.55),
+    0 -14px 40px rgba(0,0,0,0.42);
   --text:        rgba(255,255,255,0.96);
   --muted:       rgba(200,195,235,0.64);
   --line:        rgba(167,139,250,0.18);
@@ -185,11 +197,8 @@ header{
   background: var(--header);
   backdrop-filter: blur(18px) saturate(1.8);
   -webkit-backdrop-filter: blur(18px) saturate(1.8);
-  border-bottom: 1px solid rgba(167,139,250,0.10);
-  box-shadow:
-    0 1px 0 rgba(167,139,250,0.14),
-    0 0 0 1px rgba(96,165,250,0.06),
-    0 6px 30px rgba(0,0,0,0.36);
+  border-bottom: 1px solid var(--chrome-line);
+  box-shadow: var(--chrome-shadow-down);
 }
 
 .navbar{
@@ -1784,8 +1793,15 @@ html[data-theme="light"] .contact-intro a:hover{ color: #6d4ae0; }
 
 /* Footer */
 footer{
+  /* Own stacking context so the upward shadow paints over the last
+     section instead of being covered by it. Keep this low - the
+     lightbox / modals sit far above. */
+  position: relative;
+  z-index: 1;
   padding: 28px 0 48px;
-  border-top: 1px solid rgba(167,139,250,0.08);
+  background: var(--header);
+  border-top: 1px solid var(--chrome-line);
+  box-shadow: var(--chrome-shadow-up);
   color: var(--muted); font-size: 11.5px; letter-spacing: 0.08em;
 }
 /* Footer nav — mirrors the header (gradient links + Puzzles menu),
@@ -2478,6 +2494,15 @@ html[data-theme="light"]{
   --bg2:         #f5f4fc;
   --header:      rgba(255,255,255,0.82);
   --header-solid:#ffffff;
+  --chrome-line: rgba(124,92,246,0.14);
+  /* Unchanged from the old hardcoded values - this is the light shadow as it was */
+  --chrome-shadow-down:
+    0 1px 0 rgba(167,139,250,0.14),
+    0 0 0 1px rgba(96,165,250,0.06),
+    0 6px 30px rgba(0,0,0,0.36);
+  --chrome-shadow-up:
+    0 -1px 0 rgba(167,139,250,0.14),
+    0 -6px 30px rgba(0,0,0,0.36);
   --text:        rgba(26,23,48,0.94);
   --muted:       rgba(70,64,110,0.72);
   --line:        rgba(124,92,246,0.28);
