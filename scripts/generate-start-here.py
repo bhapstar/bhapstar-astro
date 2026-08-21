@@ -31,6 +31,22 @@ Where the order comes from:
   "category", an article can sit under Gear on the shelf and under Capture
   on the path. The Seestar tour is the obvious case.
 
+Routes (the "what are you shooting with?" pills at the top):
+
+      "paths": ["camera", "smartscope", "rig"]
+
+  A list, because most articles are not tied to one kind of kit. The
+  balcony piece is about a location rather than a camera, so it belongs to
+  three routes at once; the phone Milky Way guide belongs to exactly one.
+
+  Valid values are the keys in ROUTES below. An article with no "paths"
+  is treated as belonging to all of them, which is the safe default: it
+  keeps showing rather than quietly vanishing when somebody picks a route.
+
+  The filter is progressive enhancement. The page ships with every article
+  in the HTML and no route selected, so crawlers and anyone without JS get
+  the full list.
+
 The page is fully generated, so editing start-here.html by hand will be
 overwritten on the next build. Change the copy in STAGES below, or the
 stage fields in site-data.json.
@@ -62,20 +78,36 @@ INTRO = (
 )
 
 # Stage key -> (heading, standfirst). Order here is the order on the page.
+# The headings carry no leading number: the number is rendered separately so
+# that a stage emptied by a route filter does not leave a gap in the count.
 STAGES = [
-    ("plan", "1. Plan the night",
+    ("plan", "Plan the night",
      "Half of a good image is decided before anything is switched on. "
      "Knowing what is up, how dark your sky really is, and where to point."),
-    ("capture", "2. Capture the image",
+    ("capture", "Capture the image",
      "From a phone on a wall to a rig running itself all night. Start with "
      "whatever you already own."),
-    ("process", "3. Process what you caught",
+    ("process", "Process what you caught",
      "The part that surprises most people. A finished image is built from "
      "hundreds of frames, and some of those frames are not photographs at all."),
-    ("gear", "4. The gear behind it",
+    ("gear", "The gear behind it",
      "What I actually use, and why. Useful once you know what you want a "
      "piece of kit to do for you."),
 ]
+
+# Route key -> pill label. Order here is the order of the pills, which runs
+# from least equipment to most.
+ROUTES = [
+    ("phone", "A phone"),
+    ("camera", "A camera and lens"),
+    ("smartscope", "A smart telescope"),
+    ("rig", "A full rig"),
+]
+ROUTE_KEYS = [key for key, _ in ROUTES]
+
+ROUTE_PROMPT = "What are you shooting with?"
+ROUTE_HELP = ("Optional. Pick one and the path below trims to the pieces that "
+              "apply to you. Everything stays one click away.")
 
 # Appended to the end of a stage, for stages that lead somewhere else.
 STAGE_FOOTERS = {
@@ -114,6 +146,20 @@ def load_articles():
     return by_stage
 
 
+def card_paths(entry):
+    """Which routes an article belongs to.
+
+    An entry with no "paths", or one listing a key that is not a real route,
+    falls back to every route. Failing open means a typo in site-data.json
+    shows an extra card rather than silently losing one.
+    """
+    raw = entry.get("paths")
+    if not isinstance(raw, list):
+        return ROUTE_KEYS
+    keys = [p for p in raw if p in ROUTE_KEYS]
+    return keys or ROUTE_KEYS
+
+
 def build_card(entry, number):
     """One step on the path. Numbered, because the order is the whole point."""
     meta_bits = [b for b in (entry.get("category"), entry.get("readTime")) if b]
@@ -123,8 +169,10 @@ def build_card(entry, number):
         meta = ('<span class="sh-meta">'
                 + sep.join(esc(b) for b in meta_bits) + "</span>")
 
+    paths = " ".join(card_paths(entry))
+
     return (
-        f'          <a class="sh-card" '
+        f'          <a class="sh-card" data-paths="{esc(paths)}" '
         f'href="/{ARTICLE_DIR}/{esc(entry.get("slug", ""))}.html">\n'
         f'            <span class="sh-num" aria-hidden="true">{number}</span>\n'
         f'            <span class="sh-text">\n'
@@ -138,6 +186,7 @@ def build_card(entry, number):
 
 def build_stages(by_stage):
     out = []
+    number = 0
     for key, heading, standfirst in STAGES:
         entries = by_stage.get(key, [])
         footer = STAGE_FOOTERS.get(key, "")
@@ -146,12 +195,15 @@ def build_stages(by_stage):
         if not entries and not footer:
             continue
 
+        number += 1
         cards = "".join(build_card(e, i)
                         for i, e in enumerate(entries, start=1))
         footer_html = f'          {footer}\n' if footer else ""
         out.append(
-            f'      <section class="sh-stage">\n'
-            f'        <h2 class="sh-stage-title">{esc(heading)}</h2>\n'
+            f'      <section class="sh-stage" data-stage="{esc(key)}">\n'
+            f'        <h2 class="sh-stage-title">'
+            f'<span class="sh-stage-num" aria-hidden="true">{number}.</span> '
+            f'{esc(heading)}</h2>\n'
             f'        <p class="sh-stage-lede">{esc(standfirst)}</p>\n'
             f'        <div class="sh-list">\n'
             f'{cards}{footer_html}'
@@ -159,6 +211,28 @@ def build_stages(by_stage):
             f'      </section>\n'
         )
     return "".join(out)
+
+
+def build_chooser():
+    """The route pills. No option is preselected, so the default view is the
+    whole path; 'Show everything' is the way back rather than the start."""
+    pills = "".join(
+        f'          <button type="button" class="filter-pill sh-route" '
+        f'data-route="{esc(key)}" aria-pressed="false">{esc(label)}</button>\n'
+        for key, label in ROUTES
+    )
+    return (
+        f'      <div class="sh-chooser" id="shChooser" hidden>\n'
+        f'        <p class="sh-chooser-q">{esc(ROUTE_PROMPT)}</p>\n'
+        f'        <div class="filter-pills" role="group" '
+        f'aria-label="{esc(ROUTE_PROMPT)}">\n'
+        f'{pills}'
+        f'          <button type="button" class="filter-pill sh-route sh-route-all active" '
+        f'data-route="all" aria-pressed="true">Show everything</button>\n'
+        f'        </div>\n'
+        f'        <p class="sh-chooser-help">{esc(ROUTE_HELP)}</p>\n'
+        f'      </div>\n'
+    )
 
 
 def build_json_ld(by_stage):
@@ -199,9 +273,23 @@ CSS = """
     .sh-intro { font-size: 14px; line-height: 1.72; color: var(--muted);
                 margin: 14px 0 0; }
 
+    /* Route chooser. Hidden in the markup and revealed by the script, so a
+       reader without JS never sees a control that cannot do anything. */
+    .sh-chooser { margin: 0 0 40px; padding: 18px 20px; border-radius: 14px;
+                  border: 1px solid var(--line); background: var(--soft); }
+    .sh-chooser[hidden] { display: none; }
+    .sh-chooser-q { font-size: 15px; font-weight: 600; color: var(--text);
+                    margin: 0 0 12px; }
+    .sh-chooser-help { font-size: 12.5px; line-height: 1.6; color: var(--muted);
+                       margin: 12px 0 0; }
+    .sh-route-all { margin-left: auto; }
+
     .sh-stage { margin: 0 0 44px; }
+    .sh-stage[hidden] { display: none; }
+    .sh-card[hidden] { display: none; }
     .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
                       margin: 0 0 6px; }
+    .sh-stage-num { color: var(--accent); }
     .sh-stage-lede { font-size: 14.5px; line-height: 1.6; color: var(--muted);
                      margin: 0 0 18px; }
     .sh-list { display: flex; flex-direction: column; gap: 10px; }
@@ -245,7 +333,80 @@ CSS = """
     @media (max-width: 560px) {
       .sh-subtitle { font-size: 20px; }
       .sh-card { padding: 13px 14px; gap: 11px; }
+      .sh-chooser { padding: 15px 16px; }
+      .sh-route-all { margin-left: 0; }
     }
+"""
+
+SCRIPT = """
+(function () {
+  var chooser = document.getElementById('shChooser');
+  if (!chooser) return;
+
+  var pills  = Array.prototype.slice.call(chooser.querySelectorAll('.sh-route'));
+  var stages = Array.prototype.slice.call(document.querySelectorAll('.sh-stage'));
+  if (!pills.length || !stages.length) return;
+
+  // Only reveal the control once we know the script is running, so no-JS
+  // readers get the full path rather than a set of dead buttons.
+  chooser.hidden = false;
+
+  var KEY = 'bhapstar:startHereRoute';
+
+  function apply(route) {
+    var stageNumber = 0;
+
+    stages.forEach(function (stage) {
+      var cards = Array.prototype.slice.call(stage.querySelectorAll('.sh-card'));
+      var shown = 0;
+
+      cards.forEach(function (card) {
+        var paths = (card.getAttribute('data-paths') || '').split(/\\s+/);
+        var match = route === 'all' || paths.indexOf(route) !== -1;
+        card.hidden = !match;
+        if (match) {
+          shown += 1;
+          // Renumber as we go, so a filtered stage still reads 1, 2, 3.
+          var num = card.querySelector('.sh-num');
+          if (num) num.textContent = shown;
+        }
+      });
+
+      // A stage with nothing left in it collapses entirely, footer included.
+      var empty = shown === 0;
+      stage.hidden = empty;
+      if (empty) return;
+
+      stageNumber += 1;
+      var label = stage.querySelector('.sh-stage-num');
+      if (label) label.textContent = stageNumber + '.';
+    });
+
+    pills.forEach(function (pill) {
+      var on = pill.getAttribute('data-route') === route;
+      pill.classList.toggle('active', on);
+      pill.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+
+    try {
+      if (route === 'all') sessionStorage.removeItem(KEY);
+      else sessionStorage.setItem(KEY, route);
+    } catch (e) { /* private mode, not worth caring about */ }
+  }
+
+  pills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      var route = pill.getAttribute('data-route');
+      // Tapping the active route a second time clears it.
+      apply(pill.classList.contains('active') ? 'all' : route);
+    });
+  });
+
+  var saved = null;
+  try { saved = sessionStorage.getItem(KEY); } catch (e) {}
+  var valid = pills.some(function (p) { return p.getAttribute('data-route') === saved; });
+  if (saved && valid) apply(saved);
+})();
 """
 
 OUTRO = (
@@ -311,6 +472,7 @@ def build_page(by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
+{build_chooser()}
 {build_stages(by_stage)}
 {OUTRO}
     </div>
@@ -321,6 +483,7 @@ def build_page(by_stage):
 <div id="siteFooter"></div>
 
   <script src="/partials/partials.js"></script>
+  <script>{SCRIPT}</script>
 </body>
 </html>
 '''

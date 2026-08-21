@@ -1265,6 +1265,7 @@
     ],
     "stage": "gear",
     "stageOrder": 1,
+    "paths": ["rig"],
     "seoTitle": "My Deep-Sky Astrophotography Setup"
   },
   {
@@ -1312,6 +1313,7 @@
     },
     "stage": "capture",
     "stageOrder": 1,
+    "paths": ["phone"],
     "seoTitle": "How to Photograph the Milky Way with a Phone"
   },
   {
@@ -1359,6 +1361,7 @@
     },
     "stage": "capture",
     "stageOrder": 2,
+    "paths": ["camera"],
     "seoTitle": "How to Photograph the Milky Way with a Camera"
   },
   {
@@ -1386,6 +1389,7 @@
     ],
     "stage": "plan",
     "stageOrder": 3,
+    "paths": ["camera", "smartscope", "rig"],
     "seoTitle": "How to Use Stellarium for Astrophotography"
   },
   {
@@ -1428,6 +1432,7 @@
     ],
     "stage": "process",
     "stageOrder": 2,
+    "paths": ["camera", "smartscope", "rig"],
     "seoTitle": "Siril Tutorial: Stack and Process Astrophotos"
   },
   {
@@ -1470,6 +1475,7 @@
     ],
     "stage": "capture",
     "stageOrder": 4,
+    "paths": ["rig"],
     "seoTitle": "ZWO ASIAIR Guide: Control Your Rig by Phone"
   },
   {
@@ -1512,6 +1518,7 @@
     ],
     "stage": "plan",
     "stageOrder": 2,
+    "paths": ["phone", "camera", "smartscope", "rig"],
     "seoTitle": "Bortle Scale Explained: Light Pollution Levels"
   },
   {
@@ -1554,6 +1561,7 @@
     ],
     "stage": "capture",
     "stageOrder": 3,
+    "paths": ["smartscope"],
     "seoTitle": "ZWO Seestar S30 Pro: Hands-On Tour"
   },
   {
@@ -1596,6 +1604,7 @@
     ],
     "stage": "process",
     "stageOrder": 1,
+    "paths": ["camera", "rig"],
     "seoTitle": "Calibration Frames: Darks, Flats and Biases"
   },
   {
@@ -1638,6 +1647,7 @@
     ],
     "stage": "plan",
     "stageOrder": 1,
+    "paths": ["phone", "camera", "smartscope", "rig"],
     "seoTitle": "How to Find Polaris and Navigate the Night Sky"
   },
   {
@@ -1653,6 +1663,7 @@
     "date": "19-08-2026",
     "stage": "capture",
     "stageOrder": 5,
+    "paths": ["camera", "smartscope", "rig"],
     "seoTitle": "Astrophotography from a City Balcony"
   }
 ]
