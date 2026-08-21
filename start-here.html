@@ -45,9 +45,40 @@
                        margin: 12px 0 0; }
     .sh-route-all { margin-left: auto; }
 
+    /* Per-route closing line, revealed by the script. */
+    .sh-route-note { font-size: 14.5px; line-height: 1.65; color: var(--muted);
+                     margin: -18px 0 40px; padding: 16px 18px; border-radius: 13px;
+                     border: 1px dashed var(--line); background: transparent; }
+    .sh-route-note[hidden] { display: none; }
+    .sh-route-jump { font: inherit; color: var(--accent); background: none;
+                     border: 0; border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
+                     padding: 0; cursor: pointer;
+                     transition: border-color 200ms ease; }
+    .sh-route-jump:hover { border-bottom-color: var(--accent); }
+
     .sh-stage { margin: 0 0 44px; }
     .sh-stage[hidden] { display: none; }
     .sh-card[hidden] { display: none; }
+
+    /* Route switching. Everything on the path fades and drops a few pixels,
+       the visibility changes are committed while it is invisible, then it
+       slides back up. Doing the reflow at zero opacity is what stops the
+       page snapping to a new height in front of the reader. */
+    .sh-stage, .sh-route-note {
+      transition: opacity 180ms var(--ease-in-out),
+                  transform 180ms var(--ease-in-out);
+    }
+    .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
+      opacity: 0; transform: translateY(10px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sh-stage, .sh-route-note { transition: none; }
+      .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
+        opacity: 1; transform: none;
+      }
+    }
+
     .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
                       margin: 0 0 6px; }
     .sh-stage-num { color: var(--accent); }
@@ -152,7 +183,7 @@
               <span class="sh-meta">Capture <span aria-hidden="true">&middot;</span> 9 min read</span>
             </span>
           </a>
-          <a class="sh-card" data-paths="camera smartscope rig" href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html">
+          <a class="sh-card" data-paths="phone camera smartscope rig" href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html">
             <span class="sh-num" aria-hidden="true">3</span>
             <span class="sh-text">
               <span class="sh-title">How I Plan Every Astrophotography Session Using Stellarium</span>
@@ -246,6 +277,8 @@
         </div>
       </section>
 
+      <p class="sh-route-note" data-note="phone" hidden>That is the whole phone path. A phone will get you the Milky Way arching over a horizon, and on a dark night it will get you more of it than you expect. What it will not get you is deep sky: the faint nebulae and galaxies need longer exposures than a handset will give you. When you are ready for that, <button type="button" class="sh-route-jump" data-goto="camera">the camera and lens route</button> picks up exactly where this one stops.</p>
+
       <section class="sh-outro">
         <p>That is the path. When you want the full list rather than a route through it, <a href="/articles.html">every article lives here</a>, newest first, and the <a href="/gallery.html">gallery</a> has the images these guides were written from.</p>
         <p>If you would rather hear when something new goes up, there is a monthly newsletter you can join from the <a href="/index.html">home page</a>.</p>
@@ -266,6 +299,7 @@
 
   var pills  = Array.prototype.slice.call(chooser.querySelectorAll('.sh-route'));
   var stages = Array.prototype.slice.call(document.querySelectorAll('.sh-stage'));
+  var notes  = Array.prototype.slice.call(document.querySelectorAll('.sh-route-note'));
   if (!pills.length || !stages.length) return;
 
   // Only reveal the control once we know the script is running, so no-JS
@@ -273,8 +307,19 @@
   chooser.hidden = false;
 
   var KEY = 'bhapstar:startHereRoute';
+  var FADE = 180;   // must match the CSS transition duration
+  var current = 'all';
+  var token = 0;    // guards against a second pill tapped mid-transition
 
-  function apply(route) {
+  var still = false;
+  try {
+    still = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+
+  // Show or hide cards, stages and notes for a route, and renumber whatever
+  // is left so the path still reads 1, 2, 3 with no gaps.
+  function commit(route) {
     var stageNumber = 0;
 
     stages.forEach(function (stage) {
@@ -287,7 +332,6 @@
         card.hidden = !match;
         if (match) {
           shown += 1;
-          // Renumber as we go, so a filtered stage still reads 1, 2, 3.
           var num = card.querySelector('.sh-num');
           if (num) num.textContent = shown;
         }
@@ -303,11 +347,17 @@
       if (label) label.textContent = stageNumber + '.';
     });
 
+    notes.forEach(function (note) {
+      note.hidden = note.getAttribute('data-note') !== route;
+    });
+
     pills.forEach(function (pill) {
       var on = pill.getAttribute('data-route') === route;
       pill.classList.toggle('active', on);
       pill.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
+
+    current = route;
 
     try {
       if (route === 'all') sessionStorage.removeItem(KEY);
@@ -315,18 +365,49 @@
     } catch (e) { /* private mode, not worth caring about */ }
   }
 
+  function fading() {
+    return stages.concat(notes.filter(function (n) { return !n.hidden; }));
+  }
+
+  function apply(route, animate) {
+    if (route === current) return;
+
+    if (!animate || still) { commit(route); return; }
+
+    var mine = ++token;
+    var out = fading();
+    out.forEach(function (el) { el.classList.add('sh-swapping'); });
+
+    window.setTimeout(function () {
+      if (mine !== token) return;   // a newer choice took over
+      commit(route);
+      // Clear on everything, including the note that has just appeared.
+      stages.forEach(function (el) { el.classList.remove('sh-swapping'); });
+      notes.forEach(function (el) { el.classList.remove('sh-swapping'); });
+    }, FADE);
+  }
+
   pills.forEach(function (pill) {
     pill.addEventListener('click', function () {
       var route = pill.getAttribute('data-route');
       // Tapping the active route a second time clears it.
-      apply(pill.classList.contains('active') ? 'all' : route);
+      apply(pill.classList.contains('active') ? 'all' : route, true);
     });
+  });
+
+  // "follow the camera and lens route" inside a closing note.
+  document.addEventListener('click', function (ev) {
+    var jump = ev.target.closest && ev.target.closest('.sh-route-jump');
+    if (!jump) return;
+    apply(jump.getAttribute('data-goto'), true);
+    chooser.scrollIntoView({ behavior: still ? 'auto' : 'smooth',
+                             block: 'start' });
   });
 
   var saved = null;
   try { saved = sessionStorage.getItem(KEY); } catch (e) {}
   var valid = pills.some(function (p) { return p.getAttribute('data-route') === saved; });
-  if (saved && valid) apply(saved);
+  if (saved && valid) apply(saved, false);   // no animation on first paint
 })();
 </script>
 </body>

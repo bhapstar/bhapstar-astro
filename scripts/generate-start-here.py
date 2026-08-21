@@ -109,6 +109,26 @@ ROUTE_PROMPT = "What are you shooting with?"
 ROUTE_HELP = ("Optional. Pick one and the path below trims to the pieces that "
               "apply to you. Everything stays one click away.")
 
+# A closing line shown at the end of the path, for routes that stop somewhere
+# short of the whole thing. Keyed by route. The {route:key} token becomes a
+# button that switches to that route, so the reader does not have to scroll
+# back up to the pills. Any route with no entry here simply gets nothing.
+ROUTE_NOTES = {
+    "phone": ("That is the whole phone path. A phone will get you the Milky "
+              "Way arching over a horizon, and on a dark night it will get "
+              "you more of it than you expect. What it will not get you is "
+              "deep sky: the faint nebulae and galaxies need longer "
+              "exposures than a handset will give you. When you are ready "
+              "for that, {route:camera} picks up exactly where this one "
+              "stops."),
+}
+ROUTE_NOTE_LINKS = {
+    "camera": "the camera and lens route",
+    "smartscope": "the smart telescope route",
+    "rig": "the full rig route",
+    "phone": "the phone route",
+}
+
 # Appended to the end of a stage, for stages that lead somewhere else.
 STAGE_FOOTERS = {
     "gear": ('<a class="sh-more" href="/gear.html">'
@@ -213,6 +233,35 @@ def build_stages(by_stage):
     return "".join(out)
 
 
+def build_route_notes():
+    """Per-route closing lines. All are in the HTML and hidden; the script
+    reveals the one matching the active route, and none of them when the
+    whole path is showing."""
+    out = []
+    for key, _ in ROUTES:
+        text = ROUTE_NOTES.get(key)
+        if not text:
+            continue
+
+        body = ""
+        rest = esc(text)
+        while "{route:" in rest:
+            before, _, after = rest.partition("{route:")
+            target, _, rest = after.partition("}")
+            label = ROUTE_NOTE_LINKS.get(target, "that route")
+            body += before + (
+                f'<button type="button" class="sh-route-jump" '
+                f'data-goto="{esc(target)}">{esc(label)}</button>'
+            )
+        body += rest
+
+        out.append(
+            f'      <p class="sh-route-note" data-note="{esc(key)}" hidden>'
+            f'{body}</p>\n'
+        )
+    return "".join(out)
+
+
 def build_chooser():
     """The route pills. No option is preselected, so the default view is the
     whole path; 'Show everything' is the way back rather than the start."""
@@ -284,9 +333,40 @@ CSS = """
                        margin: 12px 0 0; }
     .sh-route-all { margin-left: auto; }
 
+    /* Per-route closing line, revealed by the script. */
+    .sh-route-note { font-size: 14.5px; line-height: 1.65; color: var(--muted);
+                     margin: -18px 0 40px; padding: 16px 18px; border-radius: 13px;
+                     border: 1px dashed var(--line); background: transparent; }
+    .sh-route-note[hidden] { display: none; }
+    .sh-route-jump { font: inherit; color: var(--accent); background: none;
+                     border: 0; border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
+                     padding: 0; cursor: pointer;
+                     transition: border-color 200ms ease; }
+    .sh-route-jump:hover { border-bottom-color: var(--accent); }
+
     .sh-stage { margin: 0 0 44px; }
     .sh-stage[hidden] { display: none; }
     .sh-card[hidden] { display: none; }
+
+    /* Route switching. Everything on the path fades and drops a few pixels,
+       the visibility changes are committed while it is invisible, then it
+       slides back up. Doing the reflow at zero opacity is what stops the
+       page snapping to a new height in front of the reader. */
+    .sh-stage, .sh-route-note {
+      transition: opacity 180ms var(--ease-in-out),
+                  transform 180ms var(--ease-in-out);
+    }
+    .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
+      opacity: 0; transform: translateY(10px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sh-stage, .sh-route-note { transition: none; }
+      .sh-stage.sh-swapping, .sh-route-note.sh-swapping {
+        opacity: 1; transform: none;
+      }
+    }
+
     .sh-stage-title { font-size: 20px; font-weight: 600; line-height: 1.3;
                       margin: 0 0 6px; }
     .sh-stage-num { color: var(--accent); }
@@ -345,6 +425,7 @@ SCRIPT = """
 
   var pills  = Array.prototype.slice.call(chooser.querySelectorAll('.sh-route'));
   var stages = Array.prototype.slice.call(document.querySelectorAll('.sh-stage'));
+  var notes  = Array.prototype.slice.call(document.querySelectorAll('.sh-route-note'));
   if (!pills.length || !stages.length) return;
 
   // Only reveal the control once we know the script is running, so no-JS
@@ -352,8 +433,19 @@ SCRIPT = """
   chooser.hidden = false;
 
   var KEY = 'bhapstar:startHereRoute';
+  var FADE = 180;   // must match the CSS transition duration
+  var current = 'all';
+  var token = 0;    // guards against a second pill tapped mid-transition
 
-  function apply(route) {
+  var still = false;
+  try {
+    still = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+
+  // Show or hide cards, stages and notes for a route, and renumber whatever
+  // is left so the path still reads 1, 2, 3 with no gaps.
+  function commit(route) {
     var stageNumber = 0;
 
     stages.forEach(function (stage) {
@@ -366,7 +458,6 @@ SCRIPT = """
         card.hidden = !match;
         if (match) {
           shown += 1;
-          // Renumber as we go, so a filtered stage still reads 1, 2, 3.
           var num = card.querySelector('.sh-num');
           if (num) num.textContent = shown;
         }
@@ -382,11 +473,17 @@ SCRIPT = """
       if (label) label.textContent = stageNumber + '.';
     });
 
+    notes.forEach(function (note) {
+      note.hidden = note.getAttribute('data-note') !== route;
+    });
+
     pills.forEach(function (pill) {
       var on = pill.getAttribute('data-route') === route;
       pill.classList.toggle('active', on);
       pill.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
+
+    current = route;
 
     try {
       if (route === 'all') sessionStorage.removeItem(KEY);
@@ -394,20 +491,52 @@ SCRIPT = """
     } catch (e) { /* private mode, not worth caring about */ }
   }
 
+  function fading() {
+    return stages.concat(notes.filter(function (n) { return !n.hidden; }));
+  }
+
+  function apply(route, animate) {
+    if (route === current) return;
+
+    if (!animate || still) { commit(route); return; }
+
+    var mine = ++token;
+    var out = fading();
+    out.forEach(function (el) { el.classList.add('sh-swapping'); });
+
+    window.setTimeout(function () {
+      if (mine !== token) return;   // a newer choice took over
+      commit(route);
+      // Clear on everything, including the note that has just appeared.
+      stages.forEach(function (el) { el.classList.remove('sh-swapping'); });
+      notes.forEach(function (el) { el.classList.remove('sh-swapping'); });
+    }, FADE);
+  }
+
   pills.forEach(function (pill) {
     pill.addEventListener('click', function () {
       var route = pill.getAttribute('data-route');
       // Tapping the active route a second time clears it.
-      apply(pill.classList.contains('active') ? 'all' : route);
+      apply(pill.classList.contains('active') ? 'all' : route, true);
     });
+  });
+
+  // "follow the camera and lens route" inside a closing note.
+  document.addEventListener('click', function (ev) {
+    var jump = ev.target.closest && ev.target.closest('.sh-route-jump');
+    if (!jump) return;
+    apply(jump.getAttribute('data-goto'), true);
+    chooser.scrollIntoView({ behavior: still ? 'auto' : 'smooth',
+                             block: 'start' });
   });
 
   var saved = null;
   try { saved = sessionStorage.getItem(KEY); } catch (e) {}
   var valid = pills.some(function (p) { return p.getAttribute('data-route') === saved; });
-  if (saved && valid) apply(saved);
+  if (saved && valid) apply(saved, false);   // no animation on first paint
 })();
 """
+
 
 OUTRO = (
     '      <section class="sh-outro">\n'
@@ -474,6 +603,7 @@ def build_page(by_stage):
 
 {build_chooser()}
 {build_stages(by_stage)}
+{build_route_notes()}
 {OUTRO}
     </div>
   </section>
