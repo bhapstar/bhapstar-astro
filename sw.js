@@ -33,6 +33,7 @@ const SHELL_ASSETS = [
   '/partials/header.html',
   '/partials/footer.html',
   '/site-data.json',
+  '/assets/data/starword-words.txt',
   '/fonts/outfit-latin-wght-normal.woff2',
   '/fonts/outfit-latin-ext-wght-normal.woff2',
   '/images/icons/favicon-32.png',

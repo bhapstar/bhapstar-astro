@@ -815,6 +815,38 @@ const ROWS = 6, COLS = 5;
 const SITE_URL = 'https://bhapstar.com/star_word.html';
 
 /* ══════════════════════════════════════════════════════════════
+   VALID GUESS LIST
+   assets/data/starword-words.txt holds every accepted five-letter
+   guess, one per line, uppercase. Loaded in the background, so it
+   never blocks first paint.
+
+   Deliberately fail-open: while the list is still loading, or if
+   the fetch fails, VALID stays null and submit() skips the check
+   entirely. A broken dictionary must never make the game
+   unplayable. The answers in WORDS are re-added on top of the
+   loaded set so a new answer can never be rejected as invalid,
+   even if the word list is not regenerated with it.
+   ══════════════════════════════════════════════════════════════ */
+let VALID = null;
+
+(function loadValidWords(){
+  fetch('assets/data/starword-words.txt', { cache: 'default' })
+    .then(function(r){ return r.ok ? r.text() : null; })
+    .then(function(txt){
+      if(!txt) return;
+      const set = new Set();
+      txt.split(/\r?\n/).forEach(function(line){
+        const w = line.trim().toUpperCase();
+        if(w.length === COLS) set.add(w);
+      });
+      if(set.size < 1000) return;   // truncated download — don't trust it
+      WORDS.forEach(function(w){ set.add(w[0]); });
+      VALID = set;
+    })
+    .catch(function(){ /* no dictionary — guesses stay unrestricted */ });
+})();
+
+/* ══════════════════════════════════════════════════════════════
    AUDIO — shares the site-wide mute key with the other puzzles
    ══════════════════════════════════════════════════════════════ */
 const MUTE_KEY = 'bhapstar_sound_muted';
@@ -1242,6 +1274,12 @@ function submit(){
   const r = guesses.length;
   if(current.length < COLS){
     toast('Not enough letters');
+    shakeRow(r);
+    playInvalid();
+    return;
+  }
+  if(VALID && !VALID.has(current)){
+    toast('Not in word list');
     shakeRow(r);
     playInvalid();
     return;
