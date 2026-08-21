@@ -1,0 +1,61 @@
+<!--
+  ZWO EAF. The focus-tolerance arithmetic is standard optical theory. I have
+  not stated your measured drift, which depends on tube material and local
+  temperature swing.
+-->
+
+<h2>Focus does not stay where you put it</h2>
+
+<p>Telescope tubes expand and contract as the temperature falls through the
+night, and the optical path changes with them. A tube in focus at nine in the
+evening is not in focus at two in the morning.</p>
+
+<p>How much that matters depends on the focal ratio, and it matters more than
+most people expect. The usable focus zone scales with the square of the f-number,
+so an f/5 instrument tolerates roughly a quarter the error of an f/10 one. At the
+fast end you are working within a few tens of microns, comfortably less than a
+night's thermal drift.</p>
+
+<h2>What it does about it</h2>
+
+<p>The EAF replaces the focuser knob with a stepper motor driven from the ASIAIR.
+It runs an autofocus routine, stepping through positions and measuring star sizes
+to find best focus without anyone touching the telescope, and it refocuses during
+the session, either at intervals or when the temperature has moved by a set
+amount.</p>
+
+<p>The second is the one that changes results. Refocusing periodically keeps the
+whole night's subs usable instead of accumulating a drift that quietly ruins the
+last third of them. It also removes a source of vibration, since focusing by hand
+means touching the telescope and waiting for it to settle, several times a night.</p>
+
+<h2>Fitting and pairing</h2>
+
+<p>Installation means removing a focuser knob and fitting the motor bracket, so
+it is worth confirming the bracket suits your focuser before ordering, as ZWO
+supply different fittings. Checking and configuring backlash after installation
+makes the autofocus routine noticeably better behaved.</p>
+
+<p>It pairs naturally with the
+<a href="/gear/zwo-asi585mc-air-camera.html">ASI585MC Air</a>, which provides the
+ASIAIR side of the arrangement, and it matters most on the faster
+<a href="/gear/askar-v-modular-apo-refractor.html">Askar V</a> configurations.
+For short sessions on slow optics it is a convenience rather than a necessity.</p>
+
+<p>Where it sits in the rest of the setup is covered in the
+<a href="/articles/main-rig-tour.html">rig tour</a>, and the autofocus routine it
+runs, the V-curve and the repeat-on-temperature-drop setting, is described in the
+<a href="/articles/asiair-astrophotography-control.html">ASIAir write-up</a>.</p>
+
+<h2>Getting one to the UAE</h2>
+
+<p>Mine came from AliExpress and arrived in Dubai without trouble. Since the
+bracket has to match your focuser, this is one to confirm before ordering rather
+than after, because returning a small mechanical part internationally costs more
+in effort than the part is worth.</p>
+
+<!--
+  TODO: how many focuser steps does your rig drift across a typical night, and
+  over what temperature fall? That pairing is genuinely useful and almost nobody
+  publishes it. Include steps per degree if you have it.
+-->

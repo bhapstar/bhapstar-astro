@@ -1,0 +1,82 @@
+<!--
+  Svbony SV220 3nm. Checked: 3+/-1nm FWHM at Ha 656.3nm and OIII 500.7nm,
+  peak transmission above 85%, OD5 blocking across 300-1050nm, minimal-halo
+  coating. Jim Thompson's published testing found OIII f-ratio sensitivity in
+  line with rival 3nm filters and higher sensitivity in the Ha band.
+  Currently hidden in site-data.json pending a photograph.
+  Diagram drawn in-page, not copied from Svbony's datasheet.
+-->
+
+<h2>Half the width of a 7nm filter</h2>
+
+<p>The SV220 does the same job as the
+<a href="/gear/optolong-l-extreme-filter.html">L-eXtreme</a>, through windows
+less than half as wide: 3nm at hydrogen-alpha and 3nm at doubly-ionised oxygen,
+against the L-eXtreme's 7nm. Drawn to scale the difference is obvious.</p>
+
+<figure class="passband-fig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Diagram comparing 7nm and 3nm dual narrowband passbands against the visible spectrum, showing the OIII line at 500.7nm and the H-alpha line at 656.3nm, with the sodium streetlight band at 589nm falling between them.">
+  <defs>
+    <linearGradient id="vis" x1="0" x2="1">
+      <stop offset="0.00" stop-color="#4453d6"/><stop offset="0.20" stop-color="#3aa7d8"/>
+      <stop offset="0.38" stop-color="#43c07a"/><stop offset="0.56" stop-color="#d7d24a"/>
+      <stop offset="0.74" stop-color="#e08a3c"/><stop offset="1.00" stop-color="#c8384a"/>
+    </linearGradient>
+  </defs>
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">What the sky sends, and what each filter lets through</text>
+  <rect x="62.0" y="34" width="604.0" height="16" rx="3" fill="url(#vis)" opacity="0.85"/>
+  <text x="10" y="46" font-size="12" fill="var(--muted)">sky</text>
+  <line x1="397.8" y1="30" x2="397.8" y2="156" stroke="#e8b84b"
+        stroke-width="1.4" stroke-dasharray="3 3"/>
+  <text x="397.8" y="26" font-size="10" fill="#e8b84b" text-anchor="middle">sodium 589</text>
+  <text x="184.5" y="70" font-size="10.5" fill="#4fd1c5" text-anchor="middle">O III 500.7</text>
+  <text x="560.4" y="70" font-size="10.5" fill="#f06a7a" text-anchor="middle">H&#945; 656.3</text>
+  <text x="10" y="101" font-size="12" fill="var(--muted)">7nm</text><rect x="62.0" y="86" width="604.0" height="22" rx="3" fill="var(--soft)" stroke="var(--line)"/><rect x="176.0" y="88" width="16.9" height="18" rx="1" fill="#4fd1c5" opacity="0.95"/><rect x="552.0" y="88" width="16.9" height="18" rx="1" fill="#f06a7a" opacity="0.95"/><text x="197.9" y="101" font-size="10" fill="var(--muted)">7nm</text><text x="573.9" y="101" font-size="10" fill="var(--muted)">7nm</text><text x="10" y="143" font-size="12" fill="var(--muted)">3nm</text><rect x="62.0" y="128" width="604.0" height="22" rx="3" fill="var(--soft)" stroke="var(--line)"/><rect x="180.9" y="130" width="7.2" height="18" rx="1" fill="#4fd1c5" opacity="0.95"/><rect x="556.8" y="130" width="7.2" height="18" rx="1" fill="#f06a7a" opacity="0.95"/><text x="193.1" y="143" font-size="10" fill="var(--muted)">3nm</text><text x="569.0" y="143" font-size="10" fill="var(--muted)">3nm</text>
+  <line x1="62.0" y1="166" x2="666.0" y2="166" stroke="var(--line)"/>
+  <line x1="62.0" y1="166" x2="62.0" y2="172" stroke="var(--line)"/><text x="62.0" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">450</text><line x1="182.8" y1="166" x2="182.8" y2="172" stroke="var(--line)"/><text x="182.8" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">500</text><line x1="303.6" y1="166" x2="303.6" y2="172" stroke="var(--line)"/><text x="303.6" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">550</text><line x1="424.4" y1="166" x2="424.4" y2="172" stroke="var(--line)"/><text x="424.4" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">600</text><line x1="545.2" y1="166" x2="545.2" y2="172" stroke="var(--line)"/><text x="545.2" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">650</text><line x1="666.0" y1="166" x2="666.0" y2="172" stroke="var(--line)"/><text x="666.0" y="186" font-size="10" fill="var(--muted)" text-anchor="middle">700</text>
+  <text x="364.0" y="199" font-size="10" fill="var(--muted)" text-anchor="middle">wavelength (nm)</text>
+</svg>
+<figcaption>Drawn to scale. The coloured bar is roughly what reaches the telescope; the slots below are all each filter permits. Sodium streetlighting at 589nm falls in the gap, which is the whole idea.</figcaption>
+</figure>
+
+<p>Narrowing the window rejects proportionally more skyglow while the emission
+line itself, which is genuinely narrow, passes more or less untouched. Svbony
+quote better than 85% peak transmission and OD5 blocking, meaning roughly
+99.999% of everything outside those two slots is stopped.</p>
+
+<h2>What it asks in return</h2>
+
+<p>Less total light arrives, so integration has to grow. If your limiting factor
+is available hours rather than sky brightness, a 3nm filter can finish a session
+behind a 7nm one simply because you gathered less. It also cares more about focal
+ratio: in a fast light cone the rays strike the coating at an angle and the
+effective passband shifts, and a narrower band has less margin before the
+emission line drifts outside it. Independent testing found this filter's oxygen
+performance in line with rival 3nm filters and its hydrogen-alpha band rather
+more sensitive to fast optics, so it suits f/5 and slower most comfortably.</p>
+
+<h2>Where it should shine</h2>
+
+<p>Bright emission nebulae with long integration behind them, from the most
+light-polluted sites. That is precisely the Dubai balcony case, and it is where I
+would expect this to pull ahead of the 7nm
+<a href="/gear/optolong-l-extreme-filter.html">L-eXtreme</a> rather than merely
+match it. Nothing in the gallery has been shot through it yet, so that
+expectation is still just an expectation.</p>
+
+<h2>Getting one to the UAE</h2>
+
+<p>Mine came from Amazon's US site rather than the regional one, and arrived in
+Dubai without any complication. Worth knowing, because people often assume
+Amazon.com will not deliver here or will make it painful. For something small and
+light like a filter it is a straightforward route, and the shipping cost stays
+proportionate in a way it does not for a telescope.</p>
+
+<!--
+  TODO: the comparison worth owning. Same scope, same camera, same target,
+  matched integration: SV220 3nm against L-eXtreme 7nm. Very few people own both
+  and publish the result. Include the focal ratio you shot at, because that is
+  what decides whether your result transfers to the reader's setup. Report it
+  straight even if the 7nm filter wins or the difference is negligible.
+-->
