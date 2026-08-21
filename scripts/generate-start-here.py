@@ -105,9 +105,17 @@ ROUTES = [
 ]
 ROUTE_KEYS = [key for key, _ in ROUTES]
 
+# The chooser is rendered immediately after this stage. Planning is the same
+# job whatever you own, so the pills sit below it rather than above: the
+# reader gets the common ground first, then chooses. Anything before the
+# chooser is exempt from filtering, which the script works out from document
+# position rather than from a second list that could drift out of step.
+CHOOSER_AFTER = "plan"
+
 ROUTE_PROMPT = "What are you shooting with?"
-ROUTE_HELP = ("Optional. Pick one and the path below trims to the pieces that "
-              "apply to you. Everything stays one click away.")
+ROUTE_HELP = ("Optional. Everything above applies whatever you own. From here "
+              "the path splits by kit, so pick one and the rest trims to "
+              "suit. Nothing is more than a click away.")
 
 # A closing line shown at the end of the path, for routes that stop somewhere
 # short of the whole thing. Keyed by route. The {route:key} token becomes a
@@ -204,9 +212,10 @@ def build_card(entry, number):
     )
 
 
-def build_stages(by_stage):
+def build_stages(by_stage, chooser=""):
     out = []
     number = 0
+    placed = False
     for key, heading, standfirst in STAGES:
         entries = by_stage.get(key, [])
         footer = STAGE_FOOTERS.get(key, "")
@@ -230,6 +239,17 @@ def build_stages(by_stage):
             f'        </div>\n'
             f'      </section>\n'
         )
+
+        if chooser and key == CHOOSER_AFTER:
+            out.append(chooser)
+            placed = True
+
+    # If the anchor stage produced nothing, the chooser still has to appear.
+    # Above everything is the safe fallback: it never sits under a stage it
+    # is supposed to control.
+    if chooser and not placed:
+        out.insert(0, chooser)
+
     return "".join(out)
 
 
@@ -428,6 +448,15 @@ SCRIPT = """
   var notes  = Array.prototype.slice.call(document.querySelectorAll('.sh-route-note'));
   if (!pills.length || !stages.length) return;
 
+  // Stages above the chooser are common to every route and are left alone.
+  // Position in the document decides this, so moving the chooser in the
+  // generator is all it takes to change what the pills govern.
+  var FOLLOWING = window.Node ? window.Node.DOCUMENT_POSITION_FOLLOWING : 4;
+  function governed(el) {
+    return !!(chooser.compareDocumentPosition(el) & FOLLOWING);
+  }
+  var filterable = stages.filter(governed);
+
   // Only reveal the control once we know the script is running, so no-JS
   // readers get the full path rather than a set of dead buttons.
   chooser.hidden = false;
@@ -450,11 +479,13 @@ SCRIPT = """
 
     stages.forEach(function (stage) {
       var cards = Array.prototype.slice.call(stage.querySelectorAll('.sh-card'));
+      var governs = filterable.indexOf(stage) !== -1;
       var shown = 0;
 
       cards.forEach(function (card) {
         var paths = (card.getAttribute('data-paths') || '').split(/\\s+/);
-        var match = route === 'all' || paths.indexOf(route) !== -1;
+        var match = route === 'all' || !governs ||
+                    paths.indexOf(route) !== -1;
         card.hidden = !match;
         if (match) {
           shown += 1;
@@ -492,7 +523,7 @@ SCRIPT = """
   }
 
   function fading() {
-    return stages.concat(notes.filter(function (n) { return !n.hidden; }));
+    return filterable.concat(notes.filter(function (n) { return !n.hidden; }));
   }
 
   function apply(route, animate) {
@@ -508,7 +539,7 @@ SCRIPT = """
       if (mine !== token) return;   // a newer choice took over
       commit(route);
       // Clear on everything, including the note that has just appeared.
-      stages.forEach(function (el) { el.classList.remove('sh-swapping'); });
+      filterable.forEach(function (el) { el.classList.remove('sh-swapping'); });
       notes.forEach(function (el) { el.classList.remove('sh-swapping'); });
     }, FADE);
   }
@@ -601,8 +632,7 @@ def build_page(by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
-{build_chooser()}
-{build_stages(by_stage)}
+{build_stages(by_stage, build_chooser())}
 {build_route_notes()}
 {OUTRO}
     </div>

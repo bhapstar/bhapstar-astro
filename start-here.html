@@ -151,18 +151,6 @@
         <p class="sh-intro">If you have just found this site, this page is the place to begin. Everything below is arranged in the order the work actually happens: you plan a night, you capture what you can, and then you process what you caught. You do not need a telescope to start. The first few pieces assume nothing more than your eyes and a phone.</p>
       </div>
 
-      <div class="sh-chooser" id="shChooser" hidden>
-        <p class="sh-chooser-q">What are you shooting with?</p>
-        <div class="filter-pills" role="group" aria-label="What are you shooting with?">
-          <button type="button" class="filter-pill sh-route" data-route="phone" aria-pressed="false">A phone</button>
-          <button type="button" class="filter-pill sh-route" data-route="camera" aria-pressed="false">A camera and lens</button>
-          <button type="button" class="filter-pill sh-route" data-route="smartscope" aria-pressed="false">A smart telescope</button>
-          <button type="button" class="filter-pill sh-route" data-route="rig" aria-pressed="false">A full rig</button>
-          <button type="button" class="filter-pill sh-route sh-route-all active" data-route="all" aria-pressed="true">Show everything</button>
-        </div>
-        <p class="sh-chooser-help">Optional. Pick one and the path below trims to the pieces that apply to you. Everything stays one click away.</p>
-      </div>
-
       <section class="sh-stage" data-stage="plan">
         <h2 class="sh-stage-title"><span class="sh-stage-num" aria-hidden="true">1.</span> Plan the night</h2>
         <p class="sh-stage-lede">Half of a good image is decided before anything is switched on. Knowing what is up, how dark your sky really is, and where to point.</p>
@@ -193,6 +181,17 @@
           </a>
         </div>
       </section>
+      <div class="sh-chooser" id="shChooser" hidden>
+        <p class="sh-chooser-q">What are you shooting with?</p>
+        <div class="filter-pills" role="group" aria-label="What are you shooting with?">
+          <button type="button" class="filter-pill sh-route" data-route="phone" aria-pressed="false">A phone</button>
+          <button type="button" class="filter-pill sh-route" data-route="camera" aria-pressed="false">A camera and lens</button>
+          <button type="button" class="filter-pill sh-route" data-route="smartscope" aria-pressed="false">A smart telescope</button>
+          <button type="button" class="filter-pill sh-route" data-route="rig" aria-pressed="false">A full rig</button>
+          <button type="button" class="filter-pill sh-route sh-route-all active" data-route="all" aria-pressed="true">Show everything</button>
+        </div>
+        <p class="sh-chooser-help">Optional. Everything above applies whatever you own. From here the path splits by kit, so pick one and the rest trims to suit. Nothing is more than a click away.</p>
+      </div>
       <section class="sh-stage" data-stage="capture">
         <h2 class="sh-stage-title"><span class="sh-stage-num" aria-hidden="true">2.</span> Capture the image</h2>
         <p class="sh-stage-lede">From a phone on a wall to a rig running itself all night. Start with whatever you already own.</p>
@@ -302,6 +301,15 @@
   var notes  = Array.prototype.slice.call(document.querySelectorAll('.sh-route-note'));
   if (!pills.length || !stages.length) return;
 
+  // Stages above the chooser are common to every route and are left alone.
+  // Position in the document decides this, so moving the chooser in the
+  // generator is all it takes to change what the pills govern.
+  var FOLLOWING = window.Node ? window.Node.DOCUMENT_POSITION_FOLLOWING : 4;
+  function governed(el) {
+    return !!(chooser.compareDocumentPosition(el) & FOLLOWING);
+  }
+  var filterable = stages.filter(governed);
+
   // Only reveal the control once we know the script is running, so no-JS
   // readers get the full path rather than a set of dead buttons.
   chooser.hidden = false;
@@ -324,11 +332,13 @@
 
     stages.forEach(function (stage) {
       var cards = Array.prototype.slice.call(stage.querySelectorAll('.sh-card'));
+      var governs = filterable.indexOf(stage) !== -1;
       var shown = 0;
 
       cards.forEach(function (card) {
         var paths = (card.getAttribute('data-paths') || '').split(/\s+/);
-        var match = route === 'all' || paths.indexOf(route) !== -1;
+        var match = route === 'all' || !governs ||
+                    paths.indexOf(route) !== -1;
         card.hidden = !match;
         if (match) {
           shown += 1;
@@ -366,7 +376,7 @@
   }
 
   function fading() {
-    return stages.concat(notes.filter(function (n) { return !n.hidden; }));
+    return filterable.concat(notes.filter(function (n) { return !n.hidden; }));
   }
 
   function apply(route, animate) {
@@ -382,7 +392,7 @@
       if (mine !== token) return;   // a newer choice took over
       commit(route);
       // Clear on everything, including the note that has just appeared.
-      stages.forEach(function (el) { el.classList.remove('sh-swapping'); });
+      filterable.forEach(function (el) { el.classList.remove('sh-swapping'); });
       notes.forEach(function (el) { el.classList.remove('sh-swapping'); });
     }, FADE);
   }
