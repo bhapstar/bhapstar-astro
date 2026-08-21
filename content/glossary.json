@@ -53,6 +53,9 @@
     },
     {
       "term": "apparent field",
+      "aliases": [
+        "apparent fields"
+      ],
       "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw."
     },
     {
@@ -76,6 +79,18 @@
         "Alpaca"
       ],
       "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
+    },
+    {
+      "term": "ASIAir",
+      "aliases": [
+        "ASIAIR",
+        "ASIAir Plus",
+        "ASIAIR Plus"
+      ],
+      "def": "A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.",
+      "except": [
+        "asiair-astrophotography-control"
+      ]
     },
     {
       "term": "astronomical darkness",
@@ -117,6 +132,13 @@
     {
       "term": "backlash",
       "def": "The small amount of free play in a gear or a focuser before it starts moving. Measuring it once lets the software allow for it."
+    },
+    {
+      "term": "Bahtinov mask",
+      "aliases": [
+        "Bahtinov"
+      ],
+      "def": "A slotted cover placed over the front of a telescope. It turns a bright star into crossed spikes that line up only when the focus is exactly right."
     },
     {
       "term": "bias frame",
@@ -203,9 +225,13 @@
     {
       "term": "dark frame",
       "aliases": [
-        "dark frames"
+        "dark frames",
+        "darks"
       ],
-      "def": "An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted."
+      "def": "An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted.",
+      "except": [
+        "calibration-frames-darks-flats-biases"
+      ]
     },
     {
       "term": "declination",
@@ -265,6 +291,16 @@
       "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once."
     },
     {
+      "term": "EAF",
+      "aliases": [
+        "electronic autofocuser"
+      ],
+      "def": "ZWO's motorised focuser. A small motor takes the place of the focus knob, so focus can be set and corrected by software instead of by hand.",
+      "except": [
+        "zwo-eaf-electronic-focuser"
+      ]
+    },
+    {
       "term": "ecliptic",
       "def": "The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it."
     },
@@ -311,6 +347,13 @@
     {
       "term": "eye relief",
       "def": "How far your eye can sit from an eyepiece and still see the whole view. Generous eye relief matters if you wear glasses."
+    },
+    {
+      "term": "eyepiece",
+      "aliases": [
+        "eyepieces"
+      ],
+      "def": "The small lens you put your eye to at the back of a telescope. Swapping it for another one changes how much bigger everything looks."
     },
     {
       "term": "false colour",
@@ -436,6 +479,15 @@
       "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right."
     },
     {
+      "term": "hot pixel",
+      "aliases": [
+        "hot pixels",
+        "stuck pixel",
+        "stuck pixels"
+      ],
+      "def": "A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later."
+    },
+    {
       "term": "hydrogen-alpha",
       "aliases": [
         "hydrogen alpha",
@@ -488,6 +540,13 @@
       "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp."
     },
     {
+      "term": "magnification",
+      "aliases": [
+        "magnifications"
+      ],
+      "def": "How much bigger a telescope makes something look. It is the telescope's focal length divided by the eyepiece's focal length."
+    },
+    {
       "term": "magnitude",
       "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times."
     },
@@ -521,7 +580,8 @@
       "term": "nanometre",
       "aliases": [
         "nanometres",
-        "nanometer"
+        "nanometer",
+        "nm"
       ],
       "def": "A billionth of a metre, the unit colours of light are measured in. A 7nm filter opens a window seven of those wide."
     },
@@ -608,8 +668,20 @@
       "def": "Lining a mount's main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night."
     },
     {
+      "term": "Polaris",
+      "aliases": [
+        "pole star",
+        "North Star"
+      ],
+      "def": "The bright star that sits almost exactly above the Earth's northern axis. It barely moves all night, which is why polar alignment usually starts by pointing at it."
+    },
+    {
       "term": "quantum efficiency",
       "def": "How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost."
+    },
+    {
+      "term": "radiant",
+      "def": "The point in the sky a meteor shower appears to stream out from. Meteors near it look short, and the ones further away look long."
     },
     {
       "term": "RAW",
@@ -687,6 +759,13 @@
       "def": "The mount moving quickly from one part of the sky to another."
     },
     {
+      "term": "smart telescope",
+      "aliases": [
+        "smart telescopes"
+      ],
+      "def": "A sealed telescope with the mount, camera and processing built into one body, run from a phone. It finds the target, tracks it and stacks the frames on its own."
+    },
+    {
       "term": "SPCC",
       "def": "Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste."
     },
@@ -723,6 +802,16 @@
     {
       "term": "StarNet",
       "def": "A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together."
+    },
+    {
+      "term": "Stellarium",
+      "aliases": [
+        "Stellarium Web"
+      ],
+      "def": "Free planetarium software. You give it your location, date and time and it draws the sky as it will look, including where a target sits and how it will be framed.",
+      "except": [
+        "how-i-plan-every-astrophotography-session-using-stellarium"
+      ]
     },
     {
       "term": "stop down",
