@@ -184,13 +184,13 @@
       opacity:0; transition:opacity .55s ease;
     }
     .thumbs.on{ opacity:1 }
-    .thumbs a{
+    .thumbs div{
       display:block; line-height:0;
       background:var(--cell) center/cover no-repeat;
       transition:opacity .62s ease;
     }
     /* Set while a cell swaps its picture: fade out, change, fade back. */
-    .thumbs a.swapping{ opacity:0 }
+    .thumbs div.swapping{ opacity:0 }
 
     /* The scrim from the printed front, in the same proportions */
     .face-front .scrim{
@@ -332,13 +332,13 @@
 
     <!-- ══ The front of the card ══ -->
     <div class="face face-front">
-      <div class="thumbs" id="dGrid">
-        <a href="gallery.html" aria-label="Gallery"></a>
-        <a href="gallery.html" aria-label="Gallery"></a>
-        <a href="gallery.html" aria-label="Gallery"></a>
-        <a href="gallery.html" aria-label="Gallery"></a>
-        <a href="gallery.html" aria-label="Gallery"></a>
-        <a href="gallery.html" aria-label="Gallery"></a>
+      <div class="thumbs" id="dGrid" aria-hidden="true">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
       <div class="scrim" aria-hidden="true"></div>
       <div class="plate">
@@ -515,7 +515,7 @@
     var six = shuffle(pool.slice()).slice(0, 6);
     while (six.length < 6 && pool.length) six.push(pool[six.length % pool.length]);
 
-    var cells = document.querySelectorAll('#dGrid a');
+    var cells = document.querySelectorAll('#dGrid div');
     six.forEach(function(src, i){
       if (cells[i]) cells[i].style.backgroundImage = 'url("' + src + '")';
     });
