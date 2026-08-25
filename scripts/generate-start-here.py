@@ -2,58 +2,79 @@
 """
 generate-start-here.py — bhapstar
 -------------------------------------------------------------
-Writes start-here.html: a guided path through the articles, in the order
-someone new to all of this should read them.
+Writes start-here.html: the page that has to convince a stranger this
+hobby is within reach, and then give them one small thing to do.
 
     python generate-start-here.py
 
 Why this page exists, and why it is not articles.html:
 
   articles.html is the shelf. Everything, newest first, which is what a
-  returning reader wants. This page is the reading list: fewer choices, in
-  a deliberate order, for someone who has just found the site and does not
-  yet know which end to pick up.
+  returning reader wants. This page is for someone who has just found the
+  site, probably owns a phone and nothing else, and has not yet decided
+  whether any of this is for them.
 
-Where the order comes from:
+  It is therefore not a reading list. It opens with evidence, gives away
+  something free before asking for anything, and only then offers a short
+  route. The eighty-minute path still exists, at the bottom, collapsed,
+  for the reader who is already sold.
 
-  Two optional fields on any article entry in site-data.json.
+The page has four parts:
+
+  1. PROOF    Three gallery images, captioned with what took them. Pulled
+              from the gallery entries in site-data.json so the specs can
+              never drift from the gallery itself.
+
+  2. TONIGHT  One thing to do on the next clear night with no equipment.
+              Pure copy, edited in TONIGHT_STEPS below.
+
+  3. ROUTES   Six curated routes of three articles each, chosen by where
+              the reader is rather than by what they own.
+
+  4. FULL     Every staged article in order, inside a closed <details>.
+
+Where the routes come from:
+
+  ROUTES below, not site-data.json. This is deliberate. The same article
+  is framed differently depending on who is reading it: the Bortle piece
+  is "score your own sky" to a curious reader, "work out what your sky can
+  do before you spend" to a buyer, and "what a rig will actually achieve
+  here" to somebody pricing a mount. One "desc" field in site-data.json
+  cannot do all three, so the route blurb lives with the route.
+
+  Each card names a slug. The slug is looked up in site-data.json for its
+  URL and read time, and a missing slug fails the build rather than
+  silently dropping a card.
+
+  The old "paths" field on article entries is no longer read. It can stay
+  in site-data.json harmlessly, or be removed at leisure.
+
+Where the full path comes from:
+
+  Still the two optional fields on any article entry in site-data.json.
 
       "stage":      one of plan, capture, process, gear
       "stageOrder": an integer, low numbers first within that stage
 
-  An article with no "stage" simply does not appear here. That is the
-  intended way to keep something off the path without hiding it from the
-  site: it still gets a page, still appears on articles.html, still goes in
-  the feed. Nothing needs a "stageOrder"; entries without one fall to the
-  end of their stage, newest first.
+  An article with no "stage" does not appear in the full path. That is the
+  intended way to keep something off it without hiding it from the site:
+  it still gets a page, still appears on articles.html, still goes in the
+  feed. Nothing needs a "stageOrder"; entries without one fall to the end
+  of their stage, newest first.
 
-  Because the stages are their own field rather than a reuse of
-  "category", an article can sit under Gear on the shelf and under Capture
-  on the path. The Seestar tour is the obvious case.
+Tokens available in route ledes, endings and tonight steps:
 
-Routes (the "what are you shooting with?" pills at the top):
-
-      "paths": ["camera", "smartscope", "rig"]
-
-  A list, because most articles are not tied to one kind of kit. The
-  balcony piece is about a location rather than a camera, so it belongs to
-  three routes at once; the phone Milky Way guide belongs to exactly one.
-
-  Valid values are the keys in ROUTES below. An article with no "paths"
-  is treated as belonging to all of them, which is the safe default: it
-  keeps showing rather than quietly vanishing when somebody picks a route.
-
-  The filter is progressive enhancement. The page ships with every article
-  in the HTML and no route selected, so crawlers and anyone without JS get
-  the full list.
+      {route:key}            a button that switches to that route
+      {article:slug|label}   a link to an article page
+      {url:path|label}       a link to anything else on the site
 
 The page is fully generated, so editing start-here.html by hand will be
-overwritten on the next build. Change the copy in STAGES below, or the
-stage fields in site-data.json.
+overwritten on the next build. Change the copy below instead. Page CSS
+lives in /styles.css under "PAGE: Start Here".
 """
 
 import json
-import os
+import sys
 from datetime import datetime
 from html import escape as esc
 
@@ -63,89 +84,322 @@ OUT = "start-here.html"
 ARTICLE_DIR = "articles"
 
 PAGE_TITLE = "Start Here"
-PAGE_DESC = ("A guided path through astrophotography, from finding your way "
-             "around the night sky to processing your first deep-sky image. "
-             "Written for anyone starting out, with no equipment assumed.")
+PAGE_DESC = ("You need less equipment than you think. Four galaxies taken with "
+             "a smart telescope that fits in a shoulder bag, one thing to try "
+             "tonight with nothing at all, and a short route through the rest "
+             "depending on where you are.")
 
-SUBTITLE = "New to all of this? Read in this order."
+SUBTITLE = "You need less equipment than you think."
 
-INTRO = (
-    "If you have just found this site, this page is the place to begin. "
-    "Everything below is arranged in the order the work actually happens: "
-    "you plan a night, you capture what you can, and then you process what "
-    "you caught. You do not need a telescope to start. The first few pieces "
-    "assume nothing more than your eyes and a phone."
-)
+INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
+         "wondered whether an ordinary person could take one. You can. This is "
+         "where to begin, and the first step costs nothing at all.")
 
-# Stage key -> (heading, standfirst). Order here is the order on the page.
-# The headings carry no leading number: the number is rendered separately so
-# that a stage emptied by a route filter does not leave a gap in the count.
-STAGES = [
-    ("plan", "Plan the night",
-     "Half of a good image is decided before anything is switched on. "
-     "Knowing what is up, how dark your sky really is, and where to point."),
-    ("capture", "Capture the image",
-     "From a phone on a wall to a rig running itself all night. Start with "
-     "whatever you already own."),
-    ("process", "Process what you caught",
-     "The part that surprises most people. A finished image is built from "
-     "hundreds of frames, and some of those frames are not photographs at all."),
-    ("gear", "The gear behind it",
-     "What I actually use, and why. Useful once you know what you want a "
-     "piece of kit to do for you."),
+
+# ---------------------------------------------------------------- 1. PROOF
+
+# Gallery slugs, in display order. Everything else about each image, the
+# file, the alt text and the capture specs, is read from its gallery entry
+# so this page and gallery.html can never disagree about what took what.
+# The third is hidden on narrow screens, so put the weakest one last.
+PROOF_SLUGS = [
+    "andromeda-galaxy-m31",
+    "leo-triplet-m65-m66-ngc3628",
+    "the-milky-way",
 ]
 
-# Route key -> pill label. Order here is the order of the pills, which runs
-# from least equipment to most.
+# Short display names, because gallery titles carry catalogue numbers that
+# mean nothing to a first-time reader. A slug with no entry here keeps its
+# gallery title.
+PROOF_NAMES = {
+    "andromeda-galaxy-m31": "The Andromeda Galaxy",
+    "leo-triplet-m65-m66-ngc3628": "The Leo Triplet",
+    "the-milky-way": "The Milky Way",
+}
+
+# Carries inline markup, so this one is not escaped. Keep it plain.
+PROOF_LINE = ("Four galaxies and the centre of our own, all taken with a "
+              "<strong>smart telescope that fits in a shoulder bag</strong> "
+              "and sets itself up in about a minute. No laptop, no "
+              "counterweights, no observatory. Six of the images in the "
+              "gallery were taken this way.")
+
+# Used for the social card, since this page now has something worth showing.
+SHARE_IMAGE = "images/andromeda-galaxy-m31.webp"
+
+
+# -------------------------------------------------------------- 2. TONIGHT
+
+TONIGHT_TITLE = "Try this tonight, with nothing"
+TONIGHT_LEDE = ("Before you read anything or buy anything, do these three "
+                "things on the next clear night. They take about half an hour "
+                "and they will tell you more about your sky than any article "
+                "can.")
+
+TONIGHT_STEPS = [
+    ("Go outside and wait twenty minutes",
+     "Your eyes need roughly twenty minutes in the dark before they work "
+     "properly. Keep your phone screen off, or switch it to the dimmest red "
+     "setting you have. Stars will keep appearing the whole time you wait."),
+    ("Count what you can actually see",
+     "Pick one patch of sky and count the stars in it. From the middle of "
+     "Dubai you might get one or two. An hour into the Dubai desert you will "
+     "see hundreds. Two and a half hours into the heart of the Abu Dhabi "
+     "desert at Al Quaa, you will lose count. That difference is the single "
+     "biggest factor in what you will be able to photograph. If you want to "
+     "know what those counted stars mean, "
+     "{article:bortle-scale-narrowband-filters|the Bortle scale explains it}."),
+    ("Take one photo with the phone in your pocket",
+     "If you have a small phone tripod, now is the time to use it. Otherwise "
+     "prop the phone against a wall or a bag so it cannot move. Use night "
+     "mode, or set the shutter to ten seconds, and point it up. Most modern "
+     "phones will record stars you could not see with your eyes."),
+]
+
+TONIGHT_OUT = ("That is the hobby in miniature: dark skies, patience, and a "
+               "camera held still. Everything below is a way of doing more "
+               "of it.")
+
+
+# --------------------------------------------------------------- 3. ROUTES
+
+ROUTE_PROMPT = "Where are you right now?"
+ROUTE_HELP = ("Pick one and you get three articles instead of eleven. Nothing "
+              "is hidden permanently, and the full list is at the bottom of "
+              "the page. Tap the same one again to clear it.")
+
+GEAR_LINK = ('<a class="sh-more" href="/gear.html">Every piece of gear I use, '
+             'with prices <span aria-hidden="true">&#8594;</span></a>')
+
+# Order here is the order of the pills and of the blocks in the document,
+# which runs from what you already have to what you are considering buying.
 ROUTES = [
-    ("phone", "A phone"),
-    ("camera", "A camera and lens"),
-    ("smartscope", "A smart telescope"),
-    ("rig", "A full rig"),
+    {
+        "key": "curious",
+        "label": "Just curious",
+        "heading": "Just curious",
+        "lede": "You are not buying anything yet. Fair enough. These three "
+                "will tell you whether the hobby suits you, and none of them "
+                "assume you own a single piece of equipment.",
+        "cards": [
+            ("navigating-the-night-sky",
+             "Navigating the Night Sky",
+             "How to find Polaris, why the south has no north star, and what "
+             "the celestial equator and the meridian actually are."),
+            ("bortle-scale-narrowband-filters",
+             "The Bortle Scale",
+             "Why a city sky buries a nebula instead of dimming it, and how "
+             "to score your own sky from one to nine tonight."),
+            ("photograph-meteor-shower-milky-way-phone",
+             "Photograph the Milky Way with Your Phone",
+             "No camera and no experience needed, just a phone, a small "
+             "tripod and a dark sky."),
+        ],
+        "ending": "Twenty two minutes of reading and one drive out of the "
+                  "city, and you will have an answer. If it turns out you "
+                  "want more, {route:buying} is the next question.",
+    },
+    {
+        "key": "phone",
+        "label": "I have a phone",
+        "heading": "I have a phone",
+        "lede": "A phone will get you the Milky Way arching over a horizon, "
+                "and on a dark night it will get you more of it than you "
+                "expect. Start here and spend nothing.",
+        "cards": [
+            ("photograph-meteor-shower-milky-way-phone",
+             "Photograph the Milky Way with Your Phone",
+             "Where to look, which mode to use on an iPhone, Pixel or "
+             "Samsung, and what to change if a meteor shower is on."),
+            ("navigating-the-night-sky",
+             "Navigating the Night Sky",
+             "Knowing where things are, so you can point the phone at "
+             "something on purpose rather than by accident."),
+            ("how-i-plan-every-astrophotography-session-using-stellarium",
+             "Planning with Stellarium",
+             "Free software that tells you what is up tonight, how high it "
+             "gets, and when it is highest."),
+        ],
+        "ending": "That is the whole phone path. What a phone will not get "
+                  "you is deep sky: faint nebulae and galaxies need longer "
+                  "exposures than a handset will give you. When you want "
+                  "those, {route:buying} picks up where this one stops.",
+    },
+    {
+        "key": "camera",
+        "label": "I have a digital camera",
+        "heading": "I have a digital camera",
+        "lede": "A camera and one wide lens on a tripod will already get you "
+                "the Milky Way. Add a way of tracking the sky and the same "
+                "camera will reach nebulae and galaxies. This is the route "
+                "with the most headroom and the steepest middle.",
+        "cards": [
+            ("photograph-meteor-shower-milky-way-camera",
+             "Photograph the Milky Way with a Camera",
+             "One wide lens on a tripod, set to manual. The settings to use, "
+             "and how long the shutter can stay open before stars trail."),
+            ("imaging-from-a-city-balcony",
+             "Imaging from a City Balcony",
+             "Moving from the Milky Way to deep sky without leaving home, and "
+             "how to work with a view of half the sky."),
+            ("siril-post-processing-guide",
+             "Finishing the Image in Siril",
+             "Free software that turns a folder of near-black frames into a "
+             "picture, and the one rule about stretching."),
+        ],
+        "ending": "Once you are stacking your own frames, the next thing "
+                  "worth learning is "
+                  "{article:calibration-frames-darks-flats-biases|calibration "
+                  "frames}, which is twenty minutes of extra work per session "
+                  "that quietly decides how clean the final picture looks.",
+    },
+    {
+        "key": "smartscope",
+        "label": "I have a smart telescope",
+        "heading": "I have a smart telescope",
+        "lede": "The box handles tracking, focus and stacking on its own, so "
+                "the skill is now in choosing targets, choosing nights, and "
+                "finishing the image afterwards.",
+        "cards": [
+            ("seestar-s30-pro-tour",
+             "The Seestar S30 Pro",
+             "What the box does well, and the point at which a 30mm aperture "
+             "becomes the limiting factor."),
+            ("imaging-from-a-city-balcony",
+             "Imaging from a City Balcony",
+             "A balcony takes away your view of Polaris, most of the sky, and "
+             "half the night. Here is how to work with all three."),
+            ("siril-post-processing-guide",
+             "Finishing the Image in Siril",
+             "The free route from the box's output to a picture worth "
+             "printing, and the one rule about stretching."),
+        ],
+        "ending": "The three images at the top of this page were taken with a "
+                  "Seestar S30, so this is the route they came from. When you "
+                  "want more aperture than 30mm can give you, {route:rig} is "
+                  "where that leads.",
+    },
+    {
+        "key": "buying",
+        "label": "Buying my first setup",
+        "heading": "Buying my first setup",
+        "lede": "Smart telescopes changed what a first purchase looks like. A "
+                "few years ago the entry point was a mount, a scope, a camera "
+                "and a laptop. Now it can be one box. Read these before you "
+                "spend anything.",
+        "cards": [
+            ("seestar-s30-pro-tour",
+             "The Seestar S30 Pro",
+             "Deep sky and the Milky Way from the same 1.65kg box, and where "
+             "a 30mm aperture stops."),
+            ("bortle-scale-narrowband-filters",
+             "The Bortle Scale",
+             "Work out what your sky can do before you decide what to buy. "
+             "The sky matters more than the equipment."),
+            ("photograph-meteor-shower-milky-way-phone",
+             "Photograph the Milky Way with Your Phone",
+             "Do this before you spend anything. It costs nothing and it will "
+             "tell you whether you enjoy the standing around in the dark "
+             "part."),
+        ],
+        "more": GEAR_LINK,
+        "ending": "If you already know you want the version with no ceiling "
+                  "on it, {route:rig} covers what that actually involves.",
+    },
+    {
+        "key": "rig",
+        "label": "Buying a full rig",
+        "heading": "Buying a full rig",
+        "lede": "A mount, a telescope, a dedicated camera and something to run "
+                "it all. It is the most capable setup and the least "
+                "forgiving, because every part has to work with every other "
+                "part. Read all three before you order anything.",
+        "cards": [
+            ("main-rig-tour",
+             "The Rig",
+             "A tour of the setup that takes every deep-sky image on this "
+             "site, and why each part was chosen over the alternatives."),
+            ("asiair-astrophotography-control",
+             "The ASIAir",
+             "The box that ties the rest together. Plate solving, autofocus, "
+             "guiding, and where the closed ecosystem bites."),
+            ("bortle-scale-narrowband-filters",
+             "The Bortle Scale",
+             "What your sky will let a rig achieve, and what narrowband "
+             "filters can and cannot buy back in a city."),
+        ],
+        "more": GEAR_LINK,
+        "ending": "Worth saying plainly: a smart telescope will produce a good "
+                  "image on your first night, and a rig probably will not. If "
+                  "you have never assembled one, {route:smartscope} is a "
+                  "cheaper way to find out whether you like the work.",
+    },
 ]
-ROUTE_KEYS = [key for key, _ in ROUTES]
+ROUTE_KEYS = [r["key"] for r in ROUTES]
 
-# The chooser is rendered immediately after this stage. Planning is the same
-# job whatever you own, so the pills sit below it rather than above: the
-# reader gets the common ground first, then chooses. Anything before the
-# chooser is exempt from filtering, which the script works out from document
-# position rather than from a second list that could drift out of step.
-CHOOSER_AFTER = "plan"
-
-ROUTE_PROMPT = "What are you shooting with?"
-ROUTE_HELP = ("Optional. Everything above applies whatever you own. From here "
-              "the path splits by kit, so pick one and the rest trims to "
-              "suit. Nothing is more than a click away.")
-
-# A closing line shown at the end of the path, for routes that stop somewhere
-# short of the whole thing. Keyed by route. The {route:key} token becomes a
-# button that switches to that route, so the reader does not have to scroll
-# back up to the pills. Any route with no entry here simply gets nothing.
-ROUTE_NOTES = {
-    "phone": ("That is the whole phone path. A phone will get you the Milky "
-              "Way arching over a horizon, and on a dark night it will get "
-              "you more of it than you expect. What it will not get you is "
-              "deep sky: the faint nebulae and galaxies need longer "
-              "exposures than a handset will give you. When you are ready "
-              "for that, {route:camera} picks up exactly where this one "
-              "stops."),
-}
-ROUTE_NOTE_LINKS = {
-    "camera": "the camera and lens route",
-    "smartscope": "the smart telescope route",
-    "rig": "the full rig route",
+# Used when a {route:key} token needs a readable label inside a sentence.
+ROUTE_PHRASES = {
+    "curious": "the curious route",
     "phone": "the phone route",
+    "camera": "the camera route",
+    "smartscope": "the smart telescope route",
+    "buying": "buying your first setup",
+    "rig": "the full rig route",
 }
 
-# Appended to the end of a stage, for stages that lead somewhere else.
-STAGE_FOOTERS = {
-    "gear": ('<a class="sh-more" href="/gear.html">'
-             'Every piece of gear I use <span aria-hidden="true">&#8594;</span></a>'),
-}
+
+# ----------------------------------------------------------------- 4. FULL
+
+FULL_SUMMARY = "The whole thing, in order"
+FULL_NOTE = ("Every article, arranged the way the work actually happens. "
+             "Roughly eighty minutes end to end, so this is for when you "
+             "already know you want it.")
+
+# Stage key -> heading. Order here is the order in the full path.
+STAGES = [
+    ("plan", "Plan the night"),
+    ("capture", "Capture the image"),
+    ("process", "Process what you caught"),
+    ("gear", "The gear behind it"),
+]
+STAGE_FOOTERS = {"gear": GEAR_LINK}
+
+# Carries inline markup, so this one is not escaped.
+VETERAN = ('Already shooting? You probably want '
+           '<a href="/gallery.html">the gallery</a> or '
+           '<a href="/gear.html">the gear list</a> instead. Every article '
+           'lives on <a href="/articles.html">the articles page</a>, '
+           'newest first.')
+
+
+# ------------------------------------------------------------------ build
+
+class BuildError(Exception):
+    """A missing slug is worth failing the build for. A card that silently
+    vanishes is far harder to notice than a red cross in Actions."""
+
+
+def load_data():
+    with open(DATA, "r", encoding="utf-8") as f:
+        items = json.load(f)
+
+    articles, gallery = {}, {}
+    for entry in items:
+        if not isinstance(entry, dict):
+            continue
+        slug = entry.get("slug")
+        if not slug or entry.get("hidden"):
+            continue
+        if entry.get("section") == "article":
+            articles[slug] = entry
+        elif entry.get("section") == "gallery":
+            gallery[slug] = entry
+    return articles, gallery
 
 
 def sort_key(entry):
-    """stageOrder first, then newest, so a partly ordered stage still reads well."""
+    """stageOrder first, then newest, so a partly ordered stage still reads
+    well."""
     order = entry.get("stageOrder")
     order = order if isinstance(order, int) else 999
     try:
@@ -155,170 +409,241 @@ def sort_key(entry):
     return (order, -date.toordinal())
 
 
-def load_articles():
-    with open(DATA, "r", encoding="utf-8") as f:
-        items = json.load(f)
-
-    by_stage = {key: [] for key, _, _ in STAGES}
-    for entry in items:
-        if not isinstance(entry, dict) or entry.get("section") != "article":
-            continue
-        if not entry.get("slug") or entry.get("hidden"):
-            continue
+def staged(articles):
+    by_stage = {key: [] for key, _ in STAGES}
+    for entry in articles.values():
         stage = entry.get("stage")
         if stage in by_stage:
             by_stage[stage].append(entry)
-
     for key in by_stage:
         by_stage[key].sort(key=sort_key)
     return by_stage
 
 
-def card_paths(entry):
-    """Which routes an article belongs to.
+def article_url(slug):
+    return f"/{ARTICLE_DIR}/{slug}.html"
 
-    An entry with no "paths", or one listing a key that is not a real route,
-    falls back to every route. Failing open means a typo in site-data.json
-    shows an extra card rather than silently losing one.
+
+def tokens(text, articles):
+    """Expand {route:}, {article:} and {url:} inside escaped copy.
+
+    The prose is escaped first and the markup spliced in afterwards, so the
+    copy above stays plain text and an ampersand in a sentence cannot break
+    the page. A brace that is not a known token is left alone.
     """
-    raw = entry.get("paths")
-    if not isinstance(raw, list):
-        return ROUTE_KEYS
-    keys = [p for p in raw if p in ROUTE_KEYS]
-    return keys or ROUTE_KEYS
+    out = ""
+    rest = esc(text)
+    while "{" in rest:
+        before, brace, after = rest.partition("{")
+        kind, colon, tail = after.partition(":")
+        if kind not in ("route", "article", "url") or not colon or "}" not in tail:
+            out += before + brace
+            rest = after
+            continue
+
+        body, _, rest = tail.partition("}")
+        out += before
+
+        if kind == "route":
+            if body not in ROUTE_KEYS:
+                raise BuildError(f"unknown route '{body}' in copy")
+            label = ROUTE_PHRASES.get(body, "that route")
+            out += (f'<button type="button" class="sh-goto" '
+                    f'data-goto="{esc(body)}">{esc(label)}</button>')
+        else:
+            target, _, label = body.partition("|")
+            label = label or target
+            if kind == "article":
+                if target not in articles:
+                    raise BuildError(f"unknown article slug '{target}' in copy")
+                href = article_url(target)
+            else:
+                href = target if target.startswith("/") else "/" + target
+            out += f'<a href="{esc(href)}">{label}</a>'
+    return out + rest
 
 
-def build_card(entry, number):
-    """One step on the path. Numbered, because the order is the whole point."""
-    meta_bits = [b for b in (entry.get("category"), entry.get("readTime")) if b]
-    sep = ' <span aria-hidden="true">&middot;</span> '
-    meta = ""
-    if meta_bits:
-        meta = ('<span class="sh-meta">'
-                + sep.join(esc(b) for b in meta_bits) + "</span>")
+def build_proof(gallery):
+    shots = []
+    for slug in PROOF_SLUGS:
+        entry = gallery.get(slug)
+        if not entry:
+            raise BuildError(f"proof image '{slug}' is not a gallery entry")
+        file = entry.get("file")
+        if not file:
+            raise BuildError(f"proof image '{slug}' has no file")
 
-    paths = " ".join(card_paths(entry))
+        specs = entry.get("specs") or {}
+        bits = [specs.get("telescope"), specs.get("integration"),
+                (specs.get("location") or "").split(",")[0].strip()]
+        caption = " &middot; ".join(esc(b) for b in bits if b)
+        name = PROOF_NAMES.get(slug, entry.get("title", ""))
+
+        shots.append(
+            f'          <a class="sh-shot" href="/gallery.html#{esc(slug)}">\n'
+            f'            <span class="sh-shot-frame">\n'
+            f'              <img src="/{esc(file)}" '
+            f'alt="{esc(entry.get("alt", ""))}" '
+            f'loading="eager" decoding="async" />\n'
+            f'            </span>\n'
+            f'            <span class="sh-shot-name">{esc(name)}</span>\n'
+            f'            <span class="sh-shot-spec">{caption}</span>\n'
+            f'          </a>\n'
+        )
 
     return (
-        f'          <a class="sh-card" data-paths="{esc(paths)}" '
-        f'href="/{ARTICLE_DIR}/{esc(entry.get("slug", ""))}.html">\n'
+        '      <section class="sh-proof">\n'
+        '        <div class="sh-proof-grid">\n'
+        + "".join(shots) +
+        '        </div>\n'
+        f'        <p class="sh-proof-line">{PROOF_LINE}</p>\n'
+        '      </section>\n'
+    )
+
+
+def build_tonight(articles):
+    steps = "".join(
+        f'          <li class="sh-step">\n'
+        f'            <span class="sh-step-b">\n'
+        f'              <span class="sh-step-t">{esc(title)}</span>\n'
+        f'              <span class="sh-step-d">{tokens(body, articles)}</span>\n'
+        f'            </span>\n'
+        f'          </li>\n'
+        for title, body in TONIGHT_STEPS
+    )
+    return (
+        '      <section class="sh-tonight">\n'
+        f'        <h2>{esc(TONIGHT_TITLE)}</h2>\n'
+        f'        <p class="sh-tonight-lede">{esc(TONIGHT_LEDE)}</p>\n'
+        '        <ol class="sh-steps">\n'
+        f'{steps}'
+        '        </ol>\n'
+        f'        <p class="sh-tonight-out">{esc(TONIGHT_OUT)}</p>\n'
+        '      </section>\n'
+    )
+
+
+def build_chooser():
+    """The route pills. Nothing is preselected, so a first-time reader gets
+    the proof and the free step rather than a wall of choices."""
+    pills = "".join(
+        f'          <button type="button" class="filter-pill sh-route" '
+        f'data-route="{esc(r["key"])}" aria-pressed="false">'
+        f'{esc(r["label"])}</button>\n'
+        for r in ROUTES
+    )
+    return (
+        '      <div class="sh-chooser" id="shChooser" hidden>\n'
+        f'        <p class="sh-chooser-q">{esc(ROUTE_PROMPT)}</p>\n'
+        f'        <div class="filter-pills" role="group" '
+        f'aria-label="{esc(ROUTE_PROMPT)}">\n'
+        f'{pills}'
+        '        </div>\n'
+        f'        <p class="sh-chooser-help">{esc(ROUTE_HELP)}</p>\n'
+        '      </div>\n'
+    )
+
+
+def build_card(slug, title, blurb, number, articles):
+    entry = articles.get(slug)
+    if entry is None:
+        raise BuildError(f"card points at unknown article slug '{slug}'")
+
+    title = title or entry.get("title", "")
+    read = entry.get("readTime")
+    desc = (f'\n              <span class="sh-desc">{esc(blurb)}</span>'
+            if blurb else "")
+    meta = (f'\n              <span class="sh-meta">{esc(read)}</span>'
+            if read else "")
+
+    return (
+        f'          <a class="sh-card" href="{esc(article_url(slug))}">\n'
         f'            <span class="sh-num" aria-hidden="true">{number}</span>\n'
         f'            <span class="sh-text">\n'
-        f'              <span class="sh-title">{esc(entry.get("title", ""))}</span>\n'
-        f'              <span class="sh-desc">{esc(entry.get("desc", "")[:150])}</span>\n'
-        f'              {meta}\n'
+        f'              <span class="sh-title">{esc(title)}</span>'
+        f'{desc}{meta}\n'
         f'            </span>\n'
         f'          </a>\n'
     )
 
 
-def build_stages(by_stage, chooser=""):
+def build_routes(articles):
     out = []
+    for route in ROUTES:
+        cards = "".join(
+            build_card(slug, title, blurb, i, articles)
+            for i, (slug, title, blurb) in enumerate(route["cards"], start=1)
+        )
+        more = f'          {route["more"]}\n' if route.get("more") else ""
+        ending = route.get("ending")
+        ending_html = (
+            f'        <p class="sh-route-end">{tokens(ending, articles)}</p>\n'
+            if ending else ""
+        )
+        out.append(
+            f'      <section class="sh-route-block" '
+            f'data-block="{esc(route["key"])}" hidden>\n'
+            f'        <h2 class="sh-route-head">{esc(route["heading"])}</h2>\n'
+            f'        <p class="sh-route-lede">'
+            f'{tokens(route["lede"], articles)}</p>\n'
+            f'        <div class="sh-list">\n'
+            f'{cards}{more}'
+            f'        </div>\n'
+            f'{ending_html}'
+            f'      </section>\n'
+        )
+    return "".join(out)
+
+
+def build_full(by_stage, articles):
+    """Every staged article, numbered straight through with no restarts, so
+    the sequence reads as one path rather than four short ones."""
+    blocks = []
     number = 0
-    placed = False
-    for key, heading, standfirst in STAGES:
+    for key, heading in STAGES:
         entries = by_stage.get(key, [])
         footer = STAGE_FOOTERS.get(key, "")
-        # A stage with nothing in it and nowhere to point is left out rather
-        # than rendered as an empty heading.
         if not entries and not footer:
             continue
 
-        number += 1
-        cards = "".join(build_card(e, i)
-                        for i, e in enumerate(entries, start=1))
+        cards = ""
+        for entry in entries:
+            number += 1
+            cards += build_card(entry["slug"], entry.get("title", ""),
+                                None, number, articles)
         footer_html = f'          {footer}\n' if footer else ""
-        out.append(
-            f'      <section class="sh-stage" data-stage="{esc(key)}">\n'
-            f'        <h2 class="sh-stage-title">'
-            f'<span class="sh-stage-num" aria-hidden="true">{number}.</span> '
-            f'{esc(heading)}</h2>\n'
-            f'        <p class="sh-stage-lede">{esc(standfirst)}</p>\n'
+        blocks.append(
+            f'        <p class="sh-full-stage">{esc(heading)}</p>\n'
             f'        <div class="sh-list">\n'
             f'{cards}{footer_html}'
             f'        </div>\n'
-            f'      </section>\n'
         )
 
-        if chooser and key == CHOOSER_AFTER:
-            out.append(chooser)
-            placed = True
-
-    # If the anchor stage produced nothing, the chooser still has to appear.
-    # Above everything is the safe fallback: it never sits under a stage it
-    # is supposed to control.
-    if chooser and not placed:
-        out.insert(0, chooser)
-
-    return "".join(out)
-
-
-def build_route_notes():
-    """Per-route closing lines. All are in the HTML and hidden; the script
-    reveals the one matching the active route, and none of them when the
-    whole path is showing."""
-    out = []
-    for key, _ in ROUTES:
-        text = ROUTE_NOTES.get(key)
-        if not text:
-            continue
-
-        body = ""
-        rest = esc(text)
-        while "{route:" in rest:
-            before, _, after = rest.partition("{route:")
-            target, _, rest = after.partition("}")
-            label = ROUTE_NOTE_LINKS.get(target, "that route")
-            body += before + (
-                f'<button type="button" class="sh-route-jump" '
-                f'data-goto="{esc(target)}">{esc(label)}</button>'
-            )
-        body += rest
-
-        out.append(
-            f'      <p class="sh-route-note" data-note="{esc(key)}" hidden>'
-            f'{body}</p>\n'
-        )
-    return "".join(out)
-
-
-def build_chooser():
-    """The route pills. No option is preselected, so the default view is the
-    whole path; 'Show everything' is the way back rather than the start."""
-    pills = "".join(
-        f'          <button type="button" class="filter-pill sh-route" '
-        f'data-route="{esc(key)}" aria-pressed="false">{esc(label)}</button>\n'
-        for key, label in ROUTES
-    )
     return (
-        f'      <div class="sh-chooser" id="shChooser" hidden>\n'
-        f'        <p class="sh-chooser-q">{esc(ROUTE_PROMPT)}</p>\n'
-        f'        <div class="filter-pills" role="group" '
-        f'aria-label="{esc(ROUTE_PROMPT)}">\n'
-        f'{pills}'
-        f'          <button type="button" class="filter-pill sh-route sh-route-all active" '
-        f'data-route="all" aria-pressed="true">Show everything</button>\n'
-        f'        </div>\n'
-        f'        <p class="sh-chooser-help">{esc(ROUTE_HELP)}</p>\n'
-        f'      </div>\n'
-    )
+        '      <details class="sh-full">\n'
+        f'        <summary>{esc(FULL_SUMMARY)}</summary>\n'
+        f'        <p class="sh-full-note">{esc(FULL_NOTE)}</p>\n'
+        + "".join(blocks) +
+        '      </details>\n'
+    ), number
 
 
 def build_json_ld(by_stage):
-    """An ItemList of the path, in path order, so the sequence is legible."""
+    """An ItemList of the full path, in path order, so the sequence stays
+    legible to a crawler even though the markup keeps it collapsed."""
     elements = []
     position = 1
-    for key, _, _ in STAGES:
+    for key, _ in STAGES:
         for entry in by_stage.get(key, []):
             elements.append({
                 "@type": "ListItem",
                 "position": position,
-                "url": f"{DOMAIN}/{ARTICLE_DIR}/{entry.get('slug', '')}.html",
+                "url": f"{DOMAIN}{article_url(entry.get('slug', ''))}",
                 "name": entry.get("title", ""),
             })
             position += 1
 
-    schema = {
+    return json.dumps({
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": "Start Here: a guided path through astrophotography",
@@ -327,11 +652,8 @@ def build_json_ld(by_stage):
         "numberOfItems": len(elements),
         "itemListOrder": "https://schema.org/ItemListOrderAscending",
         "itemListElement": elements,
-    }
-    return json.dumps(schema, ensure_ascii=False)
+    }, ensure_ascii=False)
 
-
-CSS = ""   # moved to /styles.css (PAGE: Start Here)
 
 SCRIPT = """
 (function () {
@@ -339,26 +661,17 @@ SCRIPT = """
   if (!chooser) return;
 
   var pills  = Array.prototype.slice.call(chooser.querySelectorAll('.sh-route'));
-  var stages = Array.prototype.slice.call(document.querySelectorAll('.sh-stage'));
-  var notes  = Array.prototype.slice.call(document.querySelectorAll('.sh-route-note'));
-  if (!pills.length || !stages.length) return;
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('.sh-route-block'));
+  if (!pills.length || !blocks.length) return;
 
-  // Stages above the chooser are common to every route and are left alone.
-  // Position in the document decides this, so moving the chooser in the
-  // generator is all it takes to change what the pills govern.
-  var FOLLOWING = window.Node ? window.Node.DOCUMENT_POSITION_FOLLOWING : 4;
-  function governed(el) {
-    return !!(chooser.compareDocumentPosition(el) & FOLLOWING);
-  }
-  var filterable = stages.filter(governed);
-
-  // Only reveal the control once we know the script is running, so no-JS
-  // readers get the full path rather than a set of dead buttons.
+  // Only reveal the pills once we know the script is running, so a reader
+  // without JS never sees a control that cannot do anything. Everything
+  // ships in the HTML, so a crawler still gets all six routes.
   chooser.hidden = false;
 
-  var KEY = 'bhapstar:startHereRoute';
+  var KEY  = 'bhapstar:startHereRoute';
   var FADE = 180;   // must match the CSS transition duration
-  var current = 'all';
+  var current = 'none';
   var token = 0;    // guards against a second pill tapped mid-transition
 
   var still = false;
@@ -367,89 +680,49 @@ SCRIPT = """
             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   } catch (e) {}
 
-  // Show or hide cards, stages and notes for a route, and renumber whatever
-  // is left so the path still reads 1, 2, 3 with no gaps.
   function commit(route) {
-    var stageNumber = 0;
-
-    stages.forEach(function (stage) {
-      var cards = Array.prototype.slice.call(stage.querySelectorAll('.sh-card'));
-      var governs = filterable.indexOf(stage) !== -1;
-      var shown = 0;
-
-      cards.forEach(function (card) {
-        var paths = (card.getAttribute('data-paths') || '').split(/\\s+/);
-        var match = route === 'all' || !governs ||
-                    paths.indexOf(route) !== -1;
-        card.hidden = !match;
-        if (match) {
-          shown += 1;
-          var num = card.querySelector('.sh-num');
-          if (num) num.textContent = shown;
-        }
-      });
-
-      // A stage with nothing left in it collapses entirely, footer included.
-      var empty = shown === 0;
-      stage.hidden = empty;
-      if (empty) return;
-
-      stageNumber += 1;
-      var label = stage.querySelector('.sh-stage-num');
-      if (label) label.textContent = stageNumber + '.';
+    blocks.forEach(function (block) {
+      block.hidden = block.getAttribute('data-block') !== route;
     });
-
-    notes.forEach(function (note) {
-      note.hidden = note.getAttribute('data-note') !== route;
-    });
-
     pills.forEach(function (pill) {
       var on = pill.getAttribute('data-route') === route;
       pill.classList.toggle('active', on);
       pill.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-
     current = route;
-
     try {
-      if (route === 'all') sessionStorage.removeItem(KEY);
+      if (route === 'none') sessionStorage.removeItem(KEY);
       else sessionStorage.setItem(KEY, route);
     } catch (e) { /* private mode, not worth caring about */ }
-  }
-
-  function fading() {
-    return filterable.concat(notes.filter(function (n) { return !n.hidden; }));
   }
 
   function apply(route, animate) {
     if (route === current) return;
 
-    if (!animate || still) { commit(route); return; }
+    var showing = blocks.filter(function (b) { return !b.hidden; });
+    if (!animate || still || !showing.length) { commit(route); return; }
 
     var mine = ++token;
-    var out = fading();
-    out.forEach(function (el) { el.classList.add('sh-swapping'); });
+    showing.forEach(function (b) { b.classList.add('sh-swapping'); });
 
     window.setTimeout(function () {
       if (mine !== token) return;   // a newer choice took over
       commit(route);
-      // Clear on everything, including the note that has just appeared.
-      filterable.forEach(function (el) { el.classList.remove('sh-swapping'); });
-      notes.forEach(function (el) { el.classList.remove('sh-swapping'); });
+      blocks.forEach(function (b) { b.classList.remove('sh-swapping'); });
     }, FADE);
   }
 
   pills.forEach(function (pill) {
     pill.addEventListener('click', function () {
-      var route = pill.getAttribute('data-route');
       // Tapping the active route a second time clears it.
-      apply(pill.classList.contains('active') ? 'all' : route, true);
+      apply(pill.classList.contains('active')
+              ? 'none' : pill.getAttribute('data-route'), true);
     });
   });
 
-  // "follow the camera and lens route" inside a closing note.
+  // "the full rig route" inside a closing line.
   document.addEventListener('click', function (ev) {
-    var jump = ev.target.closest && ev.target.closest('.sh-route-jump');
+    var jump = ev.target.closest && ev.target.closest('.sh-goto');
     if (!jump) return;
     apply(jump.getAttribute('data-goto'), true);
     chooser.scrollIntoView({ behavior: still ? 'auto' : 'smooth',
@@ -458,27 +731,21 @@ SCRIPT = """
 
   var saved = null;
   try { saved = sessionStorage.getItem(KEY); } catch (e) {}
-  var valid = pills.some(function (p) { return p.getAttribute('data-route') === saved; });
-  if (saved && valid) apply(saved, false);   // no animation on first paint
+  var valid = pills.some(function (p) {
+    return p.getAttribute('data-route') === saved;
+  });
+
+  // First paint, no animation. With nothing saved this collapses every
+  // route, so the page opens on the proof and the free step.
+  commit(saved && valid ? saved : 'none');
 })();
 """
 
 
-OUTRO = (
-    '      <section class="sh-outro">\n'
-    '        <p>That is the path. When you want the full list rather than a '
-    'route through it, <a href="/articles.html">every article lives here</a>, '
-    'newest first, and the <a href="/gallery.html">gallery</a> has the images '
-    'these guides were written from.</p>\n'
-    '        <p>If you would rather hear when something new goes up, there is '
-    'a monthly newsletter you can join from the <a href="/index.html">home '
-    'page</a>.</p>\n'
-    '      </section>\n'
-)
-
-
-def build_page(by_stage):
+def build_page(articles, gallery, by_stage):
     page_url = f"{DOMAIN}/{OUT}"
+    share_url = f"{DOMAIN}/{SHARE_IMAGE}"
+    full_html, _ = build_full(by_stage, articles)
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -496,9 +763,11 @@ def build_page(by_stage):
   <meta property="og:title" content="{esc(PAGE_TITLE)} — Bhapstar Astrophotography" />
   <meta property="og:description" content="{esc(PAGE_DESC)}" />
   <meta property="og:url" content="{esc(page_url)}" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="{esc(share_url)}" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{esc(PAGE_TITLE)} — Bhapstar Astrophotography" />
   <meta name="twitter:description" content="{esc(PAGE_DESC)}" />
+  <meta name="twitter:image" content="{esc(share_url)}" />
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}}'></script>
   <link rel="stylesheet" href="/styles.css" />
@@ -526,9 +795,13 @@ def build_page(by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
-{build_stages(by_stage, build_chooser())}
-{build_route_notes()}
-{OUTRO}
+{build_proof(gallery)}
+{build_tonight(articles)}
+{build_chooser()}
+{build_routes(articles)}
+{full_html}
+      <p class="sh-veteran">{VETERAN}</p>
+
     </div>
   </section>
 </main>
@@ -544,18 +817,29 @@ def build_page(by_stage):
 
 
 def main():
-    by_stage = load_articles()
-    total = sum(len(v) for v in by_stage.values())
+    try:
+        articles, gallery = load_data()
+        by_stage = staged(articles)
+        html = build_page(articles, gallery, by_stage)
+    except BuildError as exc:
+        print(f"✗ {OUT}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
 
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(build_page(by_stage))
+        f.write(html)
 
-    bits = ", ".join(f"{k}: {len(by_stage.get(k, []))}" for k, _, _ in STAGES)
-    print(f"✓ {OUT}  ({total} articles on the path — {bits})")
+    on_path = sum(len(v) for v in by_stage.values())
+    print(f"✓ {OUT}  ({len(ROUTES)} routes, "
+          f"{on_path} articles in the full path)")
 
-    # A stage that has emptied out is worth knowing about, since the page
-    # silently drops it rather than rendering a bare heading.
-    for key, heading, _ in STAGES:
+    # An article that is live but on neither a route nor the full path is
+    # almost always an oversight rather than a decision.
+    routed = {slug for r in ROUTES for slug, _, _ in r["cards"]}
+    for slug, entry in sorted(articles.items()):
+        if slug not in routed and not entry.get("stage"):
+            print(f"  ! '{slug}' appears nowhere on this page")
+
+    for key, heading in STAGES:
         if not by_stage.get(key) and key not in STAGE_FOOTERS:
             print(f"  ! stage '{key}' ({heading}) is empty and was omitted")
 
