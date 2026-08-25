@@ -1473,6 +1473,11 @@
         "affiliate": true
       }
     ],
+    "download": {
+      "file": "downloads/asiair-field-card.pdf",
+      "label": "ASIAir field card",
+      "note": "One side of A4: what plugs into what, the order a night runs in, the settings worth getting right, and what to check when something stops working at three in the morning."
+    },
     "stage": "capture",
     "stageOrder": 4,
     "paths": ["rig"],
@@ -1602,6 +1607,11 @@
         "affiliate": true
       }
     ],
+    "download": {
+      "file": "downloads/calibration-frames-field-card.pdf",
+      "label": "Calibration frames field card",
+      "note": "All four frames on one side of A4: what each one removes, how to take it, how many, and the order to shoot them in at the end of a session."
+    },
     "stage": "process",
     "stageOrder": 1,
     "paths": ["camera", "rig"],

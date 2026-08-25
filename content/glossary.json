@@ -499,7 +499,10 @@
     },
     {
       "term": "integration",
-      "def": "The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute."
+      "def": "The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.",
+      "except": [
+        "asiair-astrophotography-control"
+      ]
     },
     {
       "term": "intervalometer",
