@@ -6,10 +6,11 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">Everything plugs into one box on the telescope, and you run the night from your phone.</p>
+  <p class="ec-title">Everything plugs into one box on the telescope, and you run the night from a phone or tablet.</p>
   <p class="ec-body">It replaces the laptop, the extension lead, the folding table and the long
   cable back to the house. Plate solving, autofocus, guiding and the whole
-  imaging sequence are driven from a handset, and shortening the cable runs to
+  imaging sequence are driven from whichever screen you are holding, and
+  shortening the cable runs to
   a few centimetres on the scope itself removes most of the failures that lose
   a session. The cost is a closed ecosystem: ZWO cameras and a defined list of
   mounts, rather than anything that speaks ASCOM.</p>
@@ -25,6 +26,15 @@ phone or tablet. That is the whole idea. It replaces the laptop, the extension
 lead, the folding table and the long trailing cable that used to run back to the
 house.</p>
 
+<p>Either works, and the app is identical on both. In practice I use a tablet
+almost every time. The preview frame is what you spend the night looking at, and
+checking focus, framing and star shape is easier on a larger screen, particularly
+when the target sits near the edge. The autofocus curve and the guiding graph are
+both easier to read at a glance too. A phone is still the better thing for a quick
+look from indoors, or as a spare if the tablet is flat, and you can move between
+the two mid-session without disturbing anything, because the run lives on the box
+rather than on the screen.</p>
+
 <p>It matters more than it sounds. Almost every session I have lost was lost to
 something mundane — a USB cable working loose in the cold, a laptop lid closing,
 a hub dropping a device mid-run. Shortening the cable runs to a few centimetres
@@ -32,8 +42,8 @@ on the scope itself removes most of that class of failure at a stroke.</p>
 
 <figure class="article-fig">
 <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="Diagram of an ASIAir setup. A phone connects over Wi-Fi to the ASIAir control box, which in turn connects by cable to the mount, main camera, electronic focuser, guide camera and dew heater, and takes a single 12 volt power input.">
-  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">Everything hangs off one box, and the box talks to your phone</text>
+     aria-label="Diagram of an ASIAir setup. A phone or tablet connects over Wi-Fi to the ASIAir control box, which in turn connects by cable to the mount, main camera, electronic focuser, guide camera and dew heater, and takes a single 12 volt power input.">
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">Everything hangs off one box, and the box talks to your phone or tablet</text>
 
   <!-- phone -->
   <rect x="22" y="140" width="62" height="100" rx="10" fill="var(--soft)" stroke="var(--line)" stroke-width="1.4"/>
@@ -182,7 +192,8 @@ you image from a balcony with an obstructed north.</p>
   camera and onto the screen. This is the frame you use to check focus, framing
   and exposure before committing to a run, and it arrives about a minute after
   you ask for the target. The controls sit around the edge so the picture keeps
-  the middle of the screen.</figcaption>
+  the middle of the screen. This is a tablet, which is what I reach for most
+  nights; the phone layout is the same with less room around the frame.</figcaption>
 </figure>
 
 <h3>Plate solving and goto</h3>
@@ -237,7 +248,7 @@ any finished image shown a week later.</p>
 
 <p>The strength is integration. Everything talks to everything else, nothing needs
 configuring, and there is no driver layer to go wrong. Frames are written to the
-onboard storage, so a phone going flat or wandering out of range does not stop the
+onboard storage, so a tablet going flat or wandering out of range does not stop the
 run — the box carries on regardless, which is exactly what you want at three in the
 morning.</p>
 
@@ -251,8 +262,9 @@ It is a deliberate trade: less choice, far fewer things to debug in the dark.</p
 
 <ul>
   <li><strong>Station mode is better than the default.</strong> Out of the box the
-  ASIAir broadcasts its own network, which means your phone leaves your home Wi-Fi
-  to connect to it. Joining it to your house network instead lets you keep both,
+  ASIAir broadcasts its own network, which means your phone or tablet leaves your
+  home Wi-Fi to connect to it. Joining it to your house network instead lets you
+  keep both,
   and lets you check on a run from inside.</li>
   <li><strong>Give it a proper power supply.</strong> A single 12&nbsp;V feed runs
   the controller, a cooled camera, the mount and the dew heaters. Undersized supplies

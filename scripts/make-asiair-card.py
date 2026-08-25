@@ -35,9 +35,9 @@ y = card.callout(
     'What it is, in one paragraph',
     'A small Linux computer that sits on the telescope. The mount, cameras, '
     'focuser and dew heater all plug into it, one 12 volt lead runs to the '
-    'ground, and you drive the whole night from a phone or tablet over Wi-Fi. '
+    'ground, and you drive the whole night from a tablet or phone over Wi-Fi. '
     'Plate solving, autofocus, guiding and the imaging plan all run on the box '
-    'itself, so the frames keep being written even if the phone goes flat or '
+    'itself, so the frames keep being written even if the tablet goes flat or '
     'wanders out of range.')
 
 # ── the night, with the fork ───────────────────────────────────────────
@@ -126,7 +126,7 @@ PORTS = [
     ('Electronic focuser', 'autofocus by V-curve'),
     ('Dew heater', 'switched 12 V, warm all night'),
     ('One 12 V input', 'the only lead running to the ground'),
-    ('Phone or tablet', 'Wi-Fi, no cable needed'),
+    ('Tablet or phone', 'Wi-Fi, no cable. A tablet is easier'),
 ]
 
 for i, (name, role) in enumerate(PORTS):
@@ -150,7 +150,7 @@ ry = card.section(RIGHT_X, col_top, RIGHT_W, 'Settings worth getting right')
 SET_COLS = [(0, 78, 'label'), (86, 92, 'value'), (186, 112, 'note')]
 SET_ROWS = [
     ('Wi-Fi mode', 'Station mode',
-     'Joins the box to your house network so the phone keeps both'),
+     'Joins the box to your house network so the tablet keeps both'),
     ('Autofocus', 'Repeat hourly, or on a temperature drop',
      'A refractor moves focus measurably as the tube cools'),
     ('Dithering', 'On, always',
@@ -176,7 +176,7 @@ tops = y + 2
 bottoms = []
 FIRST = [
     ('Use station mode', 'Out of the box it broadcasts its own network, so your '
-     'phone has to leave your home Wi-Fi to reach it. Joining it to the house '
+     'tablet has to leave your home Wi-Fi to reach it. Joining it to the house '
      'network keeps both, and lets you check a run from indoors.', VIOLET),
     ('Give it real power', 'A single 12 V feed runs the controller, a cooled '
      'camera, the mount and the dew heaters. Undersized supplies cause failures '
