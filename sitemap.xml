@@ -884,6 +884,12 @@
     </image:image>
   </url>
   <url>
+    <loc>https://bhapstar.com/downloads/asiair-field-card.pdf</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://bhapstar.com/articles/bortle-scale-narrowband-filters.html</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>yearly</changefreq>
@@ -909,6 +915,12 @@
     <image:image>
       <image:loc>https://bhapstar.com/images/articles/calibration-frames-tile.webp</image:loc>
     </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/downloads/calibration-frames-field-card.pdf</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://bhapstar.com/articles/navigating-the-night-sky.html</loc>

@@ -154,49 +154,79 @@ the reason it is quick to learn even if you have never used capture software
 before.</p>
 
 <figure class="article-fig">
-<svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="Six-stage timeline of an imaging session: polar align, plate solve and goto, autofocus, framing, autorun, then meridian flip and calibration frames.">
-  <text x="10" y="22" font-size="12.5" fill="var(--text)" font-weight="600">How a session runs, start to finish</text>
+<svg viewBox="0 0 700 215" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of an imaging session: polar align, plate solve and goto, autofocus and framing are shared, then the night forks two ways. One branch runs an unattended autorun through the meridian flip and on to calibration frames. The other switches to live stacking, building one image on screen as the frames arrive.">
+  <text x="10" y="20" font-size="12.5" fill="var(--text)" font-weight="600">How a session runs, start to finish</text>
+
   <g>
-    <rect x="14"  y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
-    <rect x="126" y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
-    <rect x="238" y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
-    <rect x="350" y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
-    <rect x="462" y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="#a78bfa" stroke-width="1.7"/>
-    <rect x="574" y="48" width="104" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="14"  y="86" width="96" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="120" y="86" width="96" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="226" y="86" width="96" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="332" y="86" width="96" height="56" rx="10" fill="var(--soft)" stroke="var(--line)"/>
   </g>
   <g font-size="11.5" fill="var(--text)" text-anchor="middle" font-weight="600">
-    <text x="66"  y="72">Polar align</text>
-    <text x="178" y="72">Plate solve</text>
-    <text x="290" y="72">Autofocus</text>
-    <text x="402" y="72">Frame</text>
-    <text x="514" y="72">Autorun</text>
-    <text x="626" y="72">Flip &amp; finish</text>
+    <text x="62"  y="110">Polar align</text>
+    <text x="168" y="110">Plate solve</text>
+    <text x="274" y="110">Autofocus</text>
+    <text x="380" y="110">Frame</text>
   </g>
   <g font-size="9.5" fill="var(--muted)" text-anchor="middle">
-    <text x="66"  y="90">on-screen, ~5 min</text>
-    <text x="178" y="90">then goto target</text>
-    <text x="290" y="90">EAF V-curve</text>
-    <text x="402" y="90">rotate, re-solve</text>
-    <text x="514" y="90">lights + dithering</text>
-    <text x="626" y="90">then darks &amp; flats</text>
+    <text x="62"  y="128">on-screen, ~5 min</text>
+    <text x="168" y="128">then goto target</text>
+    <text x="274" y="128">EAF V-curve</text>
+    <text x="380" y="128">rotate, re-solve</text>
   </g>
   <g fill="#60a5fa">
-    <path d="M118,71 l7,5 l-7,5 z"/><path d="M230,71 l7,5 l-7,5 z"/>
-    <path d="M342,71 l7,5 l-7,5 z"/><path d="M454,71 l7,5 l-7,5 z"/>
-    <path d="M566,71 l7,5 l-7,5 z"/>
+    <path d="M110,109 l7,5 l-7,5 z"/><path d="M216,109 l7,5 l-7,5 z"/>
+    <path d="M322,109 l7,5 l-7,5 z"/>
   </g>
-  <text x="514" y="126" font-size="10.5" fill="#a78bfa" text-anchor="middle">this is the part you sleep through</text>
+
+  <g stroke="#60a5fa" stroke-width="1.6" fill="none" stroke-linecap="round">
+    <path d="M428,114 h14"/>
+    <path d="M442,62 V166"/>
+    <path d="M442,62 h9"/>
+    <path d="M442,166 h9"/>
+  </g>
+  <g fill="#60a5fa">
+    <path d="M451,57 l7,5 l-7,5 z"/><path d="M451,161 l7,5 l-7,5 z"/>
+    <path d="M567,57 l7,5 l-7,5 z"/><path d="M567,161 l7,5 l-7,5 z"/>
+  </g>
+
+  <g>
+    <rect x="458" y="36"  width="109" height="52" rx="10" fill="var(--soft)" stroke="#a78bfa" stroke-width="1.7"/>
+    <rect x="577" y="36"  width="109" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <rect x="458" y="140" width="109" height="52" rx="10" fill="var(--soft)" stroke="#f472b6" stroke-width="1.7"/>
+    <rect x="577" y="140" width="109" height="52" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+  </g>
+  <g font-size="11.5" fill="var(--text)" text-anchor="middle" font-weight="600">
+    <text x="512" y="58">Autorun</text>
+    <text x="631" y="58">Meridian flip</text>
+    <text x="512" y="162">Live stack</text>
+    <text x="631" y="162">Save &amp; show</text>
+  </g>
+  <g font-size="9.5" fill="var(--muted)" text-anchor="middle">
+    <text x="512" y="74">lights + dithering</text>
+    <text x="631" y="74">then darks &amp; flats</text>
+    <text x="512" y="178">builds on screen</text>
+    <text x="631" y="178">saved as one image</text>
+  </g>
+
+  <text x="458" y="26"  font-size="10.5" fill="#a78bfa" font-weight="600">Leave it running</text>
+  <text x="458" y="206" font-size="10.5" fill="#f472b6" font-weight="600">Watch it build</text>
 </svg>
-<figcaption>Only the first four stages need you awake. Autorun handles the rest, including the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-7" data-gl-term="meridian flip">meridian flip</span><span class="gl-def" id="gl-asiair-astrophotography-control-7" hidden>As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again.</span>, and will re-solve and re-centre afterwards so the framing survives the flip.</figcaption>
+<figcaption>Only the first four stages need you awake. After framing, the night goes
+one of two ways. An Autorun runs unattended: it handles the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-7" data-gl-term="meridian flip">meridian flip</span><span class="gl-def" id="gl-asiair-astrophotography-control-7" hidden>As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again.</span> itself,
+then re-solves and re-centres so the framing survives it, and finishes on the
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-8" data-gl-term="calibration frame">calibration frames</span><span class="gl-def" id="gl-asiair-astrophotography-control-8" hidden>Extra frames that are not pictures of anything. They record what the camera and the optics add to every shot, so it can be measured and taken back out.</span>. Live <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-9" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-asiair-astrophotography-control-9" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> is the other path, building a single image on
+screen as each frame arrives.</figcaption>
 </figure>
 
 <h3>Polar alignment</h3>
 
-<p>The routine takes two exposures a set distance apart in <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-8" data-gl-term="right ascension">right ascension</span><span class="gl-def" id="gl-asiair-astrophotography-control-8" hidden>The sky&#x27;s version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h.</span>,
+<p>The routine takes two exposures a set distance apart in <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-10" data-gl-term="right ascension">right ascension</span><span class="gl-def" id="gl-asiair-astrophotography-control-10" hidden>The sky&#x27;s version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h.</span>,
 plate-solves both, works out where your polar axis actually points and then draws
-live arrows telling you which way to turn the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-9" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-asiair-astrophotography-control-9" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> and <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-10" data-gl-term="azimuth">azimuth</span><span class="gl-def" id="gl-asiair-astrophotography-control-10" hidden>The compass direction of something, measured round the horizon from north. Due east is 90 degrees.</span> bolts. It does
-not need <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-11" data-gl-term="Polaris">Polaris</span><span class="gl-def" id="gl-asiair-astrophotography-control-11" hidden>The bright star that sits almost exactly above the Earth&#x27;s northern axis. It barely moves all night, which is why polar alignment usually starts by pointing at it.</span> to be visible, which is the single most useful thing about it if
+live arrows telling you which way to turn the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-11" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-asiair-astrophotography-control-11" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> and <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-12" data-gl-term="azimuth">azimuth</span><span class="gl-def" id="gl-asiair-astrophotography-control-12" hidden>The compass direction of something, measured round the horizon from north. Due east is 90 degrees.</span> bolts. It does
+not need <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-13" data-gl-term="Polaris">Polaris</span><span class="gl-def" id="gl-asiair-astrophotography-control-13" hidden>The bright star that sits almost exactly above the Earth&#x27;s northern axis. It barely moves all night, which is why polar alignment usually starts by pointing at it.</span> to be visible, which is the single most useful thing about it if
 you image from a balcony with an obstructed north.</p>
 
 <figure class="article-fig">
@@ -215,28 +245,36 @@ you image from a balcony with an obstructed north.</p>
 <p>Plate solving is the feature that changes the hobby. The camera takes a short
 exposure, the software identifies the star pattern against a catalogue, and the
 mount then knows precisely where it is pointing rather than where it believes it
-is pointing. Ask for a target, and it will <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-12" data-gl-term="slew">slew</span><span class="gl-def" id="gl-asiair-astrophotography-control-12" hidden>The mount moving quickly from one part of the sky to another.</span>, solve, correct and re-solve until
+is pointing. Ask for a target, and it will <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-14" data-gl-term="slew">slew</span><span class="gl-def" id="gl-asiair-astrophotography-control-14" hidden>The mount moving quickly from one part of the sky to another.</span>, solve, correct and re-solve until
 the object is on the pixel you asked for. Star alignment routines, hand controllers
 and finder scopes all become optional.</p>
 
 <h3>Autofocus</h3>
 
 <p>With an <a href="/gear/zwo-eaf-electronic-focuser.html">electronic focuser</a>
-attached, the ASIAir steps the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-13" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-asiair-astrophotography-control-13" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> through a range of positions, measures star
-size at each, fits a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-14" data-gl-term="V-curve">V-curve</span><span class="gl-def" id="gl-asiair-astrophotography-control-14" hidden>Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus.</span> and returns to the minimum. It takes about a minute
-and it is more accurate than I am with a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-15" data-gl-term="Bahtinov mask">Bahtinov mask</span><span class="gl-def" id="gl-asiair-astrophotography-control-15" hidden>A slotted cover placed over the front of a telescope. It turns a bright star into crossed spikes that line up only when the focus is exactly right.</span>. More to the point it can be
+attached, the ASIAir steps the <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-15" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-asiair-astrophotography-control-15" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> through a range of positions, measures star
+size at each, fits a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-16" data-gl-term="V-curve">V-curve</span><span class="gl-def" id="gl-asiair-astrophotography-control-16" hidden>Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus.</span> and returns to the minimum. It takes about a minute
+and it is more accurate than I am with a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-17" data-gl-term="Bahtinov mask">Bahtinov mask</span><span class="gl-def" id="gl-asiair-astrophotography-control-17" hidden>A slotted cover placed over the front of a telescope. It turns a bright star into crossed spikes that line up only when the focus is exactly right.</span>. More to the point it can be
 set to repeat automatically every hour or after a given temperature drop, which is
-what actually keeps a long night sharp — a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-16" data-gl-term="refractor">refractor</span><span class="gl-def" id="gl-asiair-astrophotography-control-16" hidden>A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead.</span> moves focus measurably as the
+what actually keeps a long night sharp — a <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-18" data-gl-term="refractor">refractor</span><span class="gl-def" id="gl-asiair-astrophotography-control-18" hidden>A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead.</span> moves focus measurably as the
 tube cools.</p>
 
 <h3>Autorun, guiding and dithering</h3>
 
 <p>Autorun is the plan: a list of exposures, a count, a filter, and optionally
 several targets in sequence. Guiding runs alongside it, making small corrections
-from the guide sensor, and <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-17" data-gl-term="dithering">dithering</span><span class="gl-def" id="gl-asiair-astrophotography-control-17" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> nudges the mount a few pixels between frames
+from the guide sensor, and <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-19" data-gl-term="dithering">dithering</span><span class="gl-def" id="gl-asiair-astrophotography-control-19" hidden>Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.</span> nudges the mount a few pixels between frames
 so that fixed sensor noise lands in a different place each time and averages away
-during <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-18" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-asiair-astrophotography-control-18" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>. Dithering is free and it is the cheapest noise reduction
+during stacking. Dithering is free and it is the cheapest noise reduction
 available; leave it on.</p>
+
+<p>Live is the other way to spend the same night. Instead of writing frames away
+for later, the box stacks them as they arrive and shows the result building on the
+screen, getting cleaner every minute. It is the wrong choice if you want the best
+possible picture, because you keep the stack rather than the frames that made it,
+and it is the right choice if there are people standing next to you. On a public
+night in the desert, a nebula appearing on a tablet in real time does more than
+any finished image shown a week later.</p>
 
 <figure class="article-fig">
   <img src="/images/articles/asiair-annotated-guiding.webp"
@@ -244,15 +282,15 @@ available; leave it on.</p>
        loading="lazy" decoding="async" />
   <figcaption>Three readouts at once, mid-session. The annotation overlay has
   plate-solved the field and labelled what is in it, here IC 2177 with a pair of
-  nearby clusters. The <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-19" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-asiair-astrophotography-control-19" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> along the bottom shows where the exposure is
+  nearby clusters. The <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-20" data-gl-term="histogram">histogram</span><span class="gl-def" id="gl-asiair-astrophotography-control-20" hidden>A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.</span> along the bottom shows where the exposure is
   sitting, and the guiding graph is reporting 1.51&#8243; RMS total. As a rule of
-  thumb, keep guiding error below roughly half your image scale in <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-20" data-gl-term="arcsecond">arcseconds</span><span class="gl-def" id="gl-asiair-astrophotography-control-20" hidden>A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across.</span>
+  thumb, keep guiding error below roughly half your image scale in <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-21" data-gl-term="arcsecond">arcseconds</span><span class="gl-def" id="gl-asiair-astrophotography-control-21" hidden>A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across.</span>
   per pixel and the stars stay round.</figcaption>
 </figure>
 
 <h2>Where it is strong, and where it is not</h2>
 
-<p>The strength is <span class="gl" role="button" tabindex="0" aria-describedby="gl-asiair-astrophotography-control-21" data-gl-term="integration">integration</span><span class="gl-def" id="gl-asiair-astrophotography-control-21" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span>. Everything talks to everything else, nothing needs
+<p>The strength is integration. Everything talks to everything else, nothing needs
 configuring, and there is no driver layer to go wrong. Frames are written to the
 onboard storage, so a phone going flat or wandering out of range does not stop the
 run — the box carries on regardless, which is exactly what you want at three in the
@@ -301,6 +339,15 @@ it. Once the sequence is running the work moves indoors, which is where
           <a class="related-card" href="/articles/bortle-scale-narrowband-filters.html"><span class="related-kicker">Capture <span aria-hidden="true">&middot;</span> 9 min read</span><span class="related-title">The Bortle Scale of Night-Sky Brightness and Light Pollution</span></a>
         </div>
       </section>
+      <aside class="article-download" aria-labelledby="articleDownloadHeading">
+        <h2 id="articleDownloadHeading">Take it with you</h2>
+        <p class="article-download-intro">One side of A4: what plugs into what, the order a night runs in, the settings worth getting right, and what to check when something stops working at three in the morning.</p>
+        <a class="article-download-btn" href="/downloads/asiair-field-card.pdf" download>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="M4.5 7L8 10.5 11.5 7"/><path d="M2.5 13h11"/></svg><span>ASIAir field card (PDF)</span>
+        </a>
+        <p class="article-download-meta">Free, no sign-up needed. Opens or saves straight away.</p>
+      </aside>
+
       <aside class="article-signup-block" aria-labelledby="articleSignupHeading">
         <h2 id="articleSignupHeading">Stay in the loop</h2>
         <div class="article-signup">
