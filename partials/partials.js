@@ -459,7 +459,9 @@ const HIDE_FIELD_NOTES = true;
       card: 1,         // printed QR cards
       x: 1,            // links posted on X
       'pdf-phone': 1,  // QR on the phone field card
-      'pdf-camera': 1  // QR on the camera field card
+      'pdf-camera': 1, // QR on the camera field card
+      'pdf-calibration': 1, // QR on the calibration frames field card
+      'pdf-asiair': 1  // QR on the ASIAir field card
     };
     var tapSrc = new URLSearchParams(location.search).get('src');
 
