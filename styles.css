@@ -2839,9 +2839,34 @@ html[data-theme="light"] .sh-step-d a,
 html[data-theme="light"] .sh-route-end a,
 html[data-theme="light"] .sh-veteran a { color: #6d4bd8; }
 
+/* Below 760px the three images become a snap-scroll strip rather than a
+   grid. Three columns at phone width would be about 108px each, which
+   turns the images into thumbnails on the one page whose job is showing
+   them off, and dropping the third would strand "the centre of our own"
+   in the line underneath. The strip bleeds to both screen edges so it
+   reads as continuous rather than as a row that happens to be clipped. */
 @media (max-width: 760px) {
-  .sh-proof-grid { grid-template-columns: 1fr 1fr; }
-  .sh-proof-grid .sh-shot:nth-child(3) { display: none; }
+  .sh-proof-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: var(--pad);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: calc(var(--pad) * -1);
+    padding: 0 var(--pad) 2px;
+  }
+  .sh-proof-grid::-webkit-scrollbar { display: none; }
+  /* Trailing spacer: older Safari drops the container's padding-right on
+     an overflowing flex row, which leaves the last image flush to the
+     edge. */
+  .sh-proof-grid::after { content: ""; flex: 0 0 1px; }
+  /* Capped rather than a flat percentage: a plain 58% would give 232px
+     cards on a phone but 441px on a 760px tablet, where only 1.6 fit on
+     screen. The cap holds the card near 250px across the whole range, so
+     a phone shows about one and a half and a tablet about three. */
+  .sh-shot { flex: 0 0 min(62%, 250px); scroll-snap-align: start; }
 }
 
 @media (max-width: 560px) {

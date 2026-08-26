@@ -101,7 +101,13 @@ INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
 # Gallery slugs, in display order. Everything else about each image, the
 # file, the alt text and the capture specs, is read from its gallery entry
 # so this page and gallery.html can never disagree about what took what.
-# The third is hidden on narrow screens, so put the weakest one last.
+#
+# All three show at every width: a grid on desktop, a snap-scroll strip on
+# mobile. Nothing is dropped on small screens, because PROOF_LINE below
+# refers to these images by what they are. "Four galaxies and the centre
+# of our own" counts Andromeda as one, the Leo Triplet as three, and the
+# Milky Way as the centre of our own, so changing this list means changing
+# that sentence too.
 PROOF_SLUGS = [
     "andromeda-galaxy-m31",
     "leo-triplet-m65-m66-ngc3628",
