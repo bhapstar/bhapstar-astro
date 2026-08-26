@@ -170,12 +170,11 @@ TONIGHT_OUT = ("That is the hobby in miniature: dark skies, patience, and a "
 # --------------------------------------------------------------- 3. ROUTES
 
 ROUTE_PROMPT = "Where are you right now?"
-ROUTE_HELP = ("Pick one and you get three articles instead of eleven. Nothing "
-              "is hidden permanently, and the full list is at the bottom of "
-              "the page. Tap the same one again to clear it.")
+ROUTE_HELP = ("Pick one of the buttons and read the articles on your choice, with a full list of articles available at the bottom of "
+              "the page.")
 
 GEAR_LINK = ('<a class="sh-more" href="/gear.html">Every piece of gear I use, '
-             'with prices <span aria-hidden="true">&#8594;</span></a>')
+             'with links to buy <span aria-hidden="true">&#8594;</span></a>')
 
 # Order here is the order of the pills and of the blocks in the document,
 # which runs from what you already have to what you are considering buying.
