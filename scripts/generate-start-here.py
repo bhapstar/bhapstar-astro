@@ -150,7 +150,7 @@ TONIGHT_STEPS = [
     ("Count what you can actually see",
      "Pick one patch of sky and count the stars in it. From the middle of "
      "Dubai you might get one or two. An hour into the Dubai desert you will "
-     "see hundreds. Two and a half hours into the heart of the Abu Dhabi, "
+     "see hundreds. Two and a half hours into the heart of the Abu Dhabi desert, "
      "you will lose count. That difference is the single "
      "biggest factor in what you will be able to photograph. If you want to "
      "know what those counted stars mean, "
