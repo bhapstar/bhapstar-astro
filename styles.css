@@ -2839,6 +2839,71 @@ html[data-theme="light"] .sh-step-d a,
 html[data-theme="light"] .sh-route-end a,
 html[data-theme="light"] .sh-veteran a { color: #6d4bd8; }
 
+/* ---- Proof image popup ---------------------------------------------
+   A small dialog rather than the gallery lightbox. The point of this
+   page is to hold a first-time reader, and sending them to gallery.html
+   one tap in is the easiest way to lose them. */
+.sh-modal { position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+            opacity: 0; transition: opacity 200ms var(--ease-in-out); }
+.sh-modal[hidden] { display: none; }
+.sh-modal.open { opacity: 1; }
+.sh-modal-back { position: absolute; inset: 0; cursor: pointer;
+                 background: rgba(3, 2, 12, 0.82);
+                 -webkit-backdrop-filter: blur(6px);
+                 backdrop-filter: blur(6px); }
+.sh-modal-card { position: relative; z-index: 1;
+                 width: min(420px, 100%); max-height: calc(100vh - 48px);
+                 overflow-y: auto; border-radius: 16px;
+                 border: 1px solid var(--line); background: var(--bg);
+                 box-shadow: var(--shadow);
+                 transform: translateY(10px) scale(0.985);
+                 transition: transform 200ms var(--ease-in-out);
+                 -webkit-user-select: none; user-select: none;
+                 -webkit-touch-callout: none; }
+.sh-modal.open .sh-modal-card { transform: none; }
+.sh-modal-img { display: block; width: 100%; max-height: 56vh;
+                object-fit: contain; background: #05040f;
+                border-radius: 16px 16px 0 0; pointer-events: none; }
+.sh-modal-x { position: absolute; top: 9px; right: 9px; z-index: 2;
+              width: 32px; height: 32px; border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 19px; line-height: 1; cursor: pointer;
+              color: #fff; background: rgba(5, 4, 15, 0.62);
+              border: 1px solid rgba(255, 255, 255, 0.18);
+              transition: background 200ms ease, border-color 200ms ease; }
+.sh-modal-x:hover { background: rgba(5, 4, 15, 0.85);
+                    border-color: var(--accent); }
+.sh-modal-body { padding: 16px 18px 18px; }
+.sh-modal-name { font-size: 17px; font-weight: 600; line-height: 1.3;
+                 margin: 0 0 6px; color: var(--text); }
+.sh-modal-spec { font-size: 9.5px; letter-spacing: 0.13em;
+                 text-transform: uppercase; color: var(--muted);
+                 line-height: 1.6; margin: 0; }
+.sh-modal-blurb { font-size: 13.5px; line-height: 1.6; color: var(--muted);
+                  margin: 12px 0 0; }
+.sh-modal-blurb[hidden] { display: none; }
+.sh-modal-link { display: inline-block; margin-top: 14px; font-size: 13.5px;
+                 color: var(--accent); text-decoration: none;
+                 border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
+                 transition: border-color 200ms ease; }
+.sh-modal-link:hover { border-bottom-color: var(--accent); }
+
+/* Stops the page behind the dialog scrolling under it. */
+body.sh-modal-lock { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-modal, .sh-modal-card { transition: none; }
+  .sh-modal-card { transform: none; }
+}
+
+@media (max-width: 560px) {
+  .sh-modal { padding: 14px; }
+  .sh-modal-card { max-height: calc(100vh - 28px); }
+  .sh-modal-img { max-height: 48vh; }
+}
+
 /* Below 760px the three images become a snap-scroll strip rather than a
    grid. Three columns at phone width would be about 108px each, which
    turns the images into thumbnails on the one page whose job is showing

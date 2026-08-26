@@ -105,9 +105,9 @@ INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
 # All three show at every width: a grid on desktop, a snap-scroll strip on
 # mobile. Nothing is dropped on small screens, because PROOF_LINE below
 # refers to these images by what they are. "Four galaxies and the centre
-# of our own" counts Andromeda as one, the Leo Triplet as three, and the
-# Milky Way as the centre of our own, so changing this list means changing
-# that sentence too.
+# of our own Milky Way" counts Andromeda as one, the Leo Triplet as three,
+# and the Milky Way as the last, so changing this list means changing that
+# sentence too.
 PROOF_SLUGS = [
     "andromeda-galaxy-m31",
     "leo-triplet-m65-m66-ngc3628",
@@ -124,10 +124,10 @@ PROOF_NAMES = {
 }
 
 # Carries inline markup, so this one is not escaped. Keep it plain.
-PROOF_LINE = ("Four galaxies and the centre of our own, all taken with a "
-              "<strong>smart telescope that fits in a shoulder bag</strong> "
-              "and sets itself up in about a minute. No laptop, no "
-              "counterweights, no observatory. Six of the images in the "
+PROOF_LINE = ("Four galaxies and the centre of our own Milky Way, all taken "
+              "with a <strong>smart telescope that fits in a shoulder "
+              "bag</strong> and sets itself up in about a minute. No laptop, "
+              "no counterweights, no observatory. Six of the images in the "
               "gallery were taken this way.")
 
 # Used for the social card, since this page now has something worth showing.
@@ -484,9 +484,15 @@ def build_proof(gallery):
                 (specs.get("location") or "").split(",")[0].strip()]
         caption = " &middot; ".join(esc(b) for b in bits if b)
         name = PROOF_NAMES.get(slug, entry.get("title", ""))
+        blurb = entry.get("intro") or entry.get("desc") or ""
 
+        # The href stays a real link to the gallery entry. The script
+        # intercepts the click and opens the popup instead, so a reader
+        # with no JS still gets somewhere sensible rather than a dead
+        # image.
         shots.append(
-            f'          <a class="sh-shot" href="/gallery.html#{esc(slug)}">\n'
+            f'          <a class="sh-shot" href="/gallery.html#{esc(slug)}"\n'
+            f'             data-blurb="{esc(blurb)}">\n'
             f'            <span class="sh-shot-frame">\n'
             f'              <img src="/{esc(file)}" '
             f'alt="{esc(entry.get("alt", ""))}" '
@@ -661,6 +667,34 @@ def build_json_ld(by_stage):
     }, ensure_ascii=False)
 
 
+def build_modal():
+    """One popup, reused by all three proof images.
+
+    Deliberately not the gallery lightbox: this page is trying to hold a
+    first-time reader, and sending them to gallery.html one tap in is the
+    easiest way to lose them. The popup keeps them here and offers the
+    gallery as a decision rather than an accident.
+    """
+    return (
+        '  <div class="sh-modal" id="shModal" hidden>\n'
+        '    <div class="sh-modal-back" data-sh-close></div>\n'
+        '    <div class="sh-modal-card protect-zone" role="dialog" '
+        'aria-modal="true" aria-labelledby="shModalName">\n'
+        '      <button type="button" class="sh-modal-x" data-sh-close '
+        'aria-label="Close">&#215;</button>\n'
+        '      <img class="sh-modal-img" id="shModalImg" src="" alt="" />\n'
+        '      <div class="sh-modal-body">\n'
+        '        <p class="sh-modal-name" id="shModalName"></p>\n'
+        '        <p class="sh-modal-spec" id="shModalSpec"></p>\n'
+        '        <p class="sh-modal-blurb" id="shModalBlurb"></p>\n'
+        '        <a class="sh-modal-link" id="shModalLink" href="/gallery.html">'
+        'See it in the gallery <span aria-hidden="true">&#8594;</span></a>\n'
+        '      </div>\n'
+        '    </div>\n'
+        '  </div>\n'
+    )
+
+
 SCRIPT = """
 (function () {
   var chooser = document.getElementById('shChooser');
@@ -745,6 +779,97 @@ SCRIPT = """
   // route, so the page opens on the proof and the free step.
   commit(saved && valid ? saved : 'none');
 })();
+
+/* ── Proof image popup ──────────────────────────────────────────────
+   Opens the image in place rather than following the link through to
+   gallery.html, so a first-time reader cannot lose this page with one
+   stray tap. The link is still there inside the popup for anyone who
+   means it. */
+(function () {
+  var modal = document.getElementById('shModal');
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.sh-shot'));
+  if (!modal || !shots.length) return;
+
+  var img   = document.getElementById('shModalImg');
+  var name  = document.getElementById('shModalName');
+  var spec  = document.getElementById('shModalSpec');
+  var blurb = document.getElementById('shModalBlurb');
+  var link  = document.getElementById('shModalLink');
+  var close = modal.querySelector('.sh-modal-x');
+  var opener = null;
+
+  function text(el, selector) {
+    var found = el.querySelector(selector);
+    return found ? found.textContent.trim() : '';
+  }
+
+  function open(shot) {
+    var picture = shot.querySelector('img');
+    if (!picture) return;
+
+    opener = shot;
+    img.src = picture.getAttribute('src');
+    img.alt = picture.getAttribute('alt') || '';
+    name.textContent  = text(shot, '.sh-shot-name');
+    spec.textContent  = text(shot, '.sh-shot-spec');
+    blurb.textContent = shot.getAttribute('data-blurb') || '';
+    blurb.hidden = !blurb.textContent;
+    link.setAttribute('href', shot.getAttribute('href'));
+
+    modal.hidden = false;
+    // Next frame, so the opacity transition has a starting value to move
+    // from rather than being collapsed into the same style recalculation.
+    window.requestAnimationFrame(function () {
+      modal.classList.add('open');
+    });
+    document.body.classList.add('sh-modal-lock');
+    if (close) close.focus();
+  }
+
+  function shut() {
+    if (modal.hidden) return;
+    modal.classList.remove('open');
+    document.body.classList.remove('sh-modal-lock');
+
+    window.setTimeout(function () {
+      modal.hidden = true;
+      // removeAttribute, not src = '': an empty src resolves against the
+      // document URL and makes the browser refetch the page as an image.
+      img.removeAttribute('src');
+      if (opener) { opener.focus(); opener = null; }
+    }, 200);
+  }
+
+  shots.forEach(function (shot) {
+    shot.addEventListener('click', function (ev) {
+      // Let modified clicks through, so "open in new tab" still works.
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
+      ev.preventDefault();
+      open(shot);
+    });
+  });
+
+  modal.addEventListener('click', function (ev) {
+    if (ev.target.closest && ev.target.closest('[data-sh-close]')) shut();
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (modal.hidden) return;
+    if (ev.key === 'Escape') { shut(); return; }
+    // Keep tabbing inside the dialog while it is open.
+    if (ev.key === 'Tab') {
+      var focusable = modal.querySelectorAll('button, a[href]');
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (ev.shiftKey && document.activeElement === first) {
+        ev.preventDefault(); last.focus();
+      } else if (!ev.shiftKey && document.activeElement === last) {
+        ev.preventDefault(); first.focus();
+      }
+    }
+  });
+})();
 """
 
 
@@ -815,7 +940,9 @@ def build_page(articles, gallery, by_stage):
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
+{build_modal()}
   <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
   <script>{SCRIPT}</script>
 </body>
 </html>
