@@ -49,21 +49,24 @@
 
       <section class="sh-proof">
         <div class="sh-proof-grid">
-          <a class="sh-shot" href="/gallery.html#andromeda-galaxy-m31">
+          <a class="sh-shot" href="/gallery.html#andromeda-galaxy-m31"
+             data-blurb="The Andromeda Galaxy is our nearest large galactic neighbour - a vast spiral system over two million light-years away, and the most distant object visible to the naked eye.">
             <span class="sh-shot-frame">
               <img src="/images/andromeda-galaxy-m31.webp" alt="Andromeda Galaxy M31 spiral galaxy astrophotography" loading="eager" decoding="async" />
             </span>
             <span class="sh-shot-name">The Andromeda Galaxy</span>
             <span class="sh-shot-spec">Seestar S30 &middot; 4 hours &middot; Al Quaa</span>
           </a>
-          <a class="sh-shot" href="/gallery.html#leo-triplet-m65-m66-ngc3628">
+          <a class="sh-shot" href="/gallery.html#leo-triplet-m65-m66-ngc3628"
+             data-blurb="Three spiral galaxies bound by gravity in the constellation Leo, each presenting a different orientation to our line of sight, together offering three distinct perspectives on the spiral galaxy form in a single field of view.">
             <span class="sh-shot-frame">
               <img src="/images/leo-triplet-m65-m66-ngc3628.webp" alt="Leo Triplet M65 M66 NGC 3628 spiral galaxies astrophotography" loading="eager" decoding="async" />
             </span>
             <span class="sh-shot-name">The Leo Triplet</span>
             <span class="sh-shot-spec">Seestar S30 &middot; 4 hours &middot; Al Qudra</span>
           </a>
-          <a class="sh-shot" href="/gallery.html#the-milky-way">
+          <a class="sh-shot" href="/gallery.html#the-milky-way"
+             data-blurb="The brightest, densest stretch of our home galaxy - the direction of the galactic centre, thick with star clouds and threaded with the dark dust lanes of the Great Rift.">
             <span class="sh-shot-frame">
               <img src="/images/the_milky_way.webp" alt="Milky Way galactic core wide-field astrophotography with dark dust lanes" loading="eager" decoding="async" />
             </span>
@@ -71,7 +74,7 @@
             <span class="sh-shot-spec">ZWO Seestar S30 Pro &middot; 3 hours &middot; Al Quaa</span>
           </a>
         </div>
-        <p class="sh-proof-line">Four galaxies and the centre of our own, all taken with a <strong>smart telescope that fits in a shoulder bag</strong> and sets itself up in about a minute. No laptop, no counterweights, no observatory. Six of the images in the gallery were taken this way.</p>
+        <p class="sh-proof-line">Four galaxies and the centre of our own Milky Way, all taken with a <strong>smart telescope that fits in a shoulder bag</strong> and sets itself up in about a minute. No laptop, no counterweights, no observatory. Six of the images in the gallery were taken this way.</p>
       </section>
 
       <section class="sh-tonight">
@@ -406,7 +409,22 @@
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
+  <div class="sh-modal" id="shModal" hidden>
+    <div class="sh-modal-back" data-sh-close></div>
+    <div class="sh-modal-card protect-zone" role="dialog" aria-modal="true" aria-labelledby="shModalName">
+      <button type="button" class="sh-modal-x" data-sh-close aria-label="Close">&#215;</button>
+      <img class="sh-modal-img" id="shModalImg" src="" alt="" />
+      <div class="sh-modal-body">
+        <p class="sh-modal-name" id="shModalName"></p>
+        <p class="sh-modal-spec" id="shModalSpec"></p>
+        <p class="sh-modal-blurb" id="shModalBlurb"></p>
+        <a class="sh-modal-link" id="shModalLink" href="/gallery.html">See it in the gallery <span aria-hidden="true">&#8594;</span></a>
+      </div>
+    </div>
+  </div>
+
   <script src="/partials/partials.js"></script>
+  <script src="/protect-images.js"></script>
   <script>
 (function () {
   var chooser = document.getElementById('shChooser');
@@ -490,6 +508,97 @@
   // First paint, no animation. With nothing saved this collapses every
   // route, so the page opens on the proof and the free step.
   commit(saved && valid ? saved : 'none');
+})();
+
+/* ── Proof image popup ──────────────────────────────────────────────
+   Opens the image in place rather than following the link through to
+   gallery.html, so a first-time reader cannot lose this page with one
+   stray tap. The link is still there inside the popup for anyone who
+   means it. */
+(function () {
+  var modal = document.getElementById('shModal');
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.sh-shot'));
+  if (!modal || !shots.length) return;
+
+  var img   = document.getElementById('shModalImg');
+  var name  = document.getElementById('shModalName');
+  var spec  = document.getElementById('shModalSpec');
+  var blurb = document.getElementById('shModalBlurb');
+  var link  = document.getElementById('shModalLink');
+  var close = modal.querySelector('.sh-modal-x');
+  var opener = null;
+
+  function text(el, selector) {
+    var found = el.querySelector(selector);
+    return found ? found.textContent.trim() : '';
+  }
+
+  function open(shot) {
+    var picture = shot.querySelector('img');
+    if (!picture) return;
+
+    opener = shot;
+    img.src = picture.getAttribute('src');
+    img.alt = picture.getAttribute('alt') || '';
+    name.textContent  = text(shot, '.sh-shot-name');
+    spec.textContent  = text(shot, '.sh-shot-spec');
+    blurb.textContent = shot.getAttribute('data-blurb') || '';
+    blurb.hidden = !blurb.textContent;
+    link.setAttribute('href', shot.getAttribute('href'));
+
+    modal.hidden = false;
+    // Next frame, so the opacity transition has a starting value to move
+    // from rather than being collapsed into the same style recalculation.
+    window.requestAnimationFrame(function () {
+      modal.classList.add('open');
+    });
+    document.body.classList.add('sh-modal-lock');
+    if (close) close.focus();
+  }
+
+  function shut() {
+    if (modal.hidden) return;
+    modal.classList.remove('open');
+    document.body.classList.remove('sh-modal-lock');
+
+    window.setTimeout(function () {
+      modal.hidden = true;
+      // removeAttribute, not src = '': an empty src resolves against the
+      // document URL and makes the browser refetch the page as an image.
+      img.removeAttribute('src');
+      if (opener) { opener.focus(); opener = null; }
+    }, 200);
+  }
+
+  shots.forEach(function (shot) {
+    shot.addEventListener('click', function (ev) {
+      // Let modified clicks through, so "open in new tab" still works.
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
+      ev.preventDefault();
+      open(shot);
+    });
+  });
+
+  modal.addEventListener('click', function (ev) {
+    if (ev.target.closest && ev.target.closest('[data-sh-close]')) shut();
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (modal.hidden) return;
+    if (ev.key === 'Escape') { shut(); return; }
+    // Keep tabbing inside the dialog while it is open.
+    if (ev.key === 'Tab') {
+      var focusable = modal.querySelectorAll('button, a[href]');
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (ev.shiftKey && document.activeElement === first) {
+        ev.preventDefault(); last.focus();
+      } else if (!ev.shiftKey && document.activeElement === last) {
+        ev.preventDefault(); first.focus();
+      }
+    }
+  });
 })();
 </script>
 </body>
