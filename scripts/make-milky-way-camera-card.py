@@ -3,7 +3,7 @@
 make-milky-way-camera-card.py — the printable crib sheet for the camera route
 -----------------------------------------------------------------------------
 One side of A4, for someone setting a camera up on a tripod at a dark site.
-Content follows /articles/photograph-meteor-shower-milky-way-camera.html.
+Content follows /articles/photograph-milky-way-camera.html.
 
 Rebuilt from the printed card after the original driver was lost. The layout
 is measured off that card so a reprint sits beside the old one: settings table
@@ -19,9 +19,9 @@ from fieldcard import (Card, register_fonts, out_path, MARGIN, PW, CONTENT,
                        INK, BODY, MUTED, VIOLET, BLUE, PINK, LINE,
                        SOFT_V, SOFT_B, F_REG, F_SEMI, F_BOLD, sw, wrap)
 
-OUT = out_path('meteors-milky-way-camera-field-card.pdf')
+OUT = out_path('milky-way-camera-field-card.pdf')
 URL = ('https://bhapstar.com/articles/'
-       'photograph-meteor-shower-milky-way-camera.html?src=pdf-camera')
+       'photograph-milky-way-camera.html?src=pdf-camera')
 
 register_fonts()
 

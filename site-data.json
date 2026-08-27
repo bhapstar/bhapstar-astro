@@ -1278,7 +1278,8 @@
     "tags": ["milky-way", "wide-field", "tripod", "timelapse"],
     "readTime": "7 min read",
     "section": "article",
-    "slug": "photograph-meteor-shower-milky-way-phone",
+    "slug": "photograph-milky-way-phone",
+    "redirects": ["photograph-meteor-shower-milky-way-phone"],
     "date": "30-07-2026",
     "buy": [
       {
@@ -1327,7 +1328,8 @@
     "tags": ["milky-way", "wide-field", "tripod", "timelapse"],
     "readTime": "6 min read",
     "section": "article",
-    "slug": "photograph-meteor-shower-milky-way-camera",
+    "slug": "photograph-milky-way-camera",
+    "redirects": ["photograph-meteor-shower-milky-way-camera"],
     "date": "29-07-2026",
     "buy": [
       {

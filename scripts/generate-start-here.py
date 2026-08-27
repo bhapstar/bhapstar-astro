@@ -200,7 +200,7 @@ ROUTES = [
              "The Bortle Scale",
              "Why a city sky buries a nebula instead of dimming it, and how "
              "to score your own sky from one to nine tonight."),
-            ("photograph-meteor-shower-milky-way-phone",
+            ("photograph-milky-way-phone",
              "Photograph the Milky Way with Your Phone",
              "No camera and no experience needed, just a phone, a small "
              "tripod and a dark sky."),
@@ -217,7 +217,7 @@ ROUTES = [
                 "and on a dark night it will get you more of it than you "
                 "expect. Start here and spend nothing.",
         "cards": [
-            ("photograph-meteor-shower-milky-way-phone",
+            ("photograph-milky-way-phone",
              "Photograph the Milky Way with Your Phone",
              "Where to look, which mode to use on an iPhone, Pixel or "
              "Samsung, and what to change if a meteor shower is on."),
@@ -244,7 +244,7 @@ ROUTES = [
                 "camera will reach nebulae and galaxies. This is the route "
                 "with the most headroom and the steepest middle.",
         "cards": [
-            ("photograph-meteor-shower-milky-way-camera",
+            ("photograph-milky-way-camera",
              "Photograph the Milky Way with a Camera",
              "One wide lens on a tripod, set to manual. The settings to use, "
              "and how long the shutter can stay open before stars trail."),
@@ -306,7 +306,7 @@ ROUTES = [
              "The Bortle Scale",
              "Work out what your sky can do before you decide what to buy. "
              "The sky matters more than the equipment."),
-            ("photograph-meteor-shower-milky-way-phone",
+            ("photograph-milky-way-phone",
              "Photograph the Milky Way with Your Phone",
              "Do this before you spend anything. It costs nothing and it will "
              "tell you whether you enjoy the standing around in the dark "

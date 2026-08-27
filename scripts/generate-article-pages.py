@@ -807,6 +807,7 @@ def main():
 
     n = len(articles)
     generated_slugs = set()
+    redirect_slugs = set()
     gloss_total = 0
     for i, entry in enumerate(articles):
         slug = entry['slug']
@@ -822,12 +823,57 @@ def main():
         print(f"✓ {filename}"
               + (f"  ({marked} explained)" if marked else ""))
 
-    # Clean up stale files (whose slug is no longer in site-data.json)
+    # Redirect stubs for any URL an article used to live at, listed in its
+    # "redirects" array in site-data.json.
+    #
+    # The site is on GitHub Pages with no proxy in front, so a real 301 is not
+    # available and a generated stub is the only way to keep an old URL alive.
+    # Two details matter. The canonical tag is what tells Google the page has
+    # moved, so it must point at the new URL. And the JavaScript hop carries
+    # location.search across, without which a scanned field card would arrive
+    # stripped of its ?src= parameter and the tap would never be counted; the
+    # meta refresh is the fallback for anyone with JavaScript off.
+    #
+    # Deliberately no noindex. It reads like the tidy thing to add, but it
+    # contradicts the canonical: noindex asks Google to drop the URL, while
+    # the canonical asks it to fold the URL's history into the new one. On a
+    # page that already has ranking history, dropping it is the worse
+    # outcome, so the canonical is left to do the job alone.
+    for entry in articles:
+        for old_slug in entry.get('redirects') or []:
+            if old_slug in generated_slugs:
+                print(f"  ! redirect '{old_slug}' is also a live slug, skipped")
+                continue
+            target = f"/{OUT_DIR}/{entry['slug']}.html"
+            redirect_slugs.add(old_slug)
+            path = os.path.join(OUT_DIR, f"{old_slug}.html")
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write(
+                    '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+                    '<meta charset="utf-8">\n'
+                    '<meta name="viewport" content="width=device-width,'
+                    'initial-scale=1">\n'
+                    f'<title>Moved: {esc(entry.get("title", ""))}</title>\n'
+                    f'<link rel="canonical" href="{DOMAIN}{target}">\n'
+                    f'<meta http-equiv="refresh" content="0; url={target}">\n'
+                    '</head>\n<body>\n'
+                    f'<p>This page has moved to <a href="{target}">'
+                    f'{esc(entry.get("title", "the new address"))}</a>.</p>\n'
+                    '<script>\n'
+                    f'  location.replace({target!r} + location.search'
+                    ' + location.hash);\n'
+                    '</script>\n'
+                    '</body>\n</html>\n')
+            print(f"→ {path}  redirects to {entry['slug']}")
+
+    # Clean up stale files (whose slug is no longer in site-data.json, and
+    # which is not a redirect stub we have just written)
     if os.path.isdir(OUT_DIR):
+        keep = generated_slugs | redirect_slugs
         for filename in os.listdir(OUT_DIR):
             if not filename.endswith('.html'):
                 continue
-            if filename[:-5] not in generated_slugs:
+            if filename[:-5] not in keep:
                 os.remove(os.path.join(OUT_DIR, filename))
                 print(f"✗ deleted stale {OUT_DIR}/{filename}")
 

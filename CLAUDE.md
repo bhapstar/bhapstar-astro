@@ -99,6 +99,35 @@ are `pdf-phone`, `pdf-camera`, `pdf-meteors`, `pdf-calibration`, `pdf-asiair`.
 
 ---
 
+## Hosting, and why URLs need stubs
+
+GitHub Pages, apex resolving to `185.199.108-111.153`, `www` a CNAME to
+`bhapstar.github.io`, DNS at Namecheap. Cloudflare is used only for Workers
+(likes, taps, newsletter) and Analytics; **it does not proxy the site**.
+
+So there is no server in front to set headers or issue redirects. A 301 is not
+available. When an article slug changes, the old URL must be kept alive by a
+generated stub.
+
+Add the old slug to a `redirects` array on the article entry:
+
+```json
+"slug": "photograph-milky-way-camera",
+"redirects": ["photograph-meteor-shower-milky-way-camera"],
+```
+
+`generate-article-pages.py` then writes a stub at the old path and exempts it
+from the stale-file cleanup. Renaming a slug also means renaming its body file
+in `content/articles/`, which the generator looks up as
+`content/articles/<slug>.html`.
+
+Two things about the stub are load-bearing. Its JavaScript hop carries
+`location.search` across, without which a scanned field card arrives stripped
+of `?src=` and the tap goes uncounted. And it carries a canonical but
+deliberately **no** `noindex`: the two contradict each other, and on a URL with
+ranking history, having Google fold that history into the new address beats
+having it drop the URL.
+
 ## Field cards
 
 Printable A4 PDFs in `downloads/`, built by `scripts/make-*-card.py` on top of
