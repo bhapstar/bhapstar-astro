@@ -834,6 +834,13 @@ def main():
     # stripped of its ?src= parameter and the tap would never be counted; the
     # meta refresh is the fallback for anyone with JavaScript off.
     #
+    # Order is load-bearing. A meta refresh cannot carry a query string, so if
+    # it sits in <head> at delay 0 it navigates the moment it is parsed and a
+    # script lower down never runs: the redirect works, but ?src= is silently
+    # dropped and the scan goes unattributed. The script therefore goes first
+    # in <head>, before anything else can trigger navigation, and the meta
+    # refresh is wrapped in <noscript> so the two can never race.
+    #
     # Deliberately no noindex. It reads like the tidy thing to add, but it
     # contradicts the canonical: noindex asks Google to drop the URL, while
     # the canonical asks it to fold the URL's history into the new one. On a
@@ -851,18 +858,19 @@ def main():
                 f.write(
                     '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
                     '<meta charset="utf-8">\n'
-                    '<meta name="viewport" content="width=device-width,'
-                    'initial-scale=1">\n'
-                    f'<title>Moved: {esc(entry.get("title", ""))}</title>\n'
-                    f'<link rel="canonical" href="{DOMAIN}{target}">\n'
-                    f'<meta http-equiv="refresh" content="0; url={target}">\n'
-                    '</head>\n<body>\n'
-                    f'<p>This page has moved to <a href="{target}">'
-                    f'{esc(entry.get("title", "the new address"))}</a>.</p>\n'
                     '<script>\n'
                     f'  location.replace({target!r} + location.search'
                     ' + location.hash);\n'
                     '</script>\n'
+                    '<meta name="viewport" content="width=device-width,'
+                    'initial-scale=1">\n'
+                    f'<title>Moved: {esc(entry.get("title", ""))}</title>\n'
+                    f'<link rel="canonical" href="{DOMAIN}{target}">\n'
+                    f'<noscript><meta http-equiv="refresh" '
+                    f'content="0; url={target}"></noscript>\n'
+                    '</head>\n<body>\n'
+                    f'<p>This page has moved to <a href="{target}">'
+                    f'{esc(entry.get("title", "the new address"))}</a>.</p>\n'
                     '</body>\n</html>\n')
             print(f"→ {path}  redirects to {entry['slug']}")
 

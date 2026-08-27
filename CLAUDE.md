@@ -121,12 +121,20 @@ from the stale-file cleanup. Renaming a slug also means renaming its body file
 in `content/articles/`, which the generator looks up as
 `content/articles/<slug>.html`.
 
-Two things about the stub are load-bearing. Its JavaScript hop carries
-`location.search` across, without which a scanned field card arrives stripped
-of `?src=` and the tap goes uncounted. And it carries a canonical but
-deliberately **no** `noindex`: the two contradict each other, and on a URL with
-ranking history, having Google fold that history into the new address beats
-having it drop the URL.
+Three things about the stub are load-bearing.
+
+Its JavaScript hop carries `location.search` across, without which a scanned
+field card arrives stripped of `?src=` and the tap goes uncounted.
+
+**The script must come first in `<head>`, and the meta refresh must be wrapped
+in `<noscript>`.** A meta refresh cannot carry a query string. At delay 0 in
+`<head>` it navigates the moment it is parsed, so a script placed lower down
+never runs. This failed in exactly that way once: the redirect worked and
+looked correct, while `?src=` was dropped every time.
+
+It carries a canonical but deliberately **no** `noindex`. The two contradict
+each other, and on a URL with ranking history, having Google fold that history
+into the new address beats having it drop the URL.
 
 ## Field cards
 
