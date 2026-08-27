@@ -91,6 +91,11 @@
       --face-text:#efedfa;
       --face-muted:#9b98b8;
       --url:#60a5fa;
+
+      /* Form fields sit on the face, so they need to lift off it slightly */
+      --field:rgba(255,255,255,.05);
+      --field-focus:rgba(255,255,255,.085);
+      --field-line:rgba(167,139,250,.24);
     }
 
     /* ── Light, matching the site's own light theme tokens ── */
@@ -119,10 +124,15 @@
       --face-text:#1a1730;
       --face-muted:#564f82;
       --url:#3c82e6;
+
+      --field:rgba(255,255,255,.85);
+      --field-focus:#ffffff;
+      --field-line:rgba(124,92,246,.26);
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
+    html{ scroll-behavior:smooth }
     body{
       font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
       font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased;
@@ -291,6 +301,87 @@
     :root .face-back .btn{ background:rgba(255,255,255,.055) }
     :root .face-back .btn.pri{ background:var(--pri) }
 
+    /* ─────────── Contact and Updates ───────────
+       The same panel the site carries, kept on the card so someone met at an
+       event can send a message or join the list without a second page load.
+       Written out here rather than pulled from styles.css because card.html
+       is deliberately self-contained: one file, one request, no dependencies. */
+    .contact{
+      margin-top:22px; padding-top:20px;
+      border-top:1px solid var(--face-line);
+      scroll-margin-top:16px;
+    }
+    h2.grp-label{ font-weight:500; font-size:12px }
+    .contact-intro{
+      color:var(--face-muted); font-size:13px; line-height:1.5;
+      margin:0 0 15px; text-align:center;
+    }
+    .contact-form label{ display:block; margin-bottom:11px }
+    .contact-form label > span{
+      display:block; font-size:12px; color:var(--face-muted);
+      letter-spacing:.04em; margin-bottom:5px;
+    }
+    .contact-form input[type="text"],
+    .contact-form input[type="email"],
+    .contact-form textarea{
+      width:100%; font-family:inherit; font-size:15px; font-weight:300;
+      color:var(--face-text); background:var(--field);
+      border:1px solid var(--field-line); border-radius:10px;
+      padding:10px 12px; -webkit-appearance:none; appearance:none;
+      transition:border-color .18s ease, background-color .18s ease;
+    }
+    .contact-form textarea{ resize:vertical; min-height:84px; line-height:1.45 }
+    .contact-form input:focus,
+    .contact-form textarea:focus{
+      outline:none; border-color:var(--pri-line); background:var(--field-focus);
+    }
+    /* Written as label.contact-check so it outranks .contact-form label above,
+       which would otherwise keep this block and let the wording wrap back
+       under the tick box. */
+    .contact-form label.contact-check{
+      display:flex; align-items:flex-start; gap:9px;
+      margin:2px 0 9px; cursor:pointer;
+    }
+    .contact-check input[type="checkbox"]{
+      margin:2px 0 0; width:16px; height:16px; flex:none;
+      accent-color:var(--accent);
+    }
+    /* Beats .contact-form label > span, which would otherwise stack the tick
+       and its wording rather than sitting them side by side. */
+    .contact-form .contact-check > span{
+      display:inline; font-size:12.5px; color:var(--face-muted);
+      line-height:1.45; letter-spacing:0; margin:0;
+    }
+    .contact-privacy{
+      font-size:11.5px; color:var(--face-muted);
+      margin:0 0 15px; line-height:1.45;
+    }
+    /* The send button borrows the tile styling from the links above it */
+    .face-back button.btn{ font-family:inherit; cursor:pointer; width:100% }
+    .face-back button.btn[disabled]{ opacity:.6; cursor:default }
+    .contact-alt{ text-align:center; margin:15px 0 0; font-size:12.5px }
+    .contact-alt a{ color:var(--url); text-decoration:none; border-bottom:1px solid var(--face-line) }
+    /* Off screen spam trap. A bot fills it in, a person never sees it. */
+    .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
+
+    /* ─────────── Toast ───────────
+       Confirmation lives here rather than in an alert so the page never
+       loses its place on a phone held at arm's length in the dark. */
+    .toast{
+      position:fixed; left:50%; bottom:22px; z-index:20;
+      transform:translate(-50%,14px);
+      /* left:50% leaves only half the viewport to shrink into, so the width
+         is set explicitly and then capped, rather than left to fit. */
+      width:max-content; max-width:min(420px,calc(100vw - 32px));
+      padding:12px 16px; border-radius:12px;
+      background:var(--face); color:var(--face-text);
+      border:1px solid var(--pri-line); box-shadow:0 10px 30px var(--shadow);
+      font-size:14px; line-height:1.45; text-align:center;
+      opacity:0; pointer-events:none;
+      transition:opacity .22s ease, transform .22s ease;
+    }
+    .toast.show{ opacity:1; transform:translate(-50%,0) }
+
     /* ─────────── Hover ───────────
        Gated behind a real pointer. On a phone a plain :hover rule sticks to
        whatever was tapped last and leaves a button looking selected. */
@@ -309,7 +400,10 @@
       .btn{ font-size:14.5px }
     }
 
-    @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important } }
+    @media (prefers-reduced-motion:reduce){
+      *{ transition:none !important; animation:none !important }
+      html{ scroll-behavior:auto }
+    }
   </style>
 </head>
 
@@ -372,7 +466,7 @@
       <a class="btn" href="star_word.html">Star Word <em>daily puzzle</em></a>
     </div>
     <div class="row">
-      <a class="btn pri wide" href="index.html?goto=contact">Get in touch <em>questions and updates</em></a>
+      <a class="btn pri wide" href="#cardContact">Get in touch <em>message me from this card</em></a>
     </div>
 
     <p class="grp-label">Socials</p>
@@ -384,10 +478,59 @@
     <div class="row">
       <a class="btn pri wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
     </div>
+
+    <!-- ══ Contact and Updates, the same form the site carries ══ -->
+    <div class="contact" id="cardContact">
+      <h2 class="grp-label">Contact &amp; Updates</h2>
+
+      <p class="contact-intro">
+        Sign up to hear whenever new images, gear reviews or articles are added. Or send me a message about my work, prints or anything astro related.
+      </p>
+
+      <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
+        <!-- Tells the inbox this arrived from a card or an NFC tap rather
+             than from the website form, which share the same endpoint. -->
+        <input type="hidden" name="_subject" value="bhapstar — Message from card" />
+        <input type="hidden" name="source" value="card" />
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" required autocomplete="name" />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+
+        <label class="contact-check" for="cardUpdates">
+          <input type="checkbox" id="cardUpdates" name="keep_me_updated" value="yes" checked />
+          <span>Keep me up to date when new images, gear reviews or articles are added.</span>
+        </label>
+
+        <p class="contact-privacy">
+          Your email address is used only to send those updates and will never be shared or sold.
+        </p>
+
+        <label>
+          <span>Message (optional)</span>
+          <textarea name="message" rows="4"></textarea>
+        </label>
+
+        <button type="submit" class="btn pri wide">Send message</button>
+      </form>
+
+      <p class="contact-alt">
+        <a href="index.html?goto=contact">Open Contact &amp; Updates on the site</a>
+      </p>
+    </div>
     </div>
 
   </div>
 </div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -601,6 +744,120 @@
       paint(pool);
     })
     .catch(function(){ paint([]); });
+})();
+</script>
+
+<!-- ─────────────────────────────────────────
+     CONTACT FORM — AJAX SUBMIT
+
+     Lifted from index.html so the card behaves exactly as the site does.
+     If the Formspree endpoint or the subscribe Worker URL ever changes,
+     both files need the new value.
+───────────────────────────────────────── -->
+<script>
+(function () {
+  var SUBSCRIBE_ENDPOINT =
+    'https://bhapstar-subscribe.bhapindersingh.workers.dev/subscribe';
+
+  var form  = document.querySelector('form.contact-form');
+  var toast = document.getElementById('toast');
+  if (!form || !toast) return;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ toast.classList.remove('show'); }, 4200);
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    var btn = form.querySelector('button[type="submit"]');
+    // .btn-label is the span the gradient script wraps the wording in
+    var label = btn.querySelector('.btn-label') || btn;
+    var originalText = label.textContent;
+    label.textContent = 'Sending…';
+    btn.disabled = true;
+
+    /* Two separate jobs from one form.
+
+       The message goes to Formspree, which relays it to my inbox. The
+       newsletter tick goes to the subscribe Worker, which adds the person
+       to the Brevo list. They are sent independently on purpose: someone
+       who only wants the newsletter leaves the message empty, and a hiccup
+       at one service should not lose the other. */
+    var updatesBox   = form.querySelector('[name="keep_me_updated"]');
+    var messageField = form.querySelector('[name="message"]');
+    var wantsUpdates = updatesBox ? updatesBox.checked : false;
+    var messageText  = (messageField ? messageField.value : '').trim();
+
+    async function sendMessage() {
+      if (!messageText) return 'skipped';
+      var res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      });
+      if (!res.ok) throw new Error('message failed');
+      return 'sent';
+    }
+
+    async function subscribe() {
+      if (!wantsUpdates) return 'skipped';
+      var nameField  = form.querySelector('[name="name"]');
+      var emailField = form.querySelector('[name="email"]');
+      var trapField  = form.querySelector('[name="_gotcha"]');
+      var res = await fetch(SUBSCRIBE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:  nameField  ? nameField.value  : '',
+          email: emailField ? emailField.value : '',
+          trap:  trapField  ? trapField.value  : ''
+        })
+      });
+      var data = await res.json().catch(function(){ return {}; });
+      if (!res.ok || !data.ok) throw new Error('subscribe failed');
+      return data.pending ? 'pending' : 'subscribed';
+    }
+
+    var results = await Promise.allSettled([sendMessage(), subscribe()]);
+    var msg = results[0], sub = results[1];
+    var msgOk = msg.status === 'fulfilled';
+    var subOk = sub.status === 'fulfilled';
+
+    if (msgOk && subOk) {
+      form.reset();
+      var sentMsg = msg.value === 'sent';
+      var pending = sub.value === 'pending';
+
+      if (sentMsg && sub.value !== 'skipped') {
+        showToast(pending
+          ? 'Message sent. Check your email to confirm your newsletter signup.'
+          : 'Thank you — message sent and you are on the list.');
+      } else if (sentMsg) {
+        showToast('Thank you — your message has been sent. I\'ll get back to you as soon as possible.');
+      } else if (pending) {
+        showToast('Almost there — check your email and click the confirmation link.');
+      } else if (sub.value === 'subscribed') {
+        showToast('Thank you — you are on the list.');
+      } else {
+        showToast('Add a message, or tick the box to get updates.');
+      }
+    } else if (msgOk && !subOk) {
+      // The message got through, so do not clear what they wrote.
+      showToast('Message sent, but the newsletter signup did not go through. Please try that again.');
+    } else if (!msgOk && subOk) {
+      showToast('You are on the list, but your message did not send. Please try again.');
+    } else {
+      showToast('Something went wrong — please try again or contact me directly.');
+    }
+
+    label.textContent = originalText;
+    btn.disabled = false;
+  });
 })();
 </script>
 
