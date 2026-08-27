@@ -7,13 +7,22 @@
     <language>en-gb</language>
     <copyright>Bhapinder Singh</copyright>
     <managingEditor>Bhapinder Singh</managingEditor>
-    <lastBuildDate>Wed, 19 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://bhapstar.com/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://bhapstar.com/images/icons/apple-touch-icon.png</url>
       <title>Fragments of the Universe — Bhapstar Astrophotography</title>
       <link>https://bhapstar.com/</link>
     </image>
+    <item>
+      <title>How to Photograph a Meteor Shower</title>
+      <link>https://bhapstar.com/articles/photograph-a-meteor-shower.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-a-meteor-shower.html</guid>
+      <pubDate>Thu, 27 Aug 2026 00:00:00 +0000</pubDate>
+      <description>Which showers are worth staying up for, why you should point away from the radiant rather than at it, and why the trick is taking far more frames than feels sensible. Works with a phone or a camera.</description>
+      <category>Milky Way</category>
+      <enclosure url="https://bhapstar.com/images/geminids-meteor-shower.webp" length="354656" type="image/webp" />
+    </item>
     <item>
       <title>Imaging Deep Sky from a Bortle 8 Balcony</title>
       <link>https://bhapstar.com/articles/imaging-from-a-city-balcony.html</link>
@@ -22,6 +31,15 @@
       <description>Most city astrophotography advice assumes a garden. A balcony takes away your view of Polaris, most of the sky, and half the night. Here is how to work with all three, and why it is still worth doing.</description>
       <category>Capture</category>
       <enclosure url="https://bhapstar.com/images/gear/Full%20rig%202.webp" length="88716" type="image/webp" />
+    </item>
+    <item>
+      <title>How I Plan Every Astrophotography Session Using Stellarium</title>
+      <link>https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</guid>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <description>The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.</description>
+      <category>Capture</category>
+      <enclosure url="https://bhapstar.com/images/articles/stellarium-app-fov-single.webp" length="131964" type="image/webp" />
     </item>
     <item>
       <title>The Bortle Scale of Night-Sky Brightness and Light Pollution</title>
@@ -75,16 +93,7 @@
       <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
       <description>One wide lens on a tripod, set to manual, pointed at a dark sky. The settings to use, how long the shutter can stay open before stars trail, and how the same frames play back as a timelapse.</description>
       <category>Milky Way</category>
-      <enclosure url="https://bhapstar.com/images/articles/meteor-shower-camera-mockup.webp" length="110988" type="image/webp" />
-    </item>
-    <item>
-      <title>How to Photograph a Meteor Shower</title>
-      <link>https://bhapstar.com/articles/photograph-a-meteor-shower.html</link>
-      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-a-meteor-shower.html</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 +0000</pubDate>
-      <description>Which showers are worth staying up for, why you should point away from the radiant rather than at it, and why the trick is taking far more frames than feels sensible. Works with a phone or a camera.</description>
-      <category>Milky Way</category>
-      <enclosure url="https://bhapstar.com/images/geminids-meteor-shower.webp" length="354656" type="image/webp" />
+      <enclosure url="https://bhapstar.com/images/articles/milky-way-camera-mockup.webp" length="206858" type="image/webp" />
     </item>
     <item>
       <title>Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs</title>
@@ -94,15 +103,6 @@
       <description>What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.</description>
       <category>Processing</category>
       <enclosure url="https://bhapstar.com/images/articles/calibration-frames-tile.webp" length="87884" type="image/webp" />
-    </item>
-    <item>
-      <title>How I Plan Every Astrophotography Session Using Stellarium</title>
-      <link>https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</link>
-      <guid isPermaLink="true">https://bhapstar.com/articles/how-i-plan-every-astrophotography-session-using-stellarium.html</guid>
-      <pubDate>Sun, 26 Jul 2026 00:00:00 +0000</pubDate>
-      <description>The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.</description>
-      <category>Capture</category>
-      <enclosure url="https://bhapstar.com/images/articles/stellarium-app-fov-single.webp" length="131964" type="image/webp" />
     </item>
     <item>
       <title>Siril: From a Folder of Subframes to a Finished Image</title>
