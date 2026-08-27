@@ -19,7 +19,7 @@ Why this page exists, and why it is not articles.html:
   route. The eighty-minute path still exists, at the bottom, collapsed,
   for the reader who is already sold.
 
-The page has four parts:
+The page has five parts:
 
   1. PROOF    Three gallery images, captioned with what took them. Pulled
               from the gallery entries in site-data.json so the specs can
@@ -31,7 +31,12 @@ The page has four parts:
   3. ROUTES   Six curated routes of three articles each, chosen by where
               the reader is rather than by what they own.
 
-  4. FULL     Every staged article in order, inside a closed <details>.
+  4. EXTRAS   Articles that belong to the calendar rather than to a route.
+              Always visible, never filtered, and deliberately outside the
+              staged path: a meteor shower is not step four of learning
+              astrophotography, it is a date in December.
+
+  5. FULL     Every staged article in order, inside a closed <details>.
 
 Where the routes come from:
 
@@ -353,7 +358,35 @@ ROUTE_PHRASES = {
 }
 
 
-# ----------------------------------------------------------------- 4. FULL
+# --------------------------------------------------------------- 4. EXTRAS
+
+# Articles that do not belong to any one route and do not belong in the
+# staged path either, because they are governed by the calendar rather
+# than by skill. These sit below the routes, visible whatever the reader
+# picked, on the grounds that somebody who has just worked out they own a
+# usable camera should also be told the Geminids are in December.
+#
+# An entry here should have no "stage" in site-data.json, which keeps it
+# out of the full path while leaving it live everywhere else on the site.
+
+EXTRAS_TITLE = "Whatever route you take, watch the calendar"
+EXTRAS_LEDE = ("A few nights each year are worth planning around, and they do "
+               "not care how much equipment you own. These work with a phone "
+               "on a tripod just as well as with a full camera.")
+
+EXTRAS = [
+    ("photograph-a-meteor-shower",
+     "Photograph a Meteor Shower",
+     "Which showers are worth staying up for, why you point away from the "
+     "radiant rather than at it, and why the whole trick is taking far more "
+     "frames than feels sensible."),
+]
+
+EXTRAS_OUT = ("Nothing on this list needs a purchase. Put the dates in a "
+              "calendar now and the rest of the year plans itself.")
+
+
+# ----------------------------------------------------------------- 5. FULL
 
 FULL_SUMMARY = "The whole thing, in order"
 FULL_NOTE = ("Every article, arranged the way the work actually happens. "
@@ -604,6 +637,35 @@ def build_routes(articles):
             f'      </section>\n'
         )
     return "".join(out)
+
+
+def build_extras(articles):
+    """The seasonal block.
+
+    Deliberately not a .sh-route-block: the route script hides every one of
+    those that does not match the current pill, and this has to stay on
+    screen whatever the reader picked. It borrows .sh-tonight, which is
+    already a padded panel, so this needs nothing new in styles.css.
+    """
+    if not EXTRAS:
+        return ""
+
+    cards = "".join(
+        build_card(slug, title, blurb, i, articles)
+        for i, (slug, title, blurb) in enumerate(EXTRAS, start=1)
+    )
+    out = (f'        <p class="sh-tonight-out">{esc(EXTRAS_OUT)}</p>\n'
+           if EXTRAS_OUT else "")
+    return (
+        '      <section class="sh-tonight sh-extras">\n'
+        f'        <h2>{esc(EXTRAS_TITLE)}</h2>\n'
+        f'        <p class="sh-tonight-lede">{tokens(EXTRAS_LEDE, articles)}</p>\n'
+        '        <div class="sh-list">\n'
+        f'{cards}'
+        '        </div>\n'
+        f'{out}'
+        '      </section>\n'
+    )
 
 
 def build_full(by_stage, articles):
@@ -929,6 +991,7 @@ def build_page(articles, gallery, by_stage):
 {build_tonight(articles)}
 {build_chooser()}
 {build_routes(articles)}
+{build_extras(articles)}
 {full_html}
       <p class="sh-veteran">{VETERAN}</p>
 
@@ -961,15 +1024,21 @@ def main():
         f.write(html)
 
     on_path = sum(len(v) for v in by_stage.values())
-    print(f"✓ {OUT}  ({len(ROUTES)} routes, "
+    print(f"✓ {OUT}  ({len(ROUTES)} routes, {len(EXTRAS)} seasonal extras, "
           f"{on_path} articles in the full path)")
 
-    # An article that is live but on neither a route nor the full path is
-    # almost always an oversight rather than a decision.
+    # An article that is live but on no route, no extra and not on the full
+    # path is almost always an oversight rather than a decision.
     routed = {slug for r in ROUTES for slug, _, _ in r["cards"]}
+    routed |= {slug for slug, _, _ in EXTRAS}
     for slug, entry in sorted(articles.items()):
         if slug not in routed and not entry.get("stage"):
             print(f"  ! '{slug}' appears nowhere on this page")
+
+    # An extra that also carries a stage would appear twice.
+    for slug, _, _ in EXTRAS:
+        if articles.get(slug, {}).get("stage"):
+            print(f"  ! extra '{slug}' also has a stage, so it appears twice")
 
     for key, heading in STAGES:
         if not by_stage.get(key) and key not in STAGE_FOOTERS:
