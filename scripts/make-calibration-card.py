@@ -9,11 +9,11 @@ wrong. Content follows /articles/calibration-frames-darks-flats-biases.html.
     python3 make-calibration-card.py
 """
 
-from fieldcard import (Card, register_fonts, MARGIN, PW, CONTENT,
+from fieldcard import (Card, register_fonts, out_path, MARGIN, PW, CONTENT,
                        INK, BODY, MUTED, VIOLET, BLUE, PINK, LINE,
                        SOFT_V, SOFT_B, F_REG, F_SEMI, F_BOLD, sw, wrap)
 
-OUT = 'calibration-frames-field-card.pdf'
+OUT = out_path('calibration-frames-field-card.pdf')
 URL = ('https://bhapstar.com/articles/'
        'calibration-frames-darks-flats-biases.html?src=pdf-calibration')
 

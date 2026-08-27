@@ -10,11 +10,11 @@ first night. Content follows /articles/asiair-astrophotography-control.html.
     python3 make-asiair-card.py
 """
 
-from fieldcard import (Card, register_fonts, MARGIN, PW, CONTENT,
+from fieldcard import (Card, register_fonts, out_path, MARGIN, PW, CONTENT,
                        INK, BODY, MUTED, VIOLET, BLUE, PINK, LINE,
                        SOFT_V, SOFT_B, F_REG, F_SEMI, F_BOLD, sw, wrap)
 
-OUT = 'asiair-field-card.pdf'
+OUT = out_path('asiair-field-card.pdf')
 URL = ('https://bhapstar.com/articles/'
        'asiair-astrophotography-control.html?src=pdf-asiair')
 

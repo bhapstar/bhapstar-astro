@@ -7,7 +7,9 @@ palette used only for headings, values and accent bars. Every measurement here
 was taken from the two meteor cards so a new sheet sits in the same family.
 
 Fonts: Outfit is a variable font in the repo, and reportlab wants static ones,
-so three weights are instantiated into ./fonts on first run.
+so three weights are instantiated into the repo-root fonts/ directory on first
+run. All paths here are resolved relative to this file, not the working
+directory, so the drivers work from anywhere.
 
 Nothing in here knows about any particular card. The content lives in the
 make-*-card.py drivers.
@@ -45,9 +47,25 @@ F_BOLD   = 'Outfit-Bold'
 
 TRACKING = 1.6                   # letter-spacing on section headings
 
+# ── paths ──────────────────────────────────────────────────────────────
+# Anchored to this file (scripts/fieldcard.py), so a driver launched from
+# scripts/, the repo root, or anywhere else finds the same fonts/ and
+# downloads/ directories at the repo root.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)                       # scripts/ -> repo root
+_FONT_DIR = os.path.join(_ROOT, 'fonts')
+_VARIABLE_FONT = os.path.join(_FONT_DIR, 'outfit-latin-wght-normal.woff2')
 
-def register_fonts(font_dir='fonts',
-                   variable='../bhapstar-astro-main/fonts/outfit-latin-wght-normal.woff2'):
+
+def out_path(filename):
+    """Absolute path to downloads/<filename> at the repo root, so a driver
+    writes its PDF to the right place no matter where it was launched from."""
+    d = os.path.join(_ROOT, 'downloads')
+    os.makedirs(d, exist_ok=True)
+    return os.path.join(d, filename)
+
+
+def register_fonts(font_dir=_FONT_DIR, variable=_VARIABLE_FONT):
     """Instantiate three static weights out of the variable Outfit, then
     register them. Skips the conversion if the .ttf files are already there."""
     os.makedirs(font_dir, exist_ok=True)

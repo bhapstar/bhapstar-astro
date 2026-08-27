@@ -13,11 +13,11 @@ have a card of their own: make-meteor-shower-card.py.
     python3 make-milky-way-phone-card.py
 """
 
-from fieldcard import (Card, register_fonts, MARGIN, PW, CONTENT,
+from fieldcard import (Card, register_fonts, out_path, MARGIN, PW, CONTENT,
                        INK, BODY, MUTED, VIOLET, BLUE, PINK, LINE,
                        SOFT_V, SOFT_B, F_REG, F_SEMI, F_BOLD, sw, wrap)
 
-OUT = 'meteors-milky-way-phone-field-card.pdf'
+OUT = out_path('meteors-milky-way-phone-field-card.pdf')
 URL = ('https://bhapstar.com/articles/'
        'photograph-meteor-shower-milky-way-phone.html?src=pdf-phone')
 
