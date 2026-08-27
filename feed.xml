@@ -7,22 +7,13 @@
     <language>en-gb</language>
     <copyright>Bhapinder Singh</copyright>
     <managingEditor>Bhapinder Singh</managingEditor>
-    <lastBuildDate>Thu, 27 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://bhapstar.com/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://bhapstar.com/images/icons/apple-touch-icon.png</url>
       <title>Fragments of the Universe — Bhapstar Astrophotography</title>
       <link>https://bhapstar.com/</link>
     </image>
-    <item>
-      <title>How to Photograph a Meteor Shower</title>
-      <link>https://bhapstar.com/articles/photograph-a-meteor-shower.html</link>
-      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-a-meteor-shower.html</guid>
-      <pubDate>Thu, 27 Aug 2026 00:00:00 +0000</pubDate>
-      <description>Which showers are worth staying up for, why you should point away from the radiant rather than at it, and why the trick is taking far more frames than feels sensible. Works with a phone or a camera.</description>
-      <category>Milky Way</category>
-      <enclosure url="https://bhapstar.com/images/geminids-meteor-shower.webp" length="354656" type="image/webp" />
-    </item>
     <item>
       <title>Imaging Deep Sky from a Bortle 8 Balcony</title>
       <link>https://bhapstar.com/articles/imaging-from-a-city-balcony.html</link>
@@ -94,6 +85,15 @@
       <description>One wide lens on a tripod, set to manual, pointed at a dark sky. The settings to use, how long the shutter can stay open before stars trail, and how the same frames play back as a timelapse.</description>
       <category>Milky Way</category>
       <enclosure url="https://bhapstar.com/images/articles/milky-way-camera-mockup.webp" length="218346" type="image/webp" />
+    </item>
+    <item>
+      <title>How to Photograph a Meteor Shower</title>
+      <link>https://bhapstar.com/articles/photograph-a-meteor-shower.html</link>
+      <guid isPermaLink="true">https://bhapstar.com/articles/photograph-a-meteor-shower.html</guid>
+      <pubDate>Tue, 28 Jul 2026 00:00:00 +0000</pubDate>
+      <description>Which showers are worth staying up for, why you should point away from the radiant rather than at it, and why the trick is taking far more frames than feels sensible. Works with a phone or a camera.</description>
+      <category>Milky Way</category>
+      <enclosure url="https://bhapstar.com/images/geminids-meteor-shower.webp" length="354656" type="image/webp" />
     </item>
     <item>
       <title>Calibration Frames (Darks, Flats and Biases): The Images That Are Not Photographs</title>
