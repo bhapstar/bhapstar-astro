@@ -1310,7 +1310,7 @@
     "download": {
       "file": "downloads/meteors-milky-way-phone-field-card.pdf",
       "label": "Phone settings field card",
-      "note": "The settings from this page on one side of A4: which mode to use on each phone, the Pro mode numbers, and a reminder of what to change if a meteor shower is on."
+      "note": "Everything on this page on one side of A4: which mode to use on each phone, the Pro mode numbers, and how to turn an hour of frames into a timelapse or a star trail."
     },
     "stage": "capture",
     "stageOrder": 1,
@@ -1359,7 +1359,7 @@
     "download": {
       "file": "downloads/meteors-milky-way-camera-field-card.pdf",
       "label": "Camera settings field card",
-      "note": "The full settings table, how long the shutter can stay open at each focal length, and a reminder of what to change if a meteor shower is on. One side of A4."
+      "note": "The full settings table, how long the shutter can stay open at each focal length, and the interval rule for turning the same frames into a timelapse. One side of A4."
     },
     "stage": "capture",
     "stageOrder": 2,
@@ -1377,7 +1377,7 @@
     "readTime": "6 min read",
     "section": "article",
     "slug": "photograph-a-meteor-shower",
-    "date": "28-07-2026",
+    "date": "27-08-2026",
     "buy": [
       {
         "retailer": "ZWO TC20",
@@ -1390,6 +1390,11 @@
         "affiliate": true
       }
     ],
+    "download": {
+      "file": "downloads/meteor-shower-field-card.pdf",
+      "label": "Meteor shower field card",
+      "note": "The eight showers worth planning around with their dates and rates, the radiant diagram, and what to set on a phone or a camera. One side of A4."
+    },
     "paths": ["phone", "camera"],
     "seoTitle": "How to Photograph a Meteor Shower: Phone or Camera"
   },
