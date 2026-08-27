@@ -100,7 +100,7 @@ SUPPORT_NOTE = (
 # An article may carry a "download" object in site-data.json:
 #
 #   "download": {
-#     "file":  "downloads/meteors-milky-way-phone-field-card.pdf",
+#     "file":  "downloads/milky-way-phone-field-card.pdf",
 #     "label": "Phone settings field card",
 #     "note":  "One page, A4. Everything on this page, ready to print."
 #   }
