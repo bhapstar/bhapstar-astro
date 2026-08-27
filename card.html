@@ -235,7 +235,12 @@
       background:var(--face);
       border:1px solid var(--face-line);
       padding:20px 16px 22px;
+      margin-bottom:14px;
     }
+    /* The third panel. Same paper as the back, so the three faces read as one
+       card: pictures, links, then the form. */
+    .face-contact{ margin-bottom:0; scroll-margin-top:16px }
+    .face-contact h2.grp-label{ margin-top:0 }
     .rule{
       width:56px; height:4px; border-radius:2px;
       background:var(--grad); background-size:300% 100%;
@@ -306,11 +311,6 @@
        event can send a message or join the list without a second page load.
        Written out here rather than pulled from styles.css because card.html
        is deliberately self-contained: one file, one request, no dependencies. */
-    .contact{
-      margin-top:22px; padding-top:20px;
-      border-top:1px solid var(--face-line);
-      scroll-margin-top:16px;
-    }
     h2.grp-label{ font-weight:500; font-size:12px }
     .contact-intro{
       color:var(--face-muted); font-size:13px; line-height:1.5;
@@ -359,8 +359,6 @@
     /* The send button borrows the tile styling from the links above it */
     .face-back button.btn{ font-family:inherit; cursor:pointer; width:100% }
     .face-back button.btn[disabled]{ opacity:.6; cursor:default }
-    .contact-alt{ text-align:center; margin:15px 0 0; font-size:12.5px }
-    .contact-alt a{ color:var(--url); text-decoration:none; border-bottom:1px solid var(--face-line) }
     /* Off screen spam trap. A bot fills it in, a person never sees it. */
     .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
 
@@ -466,7 +464,7 @@
       <a class="btn" href="star_word.html">Star Word <em>daily puzzle</em></a>
     </div>
     <div class="row">
-      <a class="btn pri wide" href="#cardContact">Get in touch <em>message me from this card</em></a>
+      <a class="btn pri wide" href="#cardContact">Get in touch</a>
     </div>
 
     <p class="grp-label">Socials</p>
@@ -478,10 +476,11 @@
     <div class="row">
       <a class="btn pri wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
     </div>
+    </div>
 
-    <!-- ══ Contact and Updates, the same form the site carries ══ -->
-    <div class="contact" id="cardContact">
-      <h2 class="grp-label">Contact &amp; Updates</h2>
+    <!-- ══ Get in touch: the same form the site carries ══ -->
+    <div class="face face-back face-contact" id="cardContact">
+      <h2 class="grp-label">Get in touch</h2>
 
       <p class="contact-intro">
         Sign up to hear whenever new images, gear reviews or articles are added. Or send me a message about my work, prints or anything astro related.
@@ -520,11 +519,6 @@
 
         <button type="submit" class="btn pri wide">Send message</button>
       </form>
-
-      <p class="contact-alt">
-        <a href="index.html?goto=contact">Open Contact &amp; Updates on the site</a>
-      </p>
-    </div>
     </div>
 
   </div>
