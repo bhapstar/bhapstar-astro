@@ -298,6 +298,10 @@
       ]
     },
     {
+      "term": "earthshine",
+      "def": "The faint glow on the unlit part of a crescent Moon. It is sunlight that has bounced off Earth and lit the Moon's night side."
+    },
+    {
       "term": "ecliptic",
       "def": "The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it."
     },
@@ -540,6 +544,10 @@
       "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp."
     },
     {
+      "term": "lucky imaging",
+      "def": "Recording hundreds or thousands of very short frames, then keeping only the sharpest ones and averaging them. It works because the air is not equally unsteady every moment."
+    },
+    {
       "term": "magnification",
       "aliases": [
         "magnifications"
@@ -549,6 +557,10 @@
     {
       "term": "magnitude",
       "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times."
+    },
+    {
+      "term": "maria",
+      "def": "The large dark patches on the Moon, which are ancient lava flows rather than seas. Early astronomers named them seas before anyone knew better, and the name stuck."
     },
     {
       "term": "meridian",
@@ -843,6 +855,10 @@
         "sub length"
       ],
       "def": "One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data."
+    },
+    {
+      "term": "terminator",
+      "def": "The curved line on the Moon between the sunlit half and the dark half. Sunlight arrives almost sideways there, so craters and mountains throw long shadows. It is where all the surface detail is."
     },
     {
       "term": "thermoelectric",
