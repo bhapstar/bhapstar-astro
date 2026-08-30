@@ -200,14 +200,15 @@ ROUTES = [
              "The Bortle Scale",
              "Why a city sky buries a nebula instead of dimming it, and how "
              "to score your own sky from one to nine tonight."),
-            ("photograph-milky-way-phone",
-             "Photograph the Milky Way with Your Phone",
-             "No camera and no experience needed, just a phone, a small "
-             "tripod and a dark sky."),
+            ("photograph-the-moon",
+             "Photograph the Moon",
+             "The one target that is bright enough for a city sky and up "
+             "tonight. No dark site, no tracking, a result in ten minutes."),
         ],
-        "ending": "Twenty two minutes of reading and one drive out of the "
-                  "city, and you will have an answer. If it turns out you "
-                  "want more, {route:buying} is the next question.",
+        "ending": "Twenty odd minutes of reading and one clear evening, and "
+                  "you will have an answer, without going anywhere or buying "
+                  "anything. If it turns out you want more, {route:buying} is "
+                  "the next question.",
     },
     {
         "key": "phone",
