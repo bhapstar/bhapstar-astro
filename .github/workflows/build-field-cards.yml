@@ -1,0 +1,84 @@
+name: Rebuild field cards
+
+# Manual only. workflow_dispatch is the sole trigger, so this never fires on a
+# push: editing an article, the glossary or site-data.json leaves it alone. Go
+# to Actions, pick "Rebuild field cards", press Run workflow.
+#
+# It exists because the PDFs are the one output the main pipeline cannot make.
+# site-postprocess.yml installs no pip packages, and adding reportlab to it
+# would rebuild six binaries on every push for no reason. This runs when a
+# card actually changes, which is a few times a year.
+on:
+  workflow_dispatch:
+    inputs:
+      card:
+        description: 'Which card to rebuild. Leave as "all" for every one.'
+        required: false
+        default: 'all'
+
+permissions:
+  contents: write
+
+# Its own queue, so a card rebuild never sits behind a Pages deployment and a
+# deployment never sits behind this.
+concurrency:
+  group: "field-cards"
+  cancel-in-progress: false
+
+jobs:
+  build-cards:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # reportlab draws the PDF, fontTools instantiates the three static
+      # weights out of the variable Outfit, brotli is what fontTools needs to
+      # open the .woff2. The .ttf files are committed, so the woff2 route is
+      # only used if they ever go missing.
+      - name: Install PDF toolchain
+        run: pip install reportlab fonttools brotli
+
+      # The drivers are discovered rather than listed, so adding a seventh
+      # card means adding scripts/make-<name>-card.py and nothing else. Every
+      # driver resolves fonts/ and downloads/ relative to fieldcard.py, so the
+      # working directory here does not matter.
+      - name: Build the cards
+        run: |
+          set -e
+          CARD="${{ github.event.inputs.card }}"
+          if [ -z "$CARD" ] || [ "$CARD" = "all" ]; then
+            FILES=$(ls scripts/make-*-card.py)
+          else
+            FILES="scripts/make-${CARD}-card.py"
+            if [ ! -f "$FILES" ]; then
+              echo "No such driver: $FILES"
+              echo "Available:"
+              ls scripts/make-*-card.py
+              exit 1
+            fi
+          fi
+          for f in $FILES; do
+            echo "── $f"
+            python "$f"
+          done
+
+      # fieldcard.py sets rl_config.invariant, so a rebuild with no content
+      # change is byte-identical and this commits nothing at all.
+      - name: Commit changed PDFs
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads
+          if git diff --staged --quiet; then
+            echo "No card changed. Nothing to commit."
+          else
+            git commit -m "Auto: rebuild field card PDFs"
+            git pull --rebase origin main
+            git push
+          fi
