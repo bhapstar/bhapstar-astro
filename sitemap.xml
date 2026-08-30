@@ -964,4 +964,10 @@
       <image:loc>https://bhapstar.com/images/the-moon-1.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://bhapstar.com/downloads/moon-field-card.pdf</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
