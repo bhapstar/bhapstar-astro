@@ -462,7 +462,8 @@ const HIDE_FIELD_NOTES = true;
       'pdf-camera': 1, // QR on the camera field card
       'pdf-meteors': 1, // QR on the meteor shower field card
       'pdf-calibration': 1, // QR on the calibration frames field card
-      'pdf-asiair': 1  // QR on the ASIAir field card
+      'pdf-asiair': 1, // QR on the ASIAir field card
+      'pdf-moon': 1    // QR on the Moon field card
     };
     var tapSrc = new URLSearchParams(location.search).get('src');
 
