@@ -16,11 +16,21 @@ make-*-card.py drivers.
 """
 
 import os
+from reportlab import rl_config
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont as RLTTFont
 from reportlab.pdfgen import canvas as rl_canvas
+
+# ── reproducible output ────────────────────────────────────────────────
+# ReportLab stamps a creation date, a modification date and a random document
+# ID into every PDF, so two runs over identical content produce two different
+# files. That is fine for a one-off, and wrong for a file that lives in git:
+# every rebuild would commit six changed binaries whether anything changed or
+# not. invariant fixes the dates and derives the ID from the content, so a
+# rebuild with no content change is byte-identical and git sees nothing.
+rl_config.invariant = 1
 
 # ── palette ────────────────────────────────────────────────────────────
 # The site's own colours, darkened for paper. On screen the theme is light
