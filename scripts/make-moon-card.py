@@ -54,7 +54,7 @@ y = card.header('Photograph the Moon',
 y = card.callout(
     MARGIN, y, CONTENT,
     'The whole technique, in one paragraph',
-    'The Moon is a sunlit rock, so expose it like something in daylight, not '
+    'The Moon very bright in the night sky, so expose it like something in daylight, not '
     'like the night sky. Set the camera to manual, f/8 to f/11, ISO 100 to '
     '200, and a shutter of one over the ISO number. Nothing needs to track, '
     'because at those speeds the sky has not moved. Then pick a night that is '
