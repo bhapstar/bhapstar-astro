@@ -2939,6 +2939,24 @@ body.sh-modal-lock { overflow: hidden; }
   .sh-card { padding: 13px 14px; gap: 11px; }
   .sh-tonight { padding: 19px 18px; }
   .sh-chooser { padding: 17px 17px; }
+
+  /* Route pills go from a wrapping flex row to an even grid. Flex wrap
+     packed them by label length, so a narrow screen ended up with rows
+     of two, one, one, two. auto-fit gives one full-width column on a
+     phone and two even columns once there is room, so every pill lines
+     up with the one above it. */
+  .sh-chooser .filter-pills{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .sh-chooser .filter-pill{
+    width: 100%;
+    height: auto;
+    min-height: 38px;
+    padding: 9px 12px;
+    text-align: center;
+  }
   .sh-shot-name { font-size: 13px; }
   .sh-proof-grid { gap: 10px; }
 }
