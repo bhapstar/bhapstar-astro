@@ -1740,6 +1740,11 @@
         "affiliate": true
       }
     ],
+    "download": {
+      "file": "downloads/moon-field-card.pdf",
+      "label": "Moon field card",
+      "note": "One side of A4: the phase strip showing when the Moon is up and which nights carry shadow detail, the full manual settings table, what to do with a phone or a smart telescope instead, and how much lens you need."
+    },
     "stage": "capture",
     "stageOrder": 0,
     "paths": ["phone", "camera", "smartscope", "rig"],
