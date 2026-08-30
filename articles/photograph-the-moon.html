@@ -59,9 +59,17 @@
   needed and every number has a reason next to it.
 
   The argument the page is built on: the Moon is the only bright target that
-  survives a Bortle 8 sky, needs no tracking, needs no dark-site drive and
-  gives a result the same night. That makes it the correct first target and
-  the correct entry point for the "Just curious" route on start-here.html.
+  survives a Bortle 8 sky, needs no tracking and needs no dark-site drive.
+  That makes it the correct first target and the correct entry point for the
+  "Just curious" route on start-here.html.
+
+  Deliberately NOT built on "you can do this tonight". The Moon is absent for
+  three or four nights around new moon and is a small-hours object for about a
+  third of the rest, so a page that promises tonight is wrong on roughly half
+  the nights someone might read it. The "Is the Moon up tonight?" section
+  handles all three cases and sends new-moon readers to the Milky Way articles
+  instead, which is where they should be on those nights anyway. The two
+  halves of the lunar month point at each other rather than competing.
 
   Two diagrams, both hand-drawn inline SVG so they theme with the site, scale
   cleanly and cost nothing to load:
@@ -71,7 +79,14 @@
        semi-minor axis R*|1-2k| for illuminated fraction k, so the terminator
        is the correct curve rather than a straight line. Waxing is lit on the
        right, which is the northern hemisphere view.
-    2. The Moon drawn on a full-frame sensor at six focal lengths. Angular
+    2. When the Moon is above the horizon at each phase, on an axis running
+       noon to noon so the night sits in the middle. Rise is taken as
+       06:00 + age * 0.813h and set as rise + 12h, which puts new moon rise
+       at 06:00, first quarter at 12:00, full at 18:00 and last quarter at
+       00:00. That is the textbook behaviour and it is what makes the fifty
+       minutes a day figure fall out of the diagram rather than being
+       asserted next to it.
+    3. The Moon drawn on a full-frame sensor at six focal lengths. Angular
        diameter taken as 31 arcmin (0.5167 degrees), so the disc measures
        2*f*tan(0.2583 deg) on the sensor: 0.90mm at 100mm, 3.61mm at 400mm,
        and 24.35mm at 2700mm, which is the point where it fills the 24mm
@@ -97,12 +112,13 @@
 
 <div class="event-callout">
   <p class="ec-kicker">The short version</p>
-  <p class="ec-title">The Moon is the one thing you can photograph tonight, from wherever you are standing.</p>
-  <p class="ec-body">It is bright enough to cut through a city sky, big enough that a phone
-  will get a recognisable picture of it, and it is up on more nights than it is not. The
-  mistake nearly everyone makes on the first try is treating it as a night subject. It is a
-  sunlit rock, and once you expose it like something in daylight it stops being a white blob
-  and turns into a landscape.</p>
+  <p class="ec-title">The Moon is the one thing you can photograph from wherever you are standing, with no dark sky and nothing that tracks.</p>
+  <p class="ec-body">It is bright enough to cut through a city sky and big enough that a
+  phone will get a recognisable picture of it. On roughly half the nights of any month it is
+  sitting in the evening sky waiting for you, and the section below tells you in ten seconds
+  whether tonight is one of them. The mistake nearly everyone makes on the first try is
+  treating it as a night subject. It is a sunlit rock, and once you expose it like something
+  in daylight it stops being a white blob and turns into a landscape.</p>
 </div>
 
 <h2>Why this is the right place to start</h2>
@@ -131,6 +147,113 @@ it worked. The Moon appears on your screen a second after you press the button. 
 a setting, look, change it, and try again, twenty times in ten minutes. That is the fastest
 way anyone learns exposure and focus, and both of those skills transfer to everything else
 you will ever point at the sky.</p>
+
+<h2>Is the Moon up tonight?</h2>
+
+<p>Worth answering before you carry anything outside, because the Moon does not sit in the
+sky waiting to be used. It keeps its own timetable, and it is a timetable you can learn once
+and then predict for the rest of your life.</p>
+
+<p>Two facts do all the work. The Moon rises about fifty minutes later each day than it did
+the day before, so over a month it works its way right around the clock. And the phase tells
+you the time: a full Moon rises at sunset, a first quarter Moon is already high when it gets
+dark, and a new Moon rises and sets with the Sun, which is exactly why nobody has ever
+seen one.</p>
+
+<figure class="article-fig">
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A timetable showing when the Moon is above the horizon at each phase, across a day running from noon to noon. A new Moon is up only during daylight. A first quarter Moon is up all evening and sets around midnight. A full Moon rises at sunset and sets at sunrise. A last quarter Moon rises around midnight. A waning crescent is up only in the hours before dawn. The Moon rises about fifty minutes later each day.">
+  <text x="12" y="21" font-size="13" fill="var(--text)" font-weight="600">When the Moon is actually up</text>
+  <text x="12" y="38" font-size="10.5" fill="var(--muted)">One day, noon to noon. The shaded band is the hours of darkness.</text>
+  <rect x="301.5" y="100.0" width="247.0" height="224.0" fill="var(--soft)" stroke="var(--line)" stroke-width="1"/>
+  <text x="425.0" y="92.0" font-size="9.5" fill="var(--muted)" text-anchor="middle">dark</text>
+  <line x1="178.0" y1="106.0" x2="178.0" y2="318.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="178.0" y="338.0" font-size="9" fill="var(--muted)" text-anchor="middle">noon</text>
+  <line x1="301.5" y1="106.0" x2="301.5" y2="318.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="301.5" y="338.0" font-size="9" fill="var(--muted)" text-anchor="middle">sunset</text>
+  <line x1="425.0" y1="106.0" x2="425.0" y2="318.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="425.0" y="338.0" font-size="9" fill="var(--muted)" text-anchor="middle">midnight</text>
+  <line x1="548.5" y1="106.0" x2="548.5" y2="318.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="548.5" y="338.0" font-size="9" fill="var(--muted)" text-anchor="middle">sunrise</text>
+  <line x1="672.0" y1="106.0" x2="672.0" y2="318.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="672.0" y="338.0" font-size="9" fill="var(--muted)" text-anchor="middle">noon</text>
+  <text x="168.0" y="120.0" font-size="9.5" fill="var(--text)" text-anchor="end">New</text>
+  <rect x="178.0" y="109.0" width="123.5" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <text x="672.0" y="120.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="130.0" font-size="8" fill="var(--muted)" text-anchor="end">not visible at all</text>
+  <text x="168.0" y="146.0" font-size="9.5" fill="var(--text)" text-anchor="end">Waxing crescent</text>
+  <rect x="178.0" y="135.0" width="185.4" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="301.5" y="135.0" width="61.9" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="146.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="156.0" font-size="8" fill="var(--muted)" text-anchor="end">low in the west after sunset</text>
+  <text x="168.0" y="172.0" font-size="9.5" fill="var(--text)" text-anchor="end">First quarter</text>
+  <rect x="178.3" y="161.0" width="247.0" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="301.5" y="161.0" width="123.8" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="172.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="182.0" font-size="8" fill="var(--muted)" text-anchor="end">high all evening</text>
+  <text x="168.0" y="198.0" font-size="9.5" fill="var(--text)" text-anchor="end">Waxing gibbous</text>
+  <rect x="238.6" y="187.0" width="247.0" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="301.5" y="187.0" width="184.1" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="198.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="208.0" font-size="8" fill="var(--muted)" text-anchor="end">up until the small hours</text>
+  <text x="168.0" y="224.0" font-size="9.5" fill="var(--text)" text-anchor="end">Full</text>
+  <rect x="302.2" y="213.0" width="247.0" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="302.2" y="213.0" width="246.3" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="224.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="234.0" font-size="8" fill="var(--muted)" text-anchor="end">sunset to sunrise</text>
+  <text x="168.0" y="250.0" font-size="9.5" fill="var(--text)" text-anchor="end">Waning gibbous</text>
+  <rect x="364.1" y="239.0" width="247.0" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="364.1" y="239.0" width="184.4" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="250.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="260.0" font-size="8" fill="var(--muted)" text-anchor="end">rises mid-evening</text>
+  <text x="168.0" y="276.0" font-size="9.5" fill="var(--text)" text-anchor="end">Last quarter</text>
+  <rect x="424.3" y="265.0" width="247.0" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="424.3" y="265.0" width="124.2" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="276.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="286.0" font-size="8" fill="var(--muted)" text-anchor="end">rises around midnight</text>
+  <text x="168.0" y="302.0" font-size="9.5" fill="var(--text)" text-anchor="end">Waning crescent</text>
+  <rect x="486.2" y="291.0" width="185.8" height="13" rx="6.5" fill="var(--accent)" opacity="0.30"/>
+  <rect x="486.2" y="291.0" width="62.3" height="13" rx="6.5" fill="var(--accent)" opacity="0.55"/>
+  <text x="672.0" y="302.0" font-size="8.5" fill="var(--muted)" text-anchor="end" opacity="0">.</text>
+  <text x="168.0" y="312.0" font-size="8" fill="var(--muted)" text-anchor="end">only just before dawn</text>
+  <text x="12" y="350" font-size="9.5" fill="var(--muted)">Rise and set shift about fifty minutes later each day, so the Moon works its way round the clock once a month.</text>
+  <text x="12" y="366" font-size="9.5" fill="var(--muted)">Times are approximate, and move with your latitude and the time of year.</text>
+</svg>
+<figcaption>Read across the row for the phase you have tonight. The darker part of
+each bar is the time the Moon is up and the sky is also dark, which is the part
+you can actually use.</figcaption>
+</figure>
+
+<p>Which gives three possible answers, and only one of them is bad news.</p>
+
+<h3>It is up in the evening</h3>
+
+<p>Anywhere from a couple of days after new moon through to a day or two after full. The
+Moon is already there when the sky goes dark, it stays up for hours, and you do not have to
+plan anything. This is about half of every month, and if you are in it, stop reading and go
+outside.</p>
+
+<h3>It is up, but late</h3>
+
+<p>From a few days after full until it vanishes again. The Moon has become an early hours
+object, rising later each night until it is only there shortly before dawn. This is still
+excellent, and the phase is a good one for surface detail, but it wants either an alarm
+clock or a very late night.</p>
+
+<h3>It is not up at all</h3>
+
+<p>For three or four nights around new moon the Moon is in the daytime sky, drowned in
+sunlight. There is nothing to photograph and no setting that fixes it. This happens once a
+month, to everybody.</p>
+
+<p>Those nights are not a lost week, though. They are the opposite. A sky with no Moon in it
+is a dark sky, and those handful of nights are exactly what the rest of astrophotography
+spends the month waiting for. If you have arrived here on a new moon night, go and
+photograph the Milky Way instead, with
+<a href="/articles/photograph-milky-way-phone.html">a phone</a> or
+<a href="/articles/photograph-milky-way-camera.html">a camera</a>, and come back in three or
+four nights when a thin crescent appears low in the west after sunset. The two halves of the
+month are for different things. Neither one is the consolation prize.</p>
 
 <h2>The one thing everyone gets wrong</h2>
 
@@ -354,8 +477,11 @@ telescope on the same night shows twenty times more here than it does at full.</
   detail.</li>
 </ul>
 
-<p>Any free <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-the-moon-16" data-gl-term="planetarium software">planetarium app</span><span class="gl-def" id="gl-photograph-the-moon-16" hidden>A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside.</span> will tell you the phase and the rise time for tonight where you
-are. If you want to plan properly rather than glance, the same
+<p>Put that together with the timetable further up and you have the whole planning problem
+solved. Days 3 to 11 are both the best nights for detail and the easiest ones to be awake
+for, which is why they are the window to aim at. Any free <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-the-moon-16" data-gl-term="planetarium software">planetarium app</span><span class="gl-def" id="gl-photograph-the-moon-16" hidden>A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside.</span> will tell you
+tonight's phase and rise time where you are standing. If you would rather plan properly than
+glance, the same
 <a href="/articles/how-i-plan-every-astrophotography-session-using-stellarium.html">Stellarium
 routine</a> that works for deep sky works here.</p>
 
@@ -423,7 +549,9 @@ with <a href="/articles/photograph-milky-way-phone.html">a phone</a> or
 wondering why the faint things are so much harder than the Moon was, the answer is in
 <a href="/articles/bortle-scale-narrowband-filters.html">the Bortle scale</a>.</p>
 
-<p>But do the Moon first. It is the only one that will work tonight.</p>
+<p>But do the Moon first, on the next evening it is up. It is the only target that asks
+nothing of you except a clear sky, and you will learn more in that one session than in a
+week of reading about the others.</p>
 
       </div>
 
