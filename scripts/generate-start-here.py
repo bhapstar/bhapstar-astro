@@ -202,13 +202,16 @@ ROUTES = [
              "to score your own sky from one to nine tonight."),
             ("photograph-the-moon",
              "Photograph the Moon",
-             "The one target that is bright enough for a city sky and up "
-             "tonight. No dark site, no tracking, a result in ten minutes."),
+             "Bright enough for a city sky, up on half the nights of any "
+             "month, and it needs no dark site and nothing that tracks."),
         ],
         "ending": "Twenty odd minutes of reading and one clear evening, and "
                   "you will have an answer, without going anywhere or buying "
-                  "anything. If it turns out you want more, {route:buying} is "
-                  "the next question.",
+                  "anything. On the few nights a month when the Moon is not "
+                  "up, "
+                  "{article:photograph-milky-way-phone|the phone route} is "
+                  "what those nights are for. If it turns out you want more, "
+                  "{route:buying} is the next question.",
     },
     {
         "key": "phone",
