@@ -6749,7 +6749,20 @@ html[data-theme="light"] .page-starword .sw-swatch.absent{
 }
 .sw-key:active{ transform: scale(0.94); }
 .sw-key.wide{ flex: 1.6 1 auto; font-size: 11px; letter-spacing: .06em; }
-.sw-key.util{ flex: 1.45 1 auto; font-size: clamp(8.5px, 2.3vw, 11px); letter-spacing: 0; }
+.sw-key.util{ flex: 1.45 1 auto; font-size: 16px; letter-spacing: 0; }
+
+/* Clear sits on its own row beneath the letters so the bottom letter row
+   keeps full-size keys. It reads as a secondary control: shorter, centred
+   and narrower than a letter row. */
+.sw-krow.clear-row{ margin-top: 1px; }
+.sw-key.clear{
+  flex: 0 1 auto;
+  width: 100%;
+  max-width: 220px;
+  height: 38px;
+  font-size: 11px;
+  letter-spacing: .10em;
+}
 
 /* Action keys (Enter, backspace, clear) sit apart from the letters:
    stronger accent fill and border so they read as controls rather
@@ -6913,6 +6926,7 @@ html[data-theme="light"] .page-starword .sw-toast{
   .page-starword .sw-wrap{ padding: 10px 10px 32px; }
   .sw-key{ height: 46px; font-size: 12px; }
   .sw-key.wide{ font-size: 10px; }
+  .sw-key.clear{ height: 36px; font-size: 10px; max-width: 200px; }
   .sw-keys{ gap: 5px; }
   .sw-krow{ gap: 4px; }
 }

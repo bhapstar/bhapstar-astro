@@ -673,7 +673,8 @@ function buildBoard(){
 const KEY_ROWS = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
-  ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL', 'CLEAR'])
+  ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL']),
+  ['CLEAR']
 ];
 
 const KEY_LABEL = { DEL: '⌫', CLEAR: 'CLEAR' };
@@ -684,13 +685,15 @@ function buildKeyboard(){
   KEY_ROWS.forEach(function(rowKeys){
     const row = document.createElement('div');
     row.className = 'sw-krow';
+    if(rowKeys.length === 1 && rowKeys[0] === 'CLEAR') row.className += ' clear-row';
     rowKeys.forEach(function(k){
       const b = document.createElement('button');
       b.type = 'button';
       let cls = 'sw-key';
       if(k.length > 1) cls += ' action';
       if(k === 'ENTER') cls += ' wide';
-      if(k === 'DEL' || k === 'CLEAR') cls += ' util';
+      if(k === 'DEL') cls += ' util';
+      if(k === 'CLEAR') cls += ' clear';
       b.className = cls;
       b.textContent = KEY_LABEL[k] || k;
       b.dataset.key = k;
