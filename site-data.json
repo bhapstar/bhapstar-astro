@@ -1711,5 +1711,38 @@
     "stageOrder": 5,
     "paths": ["camera", "smartscope", "rig"],
     "seoTitle": "Astrophotography from a City Balcony"
+  },
+  {
+    "file": "images/the-moon-1.webp",
+    "alt": "The Moon photographed close up, its craters and dark lava plains clearly visible across the face",
+    "title": "Photograph the Moon: The One Target That Works From Anywhere",
+    "desc": "It is bright enough to cut through a city sky, it needs no tracking and no dark-site drive, and it is up tonight. Why the full moon is the worst night to shoot it, what the terminator gives you, and the settings to start from on a phone or a camera.",
+    "type": "capture",
+    "category": "Capture",
+    "readTime": "8 min read",
+    "section": "article",
+    "slug": "photograph-the-moon",
+    "date": "30-08-2026",
+    "buy": [
+      {
+        "retailer": "ZWO Seestar S30 Pro",
+        "url": "https://www.zwoastro.com/product/seestar-s30-pro/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
+        "retailer": "ZWO TC20 tripod",
+        "url": "https://www.zwoastro.com/product/tc20-carbon-fiber-tripod-for-seestar-smart-telescopes/?ref=sfbuvxv1",
+        "affiliate": true
+      },
+      {
+        "retailer": "ZWO ASI585MC Air",
+        "url": "https://www.zwoastro.com/product/asi585air/?ref=sfbuvxv1",
+        "affiliate": true
+      }
+    ],
+    "stage": "capture",
+    "stageOrder": 0,
+    "paths": ["phone", "camera", "smartscope", "rig"],
+    "seoTitle": "How to Photograph the Moon: Phone, Camera or Telescope"
   }
 ]
