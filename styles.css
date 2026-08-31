@@ -2863,7 +2863,7 @@ html[data-theme="light"] .sh-veteran a { color: #6d4bd8; }
                  -webkit-user-select: none; user-select: none;
                  -webkit-touch-callout: none; }
 .sh-modal.open .sh-modal-card { transform: none; }
-.sh-modal-img { display: block; width: 100%; max-height: 56vh;
+.sh-modal-img { cursor: zoom-out; display: block; width: 100%; max-height: 56vh;
                 object-fit: contain; background: #05040f;
                 border-radius: 16px 16px 0 0; pointer-events: none; }
 .sh-modal-x { position: absolute; top: 9px; right: 9px; z-index: 2;
@@ -2878,6 +2878,9 @@ html[data-theme="light"] .sh-veteran a { color: #6d4bd8; }
 .sh-modal-body { padding: 16px 18px 18px; }
 .sh-modal-name { font-size: 17px; font-weight: 600; line-height: 1.3;
                  margin: 0 0 6px; color: var(--text); }
+.sh-modal-hint { font-size: 10px; letter-spacing: 0.09em;
+                 text-transform: uppercase; color: var(--muted);
+                 margin: 0 0 10px; opacity: 0.7; }
 .sh-modal-spec { font-size: 9.5px; letter-spacing: 0.13em;
                  text-transform: uppercase; color: var(--muted);
                  line-height: 1.6; margin: 0; }
@@ -8899,3 +8902,88 @@ html[data-theme="light"] #mineMsg{ color: rgba(70,64,110,0.78); }
 /* Field Notes tag filter bar sits directly on the page body. */
 html[data-theme="light"] #tagFilterBar{ color: rgba(70,64,110,0.78); }
 html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   Figure lightbox
+   Article figures and the SVG diagrams inside them open here. Separate
+   from .lightbox above, which belongs to the gallery and carries zoom,
+   rotate, navigation and captions that make no sense for a diagram.
+
+   The whole overlay closes on click, image included, so there is nothing
+   to aim at. The close button is kept for keyboard and screen reader
+   users, not because a pointer needs it.
+   ══════════════════════════════════════════════════════════════════════ */
+.figbox{
+  position: fixed; inset: 0; z-index: 9990;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 14px;
+  padding: 4vmin; cursor: zoom-out;
+  background: rgba(4,3,16,0.86);
+  opacity: 0; transition: opacity 200ms var(--ease-in-out);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+}
+.figbox[hidden]{ display: none; }
+.figbox.open{ opacity: 1; }
+
+/* Photographs sit on the scrim with nothing behind them. Diagrams get a
+   panel, because their strokes and labels are drawn with var(--text) and
+   var(--muted): on a light theme those are near-black and would vanish
+   against a dark backdrop. */
+.figbox-stage{
+  max-width: min(1400px, 96vw); max-height: 88vh;
+  display: flex; align-items: center; justify-content: center;
+  transform: scale(0.96); opacity: 0;
+  transition: transform 220ms var(--ease-in-out), opacity 220ms var(--ease-in-out);
+}
+.figbox.open .figbox-stage{ transform: scale(1); opacity: 1; }
+
+.figbox-stage img{
+  display: block; max-width: min(1400px, 96vw); max-height: 88vh;
+  width: auto; height: auto; object-fit: contain;
+  border-radius: 10px; box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+}
+.figbox-stage.is-diagram{
+  background: var(--bg2); border: 1px solid var(--line);
+  border-radius: 14px; padding: clamp(14px, 3vw, 30px);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+}
+.figbox-stage.is-diagram svg{
+  display: block; width: auto; height: auto;
+  max-width: min(1200px, 90vw); max-height: 78vh;
+}
+
+.figbox-cap{
+  margin: 0; max-width: min(900px, 92vw); text-align: center;
+  font-size: 13px; line-height: 1.6; color: rgba(232,229,247,0.82);
+}
+.figbox-hint{
+  margin: 0; font-size: 11px; letter-spacing: 0.09em;
+  text-transform: uppercase; color: rgba(232,229,247,0.42);
+}
+.figbox-x{
+  position: absolute; top: 14px; right: 14px;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.42); color: #fff;
+  font-size: 22px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 200ms ease;
+}
+.figbox-x:hover{ background: rgba(0,0,0,0.68); }
+
+/* The cue that a figure is openable. Only applied by the script, so a
+   figure on a page without JS never advertises a click it cannot honour. */
+.fig-openable{ cursor: zoom-in; }
+.fig-openable img, .fig-openable svg{
+  transition: opacity 200ms var(--ease-in-out);
+}
+.fig-openable:hover img, .fig-openable:hover svg{ opacity: 0.9; }
+.fig-openable:focus-visible{
+  outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .figbox, .figbox-stage{ transition: none; }
+  .figbox-stage{ transform: none; }
+  .fig-openable img, .fig-openable svg{ transition: none; }
+}

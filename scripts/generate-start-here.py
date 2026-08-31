@@ -89,16 +89,22 @@ OUT = "start-here.html"
 ARTICLE_DIR = "articles"
 
 PAGE_TITLE = "Start Here"
-PAGE_DESC = ("You need less equipment than you think. Four galaxies taken with "
-             "a smart telescope that fits in a shoulder bag, one thing to try "
-             "tonight with nothing at all, and a short route through the rest "
-             "depending on where you are.")
+PAGE_DESC = ("The equipment matters less than the sky you point it at. Four "
+             "galaxies taken with a telescope that fits in a shoulder bag, one "
+             "thing to try tonight with nothing at all, and a short route "
+             "through the rest depending on where you are.")
 
-SUBTITLE = "You need less equipment than you think."
+SUBTITLE = "The equipment matters less than the sky you point it at."
 
+# No claim about cost here. The images directly below cost real money and
+# real hours, and their captions say so, so a "costs nothing" line sitting
+# on top of them reads as a bait however carefully it is qualified. That
+# promise now lives in TONIGHT_LEDE, where it is the literal truth.
 INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
-         "wondered whether an ordinary person could take one. You can. This is "
-         "where to begin, and the first step costs nothing at all.")
+         "wondered whether an ordinary person could take one. You can, and "
+         "with less equipment than you would guess. The harder part is not the "
+         "kit. It is getting under a sky dark enough to be worth the trouble, "
+         "and that is the first thing this page will help you work out.")
 
 
 # ---------------------------------------------------------------- 1. PROOF
@@ -128,12 +134,24 @@ PROOF_NAMES = {
     "the-milky-way": "The Milky Way",
 }
 
+# The article this line links to. Checked against the real article list at
+# build time, so a rename cannot leave a dead link here.
+PROOF_ARTICLE = "seestar-s30-pro-tour"
+
 # Carries inline markup, so this one is not escaped. Keep it plain.
+#
+# It names the telescope because the captions above it already do. Being
+# coy about a product the page has just named twice is what made this read
+# as advertising copy. It also states the hours and the drive, for the same
+# reason: the captions admit both, so the sentence may as well.
 PROOF_LINE = ("Four galaxies and the centre of our own Milky Way, all taken "
-              "with a <strong>smart telescope that fits in a shoulder "
-              "bag</strong> and sets itself up in about a minute. No laptop, "
-              "no counterweights, no observatory. Six of the images in the "
-              "gallery were taken this way.")
+              "with a <strong>Seestar S30</strong>. Two on the original, one "
+              "on the Pro. It fits in a shoulder bag and sets itself up in "
+              "about a minute, with no mount to balance, no laptop and no "
+              "counterweights. What each one did cost was three or four hours "
+              "of tracking and a drive out of the city to a properly dark "
+              "site. Six of the images in the gallery were taken this way, "
+              "and {link} if you want to know what one is like to live with.")
 
 # Used for the social card, since this page now has something worth showing.
 SHARE_IMAGE = "images/andromeda-galaxy-m31.webp"
@@ -143,9 +161,9 @@ SHARE_IMAGE = "images/andromeda-galaxy-m31.webp"
 
 TONIGHT_TITLE = "Try this tonight, with nothing"
 TONIGHT_LEDE = ("Before you read anything or buy anything, do these three "
-                "things on the next clear night. They take about half an hour "
-                "and they will tell you more about your sky than any article "
-                "can.")
+                "things on the next clear night. They cost nothing at all, "
+                "they take about half an hour, and they will tell you more "
+                "about your sky than any article can.")
 
 TONIGHT_STEPS = [
     ("Go outside and wait twenty minutes",
@@ -505,7 +523,12 @@ def tokens(text, articles):
     return out + rest
 
 
-def build_proof(gallery):
+def build_proof(gallery, articles):
+    if PROOF_ARTICLE not in articles:
+        raise BuildError(f"proof link article '{PROOF_ARTICLE}' does not exist")
+    link = (f'<a href="{article_url(PROOF_ARTICLE)}">there is a full '
+            f'write-up of it</a>')
+
     shots = []
     for slug in PROOF_SLUGS:
         entry = gallery.get(slug)
@@ -544,7 +567,7 @@ def build_proof(gallery):
         '        <div class="sh-proof-grid">\n'
         + "".join(shots) +
         '        </div>\n'
-        f'        <p class="sh-proof-line">{PROOF_LINE}</p>\n'
+        f'        <p class="sh-proof-line">{PROOF_LINE.format(link=link)}</p>\n'
         '      </section>\n'
     )
 
@@ -747,8 +770,10 @@ def build_modal():
         'aria-modal="true" aria-labelledby="shModalName">\n'
         '      <button type="button" class="sh-modal-x" data-sh-close '
         'aria-label="Close">&#215;</button>\n'
-        '      <img class="sh-modal-img" id="shModalImg" src="" alt="" />\n'
+        '      <img class="sh-modal-img" id="shModalImg" src="" alt="" '
+        'data-sh-close />\n'
         '      <div class="sh-modal-body">\n'
+        '        <p class="sh-modal-hint">Click the image to close</p>\n'
         '        <p class="sh-modal-name" id="shModalName"></p>\n'
         '        <p class="sh-modal-spec" id="shModalSpec"></p>\n'
         '        <p class="sh-modal-blurb" id="shModalBlurb"></p>\n'
@@ -991,7 +1016,7 @@ def build_page(articles, gallery, by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
-{build_proof(gallery)}
+{build_proof(gallery, articles)}
 {build_tonight(articles)}
 {build_chooser()}
 {build_routes(articles)}

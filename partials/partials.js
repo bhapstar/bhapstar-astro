@@ -497,3 +497,169 @@ const HIDE_FIELD_NOTES = true;
   } catch (e) { /* localStorage can throw in locked-down browsers */ }
 
 })();
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   Figure lightbox
+   ----------------------------------------------------------------------
+   Makes every figure on an article page openable: photographs and the
+   inline SVG diagrams alike. Lives here rather than in the article
+   generator so that all thirteen article pages get it without being
+   rebuilt, and so a new article gets it for free.
+
+   Scoped to figure.article-fig. That keeps it away from the gallery,
+   which has its own lightbox with zoom, rotate and navigation, and away
+   from the icon SVGs in the header and footer.
+
+   Clicking anywhere closes, the image included. Escape closes. The X is
+   there for keyboard and screen reader users.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var figures = document.querySelectorAll('figure.article-fig');
+  if (!figures.length) return;
+
+  // The gallery runs its own overlay. If one is already on the page,
+  // stay out of its way rather than stacking two lightboxes.
+  if (document.querySelector('.lightbox')) return;
+
+  var box = null, stage = null, cap = null, opener = null;
+
+  function build() {
+    box = document.createElement('div');
+    box.className = 'figbox';
+    box.id = 'figbox';
+    box.hidden = true;
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Enlarged figure');
+    box.tabIndex = -1;
+
+    var x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'figbox-x';
+    x.setAttribute('aria-label', 'Close');
+    x.innerHTML = '&#215;';
+
+    stage = document.createElement('div');
+    stage.className = 'figbox-stage';
+
+    cap = document.createElement('p');
+    cap.className = 'figbox-cap';
+
+    var hint = document.createElement('p');
+    hint.className = 'figbox-hint';
+    hint.textContent = 'Click anywhere to close';
+
+    box.appendChild(x);
+    box.appendChild(stage);
+    box.appendChild(cap);
+    box.appendChild(hint);
+    document.body.appendChild(box);
+
+    // One handler on the overlay: the image is inside it, so a click on
+    // the picture closes exactly like a click on the backdrop.
+    box.addEventListener('click', close);
+    box.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' || ev.key === 'Esc') { ev.preventDefault(); close(); }
+    });
+  }
+
+  function captionFor(fig) {
+    var fc = fig.querySelector('figcaption');
+    return fc ? fc.textContent.replace(/\s+/g, ' ').trim() : '';
+  }
+
+  function open(fig, node) {
+    if (!box) build();
+
+    opener = node;
+    stage.innerHTML = '';
+
+    var diagram = node.tagName.toLowerCase() === 'svg';
+    stage.classList.toggle('is-diagram', diagram);
+
+    if (diagram) {
+      // Cloned rather than moved, so the figure keeps its diagram. The
+      // clone stays in the document, so the var() colours it is drawn
+      // with still resolve against the current theme.
+      var svg = node.cloneNode(true);
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.removeAttribute('class');
+      svg.setAttribute('aria-hidden', 'true');
+      stage.appendChild(svg);
+    } else {
+      var img = document.createElement('img');
+      // currentSrc resolves srcset, so a lightbox never shows a smaller
+      // file than the one already on the page.
+      img.src = node.currentSrc || node.src;
+      img.alt = node.alt || '';
+      img.decoding = 'async';
+      stage.appendChild(img);
+    }
+
+    var text = captionFor(fig);
+    cap.textContent = text;
+    cap.style.display = text ? '' : 'none';
+
+    box.hidden = false;
+    // Next frame, so the opening transition has a state to move from.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { box.classList.add('open'); });
+    });
+    document.documentElement.style.overflow = 'hidden';
+    box.focus();
+  }
+
+  function close() {
+    if (!box || box.hidden) return;
+    box.classList.remove('open');
+    document.documentElement.style.overflow = '';
+
+    var done = function () {
+      box.hidden = true;
+      stage.innerHTML = '';
+      if (opener && opener.focus) {
+        // Focus goes back to the figure that was opened, not to the top.
+        var host = opener.closest ? opener.closest('figure.article-fig') : null;
+        if (host) host.focus();
+      }
+      opener = null;
+    };
+
+    var reduce = false;
+    try {
+      reduce = window.matchMedia &&
+               window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+    if (reduce) { done(); return; }
+    window.setTimeout(done, 200);
+  }
+
+  Array.prototype.forEach.call(figures, function (fig) {
+    var nodes = fig.querySelectorAll('img, svg');
+    if (!nodes.length) return;
+
+    Array.prototype.forEach.call(nodes, function (node) {
+      // A figure holding two diagrams side by side gets one target each.
+      var host = node.parentNode === fig ? fig : node;
+      node.style.cursor = 'zoom-in';
+      node.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        open(fig, node);
+      });
+    });
+
+    fig.classList.add('fig-openable');
+    fig.tabIndex = 0;
+    fig.setAttribute('role', 'button');
+    fig.setAttribute('aria-label',
+      (captionFor(fig) || 'Figure') + '. Activate to enlarge.');
+    fig.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        open(fig, fig.querySelector('img, svg'));
+      }
+    });
+  });
+})();
