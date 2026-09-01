@@ -57,11 +57,13 @@ Why the headings live here and not in site-data.json:
 
 Order:
 
-  ORDER below, by slug, lightest kit first. This is a deliberate reading
-  order rather than an alphabetical one: somebody arriving with a phone
-  should meet the phone card before the one that assumes a mount. A card
-  whose slug is not in ORDER still appears, at the end, and the build
-  prints a note so it does not stay unordered by accident.
+  ORDER below, by slug. Broadly lightest kit first, so somebody arriving
+  with a phone meets the phone card before the one that assumes a mount,
+  but subject grouping wins where the two disagree: the phone and camera
+  Milky Way cards sit together because a reader comparing them wants them
+  side by side more than they want a strict kit ladder. A card whose slug
+  is not in ORDER still appears, at the end, and the build prints a note
+  so it does not stay unordered by accident.
 
 Missing PDFs:
 
@@ -94,20 +96,17 @@ PAGE_DESC = ("Every printable field card on the site in one place. One side "
 
 SUBTITLE = "The settings from the articles, on paper, for the dark."
 
-INTRO = ("Every card here is one side of A4. Print it, fold it once, and put "
-         "it in a pocket. Out in the field a phone screen is the last thing "
-         "you want to look at, the signal is often gone, and a battery that "
-         "has been out in the cold for an hour is not something to rely on. "
-         "Paper solves all three. Each card holds the working numbers from "
-         "one article, and each one links back to that article if you want "
-         "the reasoning behind them.")
+INTRO = ("Each card is one side of A4. Print it, fold it, put it in a "
+         "pocket. It carries the settings from one article so you have them "
+         "with you in the field without needing a phone, and it links back "
+         "to that article if you want the reasoning behind the numbers.")
 
 # Slug -> where the card sits in the reading order. Lightest kit first.
 ORDER = [
     "photograph-milky-way-phone",
-    "photograph-the-moon",
-    "photograph-a-meteor-shower",
     "photograph-milky-way-camera",
+    "photograph-a-meteor-shower",
+    "photograph-the-moon",
     "asiair-astrophotography-control",
     "calibration-frames-darks-flats-biases",
 ]
