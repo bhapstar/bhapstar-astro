@@ -39,6 +39,22 @@ Where the content comes from:
   one screen the tags were noise, and the note under each title already
   says who the card is for in plain words.
 
+Why the headings live here and not in site-data.json:
+
+  The "label" on a download is the text inside the button at the foot of
+  the article, where the reader already knows what the article is about
+  and a short name is the right one. "Moon field card" reads well there.
+
+  On this page nobody has that context. Six cards sit side by side with no
+  article around them, so each heading has to say what the download is on
+  its own. HEADINGS below carries that longer wording, keyed by slug.
+
+  This is the same split generate-start-here.py makes with its route
+  blurbs: one field in site-data.json cannot phrase the same thing
+  correctly for two audiences, so the page-specific wording lives with the
+  page. A slug with no entry in HEADINGS falls back to its "label", so
+  nothing breaks if one is forgotten.
+
 Order:
 
   ORDER below, by slug, lightest kit first. This is a deliberate reading
@@ -95,6 +111,24 @@ ORDER = [
     "asiair-astrophotography-control",
     "calibration-frames-darks-flats-biases",
 ]
+
+# Slug -> the heading on this page. Longer and more literal than the button
+# label on the article, because here it is doing all the explaining. Any slug
+# left out falls back to the "label" in site-data.json.
+HEADINGS = {
+    "photograph-milky-way-phone":
+        "Phone settings for imaging the Milky Way",
+    "photograph-the-moon":
+        "Camera and phone settings for imaging the Moon",
+    "photograph-a-meteor-shower":
+        "Meteor shower dates, rates and settings",
+    "photograph-milky-way-camera":
+        "Camera settings for imaging the Milky Way",
+    "asiair-astrophotography-control":
+        "Running a whole rig from the ASIAir",
+    "calibration-frames-darks-flats-biases":
+        "Which calibration frames to shoot, and when",
+}
 
 # Split so "Start Here" is a link on its first mention and plain text after.
 # A second link to the same page in the same sentence adds nothing and makes
@@ -182,9 +216,12 @@ def build_card(entry, index):
     """
     dl = entry["download"]
     path = dl["file"].lstrip("/")
-    label = dl.get("label") or entry.get("title") or "Field card"
-    note = dl.get("note") or entry.get("desc") or ""
     slug = entry["slug"]
+    label = (HEADINGS.get(slug)
+             or dl.get("label")
+             or entry.get("title")
+             or "Field card")
+    note = dl.get("note") or entry.get("desc") or ""
     heading_id = f"fcCard{index}"
 
     size = file_size(path)
@@ -219,7 +256,11 @@ def build_json_ld(cards):
             "position": i,
             "item": {
                 "@type": "DigitalDocument",
-                "name": dl.get("label") or entry.get("title"),
+                # Same wording as the visible heading, so what a search
+                # result shows matches what the page shows.
+                "name": (HEADINGS.get(entry["slug"])
+                         or dl.get("label")
+                         or entry.get("title")),
                 "description": dl.get("note") or "",
                 "encodingFormat": "application/pdf",
                 "url": f"{DOMAIN}/{dl['file'].lstrip('/')}",
@@ -336,6 +377,17 @@ def main():
     if not live:
         print(f"✗ {OUT}: none of the listed PDFs exist on disk", file=sys.stderr)
         raise SystemExit(1)
+
+    # A heading keyed to a slug that no longer carries a card is dead copy,
+    # and a card with no heading silently falls back to its button label,
+    # which is the short wording this page exists to avoid.
+    slugs = {e["slug"] for e in cards}
+    for slug in sorted(set(HEADINGS) - slugs):
+        print(f"  ! HEADINGS has '{slug}', which carries no card")
+    for entry in live:
+        if entry["slug"] not in HEADINGS:
+            print(f"  ! '{entry['slug']}' has no HEADINGS entry, so it fell "
+                  f"back to its button label")
 
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(build_page(live))
