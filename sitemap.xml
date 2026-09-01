@@ -275,6 +275,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bhapstar.com/field-cards.html</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bhapstar.com/prints.html</loc>
     <lastmod>2025-04-20</lastmod>
     <changefreq>monthly</changefreq>
