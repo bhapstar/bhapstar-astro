@@ -32,9 +32,10 @@ The page has five parts:
               the reader is rather than by what they own.
 
   4. EXTRAS   Articles that belong to the calendar rather than to a route.
-              Always visible, never filtered, and deliberately outside the
-              staged path: a meteor shower is not step four of learning
-              astrophotography, it is a date in December.
+              Never filtered, and deliberately outside the staged path: a
+              meteor shower is not step four of learning astrophotography,
+              it is a date in December. Sits in a closed <details> so the
+              page ends on two short lines rather than two full panels.
 
   5. FULL     Every staged article in order, inside a closed <details>.
 
@@ -391,8 +392,8 @@ ROUTE_PHRASES = {
 # An entry here should have no "stage" in site-data.json, which keeps it
 # out of the full path while leaving it live everywhere else on the site.
 
-EXTRAS_TITLE = "Whatever route you take, watch the calendar"
-EXTRAS_LEDE = ("A few nights each year are worth planning around, and they do "
+EXTRAS_SUMMARY = "Meteor showers worth planning around"
+EXTRAS_NOTE = ("A few nights each year are worth planning around, and they do "
                "not care how much equipment you own. These work with a phone "
                "on a tripod just as well as with a full camera.")
 
@@ -404,8 +405,10 @@ EXTRAS = [
      "frames than feels sensible."),
 ]
 
-EXTRAS_OUT = ("Nothing on this list needs a purchase. Put the dates in a "
-              "calendar now and the rest of the year plans itself.")
+# Left empty so the collapsed block reads as one summary line plus one note,
+# matching the full path below it. Set it to a sentence to bring the closing
+# line back.
+EXTRAS_OUT = ""
 
 
 # ----------------------------------------------------------------- 5. FULL
@@ -671,8 +674,10 @@ def build_extras(articles):
 
     Deliberately not a .sh-route-block: the route script hides every one of
     those that does not match the current pill, and this has to stay on
-    screen whatever the reader picked. It borrows .sh-tonight, which is
-    already a padded panel, so this needs nothing new in styles.css.
+    screen whatever the reader picked. It borrows .sh-full, the same closed
+    details used by the full path below it, so a reader meets one short
+    summary line rather than a full panel on the way down the page. That
+    also means this needs nothing new in styles.css.
     """
     if not EXTRAS:
         return ""
@@ -681,17 +686,17 @@ def build_extras(articles):
         build_card(slug, title, blurb, i, articles)
         for i, (slug, title, blurb) in enumerate(EXTRAS, start=1)
     )
-    out = (f'        <p class="sh-tonight-out">{esc(EXTRAS_OUT)}</p>\n'
+    out = (f'        <p class="sh-full-note sh-extras-out">{esc(EXTRAS_OUT)}</p>\n'
            if EXTRAS_OUT else "")
     return (
-        '      <section class="sh-tonight sh-extras">\n'
-        f'        <h2>{esc(EXTRAS_TITLE)}</h2>\n'
-        f'        <p class="sh-tonight-lede">{tokens(EXTRAS_LEDE, articles)}</p>\n'
+        '      <details class="sh-full sh-extras">\n'
+        f'        <summary>{esc(EXTRAS_SUMMARY)}</summary>\n'
+        f'        <p class="sh-full-note">{tokens(EXTRAS_NOTE, articles)}</p>\n'
         '        <div class="sh-list">\n'
         f'{cards}'
         '        </div>\n'
         f'{out}'
-        '      </section>\n'
+        '      </details>\n'
     )
 
 

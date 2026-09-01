@@ -2828,6 +2828,12 @@ a[href="prints.html"], a[href*="prints"] {
                  margin: 22px 0 10px; }
 .sh-full-stage:first-of-type { margin-top: 4px; }
 
+/* The seasonal block reuses .sh-full so the two closed prompts read as a
+   pair. Only the spacing differs: it needs room below the summary line so
+   the divider under it does not crowd the text when the block is shut. */
+.sh-extras { margin-bottom: 22px; }
+.sh-extras .sh-list { margin-top: 4px; }
+
 .sh-veteran { font-size: 13.5px; line-height: 1.7; color: var(--muted);
               margin: 26px 0 0; padding-top: 20px;
               border-top: 1px solid var(--line); }
