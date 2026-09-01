@@ -96,18 +96,6 @@ ORDER = [
     "calibration-frames-darks-flats-biases",
 ]
 
-PRINT_NOTES = [
-    ("Print at full size", "Choose 100 percent rather than fit-to-page. The "
-     "type is sized to stay readable under a red torch, and scaling it down "
-     "undoes that."),
-    ("Greyscale is fine", "The cards are drawn as dark ink on white so they "
-     "do not drink toner. Nothing on any of them depends on colour."),
-    ("One side, every time", "There is no second page to lose, and no need "
-     "to turn anything over in the dark."),
-    ("Keep the dew off", "A laminating pouch works. So does a freezer bag, "
-     "for a lot less money."),
-]
-
 # Split so "Start Here" is a link on its first mention and plain text after.
 # A second link to the same page in the same sentence adds nothing and makes
 # the paragraph harder to scan.
@@ -222,19 +210,6 @@ def build_grid(cards):
       </ul>'''
 
 
-def build_print_notes():
-    rows = "\n".join(
-        f'          <li class="fc-tip"><span class="fc-tip-title">{esc(t)}</span>'
-        f'<span class="fc-tip-body">{esc(b)}</span></li>'
-        for t, b in PRINT_NOTES)
-    return f'''      <section class="fc-how" aria-labelledby="fcHowHeading">
-        <h2 id="fcHowHeading">Printing them</h2>
-        <ul class="fc-tips">
-{rows}
-        </ul>
-      </section>'''
-
-
 def build_json_ld(cards):
     elements = []
     for i, entry in enumerate(cards, 1):
@@ -322,8 +297,6 @@ def build_page(cards):
       </div>
 
 {build_grid(cards)}
-
-{build_print_notes()}
 
       <p class="fc-closing">{esc(CLOSING_BEFORE)}<a href="/{esc(CLOSING_LINK[0])}">{esc(CLOSING_LINK[1])}</a>{esc(CLOSING_AFTER)}</p>
 
