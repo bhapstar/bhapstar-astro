@@ -8641,7 +8641,9 @@ html[data-theme="light"] .page-starword .sw-toast{
 .page-field-cards .fc-header { margin-bottom: 26px; }
 .page-field-cards .fc-subtitle { margin: 14px 0 0; font-size: 16px;
                                  color: var(--text); opacity: 0.9; }
-.page-field-cards .fc-intro { margin: 14px 0 0; max-width: 62ch;
+/* No max-width: the intro runs the full width of .wrap, matching the grid
+   below it rather than stopping halfway across the page. */
+.page-field-cards .fc-intro { margin: 14px 0 0;
                               font-size: 14.5px; line-height: 1.7;
                               color: var(--muted); }
 .page-field-cards .fc-free { margin: 12px 0 0; font-size: 12px;
@@ -8667,16 +8669,6 @@ html[data-theme="light"] .page-starword .sw-toast{
                                    font-weight: 600; line-height: 1.35;
                                    color: var(--text); }
 
-/* ── "Works with" pills, from the article's paths array ── */
-.page-field-cards .fc-tags { list-style: none; display: flex; flex-wrap: wrap;
-                             gap: 6px; margin: 12px 0 0; padding: 0; }
-.page-field-cards .fc-tag { font-size: 11px; font-weight: 600;
-                            letter-spacing: 0.05em; text-transform: uppercase;
-                            padding: 4px 10px; border-radius: 999px;
-                            border: 1px solid var(--line);
-                            color: var(--muted);
-                            background: rgba(167,139,250,0.06); }
-
 .page-field-cards .fc-note { margin: 14px 0 0; font-size: 13.5px;
                              line-height: 1.65; color: var(--muted); }
 
@@ -8701,13 +8693,25 @@ html[data-theme="light"] .page-starword .sw-toast{
                             transform: translateY(-2px);
                             box-shadow: 0 10px 30px rgba(167,139,250,0.32); }
 .page-field-cards .fc-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-.page-field-cards .fc-read { font-size: 13px; font-weight: 500;
-                             color: var(--muted); text-decoration: none;
-                             border-bottom: 1px solid transparent;
-                             transition: color 180ms ease, border-color 180ms ease; }
+/* Outlined rather than filled, and the same height as the download button,
+   so it reads as the second action on the card instead of body text that
+   happens to be clickable. */
+.page-field-cards .fc-read { display: inline-flex; align-items: center; gap: 8px;
+                             padding: 10px 16px; border-radius: 12px;
+                             font-size: 13.5px; font-weight: 600;
+                             text-decoration: none;
+                             color: var(--text);
+                             border: 1px solid var(--line);
+                             background: transparent;
+                             transition: color 180ms ease, border-color 180ms ease,
+                                         background 180ms ease, transform 180ms ease; }
 .page-field-cards .fc-read:hover, .page-field-cards .fc-read:focus-visible {
                              color: var(--accent);
-                             border-bottom-color: var(--accent); }
+                             border-color: var(--accent);
+                             background: rgba(167,139,250,0.08);
+                             transform: translateY(-2px); }
+.page-field-cards .fc-read svg { width: 15px; height: 15px; flex-shrink: 0;
+                                 opacity: 0.85; }
 .page-field-cards .fc-meta { margin: 12px 0 0; font-size: 11.5px;
                              color: var(--muted); opacity: 0.8; }
 
@@ -8728,7 +8732,7 @@ html[data-theme="light"] .page-starword .sw-toast{
 .page-field-cards .fc-tip-body { font-size: 13px; line-height: 1.6;
                                  color: var(--muted); }
 
-.page-field-cards .fc-closing { margin: 30px 0 0; max-width: 62ch;
+.page-field-cards .fc-closing { margin: 30px 0 0;
                                 font-size: 13.5px; line-height: 1.7;
                                 color: var(--muted); }
 .page-field-cards .fc-closing a { color: var(--accent); text-decoration: none;
@@ -8738,6 +8742,7 @@ html[data-theme="light"] .page-starword .sw-toast{
 @media (prefers-reduced-motion: reduce) {
   .page-field-cards .fc-btn { animation: none; }
   .page-field-cards .fc-btn:hover { transform: none; }
+  .page-field-cards .fc-read:hover { transform: none; }
   .page-field-cards .fc-card:hover { transform: none; }
 }
 
@@ -8745,13 +8750,12 @@ html[data-theme="light"] .page-starword .sw-toast{
   .page-field-cards .fc-grid { grid-template-columns: 1fr; gap: 14px; }
   .page-field-cards .fc-card { padding: 18px 16px; }
   .page-field-cards .fc-actions { gap: 12px; }
-  .page-field-cards .fc-btn { flex: 1 1 auto; justify-content: center; }
+  .page-field-cards .fc-btn,
+  .page-field-cards .fc-read { flex: 1 1 auto; justify-content: center; }
   .page-field-cards .fc-how { padding: 18px 16px; }
 }
 
-/* The two surfaces that use a hardcoded violet wash rather than a token. */
-html[data-theme="light"] .page-field-cards .fc-tag {
-  background: rgba(124,92,246,0.06); }
+/* The one surface using a hardcoded violet rather than a token. */
 html[data-theme="light"] .page-field-cards .fc-card:hover {
   border-color: rgba(124,92,246,0.45); }
 

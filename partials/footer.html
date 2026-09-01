@@ -1,10 +1,10 @@
 <!-- =========================
      Footer
-     - Mirrors the header: gradient nav links + a Puzzles
-       dropdown menu, sitting ABOVE the © line
+     - Mirrors the header: gradient nav links + Articles
+       and Puzzles dropdown menus, sitting ABOVE the © line
      - Reuses the header's .nav-menu / .nav-group classes,
        sized down via footer-scoped CSS overrides
-     - Puzzles menu opens upward (footer is page-bottom)
+     - Both menus open upward (footer is page-bottom)
      - © line + Instagram/X socials sit beneath the links
      - Copyright year (#y) populated by partials.js
 ========================= -->
@@ -18,8 +18,18 @@
         <a href="/gallery.html">Gallery</a>
         <a href="/prints.html">Prints</a>
         <a href="/gear.html">Gear</a>
-        <a href="/articles.html">Articles</a>
-        <a href="/field-cards.html">Field Cards</a>
+        <div class="nav-group">
+          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerArticlesSubmenu" type="button">
+            <span class="btn-label">Articles</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-submenu" id="footerArticlesSubmenu">
+            <a href="/articles.html">All Articles</a>
+            <a href="/field-cards.html">Field Cards</a>
+          </div>
+        </div>
 
         <div class="nav-group">
           <button class="nav-group-btn" aria-expanded="false" aria-controls="footerPuzzleSubmenu" type="button">

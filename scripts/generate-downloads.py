@@ -35,14 +35,9 @@ Where the content comes from:
   is called or what it holds. Adding a seventh card means adding a
   "download" object to its article and nothing else here.
 
-  The "works with" tags come from the "paths" array on the article entry:
-
-      "paths": ["phone", "camera", "smartscope", "rig"]
-
-  generate-start-here.py stopped reading "paths" when the routes moved
-  into that script, which left the field with no consumer. This page is
-  now that consumer, so it is worth keeping accurate again. An entry with
-  no "paths" simply renders no tags.
+  Nothing else is read. The cards carry no route tags: with six of them on
+  one screen the tags were noise, and the note under each title already
+  says who the card is for in plain words.
 
 Order:
 
@@ -101,19 +96,6 @@ ORDER = [
     "calibration-frames-darks-flats-biases",
 ]
 
-# "paths" values -> the label shown on a tag. Anything not listed here is
-# title-cased and shown anyway, so a new route never silently disappears.
-PATH_LABELS = {
-    "phone": "Phone",
-    "camera": "Camera",
-    "smartscope": "Smart telescope",
-    "rig": "Full rig",
-}
-
-# Order tags render in, regardless of the order they sit in site-data.json,
-# so the same pair always reads the same way across cards.
-PATH_ORDER = ["phone", "camera", "smartscope", "rig"]
-
 PRINT_NOTES = [
     ("Print at full size", "Choose 100 percent rather than fit-to-page. The "
      "type is sized to stay readable under a red torch, and scaling it down "
@@ -126,9 +108,14 @@ PRINT_NOTES = [
      "for a lot less money."),
 ]
 
-CLOSING = ("New to all of this and not sure which card is the one to take "
-           "first, have a look at Start Here. It sorts the articles by what "
-           "you already own rather than by what you might buy.")
+# Split so "Start Here" is a link on its first mention and plain text after.
+# A second link to the same page in the same sentence adds nothing and makes
+# the paragraph harder to scan.
+CLOSING_BEFORE = ("New to all of this and not sure which card is the one to "
+                  "take first, have a look at ")
+CLOSING_LINK = ("start-here.html", "Start Here")
+CLOSING_AFTER = (". It sorts the articles by what you already own rather "
+                 "than by what you might buy.")
 
 
 class BuildError(Exception):
@@ -179,16 +166,6 @@ def file_size(path):
     return f"{kb} KB"
 
 
-def tags_for(entry):
-    paths = entry.get("paths")
-    if not isinstance(paths, list):
-        return []
-    known = [p for p in PATH_ORDER if p in paths]
-    rest = [p for p in paths if p not in PATH_ORDER]
-    return [PATH_LABELS.get(p, str(p).replace("-", " ").title())
-            for p in known + rest]
-
-
 # ---------------------------------------------------------------- markup
 
 DOWNLOAD_ICON = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" '
@@ -197,8 +174,24 @@ DOWNLOAD_ICON = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" '
                  '<path d="M8 2v8"/><path d="M4.5 7L8 10.5 11.5 7"/>'
                  '<path d="M2.5 13h11"/></svg>')
 
+READ_ICON = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" '
+             'stroke-width="1.7" stroke-linecap="round" '
+             'stroke-linejoin="round" aria-hidden="true">'
+             '<path d="M2.5 3.5h4a2 2 0 0 1 2 2v7a1.6 1.6 0 0 0-1.6-1.6H2.5z"/>'
+             '<path d="M13.5 3.5h-4a2 2 0 0 0-2 2v7a1.6 1.6 0 0 1 1.6-1.6h4.4z"/>'
+             '</svg>')
+
 
 def build_card(entry, index):
+    """One card.
+
+    The title is a plain heading rather than a link. Two links to the same
+    article inside one small card is a well-worn way to make a card feel
+    fiddly, and the download is the reason somebody came to this page, so it
+    keeps the only strong-looking control. "Read the article" is a proper
+    outlined button beside it instead: clearly a second action, clearly not
+    the main one.
+    """
     dl = entry["download"]
     path = dl["file"].lstrip("/")
     label = dl.get("label") or entry.get("title") or "Field card"
@@ -209,20 +202,14 @@ def build_card(entry, index):
     size = file_size(path)
     meta = f"PDF, one side of A4, {size}" if size else "PDF, one side of A4"
 
-    tags = tags_for(entry)
-    tags_html = ""
-    if tags:
-        pills = "".join(f'<li class="fc-tag">{esc(t)}</li>' for t in tags)
-        tags_html = (f'\n          <ul class="fc-tags" aria-label="Works with">'
-                     f'{pills}</ul>')
-
     return f'''        <li class="fc-card">
-          <h2 class="fc-card-title" id="{heading_id}">{esc(label)}</h2>{tags_html}
+          <h2 class="fc-card-title" id="{heading_id}">{esc(label)}</h2>
           <p class="fc-note">{esc(note)}</p>
           <div class="fc-actions">
             <a class="fc-btn" href="/{esc(path)}" download
                aria-describedby="{heading_id}">{DOWNLOAD_ICON}<span>Download</span></a>
-            <a class="fc-read" href="/{ARTICLE_DIR}/{esc(slug)}.html">Read the article</a>
+            <a class="fc-read" href="/{ARTICLE_DIR}/{esc(slug)}.html"
+               aria-describedby="{heading_id}">{READ_ICON}<span>Read the article</span></a>
           </div>
           <p class="fc-meta">{esc(meta)}</p>
         </li>'''
@@ -338,7 +325,7 @@ def build_page(cards):
 
 {build_print_notes()}
 
-      <p class="fc-closing">{esc(CLOSING)} <a href="/start-here.html">Start Here</a></p>
+      <p class="fc-closing">{esc(CLOSING_BEFORE)}<a href="/{esc(CLOSING_LINK[0])}">{esc(CLOSING_LINK[1])}</a>{esc(CLOSING_AFTER)}</p>
 
     </div>
   </section>

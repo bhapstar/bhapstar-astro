@@ -273,13 +273,6 @@ const HIDE_FIELD_NOTES = true;
       }
     });
 
-    // If a submenu child is the active page (a puzzle, or an individual
-    // article), highlight that group's button — but don't force the popover
-    // open now that the nav is always visible.
-    document.querySelectorAll('.nav-submenu a.active').forEach(a => {
-      a.closest('.nav-group')?.querySelector('.nav-group-btn')?.classList.add('active');
-    });
-
     // Section directories: /gear/<slug>.html and /articles/<slug>.html are real
     // pages that live one level down, so the filename match above never fires
     // for their parent nav entry. Mark the parent active from the directory.
@@ -290,6 +283,18 @@ const HIDE_FIELD_NOTES = true;
         a.setAttribute('aria-current', 'page');
       });
     }
+
+    // If a submenu child is the active page (a puzzle, a field card page, or
+    // an individual article), highlight that group's button — but don't force
+    // the popover open now that the nav is always visible.
+    //
+    // This runs AFTER the directory match above, not before. "All Articles"
+    // now lives inside the Articles popover, so on /articles/<slug>.html it is
+    // the directory rule that marks it active. Highlighting the buttons first
+    // would leave the Articles button unlit on every article page.
+    document.querySelectorAll('.nav-submenu a.active').forEach(a => {
+      a.closest('.nav-group')?.querySelector('.nav-group-btn')?.classList.add('active');
+    });
 
 
     /* ─────────────────────────────────────────
