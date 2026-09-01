@@ -31,11 +31,15 @@ Why the order matters:
   7. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
               is order-independent too, but it runs last for the same reason
               as the sitemap: it describes everything above it.
+  8. downloads  field-cards.html, the index of every printable field card.
+              Built from site-data.json and from the PDFs on disk, so it is
+              order-independent, but it runs after the article pages because
+              every card links back to the article it came from.
 
 Layout this expects:
 
     build.py            this file, at the repository root
-    scripts/            the five generators
+    scripts/            the generators
     content/articles/   hand-written article prose, one file per slug
     content/gear/       hand-written gear review prose, one file per slug
     site-data.json      the single source of data for all of it
@@ -61,6 +65,7 @@ STAGES = [
     ("sitemap", "generate-sitemap.py"),
     ("starthere", "generate-start-here.py"),
     ("feed",    "generate-feed.py"),
+    ("downloads", "generate-downloads.py"),
 ]
 
 ROOT = os.path.dirname(os.path.abspath(__file__))

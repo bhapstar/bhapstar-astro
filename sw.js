@@ -21,6 +21,7 @@ const SHELL_ASSETS = [
   '/gallery.html',
   '/gear.html',
   '/articles.html',
+  '/field-cards.html',
   '/prints.html',
   '/field_notes.html',
   '/quiz.html',
@@ -34,6 +35,14 @@ const SHELL_ASSETS = [
   '/partials/footer.html',
   '/site-data.json',
   '/assets/data/starword-words.txt',
+  // The field cards are ~130 KB for all six, and being readable with no
+  // signal is the entire point of them, so they are worth the shell slot.
+  '/downloads/milky-way-phone-field-card.pdf',
+  '/downloads/milky-way-camera-field-card.pdf',
+  '/downloads/moon-field-card.pdf',
+  '/downloads/meteor-shower-field-card.pdf',
+  '/downloads/asiair-field-card.pdf',
+  '/downloads/calibration-frames-field-card.pdf',
   '/fonts/outfit-latin-wght-normal.woff2',
   '/fonts/outfit-latin-ext-wght-normal.woff2',
   '/images/icons/favicon-32.png',
