@@ -612,35 +612,35 @@
     </div>
 
     <div id="tpContent" style="display:none">
-      <div class="section-title">By source</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Source</th>
-              <th style="text-align:center">Taps</th>
-              <th style="text-align:center">Devices</th>
-              <th class="bar-cell">Share</th>
-            </tr>
-          </thead>
-          <tbody id="tpSrcBody"></tbody>
-        </table>
-      </div>
-
       <div class="section-title" id="tpDayTitle">By day</div>
       <div class="table-wrap">
-        <table>
+        <table id="tpDayTable">
           <thead>
             <tr>
-              <th>Day</th>
-              <th>Source</th>
-              <th>Times</th>
-              <th style="text-align:center">Taps</th>
-              <th style="text-align:center">Devices</th>
-              <th class="bar-cell">Busiest</th>
+              <th class="sortable active" data-col="day">Day <span class="sort-arrow">▼</span></th>
+              <th class="sortable" data-col="src">Source <span class="sort-arrow"></span></th>
+              <th class="sortable" data-col="times">Times <span class="sort-arrow"></span></th>
+              <th class="sortable" data-col="taps" style="text-align:center">Taps <span class="sort-arrow"></span></th>
+              <th class="sortable" data-col="devices" style="text-align:center">Devices <span class="sort-arrow"></span></th>
+              <th class="sortable bar-cell" data-col="busiest">Busiest <span class="sort-arrow"></span></th>
             </tr>
           </thead>
           <tbody id="tpDayBody"></tbody>
+        </table>
+      </div>
+
+      <div class="section-title">By source</div>
+      <div class="table-wrap">
+        <table id="tpSrcTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-col="src">Source <span class="sort-arrow"></span></th>
+              <th class="sortable active" data-col="taps" style="text-align:center">Taps <span class="sort-arrow">▼</span></th>
+              <th class="sortable" data-col="devices" style="text-align:center">Devices <span class="sort-arrow"></span></th>
+              <th class="sortable bar-cell" data-col="share">Share <span class="sort-arrow"></span></th>
+            </tr>
+          </thead>
+          <tbody id="tpSrcBody"></tbody>
         </table>
       </div>
     </div>
@@ -960,6 +960,106 @@
       return SOURCES[src] || { label: src, cls: 'src-qr' };
     }
 
+    /* ── Sorting ──
+       Both tables sort on every column. The two keep separate state so
+       sorting one does not disturb the other.
+
+       Defaults match what the tables did before they were sortable: days
+       newest first, sources busiest first. Sorting re-renders from the data
+       already in memory, so it never refetches.
+
+       Text columns default A→Z on first click, numbers and dates default
+       high→low, because that is the useful direction in each case. Clicking
+       the same header again reverses it. */
+    let daySortCol = 'day',  daySortAsc = false;
+    let srcSortCol = 'taps', srcSortAsc = false;
+
+    const DAY_TEXT_COLS = ['src'];
+    const SRC_TEXT_COLS = ['src'];
+
+    function stamp(v) {
+      return v ? new Date(v).getTime() || 0 : 0;
+    }
+
+    // The label, not the raw key, so sorting by source matches what is on
+    // screen: "Downloaded: Moon card" sorts under D, not under dl-moon.
+    function srcLabel(row) {
+      return srcInfo(row.src).label || '';
+    }
+
+    function sortDayRows(rows) {
+      const dir = daySortAsc ? 1 : -1;
+      return [...rows].sort((a, b) => {
+        let r = 0;
+        switch (daySortCol) {
+          case 'day':     r = String(a.day || '').localeCompare(String(b.day || '')); break;
+          case 'src':     r = srcLabel(a).localeCompare(srcLabel(b)); break;
+          case 'times':   r = stamp(a.first) - stamp(b.first); break;
+          case 'taps':
+          case 'busiest': r = (a.taps || 0) - (b.taps || 0); break;
+          case 'devices': r = (a.devices || 0) - (b.devices || 0); break;
+        }
+        // Same day, or an equal count: fall back to the most recent tap, so
+        // rows never shuffle between renders.
+        if (r === 0) return stamp(b.last) - stamp(a.last);
+        return dir * r;
+      });
+    }
+
+    function sortSrcRows(rows) {
+      const dir = srcSortAsc ? 1 : -1;
+      return [...rows].sort((a, b) => {
+        let r = 0;
+        switch (srcSortCol) {
+          case 'src':     r = srcLabel(a).localeCompare(srcLabel(b)); break;
+          case 'taps':
+          case 'share':   r = (a.taps || 0) - (b.taps || 0); break;
+          case 'devices': r = (a.devices || 0) - (b.devices || 0); break;
+        }
+        if (r === 0) return srcLabel(a).localeCompare(srcLabel(b));
+        return dir * r;
+      });
+    }
+
+    function updateSortHeaders(tableId, col, asc) {
+      document.querySelectorAll(`#${tableId} th.sortable`).forEach(th => {
+        const arrow = th.querySelector('.sort-arrow');
+        if (th.dataset.col === col) {
+          th.classList.add('active');
+          arrow.textContent = asc ? '▲' : '▼';
+        } else {
+          th.classList.remove('active');
+          arrow.textContent = '';
+        }
+      });
+    }
+
+    document.querySelectorAll('#tpDayTable th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        if (daySortCol === th.dataset.col) {
+          daySortAsc = !daySortAsc;
+        } else {
+          daySortCol = th.dataset.col;
+          daySortAsc = DAY_TEXT_COLS.includes(daySortCol);
+        }
+        updateSortHeaders('tpDayTable', daySortCol, daySortAsc);
+        renderDayTable();
+      });
+    });
+
+    document.querySelectorAll('#tpSrcTable th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        if (srcSortCol === th.dataset.col) {
+          srcSortAsc = !srcSortAsc;
+        } else {
+          srcSortCol = th.dataset.col;
+          srcSortAsc = SRC_TEXT_COLS.includes(srcSortCol);
+        }
+        updateSortHeaders('tpSrcTable', srcSortCol, srcSortAsc);
+        renderSrcTable();
+      });
+    });
+
     /* Dates come back as YYYY-MM-DD in UTC. Shown as a readable date with the
        weekday underneath, because an event is a Friday or a Saturday and that
        is usually what you are looking for. */
@@ -1055,62 +1155,62 @@
           <div class="stat-value" style="font-size:15px;padding-top:8px">${esc(prettyStamp(overall.last))}</div>
         </div>`;
 
-      // By source
-      if (!bySrc.length) {
-        srcBody.innerHTML = `<tr><td colspan="4"><div class="empty">No taps recorded yet.</div></td></tr>`;
-      } else {
-        const maxSrc = Math.max(...bySrc.map(r => r.taps || 0));
-        srcBody.innerHTML = bySrc
-          .slice()
-          .sort((a, b) => (b.taps || 0) - (a.taps || 0))
-          .map(r => {
-            const info = srcInfo(r.src);
-            return `<tr>
-              <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
-              <td class="num-cell">${r.taps || 0}</td>
-              <td class="dev-cell">${r.devices || 0}</td>
-              <td class="bar-cell">${bar(r.taps || 0, maxSrc)}</td>
-            </tr>`;
-          }).join('');
-      }
-
-      // By day
+      // By day comes first: it is the table you read to see what actually
+      // happened. By source is the summary underneath it.
       const allTime = (data.window_days || days) >= 3650;
       dayTitle.textContent = allTime
         ? 'By day · all time'
         : `By day · last ${data.window_days || days} days`;
-      if (!byDay.length) {
-        dayBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nothing in this window.</div></td></tr>`;
-      } else {
-        const maxDay = Math.max(...byDay.map(r => r.taps || 0));
 
-        // Sort by date first (newest first), then by the latest tap
-        // within each day (newest first). This prevents the display order
-        // from depending on the order returned by the Worker.
-        const sortedByDay = byDay.slice().sort((a, b) => {
-          const dayCompare = String(b.day || '').localeCompare(String(a.day || ''));
-          if (dayCompare !== 0) return dayCompare;
-
-          const timeA = a.last ? new Date(a.last).getTime() : 0;
-          const timeB = b.last ? new Date(b.last).getTime() : 0;
-          return timeB - timeA;
-        });
-
-        dayBody.innerHTML = sortedByDay.map(r => {
-          const info = srcInfo(r.src);
-          const d = prettyDay(r.day);
-          return `<tr>
-            <td class="day-cell">${esc(d.main)}<div class="day-sub">${esc(d.sub)}</div></td>
-            <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
-            <td class="times-cell">${timeRange(r)}</td>
-            <td class="num-cell">${r.taps || 0}</td>
-            <td class="dev-cell">${r.devices || 0}</td>
-            <td class="bar-cell">${bar(r.taps || 0, maxDay)}</td>
-          </tr>`;
-        }).join('');
-      }
+      renderDayTable();
+      renderSrcTable();
 
       genTime.textContent = prettyStamp(data.generated);
+    }
+
+    /* ── By day table ── */
+    function renderDayTable() {
+      const byDay = (data && data.by_day) || [];
+      if (!byDay.length) {
+        dayBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nothing in this window.</div></td></tr>`;
+        return;
+      }
+      // The bar is scaled against the largest value in the whole window, not
+      // the largest on screen, so re-sorting never changes a bar's length.
+      const maxDay = Math.max(...byDay.map(r => r.taps || 0));
+
+      dayBody.innerHTML = sortDayRows(byDay).map(r => {
+        const info = srcInfo(r.src);
+        const d = prettyDay(r.day);
+        return `<tr>
+          <td class="day-cell">${esc(d.main)}<div class="day-sub">${esc(d.sub)}</div></td>
+          <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
+          <td class="times-cell">${timeRange(r)}</td>
+          <td class="num-cell">${r.taps || 0}</td>
+          <td class="dev-cell">${r.devices || 0}</td>
+          <td class="bar-cell">${bar(r.taps || 0, maxDay)}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    /* ── By source table ── */
+    function renderSrcTable() {
+      const bySrc = (data && data.by_source) || [];
+      if (!bySrc.length) {
+        srcBody.innerHTML = `<tr><td colspan="4"><div class="empty">No taps recorded yet.</div></td></tr>`;
+        return;
+      }
+      const maxSrc = Math.max(...bySrc.map(r => r.taps || 0));
+
+      srcBody.innerHTML = sortSrcRows(bySrc).map(r => {
+        const info = srcInfo(r.src);
+        return `<tr>
+          <td><div class="src-cell"><span class="src-dot ${info.cls}"></span>${esc(info.label)}</div></td>
+          <td class="num-cell">${r.taps || 0}</td>
+          <td class="dev-cell">${r.devices || 0}</td>
+          <td class="bar-cell">${bar(r.taps || 0, maxSrc)}</td>
+        </tr>`;
+      }).join('');
     }
 
     /* ── Range buttons ── */
@@ -1130,16 +1230,10 @@
       if (!data) return;
       const rows = [['day', 'source', 'first tap', 'last tap', 'taps', 'devices']];
 
-      // Keep the CSV in the same chronological order as the dashboard:
-      // newest date first, then newest tap within each day.
-      const sortedByDay = (data.by_day || []).slice().sort((a, b) => {
-        const dayCompare = String(b.day || '').localeCompare(String(a.day || ''));
-        if (dayCompare !== 0) return dayCompare;
-
-        const timeA = a.last ? new Date(a.last).getTime() : 0;
-        const timeB = b.last ? new Date(b.last).getTime() : 0;
-        return timeB - timeA;
-      });
+      // Same order as the By day table on screen, whichever way it is
+      // currently sorted. Exporting a different order from the one you are
+      // looking at is a good way to mistrust both.
+      const sortedByDay = sortDayRows(data.by_day || []);
 
       sortedByDay.forEach(r => {
         rows.push([r.day, srcInfo(r.src).label, prettyTime(r.first), prettyTime(r.last), r.taps || 0, r.devices || 0]);
@@ -1183,7 +1277,7 @@
 
   const SUBTITLES = {
     likes: 'Gallery engagement dashboard',
-    taps:  'Business Card scans (NFC Taps and QR Code scans), QR arrivals from field cards and field card downloads'
+    taps:  'NFC tag and QR card scans'
   };
 
   const lkUnlock      = document.getElementById('lkUnlock');
