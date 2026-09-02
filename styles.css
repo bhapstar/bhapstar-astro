@@ -1136,7 +1136,6 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 }
 
 
-
 /* About page */
 .page-about .cols{ grid-template-columns: 1fr; justify-items: center; }
 .page-about .panel{ width: 100%; max-width: 800px; padding: 32px 30px; }
@@ -2490,8 +2489,6 @@ a[href="prints.html"], a[href*="prints"] {
 }
 
 
-
-
 /* ############################################################
    PAGE STYLES
    Everything below was previously inline in each page's <style>
@@ -2671,36 +2668,7 @@ a[href="prints.html"], a[href*="prints"] {
 .sh-intro { font-size: 14px; line-height: 1.72; color: var(--muted);
             margin: 14px 0 0; }
 
-/* ---- Proof band ----------------------------------------------------
-   Three gallery images with their capture specs. Portrait crops, because
-   every image on the site is taller than it is wide and a 3/4 frame
-   keeps the row even without letterboxing anything. */
-.sh-proof { margin: 0 0 44px; }
-.sh-proof-grid { display: grid; grid-template-columns: repeat(3, 1fr);
-                 gap: 14px; }
-.sh-shot { display: block; text-decoration: none; color: inherit; }
-.sh-shot-frame { display: block; position: relative; overflow: hidden;
-                 border-radius: 13px; border: 1px solid var(--line);
-                 background: var(--soft); aspect-ratio: 3 / 4;
-                 transition: border-color 200ms ease; }
-.sh-shot-frame img { width: 100%; height: 100%; object-fit: cover;
-                     display: block;
-                     transition: transform 420ms var(--ease-in-out); }
-.sh-shot:hover .sh-shot-frame,
-.sh-shot:focus-visible .sh-shot-frame { border-color: var(--accent); }
-.sh-shot:hover .sh-shot-frame img { transform: scale(1.04); }
-.sh-shot-name { display: block; font-size: 14px; font-weight: 600;
-                line-height: 1.3; margin: 10px 0 3px; }
-.sh-shot-spec { display: block; font-size: 9.5px; letter-spacing: 0.13em;
-                text-transform: uppercase; color: var(--muted);
-                line-height: 1.6; }
-.sh-proof-line { font-size: 14.5px; line-height: 1.7; color: var(--muted);
-                 margin: 20px 0 0; }
-.sh-proof-line strong { color: var(--text); font-weight: 600; }
-
 @media (prefers-reduced-motion: reduce) {
-  .sh-shot-frame img { transition: none; }
-  .sh-shot:hover .sh-shot-frame img { transform: none; }
 }
 
 /* ---- Tonight block -------------------------------------------------
@@ -2845,72 +2813,10 @@ html[data-theme="light"] .sh-step-d a,
 html[data-theme="light"] .sh-route-end a,
 html[data-theme="light"] .sh-veteran a { color: #6d4bd8; }
 
-/* ---- Proof image popup ---------------------------------------------
-   A small dialog rather than the gallery lightbox. The point of this
-   page is to hold a first-time reader, and sending them to gallery.html
-   one tap in is the easiest way to lose them. */
-.sh-modal { position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            padding: 24px;
-            opacity: 0; transition: opacity 200ms var(--ease-in-out); }
-.sh-modal[hidden] { display: none; }
-.sh-modal.open { opacity: 1; }
-.sh-modal-back { position: absolute; inset: 0; cursor: pointer;
-                 background: rgba(3, 2, 12, 0.82);
-                 -webkit-backdrop-filter: blur(6px);
-                 backdrop-filter: blur(6px); }
-.sh-modal-card { position: relative; z-index: 1;
-                 width: min(420px, 100%); max-height: calc(100vh - 48px);
-                 overflow-y: auto; border-radius: 16px;
-                 border: 1px solid var(--line); background: var(--bg);
-                 box-shadow: var(--shadow);
-                 transform: translateY(10px) scale(0.985);
-                 transition: transform 200ms var(--ease-in-out);
-                 -webkit-user-select: none; user-select: none;
-                 -webkit-touch-callout: none; }
-.sh-modal.open .sh-modal-card { transform: none; }
-.sh-modal-img { cursor: zoom-out; display: block; width: 100%; max-height: 56vh;
-                object-fit: contain; background: #05040f;
-                border-radius: 16px 16px 0 0; pointer-events: none; }
-.sh-modal-x { position: absolute; top: 9px; right: 9px; z-index: 2;
-              width: 32px; height: 32px; border-radius: 50%;
-              display: flex; align-items: center; justify-content: center;
-              font-size: 19px; line-height: 1; cursor: pointer;
-              color: #fff; background: rgba(5, 4, 15, 0.62);
-              border: 1px solid rgba(255, 255, 255, 0.18);
-              transition: background 200ms ease, border-color 200ms ease; }
-.sh-modal-x:hover { background: rgba(5, 4, 15, 0.85);
-                    border-color: var(--accent); }
-.sh-modal-body { padding: 16px 18px 18px; }
-.sh-modal-name { font-size: 17px; font-weight: 600; line-height: 1.3;
-                 margin: 0 0 6px; color: var(--text); }
-.sh-modal-hint { font-size: 10px; letter-spacing: 0.09em;
-                 text-transform: uppercase; color: var(--muted);
-                 margin: 0 0 10px; opacity: 0.7; }
-.sh-modal-spec { font-size: 9.5px; letter-spacing: 0.13em;
-                 text-transform: uppercase; color: var(--muted);
-                 line-height: 1.6; margin: 0; }
-.sh-modal-blurb { font-size: 13.5px; line-height: 1.6; color: var(--muted);
-                  margin: 12px 0 0; }
-.sh-modal-blurb[hidden] { display: none; }
-.sh-modal-link { display: inline-block; margin-top: 14px; font-size: 13.5px;
-                 color: var(--accent); text-decoration: none;
-                 border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
-                 transition: border-color 200ms ease; }
-.sh-modal-link:hover { border-bottom-color: var(--accent); }
-
-/* Stops the page behind the dialog scrolling under it. */
-body.sh-modal-lock { overflow: hidden; }
-
 @media (prefers-reduced-motion: reduce) {
-  .sh-modal, .sh-modal-card { transition: none; }
-  .sh-modal-card { transform: none; }
 }
 
 @media (max-width: 560px) {
-  .sh-modal { padding: 14px; }
-  .sh-modal-card { max-height: calc(100vh - 28px); }
-  .sh-modal-img { max-height: 48vh; }
 }
 
 /* Below 760px the three images become a snap-scroll strip rather than a
@@ -2920,27 +2826,6 @@ body.sh-modal-lock { overflow: hidden; }
    in the line underneath. The strip bleeds to both screen edges so it
    reads as continuous rather than as a row that happens to be clipped. */
 @media (max-width: 760px) {
-  .sh-proof-grid {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scroll-padding-left: var(--pad);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    margin-inline: calc(var(--pad) * -1);
-    padding: 0 var(--pad) 2px;
-  }
-  .sh-proof-grid::-webkit-scrollbar { display: none; }
-  /* Trailing spacer: older Safari drops the container's padding-right on
-     an overflowing flex row, which leaves the last image flush to the
-     edge. */
-  .sh-proof-grid::after { content: ""; flex: 0 0 1px; }
-  /* Capped rather than a flat percentage: a plain 58% would give 232px
-     cards on a phone but 441px on a 760px tablet, where only 1.6 fit on
-     screen. The cap holds the card near 250px across the whole range, so
-     a phone shows about one and a half and a tablet about three. */
-  .sh-shot { flex: 0 0 min(62%, 250px); scroll-snap-align: start; }
 }
 
 @media (max-width: 560px) {
@@ -2966,8 +2851,6 @@ body.sh-modal-lock { overflow: hidden; }
     padding: 9px 12px;
     text-align: center;
   }
-  .sh-shot-name { font-size: 13px; }
-  .sh-proof-grid { gap: 10px; }
 }
 
 /* ============================================================
@@ -5124,7 +5007,6 @@ body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
   font-size: 9px; color: rgba(80,60,110,0.42); letter-spacing: 0.04em;
   margin-top: 3px;
 }
-
 
 
 /* Skeleton */
@@ -8508,7 +8390,6 @@ html[data-theme="light"] .page-starword .sw-toast{
   
 
 
-
 /* ############################################################
    ARTICLE CONTENT FRAGMENTS, 404 AND SHARED SMALL BITS
    Lifted out of content/ fragments and inline style= attributes.
@@ -9106,6 +8987,7 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   .figbox-stage{ transform: none; }
   .fig-openable img, .fig-openable svg{ transition: none; }
 }
+
 /* ==================================================================
    PAGE: Start Here — sky panel (start-here.html)
    Append to the end of styles.css.
@@ -9137,7 +9019,7 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
    Leaflet injects its own markup inside #shSkyMap, so anything that
    has to beat Leaflet's stylesheet is scoped under .sh-sky-map. */
 .sh-sky-map{
-  height:230px;
+  height:360px;
   margin-bottom:12px;
   border:1px solid var(--line);
   border-radius:12px;
@@ -9241,7 +9123,10 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 }
 .sh-sky-list li{
   position:relative;
-  padding:12px 14px 12px 44px;
+  display:grid;
+  grid-template-columns:1fr 168px;
+  gap:6px 18px;
+  padding:14px 16px 14px 46px;
   border:1px solid var(--line);
   border-radius:12px;
   background:var(--bg2);
@@ -9276,10 +9161,54 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 .sh-sky-tag-cluster { background:rgba(var(--accent3-rgb),0.16); color:var(--accent3); }
 .sh-sky-tag-wide    { background:rgba(var(--accent-rgb),0.16);  color:var(--accent);  }
 
-.sh-sky-when,
-.sh-sky-why{ display:block; line-height:1.5; }
-.sh-sky-when{ margin-top:5px; color:var(--muted); font-size:.79rem; }
-.sh-sky-why { margin-top:4px; color:var(--text); font-size:.82rem; opacity:.86; }
+/* Left column. min-width:0 stops long names overflowing the grid track. */
+.sh-sky-main{ min-width:0; }
+.sh-sky-head{ margin:0 0 6px; }
+.sh-sky-desc{ margin:0 0 5px; color:var(--muted); font-size:.83rem; line-height:1.55; }
+.sh-sky-why { margin:0; color:var(--text); font-size:.83rem; line-height:1.5; opacity:.88; }
+
+/* Timings, right-hand column. These used to run as one grey line under
+   the title, which left most of a wide card empty. */
+.sh-sky-timing{
+  display:flex; flex-direction:column; gap:7px;
+  padding-left:16px;
+  border-left:1px solid var(--line);
+}
+.sh-sky-timing span{ display:flex; flex-direction:column; gap:1px; }
+.sh-sky-timing b{ color:var(--text); font-size:.83rem; font-weight:600; }
+.sh-sky-timing i{
+  font-style:normal; font-size:.66rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em;
+}
+
+/* ── "i" explanations on the summary figures ── */
+.sh-sky-facts i{ position:relative; }
+.sh-sky-i{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:14px; height:14px; margin-left:5px; padding:0;
+  border:1px solid var(--line); border-radius:50%;
+  background:transparent; color:var(--muted);
+  font:inherit; font-size:.6rem; font-style:normal; line-height:1;
+  text-transform:none; letter-spacing:0;
+  cursor:pointer; vertical-align:middle;
+}
+.sh-sky-i:hover{ color:var(--text); border-color:rgba(var(--accent-rgb),0.55); }
+.sh-sky-i::after{
+  content:attr(data-tip);
+  position:absolute; left:0; top:calc(100% + 7px); z-index:5;
+  width:min(270px,72vw);
+  padding:10px 12px;
+  border:1px solid var(--line); border-radius:10px;
+  background:var(--header-solid);
+  box-shadow:var(--shadow);
+  color:var(--text);
+  font-size:.75rem; line-height:1.5;
+  text-transform:none; letter-spacing:0; text-align:left;
+  opacity:0; visibility:hidden;
+  transition:opacity .14s ease;
+}
+.sh-sky-i:hover::after,
+.sh-sky-i.is-open::after{ opacity:1; visibility:visible; }
 
 .sh-sky-toggle{ font-size:.85rem; padding:8px 16px; }
 
@@ -9290,11 +9219,16 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 
 @media (max-width:560px){
   .sh-sky{ padding:17px; }
-  .sh-sky-map{ height:190px; }
+  .sh-sky-map{ height:260px; }
   .sh-sky-facts{ gap:8px; }
   .sh-sky-facts span{ flex:1 1 100px; padding:9px 11px; }
-  .sh-sky-list li{ padding:11px 12px 11px 40px; }
+  .sh-sky-list li{ grid-template-columns:1fr; padding:12px 13px 12px 40px; }
   .sh-sky-list li::before{ left:11px; }
+  .sh-sky-timing{
+    flex-direction:row; flex-wrap:wrap; gap:12px 20px;
+    padding:10px 0 0; margin-top:4px;
+    border-left:0; border-top:1px solid var(--line);
+  }
 }
 
 /* ── Light theme ────────────────────────────── */
@@ -9305,3 +9239,4 @@ html[data-theme="light"] .sh-sky-map .leaflet-control-attribution{
 html[data-theme="light"] .sh-sky-list li{ background:rgba(255,255,255,0.62); }
 html[data-theme="light"] .sh-sky-bortle select{ background:rgba(255,255,255,0.75); }
 html[data-theme="light"] .sh-sky-why{ opacity:1; }
+html[data-theme="light"] .sh-sky-i::after{ background:#fff; }

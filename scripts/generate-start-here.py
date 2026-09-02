@@ -127,11 +127,11 @@ SKY_LEDE = ("Drop a pin where you will be observing from, whether that is "
             "be worth setting up for.")
 
 # Where the map opens before the reader has moved the pin or saved a
-# location. Dubai, because that is where most of the gallery was shot, but
-# nothing on the page depends on it: the first drag replaces it.
+# location: Dubai city. Nothing on the page depends on it, because the
+# first drag or tap replaces it.
 SKY_MAP_LAT = 25.2048
 SKY_MAP_LNG = 55.2708
-SKY_MAP_ZOOM = 9
+SKY_MAP_ZOOM = 11
 
 SKY_MAP_HELP = ("Drag the pin, or tap anywhere on the map, to set your "
                 "location. Nothing is sent anywhere.")
@@ -145,11 +145,40 @@ LEAFLET_VERSION = "1.9.4"
 LEAFLET_CSS_SRI = "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
 LEAFLET_JS_SRI = "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
 
-# The Bortle number changes which targets are recommended, so a reader who
-# does not know theirs will get bad advice without noticing. Checked
-# against the real article list at build time.
-SKY_BORTLE_ARTICLE = "bortle-scale-narrowband-filters"
-SKY_BORTLE_LINK = "not sure which yours is?"
+# The sky brightness picker. Worded as what the reader can actually see
+# rather than as a Bortle class, because someone who has never heard of
+# Bortle can still answer "can I see the Milky Way from here". The number
+# is what the engine uses; the words are how it gets chosen.
+SKY_BORTLE_Q = "How dark is your night sky?"
+SKY_BORTLE_DEFAULT = 5
+SKY_BORTLE_SCALE = [
+    (1, "1 — Pristine. The Milky Way casts a shadow"),
+    (2, "2 — Truly dark. Milky Way full of detail"),
+    (3, "3 — Rural. Milky Way clear, slight glow low down"),
+    (4, "4 — Edge of town. Milky Way visible but washed out near the horizon"),
+    (5, "5 — Suburban. Milky Way faint overhead at best"),
+    (6, "6 — Bright suburb. No Milky Way, sky looks grey"),
+    (7, "7 — Town. Only the brighter stars, sky glows all round"),
+    (8, "8 — City. Brightest stars and planets only"),
+    (9, "9 — Inner city. A handful of stars at most"),
+]
+
+# The "i" explanations on the four summary figures. Emitted as data
+# attributes on the section so the copy stays here rather than buried in
+# the script string.
+SKY_TIPS = {
+    "dark": ("Astronomical darkness: the sun is more than 18 degrees below "
+             "the horizon, so the sky is as dark as it gets that night. "
+             "Twilight before and after is still too bright for faint "
+             "objects."),
+    "hours": ("How long that fully dark window lasts. In midsummer at high "
+              "latitudes it can vanish altogether."),
+    "moon": ("How much of the moon is lit, and its phase. A bright moon "
+             "washes out faint galaxies and nebulae much like light "
+             "pollution does, so a new moon is the prize."),
+    "sky": ("The brightness of your own sky, from the picker above. It "
+            "decides which objects are realistic from where you are."),
+}
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
 SKY_FALLBACK = ("Working out tonight's sky. If nothing appears here, "
@@ -537,26 +566,25 @@ def build_sky(articles):
     Holds no astronomy. /tonight-core.js fills #shSkyOut in, so this page
     and the engine cannot drift apart.
 
-    The map is progressive: the coordinate readout and the Bortle picker
-    are plain HTML that work on their own, and Leaflet upgrades the empty
-    div above them into a draggable pin if it loads. With JavaScript off,
-    or tiles blocked, the reader sees SKY_FALLBACK rather than a broken
-    grey box.
-    """
-    if SKY_BORTLE_ARTICLE not in articles:
-        raise BuildError(
-            f"sky panel Bortle link '{SKY_BORTLE_ARTICLE}' does not exist")
+    The map is an upgrade, not a requirement: the coordinate readout and
+    the darkness picker are plain HTML that work on their own, and Leaflet
+    turns the empty div above them into a draggable pin if it loads.
 
-    bortle_opts = "".join(
-        f'<option value="{n}"{" selected" if n == 5 else ""}>{n}{esc(t)}</option>'
-        for n, t in [(1, " (pristine)"), (2, " (very dark)"), (3, " (rural)"),
-                     (4, " (rural/suburban)"), (5, " (suburban)"),
-                     (6, " (bright suburban)"), (7, " (suburban/urban)"),
-                     (8, " (city)"), (9, " (inner city)")]
+    The `articles` argument is unused now that the Bortle link is gone. It
+    is kept so build_page's call site stays uniform with the other
+    builders, and so a future link here has the list to validate against.
+    """
+    opts = "".join(
+        f'<option value="{n}"{" selected" if n == SKY_BORTLE_DEFAULT else ""}>'
+        f'{esc(label)}</option>'
+        for n, label in SKY_BORTLE_SCALE
+    )
+    tips = " ".join(
+        f'data-tip-{k}="{esc(v)}"' for k, v in SKY_TIPS.items()
     )
 
     return (
-        '      <section class="sh-sky" id="shSky">\n'
+        f'      <section class="sh-sky" id="shSky" {tips}>\n'
         f'        <h2>{esc(SKY_TITLE)}</h2>\n'
         f'        <p class="sh-sky-lede">{esc(SKY_LEDE)}</p>\n'
 
@@ -573,10 +601,8 @@ def build_sky(articles):
         f'        <p class="sh-sky-map-help">{esc(SKY_MAP_HELP)}</p>\n'
 
         '        <div class="sh-sky-bortle">\n'
-        '          <label for="shSkyBortle">How bright is your sky?</label>\n'
-        f'          <select id="shSkyBortle">{bortle_opts}</select>\n'
-        f'          <a href="{article_url(SKY_BORTLE_ARTICLE)}">'
-        f'{esc(SKY_BORTLE_LINK)}</a>\n'
+        f'          <label for="shSkyBortle">{esc(SKY_BORTLE_Q)}</label>\n'
+        f'          <select id="shSkyBortle">{opts}</select>\n'
         '        </div>\n'
 
         '        <div class="sh-sky-datenav">\n'
@@ -942,7 +968,11 @@ SCRIPT = """
   }
 
   if (window.L && mapEl) {
-    map = L.map(mapEl, { scrollWheelZoom: false })
+    /* Wheel zoom is on because zooming by button is clunky on desktop.
+       The cost is that a wheel scroll starting over the map zooms instead
+       of moving the page, which is why the map is not full width: there
+       is always margin either side to scroll past it. */
+    map = L.map(mapEl, { scrollWheelZoom: true })
            .setView([state.lat, state.lng], parseInt(mapEl.dataset.zoom, 10));
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -963,6 +993,30 @@ SCRIPT = """
   }
 
   /* ── Rendering ───────────────────────────────────── */
+  /* The "i" buttons. Copy comes from data attributes on #shSky so it
+     stays in the generator rather than in this script string. */
+  var TIPS = {
+    dark:  sky.dataset.tipDark  || '',
+    hours: sky.dataset.tipHours || '',
+    moon:  sky.dataset.tipMoon  || '',
+    sky:   sky.dataset.tipSky   || ''
+  };
+
+  function info(key) {
+    if (!TIPS[key]) return '';
+    return '<button type="button" class="sh-sky-i" aria-label="What this means" ' +
+           'data-tip="' + TIPS[key].replace(/"/g, '&quot;') + '">i</button>';
+  }
+
+  /* One open tip at a time, closed by a second tap or a click elsewhere.
+     Hover alone would leave this unusable on a phone. */
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.sh-sky-i');
+    var open = sky.querySelector('.sh-sky-i.is-open');
+    if (open && open !== btn) open.classList.remove('is-open');
+    if (btn) { ev.preventDefault(); btn.classList.toggle('is-open'); }
+  });
+
   function reasonFor(r) {
     var bits = [];
     if (r.bf < 0.5) bits.push('Your sky is too bright for this one. It will be a struggle.');
@@ -994,11 +1048,12 @@ SCRIPT = """
     var html =
       '<div class="sh-sky-facts">' +
         '<span><b>' + hhmm(plan.darkStart) + ' to ' + hhmm(plan.darkEnd) +
-          '</b><i>Properly dark</i></span>' +
+          '</b><i>Properly dark' + info('dark') + '</i></span>' +
         '<span><b>' + hoursText((plan.darkEnd - plan.darkStart) / 3600000) +
-          '</b><i>Dark hours</i></span>' +
-        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) + '</i></span>' +
-        '<span><b>Bortle ' + state.bortle + '</b><i>Your sky</i></span>' +
+          '</b><i>Dark hours' + info('hours') + '</i></span>' +
+        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) +
+          info('moon') + '</i></span>' +
+        '<span><b>Level ' + state.bortle + '</b><i>Your sky' + info('sky') + '</i></span>' +
       '</div>';
 
     var v;
@@ -1026,11 +1081,19 @@ SCRIPT = """
     var list = state.expanded ? plan.targets : plan.targets.slice(0, SHOWN);
     html += '<ol class="sh-sky-list">' + list.map(function (r) {
       return '<li>' +
-        '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
-        '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
-        '<span class="sh-sky-when">' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) +
-          ', ' + hoursText(r.hours) + ' usable, peaks at ' + Math.round(r.maxAlt) + '\u00B0</span>' +
-        '<span class="sh-sky-why">' + reasonFor(r) + '</span>' +
+        '<div class="sh-sky-main">' +
+          '<p class="sh-sky-head">' +
+            '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
+            '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
+          '</p>' +
+          '<p class="sh-sky-desc">' + r.tg.d + '</p>' +
+          '<p class="sh-sky-why">' + reasonFor(r) + '</p>' +
+        '</div>' +
+        '<div class="sh-sky-timing">' +
+          '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b><i>Best window</i></span>' +
+          '<span><b>' + hoursText(r.hours) + '</b><i>Usable</i></span>' +
+          '<span><b>' + Math.round(r.maxAlt) + '\u00B0</b><i>Peak height</i></span>' +
+        '</div>' +
       '</li>';
     }).join('') + '</ol>';
 
