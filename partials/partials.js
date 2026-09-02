@@ -505,6 +505,89 @@ const HIDE_FIELD_NOTES = true;
 
 
 /* ══════════════════════════════════════════════════════════════════════
+   Field card download counter
+   ----------------------------------------------------------------------
+   The tap counter above answers "how did somebody reach the site".
+   This answers the opposite question: "which field cards do people
+   actually take away".
+
+   Those are genuinely different numbers and must not be mixed. A
+   'pdf-moon' tap means a QR printed ON the Moon card was scanned, so
+   somebody already holding a card came to the site. A 'dl-moon' event
+   means somebody on the site downloaded that card. Same PDF, opposite
+   directions, hence the separate dl- prefix.
+
+   It is a delegated listener on the document rather than a handler bound
+   to each link, so it covers the download button on every article page
+   and the six on field-cards.html without either generator knowing this
+   exists. A card added later is covered by adding one line to DL_SRCS.
+
+   Whitelisted by filename for the same reason the tap counter is
+   whitelisted by source: the Worker rejects anything not in its own
+   VALID_SRC list, so sending a value it will refuse is a wasted request.
+
+   This counts clicks on the link, which is the only thing a static site
+   can see. It is not a count of completed downloads, and a browser
+   extension that blocks the request will make it an undercount. It is
+   there for the shape of the numbers, not for an audit.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var DL_URL = 'https://bhapstar-taps.bhapindersingh.workers.dev/tap';
+
+  // PDF filename -> the source recorded against the download.
+  // Keys must match the files in /downloads/, values must match VALID_SRC
+  // in the Worker.
+  var DL_SRCS = {
+    'milky-way-phone-field-card.pdf':  'dl-phone',
+    'milky-way-camera-field-card.pdf': 'dl-camera',
+    'meteor-shower-field-card.pdf':    'dl-meteors',
+    'moon-field-card.pdf':             'dl-moon',
+    'asiair-field-card.pdf':           'dl-asiair',
+    'calibration-frames-field-card.pdf': 'dl-calibration'
+  };
+
+  // Same key the tap counter and the gallery likes module use, so a device
+  // that already has an id is not given a second one.
+  function visitorId() {
+    try {
+      var uid = localStorage.getItem('_bhap_uid');
+      if (!uid) {
+        uid = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : String(Date.now()) + '-' + String(Math.random()).slice(2);
+        localStorage.setItem('_bhap_uid', uid);
+      }
+      return uid;
+    } catch (e) {
+      return null;   // locked-down browser: still count the download
+    }
+  }
+
+  document.addEventListener('click', function (ev) {
+    var link = ev.target.closest && ev.target.closest('a[href*="/downloads/"]');
+    if (!link) return;
+
+    var file = (link.getAttribute('href') || '').split('/').pop().split('?')[0];
+    var src  = DL_SRCS[file];
+    if (!src) return;
+
+    // text/plain keeps this a simple request, so there is no CORS preflight.
+    // keepalive matters because the click may start a navigation on browsers
+    // that open the PDF in place rather than saving it.
+    try {
+      fetch(DL_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ src: src, uid: visitorId() }),
+        keepalive: true
+      }).catch(function () { /* a missed count is not worth a broken download */ });
+    } catch (e) { /* likewise */ }
+    // No preventDefault anywhere: the download must happen either way.
+  }, true);
+})();
+
+
+/* ══════════════════════════════════════════════════════════════════════
    Figure lightbox
    ----------------------------------------------------------------------
    Makes every figure on an article page openable: photographs and the
