@@ -383,6 +383,9 @@
     .src-qr   { background: var(--accent3); box-shadow: 0 0 8px rgba(52,211,153,0.55); }
     .src-x    { background: var(--accent1); box-shadow: 0 0 8px rgba(167,139,250,0.55); }
     .src-pdf  { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.55); }
+    /* Downloads get their own colour so the two field card families are
+       distinguishable at a glance, not just by reading the label. */
+    .src-dl   { background: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.55); }
     .num-cell { text-align: center; font-weight: 700; font-size: 16px; color: var(--accent4); }
     .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
     .day-cell { white-space: nowrap; }
@@ -908,16 +911,37 @@
 
     /* How each stored source is labelled and coloured. The keys must match the
        VALID_SRC list in the Worker. 'card' is the QR printed on the physical
-       cards; 'qr' is any QR made after the counter existed. */
+       cards; 'qr' is any QR made after the counter existed.
+
+       Two families of field card source, and they point in opposite
+       directions, so the labels say which:
+
+         pdf-*  someone scanned the QR printed ON a card, so they were
+                already holding one and came to the site because of it
+         dl-*   someone on the site downloaded that card
+
+       Same PDF either way, so labelling both "Moon field card" would make
+       the table unreadable. Anything missing from this list still shows,
+       under its raw source name, via srcInfo below. */
     const SOURCES = {
       nfc:          { label: 'NFC tag',            cls: 'src-nfc'  },
       card:         { label: 'Printed card QR',    cls: 'src-card' },
       qr:           { label: 'QR code',            cls: 'src-qr'   },
       x:            { label: 'Link posted on X',   cls: 'src-x'    },
-      'pdf-phone':  { label: 'Phone field card',   cls: 'src-pdf'  },
-      'pdf-camera': { label: 'Camera field card',  cls: 'src-pdf'  },
-      'pdf-calibration': { label: 'Calibration field card', cls: 'src-pdf' },
-      'pdf-asiair':      { label: 'ASIAir field card',      cls: 'src-pdf' }
+
+      'pdf-phone':       { label: 'Scanned: phone card',         cls: 'src-pdf' },
+      'pdf-camera':      { label: 'Scanned: camera card',        cls: 'src-pdf' },
+      'pdf-meteors':     { label: 'Scanned: meteor shower card', cls: 'src-pdf' },
+      'pdf-moon':        { label: 'Scanned: Moon card',          cls: 'src-pdf' },
+      'pdf-asiair':      { label: 'Scanned: ASIAir card',        cls: 'src-pdf' },
+      'pdf-calibration': { label: 'Scanned: calibration card',   cls: 'src-pdf' },
+
+      'dl-phone':        { label: 'Downloaded: phone card',         cls: 'src-dl' },
+      'dl-camera':       { label: 'Downloaded: camera card',        cls: 'src-dl' },
+      'dl-meteors':      { label: 'Downloaded: meteor shower card', cls: 'src-dl' },
+      'dl-moon':         { label: 'Downloaded: Moon card',          cls: 'src-dl' },
+      'dl-asiair':       { label: 'Downloaded: ASIAir card',        cls: 'src-dl' },
+      'dl-calibration':  { label: 'Downloaded: calibration card',   cls: 'src-dl' }
     };
 
     const loadingMsg = document.getElementById('tpLoadingMsg');
