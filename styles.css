@@ -9124,58 +9124,77 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   background:var(--soft);
 }
 .sh-sky h2{ margin:0 0 10px; font-size:1.15rem; }
+
+/* No max-width here on purpose. Constraining it left the paragraph
+   ending mid-panel with a wide empty column beside it. */
 .sh-sky-lede{
   margin:0 0 16px;
   color:var(--muted);
   font-size:.92rem; line-height:1.6;
-  max-width:62ch;
 }
 
-/* ── Location pills ─────────────────────────── */
-.sh-sky-pills{ margin-bottom:14px; }
-.sh-sky-pill.is-active{
+/* ── Map ────────────────────────────────────────
+   Leaflet injects its own markup inside #shSkyMap, so anything that
+   has to beat Leaflet's stylesheet is scoped under .sh-sky-map. */
+.sh-sky-map{
+  height:230px;
+  margin-bottom:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg2);
+  overflow:hidden;
+  z-index:0;                 /* keeps Leaflet panes under the site header */
+}
+.sh-sky-map.is-off{ display:none; }
+
+.sh-sky-map .leaflet-container{
+  background:var(--bg2);
+  font:inherit;
+}
+.sh-sky-map .leaflet-control-attribution{
+  background:rgba(5,4,20,0.72);
+  color:var(--muted);
+  font-size:.65rem;
+}
+.sh-sky-map .leaflet-control-attribution a{ color:var(--accent); }
+
+/* OSM tiles are built for white pages. Knock them back so the panel does
+   not glare on a dark background. Removed entirely in light mode below. */
+.sh-sky-map .leaflet-tile-pane{ filter:brightness(.72) saturate(.75); }
+
+.sh-sky-loc{
+  display:flex; flex-wrap:wrap; align-items:center; gap:12px;
+  margin-bottom:8px;
+}
+.sh-sky-coords{
+  margin:0;
   color:var(--text);
-  border-color:rgba(var(--accent-rgb),0.75);
-  background:rgba(var(--accent-rgb),0.14);
+  font-size:.86rem;
+  font-variant-numeric:tabular-nums;
+}
+.sh-sky-geo{ font-size:.84rem; padding:7px 14px; }
+
+.sh-sky-map-help{
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:.79rem; line-height:1.55;
 }
 
-/* ── Advanced: coordinates + minimum height ─── */
-.sh-sky-adv{ margin-bottom:16px; }
-.sh-sky-adv summary{
-  cursor:pointer; color:var(--muted);
-  font-size:.84rem; padding:4px 0;
+/* ── Bortle picker ──────────────────────────── */
+.sh-sky-bortle{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  margin-bottom:16px;
+  font-size:.84rem; color:var(--muted);
 }
-.sh-sky-adv summary:hover{ color:var(--text); }
-
-.sh-sky-adv-grid{
-  display:flex; flex-wrap:wrap; gap:12px; align-items:end;
-  margin:12px 0 14px;
-}
-.sh-sky-adv-grid label{
-  display:flex; flex-direction:column; gap:5px;
-  font-size:.78rem; color:var(--muted);
-}
-.sh-sky-adv-grid input,
-.sh-sky-adv-grid select{
-  padding:8px 10px; min-width:128px;
+.sh-sky-bortle select{
+  padding:8px 10px;
   border:1px solid var(--line);
   border-radius:10px;
   background:var(--bg2);
   color:var(--text);
-  font:inherit; font-size:.88rem;
+  font:inherit; font-size:.86rem;
 }
-.sh-sky-apply{ font-size:.86rem; padding:8px 15px; }
-
-.sh-sky-alt{
-  display:flex; align-items:center; gap:10px;
-  font-size:.78rem; color:var(--muted);
-}
-.sh-sky-alt input[type=range]{ width:130px; accent-color:var(--accent); }
-.sh-sky-alt output{ color:var(--text); min-width:34px; }
-.sh-sky-alt-help{
-  margin:8px 0 0; color:var(--muted);
-  font-size:.79rem; line-height:1.55; max-width:60ch;
-}
+.sh-sky-bortle a{ color:var(--accent); font-size:.79rem; }
 
 /* ── Which night ────────────────────────────── */
 .sh-sky-datenav{
@@ -9271,6 +9290,7 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 
 @media (max-width:560px){
   .sh-sky{ padding:17px; }
+  .sh-sky-map{ height:190px; }
   .sh-sky-facts{ gap:8px; }
   .sh-sky-facts span{ flex:1 1 100px; padding:9px 11px; }
   .sh-sky-list li{ padding:11px 12px 11px 40px; }
@@ -9278,7 +9298,10 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 }
 
 /* ── Light theme ────────────────────────────── */
+html[data-theme="light"] .sh-sky-map .leaflet-tile-pane{ filter:none; }
+html[data-theme="light"] .sh-sky-map .leaflet-control-attribution{
+  background:rgba(255,255,255,0.78);
+}
 html[data-theme="light"] .sh-sky-list li{ background:rgba(255,255,255,0.62); }
-html[data-theme="light"] .sh-sky-adv-grid input,
-html[data-theme="light"] .sh-sky-adv-grid select{ background:rgba(255,255,255,0.75); }
+html[data-theme="light"] .sh-sky-bortle select{ background:rgba(255,255,255,0.75); }
 html[data-theme="light"] .sh-sky-why{ opacity:1; }

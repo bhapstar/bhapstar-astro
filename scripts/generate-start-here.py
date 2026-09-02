@@ -112,43 +112,51 @@ INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
 
 # ------------------------------------------------------------------ 1. SKY
 
-# The sky panel. This is the whole tool, not a preview of one: the reader
-# picks where they are and gets tonight's darkness window, the moon, and
-# every target from the gallery that is actually worth pointing at, ranked.
+# The sky panel. The reader drops a pin where they will be observing from,
+# says how bright their sky is, and gets tonight's darkness window, the
+# moon, and every target from the gallery that is actually worth pointing
+# at, ranked.
 #
-# All the astronomy lives in /tonight-core.js. This file emits an empty
-# shell and the copy around it, and never calculates anything itself.
+# All the astronomy lives in /tonight-core.js. This file emits the shell
+# and the copy around it, and never calculates anything itself.
 SKY_TITLE = "What is worth looking at tonight"
-SKY_LEDE = ("Pick where you are and this works out when it actually gets "
-            "dark tonight, what the moon is doing, and which objects are "
-            "high enough for long enough to be worth the effort. Everything "
-            "is calculated on your phone, so it keeps working out in the "
-            "desert with no signal.")
+SKY_LEDE = ("Drop a pin where you will be observing from, whether that is "
+            "your garden, a balcony or somewhere you drive out to. This "
+            "works out when it actually gets dark tonight, what the moon is "
+            "doing, and which objects climb high enough for long enough to "
+            "be worth setting up for.")
 
-# Presets a reader can tap without granting location permission. The Bortle
-# numbers are the honest figure for each site rather than the flattering
-# one, because the panel demotes targets using them and a wrong number here
-# produces confident bad advice.
-#
-# These must stay in step with PRESETS in /tonight-core.js.
-SKY_PRESETS = [
-    ("Dubai balcony", 25.2048, 55.2708, 8),
-    ("Al Qudra",      24.8000, 55.3300, 6),
-    ("Al Quaa",       23.5333, 55.4833, 2),
-]
+# Where the map opens before the reader has moved the pin or saved a
+# location. Dubai, because that is where most of the gallery was shot, but
+# nothing on the page depends on it: the first drag replaces it.
+SKY_MAP_LAT = 25.2048
+SKY_MAP_LNG = 55.2708
+SKY_MAP_ZOOM = 9
+
+SKY_MAP_HELP = ("Drag the pin, or tap anywhere on the map, to set your "
+                "location. Nothing is sent anywhere.")
+
+# Leaflet from unpkg, with subresource integrity hashes taken from the
+# published 1.9.4 package. OpenStreetMap tiles rather than Google, so no
+# API key sits in the page source and there is no billing account behind
+# it. If the tiles cannot load the rest of the panel still works, because
+# the coordinates are all the astronomy needs.
+LEAFLET_VERSION = "1.9.4"
+LEAFLET_CSS_SRI = "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+LEAFLET_JS_SRI = "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+
+# The Bortle number changes which targets are recommended, so a reader who
+# does not know theirs will get bad advice without noticing. Checked
+# against the real article list at build time.
+SKY_BORTLE_ARTICLE = "bortle-scale-narrowband-filters"
+SKY_BORTLE_LINK = "not sure which yours is?"
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
 SKY_FALLBACK = ("Working out tonight's sky. If nothing appears here, "
                 "JavaScript is switched off in your browser.")
 
-SKY_ADVANCED = "Somewhere else, or a fussier horizon"
-
-SKY_ALT_HELP = ("Below about 30 degrees you are shooting through a lot more "
-                "air, so stars bloat and detail drops. Lower this if you are "
-                "willing to take that hit.")
-
-SKY_FOOT = ("Times use your device clock. Tap any object to see one taken "
-            "from this part of the world.")
+SKY_FOOT = ("Times use your device clock. Tap any object to see one from "
+            "the gallery.")
 
 
 # Used for the social card, since this page now has something worth showing.
@@ -523,56 +531,53 @@ def tokens(text, articles):
     return out + rest
 
 
-def build_sky():
+def build_sky(articles):
     """The sky panel shell.
 
     Holds no astronomy. /tonight-core.js fills #shSkyOut in, so this page
-    and the engine can never disagree about tonight.
+    and the engine cannot drift apart.
 
-    Degrades to SKY_FALLBACK with JavaScript off, which is why the copy
-    around it never promises anything the shell alone cannot deliver.
+    The map is progressive: the coordinate readout and the Bortle picker
+    are plain HTML that work on their own, and Leaflet upgrades the empty
+    div above them into a draggable pin if it loads. With JavaScript off,
+    or tiles blocked, the reader sees SKY_FALLBACK rather than a broken
+    grey box.
     """
-    pills = "".join(
-        f'          <button type="button" class="filter-pill sh-sky-pill" '
-        f'data-lat="{lat}" data-lng="{lng}" data-bortle="{b}" '
-        f'aria-pressed="false">{esc(name)}</button>\n'
-        for name, lat, lng, b in SKY_PRESETS
-    )
+    if SKY_BORTLE_ARTICLE not in articles:
+        raise BuildError(
+            f"sky panel Bortle link '{SKY_BORTLE_ARTICLE}' does not exist")
+
     bortle_opts = "".join(
-        f'<option value="{n}">{n}{esc(t)}</option>'
-        for n, t in [(2, " (very dark)"), (3, " (rural)"), (5, " (suburban)"),
-                     (6, " (bright suburban)"), (8, " (city)")]
+        f'<option value="{n}"{" selected" if n == 5 else ""}>{n}{esc(t)}</option>'
+        for n, t in [(1, " (pristine)"), (2, " (very dark)"), (3, " (rural)"),
+                     (4, " (rural/suburban)"), (5, " (suburban)"),
+                     (6, " (bright suburban)"), (7, " (suburban/urban)"),
+                     (8, " (city)"), (9, " (inner city)")]
     )
+
     return (
         '      <section class="sh-sky" id="shSky">\n'
         f'        <h2>{esc(SKY_TITLE)}</h2>\n'
         f'        <p class="sh-sky-lede">{esc(SKY_LEDE)}</p>\n'
 
-        '        <div class="sh-sky-pills filter-pills" role="group" '
-        f'aria-label="{esc(SKY_TITLE)}">\n'
-        f'{pills}'
-        '          <button type="button" class="filter-pill sh-sky-pill" '
-        'id="shSkyGeo">Use my location</button>\n'
-        '        </div>\n'
+        '        <div class="sh-sky-map" id="shSkyMap" '
+        f'data-lat="{SKY_MAP_LAT}" data-lng="{SKY_MAP_LNG}" '
+        f'data-zoom="{SKY_MAP_ZOOM}" role="application" '
+        'aria-label="Map for choosing your observing location"></div>\n'
 
-        '        <details class="sh-sky-adv">\n'
-        f'          <summary>{esc(SKY_ADVANCED)}</summary>\n'
-        '          <div class="sh-sky-adv-grid">\n'
-        '            <label>Latitude<input type="number" id="shSkyLat" '
-        'step="0.0001" placeholder="25.2048" /></label>\n'
-        '            <label>Longitude<input type="number" id="shSkyLng" '
-        'step="0.0001" placeholder="55.2708" /></label>\n'
-        f'            <label>Bortle<select id="shSkyBortle">{bortle_opts}</select></label>\n'
-        '            <button type="button" class="btn sh-sky-apply" '
-        'id="shSkyApply">Apply</button>\n'
-        '          </div>\n'
-        '          <label class="sh-sky-alt">Minimum height\n'
-        '            <input type="range" id="shSkyMinAlt" min="15" max="50" '
-        'step="5" value="30" />\n'
-        '            <output id="shSkyMinAltOut">30&deg;</output>\n'
-        '          </label>\n'
-        f'          <p class="sh-sky-alt-help">{esc(SKY_ALT_HELP)}</p>\n'
-        '        </details>\n'
+        '        <div class="sh-sky-loc">\n'
+        '          <p class="sh-sky-coords" id="shSkyCoords"></p>\n'
+        '          <button type="button" class="btn sh-sky-geo" id="shSkyGeo">'
+        'Use my location</button>\n'
+        '        </div>\n'
+        f'        <p class="sh-sky-map-help">{esc(SKY_MAP_HELP)}</p>\n'
+
+        '        <div class="sh-sky-bortle">\n'
+        '          <label for="shSkyBortle">How bright is your sky?</label>\n'
+        f'          <select id="shSkyBortle">{bortle_opts}</select>\n'
+        f'          <a href="{article_url(SKY_BORTLE_ARTICLE)}">'
+        f'{esc(SKY_BORTLE_LINK)}</a>\n'
+        '        </div>\n'
 
         '        <div class="sh-sky-datenav">\n'
         '          <button type="button" class="btn sh-sky-nav" id="shSkyPrev" '
@@ -862,47 +867,49 @@ SCRIPT = """
 
 
 
+
 /* ── Sky panel ──────────────────────────────────────────────────────
    Fills the shell from build_sky() using /tonight-core.js. Holds no
    astronomy itself, so this and the engine cannot drift apart.
 
-   The ranked list is capped at SHOWN until the reader asks for the rest.
-   A first-time visitor meeting nineteen objects at once learns nothing;
-   five with a real reason attached is a decision they can act on. */
+   The map is an upgrade, not a requirement. If Leaflet fails to load,
+   or tiles are blocked, everything below it still works from the last
+   saved coordinates. */
 (function () {
   var sky = document.getElementById('shSky');
   var out = document.getElementById('shSkyOut');
   var C   = window.TonightCore;
   if (!sky || !out || !C) return;
 
-  var SHOWN = 5;
+  var SHOWN  = 5;
+  var MIN_ALT = 30;   // degrees. Below this, stars bloat and detail drops.
 
-  var pills = Array.prototype.slice.call(sky.querySelectorAll('.sh-sky-pill[data-lat]'));
-  var geo   = document.getElementById('shSkyGeo');
-  if (!pills.length) return;
+  var mapEl  = document.getElementById('shSkyMap');
+  var coords = document.getElementById('shSkyCoords');
+  var geo    = document.getElementById('shSkyGeo');
+  var bortle = document.getElementById('shSkyBortle');
 
   var state = {
-    lat: +pills[0].dataset.lat,
-    lng: +pills[0].dataset.lng,
-    bortle: +pills[0].dataset.bortle,
-    name: pills[0].textContent,
+    lat: parseFloat(mapEl.dataset.lat),
+    lng: parseFloat(mapEl.dataset.lng),
+    bortle: parseInt(bortle.value, 10),
     offset: 0,
-    minAlt: 30,
     expanded: false
   };
 
   try {
     var saved = JSON.parse(localStorage.getItem('tonight.loc') || 'null');
     if (saved && typeof saved.lat === 'number') {
-      state.lat = saved.lat; state.lng = saved.lng;
-      state.bortle = saved.bortle; state.name = saved.name;
+      state.lat = saved.lat;
+      state.lng = saved.lng;
+      if (saved.bortle) { state.bortle = saved.bortle; bortle.value = saved.bortle; }
     }
   } catch (e) {}
 
   function save() {
     try {
       localStorage.setItem('tonight.loc', JSON.stringify({
-        lat: state.lat, lng: state.lng, bortle: state.bortle, name: state.name
+        lat: state.lat, lng: state.lng, bortle: state.bortle
       }));
     } catch (e) {}
   }
@@ -916,21 +923,46 @@ SCRIPT = """
     return w === 0 ? m + ' min' : w + 'h' + (m ? ' ' + m + 'm' : '');
   }
 
-  function markPills() {
-    var matched = false;
-    pills.forEach(function (p) {
-      var on = Math.abs(+p.dataset.lat - state.lat) < 0.001 &&
-               Math.abs(+p.dataset.lng - state.lng) < 0.001;
-      if (on) matched = true;
-      p.setAttribute('aria-pressed', on ? 'true' : 'false');
-      p.classList.toggle('is-active', on);
-    });
-    if (geo) {
-      geo.setAttribute('aria-pressed', matched ? 'false' : 'true');
-      geo.classList.toggle('is-active', !matched);
-    }
+  /* ── Map ─────────────────────────────────────────────
+     Leaflet with OpenStreetMap tiles. No API key, so
+     nothing sensitive sits in the page source. */
+  var marker = null, map = null;
+
+  function showCoords() {
+    coords.textContent = state.lat.toFixed(4) + ', ' + state.lng.toFixed(4);
   }
 
+  function moveTo(lat, lng, recentre) {
+    state.lat = lat; state.lng = lng;
+    showCoords();
+    if (marker) marker.setLatLng([lat, lng]);
+    if (map && recentre) map.setView([lat, lng], map.getZoom());
+    save();
+    render();
+  }
+
+  if (window.L && mapEl) {
+    map = L.map(mapEl, { scrollWheelZoom: false })
+           .setView([state.lat, state.lng], parseInt(mapEl.dataset.zoom, 10));
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    marker = L.marker([state.lat, state.lng], { draggable: true }).addTo(map);
+    marker.on('dragend', function () {
+      var p = marker.getLatLng();
+      moveTo(p.lat, p.lng, false);
+    });
+    map.on('click', function (ev) {
+      moveTo(ev.latlng.lat, ev.latlng.lng, false);
+    });
+  } else if (mapEl) {
+    mapEl.classList.add('is-off');
+  }
+
+  /* ── Rendering ───────────────────────────────────── */
   function reasonFor(r) {
     var bits = [];
     if (r.bf < 0.5) bits.push('Your sky is too bright for this one. It will be a struggle.');
@@ -943,15 +975,13 @@ SCRIPT = """
   }
 
   function render() {
-    markPills();
-
     var date = new Date();
     date.setDate(date.getDate() + state.offset);
     document.getElementById('shSkyDate').textContent = state.offset === 0
       ? 'Tonight'
       : date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
 
-    var plan = C.planNight(date, state.lat, state.lng, state.bortle, state.minAlt);
+    var plan = C.planNight(date, state.lat, state.lng, state.bortle, MIN_ALT);
 
     if (!plan.dark) {
       out.innerHTML = '<p class="sh-sky-wait">The sun never drops far enough ' +
@@ -968,7 +998,7 @@ SCRIPT = """
         '<span><b>' + hoursText((plan.darkEnd - plan.darkStart) / 3600000) +
           '</b><i>Dark hours</i></span>' +
         '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) + '</i></span>' +
-        '<span><b>' + state.name + '</b><i>Bortle ' + state.bortle + '</i></span>' +
+        '<span><b>Bortle ' + state.bortle + '</b><i>Your sky</i></span>' +
       '</div>';
 
     var v;
@@ -986,9 +1016,8 @@ SCRIPT = """
     html += '<p class="sh-sky-verdict">' + v + '</p>';
 
     if (!plan.targets.length) {
-      html += '<p class="sh-sky-wait">Nothing clears that height during tonight\u2019s ' +
-              'dark window from here. Try lowering the minimum height, or step ' +
-              'forward a few nights.</p>';
+      html += '<p class="sh-sky-wait">Nothing gets high enough for long enough ' +
+              'tonight from here. Step forward a few nights and try again.</p>';
       out.innerHTML = html;
       wireMore();
       return;
@@ -1007,9 +1036,7 @@ SCRIPT = """
 
     if (plan.targets.length > SHOWN) {
       html += '<button type="button" class="btn sh-sky-toggle" id="shSkyMore">' +
-        (state.expanded
-          ? 'Show fewer'
-          : 'Show all ' + plan.targets.length) + '</button>';
+        (state.expanded ? 'Show fewer' : 'Show all ' + plan.targets.length) + '</button>';
     }
 
     out.innerHTML = html;
@@ -1024,26 +1051,21 @@ SCRIPT = """
     });
   }
 
-  pills.forEach(function (p) {
-    p.addEventListener('click', function () {
-      state.lat = +p.dataset.lat; state.lng = +p.dataset.lng;
-      state.bortle = +p.dataset.bortle; state.name = p.textContent;
-      save(); render();
-    });
-  });
-
+  /* ── Controls ────────────────────────────────────── */
   if (geo) geo.addEventListener('click', function () {
     if (!navigator.geolocation) return;
     geo.textContent = 'Locating\u2026';
     navigator.geolocation.getCurrentPosition(function (pos) {
       geo.textContent = 'Use my location';
-      state.lat = pos.coords.latitude;
-      state.lng = pos.coords.longitude;
-      state.name = 'Your location';
-      save(); render();
+      moveTo(pos.coords.latitude, pos.coords.longitude, true);
     }, function () {
       geo.textContent = 'Use my location';
     }, { timeout: 10000 });
+  });
+
+  bortle.addEventListener('change', function () {
+    state.bortle = parseInt(this.value, 10);
+    save(); render();
   });
 
   document.getElementById('shSkyPrev').addEventListener('click', function () {
@@ -1053,23 +1075,7 @@ SCRIPT = """
     state.offset++; render();
   });
 
-  var slider = document.getElementById('shSkyMinAlt');
-  slider.addEventListener('input', function () {
-    state.minAlt = parseInt(this.value, 10);
-    document.getElementById('shSkyMinAltOut').textContent = state.minAlt + '\u00B0';
-    render();
-  });
-
-  document.getElementById('shSkyApply').addEventListener('click', function () {
-    var la = parseFloat(document.getElementById('shSkyLat').value);
-    var ln = parseFloat(document.getElementById('shSkyLng').value);
-    if (isNaN(la) || isNaN(ln) || la < -90 || la > 90 || ln < -180 || ln > 180) return;
-    state.lat = la; state.lng = ln;
-    state.bortle = parseInt(document.getElementById('shSkyBortle').value, 10);
-    state.name = 'Your location';
-    save(); render();
-  });
-
+  showCoords();
   render();
 })();
 """
@@ -1105,6 +1111,7 @@ def build_page(articles, by_stage):
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}}'></script>
   <link rel="stylesheet" href="/styles.css" />
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@{LEAFLET_VERSION}/dist/leaflet.css" integrity="{LEAFLET_CSS_SRI}" crossorigin="" />
   <!-- Page CSS lives in /styles.css under "PAGE: Start Here". -->
 
   <script type="application/ld+json">
@@ -1128,7 +1135,7 @@ def build_page(articles, by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
-{build_sky()}
+{build_sky(articles)}
 {build_tonight(articles)}
 {build_chooser()}
 {build_routes(articles)}
@@ -1143,6 +1150,7 @@ def build_page(articles, by_stage):
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
+  <script src="https://unpkg.com/leaflet@{LEAFLET_VERSION}/dist/leaflet.js" integrity="{LEAFLET_JS_SRI}" crossorigin=""></script>
   <script src="/tonight-core.js"></script>
   <script src="/partials/partials.js"></script>
   <script>{SCRIPT}</script>

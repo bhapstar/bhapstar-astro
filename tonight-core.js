@@ -140,12 +140,6 @@ var RAD = Math.PI / 180;
 
   var LABEL = { emission:'Emission nebula', galaxy:'Galaxy', cluster:'Star cluster', wide:'Wide field' };
 
-  var PRESETS = [
-    { id:'balcony', name:'Dubai balcony',  lat:25.2048, lng:55.2708, bortle:8 },
-    { id:'qudra',   name:'Al Qudra',       lat:24.8000, lng:55.3300, bortle:6 },
-    { id:'quaa',    name:'Al Quaa',        lat:23.5333, lng:55.4833, bortle:2 }
-  ];
-
   /* ── Scoring ────────────────────────────────── */
   function bortleFactor(type, b) {
     if (type === 'emission') return b >= 7 ? 0.75 : 1.0;
@@ -229,7 +223,6 @@ var RAD = Math.PI / 180;
     moonPhaseName: moonPhaseName,
     targetAltAz: targetAltAz,
     TARGETS: TARGETS,
-    PRESETS: PRESETS,
     LABEL: LABEL
   };
 })(window);
