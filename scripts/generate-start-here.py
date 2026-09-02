@@ -14,16 +14,18 @@ Why this page exists, and why it is not articles.html:
   site, probably owns a phone and nothing else, and has not yet decided
   whether any of this is for them.
 
-  It is therefore not a reading list. It opens with evidence, gives away
-  something free before asking for anything, and only then offers a short
-  route. The eighty-minute path still exists, at the bottom, collapsed,
+  It is therefore not a reading list. It opens with something useful the
+  reader can act on the same night, gives away something free before
+  asking for anything, and only then offers a short route. The eighty-minute path still exists, at the bottom, collapsed,
   for the reader who is already sold.
 
 The page has five parts:
 
-  1. PROOF    Three gallery images, captioned with what took them. Pulled
-              from the gallery entries in site-data.json so the specs can
-              never drift from the gallery itself.
+  1. SKY      A live "what is worth looking at tonight" panel. Works out
+              tonight's darkness window, the moon, and the three best
+              targets for wherever the reader is. The astronomy lives in
+              /tonight-core.js, shared with the full tonight.html page,
+              so this page holds no maths of its own.
 
   2. TONIGHT  One thing to do on the next clear night with no equipment.
               Pure copy, edited in TONIGHT_STEPS below.
@@ -108,51 +110,46 @@ INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
          "and that is the first thing this page will help you work out.")
 
 
-# ---------------------------------------------------------------- 1. PROOF
+# ------------------------------------------------------------------ 1. SKY
 
-# Gallery slugs, in display order. Everything else about each image, the
-# file, the alt text and the capture specs, is read from its gallery entry
-# so this page and gallery.html can never disagree about what took what.
+# The sky panel. This is the whole tool, not a preview of one: the reader
+# picks where they are and gets tonight's darkness window, the moon, and
+# every target from the gallery that is actually worth pointing at, ranked.
 #
-# All three show at every width: a grid on desktop, a snap-scroll strip on
-# mobile. Nothing is dropped on small screens, because PROOF_LINE below
-# refers to these images by what they are. "Four galaxies and the centre
-# of our own Milky Way" counts Andromeda as one, the Leo Triplet as three,
-# and the Milky Way as the last, so changing this list means changing that
-# sentence too.
-PROOF_SLUGS = [
-    "andromeda-galaxy-m31",
-    "leo-triplet-m65-m66-ngc3628",
-    "the-milky-way",
+# All the astronomy lives in /tonight-core.js. This file emits an empty
+# shell and the copy around it, and never calculates anything itself.
+SKY_TITLE = "What is worth looking at tonight"
+SKY_LEDE = ("Pick where you are and this works out when it actually gets "
+            "dark tonight, what the moon is doing, and which objects are "
+            "high enough for long enough to be worth the effort. Everything "
+            "is calculated on your phone, so it keeps working out in the "
+            "desert with no signal.")
+
+# Presets a reader can tap without granting location permission. The Bortle
+# numbers are the honest figure for each site rather than the flattering
+# one, because the panel demotes targets using them and a wrong number here
+# produces confident bad advice.
+#
+# These must stay in step with PRESETS in /tonight-core.js.
+SKY_PRESETS = [
+    ("Dubai balcony", 25.2048, 55.2708, 8),
+    ("Al Qudra",      24.8000, 55.3300, 6),
+    ("Al Quaa",       23.5333, 55.4833, 2),
 ]
 
-# Short display names, because gallery titles carry catalogue numbers that
-# mean nothing to a first-time reader. A slug with no entry here keeps its
-# gallery title.
-PROOF_NAMES = {
-    "andromeda-galaxy-m31": "The Andromeda Galaxy",
-    "leo-triplet-m65-m66-ngc3628": "The Leo Triplet",
-    "the-milky-way": "The Milky Way",
-}
+# Shown before the panel fills in, and permanently if JavaScript is off.
+SKY_FALLBACK = ("Working out tonight's sky. If nothing appears here, "
+                "JavaScript is switched off in your browser.")
 
-# The article this line links to. Checked against the real article list at
-# build time, so a rename cannot leave a dead link here.
-PROOF_ARTICLE = "seestar-s30-pro-tour"
+SKY_ADVANCED = "Somewhere else, or a fussier horizon"
 
-# Carries inline markup, so this one is not escaped. Keep it plain.
-#
-# It names the telescope because the captions above it already do. Being
-# coy about a product the page has just named twice is what made this read
-# as advertising copy. It also states the hours and the drive, for the same
-# reason: the captions admit both, so the sentence may as well.
-PROOF_LINE = ("Four galaxies and the centre of our own Milky Way, all taken "
-              "with a <strong>Seestar S30</strong>. Two on the original, one "
-              "on the Pro. It fits in a shoulder bag and sets itself up in "
-              "about a minute, with no mount to balance, no laptop and no "
-              "counterweights. What each one did cost was three or four hours "
-              "of tracking and a drive out of the city to a properly dark "
-              "site. Six of the images in the gallery were taken this way, "
-              "and {link} if you want to know what one is like to live with.")
+SKY_ALT_HELP = ("Below about 30 degrees you are shooting through a lot more "
+                "air, so stars bloat and detail drops. Lower this if you are "
+                "willing to take that hit.")
+
+SKY_FOOT = ("Times use your device clock. Tap any object to see one taken "
+            "from this part of the world.")
+
 
 # Used for the social card, since this page now has something worth showing.
 SHARE_IMAGE = "images/andromeda-galaxy-m31.webp"
@@ -526,51 +523,69 @@ def tokens(text, articles):
     return out + rest
 
 
-def build_proof(gallery, articles):
-    if PROOF_ARTICLE not in articles:
-        raise BuildError(f"proof link article '{PROOF_ARTICLE}' does not exist")
-    link = (f'<a href="{article_url(PROOF_ARTICLE)}">there is a full '
-            f'write-up of it</a>')
+def build_sky():
+    """The sky panel shell.
 
-    shots = []
-    for slug in PROOF_SLUGS:
-        entry = gallery.get(slug)
-        if not entry:
-            raise BuildError(f"proof image '{slug}' is not a gallery entry")
-        file = entry.get("file")
-        if not file:
-            raise BuildError(f"proof image '{slug}' has no file")
+    Holds no astronomy. /tonight-core.js fills #shSkyOut in, so this page
+    and the engine can never disagree about tonight.
 
-        specs = entry.get("specs") or {}
-        bits = [specs.get("telescope"), specs.get("integration"),
-                (specs.get("location") or "").split(",")[0].strip()]
-        caption = " &middot; ".join(esc(b) for b in bits if b)
-        name = PROOF_NAMES.get(slug, entry.get("title", ""))
-        blurb = entry.get("intro") or entry.get("desc") or ""
-
-        # The href stays a real link to the gallery entry. The script
-        # intercepts the click and opens the popup instead, so a reader
-        # with no JS still gets somewhere sensible rather than a dead
-        # image.
-        shots.append(
-            f'          <a class="sh-shot" href="/gallery.html#{esc(slug)}"\n'
-            f'             data-blurb="{esc(blurb)}">\n'
-            f'            <span class="sh-shot-frame">\n'
-            f'              <img src="/{esc(file)}" '
-            f'alt="{esc(entry.get("alt", ""))}" '
-            f'loading="eager" decoding="async" />\n'
-            f'            </span>\n'
-            f'            <span class="sh-shot-name">{esc(name)}</span>\n'
-            f'            <span class="sh-shot-spec">{caption}</span>\n'
-            f'          </a>\n'
-        )
-
+    Degrades to SKY_FALLBACK with JavaScript off, which is why the copy
+    around it never promises anything the shell alone cannot deliver.
+    """
+    pills = "".join(
+        f'          <button type="button" class="filter-pill sh-sky-pill" '
+        f'data-lat="{lat}" data-lng="{lng}" data-bortle="{b}" '
+        f'aria-pressed="false">{esc(name)}</button>\n'
+        for name, lat, lng, b in SKY_PRESETS
+    )
+    bortle_opts = "".join(
+        f'<option value="{n}">{n}{esc(t)}</option>'
+        for n, t in [(2, " (very dark)"), (3, " (rural)"), (5, " (suburban)"),
+                     (6, " (bright suburban)"), (8, " (city)")]
+    )
     return (
-        '      <section class="sh-proof">\n'
-        '        <div class="sh-proof-grid">\n'
-        + "".join(shots) +
+        '      <section class="sh-sky" id="shSky">\n'
+        f'        <h2>{esc(SKY_TITLE)}</h2>\n'
+        f'        <p class="sh-sky-lede">{esc(SKY_LEDE)}</p>\n'
+
+        '        <div class="sh-sky-pills filter-pills" role="group" '
+        f'aria-label="{esc(SKY_TITLE)}">\n'
+        f'{pills}'
+        '          <button type="button" class="filter-pill sh-sky-pill" '
+        'id="shSkyGeo">Use my location</button>\n'
         '        </div>\n'
-        f'        <p class="sh-proof-line">{PROOF_LINE.format(link=link)}</p>\n'
+
+        '        <details class="sh-sky-adv">\n'
+        f'          <summary>{esc(SKY_ADVANCED)}</summary>\n'
+        '          <div class="sh-sky-adv-grid">\n'
+        '            <label>Latitude<input type="number" id="shSkyLat" '
+        'step="0.0001" placeholder="25.2048" /></label>\n'
+        '            <label>Longitude<input type="number" id="shSkyLng" '
+        'step="0.0001" placeholder="55.2708" /></label>\n'
+        f'            <label>Bortle<select id="shSkyBortle">{bortle_opts}</select></label>\n'
+        '            <button type="button" class="btn sh-sky-apply" '
+        'id="shSkyApply">Apply</button>\n'
+        '          </div>\n'
+        '          <label class="sh-sky-alt">Minimum height\n'
+        '            <input type="range" id="shSkyMinAlt" min="15" max="50" '
+        'step="5" value="30" />\n'
+        '            <output id="shSkyMinAltOut">30&deg;</output>\n'
+        '          </label>\n'
+        f'          <p class="sh-sky-alt-help">{esc(SKY_ALT_HELP)}</p>\n'
+        '        </details>\n'
+
+        '        <div class="sh-sky-datenav">\n'
+        '          <button type="button" class="btn sh-sky-nav" id="shSkyPrev" '
+        'aria-label="Previous night">&#8592;</button>\n'
+        '          <span id="shSkyDate">Tonight</span>\n'
+        '          <button type="button" class="btn sh-sky-nav" id="shSkyNext" '
+        'aria-label="Next night">&#8594;</button>\n'
+        '        </div>\n'
+
+        '        <div class="sh-sky-out" id="shSkyOut" aria-live="polite">\n'
+        f'          <p class="sh-sky-wait">{esc(SKY_FALLBACK)}</p>\n'
+        '        </div>\n'
+        f'        <p class="sh-sky-foot">{esc(SKY_FOOT)}</p>\n'
         '      </section>\n'
     )
 
@@ -760,36 +775,6 @@ def build_json_ld(by_stage):
     }, ensure_ascii=False)
 
 
-def build_modal():
-    """One popup, reused by all three proof images.
-
-    Deliberately not the gallery lightbox: this page is trying to hold a
-    first-time reader, and sending them to gallery.html one tap in is the
-    easiest way to lose them. The popup keeps them here and offers the
-    gallery as a decision rather than an accident.
-    """
-    return (
-        '  <div class="sh-modal" id="shModal" hidden>\n'
-        '    <div class="sh-modal-back" data-sh-close></div>\n'
-        '    <div class="sh-modal-card protect-zone" role="dialog" '
-        'aria-modal="true" aria-labelledby="shModalName">\n'
-        '      <button type="button" class="sh-modal-x" data-sh-close '
-        'aria-label="Close">&#215;</button>\n'
-        '      <img class="sh-modal-img" id="shModalImg" src="" alt="" '
-        'data-sh-close />\n'
-        '      <div class="sh-modal-body">\n'
-        '        <p class="sh-modal-hint">Click the image to close</p>\n'
-        '        <p class="sh-modal-name" id="shModalName"></p>\n'
-        '        <p class="sh-modal-spec" id="shModalSpec"></p>\n'
-        '        <p class="sh-modal-blurb" id="shModalBlurb"></p>\n'
-        '        <a class="sh-modal-link" id="shModalLink" href="/gallery.html">'
-        'See it in the gallery <span aria-hidden="true">&#8594;</span></a>\n'
-        '      </div>\n'
-        '    </div>\n'
-        '  </div>\n'
-    )
-
-
 SCRIPT = """
 (function () {
   var chooser = document.getElementById('shChooser');
@@ -871,104 +856,226 @@ SCRIPT = """
   });
 
   // First paint, no animation. With nothing saved this collapses every
-  // route, so the page opens on the proof and the free step.
+  // route, so the page opens on the sky panel and the free step.
   commit(saved && valid ? saved : 'none');
 })();
 
-/* ── Proof image popup ──────────────────────────────────────────────
-   Opens the image in place rather than following the link through to
-   gallery.html, so a first-time reader cannot lose this page with one
-   stray tap. The link is still there inside the popup for anyone who
-   means it. */
+
+
+/* ── Sky panel ──────────────────────────────────────────────────────
+   Fills the shell from build_sky() using /tonight-core.js. Holds no
+   astronomy itself, so this and the engine cannot drift apart.
+
+   The ranked list is capped at SHOWN until the reader asks for the rest.
+   A first-time visitor meeting nineteen objects at once learns nothing;
+   five with a real reason attached is a decision they can act on. */
 (function () {
-  var modal = document.getElementById('shModal');
-  var shots = Array.prototype.slice.call(document.querySelectorAll('.sh-shot'));
-  if (!modal || !shots.length) return;
+  var sky = document.getElementById('shSky');
+  var out = document.getElementById('shSkyOut');
+  var C   = window.TonightCore;
+  if (!sky || !out || !C) return;
 
-  var img   = document.getElementById('shModalImg');
-  var name  = document.getElementById('shModalName');
-  var spec  = document.getElementById('shModalSpec');
-  var blurb = document.getElementById('shModalBlurb');
-  var link  = document.getElementById('shModalLink');
-  var close = modal.querySelector('.sh-modal-x');
-  var opener = null;
+  var SHOWN = 5;
 
-  function text(el, selector) {
-    var found = el.querySelector(selector);
-    return found ? found.textContent.trim() : '';
-  }
+  var pills = Array.prototype.slice.call(sky.querySelectorAll('.sh-sky-pill[data-lat]'));
+  var geo   = document.getElementById('shSkyGeo');
+  if (!pills.length) return;
 
-  function open(shot) {
-    var picture = shot.querySelector('img');
-    if (!picture) return;
+  var state = {
+    lat: +pills[0].dataset.lat,
+    lng: +pills[0].dataset.lng,
+    bortle: +pills[0].dataset.bortle,
+    name: pills[0].textContent,
+    offset: 0,
+    minAlt: 30,
+    expanded: false
+  };
 
-    opener = shot;
-    img.src = picture.getAttribute('src');
-    img.alt = picture.getAttribute('alt') || '';
-    name.textContent  = text(shot, '.sh-shot-name');
-    spec.textContent  = text(shot, '.sh-shot-spec');
-    blurb.textContent = shot.getAttribute('data-blurb') || '';
-    blurb.hidden = !blurb.textContent;
-    link.setAttribute('href', shot.getAttribute('href'));
-
-    modal.hidden = false;
-    // Next frame, so the opacity transition has a starting value to move
-    // from rather than being collapsed into the same style recalculation.
-    window.requestAnimationFrame(function () {
-      modal.classList.add('open');
-    });
-    document.body.classList.add('sh-modal-lock');
-    if (close) close.focus();
-  }
-
-  function shut() {
-    if (modal.hidden) return;
-    modal.classList.remove('open');
-    document.body.classList.remove('sh-modal-lock');
-
-    window.setTimeout(function () {
-      modal.hidden = true;
-      // removeAttribute, not src = '': an empty src resolves against the
-      // document URL and makes the browser refetch the page as an image.
-      img.removeAttribute('src');
-      if (opener) { opener.focus(); opener = null; }
-    }, 200);
-  }
-
-  shots.forEach(function (shot) {
-    shot.addEventListener('click', function (ev) {
-      // Let modified clicks through, so "open in new tab" still works.
-      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
-      ev.preventDefault();
-      open(shot);
-    });
-  });
-
-  modal.addEventListener('click', function (ev) {
-    if (ev.target.closest && ev.target.closest('[data-sh-close]')) shut();
-  });
-
-  document.addEventListener('keydown', function (ev) {
-    if (modal.hidden) return;
-    if (ev.key === 'Escape') { shut(); return; }
-    // Keep tabbing inside the dialog while it is open.
-    if (ev.key === 'Tab') {
-      var focusable = modal.querySelectorAll('button, a[href]');
-      if (!focusable.length) return;
-      var first = focusable[0];
-      var last  = focusable[focusable.length - 1];
-      if (ev.shiftKey && document.activeElement === first) {
-        ev.preventDefault(); last.focus();
-      } else if (!ev.shiftKey && document.activeElement === last) {
-        ev.preventDefault(); first.focus();
-      }
+  try {
+    var saved = JSON.parse(localStorage.getItem('tonight.loc') || 'null');
+    if (saved && typeof saved.lat === 'number') {
+      state.lat = saved.lat; state.lng = saved.lng;
+      state.bortle = saved.bortle; state.name = saved.name;
     }
+  } catch (e) {}
+
+  function save() {
+    try {
+      localStorage.setItem('tonight.loc', JSON.stringify({
+        lat: state.lat, lng: state.lng, bortle: state.bortle, name: state.name
+      }));
+    } catch (e) {}
+  }
+
+  function hhmm(d) {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  function hoursText(h) {
+    var w = Math.floor(h), m = Math.round((h - w) * 60);
+    if (m === 60) { w++; m = 0; }
+    return w === 0 ? m + ' min' : w + 'h' + (m ? ' ' + m + 'm' : '');
+  }
+
+  function markPills() {
+    var matched = false;
+    pills.forEach(function (p) {
+      var on = Math.abs(+p.dataset.lat - state.lat) < 0.001 &&
+               Math.abs(+p.dataset.lng - state.lng) < 0.001;
+      if (on) matched = true;
+      p.setAttribute('aria-pressed', on ? 'true' : 'false');
+      p.classList.toggle('is-active', on);
+    });
+    if (geo) {
+      geo.setAttribute('aria-pressed', matched ? 'false' : 'true');
+      geo.classList.toggle('is-active', !matched);
+    }
+  }
+
+  function reasonFor(r) {
+    var bits = [];
+    if (r.bf < 0.5) bits.push('Your sky is too bright for this one. It will be a struggle.');
+    else if (r.bf < 0.85) bits.push('Light pollution will cost you contrast here.');
+    if (r.moonHit > 0.45) bits.push('The moon is up and bright for most of this window.');
+    else if (r.moonHit > 0.2) bits.push('Some moonlight to work around.');
+    if (r.maxAlt < 35) bits.push('Stays low, so expect softer stars.');
+    if (!bits.length) bits.push('Good conditions for this one tonight.');
+    return bits.join(' ');
+  }
+
+  function render() {
+    markPills();
+
+    var date = new Date();
+    date.setDate(date.getDate() + state.offset);
+    document.getElementById('shSkyDate').textContent = state.offset === 0
+      ? 'Tonight'
+      : date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
+
+    var plan = C.planNight(date, state.lat, state.lng, state.bortle, state.minAlt);
+
+    if (!plan.dark) {
+      out.innerHTML = '<p class="sh-sky-wait">The sun never drops far enough ' +
+        'below the horizon on this date at this latitude, so there is no ' +
+        'properly dark window.</p>';
+      return;
+    }
+
+    var moonPct = Math.round(plan.moonIll * 100);
+    var html =
+      '<div class="sh-sky-facts">' +
+        '<span><b>' + hhmm(plan.darkStart) + ' to ' + hhmm(plan.darkEnd) +
+          '</b><i>Properly dark</i></span>' +
+        '<span><b>' + hoursText((plan.darkEnd - plan.darkStart) / 3600000) +
+          '</b><i>Dark hours</i></span>' +
+        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) + '</i></span>' +
+        '<span><b>' + state.name + '</b><i>Bortle ' + state.bortle + '</i></span>' +
+      '</div>';
+
+    var v;
+    if (moonPct < 15 || plan.moonUpFrac < 0.15) {
+      v = 'A good night. The moon is barely a factor, so faint things are on the table.';
+    } else if (moonPct > 70 && plan.moonUpFrac > 0.6) {
+      v = 'A bright moon for most of the night. Nebulae and star clusters will ' +
+          'survive it, galaxies will not.';
+    } else {
+      v = 'Workable. Favour things that peak while the moon is low or already down.';
+    }
+    if (state.bortle >= 7) {
+      v += ' From a sky this bright, a filter is doing most of the work.';
+    }
+    html += '<p class="sh-sky-verdict">' + v + '</p>';
+
+    if (!plan.targets.length) {
+      html += '<p class="sh-sky-wait">Nothing clears that height during tonight\u2019s ' +
+              'dark window from here. Try lowering the minimum height, or step ' +
+              'forward a few nights.</p>';
+      out.innerHTML = html;
+      wireMore();
+      return;
+    }
+
+    var list = state.expanded ? plan.targets : plan.targets.slice(0, SHOWN);
+    html += '<ol class="sh-sky-list">' + list.map(function (r) {
+      return '<li>' +
+        '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
+        '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
+        '<span class="sh-sky-when">' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) +
+          ', ' + hoursText(r.hours) + ' usable, peaks at ' + Math.round(r.maxAlt) + '\u00B0</span>' +
+        '<span class="sh-sky-why">' + reasonFor(r) + '</span>' +
+      '</li>';
+    }).join('') + '</ol>';
+
+    if (plan.targets.length > SHOWN) {
+      html += '<button type="button" class="btn sh-sky-toggle" id="shSkyMore">' +
+        (state.expanded
+          ? 'Show fewer'
+          : 'Show all ' + plan.targets.length) + '</button>';
+    }
+
+    out.innerHTML = html;
+    wireMore();
+  }
+
+  function wireMore() {
+    var more = document.getElementById('shSkyMore');
+    if (more) more.addEventListener('click', function () {
+      state.expanded = !state.expanded;
+      render();
+    });
+  }
+
+  pills.forEach(function (p) {
+    p.addEventListener('click', function () {
+      state.lat = +p.dataset.lat; state.lng = +p.dataset.lng;
+      state.bortle = +p.dataset.bortle; state.name = p.textContent;
+      save(); render();
+    });
   });
+
+  if (geo) geo.addEventListener('click', function () {
+    if (!navigator.geolocation) return;
+    geo.textContent = 'Locating\u2026';
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      geo.textContent = 'Use my location';
+      state.lat = pos.coords.latitude;
+      state.lng = pos.coords.longitude;
+      state.name = 'Your location';
+      save(); render();
+    }, function () {
+      geo.textContent = 'Use my location';
+    }, { timeout: 10000 });
+  });
+
+  document.getElementById('shSkyPrev').addEventListener('click', function () {
+    state.offset--; render();
+  });
+  document.getElementById('shSkyNext').addEventListener('click', function () {
+    state.offset++; render();
+  });
+
+  var slider = document.getElementById('shSkyMinAlt');
+  slider.addEventListener('input', function () {
+    state.minAlt = parseInt(this.value, 10);
+    document.getElementById('shSkyMinAltOut').textContent = state.minAlt + '\u00B0';
+    render();
+  });
+
+  document.getElementById('shSkyApply').addEventListener('click', function () {
+    var la = parseFloat(document.getElementById('shSkyLat').value);
+    var ln = parseFloat(document.getElementById('shSkyLng').value);
+    if (isNaN(la) || isNaN(ln) || la < -90 || la > 90 || ln < -180 || ln > 180) return;
+    state.lat = la; state.lng = ln;
+    state.bortle = parseInt(document.getElementById('shSkyBortle').value, 10);
+    state.name = 'Your location';
+    save(); render();
+  });
+
+  render();
 })();
 """
 
 
-def build_page(articles, gallery, by_stage):
+def build_page(articles, by_stage):
     page_url = f"{DOMAIN}/{OUT}"
     share_url = f"{DOMAIN}/{SHARE_IMAGE}"
     full_html, _ = build_full(by_stage, articles)
@@ -1021,7 +1128,7 @@ def build_page(articles, gallery, by_stage):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
-{build_proof(gallery, articles)}
+{build_sky()}
 {build_tonight(articles)}
 {build_chooser()}
 {build_routes(articles)}
@@ -1036,9 +1143,8 @@ def build_page(articles, gallery, by_stage):
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
-{build_modal()}
+  <script src="/tonight-core.js"></script>
   <script src="/partials/partials.js"></script>
-  <script src="/protect-images.js"></script>
   <script>{SCRIPT}</script>
 </body>
 </html>
@@ -1047,9 +1153,9 @@ def build_page(articles, gallery, by_stage):
 
 def main():
     try:
-        articles, gallery = load_data()
+        articles, _gallery = load_data()
         by_stage = staged(articles)
-        html = build_page(articles, gallery, by_stage)
+        html = build_page(articles, by_stage)
     except BuildError as exc:
         print(f"✗ {OUT}: {exc}", file=sys.stderr)
         raise SystemExit(1)

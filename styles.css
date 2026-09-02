@@ -9106,3 +9106,179 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   .figbox-stage{ transform: none; }
   .fig-openable img, .fig-openable svg{ transition: none; }
 }
+/* ==================================================================
+   PAGE: Start Here — sky panel (start-here.html)
+   Append to the end of styles.css.
+
+   Sits where the three proof images used to. The shell is emitted by
+   scripts/generate-start-here.py and filled in by /tonight-core.js.
+   Uses the existing Nebula Drift variables so both themes follow
+   automatically; light-theme overrides are scoped at the end.
+   ================================================================== */
+
+.sh-sky{
+  margin:0 0 34px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--soft);
+}
+.sh-sky h2{ margin:0 0 10px; font-size:1.15rem; }
+.sh-sky-lede{
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:.92rem; line-height:1.6;
+  max-width:62ch;
+}
+
+/* ── Location pills ─────────────────────────── */
+.sh-sky-pills{ margin-bottom:14px; }
+.sh-sky-pill.is-active{
+  color:var(--text);
+  border-color:rgba(var(--accent-rgb),0.75);
+  background:rgba(var(--accent-rgb),0.14);
+}
+
+/* ── Advanced: coordinates + minimum height ─── */
+.sh-sky-adv{ margin-bottom:16px; }
+.sh-sky-adv summary{
+  cursor:pointer; color:var(--muted);
+  font-size:.84rem; padding:4px 0;
+}
+.sh-sky-adv summary:hover{ color:var(--text); }
+
+.sh-sky-adv-grid{
+  display:flex; flex-wrap:wrap; gap:12px; align-items:end;
+  margin:12px 0 14px;
+}
+.sh-sky-adv-grid label{
+  display:flex; flex-direction:column; gap:5px;
+  font-size:.78rem; color:var(--muted);
+}
+.sh-sky-adv-grid input,
+.sh-sky-adv-grid select{
+  padding:8px 10px; min-width:128px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg2);
+  color:var(--text);
+  font:inherit; font-size:.88rem;
+}
+.sh-sky-apply{ font-size:.86rem; padding:8px 15px; }
+
+.sh-sky-alt{
+  display:flex; align-items:center; gap:10px;
+  font-size:.78rem; color:var(--muted);
+}
+.sh-sky-alt input[type=range]{ width:130px; accent-color:var(--accent); }
+.sh-sky-alt output{ color:var(--text); min-width:34px; }
+.sh-sky-alt-help{
+  margin:8px 0 0; color:var(--muted);
+  font-size:.79rem; line-height:1.55; max-width:60ch;
+}
+
+/* ── Which night ────────────────────────────── */
+.sh-sky-datenav{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:14px;
+}
+.sh-sky-datenav span{
+  color:var(--text); font-size:.88rem;
+  min-width:96px; text-align:center;
+}
+.sh-sky-nav{ padding:5px 12px; font-size:.95rem; line-height:1; }
+
+/* ── Night summary ──────────────────────────── */
+.sh-sky-wait{ margin:0; color:var(--muted); font-size:.88rem; line-height:1.55; }
+
+.sh-sky-facts{
+  display:flex; flex-wrap:wrap; gap:10px;
+  margin-bottom:12px;
+}
+.sh-sky-facts span{
+  display:flex; flex-direction:column; gap:2px;
+  flex:1 1 130px;
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(var(--accent-rgb),0.05);
+}
+.sh-sky-facts b{ font-size:.93rem; color:var(--text); font-weight:600; }
+.sh-sky-facts i{
+  font-style:normal; font-size:.7rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em;
+}
+
+.sh-sky-verdict{
+  margin:0 0 16px;
+  color:var(--text); font-size:.9rem; line-height:1.6;
+}
+
+/* ── Ranked targets ─────────────────────────── */
+.sh-sky-list{
+  list-style:none; margin:0 0 14px; padding:0;
+  display:flex; flex-direction:column; gap:10px;
+  counter-reset:sh-sky;
+}
+.sh-sky-list li{
+  position:relative;
+  padding:12px 14px 12px 44px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg2);
+  counter-increment:sh-sky;
+}
+.sh-sky-list li::before{
+  content:counter(sh-sky);
+  position:absolute; left:13px; top:12px;
+  width:22px; height:22px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:rgba(var(--accent-rgb),0.16);
+  color:var(--accent);
+  font-size:.72rem; font-weight:700;
+}
+
+.sh-sky-name{
+  display:inline-block; margin-right:9px;
+  color:var(--text); text-decoration:none;
+  font-size:.96rem; font-weight:600;
+}
+.sh-sky-name:hover{ color:var(--accent); }
+
+.sh-sky-tag{
+  display:inline-block;
+  padding:2px 9px; border-radius:999px;
+  font-size:.66rem; text-transform:uppercase; letter-spacing:.05em;
+  vertical-align:middle;
+}
+.sh-sky-tag-emission{ background:rgba(var(--accent4-rgb),0.16); color:var(--accent4); }
+.sh-sky-tag-galaxy  { background:rgba(var(--accent2-rgb),0.16); color:var(--accent2); }
+.sh-sky-tag-cluster { background:rgba(var(--accent3-rgb),0.16); color:var(--accent3); }
+.sh-sky-tag-wide    { background:rgba(var(--accent-rgb),0.16);  color:var(--accent);  }
+
+.sh-sky-when,
+.sh-sky-why{ display:block; line-height:1.5; }
+.sh-sky-when{ margin-top:5px; color:var(--muted); font-size:.79rem; }
+.sh-sky-why { margin-top:4px; color:var(--text); font-size:.82rem; opacity:.86; }
+
+.sh-sky-toggle{ font-size:.85rem; padding:8px 16px; }
+
+.sh-sky-foot{
+  margin:16px 0 0; color:var(--muted);
+  font-size:.78rem; line-height:1.55;
+}
+
+@media (max-width:560px){
+  .sh-sky{ padding:17px; }
+  .sh-sky-facts{ gap:8px; }
+  .sh-sky-facts span{ flex:1 1 100px; padding:9px 11px; }
+  .sh-sky-list li{ padding:11px 12px 11px 40px; }
+  .sh-sky-list li::before{ left:11px; }
+}
+
+/* ── Light theme ────────────────────────────── */
+html[data-theme="light"] .sh-sky-list li{ background:rgba(255,255,255,0.62); }
+html[data-theme="light"] .sh-sky-adv-grid input,
+html[data-theme="light"] .sh-sky-adv-grid select{ background:rgba(255,255,255,0.75); }
+html[data-theme="light"] .sh-sky-why{ opacity:1; }

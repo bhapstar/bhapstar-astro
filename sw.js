@@ -12,7 +12,7 @@ const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0
 
 if (!IS_DEV) {
 
-const CACHE_VERSION = 'bhapstar-3b389e2';
+const CACHE_VERSION = 'bhapstar-sky-1';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -28,6 +28,7 @@ const SHELL_ASSETS = [
   '/jigsaw.html',
   '/star_word.html',
   '/supernova_sweeper.html',
+  '/tonight-core.js',
   '/styles.css',
   '/protect-images.js',
   '/partials/partials.js',
