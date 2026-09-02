@@ -48,19 +48,18 @@
         <p class="sh-intro">This page is for anyone who has looked at a picture of a galaxy and wondered whether an ordinary person could take one. You can, and with less equipment than you would guess. The harder part is not the kit. It is getting under a sky dark enough to be worth the trouble, and that is the first thing this page will help you work out.</p>
       </div>
 
-      <section class="sh-sky" id="shSky">
+      <section class="sh-sky" id="shSky" data-tip-dark="Astronomical darkness: the sun is more than 18 degrees below the horizon, so the sky is as dark as it gets that night. Twilight before and after is still too bright for faint objects." data-tip-hours="How long that fully dark window lasts. In midsummer at high latitudes it can vanish altogether." data-tip-moon="How much of the moon is lit, and its phase. A bright moon washes out faint galaxies and nebulae much like light pollution does, so a new moon is the prize." data-tip-sky="The brightness of your own sky, from the picker above. It decides which objects are realistic from where you are.">
         <h2>What is worth looking at tonight</h2>
         <p class="sh-sky-lede">Drop a pin where you will be observing from, whether that is your garden, a balcony or somewhere you drive out to. This works out when it actually gets dark tonight, what the moon is doing, and which objects climb high enough for long enough to be worth setting up for.</p>
-        <div class="sh-sky-map" id="shSkyMap" data-lat="25.2048" data-lng="55.2708" data-zoom="9" role="application" aria-label="Map for choosing your observing location"></div>
+        <div class="sh-sky-map" id="shSkyMap" data-lat="25.2048" data-lng="55.2708" data-zoom="11" role="application" aria-label="Map for choosing your observing location"></div>
         <div class="sh-sky-loc">
           <p class="sh-sky-coords" id="shSkyCoords"></p>
           <button type="button" class="btn sh-sky-geo" id="shSkyGeo">Use my location</button>
         </div>
         <p class="sh-sky-map-help">Drag the pin, or tap anywhere on the map, to set your location. Nothing is sent anywhere.</p>
         <div class="sh-sky-bortle">
-          <label for="shSkyBortle">How bright is your sky?</label>
-          <select id="shSkyBortle"><option value="1">1 (pristine)</option><option value="2">2 (very dark)</option><option value="3">3 (rural)</option><option value="4">4 (rural/suburban)</option><option value="5" selected>5 (suburban)</option><option value="6">6 (bright suburban)</option><option value="7">7 (suburban/urban)</option><option value="8">8 (city)</option><option value="9">9 (inner city)</option></select>
-          <a href="/articles/bortle-scale-narrowband-filters.html">not sure which yours is?</a>
+          <label for="shSkyBortle">How dark is your night sky?</label>
+          <select id="shSkyBortle"><option value="1">1 — Pristine. The Milky Way casts a shadow</option><option value="2">2 — Truly dark. Milky Way full of detail</option><option value="3">3 — Rural. Milky Way clear, slight glow low down</option><option value="4">4 — Edge of town. Milky Way visible but washed out near the horizon</option><option value="5" selected>5 — Suburban. Milky Way faint overhead at best</option><option value="6">6 — Bright suburb. No Milky Way, sky looks grey</option><option value="7">7 — Town. Only the brighter stars, sky glows all round</option><option value="8">8 — City. Brightest stars and planets only</option><option value="9">9 — Inner city. A handful of stars at most</option></select>
         </div>
         <div class="sh-sky-datenav">
           <button type="button" class="btn sh-sky-nav" id="shSkyPrev" aria-label="Previous night">&#8592;</button>
@@ -592,7 +591,11 @@
   }
 
   if (window.L && mapEl) {
-    map = L.map(mapEl, { scrollWheelZoom: false })
+    /* Wheel zoom is on because zooming by button is clunky on desktop.
+       The cost is that a wheel scroll starting over the map zooms instead
+       of moving the page, which is why the map is not full width: there
+       is always margin either side to scroll past it. */
+    map = L.map(mapEl, { scrollWheelZoom: true })
            .setView([state.lat, state.lng], parseInt(mapEl.dataset.zoom, 10));
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -613,6 +616,30 @@
   }
 
   /* ── Rendering ───────────────────────────────────── */
+  /* The "i" buttons. Copy comes from data attributes on #shSky so it
+     stays in the generator rather than in this script string. */
+  var TIPS = {
+    dark:  sky.dataset.tipDark  || '',
+    hours: sky.dataset.tipHours || '',
+    moon:  sky.dataset.tipMoon  || '',
+    sky:   sky.dataset.tipSky   || ''
+  };
+
+  function info(key) {
+    if (!TIPS[key]) return '';
+    return '<button type="button" class="sh-sky-i" aria-label="What this means" ' +
+           'data-tip="' + TIPS[key].replace(/"/g, '&quot;') + '">i</button>';
+  }
+
+  /* One open tip at a time, closed by a second tap or a click elsewhere.
+     Hover alone would leave this unusable on a phone. */
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.sh-sky-i');
+    var open = sky.querySelector('.sh-sky-i.is-open');
+    if (open && open !== btn) open.classList.remove('is-open');
+    if (btn) { ev.preventDefault(); btn.classList.toggle('is-open'); }
+  });
+
   function reasonFor(r) {
     var bits = [];
     if (r.bf < 0.5) bits.push('Your sky is too bright for this one. It will be a struggle.');
@@ -644,11 +671,12 @@
     var html =
       '<div class="sh-sky-facts">' +
         '<span><b>' + hhmm(plan.darkStart) + ' to ' + hhmm(plan.darkEnd) +
-          '</b><i>Properly dark</i></span>' +
+          '</b><i>Properly dark' + info('dark') + '</i></span>' +
         '<span><b>' + hoursText((plan.darkEnd - plan.darkStart) / 3600000) +
-          '</b><i>Dark hours</i></span>' +
-        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) + '</i></span>' +
-        '<span><b>Bortle ' + state.bortle + '</b><i>Your sky</i></span>' +
+          '</b><i>Dark hours' + info('hours') + '</i></span>' +
+        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) +
+          info('moon') + '</i></span>' +
+        '<span><b>Level ' + state.bortle + '</b><i>Your sky' + info('sky') + '</i></span>' +
       '</div>';
 
     var v;
@@ -676,11 +704,19 @@
     var list = state.expanded ? plan.targets : plan.targets.slice(0, SHOWN);
     html += '<ol class="sh-sky-list">' + list.map(function (r) {
       return '<li>' +
-        '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
-        '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
-        '<span class="sh-sky-when">' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) +
-          ', ' + hoursText(r.hours) + ' usable, peaks at ' + Math.round(r.maxAlt) + '°</span>' +
-        '<span class="sh-sky-why">' + reasonFor(r) + '</span>' +
+        '<div class="sh-sky-main">' +
+          '<p class="sh-sky-head">' +
+            '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
+            '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
+          '</p>' +
+          '<p class="sh-sky-desc">' + r.tg.d + '</p>' +
+          '<p class="sh-sky-why">' + reasonFor(r) + '</p>' +
+        '</div>' +
+        '<div class="sh-sky-timing">' +
+          '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b><i>Best window</i></span>' +
+          '<span><b>' + hoursText(r.hours) + '</b><i>Usable</i></span>' +
+          '<span><b>' + Math.round(r.maxAlt) + '°</b><i>Peak height</i></span>' +
+        '</div>' +
       '</li>';
     }).join('') + '</ol>';
 
