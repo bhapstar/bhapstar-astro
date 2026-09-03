@@ -82,6 +82,8 @@ lives in /styles.css under "PAGE: Start Here".
 """
 
 import json
+import os
+import re
 import sys
 from datetime import datetime
 from html import escape as esc
@@ -178,14 +180,28 @@ SKY_TIPS = {
              "pollution does, so a new moon is the prize."),
     "sky": ("The brightness of your own sky, from the picker above. It "
             "decides which objects are realistic from where you are."),
+    "filter": ("Which filter helps on this object, on this night. It "
+               "depends on both. A narrowband filter passes only the "
+               "colours a glowing gas cloud gives off, which is why it "
+               "cuts through city light and moonlight so well. Galaxies "
+               "and star clusters shine across the whole spectrum, so a "
+               "narrowband filter would block the very light you are "
+               "trying to collect. Those get a broadband light pollution "
+               "filter at most."),
+    "kit": ("What you can realistically see or photograph this with. "
+            "Grey means not worth trying, a light chip means it works, "
+            "and a filled chip means this is where the object looks its "
+            "best. Sky brightness moves these around, so treat them as a "
+            "starting point rather than a rule."),
 }
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
 SKY_FALLBACK = ("Working out tonight's sky. If nothing appears here, "
                 "JavaScript is switched off in your browser.")
 
-SKY_FOOT = ("Times use your device clock. Tap any object to see one from "
-            "the gallery.")
+SKY_FOOT = ("Times use your device clock. Tap a thumbnail to see the full "
+            "picture, or the name to open its gallery page. Filter and kit "
+            "suggestions are a starting point, not a rule.")
 
 
 # Used for the social card, since this page now has something worth showing.
@@ -608,9 +624,20 @@ def build_sky(articles):
         '        <div class="sh-sky-datenav">\n'
         '          <button type="button" class="btn sh-sky-nav" id="shSkyPrev" '
         'aria-label="Previous night">&#8592;</button>\n'
-        '          <span id="shSkyDate">Tonight</span>\n'
+        # The label is a button rather than a span so the whole thing is
+        # tappable. The date input behind it is what actually opens the
+        # picker, and it stays in the DOM so a browser without showPicker()
+        # still gets a working native control.
+        '          <span class="sh-sky-datewrap">\n'
+        '            <button type="button" class="sh-sky-datebtn" id="shSkyDate" '
+        'aria-label="Choose a date">Tonight</button>\n'
+        '            <input type="date" id="shSkyDatePick" class="sh-sky-dateinput" '
+        'aria-label="Choose a date" />\n'
+        '          </span>\n'
         '          <button type="button" class="btn sh-sky-nav" id="shSkyNext" '
         'aria-label="Next night">&#8594;</button>\n'
+        '          <button type="button" class="btn sh-sky-today" id="shSkyToday" '
+        'hidden>Tonight</button>\n'
         '        </div>\n'
 
         '        <div class="sh-sky-out" id="shSkyOut" aria-live="polite">\n'
@@ -943,6 +970,13 @@ SCRIPT = """
   function hhmm(d) {
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   }
+  /* Target names carry entities such as &amp;, so anything going into an
+     attribute is escaped rather than dropped in raw. */
+  function attr(v) {
+    return String(v).replace(/&(?!(amp|lt|gt|quot|#\\d+);)/g, '&amp;')
+                    .replace(/"/g, '&quot;');
+  }
+
   function hoursText(h) {
     var w = Math.floor(h), m = Math.round((h - w) * 60);
     if (m === 60) { w++; m = 0; }
@@ -996,10 +1030,12 @@ SCRIPT = """
   /* The "i" buttons. Copy comes from data attributes on #shSky so it
      stays in the generator rather than in this script string. */
   var TIPS = {
-    dark:  sky.dataset.tipDark  || '',
-    hours: sky.dataset.tipHours || '',
-    moon:  sky.dataset.tipMoon  || '',
-    sky:   sky.dataset.tipSky   || ''
+    dark:   sky.dataset.tipDark   || '',
+    hours:  sky.dataset.tipHours  || '',
+    moon:   sky.dataset.tipMoon   || '',
+    sky:    sky.dataset.tipSky    || '',
+    filter: sky.dataset.tipFilter || '',
+    kit:    sky.dataset.tipKit    || ''
   };
 
   function info(key) {
@@ -1028,12 +1064,105 @@ SCRIPT = """
     return bits.join(' ');
   }
 
+  /* ── Thumbnail lightbox ───────────────────────────
+     Reuses the .figbox styling that the article pages already carry, but
+     wired here with a delegated listener, because the list is rebuilt from
+     scratch on every date, location and sky change. */
+  var lb = null, lbStage = null, lbCap = null;
+
+  function lightbox(src, name) {
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.className = 'figbox';
+      lb.id = 'shSkyFigbox';
+      lb.hidden = true;
+      lb.setAttribute('role', 'dialog');
+      lb.setAttribute('aria-modal', 'true');
+      lb.setAttribute('aria-label', 'Enlarged picture');
+      lb.tabIndex = -1;
+
+      var x = document.createElement('button');
+      x.type = 'button';
+      x.className = 'figbox-x';
+      x.setAttribute('aria-label', 'Close');
+      x.innerHTML = '&#215;';
+
+      lbStage = document.createElement('div');
+      lbStage.className = 'figbox-stage';
+
+      lbCap = document.createElement('p');
+      lbCap.className = 'figbox-cap';
+
+      var hint = document.createElement('p');
+      hint.className = 'figbox-hint';
+      hint.textContent = 'Click anywhere to close';
+
+      lb.appendChild(x);
+      lb.appendChild(lbStage);
+      lb.appendChild(lbCap);
+      lb.appendChild(hint);
+      document.body.appendChild(lb);
+
+      lb.addEventListener('click', closeLightbox);
+      lb.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' || ev.key === 'Esc') { ev.preventDefault(); closeLightbox(); }
+      });
+    }
+
+    lbStage.innerHTML = '';
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.decoding = 'async';
+    lbStage.appendChild(img);
+    lbCap.innerHTML = name;
+
+    lb.hidden = false;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { lb.classList.add('open'); });
+    });
+    document.documentElement.style.overflow = 'hidden';
+    lb.focus();
+  }
+
+  function closeLightbox() {
+    if (!lb) return;
+    lb.classList.remove('open');
+    document.documentElement.style.overflow = '';
+    setTimeout(function () { lb.hidden = true; lbStage.innerHTML = ''; }, 200);
+  }
+
+  out.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.sh-sky-thumb');
+    if (!btn || !btn.dataset.full) return;
+    ev.preventDefault();
+    lightbox(btn.dataset.full, btn.dataset.name || '');
+  });
+
+  /* ── Which night ─────────────────────────────────── */
+  function dateFor(offset) {
+    var d = new Date();
+    d.setHours(12, 0, 0, 0);
+    d.setDate(d.getDate() + offset);
+    return d;
+  }
+  function isoOf(d) {
+    return d.getFullYear() + '-' +
+           String(d.getMonth() + 1).padStart(2, '0') + '-' +
+           String(d.getDate()).padStart(2, '0');
+  }
+
   function render() {
-    var date = new Date();
-    date.setDate(date.getDate() + state.offset);
-    document.getElementById('shSkyDate').textContent = state.offset === 0
+    var date = dateFor(state.offset);
+    var label = document.getElementById('shSkyDate');
+    var pick  = document.getElementById('shSkyDatePick');
+    var today = document.getElementById('shSkyToday');
+
+    label.textContent = state.offset === 0
       ? 'Tonight'
       : date.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
+    if (pick) pick.value = isoOf(date);
+    if (today) today.hidden = state.offset === 0;
 
     var plan = C.planNight(date, state.lat, state.lng, state.bortle, MIN_ALT);
 
@@ -1080,14 +1209,48 @@ SCRIPT = """
 
     var list = state.expanded ? plan.targets : plan.targets.slice(0, SHOWN);
     html += '<ol class="sh-sky-list">' + list.map(function (r) {
+      var tg = r.tg;
+
+      /* The thumbnail is a button, not a link. It opens the full picture
+         over the page; the name beside it is the link to the gallery. Two
+         different jobs, so two different controls. */
+      var thumb = tg.f
+        ? '<button type="button" class="sh-sky-thumb" ' +
+            'data-full="/' + tg.f + '" data-name="' + attr(tg.n) + '" ' +
+            'aria-label="See ' + attr(tg.n) + ' full size">' +
+            '<img src="/' + C.thumbFor(tg) + '" alt="" loading="lazy" decoding="async" />' +
+          '</button>'
+        : '<span class="sh-sky-thumb is-empty" aria-hidden="true"></span>';
+
+      var fk = C.filterFor(tg, state.bortle, r.moonHit);
+      var fl = C.FILTERS[fk];
+      var filterChip =
+        '<span class="sh-sky-chip sh-sky-chip-' + fk + '" title="' + attr(fl.w) + '">' +
+          '<span class="sh-sky-chip-k">Filter</span>' + fl.s +
+        '</span>' + info('filter');
+
+      var kitChips = C.KIT.map(function (slot, i) {
+        var lvl = (tg.k && tg.k[i]) || 0;
+        return '<span class="sh-sky-kit-chip lvl-' + lvl + '" ' +
+               'title="' + attr(slot.l + ': ' + C.KIT_STATE[lvl]) + '">' +
+               slot.s + '</span>';
+      }).join('');
+
       return '<li>' +
+        thumb +
         '<div class="sh-sky-main">' +
           '<p class="sh-sky-head">' +
-            '<a class="sh-sky-name" href="/share/' + r.tg.slug + '.html">' + r.tg.n + '</a>' +
-            '<span class="sh-sky-tag sh-sky-tag-' + r.tg.t + '">' + C.LABEL[r.tg.t] + '</span>' +
+            '<a class="sh-sky-name" href="/share/' + tg.slug + '.html">' + tg.n + '</a>' +
+            '<span class="sh-sky-tag sh-sky-tag-' + tg.t + '">' + C.LABEL[tg.t] + '</span>' +
           '</p>' +
-          '<p class="sh-sky-desc">' + r.tg.d + '</p>' +
+          '<p class="sh-sky-desc">' + tg.d + '</p>' +
           '<p class="sh-sky-why">' + reasonFor(r) + '</p>' +
+          '<p class="sh-sky-gear">' +
+            filterChip +
+            '<span class="sh-sky-kit">' +
+              '<span class="sh-sky-chip-k">Use</span>' + kitChips + info('kit') +
+            '</span>' +
+          '</p>' +
         '</div>' +
         '<div class="sh-sky-timing">' +
           '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b><i>Best window</i></span>' +
@@ -1137,6 +1300,38 @@ SCRIPT = """
   document.getElementById('shSkyNext').addEventListener('click', function () {
     state.offset++; render();
   });
+
+  /* The label opens the native date picker. showPicker() is the reliable
+     way to do that from a button; where it is missing, or refuses because
+     the gesture was not direct enough, focusing the input still gives the
+     reader a working control. */
+  (function () {
+    var label = document.getElementById('shSkyDate');
+    var pick  = document.getElementById('shSkyDatePick');
+    var today = document.getElementById('shSkyToday');
+    if (!label || !pick) return;
+
+    label.addEventListener('click', function () {
+      try {
+        if (typeof pick.showPicker === 'function') { pick.showPicker(); return; }
+      } catch (e) {}
+      pick.focus();
+      pick.click();
+    });
+
+    pick.addEventListener('change', function () {
+      if (!pick.value) return;
+      var parts = pick.value.split('-');
+      var chosen = new Date(+parts[0], +parts[1] - 1, +parts[2], 12, 0, 0, 0);
+      var base = new Date(); base.setHours(12, 0, 0, 0);
+      state.offset = Math.round((chosen - base) / 86400000);
+      render();
+    });
+
+    if (today) today.addEventListener('click', function () {
+      state.offset = 0; render();
+    });
+  })();
 
   showCoords();
   render();
@@ -1222,10 +1417,58 @@ def build_page(articles, by_stage):
 '''
 
 
+TONIGHT_CORE = "tonight-core.js"
+
+
+def check_targets(gallery):
+    """Every target in tonight-core.js must have its pictures on disk.
+
+    The sky list now shows a thumbnail for each object, so a renamed or
+    missing image would leave a broken picture on the page with nothing to
+    warn about it. This reads the target table straight out of the engine
+    and checks the two files and the gallery slug behind each one.
+
+    Returns a list of problems rather than raising, so the build reports
+    all of them at once rather than one per run.
+    """
+    problems = []
+    try:
+        with open(TONIGHT_CORE, encoding="utf-8") as f:
+            src = f.read()
+    except OSError:
+        return [f"{TONIGHT_CORE} could not be read"]
+
+    entries = re.findall(
+        r'slug:"([^"]+)"[^\n]*\n\s*f:"([^"]*)"', src
+    )
+    if not entries:
+        return [f"no targets found in {TONIGHT_CORE}; has the table changed shape?"]
+
+    # load_data returns the gallery keyed by slug.
+    slugs = set(gallery or ())
+
+    for slug, image in entries:
+        thumb = image.replace("images/", "images/thumbs/", 1)
+        if not os.path.isfile(image):
+            problems.append(f"target '{slug}': missing image {image}")
+        if not os.path.isfile(thumb):
+            problems.append(f"target '{slug}': missing thumbnail {thumb}")
+        if slugs and slug not in slugs:
+            problems.append(f"target '{slug}': no gallery entry with that slug")
+
+    return problems
+
+
 def main():
     try:
-        articles, _gallery = load_data()
+        articles, gallery = load_data()
         by_stage = staged(articles)
+        problems = check_targets(gallery)
+        if problems:
+            raise BuildError(
+                "sky panel targets are out of step with the images on disk:\n  "
+                + "\n  ".join(problems)
+            )
         html = build_page(articles, by_stage)
     except BuildError as exc:
         print(f"✗ {OUT}: {exc}", file=sys.stderr)

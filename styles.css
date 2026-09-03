@@ -9400,3 +9400,99 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
   .sim-room-btn{ padding:6px 12px; font-size:.8rem; }
   .sim-actions .btn{ flex:1 1 100%; text-align:center; }
 }
+
+/* ── Sky panel: thumbnails, filter and kit chips, date picker ──────────
+   Added when the target list gained a picture and a gear recommendation.
+   The three-column grid is thumbnail, text, timings; on a phone it drops
+   to thumbnail plus text with the timings running underneath. */
+
+.sh-sky-list li{ grid-template-columns:78px 1fr 168px; }
+
+.sh-sky-thumb{
+  grid-row:1; align-self:start;
+  width:78px; height:78px; padding:0;
+  border:1px solid var(--line); border-radius:10px;
+  background:rgba(0,0,0,0.25); overflow:hidden; cursor:zoom-in;
+  transition:border-color 180ms ease, transform 180ms var(--ease-in-out);
+}
+.sh-sky-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.sh-sky-thumb:hover,
+.sh-sky-thumb:focus-visible{ border-color:rgba(var(--accent-rgb),0.55); transform:translateY(-1px); }
+.sh-sky-thumb.is-empty{ cursor:default; }
+
+/* ── Filter and kit line ── */
+.sh-sky-gear{
+  display:flex; flex-wrap:wrap; align-items:center; gap:7px 12px;
+  margin:9px 0 0;
+}
+.sh-sky-chip-k{
+  font-size:.6rem; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--muted); margin-right:5px;
+}
+.sh-sky-chip{
+  display:inline-flex; align-items:center;
+  padding:3px 10px; border-radius:999px;
+  font-size:.7rem; font-weight:600;
+  border:1px solid transparent;
+}
+/* The rungs read as a ladder: nothing, then broadband, then tighter. */
+.sh-sky-chip-none{ background:rgba(var(--accent3-rgb),0.14); color:var(--accent3); }
+.sh-sky-chip-lp  { background:rgba(var(--accent5-rgb,251,146,60),0.14); color:var(--accent5); }
+.sh-sky-chip-wide{ background:rgba(var(--accent2-rgb),0.16); color:var(--accent2); }
+.sh-sky-chip-nb  { background:rgba(var(--accent-rgb),0.18);  color:var(--accent); }
+.sh-sky-chip-xnb { background:rgba(var(--accent4-rgb),0.18); color:var(--accent4); }
+
+.sh-sky-kit{ display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px; }
+.sh-sky-kit-chip{
+  display:inline-flex; align-items:center;
+  padding:3px 8px; border-radius:7px;
+  font-size:.68rem; font-weight:600;
+  border:1px solid var(--line);
+  cursor:help;
+}
+.sh-sky-kit-chip.lvl-0{ color:var(--muted); opacity:.5; background:none; }
+.sh-sky-kit-chip.lvl-1{ color:var(--text); background:rgba(var(--accent-rgb),0.10); }
+.sh-sky-kit-chip.lvl-2{
+  color:var(--text);
+  background:rgba(var(--accent-rgb),0.26);
+  border-color:rgba(var(--accent-rgb),0.45);
+}
+
+/* ── Date picker ── */
+.sh-sky-datewrap{ position:relative; display:inline-flex; min-width:104px; justify-content:center; }
+.sh-sky-datebtn{
+  padding:5px 10px; border-radius:9px;
+  border:1px solid var(--line); background:rgba(0,0,0,0.16);
+  color:var(--text); font-family:inherit; font-size:.88rem;
+  cursor:pointer; white-space:nowrap;
+  transition:border-color 180ms ease, background-color 180ms ease;
+}
+.sh-sky-datebtn:hover,
+.sh-sky-datebtn:focus-visible{ border-color:rgba(var(--accent-rgb),0.50); }
+/* Present for the native picker to anchor to, and reachable by keyboard,
+   but never the visible control. */
+.sh-sky-dateinput{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  opacity:0; border:0; padding:0; margin:0;
+  pointer-events:none;
+}
+.sh-sky-today{ padding:5px 11px; font-size:.78rem; }
+
+/* ── Small screens ── */
+@media (max-width:760px){
+  /* Thumbnail beside the text, timings running full width underneath.
+     The counter stays absolutely positioned, so the padding-left that
+     makes room for it has to stay too. */
+  .sh-sky-list li{ grid-template-columns:58px minmax(0,1fr); padding:12px 13px 12px 40px; }
+  .sh-sky-list li::before{ left:11px; }
+  .sh-sky-thumb{ width:58px; height:58px; }
+  .sh-sky-timing{ grid-column:1 / -1; }
+  .sh-sky-gear{ gap:6px 10px; }
+  .sh-sky-datenav{ flex-wrap:wrap; }
+}
+
+/* ── Light theme ────────────────────────────── */
+html[data-theme="light"] .sh-sky-thumb{ background:rgba(255,255,255,0.6); }
+html[data-theme="light"] .sh-sky-datebtn{ background:rgba(255,255,255,0.72); }
+html[data-theme="light"] .sh-sky-kit-chip.lvl-0{ opacity:.55; }
