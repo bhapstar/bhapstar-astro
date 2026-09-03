@@ -225,6 +225,41 @@ var RAD = Math.PI / 180;
 
   var LABEL = { emission:'Emission nebula', galaxy:'Galaxy', cluster:'Star cluster', wide:'Wide field' };
 
+  /* ── Direction ────────────────────────────────
+     Azimuth comes out of targetAltAz as a compass bearing, 0 north,
+     90 east, 180 south, 270 west. Sixteen points rather than eight,
+     because "east" for something sitting at 112 degrees is misleading
+     when you are working out whether a building is in the way. */
+  var COMPASS = [
+    'north', 'north-north-east', 'north-east', 'east-north-east',
+    'east', 'east-south-east', 'south-east', 'south-south-east',
+    'south', 'south-south-west', 'south-west', 'west-south-west',
+    'west', 'west-north-west', 'north-west', 'north-north-west'
+  ];
+  var COMPASS_SHORT = [
+    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+    'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+  ];
+
+  function compassIndex(az) {
+    return Math.round(((az % 360) + 360) % 360 / 22.5) % 16;
+  }
+  function compassName(az)  { return COMPASS[compassIndex(az)]; }
+  function compassShort(az) { return COMPASS_SHORT[compassIndex(az)]; }
+
+  /* Within about ten degrees of the zenith the azimuth stops meaning
+     anything useful: the object is nearly straight up, so a small change
+     in position swings the bearing right round. Saying "overhead" there
+     is both more honest and more use to somebody deciding whether a
+     building is in the way. */
+  var ZENITH_CUTOFF = 80;
+  function directionText(alt, az) {
+    return alt >= ZENITH_CUTOFF ? 'overhead' : compassName(az);
+  }
+  function directionShort(alt, az) {
+    return alt >= ZENITH_CUTOFF ? 'UP' : compassShort(az);
+  }
+
   /* ── Scoring ────────────────────────────────── */
   function bortleFactor(type, b) {
     if (type === 'emission') return b >= 7 ? 0.75 : 1.0;
@@ -267,10 +302,11 @@ var RAD = Math.PI / 180;
     for (var k = 0; k < TARGETS.length; k++) {
       var tg = TARGETS[k];
       var maxAlt = -90, above = 0, winStart = null, winEnd = null;
+      var peakAt = null, peakAz = 0;
 
       for (i = 0; i < dark.length; i++) {
         var p = targetAltAz(dark[i], lat, lng, tg.ra, tg.dec);
-        if (p.alt > maxAlt) maxAlt = p.alt;
+        if (p.alt > maxAlt) { maxAlt = p.alt; peakAz = p.az; peakAt = dark[i]; }
         if (p.alt >= minAlt) {
           above++;
           if (!winStart) winStart = dark[i];
@@ -281,6 +317,19 @@ var RAD = Math.PI / 180;
       var hours = above * STEP / 60;
       if (hours <= 0.5) continue;
 
+      /* Nine samples evenly across the usable window, so the compass dial
+         can draw the actual path the object takes rather than guessing a
+         curve through three points. The peak always falls inside this
+         window: maxAlt is at least minAlt for anything that survives the
+         check above, so the highest moment is by definition part of the
+         stretch that cleared it. */
+      var track = [], TRACK_STEPS = 8, span = winEnd - winStart;
+      for (var j = 0; j <= TRACK_STEPS; j++) {
+        var tAt = new Date(winStart.getTime() + span * j / TRACK_STEPS);
+        var q = targetAltAz(tAt, lat, lng, tg.ra, tg.dec);
+        track.push({ alt: q.alt, az: q.az, at: tAt });
+      }
+
       var moonHit = ill.fraction * moonUpFrac * (tg.t === 'emission' ? 0.35 : 1.0);
       var bf = bortleFactor(tg.t, bortle);
       var altScore = Math.max(0, Math.min(1, (maxAlt - minAlt) / 45));
@@ -290,7 +339,8 @@ var RAD = Math.PI / 180;
       out.push({
         tg: tg, maxAlt: maxAlt, hours: hours,
         winStart: winStart, winEnd: winEnd, score: score,
-        moonHit: moonHit, bf: bf
+        moonHit: moonHit, bf: bf,
+        peakAt: peakAt, peakAz: peakAz, track: track
       });
     }
 
@@ -313,6 +363,10 @@ var RAD = Math.PI / 180;
     filterFor: filterFor,
     KIT: KIT,
     KIT_STATE: KIT_STATE,
-    thumbFor: thumbFor
+    thumbFor: thumbFor,
+    compassName: compassName,
+    compassShort: compassShort,
+    directionText: directionText,
+    directionShort: directionShort
   };
 })(window);
