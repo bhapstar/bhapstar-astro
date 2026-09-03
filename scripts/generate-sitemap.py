@@ -54,6 +54,7 @@ PAGES = [
     ("articles.html",           "monthly",  "0.8",  None),
     ("field-cards.html",        "monthly",  "0.7",  None),
     ("prints.html",             "monthly",  "0.7",  None),
+    ("print-simulator.html",    "monthly",  "0.6",  None),
     ("jigsaw.html",             "yearly",   "0.6",  None),
     ("quiz.html",               "yearly",   "0.6",  None),
     ("star_word.html",          "yearly",   "0.6",  None),

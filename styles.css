@@ -9240,3 +9240,153 @@ html[data-theme="light"] .sh-sky-list li{ background:rgba(255,255,255,0.62); }
 html[data-theme="light"] .sh-sky-bortle select{ background:rgba(255,255,255,0.75); }
 html[data-theme="light"] .sh-sky-why{ opacity:1; }
 html[data-theme="light"] .sh-sky-i::after{ background:#fff; }
+
+/* ============================================================
+   PAGE: Print simulator (print-simulator.html)
+   Body carries .page-print-simulator
+   The .sim-callout rule also runs on prints.html, where it is the
+   card that links across to the simulator.
+   ============================================================ */
+
+/* ── Callout on the prints page ── */
+.sim-callout{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; margin:0 0 1.25rem;
+  border:1px solid rgba(167,139,250,0.22);
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(167,139,250,0.10), rgba(96,165,250,0.06));
+  color:var(--text); text-decoration:none;
+  transition:border-color 200ms var(--ease-in-out), transform 200ms var(--ease-in-out),
+             background-color 200ms var(--ease-in-out);
+}
+.sim-callout:hover,
+.sim-callout:focus-visible{
+  border-color:rgba(167,139,250,0.48);
+  transform:translateY(-1px);
+}
+.sim-callout-icon{
+  flex:0 0 auto; display:grid; place-items:center;
+  width:40px; height:40px; border-radius:12px;
+  background:rgba(167,139,250,0.16); color:var(--accent);
+}
+.sim-callout-text{ flex:1 1 auto; min-width:0; font-size:.88rem; color:var(--muted); line-height:1.45; }
+.sim-callout-text strong{ display:block; color:var(--text); font-size:.98rem; font-weight:600; margin-bottom:2px; }
+.sim-callout-arrow{ flex:0 0 auto; color:var(--accent); font-size:1.5rem; line-height:1; }
+
+/* ── Page intro ── */
+.sim-intro{ max-width:74ch; margin:-.25rem 0 1.35rem; line-height:1.6; }
+.sim-intro a{ color:var(--accent); }
+
+/* ── Layout ── */
+.sim-layout{ display:grid; gap:18px; }
+@media (min-width:980px){
+  .sim-layout{ grid-template-columns:360px minmax(0,1fr); align-items:start; }
+  .sim-controls{    grid-column:1; grid-row:1; }
+  .sim-stage-wrap{  grid-column:2; grid-row:1; position:sticky; top:86px; }
+}
+.sim-controls{ display:grid; gap:18px; align-content:start; }
+
+/* ── Stage ── */
+.sim-stage-panel{ padding:14px; }
+.sim-rooms{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.sim-room-btn{
+  padding:7px 14px; border-radius:999px; cursor:pointer;
+  border:1px solid rgba(167,139,250,0.22);
+  background:rgba(0,0,0,0.16); color:var(--muted);
+  font-family:inherit; font-size:.84rem; font-weight:500;
+  transition:border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+.sim-room-btn:hover{ border-color:rgba(167,139,250,0.42); color:var(--text); }
+.sim-room-btn.active{
+  background:linear-gradient(135deg, rgba(167,139,250,0.26), rgba(96,165,250,0.18));
+  border-color:rgba(167,139,250,0.55); color:var(--text);
+}
+
+.sim-stage{
+  border-radius:14px; overflow:hidden;
+  background:rgba(0,0,0,0.20);
+  border:1px solid rgba(167,139,250,0.10);
+  min-height:220px; display:grid; place-items:center;
+}
+.sim-svg{ display:block; width:100%; height:auto; }
+.sim-placeholder{ margin:0; padding:60px 20px; color:var(--muted); font-size:.9rem; text-align:center; }
+
+.sim-readout{
+  margin:.7rem 0 0; font-size:.8rem; color:var(--muted);
+  line-height:1.55; letter-spacing:.01em;
+}
+
+/* ── Controls ── */
+.sim-field{ margin-bottom:14px; }
+.sim-field > label{
+  display:block; margin-bottom:6px;
+  font-size:.74rem; font-weight:600; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--accent);
+}
+.sim-field select{
+  width:100%; padding:10px 36px 10px 13px; border-radius:12px;
+  border:1px solid rgba(167,139,250,0.22);
+  background-color:#12103a;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a78bfa' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+  color:rgba(255,255,255,0.92); outline:none; font-family:inherit; font-size:13px;
+  appearance:none; -webkit-appearance:none; color-scheme:dark; cursor:pointer;
+  transition:border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+.sim-field select:hover{ background-color:#1a1650; border-color:rgba(167,139,250,0.40); }
+.sim-field select:focus{
+  border-color:rgba(167,139,250,0.65);
+  box-shadow:0 0 0 4px rgba(167,139,250,0.12);
+  background-color:#1a1650;
+}
+.sim-field select option{ background-color:#12103a; color:rgba(255,255,255,0.92); }
+.sim-field select optgroup{ background-color:#12103a; color:var(--accent); font-style:normal; }
+
+.sim-check{
+  display:flex; align-items:center; gap:9px;
+  font-size:.86rem; color:var(--muted); cursor:pointer; margin:2px 0 16px;
+}
+.sim-check input{ accent-color:var(--accent); width:16px; height:16px; cursor:pointer; }
+
+.sim-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+.sim-note{
+  margin:0; padding-top:12px;
+  border-top:1px solid var(--line);
+  font-size:.78rem; color:var(--muted); line-height:1.55;
+}
+
+.sim-tips-list{ margin:.4rem 0 0; padding-left:1.1rem; }
+.sim-tips-list li{ font-size:.86rem; color:var(--muted); line-height:1.55; margin-bottom:.5rem; }
+.sim-tips-list li:last-child{ margin-bottom:0; }
+
+/* ── Light theme ────────────────────────────── */
+html[data-theme="light"] .sim-callout{
+  background:linear-gradient(135deg, rgba(124,77,255,0.10), rgba(37,99,235,0.06));
+  border-color:rgba(124,77,255,0.24);
+}
+html[data-theme="light"] .sim-callout-icon{ background:rgba(124,77,255,0.14); }
+html[data-theme="light"] .sim-room-btn{ background:rgba(255,255,255,0.62); }
+html[data-theme="light"] .sim-room-btn.active{
+  background:linear-gradient(135deg, rgba(124,77,255,0.20), rgba(37,99,235,0.14));
+}
+html[data-theme="light"] .sim-stage{ background:rgba(255,255,255,0.55); }
+html[data-theme="light"] .sim-field select{
+  background-color:rgba(255,255,255,0.80);
+  color:#1b1638;
+  color-scheme:light;
+}
+html[data-theme="light"] .sim-field select option,
+html[data-theme="light"] .sim-field select optgroup{ background-color:#fff; color:#1b1638; }
+html[data-theme="light"] .sim-field select:hover,
+html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
+
+/* ── Small screens ── */
+@media (max-width:640px){
+  .sim-callout{ gap:11px; padding:12px 13px; }
+  .sim-callout-icon{ width:34px; height:34px; border-radius:10px; }
+  .sim-callout-text{ font-size:.82rem; }
+  .sim-callout-text strong{ font-size:.92rem; }
+  .sim-stage-panel{ padding:11px; }
+  .sim-room-btn{ padding:6px 12px; font-size:.8rem; }
+  .sim-actions .btn{ flex:1 1 100%; text-align:center; }
+}
