@@ -9348,6 +9348,15 @@ html[data-theme="light"] .sh-sky-i::after{ background:#fff; }
 }
 .sim-check input{ accent-color:var(--accent); width:16px; height:16px; cursor:pointer; }
 
+.sim-mode{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.sim-mode .btn{ flex:1 1 auto; text-align:center; }
+.sim-wall-note{
+  margin:0 0 14px; padding:11px 13px; border-radius:12px;
+  border:1px solid rgba(167,139,250,0.18);
+  background:rgba(167,139,250,0.07);
+  font-size:.83rem; color:var(--muted); line-height:1.55;
+}
+
 .sim-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
 .sim-note{
   margin:0; padding-top:12px;
@@ -9370,6 +9379,7 @@ html[data-theme="light"] .sim-room-btn.active{
   background:linear-gradient(135deg, rgba(124,77,255,0.20), rgba(37,99,235,0.14));
 }
 html[data-theme="light"] .sim-stage{ background:rgba(255,255,255,0.55); }
+html[data-theme="light"] .sim-wall-note{ background:rgba(124,77,255,0.07); border-color:rgba(124,77,255,0.20); }
 html[data-theme="light"] .sim-field select{
   background-color:rgba(255,255,255,0.80);
   color:#1b1638;

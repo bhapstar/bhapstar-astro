@@ -56,8 +56,7 @@
         Pick an image, a size and a finish, then see it hanging on a wall. Every room is drawn
         to real scale, so a sofa is a sofa-sized sofa and a 50 cm canvas is 50 cm across.
         It is the quickest way to work out which size actually suits your space.
-        When you find a combination you like, send it straight to the
-        <a href="prints.html">enquiry builder</a>.
+        When you find a combination you like, send it straight to the <a href="prints.html">enquiry builder</a>.
       </p>
 
       <div class="sim-layout">
@@ -81,30 +80,42 @@
           <div class="panel prints-panel">
             <h3>Your print</h3>
 
-            <div class="sim-field">
-              <label for="simImageLabel" id="simImageLabel">Image</label>
-              <div id="simImagePicker"></div>
+            <div id="simSingleFields">
+              <div class="sim-field">
+                <label for="simImageLabel" id="simImageLabel">Image</label>
+                <div id="simImagePicker"></div>
+              </div>
+
+              <div class="sim-field">
+                <label for="simSize">Size and type</label>
+                <div id="simSizeWrap"></div>
+              </div>
+
+              <div class="sim-field" id="simFinishField">
+                <label for="simFinish">Finish</label>
+                <div id="simFinishWrap"></div>
+              </div>
+
+              <div class="sim-field">
+                <label for="simOrient">Orientation</label>
+                <div id="simOrientWrap"></div>
+              </div>
             </div>
 
-            <div class="sim-field">
-              <label for="simSize">Size and type</label>
-              <div id="simSizeWrap"></div>
-            </div>
-
-            <div class="sim-field" id="simFinishField">
-              <label for="simFinish">Finish</label>
-              <div id="simFinishWrap"></div>
-            </div>
-
-            <div class="sim-field">
-              <label for="simOrient">Orientation</label>
-              <div id="simOrientWrap"></div>
-            </div>
+            <p class="sim-wall-note" id="simWallNote" hidden>
+              A random set of framed prints, arranged as a gallery wall. Press again for a
+              different arrangement. Every print is still drawn at its real size.
+            </p>
 
             <label class="sim-check" for="simMeasure">
               <input type="checkbox" id="simMeasure" />
               <span>Show measurements</span>
             </label>
+
+            <div class="sim-mode">
+              <button type="button" class="btn" id="simWallBtn">Shuffle a gallery wall</button>
+              <button type="button" class="btn" id="simSingleBtn" hidden>Back to a single print</button>
+            </div>
 
             <div class="sim-actions">
               <a class="btn primary" id="simToEnquiry" href="prints.html">Add to enquiry</a>
@@ -172,35 +183,45 @@
   /* ── Room definitions ──────────────────────────────────────────────────
      All measurements in centimetres. floorY is where the floor meets the
      wall, so a point at height h above the floor sits at y = floorY - h.
+
+     The walls are deliberately narrow, around 250 to 330 cm, which is a
+     realistic run of wall rather than a whole room. A wider view would be
+     just as accurate but it pushes a small print down to a few pixels,
+     which tells you nothing.
+
      artX      centre of the hanging position, across
      centre    preferred height of the centre of the picture above the floor
      minBottom lowest the bottom edge may sit, to clear the furniture
-     maxTop    highest the top edge may sit, to stay clear of the ceiling  */
+     maxTop    highest the top edge may sit, to stay clear of the ceiling
+     wallX     centre of a gallery wall arrangement
+     wallSpan  width available for a gallery wall                          */
   const ROOMS = [
-    { id:'living',   label:'Living room', w:470, floorY:250, viewH:300,
-      artX:235, centre:152, minBottom:108, maxTop:236,
+    { id:'living',   label:'Living room', w:330, floorY:250, viewH:286,
+      artX:165, centre:152, minBottom:108, maxTop:236, wallX:165, wallSpan:230,
       wall:'#ece8e0', wall2:'#d8d2c6', floor:'#b0895f', skirt:'#f2efe9' },
-    { id:'corridor', label:'Corridor',    w:340, floorY:250, viewH:300,
-      artX:95,  centre:150, minBottom:92,  maxTop:236,
+    { id:'corridor', label:'Corridor',    w:250, floorY:250, viewH:286,
+      artX:78,  centre:150, minBottom:92,  maxTop:236, wallX:78,  wallSpan:130,
       wall:'#e9e8e3', wall2:'#d3d1c9', floor:'#a67f57', skirt:'#f4f2ee' },
-    { id:'kitchen',  label:'Kitchen',     w:430, floorY:250, viewH:300,
-      artX:335, centre:150, minBottom:92,  maxTop:236,
+    { id:'kitchen',  label:'Kitchen',     w:330, floorY:250, viewH:286,
+      artX:255, centre:150, minBottom:92,  maxTop:236, wallX:255, wallSpan:142,
       wall:'#edefec', wall2:'#d6d9d5', floor:'#c6c5bf', skirt:'#f5f6f4' },
-    { id:'bedroom',  label:'Bedroom',     w:470, floorY:250, viewH:300,
-      artX:232, centre:158, minBottom:130, maxTop:236,
+    { id:'bedroom',  label:'Bedroom',     w:330, floorY:250, viewH:286,
+      artX:165, centre:158, minBottom:130, maxTop:236, wallX:165, wallSpan:220,
       wall:'#e8e5ec', wall2:'#d2cedb', floor:'#b08f6b', skirt:'#f3f1f6' },
   ];
 
   /* ── State ── */
   const state = {
+    mode:       'single',   // single | wall
     imageLabel: '',
     imageUrl:   '',
-    aspect:     0,        // natural width / natural height, 0 until loaded
+    aspect:     0,          // natural width / natural height, 0 until loaded
     size:       'A3',
     framed:     'No',
-    orient:     'auto',   // auto | landscape | portrait
+    orient:     'auto',     // auto | landscape | portrait
     room:       'living',
     measure:    false,
+    wall:       null,       // the current gallery wall arrangement
   };
 
   let PICKER_ENTRIES = [];   // { label, thumbUrl, fullUrl, isHeader, isSubImage }
@@ -326,6 +347,7 @@
         e.preventDefault();
         panel.classList.remove('open');
         renderTrigger(entry.label);
+        setMode('single');
         selectImage(entry.label);
       });
       panel.appendChild(opt);
@@ -414,6 +436,15 @@
       state.measure = e.target.checked; render();
     });
 
+    $('simWallBtn').addEventListener('click', () => {
+      setMode('wall');
+      shuffleWall();
+    });
+    $('simSingleBtn').addEventListener('click', () => {
+      setMode('single');
+      render();
+    });
+
     ROOMS.forEach(r => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -427,7 +458,8 @@
           x.classList.remove('active'); x.setAttribute('aria-selected', 'false');
         });
         b.classList.add('active'); b.setAttribute('aria-selected', 'true');
-        render();
+        // A wall built for one room will not fit another, so rebuild it.
+        if (state.mode === 'wall') shuffleWall(); else render();
       });
       roomsBar.appendChild(b);
     });
@@ -441,6 +473,15 @@
     const isCanvas = PF.kindOf(state.size) === 'canvas';
     $('simFinishField').hidden = isCanvas;
     if (isCanvas) state.framed = 'No';
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    const wall = mode === 'wall';
+    $('simSingleFields').hidden = wall;
+    $('simWallNote').hidden     = !wall;
+    $('simSingleBtn').hidden    = !wall;
+    $('simWallBtn').textContent = wall ? 'Shuffle again' : 'Shuffle a gallery wall';
   }
 
   /* ── Geometry ── */
@@ -460,211 +501,363 @@
     return Math.min(Math.max(room.centre, lo), hi);
   }
 
-  /* ── Room scenery ──────────────────────────────────────────────────────
-     Each of these returns the furniture for one room, in centimetres, with
-     the floor line at F. Nothing here scales with the artwork, which is the
-     point: the furniture is the ruler. */
-  function sceneLiving(F) {
-    return `
-      <ellipse cx="235" cy="279" rx="190" ry="16" fill="#8a6a45" opacity=".28"/>
-      <!-- plant -->
-      <path d="M34 ${F} l5-38h30l5 38z" fill="#9c6b4f"/>
-      <path d="M54 212 C40 196 34 176 40 160 C50 172 55 192 54 212Z" fill="#4a7a55"/>
-      <path d="M54 212 C68 196 76 176 70 158 C58 172 53 192 54 212Z" fill="#3f6b4a"/>
-      <path d="M54 212 C52 190 54 168 60 150 C66 170 60 194 54 212Z" fill="#55875f"/>
-      <!-- sofa -->
-      <rect x="112" y="188" width="24" height="52" rx="12" fill="#48526a"/>
-      <rect x="334" y="188" width="24" height="52" rx="12" fill="#48526a"/>
-      <rect x="126" y="162" width="218" height="56" rx="14" fill="#525d78"/>
-      <rect x="120" y="208" width="230" height="32" rx="13" fill="#48526a"/>
-      <rect x="132" y="198" width="206" height="20" rx="10" fill="#5b6785"/>
-      <rect x="160" y="170" width="42" height="42" rx="10" fill="#6f7b98" transform="rotate(-6 181 191)"/>
-      <rect x="268" y="170" width="42" height="42" rx="10" fill="#6f7b98" transform="rotate(6 289 191)"/>
-      <rect x="132" y="238" width="9" height="12" fill="#3a2c21"/>
-      <rect x="329" y="238" width="9" height="12" fill="#3a2c21"/>
-      <!-- floor lamp -->
-      <rect x="427" y="96" width="3.5" height="154" fill="#3c3a46"/>
-      <path d="M410 60h39l6 36h-51z" fill="#e6d7b6"/>
-      <ellipse cx="428.7" cy="250" rx="20" ry="5" fill="#3c3a46"/>
-    `;
+  /* ── Gallery wall ──────────────────────────────────────────────────────
+     Prints are packed into three or four columns of two or three, each
+     column centred on the block centre so the arrangement staggers rather
+     than lining up in rows. Sizes and orientations are drawn at random from
+     A5, A4 and A3, all framed. The block is then centred on the room's
+     hanging position and clamped to clear the furniture, exactly as a
+     single print is. */
+  function makeWall(room) {
+    const pool = PICKER_ENTRIES.filter(e => !e.isHeader);
+    if (!pool.length) return null;
+
+    const B    = PF.FRAME_BORDER_CM;
+    const gap  = 6;
+    const bag  = ['A5', 'A5', 'A4', 'A4', 'A4', 'A3'];   // weighted toward A4
+    const maxH = room.maxTop - room.minBottom;
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const nCols = 3 + Math.floor(Math.random() * 2);
+      const cols  = [];
+      let failed  = false;
+
+      for (let c = 0; c < nCols; c++) {
+        const items  = [];
+        const target = Math.min(maxH, 86 + Math.random() * 30);
+        let h = 0;
+        while (items.length < 3) {
+          const size = pick(bag);
+          const landscape = Math.random() < 0.5;
+          const d  = PF.dimensions(size, landscape);
+          const iw = d.w + B * 2, ih = d.h + B * 2;
+          const next = h + (items.length ? gap : 0) + ih;
+          if (next > maxH) break;
+          if (items.length && next > target) break;
+          items.push({ size, landscape, w: iw, h: ih });
+          h = next;
+        }
+        if (!items.length) { failed = true; break; }
+        cols.push({ items, h, w: Math.max(...items.map(i => i.w)) });
+      }
+      if (failed) continue;
+
+      const totalW = cols.reduce((sum, c) => sum + c.w, 0) + gap * (cols.length - 1);
+      const blockH = Math.max(...cols.map(c => c.h));
+      const count  = cols.reduce((sum, c) => sum + c.items.length, 0);
+      if (totalW > room.wallSpan || blockH > maxH || count < 6) continue;
+
+      // Place it.
+      const half    = blockH / 2;
+      const cHeight = Math.min(Math.max(room.centre, room.minBottom + half),
+                               room.maxTop - half);
+      const cy      = room.floorY - cHeight;
+      const order   = pool.slice().sort(() => Math.random() - 0.5);
+      const placed  = [];
+      let x = room.wallX - totalW / 2, k = 0;
+
+      cols.forEach(col => {
+        let y = cy - col.h / 2;
+        col.items.forEach(it => {
+          const src = order[k % order.length]; k++;
+          placed.push({
+            ...it,
+            x: x + (col.w - it.w) / 2,
+            y,
+            url: src.thumbUrl,     // thumbnails are ample at this size
+            label: src.label,
+          });
+          y += it.h + gap;
+        });
+        x += col.w + gap;
+      });
+
+      return { items: placed, w: totalW, h: blockH, cx: room.wallX, cy, cHeight, count };
+    }
+    return null;
   }
 
-  function sceneCorridor(F) {
-    return `
-      <rect x="18" y="262" width="304" height="16" rx="5" fill="#8a6b4d" opacity=".38"/>
-      <!-- door -->
-      <rect x="220" y="40" width="108" height="210" fill="#e2ddd3"/>
-      <rect x="227" y="47" width="94" height="203" fill="#cdc6b9"/>
-      <rect x="238" y="60" width="72" height="76" rx="2" fill="#c2baab"/>
-      <rect x="238" y="150" width="72" height="88" rx="2" fill="#c2baab"/>
-      <circle cx="236" cy="146" r="3.4" fill="#8d7d62"/>
-      <!-- console table -->
-      <rect x="36" y="174" width="118" height="6" rx="2.5" fill="#7d5c3d"/>
-      <rect x="43" y="180" width="5" height="70" fill="#6b4e33"/>
-      <rect x="142" y="180" width="5" height="70" fill="#6b4e33"/>
-      <rect x="43" y="216" width="104" height="4" fill="#6b4e33"/>
-      <!-- vase and bowl -->
-      <path d="M58 174 c-6-10 -2-22 6-24 8 2 12 14 6 24z" fill="#8fa3a8"/>
-      <path d="M67 152 c4-11 10-18 15-21 -2 10 -7 17 -12 22z" fill="#5d8060"/>
-      <ellipse cx="128" cy="170" rx="14" ry="5" fill="#b09a7c"/>
-    `;
+  function shuffleWall() {
+    const room = ROOMS.find(r => r.id === state.room) || ROOMS[0];
+    state.wall = makeWall(room);
+    if (!state.wall) showToast('Could not fit a gallery wall on this wall. Try another room.');
+    render();
   }
-
-  function sceneKitchen(F) {
-    return `
-      <!-- backsplash -->
-      <rect x="0" y="105" width="250" height="53" fill="#e3e7e5"/>
-      <g stroke="#d3d8d6" stroke-width="0.8">
-        <line x1="0" y1="122.7" x2="250" y2="122.7"/>
-        <line x1="0" y1="140.3" x2="250" y2="140.3"/>
-        <line x1="42" y1="105" x2="42" y2="158"/>
-        <line x1="84" y1="105" x2="84" y2="158"/>
-        <line x1="126" y1="105" x2="126" y2="158"/>
-        <line x1="168" y1="105" x2="168" y2="158"/>
-        <line x1="210" y1="105" x2="210" y2="158"/>
-      </g>
-      <!-- counter -->
-      <rect x="0" y="158" width="256" height="9" rx="2" fill="#5f6668"/>
-      <rect x="0" y="167" width="250" height="71" fill="#ced5d5"/>
-      <g stroke="#b6bfbf" stroke-width="1">
-        <line x1="62" y1="167" x2="62" y2="238"/>
-        <line x1="124" y1="167" x2="124" y2="238"/>
-        <line x1="186" y1="167" x2="186" y2="238"/>
-      </g>
-      <g fill="#8d9898">
-        <rect x="52" y="176" width="6" height="20" rx="3"/>
-        <rect x="114" y="176" width="6" height="20" rx="3"/>
-        <rect x="176" y="176" width="6" height="20" rx="3"/>
-      </g>
-      <rect x="6" y="238" width="244" height="12" fill="#9aa0a0"/>
-      <!-- kettle, jars, board -->
-      <path d="M30 158 v-22 a13 13 0 0 1 26 0 v22z" fill="#6b7378"/>
-      <rect x="40" y="128" width="6" height="6" rx="2" fill="#4d5458"/>
-      <rect x="76" y="136" width="14" height="22" rx="3" fill="#c8b48d"/>
-      <rect x="94" y="141" width="12" height="17" rx="3" fill="#b8a17a"/>
-      <rect x="110" y="145" width="11" height="13" rx="3" fill="#d0c0a0"/>
-      <path d="M150 158 v-34 a8 8 0 0 1 16 0 v34z" fill="#a3743f"/>
-      <path d="M200 158 l4-26h22l4 26z" fill="#9c6b4f"/>
-      <path d="M215 132 C204 120 200 106 205 96 C213 106 217 120 215 132Z" fill="#4a7a55"/>
-      <path d="M215 132 C226 120 231 106 226 96 C218 106 213 120 215 132Z" fill="#3f6b4a"/>
-      <!-- stool on the open wall side -->
-      <rect x="313" y="203" width="46" height="6" rx="3" fill="#7d5c3d"/>
-      <rect x="318" y="209" width="4.5" height="41" fill="#6b4e33"/>
-      <rect x="349" y="209" width="4.5" height="41" fill="#6b4e33"/>
-      <rect x="318" y="230" width="35" height="3.5" fill="#6b4e33"/>
-    `;
-  }
-
-  function sceneBedroom(F) {
-    return `
-      <ellipse cx="232" cy="276" rx="180" ry="14" fill="#8a6a45" opacity=".26"/>
-      <!-- headboard -->
-      <rect x="150" y="132" width="164" height="118" rx="9" fill="#5c4c66"/>
-      <rect x="158" y="140" width="148" height="102" rx="6" fill="#66566f"/>
-      <!-- bed -->
-      <rect x="142" y="214" width="180" height="30" rx="6" fill="#4d4055"/>
-      <rect x="142" y="192" width="180" height="24" rx="7" fill="#efeaf3"/>
-      <rect x="142" y="204" width="180" height="14" rx="6" fill="#cfc6dd"/>
-      <rect x="150" y="244" width="8" height="6" fill="#3a3040"/>
-      <rect x="306" y="244" width="8" height="6" fill="#3a3040"/>
-      <!-- pillows -->
-      <rect x="163" y="158" width="66" height="35" rx="12" fill="#f7f4fa"/>
-      <rect x="236" y="158" width="66" height="35" rx="12" fill="#f7f4fa"/>
-      <!-- bedside table and lamp -->
-      <rect x="330" y="194" width="56" height="6" rx="2.5" fill="#7d5c3d"/>
-      <rect x="334" y="200" width="5" height="50" fill="#6b4e33"/>
-      <rect x="377" y="200" width="5" height="50" fill="#6b4e33"/>
-      <rect x="352" y="176" width="4" height="18" fill="#4a4450"/>
-      <path d="M343 176h22l4 -22h-30z" fill="#e9dcc0"/>
-      <!-- rug edge -->
-      <rect x="96" y="262" width="290" height="14" rx="5" fill="#7d6a52" opacity=".35"/>
-    `;
-  }
-
-  const SCENES = { living:sceneLiving, corridor:sceneCorridor, kitchen:sceneKitchen, bedroom:sceneBedroom };
 
   /* ── Artwork ───────────────────────────────────────────────────────────
      Paper prints get a thin edge and, when framed, a black surround of
      PF.FRAME_BORDER_CM per side. A canvas is borderless, stands off the
      wall, and so casts a heavier shadow with a hint of the wrapped side
-     edge on the right. */
-  function artworkSVG(cx, cy, w, h, kind, framed) {
-    const url = esc(state.imageUrl);
-    const b   = PF.FRAME_BORDER_CM;
-    const parts = [];
+     edge on the right. Each piece carries its own clip path so a gallery
+     wall of a dozen prints does not fight over one shared id. */
+  function artworkSVG(cx, cy, w, h, kind, framed, url, id) {
+    const href = esc(url);
+    const b    = PF.FRAME_BORDER_CM;
+    const x = cx - w / 2, y = cy - h / 2;
+    const clip = `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath>`;
+    const img  = `<image href="${href}" xlink:href="${href}" x="${x}" y="${y}" width="${w}" height="${h}"
+                    preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
+    const parts = [clip];
 
     if (kind === 'canvas') {
-      const x = cx - w / 2, y = cy - h / 2;
       parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" filter="url(#artShadowDeep)" fill="#111"/>`);
-      parts.push(`<image href="${url}" xlink:href="${url}" x="${x}" y="${y}" width="${w}" height="${h}"
-                    preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)"/>`);
+      parts.push(img);
       parts.push(`<rect x="${x + w - PF.CANVAS_DEPTH_CM * 0.55}" y="${y}" width="${PF.CANVAS_DEPTH_CM * 0.55}" height="${h}"
                     fill="#000" opacity=".22"/>`);
       parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="rgba(0,0,0,.28)" stroke-width=".4"/>`);
     } else if (framed === 'Yes') {
       const ow = w + b * 2, oh = h + b * 2;
       const ox = cx - ow / 2, oy = cy - oh / 2;
-      const x = cx - w / 2, y = cy - h / 2;
       parts.push(`<rect x="${ox}" y="${oy}" width="${ow}" height="${oh}" rx=".6" filter="url(#artShadow)" fill="#17171d"/>`);
       parts.push(`<rect x="${ox + 0.4}" y="${oy + 0.4}" width="${ow - 0.8}" height="${oh - 0.8}" rx=".4"
                     fill="none" stroke="rgba(255,255,255,.16)" stroke-width=".35"/>`);
-      parts.push(`<image href="${url}" xlink:href="${url}" x="${x}" y="${y}" width="${w}" height="${h}"
-                    preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)"/>`);
+      parts.push(img);
       parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="rgba(0,0,0,.5)" stroke-width=".5"/>`);
     } else {
-      const x = cx - w / 2, y = cy - h / 2;
       parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" filter="url(#artShadow)" fill="#111"/>`);
-      parts.push(`<image href="${url}" xlink:href="${url}" x="${x}" y="${y}" width="${w}" height="${h}"
-                    preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)"/>`);
+      parts.push(img);
       parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="rgba(0,0,0,.32)" stroke-width=".35"/>`);
     }
     return parts.join('\n');
   }
 
-  /* Dimension arrows, in centimetres, below and beside the artwork. */
-  function measureSVG(cx, cy, w, h) {
+  /* Dimension arrows in centimetres. The labels sit on solid chips and the
+     rules carry a pale halo, so they stay readable where the artwork hangs
+     close to a headboard or a counter. The width rule moves above the
+     picture when there is no clear space beneath it. */
+  function measureSVG(cx, cy, w, h, flipUp) {
     const x = cx - w / 2, y = cy - h / 2;
-    const dy = y + h + 9;
+    const dy = flipUp ? y - 9 : y + h + 9;
     const dx = x - 9;
     const tick = 3;
+
+    const rules = `
+      <line x1="${x}" y1="${dy}" x2="${x + w}" y2="${dy}"/>
+      <line x1="${x}" y1="${dy - tick}" x2="${x}" y2="${dy + tick}"/>
+      <line x1="${x + w}" y1="${dy - tick}" x2="${x + w}" y2="${dy + tick}"/>
+      <line x1="${dx}" y1="${y}" x2="${dx}" y2="${y + h}"/>
+      <line x1="${dx - tick}" y1="${y}" x2="${dx + tick}" y2="${y}"/>
+      <line x1="${dx - tick}" y1="${y + h}" x2="${dx + tick}" y2="${y + h}"/>`;
+
+    /* A chip sized from the character count. Outfit at 8 units sits close
+       to 4.4 units per character, which is near enough for a background. */
+    function chip(text, tx, ty, anchor) {
+      const cw = text.length * 4.4 + 6;
+      const chx = anchor === 'middle' ? tx - cw / 2 : (anchor === 'end' ? tx - cw + 3 : tx - 3);
+      return `<rect x="${chx}" y="${ty - 8}" width="${cw}" height="11" rx="2.5"
+                fill="#ffffff" opacity=".9"/>
+              <text x="${tx}" y="${ty}" text-anchor="${anchor}">${text}</text>`;
+    }
+
+    const wTxt = `${w.toFixed(1)} cm`;
+    const hTxt = `${h.toFixed(1)} cm`;
+    const wy = flipUp ? dy - 3.5 : dy + 8;
+
     return `
-      <g class="sim-measure" stroke="#7c4dff" stroke-width=".55" fill="none">
-        <line x1="${x}" y1="${dy}" x2="${x + w}" y2="${dy}"/>
-        <line x1="${x}" y1="${dy - tick}" x2="${x}" y2="${dy + tick}"/>
-        <line x1="${x + w}" y1="${dy - tick}" x2="${x + w}" y2="${dy + tick}"/>
-        <line x1="${dx}" y1="${y}" x2="${dx}" y2="${y + h}"/>
-        <line x1="${dx - tick}" y1="${y}" x2="${dx + tick}" y2="${y}"/>
-        <line x1="${dx - tick}" y1="${y + h}" x2="${dx + tick}" y2="${y + h}"/>
-      </g>
-      <g fill="#4a2ea8" font-family="Outfit, sans-serif" font-size="8" font-weight="600">
-        <text x="${cx}" y="${dy + 8}" text-anchor="middle">${w.toFixed(1)} cm</text>
-        <text x="${dx - 4}" y="${cy + 3}" text-anchor="end">${h.toFixed(1)} cm</text>
-      </g>
+      <g class="sim-measure">
+        <g stroke="#ffffff" stroke-width="2.2" stroke-opacity=".85" fill="none" stroke-linecap="round">${rules}</g>
+        <g stroke="#5b2fd6" stroke-width=".7" fill="none" stroke-linecap="round">${rules}</g>
+        <g fill="#3f1fa8" font-family="Outfit, sans-serif" font-size="8" font-weight="600">
+          ${chip(wTxt, cx, wy, 'middle')}
+          ${chip(hTxt, dx - 4, cy + 3, 'end')}
+        </g>
+      </g>`;
+  }
+
+  /* ── Room scenery ──────────────────────────────────────────────────────
+     Each of these returns the furniture for one room, in centimetres, with
+     the floor line at F. Nothing here scales with the artwork, which is the
+     point: the furniture is the ruler. A three-seat sofa is 202 cm across
+     the arms, an internal door is 86 cm wide and 208 cm tall, a kitchen
+     worktop is 92 cm off the floor and a headboard tops out at 118 cm. */
+  function sceneLiving(F) {
+    return `
+      <ellipse cx="165" cy="268" rx="145" ry="13" fill="#8a6a45" opacity=".28"/>
+      <!-- plant -->
+      <path d="M14 ${F} l5-34h28l5 34z" fill="#9c6b4f"/>
+      <path d="M33 216 C21 202 16 184 21 170 C30 181 34 198 33 216Z" fill="#4a7a55"/>
+      <path d="M33 216 C45 202 52 184 47 168 C36 181 32 198 33 216Z" fill="#3f6b4a"/>
+      <path d="M33 216 C31 196 33 177 38 161 C43 179 38 200 33 216Z" fill="#55875f"/>
+      <!-- sofa -->
+      <rect x="64" y="188" width="22" height="52" rx="11" fill="#48526a"/>
+      <rect x="244" y="188" width="22" height="52" rx="11" fill="#48526a"/>
+      <rect x="78" y="162" width="174" height="56" rx="14" fill="#525d78"/>
+      <rect x="72" y="208" width="186" height="32" rx="13" fill="#48526a"/>
+      <rect x="84" y="198" width="162" height="20" rx="10" fill="#5b6785"/>
+      <rect x="102" y="170" width="40" height="40" rx="10" fill="#6f7b98" transform="rotate(-6 122 190)"/>
+      <rect x="188" y="170" width="40" height="40" rx="10" fill="#6f7b98" transform="rotate(6 208 190)"/>
+      <rect x="84" y="238" width="9" height="12" fill="#3a2c21"/>
+      <rect x="237" y="238" width="9" height="12" fill="#3a2c21"/>
+      <!-- floor lamp -->
+      <rect x="302" y="96" width="3.5" height="154" fill="#3c3a46"/>
+      <path d="M286 60h36l5 36h-46z" fill="#e6d7b6"/>
+      <ellipse cx="303.7" cy="250" rx="18" ry="4.5" fill="#3c3a46"/>
     `;
   }
+
+  function sceneCorridor(F) {
+    return `
+      <rect x="12" y="256" width="226" height="14" rx="5" fill="#8a6b4d" opacity=".38"/>
+      <!-- door -->
+      <rect x="162" y="42" width="86" height="208" fill="#e2ddd3"/>
+      <rect x="168" y="48" width="74" height="202" fill="#cdc6b9"/>
+      <rect x="177" y="60" width="56" height="74" rx="2" fill="#c2baab"/>
+      <rect x="177" y="148" width="56" height="88" rx="2" fill="#c2baab"/>
+      <circle cx="176" cy="146" r="3.2" fill="#8d7d62"/>
+      <!-- console table -->
+      <rect x="26" y="174" width="104" height="6" rx="2.5" fill="#7d5c3d"/>
+      <rect x="32" y="180" width="5" height="70" fill="#6b4e33"/>
+      <rect x="119" y="180" width="5" height="70" fill="#6b4e33"/>
+      <rect x="32" y="216" width="92" height="4" fill="#6b4e33"/>
+      <!-- vase and bowl -->
+      <path d="M46 174 c-6-10 -2-22 6-24 8 2 12 14 6 24z" fill="#8fa3a8"/>
+      <path d="M55 152 c4-11 10-18 15-21 -2 10 -7 17 -12 22z" fill="#5d8060"/>
+      <ellipse cx="106" cy="170" rx="13" ry="4.6" fill="#b09a7c"/>
+    `;
+  }
+
+  function sceneKitchen(F) {
+    return `
+      <!-- backsplash -->
+      <rect x="0" y="105" width="175" height="53" fill="#e3e7e5"/>
+      <g stroke="#d3d8d6" stroke-width="0.8">
+        <line x1="0" y1="122.7" x2="175" y2="122.7"/>
+        <line x1="0" y1="140.3" x2="175" y2="140.3"/>
+        <line x1="35" y1="105" x2="35" y2="158"/>
+        <line x1="70" y1="105" x2="70" y2="158"/>
+        <line x1="105" y1="105" x2="105" y2="158"/>
+        <line x1="140" y1="105" x2="140" y2="158"/>
+      </g>
+      <!-- counter -->
+      <rect x="0" y="158" width="181" height="9" rx="2" fill="#5f6668"/>
+      <rect x="0" y="167" width="175" height="71" fill="#ced5d5"/>
+      <g stroke="#b6bfbf" stroke-width="1">
+        <line x1="44" y1="167" x2="44" y2="238"/>
+        <line x1="88" y1="167" x2="88" y2="238"/>
+        <line x1="132" y1="167" x2="132" y2="238"/>
+      </g>
+      <g fill="#8d9898">
+        <rect x="36" y="176" width="6" height="20" rx="3"/>
+        <rect x="80" y="176" width="6" height="20" rx="3"/>
+        <rect x="124" y="176" width="6" height="20" rx="3"/>
+      </g>
+      <rect x="6" y="238" width="169" height="12" fill="#9aa0a0"/>
+      <!-- kettle, jars, board, plant -->
+      <path d="M22 158 v-22 a13 13 0 0 1 26 0 v22z" fill="#6b7378"/>
+      <rect x="32" y="128" width="6" height="6" rx="2" fill="#4d5458"/>
+      <rect x="58" y="136" width="14" height="22" rx="3" fill="#c8b48d"/>
+      <rect x="76" y="141" width="12" height="17" rx="3" fill="#b8a17a"/>
+      <rect x="92" y="145" width="11" height="13" rx="3" fill="#d0c0a0"/>
+      <path d="M112 158 v-34 a8 8 0 0 1 16 0 v34z" fill="#a3743f"/>
+      <path d="M140 158 l4-24h20l4 24z" fill="#9c6b4f"/>
+      <path d="M154 134 C144 122 140 109 145 100 C152 109 156 122 154 134Z" fill="#4a7a55"/>
+      <path d="M154 134 C164 122 169 109 164 100 C156 109 152 122 154 134Z" fill="#3f6b4a"/>
+      <!-- stool on the open wall side -->
+      <rect x="234" y="203" width="44" height="6" rx="3" fill="#7d5c3d"/>
+      <rect x="239" y="209" width="4.5" height="41" fill="#6b4e33"/>
+      <rect x="269" y="209" width="4.5" height="41" fill="#6b4e33"/>
+      <rect x="239" y="230" width="34" height="3.5" fill="#6b4e33"/>
+    `;
+  }
+
+  function sceneBedroom(F) {
+    return `
+      <ellipse cx="165" cy="268" rx="140" ry="13" fill="#8a6a45" opacity=".26"/>
+      <!-- headboard -->
+      <rect x="88" y="132" width="154" height="118" rx="9" fill="#5c4c66"/>
+      <rect x="96" y="140" width="138" height="102" rx="6" fill="#66566f"/>
+      <!-- bed -->
+      <rect x="80" y="214" width="170" height="30" rx="6" fill="#4d4055"/>
+      <rect x="80" y="192" width="170" height="24" rx="7" fill="#efeaf3"/>
+      <rect x="80" y="204" width="170" height="14" rx="6" fill="#cfc6dd"/>
+      <rect x="88" y="244" width="8" height="6" fill="#3a3040"/>
+      <rect x="234" y="244" width="8" height="6" fill="#3a3040"/>
+      <!-- pillows -->
+      <rect x="100" y="158" width="62" height="35" rx="12" fill="#f7f4fa"/>
+      <rect x="168" y="158" width="62" height="35" rx="12" fill="#f7f4fa"/>
+      <!-- bedside table and lamp -->
+      <rect x="256" y="194" width="52" height="6" rx="2.5" fill="#7d5c3d"/>
+      <rect x="260" y="200" width="5" height="50" fill="#6b4e33"/>
+      <rect x="299" y="200" width="5" height="50" fill="#6b4e33"/>
+      <rect x="280" y="176" width="4" height="18" fill="#4a4450"/>
+      <path d="M272 176h20l4 -22h-28z" fill="#e9dcc0"/>
+      <!-- rug edge -->
+      <rect x="40" y="256" width="250" height="14" rx="5" fill="#7d6a52" opacity=".35"/>
+    `;
+  }
+
+  const SCENES = { living:sceneLiving, corridor:sceneCorridor, kitchen:sceneKitchen, bedroom:sceneBedroom };
 
   /* ── Render ── */
   function render() {
     const room = ROOMS.find(r => r.id === state.room) || ROOMS[0];
     const F = room.floorY;
+    const wallMode = state.mode === 'wall';
 
-    if (!state.imageUrl) {
+    if (!wallMode && !state.imageUrl) {
       stage.innerHTML = '<p class="sim-placeholder">Choose an image to begin.</p>';
       readout.textContent = '';
       return;
     }
+    if (wallMode && !state.wall) {
+      stage.innerHTML = '<p class="sim-placeholder">Press the button to arrange a gallery wall.</p>';
+      readout.textContent = '';
+      return;
+    }
 
-    const { landscape, w, h } = artworkSize();
-    const kind = PF.kindOf(state.size);
-    const framed = kind === 'paper' ? state.framed : 'No';
-    const outerH = framed === 'Yes' ? h + PF.FRAME_BORDER_CM * 2 : h;
-    const cy = F - hangHeight(room, outerH);
-    const cx = room.artX;
+    let art = '', measure = '', label = '', bits = [];
+
+    if (wallMode) {
+      const wall = state.wall;
+      art = wall.items.map((it, i) =>
+        artworkSVG(it.x + it.w / 2, it.y + it.h / 2,
+                   it.w - PF.FRAME_BORDER_CM * 2, it.h - PF.FRAME_BORDER_CM * 2,
+                   'paper', 'Yes', it.url, 'wallClip' + i)
+      ).join('\n');
+
+      if (state.measure) {
+        const flipUp = (F - (wall.cy + wall.h / 2)) - room.minBottom < 14;
+        measure = measureSVG(wall.cx, wall.cy, wall.w, wall.h, flipUp);
+      }
+
+      label = `a gallery wall of ${wall.count} framed prints`;
+      bits = [
+        `Gallery wall, ${wall.count} framed prints`,
+        `A5 to A3, mixed orientation`,
+        `block ${wall.w.toFixed(0)} × ${wall.h.toFixed(0)} cm`,
+        `centre hung ${wall.cHeight.toFixed(0)} cm above the floor`,
+      ];
+    } else {
+      const { landscape, w, h } = artworkSize();
+      const kind = PF.kindOf(state.size);
+      const framed = kind === 'paper' ? state.framed : 'No';
+      const outerW = framed === 'Yes' ? w + PF.FRAME_BORDER_CM * 2 : w;
+      const outerH = framed === 'Yes' ? h + PF.FRAME_BORDER_CM * 2 : h;
+      const cy = F - hangHeight(room, outerH);
+      const cx = room.artX;
+
+      art = artworkSVG(cx, cy, w, h, kind, framed, state.imageUrl, 'artClip');
+
+      if (state.measure) {
+        const flipUp = (F - (cy + outerH / 2)) - room.minBottom < 14;
+        measure = measureSVG(cx, cy, outerW, outerH, flipUp);
+      }
+
+      label = `${state.imageLabel} at ${w.toFixed(0)} by ${h.toFixed(0)} centimetres`;
+      // Trim "Canvas large, 70 x 100 cm" back to "Canvas large" here, because
+      // the printed size that follows is the one that reflects the orientation.
+      bits.push(`${PF.labelOf(state.size).split(',')[0]}, ${landscape ? 'landscape' : 'portrait'}`);
+      bits.push(`${w.toFixed(1)} × ${h.toFixed(1)} cm`);
+      if (framed === 'Yes') bits.push(`framed size ${outerW.toFixed(1)} × ${outerH.toFixed(1)} cm`);
+      if (kind === 'canvas') bits.push('ready to hang');
+      bits.push(`centre hung ${(F - cy).toFixed(0)} cm above the floor`);
+    }
 
     stage.innerHTML = `
       <svg class="sim-svg" viewBox="0 0 ${room.w} ${room.viewH}"
            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-           role="img" aria-label="${esc(state.imageLabel)} shown on a ${esc(room.label.toLowerCase())} wall at ${w.toFixed(0)} by ${h.toFixed(0)} centimetres">
+           role="img" aria-label="${esc(label)} shown on a ${esc(room.label.toLowerCase())} wall">
         <defs>
           <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%"   stop-color="${room.wall}"/>
@@ -684,9 +877,6 @@
           <filter id="artShadowDeep" x="-30%" y="-30%" width="180%" height="180%">
             <feDropShadow dx="2" dy="3.2" stdDeviation="2.4" flood-color="#000" flood-opacity=".42"/>
           </filter>
-          <clipPath id="artClip">
-            <rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}"/>
-          </clipPath>
         </defs>
 
         <rect x="0" y="0" width="${room.w}" height="${F}" fill="url(#wallGrad)"/>
@@ -696,39 +886,38 @@
         <rect x="0" y="${F - 11}" width="${room.w}" height="1.2" fill="#000" opacity=".08"/>
 
         ${SCENES[room.id](F)}
-        ${artworkSVG(cx, cy, w, h, kind, framed)}
-        ${state.measure ? measureSVG(cx, cy, framed === 'Yes' ? w + PF.FRAME_BORDER_CM * 2 : w, outerH) : ''}
+        ${art}
+        ${measure}
       </svg>
     `;
 
-    // ── Readout ──
-    const bits = [];
-    // Trim "Canvas large, 70 x 100 cm" back to "Canvas large" here, because
-    // the printed size that follows is the one that reflects the orientation.
-    bits.push(`${PF.labelOf(state.size).split(',')[0]}, ${landscape ? 'landscape' : 'portrait'}`);
-    bits.push(`${w.toFixed(1)} × ${h.toFixed(1)} cm`);
-    if (framed === 'Yes') {
-      bits.push(`framed size ${(w + PF.FRAME_BORDER_CM * 2).toFixed(1)} × ${(h + PF.FRAME_BORDER_CM * 2).toFixed(1)} cm`);
-    }
-    if (kind === 'canvas') bits.push('ready to hang');
-    bits.push(`centre hung ${(F - cy).toFixed(0)} cm above the floor`);
     readout.textContent = bits.join(' · ');
 
     // ── Hand-off link to the enquiry builder ──
     const link = $('simToEnquiry');
     if (link) {
-      const q = new URLSearchParams({
-        image: state.imageLabel,
-        type: state.size,
-        framed: framed,
-      });
+      const q = new URLSearchParams();
+      if (wallMode) {
+        state.wall.items.forEach(it => {
+          q.append('image', it.label);
+          q.append('type', it.size);
+          q.append('framed', 'Yes');
+        });
+      } else {
+        const kind = PF.kindOf(state.size);
+        q.append('image', state.imageLabel);
+        q.append('type', state.size);
+        q.append('framed', kind === 'paper' ? state.framed : 'No');
+      }
       link.href = 'prints.html?' + q.toString();
+      link.textContent = wallMode ? 'Add the whole wall to an enquiry' : 'Add to enquiry';
     }
   }
 
   /* ── Init ── */
   (async function init() {
     buildControls();
+    setMode('single');
     await loadGallery();
     buildImagePicker();
 

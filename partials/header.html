@@ -4,7 +4,8 @@
      - Nav links sit on a second row beneath it,
        always visible and wrapping like the footer
        (the burger menu has been removed)
-     - Articles and Puzzles are click-to-expand groups
+     - Prints, Articles and Puzzles are click-to-expand
+       groups
        (dropdown popovers) — toggled by partials.js.
        "All Articles" is the first item in the Articles
        group because the group button itself does not
@@ -25,7 +26,18 @@
         <a href="/index.html">Home</a>
         <a href="/start-here.html">Start Here</a>
         <a href="/gallery.html">Gallery</a>
-        <a href="/prints.html">Prints</a>
+        <div class="nav-group">
+          <button class="nav-group-btn" aria-expanded="false" aria-controls="printsSubmenu" type="button">
+            <span class="btn-label">Prints</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-submenu" id="printsSubmenu">
+            <a href="/prints.html">Print Enquiries</a>
+            <a href="/print-simulator.html">Print Simulator</a>
+          </div>
+        </div>
         <a href="/gear.html">Gear</a>
         <div class="nav-group">
           <button class="nav-group-btn" aria-expanded="false" aria-controls="articlesSubmenu" type="button">

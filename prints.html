@@ -865,33 +865,51 @@
     });
   }
 
-  /* The wall simulator hands a chosen combination over as
-     prints.html?image=...&type=...&framed=..., so the first row arrives
-     already filled in. Anything unrecognised is simply ignored. */
-  function prefillFromQuery() {
+  /* The wall simulator hands its selection over as
+     prints.html?image=...&type=...&framed=..., repeating the three
+     parameters once per item so a whole gallery wall arrives as a whole
+     enquiry. The three lists are read in step; anything unrecognised is
+     ignored rather than guessed at. */
+  const MAX_PREFILL_ITEMS = 20;
+
+  function prefillsFromQuery() {
     const q = new URLSearchParams(location.search);
-    const image = (q.get('image') || '').trim();
-    if (!image) return null;
-    const type = (q.get('type') || '').trim();
-    return {
-      image,
-      type:   PF.byValue(type) ? type : '',
-      framed: q.get('framed') === 'Yes' ? 'Yes' : (q.get('framed') === 'No' ? 'No' : ''),
-    };
+    const images = q.getAll('image');
+    if (!images.length) return [];
+    const types  = q.getAll('type');
+    const framed = q.getAll('framed');
+    return images
+      .slice(0, MAX_PREFILL_ITEMS)
+      .map((img, i) => {
+        const type = (types[i] || '').trim();
+        const fr   = framed[i];
+        return {
+          image:  img.trim(),
+          type:   PF.byValue(type) ? type : '',
+          framed: fr === 'Yes' ? 'Yes' : (fr === 'No' ? 'No' : ''),
+        };
+      })
+      .filter(it => it.image);
   }
 
   (async function init() {
     await loadGalleryTitles();
     if (itemsWrap) itemsWrap.innerHTML = '';
-    const prefill = prefillFromQuery();
-    addItem(prefill || undefined);
+    const prefills = prefillsFromQuery();
+    if (prefills.length) {
+      prefills.forEach(pre => addItem(pre));
+    } else {
+      addItem();
+    }
     build();
-    if (prefill) {
+    if (prefills.length) {
       const target = document.getElementById('printsEnquiryForm');
       if (typeof target?.scrollIntoView === 'function') {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-      showToast('Your selection has been added. Fill in your details and send it over.');
+      showToast(prefills.length === 1
+        ? 'Your selection has been added. Fill in your details and send it over.'
+        : `${prefills.length} prints have been added. Fill in your details and send it over.`);
     }
   })();
 })();
