@@ -188,14 +188,6 @@ SKY_TIPS = {
                "narrowband filter would block the very light you are "
                "trying to collect. Those get a broadband light pollution "
                "filter at most."),
-    "where": ("The dial shows where the object sits while it is worth "
-              "shooting. North is at the top, the centre of the dial is "
-              "straight overhead and the outer ring is the horizon, so a "
-              "track near the middle means the object passes high and a "
-              "track near the edge means it stays low. The large dot is "
-              "its highest point, the two small ones are where it starts "
-              "and ends. This is the sky only. It knows nothing about "
-              "your buildings, walls or trees."),
     "kit": ("What you can realistically see or photograph this with. "
             "Grey means not worth trying, a light chip means it works, "
             "and a filled chip means this is where the object looks its "
@@ -978,61 +970,6 @@ SCRIPT = """
   function hhmm(d) {
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   }
-  /* ── Compass dial ─────────────────────────────────
-     A polar altitude and azimuth plot. North is up, the centre of the
-     dial is straight overhead and the outer ring is the horizon, so
-     distance from the middle is how low the object sits. The track is
-     the nine samples planNight took across the usable window, which is
-     the actual path rather than a guessed curve through its ends.
-
-     Drawn at 120 units square and scaled by CSS, and coloured with the
-     theme variables so it follows the light and dark themes without a
-     second copy. */
-  var DIAL = { c: 60, r: 50 };
-
-  function dialXY(alt, az) {
-    var a = Math.max(0, Math.min(90, alt));
-    var rr = DIAL.r * (90 - a) / 90;
-    var rad = az * Math.PI / 180;
-    return [
-      (DIAL.c + rr * Math.sin(rad)).toFixed(1),
-      (DIAL.c - rr * Math.cos(rad)).toFixed(1)
-    ];
-  }
-
-  function dial(r) {
-    var track = r.track || [];
-    if (!track.length) return '';
-
-    var pts = track.map(function (s) { return dialXY(s.alt, s.az).join(','); }).join(' ');
-    var a = dialXY(track[0].alt, track[0].az);
-    var b = dialXY(track[track.length - 1].alt, track[track.length - 1].az);
-    var pk = dialXY(r.maxAlt, r.peakAz);
-
-    var where = C.directionText(r.maxAlt, r.peakAz);
-    var label = 'Highest at ' + hhmm(r.peakAt) + ', ' +
-                Math.round(r.maxAlt) + ' degrees up, ' + where +
-                '. North is at the top of the dial, the centre is overhead ' +
-                'and the outer ring is the horizon.';
-
-    return '<svg class="sh-sky-dial-svg" viewBox="0 0 120 120" ' +
-      'role="img" aria-label="' + attr(label) + '">' +
-      '<circle class="sh-dial-ring" cx="60" cy="60" r="50"/>' +
-      '<circle class="sh-dial-ring sh-dial-ring-in" cx="60" cy="60" r="33.3"/>' +
-      '<circle class="sh-dial-ring sh-dial-ring-in" cx="60" cy="60" r="16.7"/>' +
-      '<line class="sh-dial-ring" x1="60" y1="10" x2="60" y2="110"/>' +
-      '<line class="sh-dial-ring" x1="10" y1="60" x2="110" y2="60"/>' +
-      '<polyline class="sh-dial-track" points="' + pts + '"/>' +
-      '<circle class="sh-dial-end" cx="' + a[0] + '" cy="' + a[1] + '" r="2.6"/>' +
-      '<circle class="sh-dial-end" cx="' + b[0] + '" cy="' + b[1] + '" r="2.6"/>' +
-      '<circle class="sh-dial-peak" cx="' + pk[0] + '" cy="' + pk[1] + '" r="4.4"/>' +
-      '<text class="sh-dial-c" x="60" y="7" text-anchor="middle">N</text>' +
-      '<text class="sh-dial-c" x="60" y="118" text-anchor="middle">S</text>' +
-      '<text class="sh-dial-c" x="115" y="63" text-anchor="middle">E</text>' +
-      '<text class="sh-dial-c" x="5" y="63" text-anchor="middle">W</text>' +
-      '</svg>';
-  }
-
   /* Target names carry entities such as &amp;, so anything going into an
      attribute is escaped rather than dropped in raw. */
   function attr(v) {
@@ -1098,8 +1035,7 @@ SCRIPT = """
     moon:   sky.dataset.tipMoon   || '',
     sky:    sky.dataset.tipSky    || '',
     filter: sky.dataset.tipFilter || '',
-    kit:    sky.dataset.tipKit    || '',
-    where:  sky.dataset.tipWhere  || ''
+    kit:    sky.dataset.tipKit    || ''
   };
 
   function info(key) {
@@ -1319,10 +1255,7 @@ SCRIPT = """
         '<div class="sh-sky-timing">' +
           '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b><i>Best window</i></span>' +
           '<span><b>' + hoursText(r.hours) + '</b><i>Usable</i></span>' +
-          '<div class="sh-sky-dial">' + dial(r) + '</div>' +
-          '<span><b>' + Math.round(r.maxAlt) + '\u00B0 ' +
-            C.directionText(r.maxAlt, r.peakAz) + '</b>' +
-            '<i>Highest at ' + hhmm(r.peakAt) + info('where') + '</i></span>' +
+          '<span><b>' + Math.round(r.maxAlt) + '\u00B0</b><i>Peak height</i></span>' +
         '</div>' +
       '</li>';
     }).join('') + '</ol>';
