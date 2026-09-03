@@ -9186,7 +9186,13 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 }
 
 /* ── "i" explanations on the summary figures ── */
-.sh-sky-facts i{ position:relative; }
+/* The tooltip is anchored to the whole row, not to the individual figure.
+   Anchored to the figure, the one on the rightmost card started 277px in
+   and ran 270px wide, which put its right edge well past the viewport.
+   It is visibility:hidden rather than display:none, so it still counted
+   towards the page width and Chrome shrank the whole page to fit it. */
+.sh-sky-facts{ position:relative; }
+.sh-sky-facts i{ position:static; }
 .sh-sky-i{
   display:inline-flex; align-items:center; justify-content:center;
   width:14px; height:14px; margin-left:5px; padding:0;
@@ -9199,8 +9205,8 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 .sh-sky-i:hover{ color:var(--text); border-color:rgba(var(--accent-rgb),0.55); }
 .sh-sky-i::after{
   content:attr(data-tip);
-  position:absolute; left:0; top:calc(100% + 7px); z-index:5;
-  width:min(270px,72vw);
+  position:absolute; left:0; right:auto; top:calc(100% + 7px); z-index:5;
+  width:auto; max-width:min(270px,100%);
   padding:10px 12px;
   border:1px solid var(--line); border-radius:10px;
   background:var(--header-solid);
