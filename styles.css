@@ -9069,6 +9069,10 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   font-size:.84rem; color:var(--muted);
 }
 .sh-sky-bortle select{
+  /* The option text is long, so the select's natural width is far wider
+     than the panel. min-width:0 lets it shrink inside the flex row;
+     without it the default min-width:auto forces the overflow. */
+  flex:1 1 auto; min-width:0; max-width:100%;
   padding:8px 10px;
   border:1px solid var(--line);
   border-radius:10px;
@@ -9478,6 +9482,10 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
   pointer-events:none;
 }
 .sh-sky-today{ padding:5px 11px; font-size:.78rem; }
+/* .btn sets display:inline-flex, which beats the [hidden] attribute the
+   script toggles. Without this the reset button shows on tonight too,
+   next to a date label already reading "Tonight". */
+.sh-sky-today[hidden]{ display:none; }
 
 /* ── Small screens ── */
 @media (max-width:760px){
