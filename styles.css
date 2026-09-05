@@ -9187,8 +9187,11 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 
 /* Left column. min-width:0 stops long names overflowing the grid track. */
 .sh-sky-main{ min-width:0; }
-.sh-sky-head{ margin:0 0 6px; }
-.sh-sky-desc{ margin:0 0 5px; color:var(--muted); font-size:.83rem; line-height:1.55; }
+.sh-sky-head{ grid-column:2; grid-row:1; align-self:center; margin:0; }
+.sh-sky-desc,
+.sh-sky-why,
+.sh-sky-gear{ grid-column:1 / -1; }
+.sh-sky-desc{ margin:0; color:var(--muted); font-size:.83rem; line-height:1.55; }
 .sh-sky-why { margin:0; color:var(--text); font-size:.83rem; line-height:1.5; opacity:.88; }
 
 /* Timings, right-hand column. These used to run as one grey line under
@@ -9223,7 +9226,11 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   cursor:pointer; vertical-align:middle;
 }
 .sh-sky-i:hover{ color:var(--text); border-color:rgba(var(--accent-rgb),0.55); }
+/* Both names match, so a deploy that lands the stylesheet before the
+   markup degrades to the old behaviour instead of killing every
+   tooltip on the page. */
 .sh-sky-tip{ cursor:pointer; }
+.sh-sky-i::after,
 .sh-sky-tip::after{
   content:attr(data-tip);
   position:absolute; left:0; right:auto; top:calc(100% + 7px); z-index:5;
@@ -9238,8 +9245,10 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   opacity:0; visibility:hidden;
   transition:opacity .14s ease;
 }
-.sh-sky-tip:hover::after,
-.sh-sky-tip.is-open::after{ opacity:1; visibility:visible; }
+.sh-sky-i:hover::after, .sh-sky-i.is-open::after,
+.sh-sky-tip:hover::after, .sh-sky-tip.is-open::after{
+  opacity:1; visibility:visible;
+}
 
 .sh-sky-toggle{ font-size:.85rem; padding:8px 16px; }
 
@@ -9437,17 +9446,22 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
 /* ── Sky panel: thumbnails, filter and kit chips, date picker ──────────
    Added when the target list gained a picture and a gear recommendation.
 
-   Two columns, text and timings, with the thumbnail floated inside the
-   text column rather than sitting in a column of its own. As a grid
-   track it left a tall empty strip under itself, because the picture is
-   78px and the text beside it runs to twice that. Floated, the
-   description and the chips wrap under it and the row gets shorter.
-   .sh-sky-main is a grid item, so it already contains the float. */
+   Two columns, text and timings. Inside the text column the picture and
+   the name share the top line, and the description, the reason and the
+   chips run the full width underneath. As a grid track of its own the
+   picture reserved its width for the whole height of the row and left a
+   tall empty strip below itself. */
 
 .sh-sky-list li{ grid-template-columns:1fr 168px; }
 
+.sh-sky-main{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  column-gap:14px; row-gap:6px;
+  align-content:start;
+}
 .sh-sky-thumb{
-  float:left; margin:2px 14px 6px 0;
+  grid-column:1; grid-row:1; align-self:start;
   width:78px; height:78px; padding:0;
   border:1px solid var(--line); border-radius:10px;
   background:rgba(0,0,0,0.25); overflow:hidden; cursor:zoom-in;
@@ -9461,7 +9475,7 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
 /* ── Filter and kit line ── */
 .sh-sky-gear{
   display:flex; flex-wrap:wrap; align-items:center; gap:7px 12px;
-  margin:9px 0 0;
+  margin:3px 0 0;
 }
 .sh-sky-chip-k{
   font-size:.6rem; text-transform:uppercase; letter-spacing:.07em;
@@ -9540,7 +9554,8 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
      makes room for it has to stay too. */
   .sh-sky-list li{ grid-template-columns:minmax(0,1fr); padding:12px 13px 12px 40px; }
   .sh-sky-list li::before{ left:11px; }
-  .sh-sky-thumb{ width:58px; height:58px; margin:1px 11px 5px 0; }
+  .sh-sky-thumb{ width:58px; height:58px; }
+  .sh-sky-main{ column-gap:11px; }
   .sh-sky-gear{ gap:6px 10px; }
   .sh-sky-datenav{ flex-wrap:wrap; }
 }
