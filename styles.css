@@ -9056,6 +9056,15 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 }
 .sh-sky-geo{ font-size:.84rem; padding:7px 14px; }
 
+/* Worked out in the browser from the bundled place table, so this line
+   appears a moment after the coordinates rather than with them. */
+.sh-sky-place{
+  margin:0 0 6px;
+  color:var(--text);
+  font-size:.84rem; line-height:1.5;
+}
+.sh-sky-place[hidden]{ display:none; }
+
 .sh-sky-map-help{
   margin:0 0 16px;
   color:var(--muted);
@@ -9096,27 +9105,38 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 /* ── Night summary ──────────────────────────── */
 .sh-sky-wait{ margin:0; color:var(--muted); font-size:.88rem; line-height:1.55; }
 
+/* Label first, then the number, then the line that answers the question
+   the number raises. Reading order matters more here than compactness:
+   a figure with the caption underneath makes the reader hold the number
+   in their head until they find out what it was. */
 .sh-sky-facts{
   display:flex; flex-wrap:wrap; gap:10px;
-  margin-bottom:12px;
+  margin-bottom:18px;
 }
 .sh-sky-facts span{
-  display:flex; flex-direction:column; gap:2px;
-  flex:1 1 130px;
-  padding:11px 13px;
+  display:flex; flex-direction:column; gap:3px;
+  flex:1 1 190px;
+  padding:12px 14px;
   border:1px solid var(--line);
   border-radius:12px;
   background:rgba(var(--accent-rgb),0.05);
 }
-.sh-sky-facts b{ font-size:.93rem; color:var(--text); font-weight:600; }
 .sh-sky-facts i{
+  display:flex; align-items:center; gap:6px;
   font-style:normal; font-size:.7rem; color:var(--muted);
   text-transform:uppercase; letter-spacing:.06em;
 }
+.sh-sky-facts b{ font-size:1.02rem; color:var(--text); font-weight:600; }
+.sh-sky-facts em{
+  font-style:normal; font-size:.76rem; line-height:1.45; color:var(--muted);
+}
 
-.sh-sky-verdict{
-  margin:0 0 16px;
-  color:var(--text); font-size:.9rem; line-height:1.6;
+/* The icons take the label colour, so they follow both themes without a
+   second rule and never fight the text they sit beside. */
+.sh-sky-ico{
+  flex:0 0 auto;
+  width:15px; height:15px;
+  color:var(--accent);
 }
 
 /* ── Ranked targets ─────────────────────────── */
@@ -9230,8 +9250,10 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 @media (max-width:560px){
   .sh-sky{ padding:17px; }
   .sh-sky-map{ height:260px; }
+  /* Each box now carries a sentence, not a bare figure, so a phone gets
+     one per row. Three across would put two words on each line. */
   .sh-sky-facts{ gap:8px; }
-  .sh-sky-facts span{ flex:1 1 100px; padding:9px 11px; }
+  .sh-sky-facts span{ flex:1 1 100%; padding:10px 12px; }
   .sh-sky-list li{ grid-template-columns:1fr; padding:12px 13px 12px 40px; }
   .sh-sky-list li::before{ left:11px; }
   .sh-sky-timing{
@@ -9447,6 +9469,10 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
 }
 /* The rungs read as a ladder: nothing, then broadband, then tighter. */
 .sh-sky-chip-none{ background:rgba(var(--accent3-rgb),0.14); color:var(--accent3); }
+.sh-sky-chip-opt { background:rgba(var(--accent3-rgb),0.14); color:var(--accent3); }
+/* "No filter will help" is a warning, not a recommendation, so it reads
+   as muted rather than as another coloured suggestion. */
+.sh-sky-chip-moon{ background:rgba(var(--muted-rgb,148,163,184),0.16); color:var(--muted); }
 .sh-sky-chip-lp  { background:rgba(var(--accent5-rgb,251,146,60),0.14); color:var(--accent5); }
 .sh-sky-chip-wide{ background:rgba(var(--accent2-rgb),0.16); color:var(--accent2); }
 .sh-sky-chip-nb  { background:rgba(var(--accent-rgb),0.18);  color:var(--accent); }
