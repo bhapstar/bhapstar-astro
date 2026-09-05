@@ -133,10 +133,22 @@ SKY_LEDE = ("Drop a pin where you will be observing from, whether that is "
 # first drag or tap replaces it.
 SKY_MAP_LAT = 25.2048
 SKY_MAP_LNG = 55.2708
-SKY_MAP_ZOOM = 11
+
+# The map opens on the region rather than on the city. A reader in Chile
+# or Ireland should not have to zoom out of Dubai before they can find
+# themselves. Two values because the same zoom covers about a third as
+# much ground on a phone as it does on a laptop, and the point is the
+# area shown, not the number.
+SKY_MAP_ZOOM = 5
+SKY_MAP_ZOOM_NARROW = 4
 
 SKY_MAP_HELP = ("Drag the pin, or tap anywhere on the map, to set your "
                 "location. Nothing is sent anywhere.")
+
+# The place name under the coordinates is worked out in the browser from
+# a table of towns that ships with the site, so the promise above still
+# holds: no coordinates leave the page, even to ask what they are near.
+SKY_PLACES_SRC = "/assets/data/places.js"
 
 # Leaflet from unpkg, with subresource integrity hashes taken from the
 # published 1.9.4 package. OpenStreetMap tiles rather than Google, so no
@@ -153,46 +165,56 @@ LEAFLET_JS_SRI = "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00md
 # is what the engine uses; the words are how it gets chosen.
 SKY_BORTLE_Q = "How dark is your night sky?"
 SKY_BORTLE_DEFAULT = 5
+# Third column is the short form, used in the summary box where there is
+# room for two words and no more.
 SKY_BORTLE_SCALE = [
-    (1, "1 — Pristine. The Milky Way casts a shadow"),
-    (2, "2 — Truly dark. Milky Way full of detail"),
-    (3, "3 — Rural. Milky Way clear, slight glow low down"),
-    (4, "4 — Edge of town. Milky Way visible but washed out near the horizon"),
-    (5, "5 — Suburban. Milky Way faint overhead at best"),
-    (6, "6 — Bright suburb. No Milky Way, sky looks grey"),
-    (7, "7 — Town. Only the brighter stars, sky glows all round"),
-    (8, "8 — City. Brightest stars and planets only"),
-    (9, "9 — Inner city. A handful of stars at most"),
+    (1, "1 — Pristine. The Milky Way casts a shadow", "Pristine"),
+    (2, "2 — Truly dark. Milky Way full of detail", "Truly dark"),
+    (3, "3 — Rural. Milky Way clear, slight glow low down", "Rural"),
+    (4, "4 — Edge of town. Milky Way washed out low down", "Edge of town"),
+    (5, "5 — Suburban. Milky Way faint overhead at best", "Suburban"),
+    (6, "6 — Bright suburb. No Milky Way, sky looks grey", "Bright suburb"),
+    (7, "7 — Town. Only the brighter stars, sky glows all round", "Town"),
+    (8, "8 — City. Brightest stars and planets only", "City"),
+    (9, "9 — Inner city. A handful of stars at most", "Inner city"),
 ]
 
 # The "i" explanations on the four summary figures. Emitted as data
 # attributes on the section so the copy stays here rather than buried in
 # the script string.
 SKY_TIPS = {
-    "dark": ("Astronomical darkness: the sun is more than 18 degrees below "
-             "the horizon, so the sky is as dark as it gets that night. "
-             "Twilight before and after is still too bright for faint "
-             "objects."),
-    "hours": ("How long that fully dark window lasts. In midsummer at high "
-              "latitudes it can vanish altogether."),
-    "moon": ("How much of the moon is lit, and its phase. A bright moon "
-             "washes out faint galaxies and nebulae much like light "
-             "pollution does, so a new moon is the prize."),
-    "sky": ("The brightness of your own sky, from the picker above. It "
-            "decides which objects are realistic from where you are."),
-    "filter": ("Which filter helps on this object, on this night. It "
-               "depends on both. A narrowband filter passes only the "
-               "colours a glowing gas cloud gives off, which is why it "
-               "cuts through city light and moonlight so well. Galaxies "
-               "and star clusters shine across the whole spectrum, so a "
-               "narrowband filter would block the very light you are "
-               "trying to collect. Those get a broadband light pollution "
-               "filter at most."),
-    "kit": ("What you can realistically see or photograph this with. "
-            "Grey means not worth trying, a light chip means it works, "
-            "and a filled chip means this is where the object looks its "
-            "best. Sky brightness moves these around, so treat them as a "
-            "starting point rather than a rule."),
+    "dark": ("The stretch when the sun is more than 18 degrees below the "
+             "horizon, so the sky is as dark as it is going to get. "
+             "Twilight either side of it is still too bright for faint "
+             "objects, which is why this is shorter than the time "
+             "between sunset and sunrise."),
+    "moon": ("How much of the moon is lit, and when it is above your "
+             "horizon. A bright moon washes out faint objects much the "
+             "way a city does, so what matters is not only the phase but "
+             "whether it is up while the thing you want is up."),
+    "sky": ("How bright your own sky is, from the picker above. It "
+            "decides which objects are realistic from where you are, and "
+            "it is the single biggest thing separating a good night from "
+            "a frustrating one."),
+    "window": ("The stretch when this object sits more than 30 degrees "
+               "above the horizon and the sky is properly dark. Lower "
+               "than that you are shooting through too much atmosphere: "
+               "stars bloat, detail softens and haze near the horizon "
+               "eats the contrast. It is not when the object is visible, "
+               "it is when it is worth your time."),
+    "filter": ("Which filter earns its place on this object, on this "
+               "night. Both halves matter. A narrowband filter passes "
+               "only the two colours a glowing gas cloud gives off, "
+               "which is how it cuts through streetlight and moonlight. "
+               "Galaxies and star clusters shine across the whole "
+               "spectrum, so the same filter would block the light you "
+               "came for. And nothing filters out moonlight, because it "
+               "is sunlight and carries every colour starlight does."),
+    "kit": ("What this is realistically worth attempting with, under the "
+            "sky you picked above. Grey means not worth trying, a light "
+            "chip means it works, and a filled chip means this is where "
+            "the object looks its best. Change the sky brightness and "
+            "these change with it."),
 }
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
@@ -591,9 +613,10 @@ def build_sky(articles):
     builders, and so a future link here has the list to validate against.
     """
     opts = "".join(
-        f'<option value="{n}"{" selected" if n == SKY_BORTLE_DEFAULT else ""}>'
+        f'<option value="{n}" data-short="{esc(short)}"'
+        f'{" selected" if n == SKY_BORTLE_DEFAULT else ""}>'
         f'{esc(label)}</option>'
-        for n, label in SKY_BORTLE_SCALE
+        for n, label, short in SKY_BORTLE_SCALE
     )
     tips = " ".join(
         f'data-tip-{k}="{esc(v)}"' for k, v in SKY_TIPS.items()
@@ -606,7 +629,8 @@ def build_sky(articles):
 
         '        <div class="sh-sky-map" id="shSkyMap" '
         f'data-lat="{SKY_MAP_LAT}" data-lng="{SKY_MAP_LNG}" '
-        f'data-zoom="{SKY_MAP_ZOOM}" role="application" '
+        f'data-zoom="{SKY_MAP_ZOOM}" data-zoom-narrow="{SKY_MAP_ZOOM_NARROW}" '
+        f'data-places="{SKY_PLACES_SRC}" role="application" '
         'aria-label="Map for choosing your observing location"></div>\n'
 
         '        <div class="sh-sky-loc">\n'
@@ -614,6 +638,10 @@ def build_sky(articles):
         '          <button type="button" class="btn sh-sky-geo" id="shSkyGeo">'
         'Use my location</button>\n'
         '        </div>\n'
+        # Filled in by the panel once the place table has loaded. Hidden
+        # until then, and left hidden if it never arrives, so a reader
+        # offline on a first visit sees coordinates and nothing broken.
+        '        <p class="sh-sky-place" id="shSkyPlace" hidden></p>\n'
         f'        <p class="sh-sky-map-help">{esc(SKY_MAP_HELP)}</p>\n'
 
         '        <div class="sh-sky-bortle">\n'
@@ -939,6 +967,7 @@ SCRIPT = """
 
   var mapEl  = document.getElementById('shSkyMap');
   var coords = document.getElementById('shSkyCoords');
+  var placeEl = document.getElementById('shSkyPlace');
   var geo    = document.getElementById('shSkyGeo');
   var bortle = document.getElementById('shSkyBortle');
 
@@ -988,15 +1017,71 @@ SCRIPT = """
      nothing sensitive sits in the page source. */
   var marker = null, map = null;
 
-  function showCoords() {
-    coords.textContent = state.lat.toFixed(4) + ', ' + state.lng.toFixed(4);
+  /* ── Where am I, roughly ──────────────────────────────
+     A pair of decimals tells you nothing about where you have put the
+     pin, so the nearest town goes underneath it. The table that answers
+     that is a hundred kilobytes, which is not worth loading for a reader
+     who never scrolls this far, so it is fetched on first use and the
+     line stays hidden until it arrives. No coordinates go anywhere. */
+  var placeTimer = null, placeAsked = false;
+
+  function regionName(cc) {
+    try {
+      var dn = new Intl.DisplayNames([document.documentElement.lang || 'en'],
+                                     { type: 'region' });
+      return dn.of(cc) || cc;
+    } catch (e) { return cc; }
   }
 
-  function moveTo(lat, lng, recentre) {
+  function paintPlace() {
+    if (!placeEl || !window.NearestPlace) return;
+    var hit = window.NearestPlace.find(state.lat, state.lng);
+    if (!hit) { placeEl.hidden = true; placeEl.textContent = ''; return; }
+    var where = hit.name + ', ' + regionName(hit.country);
+    placeEl.textContent = hit.km < 25
+      ? where
+      : 'Near ' + where + ', about ' + Math.round(hit.km) + ' km away';
+    placeEl.hidden = false;
+  }
+
+  /* Debounced, because dragging the pin fires this continuously and the
+     answer only matters once the reader has let go. */
+  function wantPlace() {
+    if (!placeEl) return;
+    clearTimeout(placeTimer);
+    placeTimer = setTimeout(function () {
+      if (window.NearestPlace) { paintPlace(); return; }
+      if (placeAsked) return;
+      placeAsked = true;
+      var src = (mapEl && mapEl.dataset.places) || '';
+      if (!src) return;
+      var sc = document.createElement('script');
+      sc.src = src;
+      sc.async = true;
+      sc.onload = paintPlace;
+      document.head.appendChild(sc);
+    }, 250);
+  }
+
+  function showCoords() {
+    coords.textContent = state.lat.toFixed(4) + ', ' + state.lng.toFixed(4);
+    wantPlace();
+  }
+
+  /* The opening view is deliberately wide, so a reader anywhere can see
+     enough of the world to find themselves. A phone shows about a third
+     of the ground a laptop does at the same zoom, hence two numbers. */
+  function openZoom() {
+    var wide = parseInt(mapEl.dataset.zoom, 10) || 5;
+    var narrow = parseInt(mapEl.dataset.zoomNarrow, 10) || wide;
+    return (mapEl.clientWidth && mapEl.clientWidth < 520) ? narrow : wide;
+  }
+
+  function moveTo(lat, lng, zoomTo) {
     state.lat = lat; state.lng = lng;
     showCoords();
     if (marker) marker.setLatLng([lat, lng]);
-    if (map && recentre) map.setView([lat, lng], map.getZoom());
+    if (map && zoomTo) map.setView([lat, lng], Math.max(map.getZoom(), zoomTo));
     save();
     render();
   }
@@ -1007,7 +1092,7 @@ SCRIPT = """
        of moving the page, which is why the map is not full width: there
        is always margin either side to scroll past it. */
     map = L.map(mapEl, { scrollWheelZoom: true })
-           .setView([state.lat, state.lng], parseInt(mapEl.dataset.zoom, 10));
+           .setView([state.lat, state.lng], openZoom());
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -1031,9 +1116,9 @@ SCRIPT = """
      stays in the generator rather than in this script string. */
   var TIPS = {
     dark:   sky.dataset.tipDark   || '',
-    hours:  sky.dataset.tipHours  || '',
     moon:   sky.dataset.tipMoon   || '',
     sky:    sky.dataset.tipSky    || '',
+    window: sky.dataset.tipWindow || '',
     filter: sky.dataset.tipFilter || '',
     kit:    sky.dataset.tipKit    || ''
   };
@@ -1053,12 +1138,61 @@ SCRIPT = """
     if (btn) { ev.preventDefault(); btn.classList.toggle('is-open'); }
   });
 
+  /* ── Summary box furniture ────────────────────────
+     Small line drawings rather than emoji, so they take the text colour,
+     follow both themes and stay the same shape on every platform. */
+  function svg(body) {
+    return '<svg class="sh-sky-ico" viewBox="0 0 18 18" aria-hidden="true" ' +
+           'fill="none" stroke="currentColor" stroke-width="1.4" ' +
+           'stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>';
+  }
+
+  /* Sun below a horizon: the thing the box is actually about. */
+  var ICON_DARK = svg('<path d="M1.5 12.5h15"/><circle cx="9" cy="15" r="3.2"/>' +
+                      '<path d="M9 7.5v1.6M4 9l1.1 1.1M14 9l-1.1 1.1"/>');
+
+  /* Rooftops with the glow coming off them. */
+  var ICON_SKY = svg('<path d="M1.5 15.5h15"/>' +
+                     '<path d="M3.5 15.5v-4h3v4M8.5 15.5V8h3.5v7.5M13.5 15.5v-5.5h2.5v5.5"/>' +
+                     '<path d="M2.6 5.2v1.4M5.6 3.4v1.4M9 2v1.6M12.4 3.4v1.4M15.4 5.2v1.4"/>');
+
+  /* The moon drawn at tonight's actual phase. The lit edge is a circle
+     and the terminator is an ellipse whose width is what the phase is:
+     flat at a quarter, bulging one way for a crescent and the other for
+     a gibbous. Mirrored for the waning half of the month. */
+  function moonIcon(frac, phase) {
+    var lit;
+    if (frac <= 0.01) {
+      lit = '';
+    } else if (frac >= 0.99) {
+      lit = '<circle cx="9" cy="9" r="7" fill="currentColor" stroke="none"/>';
+    } else {
+      var rx = (7 * Math.abs(1 - 2 * frac)).toFixed(2);
+      var sweep = frac < 0.5 ? 0 : 1;
+      var d = 'M9 2 A7 7 0 0 1 9 16 A' + rx + ' 7 0 0 ' + sweep + ' 9 2 Z';
+      lit = '<path d="' + d + '" fill="currentColor" stroke="none"' +
+            (phase < 0.5 ? '' : ' transform="rotate(180 9 9)"') + '/>';
+    }
+    return '<svg class="sh-sky-ico" viewBox="0 0 18 18" aria-hidden="true">' +
+             '<circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" ' +
+               'stroke-width="1.4" stroke-opacity="0.45"/>' + lit +
+           '</svg>';
+  }
+
+  function fact(icon, label, tip, value, sub) {
+    return '<span>' +
+             '<i>' + icon + label + info(tip) + '</i>' +
+             '<b>' + value + '</b>' +
+             (sub ? '<em>' + sub + '</em>' : '') +
+           '</span>';
+  }
+
   function reasonFor(r) {
     var bits = [];
     if (r.bf < 0.5) bits.push('Your sky is too bright for this one. It will be a struggle.');
     else if (r.bf < 0.85) bits.push('Light pollution will cost you contrast here.');
-    if (r.moonHit > 0.45) bits.push('The moon is up and bright for most of this window.');
-    else if (r.moonHit > 0.2) bits.push('Some moonlight to work around.');
+    if (r.moonLoad > 0.35) bits.push('The moon is up and bright through most of this window.');
+    else if (r.moonLoad > 0.12) bits.push('Some moonlight to work around.');
     if (r.maxAlt < 35) bits.push('Stays low, so expect softer stars.');
     if (!bits.length) bits.push('Good conditions for this one tonight.');
     return bits.join(' ');
@@ -1174,30 +1308,31 @@ SCRIPT = """
     }
 
     var moonPct = Math.round(plan.moonIll * 100);
+
+    /* Each box says what it is before it says the number, and carries a
+       second line that answers the question the number raises. The four
+       bare figures this replaced needed the tips read before any of them
+       meant anything. */
+    var moonWhen;
+    if (!plan.moonUpFrom) moonWhen = 'Down all night';
+    else if (plan.moonUpFrac > 0.98) moonWhen = 'Up the whole night';
+    else moonWhen = 'Up ' + hhmm(plan.moonUpFrom) + ' to ' + hhmm(plan.moonUpTo);
+
+    var chosen = bortle.options[bortle.selectedIndex];
+    var skyShort = (chosen && chosen.dataset.short) || '';
+
     var html =
       '<div class="sh-sky-facts">' +
-        '<span><b>' + hhmm(plan.darkStart) + ' to ' + hhmm(plan.darkEnd) +
-          '</b><i>Properly dark' + info('dark') + '</i></span>' +
-        '<span><b>' + hoursText((plan.darkEnd - plan.darkStart) / 3600000) +
-          '</b><i>Dark hours' + info('hours') + '</i></span>' +
-        '<span><b>' + moonPct + '%</b><i>' + C.moonPhaseName(plan.moonPhase) +
-          info('moon') + '</i></span>' +
-        '<span><b>Level ' + state.bortle + '</b><i>Your sky' + info('sky') + '</i></span>' +
+        fact(ICON_DARK, 'Sky is properly dark', 'dark',
+             hhmm(plan.darkStart) + ' to ' + hhmm(plan.darkEnd),
+             hoursText((plan.darkEnd - plan.darkStart) / 3600000) + ' to work with') +
+        fact(moonIcon(plan.moonIll, plan.moonPhase), 'Moon', 'moon',
+             moonPct + '% lit',
+             C.moonPhaseName(plan.moonPhase) + '. ' + moonWhen) +
+        fact(ICON_SKY, 'Your sky', 'sky',
+             'Bortle ' + state.bortle,
+             skyShort) +
       '</div>';
-
-    var v;
-    if (moonPct < 15 || plan.moonUpFrac < 0.15) {
-      v = 'A good night. The moon is barely a factor, so faint things are on the table.';
-    } else if (moonPct > 70 && plan.moonUpFrac > 0.6) {
-      v = 'A bright moon for most of the night. Nebulae and star clusters will ' +
-          'survive it, galaxies will not.';
-    } else {
-      v = 'Workable. Favour things that peak while the moon is low or already down.';
-    }
-    if (state.bortle >= 7) {
-      v += ' From a sky this bright, a filter is doing most of the work.';
-    }
-    html += '<p class="sh-sky-verdict">' + v + '</p>';
 
     if (!plan.targets.length) {
       html += '<p class="sh-sky-wait">Nothing gets high enough for long enough ' +
@@ -1222,15 +1357,16 @@ SCRIPT = """
           '</button>'
         : '<span class="sh-sky-thumb is-empty" aria-hidden="true"></span>';
 
-      var fk = C.filterFor(tg, state.bortle, r.moonHit);
+      var fk = C.filterFor(tg, state.bortle, r.moonLoad);
       var fl = C.FILTERS[fk];
       var filterChip =
         '<span class="sh-sky-chip sh-sky-chip-' + fk + '" title="' + attr(fl.w) + '">' +
           '<span class="sh-sky-chip-k">Filter</span>' + fl.s +
         '</span>' + info('filter');
 
+      var levels = C.kitFor(tg, state.bortle);
       var kitChips = C.KIT.map(function (slot, i) {
-        var lvl = (tg.k && tg.k[i]) || 0;
+        var lvl = levels[i] || 0;
         return '<span class="sh-sky-kit-chip lvl-' + lvl + '" ' +
                'title="' + attr(slot.l + ': ' + C.KIT_STATE[lvl]) + '">' +
                slot.s + '</span>';
@@ -1253,9 +1389,13 @@ SCRIPT = """
           '</p>' +
         '</div>' +
         '<div class="sh-sky-timing">' +
-          '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b><i>Best window</i></span>' +
-          '<span><b>' + hoursText(r.hours) + '</b><i>Usable</i></span>' +
-          '<span><b>' + Math.round(r.maxAlt) + '\u00B0</b><i>Peak height</i></span>' +
+          '<span><b>' + hhmm(r.winStart) + ' to ' + hhmm(r.winEnd) + '</b>' +
+            '<i>Worth shooting' + info('window') + '</i></span>' +
+          '<span><b>' + hoursText(r.hours) + '</b>' +
+            '<i>Above ' + MIN_ALT + '\\u00B0 in total</i></span>' +
+          '<span><b>' + Math.round(r.maxAlt) + '\\u00B0</b><i>Highest it gets</i></span>' +
+          '<span><b>' + (r.moonUpFrac < 0.02 ? 'Down' : moonPct + '% up') + '</b>' +
+            '<i>Moon in that window</i></span>' +
         '</div>' +
       '</li>';
     }).join('') + '</ol>';
@@ -1283,7 +1423,10 @@ SCRIPT = """
     geo.textContent = 'Locating\u2026';
     navigator.geolocation.getCurrentPosition(function (pos) {
       geo.textContent = 'Use my location';
-      moveTo(pos.coords.latitude, pos.coords.longitude, true);
+      /* The wide opening view exists so a reader can find themselves. If
+         the browser has just told us exactly where they are, that job is
+         done, so close in on it. */
+      moveTo(pos.coords.latitude, pos.coords.longitude, 10);
     }, function () {
       geo.textContent = 'Use my location';
     }, { timeout: 10000 });
