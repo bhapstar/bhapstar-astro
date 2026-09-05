@@ -48,7 +48,7 @@
         <p class="sh-intro">This page is for anyone who has looked at a picture of a galaxy and wondered whether an ordinary person could take one. You can, and with less equipment than you would guess. The harder part is not the kit. It is getting under a sky dark enough to be worth the trouble, and that is the first thing this page will help you work out.</p>
       </div>
 
-      <section class="sh-sky" id="shSky" data-tip-dark="The stretch when the sun is more than 18 degrees below the horizon, so the sky is as dark as it is going to get. Twilight either side of it is still too bright for faint objects, which is why this is shorter than the time between sunset and sunrise." data-tip-moon="How much of the moon is lit, and when it is above your horizon. A bright moon washes out faint objects much the way a city does, so what matters is not only the phase but whether it is up while the thing you want is up." data-tip-sky="How bright your own sky is, from the picker above. It decides which objects are realistic from where you are, and it is the single biggest thing separating a good night from a frustrating one." data-tip-window="The stretch when this object sits more than 30 degrees above the horizon and the sky is properly dark. Lower than that you are shooting through too much atmosphere: stars bloat, detail softens and haze near the horizon eats the contrast. It is not when the object is visible, it is when it is worth your time." data-tip-filter="Which filter earns its place on this object, on this night. Both halves matter. A narrowband filter passes only the two colours a glowing gas cloud gives off, which is how it cuts through streetlight and moonlight. Galaxies and star clusters shine across the whole spectrum, so the same filter would block the light you came for. And nothing filters out moonlight, because it is sunlight and carries every colour starlight does." data-tip-kit="What this is realistically worth attempting with, under the sky you picked above. Grey means not worth trying, a light chip means it works, and a filled chip means this is where the object looks its best. Change the sky brightness and these change with it.">
+      <section class="sh-sky" id="shSky" data-tip-dark="The stretch when the sun is more than 18 degrees below the horizon, so the sky is as dark as it is going to get. Twilight either side of it is still too bright for faint objects, which is why this is shorter than the time between sunset and sunrise." data-tip-moon="How much of the moon is lit, and when it is above your horizon. A bright moon washes out faint objects much the way a city does, so what matters is not only the phase but whether it is up while the thing you want is up." data-tip-sky="How bright your own sky is, from the picker above. It decides which objects are realistic from where you are, and it is the single biggest thing separating a good night from a frustrating one." data-tip-window="The stretch when this object sits more than 30 degrees above the horizon and the sky is properly dark. Lower than that you are shooting through too much atmosphere: stars bloat, detail softens and haze near the horizon eats the contrast. It is not when the object is visible, it is when it is worth your time.">
         <h2>What is worth looking at tonight</h2>
         <p class="sh-sky-lede">Drop a pin where you will be observing from, whether that is your garden, a balcony or somewhere you drive out to. This works out when it actually gets dark tonight, what the moon is doing, and which objects climb high enough for long enough to be worth setting up for.</p>
         <div class="sh-sky-map" id="shSkyMap" data-lat="25.2048" data-lng="55.2708" data-zoom="5" data-zoom-narrow="4" data-places="/assets/data/places.js" role="application" aria-label="Map for choosing your observing location"></div>
@@ -691,22 +691,23 @@
     dark:   sky.dataset.tipDark   || '',
     moon:   sky.dataset.tipMoon   || '',
     sky:    sky.dataset.tipSky    || '',
-    window: sky.dataset.tipWindow || '',
-    filter: sky.dataset.tipFilter || '',
-    kit:    sky.dataset.tipKit    || ''
+    window: sky.dataset.tipWindow || ''
   };
 
   function info(key) {
     if (!TIPS[key]) return '';
-    return '<button type="button" class="sh-sky-i" aria-label="What this means" ' +
+    return '<button type="button" class="sh-sky-i sh-sky-tip" aria-label="What this means" ' +
            'data-tip="' + TIPS[key].replace(/"/g, '&quot;') + '">i</button>';
   }
 
   /* One open tip at a time, closed by a second tap or a click elsewhere.
      Hover alone would leave this unusable on a phone. */
+  /* Both selectors, so this keeps working against markup from either
+     side of the change that gave the chips their own tooltips. */
+  var TRIGGER = '.sh-sky-tip, .sh-sky-i';
   document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest && ev.target.closest('.sh-sky-i');
-    var open = sky.querySelector('.sh-sky-i.is-open');
+    var btn = ev.target.closest && ev.target.closest(TRIGGER);
+    var open = sky.querySelector('.sh-sky-tip.is-open, .sh-sky-i.is-open');
     if (open && open !== btn) open.classList.remove('is-open');
     if (btn) { ev.preventDefault(); btn.classList.toggle('is-open'); }
   });
@@ -933,21 +934,50 @@
       var fk = C.filterFor(tg, state.bortle, r.moonLoad);
       var fl = C.FILTERS[fk];
       var filterChip =
-        '<span class="sh-sky-chip sh-sky-chip-' + fk + '" title="' + attr(fl.w) + '">' +
+        '<button type="button" class="sh-sky-chip sh-sky-chip-' + fk + ' sh-sky-tip" ' +
+          'data-tip="' + attr(fl.w) + '" ' +
+          'aria-label="' + attr(fl.l + '. Tap for why') + '">' +
           '<span class="sh-sky-chip-k">Filter</span>' + fl.s +
-        '</span>' + info('filter');
+        '</button>';
 
+      /* Every chip says why it looks the way it does, which is more use
+         than one note at the end of the row explaining the colours in
+         the abstract. A grey chip is the one a reader most wants an
+         answer for, so it gets the most specific answer: whether the
+         object is simply out of reach for that kit, or whether their
+         own sky is what took it away. */
       var levels = C.kitFor(tg, state.bortle);
       var kitChips = C.KIT.map(function (slot, i) {
         var lvl = levels[i] || 0;
-        return '<span class="sh-sky-kit-chip lvl-' + lvl + '" ' +
-               'title="' + attr(slot.l + ': ' + C.KIT_STATE[lvl]) + '">' +
-               slot.s + '</span>';
+        var best = (tg.k && tg.k[i]) || 0;
+        var ceiling = (tg.b && tg.b[i]);
+        var why;
+
+        if (!best) {
+          why = slot.l + ': not worth trying. This one is too faint or too ' +
+                'small for it under any sky.';
+        } else if (lvl === 0) {
+          why = slot.l + ': not worth trying from a Bortle ' + state.bortle +
+                ' sky. It holds up to about Bortle ' + ceiling +
+                ', so this needs a darker site rather than more patience.';
+        } else if (lvl === 1 && state.bortle === ceiling) {
+          why = slot.l + ': works, but Bortle ' + ceiling + ' is as bright as ' +
+                'it takes. Expect a fight for contrast.';
+        } else if (lvl === 1) {
+          why = slot.l + ': works. Not where this one looks its best, but ' +
+                'you will get something worth keeping.';
+        } else {
+          why = slot.l + ': this is where the object looks its best.';
+        }
+
+        return '<button type="button" class="sh-sky-kit-chip lvl-' + lvl +
+               ' sh-sky-tip" data-tip="' + attr(why) + '" ' +
+               'aria-label="' + attr(why) + '">' + slot.s + '</button>';
       }).join('');
 
       return '<li>' +
-        thumb +
         '<div class="sh-sky-main">' +
+          thumb +
           '<p class="sh-sky-head">' +
             '<a class="sh-sky-name" href="/share/' + tg.slug + '.html">' + tg.n + '</a>' +
             '<span class="sh-sky-tag sh-sky-tag-' + tg.t + '">' + C.LABEL[tg.t] + '</span>' +
@@ -957,7 +987,7 @@
           '<p class="sh-sky-gear">' +
             filterChip +
             '<span class="sh-sky-kit">' +
-              '<span class="sh-sky-chip-k">Use</span>' + kitChips + info('kit') +
+              '<span class="sh-sky-chip-k">Use</span>' + kitChips +
             '</span>' +
           '</p>' +
         '</div>' +
