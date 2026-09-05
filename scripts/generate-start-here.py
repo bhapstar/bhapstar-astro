@@ -182,6 +182,9 @@ SKY_BORTLE_SCALE = [
 # The "i" explanations on the four summary figures. Emitted as data
 # attributes on the section so the copy stays here rather than buried in
 # the script string.
+# The filter and kit chips carry their own explanations, written per
+# chip in the panel script, because "why is this one grey" is a question
+# about that chip rather than about the row it sits in.
 SKY_TIPS = {
     "dark": ("The stretch when the sun is more than 18 degrees below the "
              "horizon, so the sky is as dark as it is going to get. "
@@ -202,19 +205,6 @@ SKY_TIPS = {
                "stars bloat, detail softens and haze near the horizon "
                "eats the contrast. It is not when the object is visible, "
                "it is when it is worth your time."),
-    "filter": ("Which filter earns its place on this object, on this "
-               "night. Both halves matter. A narrowband filter passes "
-               "only the two colours a glowing gas cloud gives off, "
-               "which is how it cuts through streetlight and moonlight. "
-               "Galaxies and star clusters shine across the whole "
-               "spectrum, so the same filter would block the light you "
-               "came for. And nothing filters out moonlight, because it "
-               "is sunlight and carries every colour starlight does."),
-    "kit": ("What this is realistically worth attempting with, under the "
-            "sky you picked above. Grey means not worth trying, a light "
-            "chip means it works, and a filled chip means this is where "
-            "the object looks its best. Change the sky brightness and "
-            "these change with it."),
 }
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
@@ -1118,22 +1108,23 @@ SCRIPT = """
     dark:   sky.dataset.tipDark   || '',
     moon:   sky.dataset.tipMoon   || '',
     sky:    sky.dataset.tipSky    || '',
-    window: sky.dataset.tipWindow || '',
-    filter: sky.dataset.tipFilter || '',
-    kit:    sky.dataset.tipKit    || ''
+    window: sky.dataset.tipWindow || ''
   };
 
   function info(key) {
     if (!TIPS[key]) return '';
-    return '<button type="button" class="sh-sky-i" aria-label="What this means" ' +
+    return '<button type="button" class="sh-sky-i sh-sky-tip" aria-label="What this means" ' +
            'data-tip="' + TIPS[key].replace(/"/g, '&quot;') + '">i</button>';
   }
 
   /* One open tip at a time, closed by a second tap or a click elsewhere.
      Hover alone would leave this unusable on a phone. */
+  /* Both selectors, so this keeps working against markup from either
+     side of the change that gave the chips their own tooltips. */
+  var TRIGGER = '.sh-sky-tip, .sh-sky-i';
   document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest && ev.target.closest('.sh-sky-i');
-    var open = sky.querySelector('.sh-sky-i.is-open');
+    var btn = ev.target.closest && ev.target.closest(TRIGGER);
+    var open = sky.querySelector('.sh-sky-tip.is-open, .sh-sky-i.is-open');
     if (open && open !== btn) open.classList.remove('is-open');
     if (btn) { ev.preventDefault(); btn.classList.toggle('is-open'); }
   });
@@ -1360,21 +1351,50 @@ SCRIPT = """
       var fk = C.filterFor(tg, state.bortle, r.moonLoad);
       var fl = C.FILTERS[fk];
       var filterChip =
-        '<span class="sh-sky-chip sh-sky-chip-' + fk + '" title="' + attr(fl.w) + '">' +
+        '<button type="button" class="sh-sky-chip sh-sky-chip-' + fk + ' sh-sky-tip" ' +
+          'data-tip="' + attr(fl.w) + '" ' +
+          'aria-label="' + attr(fl.l + '. Tap for why') + '">' +
           '<span class="sh-sky-chip-k">Filter</span>' + fl.s +
-        '</span>' + info('filter');
+        '</button>';
 
+      /* Every chip says why it looks the way it does, which is more use
+         than one note at the end of the row explaining the colours in
+         the abstract. A grey chip is the one a reader most wants an
+         answer for, so it gets the most specific answer: whether the
+         object is simply out of reach for that kit, or whether their
+         own sky is what took it away. */
       var levels = C.kitFor(tg, state.bortle);
       var kitChips = C.KIT.map(function (slot, i) {
         var lvl = levels[i] || 0;
-        return '<span class="sh-sky-kit-chip lvl-' + lvl + '" ' +
-               'title="' + attr(slot.l + ': ' + C.KIT_STATE[lvl]) + '">' +
-               slot.s + '</span>';
+        var best = (tg.k && tg.k[i]) || 0;
+        var ceiling = (tg.b && tg.b[i]);
+        var why;
+
+        if (!best) {
+          why = slot.l + ': not worth trying. This one is too faint or too ' +
+                'small for it under any sky.';
+        } else if (lvl === 0) {
+          why = slot.l + ': not worth trying from a Bortle ' + state.bortle +
+                ' sky. It holds up to about Bortle ' + ceiling +
+                ', so this needs a darker site rather than more patience.';
+        } else if (lvl === 1 && state.bortle === ceiling) {
+          why = slot.l + ': works, but Bortle ' + ceiling + ' is as bright as ' +
+                'it takes. Expect a fight for contrast.';
+        } else if (lvl === 1) {
+          why = slot.l + ': works. Not where this one looks its best, but ' +
+                'you will get something worth keeping.';
+        } else {
+          why = slot.l + ': this is where the object looks its best.';
+        }
+
+        return '<button type="button" class="sh-sky-kit-chip lvl-' + lvl +
+               ' sh-sky-tip" data-tip="' + attr(why) + '" ' +
+               'aria-label="' + attr(why) + '">' + slot.s + '</button>';
       }).join('');
 
       return '<li>' +
-        thumb +
         '<div class="sh-sky-main">' +
+          thumb +
           '<p class="sh-sky-head">' +
             '<a class="sh-sky-name" href="/share/' + tg.slug + '.html">' + tg.n + '</a>' +
             '<span class="sh-sky-tag sh-sky-tag-' + tg.t + '">' + C.LABEL[tg.t] + '</span>' +
@@ -1384,7 +1404,7 @@ SCRIPT = """
           '<p class="sh-sky-gear">' +
             filterChip +
             '<span class="sh-sky-kit">' +
-              '<span class="sh-sky-chip-k">Use</span>' + kitChips + info('kit') +
+              '<span class="sh-sky-chip-k">Use</span>' + kitChips +
             '</span>' +
           '</p>' +
         '</div>' +
