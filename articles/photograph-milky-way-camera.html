@@ -89,12 +89,12 @@ brighter than the Milky Way, and no amount of processing brings back what the se
 recorded. Drive an hour out to a properly dark site and the same camera, the same lens and
 the same settings produce a completely different photograph.</p>
 
-<p>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-9" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-photograph-milky-way-camera-9" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map and a little planning is all it takes, and it is the
+<p>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-9" data-gl-term="light pollution" data-gl-href="/articles/bortle-scale-narrowband-filters.html">light pollution</span><span class="gl-def" id="gl-photograph-milky-way-camera-9" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map and a little planning is all it takes, and it is the
 highest-value hour you will spend on the whole night.</p>
 
 <h2>Settings</h2>
 
-<p>Set everything manually and then leave it alone. <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-10" data-gl-term="autofocus">Autofocus</span><span class="gl-def" id="gl-photograph-milky-way-camera-10" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span>, auto ISO and auto <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-11" data-gl-term="white balance">white
+<p>Set everything manually and then leave it alone. <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-10" data-gl-term="autofocus" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">Autofocus</span><span class="gl-def" id="gl-photograph-milky-way-camera-10" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span>, auto ISO and auto <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-11" data-gl-term="white balance">white
 balance</span><span class="gl-def" id="gl-photograph-milky-way-camera-11" hidden>The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other.</span> all hunt around in the dark, and frames that match each other are what let you
 combine them later.</p>
 
@@ -123,7 +123,7 @@ they stop being points and become short dashes. Wider lenses tolerate longer exp
 
 <p>There are two common rules of thumb. The older 500 rule is generous; the newer <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-14" data-gl-term="NPF rule">NPF rule</span><span class="gl-def" id="gl-photograph-milky-way-camera-14" hidden>A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule.</span>
 is stricter and holds up better on a modern sensor. Both are shown below for a
-24-megapixel <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-15" data-gl-term="full-frame">full-frame</span><span class="gl-def" id="gl-photograph-milky-way-camera-15" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> camera.</p>
+24-megapixel <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-15" data-gl-term="full-frame" data-gl-href="/gear/sony-a7iii-full-frame-camera.html">full-frame</span><span class="gl-def" id="gl-photograph-milky-way-camera-15" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> camera.</p>
 
 <figure class="article-fig">
 <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img"
@@ -266,7 +266,7 @@ individually is what causes flicker. If you do get a subtle pulse in brightness,
 editors have a deflicker filter, and LRTimelapse is the dedicated tool if you end up doing
 this often.</p>
 
-<p>The same folder also stacks into a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-17" data-gl-term="star trail">star trail</span><span class="gl-def" id="gl-photograph-milky-way-camera-17" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span>, where the stars draw curved lines instead
+<p>The same folder also stacks into a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-camera-17" data-gl-term="star trail" data-gl-href="/share/star-trails-stills.html">star trail</span><span class="gl-def" id="gl-photograph-milky-way-camera-17" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span>, where the stars draw curved lines instead
 of moving. That is a second finished image from files you already have.</p>
 
 <h2>Afterwards</h2>
@@ -465,6 +465,8 @@ guide</a>. And if all you have on the night is the phone in your pocket,
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -472,6 +474,7 @@ guide</a>. And if all you have on the night is the phone in your pocket,
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -506,6 +509,19 @@ guide</a>. And if all you have on the night is the phone in your pocket,
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

@@ -112,7 +112,7 @@
         <p class="lead">A vast star-forming complex in Scorpius, the Lobster Nebula is carved into shape by Pismis 24 - a cluster of extraordinarily massive young stars whose radiation is steadily hollowing out the gas that made them.</p>
         <p>NGC 6357 lies roughly 5,500 light-years away in Scorpius, immediately north of the Cat's Paw Nebula - the two sit close enough that at short focal lengths they can be framed together. It is sometimes also called the War and Peace Nebula, a name earned from its appearance in infrared surveys.</p>
         <p>What drives the nebula is the open cluster Pismis 24, buried near its centre. It contains several of the most massive stars known in the Milky Way, including Pismis 24-1, long thought to be a single star of well over a hundred solar masses before higher-resolution imaging resolved it into multiple components. Their combined ultraviolet output is ionising the surrounding hydrogen and blowing enormous cavities and pillars into the cloud - the same sculpting process visible in the Eagle Nebula, but on a larger and more violent scale.</p>
-        <p>This one was shot from home under <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-1" data-gl-term="Bortle">Bortle</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-1" hidden>A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.</span> 8 skies, which makes a narrow dual-band filter essential rather than optional. At 3nm the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-2" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-2" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> simply disappears and the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> structure comes through cleanly even at four hours. The bigger constraint from this latitude is <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-4" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-4" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> - at around -34 degrees <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-5" data-gl-term="declination">declination</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> the nebula never climbs far, so the usable window each night is short and you are always shooting through more atmosphere than you would like. Plan for a clean southern horizon and take the transit hours.</p>
+        <p>This one was shot from home under <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-1" data-gl-term="Bortle" data-gl-href="/articles/bortle-scale-narrowband-filters.html">Bortle</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-1" hidden>A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.</span> 8 skies, which makes a narrow dual-band filter essential rather than optional. At 3nm the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-2" data-gl-term="light pollution" data-gl-href="/articles/bortle-scale-narrowband-filters.html">light pollution</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-2" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> simply disappears and the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> structure comes through cleanly even at four hours. The bigger constraint from this latitude is <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-4" data-gl-term="altitude" data-gl-href="/articles/navigating-the-night-sky.html">altitude</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-4" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> - at around -34 degrees <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-5" data-gl-term="declination" data-gl-href="/articles/navigating-the-night-sky.html">declination</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> the nebula never climbs far, so the usable window each night is short and you are always shooting through more atmosphere than you would like. Plan for a clean southern horizon and take the transit hours.</p>
       </div>
 
       <div class="share-specs">
@@ -418,6 +418,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -425,6 +427,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -459,6 +462,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

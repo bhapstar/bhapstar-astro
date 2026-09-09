@@ -130,7 +130,7 @@
       <div class="share-body">
         <p class="lead">The Geminids are one of the year's most reliable and prolific meteor showers, caused not by a comet but by asteroid 3200 Phaethon, producing fast, bright meteors that radiate from the constellation Gemini.</p>
         <p>The Geminids peak each year around the 13th–14th of December and are unusual among major meteor showers in having an asteroid rather than a comet as their parent body. 3200 Phaethon is a rocky object that passes unusually close to the Sun, and the debris trail it has shed over time produces the stream of particles that Earth passes through each December.</p>
-        <p>This composite records multiple Geminid meteors captured over a single night, with their trails traced back to the <span class="gl" role="button" tabindex="0" aria-describedby="gl-geminids-meteor-shower-1" data-gl-term="radiant">radiant</span><span class="gl-def" id="gl-geminids-meteor-shower-1" hidden>The point in the sky a meteor shower appears to stream out from. Meteors near it look short, and the ones further away look long.</span> point in Gemini, the apparent origin of the shower as seen from Earth. Individual meteors are captured in single frames; the composite combines them to show the full pattern of the shower's geometry.</p>
+        <p>This composite records multiple Geminid meteors captured over a single night, with their trails traced back to the <span class="gl" role="button" tabindex="0" aria-describedby="gl-geminids-meteor-shower-1" data-gl-term="radiant" data-gl-href="/articles/photograph-a-meteor-shower.html">radiant</span><span class="gl-def" id="gl-geminids-meteor-shower-1" hidden>The point in the sky a meteor shower appears to stream out from. Meteors near it look short, and the ones further away look long.</span> point in Gemini, the apparent origin of the shower as seen from Earth. Individual meteors are captured in single frames; the composite combines them to show the full pattern of the shower's geometry.</p>
         <p>Meteor shower photography is one of the more unpredictable and patience-testing forms of astrophotography - you are essentially leaving the camera running and hoping. The Geminids reward persistence, producing reliably high meteor rates even under imperfect conditions.</p>
       </div>
 
@@ -459,6 +459,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -466,6 +468,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -500,6 +503,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

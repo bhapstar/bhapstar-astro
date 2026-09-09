@@ -64,7 +64,7 @@
           </div>
         </div>
         <h1 class="gear-title">Svbony Filter Drawer</h1>
-        <p class="gear-desc">Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-1" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-svbony-filter-drawer-1" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> apart. Focus and <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-2" data-gl-term="backfocus">backfocus</span><span class="gl-def" id="gl-svbony-filter-drawer-2" hidden>The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.</span> spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session.</p>
+        <p class="gear-desc">Holds a 2 inch filter in a slide-out drawer so filters can be changed without taking the <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-1" data-gl-term="imaging train">imaging train</span><span class="gl-def" id="gl-svbony-filter-drawer-1" hidden>The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.</span> apart. Focus and <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-2" data-gl-term="backfocus" data-gl-href="/gear/svbony-filter-drawer.html">backfocus</span><span class="gl-def" id="gl-svbony-filter-drawer-2" hidden>The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.</span> spacing stay untouched, which removes the main reason to avoid swapping filters part-way through a session.</p>
       </div>
 
 
@@ -95,7 +95,7 @@ galaxy is a decision about what to point at, not a decision about whether it is
 worth dismantling the imaging train.</p>
 
 <p>The <a href="/gear/svbony-sv220-3nm-filter.html">SV220</a> adds a second
-<span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-4" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-svbony-filter-drawer-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> option at 3nm, and the choice between it and the 7nm L-eXtreme is less
+<span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-4" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-svbony-filter-drawer-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> option at 3nm, and the choice between it and the 7nm L-eXtreme is less
 about the target than about the night: how much moon is up, and how many hours I
 am likely to get. Without a drawer that decision gets made once, at the start,
 and lived with. With one I can open on the 3nm, fall back to the 7nm if
@@ -105,7 +105,7 @@ separately.</p>
 <h2>Getting the spacing right</h2>
 
 <p>The drawer occupies space in the optical path and that space has to be
-accounted for. Every imaging train has a required distance between <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-5" data-gl-term="field flattener">flattener</span><span class="gl-def" id="gl-svbony-filter-drawer-5" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span> and
+accounted for. Every imaging train has a required distance between <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-filter-drawer-5" data-gl-term="field flattener" data-gl-href="/gear/skywatcher-evostar-72ed-refractor.html">flattener</span><span class="gl-def" id="gl-svbony-filter-drawer-5" hidden>A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.</span> and
 sensor, and getting it wrong gives elongated stars towards the frame edges that
 no processing will rescue. So it is worth installing once, deliberately, with the
 other spacers adjusted to compensate, rather than adding it the night before a
@@ -225,6 +225,8 @@ would quietly break your spacing.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -232,6 +234,7 @@ would quietly break your spacing.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -266,6 +269,19 @@ would quietly break your spacing.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

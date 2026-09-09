@@ -95,14 +95,14 @@ expecting to reach fainter targets because of the name will be disappointed.</p>
 
 <p>Everything behind the aperture has changed. The Pro uses an 8.3 megapixel
 IMX585 in place of the S30's 2.1 megapixel IMX662, on a 1/1.2 inch format rather
-than 1/2.8 inch, behind a four-element <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-2" data-gl-term="apochromat">apochromat</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-2" hidden>A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo.</span> at 160mm f/5.3 instead of the
+than 1/2.8 inch, behind a four-element <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-2" data-gl-term="apochromat" data-gl-href="/gear/askar-v-modular-apo-refractor.html">apochromat</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-2" hidden>A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo.</span> at 160mm f/5.3 instead of the
 <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-3" data-gl-term="triplet">triplet</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-3" hidden>A lens made of three pieces of glass. More expensive, but it brings the colours together more completely than a doublet.</span> at 150mm f/5. A second wide-angle camera is what makes the Milky Way and
 star-trail modes possible.</p>
 
 <h2>What four times the pixels actually buys</h2>
 
 <p>Less than it sounds, and more than you would think. The larger sensor is
-paired with a proportionally longer <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-4" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-4" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span>, so the angular size of a pixel
+paired with a proportionally longer <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-4" data-gl-term="focal length" data-gl-href="/gear/askar-v-modular-apo-refractor.html">focal length</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-4" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span>, so the angular size of a pixel
 barely changes: the Pro works out around 3.7 <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-seestar-s30-pro-5" data-gl-term="arcsecond">arcseconds</span><span class="gl-def" id="gl-zwo-seestar-s30-pro-5" hidden>A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across.</span> per pixel, coarse either
 way.</p>
 
@@ -245,6 +245,8 @@ manufacturer also means support comes from the people who wrote the software.</p
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -252,6 +254,7 @@ manufacturer also means support comes from the people who wrote the software.</p
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -286,6 +289,19 @@ manufacturer also means support comes from the people who wrote the software.</p
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

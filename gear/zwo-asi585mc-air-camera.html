@@ -82,7 +82,7 @@
 
 <p>A conventional imaging setup needs a main camera, a guide camera with its own
 optics, and a control computer, each with cables and power of its own. The
-ASI585MC Air puts the imaging sensor, a 2.1MP guide sensor and a full <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-2" data-gl-term="ASIAir">ASIAIR</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-2" hidden>A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.</span>
+ASI585MC Air puts the imaging sensor, a 2.1MP guide sensor and a full <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-2" data-gl-term="ASIAir" data-gl-href="/articles/asiair-astrophotography-control.html">ASIAIR</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-2" hidden>A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.</span>
 controller inside one housing.</p>
 
 <p>What that means in the field is one power lead and a phone. Anyone who has
@@ -101,12 +101,12 @@ range.</p>
 <p>Cooling is a two-stage <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-6" data-gl-term="thermoelectric">thermoelectric</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-6" hidden>Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise.</span> system rated to hold the sensor 30 to 35
 degrees below ambient. In a temperate climate that is a convenience. Imaging
 through a Gulf summer it is the feature that makes long exposures viable at all,
-since <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-7" data-gl-term="dark current">dark current</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-7" hidden>Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled.</span> roughly doubles for every 6 to 7 degrees the sensor gains.</p>
+since <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-7" data-gl-term="dark current" data-gl-href="/gear/zwo-asi585mc-air-camera.html">dark current</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-7" hidden>Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled.</span> roughly doubles for every 6 to 7 degrees the sensor gains.</p>
 
 <h2>Framing, and what the format means</h2>
 
 <p>The 1/1.2 inch format gives a narrower field than an <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-8" data-gl-term="APS-C">APS-C</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-8" hidden>A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers.</span> camera on the same
-telescope, so the largest targets want a shorter <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-9" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-9" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> or a <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-10" data-gl-term="mosaic">mosaic</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-10" hidden>Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.</span>. In
+telescope, so the largest targets want a shorter <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-9" data-gl-term="focal length" data-gl-href="/gear/askar-v-modular-apo-refractor.html">focal length</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-9" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> or a <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-asi585mc-air-camera-10" data-gl-term="mosaic">mosaic</span><span class="gl-def" id="gl-zwo-asi585mc-air-camera-10" hidden>Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.</span>. In
 exchange, a small sensor asks much less of the optics at the edges and makes
 flats considerably less troublesome. Most of the recent gallery was shot with it,
 including <a href="/share/orion-nebula-m42.html">Orion</a> and
@@ -231,6 +231,8 @@ it.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -238,6 +240,7 @@ it.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -272,6 +275,19 @@ it.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

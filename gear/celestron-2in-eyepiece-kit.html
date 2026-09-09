@@ -64,7 +64,7 @@
           </div>
         </div>
         <h1 class="gear-title">Celestron 2in Eyepiece Kit</h1>
-        <p class="gear-desc">A 2 inch <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-1" data-gl-term="eyepiece">eyepiece</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-1" hidden>The small lens you put your eye to at the back of a telescope. Swapping it for another one changes how much bigger everything looks.</span> and filter set kept for visual observing rather than imaging. Useful for finding and framing a target by eye before the camera goes on, and for handing the telescope to someone who would rather look through it than at a screen.</p>
+        <p class="gear-desc">A 2 inch <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-1" data-gl-term="eyepiece" data-gl-href="/gear/celestron-2in-eyepiece-kit.html">eyepiece</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-1" hidden>The small lens you put your eye to at the back of a telescope. Swapping it for another one changes how much bigger everything looks.</span> and filter set kept for visual observing rather than imaging. Useful for finding and framing a target by eye before the camera goes on, and for handing the telescope to someone who would rather look through it than at a screen.</p>
       </div>
 
 
@@ -81,9 +81,9 @@ for producing photographs and slightly beside the point on a clear night when
 someone asks what you are looking at.</p>
 
 <p>This kit stays in the bag for two reasons. Putting an eyepiece in and finding
-something by eye is sometimes quicker than waiting on a <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-2" data-gl-term="plate solving">plate solve</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-2" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span>, particularly
+something by eye is sometimes quicker than waiting on a <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-2" data-gl-term="plate solving" data-gl-href="/articles/asiair-astrophotography-control.html">plate solve</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-2" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span>, particularly
 on the Moon and the planets. And handing someone a telescope they can actually
-look through is a completely different experience from showing them a <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-3" data-gl-term="stacking">stacked</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-3" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>
+look through is a completely different experience from showing them a <span class="gl" role="button" tabindex="0" aria-describedby="gl-celestron-2in-eyepiece-kit-3" data-gl-term="stacking" data-gl-href="/articles/siril-post-processing-guide.html">stacked</span><span class="gl-def" id="gl-celestron-2in-eyepiece-kit-3" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>
 image afterwards.</p>
 
 <h2>What a kit like this is good at</h2>
@@ -214,6 +214,8 @@ than it does for a filter.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -221,6 +223,7 @@ than it does for a filter.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -255,6 +258,19 @@ than it does for a filter.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

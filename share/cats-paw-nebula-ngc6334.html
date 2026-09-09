@@ -111,7 +111,7 @@
       <div class="share-body">
         <p class="lead">The Cat's Paw Nebula is a large <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-1" data-gl-term="emission nebula">emission nebula</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-1" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.</p>
         <p>The Cat's Paw Nebula (NGC 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy - its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.</p>
-        <p>The emission is dominated by <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-2" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-2" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span>, so it responds very well to <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-3" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-3" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-4" data-gl-term="integration">integration</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-4" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span>. At a southern <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-5" data-gl-term="declination">declination</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.</p>
+        <p>The emission is dominated by <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-2" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-2" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span>, so it responds very well to <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-3" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-3" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-4" data-gl-term="integration">integration</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-4" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span>. At a southern <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-5" data-gl-term="declination" data-gl-href="/articles/navigating-the-night-sky.html">declination</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.</p>
       </div>
 
       <div class="share-specs">
@@ -417,6 +417,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -424,6 +426,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -458,6 +461,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

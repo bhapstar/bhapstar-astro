@@ -52,7 +52,7 @@
           </div>
         </div>
         <h1 class="gear-title">Sony A7 III</h1>
-        <p class="gear-desc">The camera I got started in astrophotography with, paired with the Samyang 135mm, the Samyang 14mm and the Rokinon 18mm. A 24-megapixel <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-1" data-gl-term="full-frame">full-frame</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-1" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> mirrorless body that has aged into one of the best-value low-light cameras available. Clean at <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-2" data-gl-term="ISO">ISO</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-2" hidden>How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.</span> 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-3" data-gl-term="star trail">star trail</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-3" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> frame in the gallery.</p>
+        <p class="gear-desc">The camera I got started in astrophotography with, paired with the Samyang 135mm, the Samyang 14mm and the Rokinon 18mm. A 24-megapixel <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-1" data-gl-term="full-frame" data-gl-href="/gear/sony-a7iii-full-frame-camera.html">full-frame</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-1" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> mirrorless body that has aged into one of the best-value low-light cameras available. Clean at <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-2" data-gl-term="ISO">ISO</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-2" hidden>How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.</span> 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-3" data-gl-term="star trail" data-gl-href="/share/star-trails-stills.html">star trail</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-3" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> frame in the gallery.</p>
       </div>
 
 
@@ -112,7 +112,7 @@ the camera is now inexpensive.</p>
 
 <h2>As a general-purpose camera</h2>
 
-<p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-9" data-gl-term="autofocus">autofocus</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-9" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> is the part that has aged best. Eye detection was startling when it
+<p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-sony-a7iii-full-frame-camera-9" data-gl-term="autofocus" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">autofocus</span><span class="gl-def" id="gl-sony-a7iii-full-frame-camera-9" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> is the part that has aged best. Eye detection was startling when it
 launched and it is still entirely adequate: it finds a face across a room, holds it
 while the subject moves, and does it without drama. Combined with 10 frames per
 second and a very deep buffer, it handles children and animals and street work
@@ -239,6 +239,8 @@ photographic equipment where buying used carries almost no penalty.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -246,6 +248,7 @@ photographic equipment where buying used carries almost no penalty.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -280,6 +283,19 @@ photographic equipment where buying used carries almost no penalty.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

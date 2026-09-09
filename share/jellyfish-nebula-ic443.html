@@ -112,7 +112,7 @@
         <p class="lead">A supernova remnant in Gemini, the Jellyfish Nebula is the ghostly aftermath of a stellar explosion that occurred between 3,000 and 30,000 years ago, its tangled filaments still expanding outward through space.</p>
         <p>IC 443 sits around 5,000 light-years away in the constellation Gemini, and is one of the most studied supernova remnants in the sky. Unlike many nebulae which are powered by ongoing star formation, the Jellyfish is a relic, the expanding shockwave from a single catastrophic stellar death, still colliding with surrounding molecular clouds thousands of years later.</p>
         <p>At its heart lies a neutron star, the compressed core left behind after the explosion. The interaction between the expanding remnant and the surrounding interstellar medium creates the complex, filamentary structures that give this nebula its distinctive shape.</p>
-        <p>The Jellyfish is a challenging <span class="gl" role="button" tabindex="0" aria-describedby="gl-jellyfish-nebula-ic443-1" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-jellyfish-nebula-ic443-1" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> target - the signal is fainter than objects like the Orion or Rosette nebulae, and the structure is complex enough that processing requires care to bring out the filaments without introducing artefacts. It rewards patience.</p>
+        <p>The Jellyfish is a challenging <span class="gl" role="button" tabindex="0" aria-describedby="gl-jellyfish-nebula-ic443-1" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-jellyfish-nebula-ic443-1" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> target - the signal is fainter than objects like the Orion or Rosette nebulae, and the structure is complex enough that processing requires care to bring out the filaments without introducing artefacts. It rewards patience.</p>
       </div>
 
       <div class="share-specs">
@@ -418,6 +418,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -425,6 +427,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -459,6 +462,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

@@ -112,7 +112,7 @@
         <p class="lead">The Andromeda Galaxy is our nearest large galactic neighbour - a vast spiral system over two million light-years away, and the most distant object visible to the naked eye.</p>
         <p>Messier 31 is a spiral galaxy roughly 2.537 million light-years from Earth in the constellation Andromeda. It is larger than the Milky Way, spanning some 220,000 light-years across, and is accompanied by several satellite galaxies, most notably M32 and M110, which are often captured in the same field.</p>
         <p>Andromeda and the Milky Way are on a collision course, expected to merge in approximately 4.5 billion years. For now, it drifts toward us at around 110 kilometres per second, its ancient light arriving here after more than two million years of travel.</p>
-        <p>The sheer angular size of Andromeda, it spans roughly six times the diameter of the full Moon on the sky, means that capturing it in full requires either a very short <span class="gl" role="button" tabindex="0" aria-describedby="gl-andromeda-galaxy-m31-1" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-andromeda-galaxy-m31-1" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> or a <span class="gl" role="button" tabindex="0" aria-describedby="gl-andromeda-galaxy-m31-2" data-gl-term="mosaic">mosaic</span><span class="gl-def" id="gl-andromeda-galaxy-m31-2" hidden>Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.</span>. The outer halo and the faint tidal streams are some of the most challenging and rewarding details to pull out.</p>
+        <p>The sheer angular size of Andromeda, it spans roughly six times the diameter of the full Moon on the sky, means that capturing it in full requires either a very short <span class="gl" role="button" tabindex="0" aria-describedby="gl-andromeda-galaxy-m31-1" data-gl-term="focal length" data-gl-href="/gear/askar-v-modular-apo-refractor.html">focal length</span><span class="gl-def" id="gl-andromeda-galaxy-m31-1" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> or a <span class="gl" role="button" tabindex="0" aria-describedby="gl-andromeda-galaxy-m31-2" data-gl-term="mosaic">mosaic</span><span class="gl-def" id="gl-andromeda-galaxy-m31-2" hidden>Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.</span>. The outer halo and the faint tidal streams are some of the most challenging and rewarding details to pull out.</p>
       </div>
 
       <div class="share-specs">
@@ -418,6 +418,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -425,6 +427,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -459,6 +462,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

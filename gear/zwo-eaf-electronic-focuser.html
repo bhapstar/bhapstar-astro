@@ -52,7 +52,7 @@
           </div>
         </div>
         <h1 class="gear-title">ZWO EAF Electronic Focuser</h1>
-        <p class="gear-desc">An electronic <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-1" data-gl-term="autofocus">autofocuser</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-1" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> that fits over the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-2" data-gl-term="focuser">focuser</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-2" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> knob and is driven from the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-3" data-gl-term="ASIAir">ASIAIR</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-3" hidden>A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.</span>. It refocuses as the temperature drifts through the night, which matters more than expected on a fast optical system where the usable focus tolerance is a few tens of <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-4" data-gl-term="micron">microns</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-4" hidden>A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter.</span>.</p>
+        <p class="gear-desc">An electronic <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-1" data-gl-term="autofocus" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">autofocuser</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-1" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> that fits over the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-2" data-gl-term="focuser" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">focuser</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-2" hidden>The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.</span> knob and is driven from the <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-3" data-gl-term="ASIAir" data-gl-href="/articles/asiair-astrophotography-control.html">ASIAIR</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-3" hidden>A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.</span>. It refocuses as the temperature drifts through the night, which matters more than expected on a fast optical system where the usable focus tolerance is a few tens of <span class="gl" role="button" tabindex="0" aria-describedby="gl-zwo-eaf-electronic-focuser-4" data-gl-term="micron">microns</span><span class="gl-def" id="gl-zwo-eaf-electronic-focuser-4" hidden>A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter.</span>.</p>
       </div>
 
 
@@ -216,6 +216,8 @@ in effort than the part is worth.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -223,6 +225,7 @@ in effort than the part is worth.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -257,6 +260,19 @@ in effort than the part is worth.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

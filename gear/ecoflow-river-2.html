@@ -66,7 +66,7 @@
           </div>
         </div>
         <h1 class="gear-title">EcoFlow River 2 Power Station</h1>
-        <p class="gear-desc">256Wh of <span class="gl" role="button" tabindex="0" aria-describedby="gl-ecoflow-river-2-1" data-gl-term="LiFePO4">lithium iron phosphate</span><span class="gl-def" id="gl-ecoflow-river-2-1" hidden>A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground.</span> in a box the size of a shoebox, running the entire rig from its 12V car socket. A 300W AC outlet, a 12.6V DC output rated to 100W, and a measured eleven-watt draw that turns a night&#x27;s power into something you stop thinking about.</p>
+        <p class="gear-desc">256Wh of <span class="gl" role="button" tabindex="0" aria-describedby="gl-ecoflow-river-2-1" data-gl-term="LiFePO4" data-gl-href="/gear/ecoflow-river-2.html">lithium iron phosphate</span><span class="gl-def" id="gl-ecoflow-river-2-1" hidden>A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground.</span> in a box the size of a shoebox, running the entire rig from its 12V car socket. A 300W AC outlet, a 12.6V DC output rated to 100W, and a measured eleven-watt draw that turns a night&#x27;s power into something you stop thinking about.</p>
       </div>
 
 
@@ -247,6 +247,8 @@ but it is worth knowing if you image from a garden with neighbours.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -254,6 +256,7 @@ but it is worth knowing if you image from a garden with neighbours.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -288,6 +291,19 @@ but it is worth knowing if you image from a garden with neighbours.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

@@ -148,8 +148,8 @@
       <div class="share-body">
         <p class="lead">Earth's only natural satellite, the Moon presents an endlessly detailed surface of impact craters, mountain ranges, lava plains and ancient geological history, all within reach of even a modest telescope.</p>
         <p>The Moon is simultaneously the easiest and most demanding target in astrophotography. Easy, because it is enormous, close and extraordinarily bright. Demanding, because that same brightness and the sheer wealth of surface detail mean there is always more to resolve, more dynamic range to manage, and more processing nuance to develop.</p>
-        <p>The dark plains, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-moon-1" data-gl-term="maria">maria</span><span class="gl-def" id="gl-the-moon-1" hidden>The large dark patches on the Moon, which are ancient lava flows rather than seas. Early astronomers named them seas before anyone knew better, and the name stuck.</span>, are solidified lava flows from volcanic eruptions billions of years ago. The bright highlands are older and more heavily cratered, a record of the intense bombardment the inner Solar System experienced in its early history. Every crater, every ray system and every mountain range is a chapter in a story that predates complex life on Earth.</p>
-        <p>Lunar imaging at high resolution is a discipline of its own - atmospheric seeing becomes the primary limiting factor, and the best results come from imaging at high frame rates and selecting only the sharpest frames for <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-moon-2" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-the-moon-2" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>.</p>
+        <p>The dark plains, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-moon-1" data-gl-term="maria" data-gl-href="/articles/photograph-the-moon.html">maria</span><span class="gl-def" id="gl-the-moon-1" hidden>The large dark patches on the Moon, which are ancient lava flows rather than seas. Early astronomers named them seas before anyone knew better, and the name stuck.</span>, are solidified lava flows from volcanic eruptions billions of years ago. The bright highlands are older and more heavily cratered, a record of the intense bombardment the inner Solar System experienced in its early history. Every crater, every ray system and every mountain range is a chapter in a story that predates complex life on Earth.</p>
+        <p>Lunar imaging at high resolution is a discipline of its own - atmospheric seeing becomes the primary limiting factor, and the best results come from imaging at high frame rates and selecting only the sharpest frames for <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-moon-2" data-gl-term="stacking" data-gl-href="/articles/siril-post-processing-guide.html">stacking</span><span class="gl-def" id="gl-the-moon-2" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>.</p>
       </div>
 
       <div class="share-specs">
@@ -477,6 +477,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -484,6 +486,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -518,6 +521,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

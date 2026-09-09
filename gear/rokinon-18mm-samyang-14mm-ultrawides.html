@@ -52,7 +52,7 @@
           </div>
         </div>
         <h1 class="gear-title">Rokinon 18mm f/2.8 &amp; Samyang 14mm f/2.8</h1>
-        <p class="gear-desc">Two manual ultra-wides that do the same job from slightly different distances: cover as much sky as possible, as fast as possible, for as little as possible. These are the meteor shower and Milky Way lenses, and neither of them needs <span class="gl" role="button" tabindex="0" aria-describedby="gl-rokinon-18mm-samyang-14mm-ultrawides-1" data-gl-term="autofocus">autofocus</span><span class="gl-def" id="gl-rokinon-18mm-samyang-14mm-ultrawides-1" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> to do it.</p>
+        <p class="gear-desc">Two manual ultra-wides that do the same job from slightly different distances: cover as much sky as possible, as fast as possible, for as little as possible. These are the meteor shower and Milky Way lenses, and neither of them needs <span class="gl" role="button" tabindex="0" aria-describedby="gl-rokinon-18mm-samyang-14mm-ultrawides-1" data-gl-term="autofocus" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">autofocus</span><span class="gl-def" id="gl-rokinon-18mm-samyang-14mm-ultrawides-1" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span> to do it.</p>
       </div>
 
 
@@ -73,7 +73,7 @@ in frame and the <span class="gl" role="button" tabindex="0" aria-describedby="g
 to pay much for them.</p>
 
 <p>They differ mainly in how far they push it. The 14mm covers about 115 degrees
-diagonally on <span class="gl" role="button" tabindex="0" aria-describedby="gl-rokinon-18mm-samyang-14mm-ultrawides-3" data-gl-term="full-frame">full frame</span><span class="gl-def" id="gl-rokinon-18mm-samyang-14mm-ultrawides-3" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> — close to the practical limit before the sky starts looking
+diagonally on <span class="gl" role="button" tabindex="0" aria-describedby="gl-rokinon-18mm-samyang-14mm-ultrawides-3" data-gl-term="full-frame" data-gl-href="/gear/sony-a7iii-full-frame-camera.html">full frame</span><span class="gl-def" id="gl-rokinon-18mm-samyang-14mm-ultrawides-3" hidden>A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.</span> — close to the practical limit before the sky starts looking
 distorted. The 18mm covers around 100 degrees, which is still very wide but noticeably
 easier to compose with, and it is tiny and light in a way the 14mm is not.</p>
 
@@ -238,6 +238,8 @@ and the settings I use with them are written up in the
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -245,6 +247,7 @@ and the settings I use with them are written up in the
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -279,6 +282,19 @@ and the settings I use with them are written up in the
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

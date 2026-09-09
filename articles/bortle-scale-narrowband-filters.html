@@ -51,7 +51,7 @@
         </figure>
         <p class="article-meta">Capture <span aria-hidden="true">&middot;</span> 4 August 2026 <span aria-hidden="true">&middot;</span> 9 min read</p>
         <h1 class="article-title">The Bortle Scale of Night-Sky Brightness and Light Pollution</h1>
-        <p class="article-standfirst">Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-1" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-1" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filters really do about it.</p>
+        <p class="article-standfirst">Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-1" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-1" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> filters really do about it.</p>
       </div>
 
       <div class="article-body">
@@ -719,7 +719,7 @@ Rosette or the Orion Nebula arrives in a small number of narrow spikes like
 those.</p>
 
 <p>City lighting does the opposite. Old orange street lights at least had a few
-strong colours you could block, which is what the <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-5" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-5" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> filters of the
+strong colours you could block, which is what the <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-5" data-gl-term="light pollution" data-gl-href="/articles/bortle-scale-narrowband-filters.html">light pollution</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-5" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> filters of the
 1990s were built for. Modern LED lighting, which is what the Gulf is lit with
 now, throws out a smooth white spread across every colour at once. There is
 nothing specific to block. It is everywhere.</p>
@@ -787,7 +787,7 @@ nothing specific to block. It is everywhere.</p>
   </g>
 </svg>
 <figcaption>The nebula puts nearly all of its light into a few narrow
-spikes. City lighting spreads its light across everything. A <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-6" data-gl-term="dual narrowband">dual narrowband</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-6" hidden>One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.</span>
+spikes. City lighting spreads its light across everything. A <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-6" data-gl-term="dual narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">dual narrowband</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-6" hidden>One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.</span>
 filter holds two small windows open and shuts the rest of the <span class="gl" role="button" tabindex="0" aria-describedby="gl-bortle-scale-narrowband-filters-7" data-gl-term="spectrum">spectrum</span><span class="gl-def" id="gl-bortle-scale-narrowband-filters-7" hidden>The full spread of colours light can be, from deep blue through to deep red and beyond at both ends.</span>.</figcaption>
 </figure>
 
@@ -1111,6 +1111,8 @@ was photographed from the car.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -1118,6 +1120,7 @@ was photographed from the car.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -1152,6 +1155,19 @@ was photographed from the car.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

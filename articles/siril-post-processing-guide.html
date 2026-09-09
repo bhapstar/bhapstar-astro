@@ -51,7 +51,7 @@
         </figure>
         <p class="article-meta">Processing <span aria-hidden="true">&middot;</span> 24 July 2026 <span aria-hidden="true">&middot;</span> 9 min read</p>
         <h1 class="article-title">Siril: From a Folder of Subframes to a Finished Image</h1>
-        <p class="article-standfirst">The free, open-source route from raw data to a finished picture. Calibration, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-1" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-siril-post-processing-guide-1" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>, and the one rule about <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-2" data-gl-term="stretch">stretching</span><span class="gl-def" id="gl-siril-post-processing-guide-2" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span> that quietly ruins images when it is broken.</p>
+        <p class="article-standfirst">The free, open-source route from raw data to a finished picture. Calibration, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-1" data-gl-term="stacking" data-gl-href="/articles/siril-post-processing-guide.html">stacking</span><span class="gl-def" id="gl-siril-post-processing-guide-1" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span>, and the one rule about <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-2" data-gl-term="stretch" data-gl-href="/articles/siril-post-processing-guide.html">stretching</span><span class="gl-def" id="gl-siril-post-processing-guide-2" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span> that quietly ruins images when it is broken.</p>
       </div>
 
       <div class="article-body">
@@ -424,7 +424,7 @@ dither, it does nothing useful.</p>
 <h3>What each calibration frame is for</h3>
 
 <ul>
-  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-9" data-gl-term="dark frame">Darks</span><span class="gl-def" id="gl-siril-post-processing-guide-9" hidden>An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted.</span></strong> record the sensor's own signal — thermal noise and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-10" data-gl-term="hot pixel">hot
+  <li><strong><span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-9" data-gl-term="dark frame" data-gl-href="/articles/calibration-frames-darks-flats-biases.html">Darks</span><span class="gl-def" id="gl-siril-post-processing-guide-9" hidden>An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted.</span></strong> record the sensor's own signal — thermal noise and <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-10" data-gl-term="hot pixel">hot
   pixels</span><span class="gl-def" id="gl-siril-post-processing-guide-10" hidden>A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later.</span> — at the same exposure, <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-11" data-gl-term="gain">gain</span><span class="gl-def" id="gl-siril-post-processing-guide-11" hidden>The same idea as ISO, but on an astronomy camera. More gain gives a brighter frame with more grain in it.</span> and temperature as your lights. A cooled camera
   makes these reusable for months, which is one of the quieter arguments for cooling.</li>
   <li><strong>Flats</strong> record the optical path: <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-12" data-gl-term="vignetting">vignetting</span><span class="gl-def" id="gl-siril-post-processing-guide-12" hidden>The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.</span>, dust motes, uneven
@@ -490,7 +490,7 @@ without inflating every star into a white disc.</p>
   streetlights or moonlight are additive and roughly smooth while the data is linear.
   Once stretched they are neither, and the extraction can no longer model them.</li>
   <li><strong>Colour calibrating too late.</strong> Run <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-15" data-gl-term="SPCC">SPCC</span><span class="gl-def" id="gl-siril-post-processing-guide-15" hidden>Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste.</span> on linear data. It
-  <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-16" data-gl-term="plate solving">plate-solves</span><span class="gl-def" id="gl-siril-post-processing-guide-16" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span> the frame, looks up the actual stars in your field, and sets the
+  <span class="gl" role="button" tabindex="0" aria-describedby="gl-siril-post-processing-guide-16" data-gl-term="plate solving" data-gl-href="/articles/asiair-astrophotography-control.html">plate-solves</span><span class="gl-def" id="gl-siril-post-processing-guide-16" hidden>The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.</span> the frame, looks up the actual stars in your field, and sets the
   colour balance from real spectra rather than from what you think looks right.</li>
   <li><strong>Too much deconvolution.</strong> It is the fastest way to make an image
   look processed. Small amounts, on linear data, and stop before it starts ringing.</li>
@@ -674,6 +674,8 @@ night on the same target rather than another hour at the keyboard.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -681,6 +683,7 @@ night on the same target rather than another hour at the keyboard.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -715,6 +718,19 @@ night on the same target rather than another hour at the keyboard.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

@@ -112,7 +112,7 @@
         <p class="lead">NGC 2359 is an <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-1" data-gl-term="emission nebula">emission nebula</span><span class="gl-def" id="gl-thors-helmet-ngc2359-1" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> in Canis Major shaped by the powerful stellar winds of a rare Wolf–Rayet star, its bubble-like structure and wing-like extensions forming one of the most dramatic silhouettes in the <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-2" data-gl-term="deep-sky">deep sky</span><span class="gl-def" id="gl-thors-helmet-ngc2359-2" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span>.</p>
         <p>Thor's Helmet lies around 15,000 light-years away in Canis Major. At its heart is WR7, a Wolf–Rayet star - one of the most luminous and short-lived stellar types known, a massive star in the final stages of its life that is blasting material into space at extraordinary speed. The expanding bubble of gas around it, compressed and shaped by the stellar wind, creates the distinctive helmet form.</p>
         <p>Wolf–Rayet stars are rare, there are only a few hundred known in the entire Milky Way, and the nebulae they create are among the most visually striking objects in the sky. NGC 2359 is one of the finest examples accessible to amateur telescopes.</p>
-        <p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-3" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-thors-helmet-ngc2359-3" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> signal in the bubble shell is particularly strong, which makes this a rewarding <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-4" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-thors-helmet-ngc2359-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> target. A Hubble palette or a natural Ha/OIII combination both work well depending on the aesthetic you are going for.</p>
+        <p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-3" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-thors-helmet-ngc2359-3" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> signal in the bubble shell is particularly strong, which makes this a rewarding <span class="gl" role="button" tabindex="0" aria-describedby="gl-thors-helmet-ngc2359-4" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-thors-helmet-ngc2359-4" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> target. A Hubble palette or a natural Ha/OIII combination both work well depending on the aesthetic you are going for.</p>
       </div>
 
       <div class="share-specs">
@@ -418,6 +418,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -425,6 +427,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -459,6 +462,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

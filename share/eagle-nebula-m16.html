@@ -131,7 +131,7 @@
         <p class="lead">Home to the Pillars of Creation, the Eagle Nebula is one of the most iconic targets in all of astrophotography, a stellar nursery where new stars are being born inside towering columns of gas and dust.</p>
         <p>Messier 16, the Eagle Nebula, lies roughly 7,000 light-years away in the constellation Serpens. It was the subject of one of the most famous astronomical images ever taken, Hubble's 1995 photograph of the Pillars of Creation, three enormous columns of molecular gas and dust rising from the nebula's interior, slowly being sculpted by the radiation of newly formed stars.</p>
         <p>This was a target I returned to more than once. The two renders in the gallery represent an earlier attempt and a later revisit with improved equipment and a better understanding of the processing. Comparing the two side by side is one of the more satisfying things about this hobby, seeing the same subject reveal more detail as your technique develops.</p>
-        <p>The Pillars themselves sit near the centre of the nebula and require good seeing and sufficient <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-1" data-gl-term="focal length">focal length</span><span class="gl-def" id="gl-eagle-nebula-m16-1" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> to resolve properly. In <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-2" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-eagle-nebula-m16-2" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span>, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-eagle-nebula-m16-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> and <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-4" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-eagle-nebula-m16-4" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> contrast beautifully - the pillars appear as dark silhouettes against the glowing gas behind them.</p>
+        <p>The Pillars themselves sit near the centre of the nebula and require good seeing and sufficient <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-1" data-gl-term="focal length" data-gl-href="/gear/askar-v-modular-apo-refractor.html">focal length</span><span class="gl-def" id="gl-eagle-nebula-m16-1" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span> to resolve properly. In <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-2" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-eagle-nebula-m16-2" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span>, the <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-eagle-nebula-m16-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> and <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-4" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-eagle-nebula-m16-4" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> contrast beautifully - the pillars appear as dark silhouettes against the glowing gas behind them.</p>
       </div>
 
       <div class="share-specs">
@@ -459,6 +459,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -466,6 +468,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -500,6 +503,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

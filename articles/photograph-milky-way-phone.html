@@ -87,7 +87,7 @@ saw. From a properly dark spot, the same phone in the same hands produces someth
 will want to print.</p>
 
 <p>Dark is closer than most people assume. An hour or so out of most cities is usually
-enough, and the difference is dramatic rather than subtle. Check a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-3" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-photograph-milky-way-phone-3" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map,
+enough, and the difference is dramatic rather than subtle. Check a <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-3" data-gl-term="light pollution" data-gl-href="/articles/bortle-scale-narrowband-filters.html">light pollution</span><span class="gl-def" id="gl-photograph-milky-way-phone-3" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> map,
 head away from the nearest town, and give your eyes twenty minutes to adjust once you
 arrive. The Milky Way often becomes visible to the naked eye while you are still setting
 up.</p>
@@ -229,7 +229,7 @@ start from, and you can adjust from there.</p>
 <figcaption>No manual mode on your phone? You lose very little. Night mode on a tripod, fired again and again, gets you most of the way there.</figcaption>
 </figure>
 
-<p>Two of those matter more than the rest. Focus is the step most people skip: <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-5" data-gl-term="autofocus">autofocus</span><span class="gl-def" id="gl-photograph-milky-way-phone-5" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span>
+<p>Two of those matter more than the rest. Focus is the step most people skip: <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-5" data-gl-term="autofocus" data-gl-href="/gear/zwo-eaf-electronic-focuser.html">autofocus</span><span class="gl-def" id="gl-photograph-milky-way-phone-5" hidden>A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.</span>
 has nothing to lock onto in the dark, so slide it all the way to infinity by hand. And
 push the <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-6" data-gl-term="ISO">ISO</span><span class="gl-def" id="gl-photograph-milky-way-phone-6" hidden>How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.</span> up until the sky looks grey rather than black on screen, then back off one
 step.</p>
@@ -298,7 +298,7 @@ step.</p>
 <p>If you leave the phone running for an hour you get two more things for free, and neither
 of them needs an app you do not already have.</p>
 
-<p><strong>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-8" data-gl-term="star trail">star trail</span><span class="gl-def" id="gl-photograph-milky-way-phone-8" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span></strong> is that hour drawn as a single picture, with the stars
+<p><strong>A <span class="gl" role="button" tabindex="0" aria-describedby="gl-photograph-milky-way-phone-8" data-gl-term="star trail" data-gl-href="/share/star-trails-stills.html">star trail</span><span class="gl-def" id="gl-photograph-milky-way-phone-8" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span></strong> is that hour drawn as a single picture, with the stars
 tracing curved lines as the Earth turns. Some Samsung phones do it in one step: switch to
 Hyperlapse, set the speed to 300x, and a star trails toggle appears. Several other makers
 hide something similar inside their own night modes, so it is worth going through every
@@ -519,6 +519,8 @@ guide</a> covers the next step.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -526,6 +528,7 @@ guide</a> covers the next step.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -560,6 +563,19 @@ guide</a> covers the next step.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

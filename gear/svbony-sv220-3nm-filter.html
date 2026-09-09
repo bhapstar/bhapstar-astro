@@ -64,7 +64,7 @@
           </div>
         </div>
         <h1 class="gear-title">Svbony SV220 3nm Filter</h1>
-        <p class="gear-desc">A 3nm <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-1" data-gl-term="dual narrowband">dual narrowband</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-1" hidden>One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.</span> filter, tighter than the 7nm L-eXtreme on both the <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-2" data-gl-term="hydrogen-alpha">Hydrogen-alpha</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-2" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> and Oxygen-III bands. Narrower <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-3" data-gl-term="passband">passbands</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-3" hidden>The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts.</span> mean better contrast against <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-4" data-gl-term="skyglow">skyglow</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-4" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> and a heavier penalty in signal, so it suits slower optics and longer integrations.</p>
+        <p class="gear-desc">A 3nm <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-1" data-gl-term="dual narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">dual narrowband</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-1" hidden>One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.</span> filter, tighter than the 7nm L-eXtreme on both the <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-2" data-gl-term="hydrogen-alpha">Hydrogen-alpha</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-2" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> and Oxygen-III bands. Narrower <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-3" data-gl-term="passband" data-gl-href="/gear/svbony-sv220-3nm-filter.html">passbands</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-3" hidden>The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts.</span> mean better contrast against <span class="gl" role="button" tabindex="0" aria-describedby="gl-svbony-sv220-3nm-filter-4" data-gl-term="skyglow">skyglow</span><span class="gl-def" id="gl-svbony-sv220-3nm-filter-4" hidden>The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.</span> and a heavier penalty in signal, so it suits slower optics and longer integrations.</p>
       </div>
 
 
@@ -248,6 +248,8 @@ proportionate in a way it does not for a telescope.</p>
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -255,6 +257,7 @@ proportionate in a way it does not for a telescope.</p>
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -289,6 +292,19 @@ proportionate in a way it does not for a telescope.</p>
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

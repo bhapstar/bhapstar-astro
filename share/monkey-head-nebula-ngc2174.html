@@ -111,7 +111,7 @@
       <div class="share-body">
         <p class="lead">NGC 2174 is a glowing <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-1" data-gl-term="emission nebula">emission nebula</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-1" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> in Orion, sculpted by the radiation of massive young stars, its dark dust lanes and bright hydrogen clouds creating the silhouette that gives it its name.</p>
         <p>The Monkey Head Nebula sits around 6,400 light-years away on the outskirts of the Orion constellation. It is an HII region, a cloud of ionised hydrogen energised by a cluster of hot young stars embedded within it. The interaction between the stellar radiation and the surrounding gas and dust creates the pillars, arcs and dark intrusions that define its distinctive appearance.</p>
-        <p>This is a target that benefits enormously from <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-2" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-2" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> imaging. In <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span>, the structure and detail in the gas clouds becomes particularly sharp, and combining Ha with <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-4" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-4" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> data reveals the full complexity of the region in a way that <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-5" data-gl-term="broadband">broadband</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-5" hidden>A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few.</span> alone cannot match.</p>
+        <p>This is a target that benefits enormously from <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-2" data-gl-term="narrowband" data-gl-href="/gear/optolong-l-extreme-filter.html">narrowband</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-2" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> imaging. In <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span>, the structure and detail in the gas clouds becomes particularly sharp, and combining Ha with <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-4" data-gl-term="OIII">OIII</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-4" hidden>The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.</span> data reveals the full complexity of the region in a way that <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-5" data-gl-term="broadband" data-gl-href="/gear/optolong-l-quad-enhance-filter.html">broadband</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-5" hidden>A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few.</span> alone cannot match.</p>
         <p>The Monkey Head is less frequently imaged than its Orion neighbours like M42 or the Horsehead, which means there is more room to produce something distinctive. The dark dust lanes cutting through the bright nebula are particularly satisfying to bring out.</p>
       </div>
 
@@ -418,6 +418,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -425,6 +427,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -459,6 +462,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

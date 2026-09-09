@@ -165,8 +165,8 @@
 
       <div class="share-body">
         <p class="lead">Long-exposure images that reveal the apparent motion of the stars as the Earth rotates - each arc a record of time passing, the fixed geometry of the sky turned into a visual record of our planet's movement.</p>
-        <p><span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-1" data-gl-term="star trail">Star trail</span><span class="gl-def" id="gl-star-trails-stills-1" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> photography captures something that the eye alone cannot perceive - the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the <span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-2" data-gl-term="celestial pole">celestial pole</span><span class="gl-def" id="gl-star-trails-stills-2" hidden>The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.</span>, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.</p>
-        <p>These images can be created either through a single very long exposure or by <span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-3" data-gl-term="stacking">stacking</span><span class="gl-def" id="gl-star-trails-stills-3" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> many shorter exposures - the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.</p>
+        <p><span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-1" data-gl-term="star trail" data-gl-href="/share/star-trails-stills.html">Star trail</span><span class="gl-def" id="gl-star-trails-stills-1" hidden>A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.</span> photography captures something that the eye alone cannot perceive - the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the <span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-2" data-gl-term="celestial pole" data-gl-href="/articles/navigating-the-night-sky.html">celestial pole</span><span class="gl-def" id="gl-star-trails-stills-2" hidden>The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.</span>, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.</p>
+        <p>These images can be created either through a single very long exposure or by <span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-3" data-gl-term="stacking" data-gl-href="/articles/siril-post-processing-guide.html">stacking</span><span class="gl-def" id="gl-star-trails-stills-3" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> many shorter exposures - the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.</p>
         <p>The <span class="gl" role="button" tabindex="0" aria-describedby="gl-star-trails-stills-4" data-gl-term="timelapse">time-lapse</span><span class="gl-def" id="gl-star-trails-stills-4" hidden>Hundreds of still frames played back one after another as a short video, so hours of sky movement pass in seconds.</span> videos in the gallery show the same phenomenon in motion - the still composites and the video sequences complement each other, the stills showing the full geometry of the night's movement and the videos making the rotation viscerally apparent.</p>
       </div>
 
@@ -495,6 +495,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -502,6 +504,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -536,6 +539,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

@@ -167,7 +167,7 @@
         <p class="lead">Some quiet nights beneath the arc of our own galaxy, a reminder that astrophotography is not just about the objects in the sky, but about the experience of being small beneath them.</p>
         <p>These images are something different from the rest of the gallery. Rather than isolating a specific <span class="gl" role="button" tabindex="0" aria-describedby="gl-milky-way-and-me-1" data-gl-term="deep-sky">deep-sky</span><span class="gl-def" id="gl-milky-way-and-me-1" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span> object, they place a human figure within the wider scene - the Milky Way arching overhead, the horizon grounding the composition, the gap between the cosmic and the personal collapsed into a single frame.</p>
         <p>The core of the Milky Way, the brightest and most structured part of the band, is visible from darker sites during the summer months in the northern hemisphere. What we are seeing is the direction toward the galactic centre, some 26,000 light-years away, dense with stars, dust clouds and the glow of billions of suns.</p>
-        <p>Milky Way landscape photography sits at the intersection of astrophotography and landscape photography, and the techniques differ somewhat from pure deep-sky work. Single exposures or short sequences rather than long <span class="gl" role="button" tabindex="0" aria-describedby="gl-milky-way-and-me-2" data-gl-term="stacking">stacked</span><span class="gl-def" id="gl-milky-way-and-me-2" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> sessions, wide fast lenses, and careful attention to foreground composition all come into play.</p>
+        <p>Milky Way landscape photography sits at the intersection of astrophotography and landscape photography, and the techniques differ somewhat from pure deep-sky work. Single exposures or short sequences rather than long <span class="gl" role="button" tabindex="0" aria-describedby="gl-milky-way-and-me-2" data-gl-term="stacking" data-gl-href="/articles/siril-post-processing-guide.html">stacked</span><span class="gl-def" id="gl-milky-way-and-me-2" hidden>Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.</span> sessions, wide fast lenses, and careful attention to foreground composition all come into play.</p>
       </div>
 
       <div class="share-specs">
@@ -495,6 +495,8 @@
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -502,6 +504,7 @@
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -536,6 +539,19 @@
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();
