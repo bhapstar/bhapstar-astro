@@ -392,8 +392,8 @@ const HIDE_FIELD_NOTES = true;
       // Comets. One at a time is the usual case; the cap only matters if a
       // very long, very slow one is still crossing when the next is due.
       let comets = [], nextComet = 0, lastFrame = 0;
-      const COMET_MIN_GAP = 9000;    // ms between arrivals
-      const COMET_MAX_GAP = 26000;
+      const COMET_MIN_GAP = 600;    // ms between arrivals
+      const COMET_MAX_GAP = 16000;
       const COMET_MAX     = 2;
 
       function rand(min, max) { return min + Math.random() * (max - min); }
@@ -520,7 +520,7 @@ const HIDE_FIELD_NOTES = true;
 
         draw(t);   // clears the canvas and repaints the stars
 
-        if (!nextComet) nextComet = t + rand(2500, 8000);
+        if (!nextComet) nextComet = t + rand(1500, 3000);
         if (t >= nextComet) {
           if (comets.length < COMET_MAX) spawnComet();
           nextComet = t + rand(COMET_MIN_GAP, COMET_MAX_GAP);
