@@ -2544,11 +2544,16 @@ a[href="prints.html"], a[href*="prints"] {
   color: #9c8abf;
   font-size: 0.78rem;
 }
+/* The banner keeps its dark gradient in both themes, so the button cannot
+   take var(--text) or it turns near-black on near-black under the light
+   theme. It is pinned to the light ink instead. */
 .pwa-banner-btn {
   flex-shrink: 0;
   padding: 6px 16px;
   font-size: 0.82rem;
+  color: rgba(240,238,250,0.96);
 }
+.pwa-banner-btn:hover { color: #fff; }
 .pwa-banner-close {
   background: none;
   border: none;
@@ -9230,6 +9235,25 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
    markup degrades to the old behaviour instead of killing every
    tooltip on the page. */
 .sh-sky-tip{ cursor:pointer; }
+
+/* Tooltips anchor to the block holding the trigger, not to the trigger
+   and not to the whole card. Anchored to the trigger, a percentage width
+   against a small pill squashed the tip into a column of single words.
+   Anchored to the card, it opened a full row away from the thing it was
+   describing. These three blocks are wide enough to read and close
+   enough to follow. */
+.sh-sky-head,
+.sh-sky-gear,
+.sh-sky-timing{ position:relative; }
+
+/* A tip is drawn inside its own card. Sibling cards are positioned too,
+   so without this the next card down paints straight over it, which is
+   worse for the chips that carry a stacking context of their own from
+   opacity. Lifting the whole row keeps everything inside it on top. */
+.sh-sky-list li:hover,
+.sh-sky-list li:focus-within{ z-index:6; }
+.sh-sky-list li:has(.is-open){ z-index:7; }
+
 .sh-sky-i::after,
 .sh-sky-tip::after{
   content:attr(data-tip);
@@ -9245,9 +9269,24 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   opacity:0; visibility:hidden;
   transition:opacity .14s ease;
 }
+/* The timing column is the right-hand edge of the card and only 168px
+   wide, so a tip capped at 100% of it would be unreadable and one opening
+   rightwards would run off the panel. It opens leftwards, into the card. */
+.sh-sky-timing .sh-sky-i::after,
+.sh-sky-timing .sh-sky-tip::after{
+  left:auto; right:0;
+  width:max-content; max-width:270px;
+}
 .sh-sky-i:hover::after, .sh-sky-i.is-open::after,
 .sh-sky-tip:hover::after, .sh-sky-tip.is-open::after{
   opacity:1; visibility:visible;
+}
+
+/* The type pill is a button now, so it needs the button reset the other
+   chips already carry. */
+button.sh-sky-tag{
+  border:0; cursor:pointer;
+  font-family:inherit; line-height:inherit; text-align:left;
 }
 
 .sh-sky-toggle{ font-size:.85rem; padding:8px 16px; }
@@ -9488,7 +9527,11 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
   border:1px solid transparent;
   font-family:inherit; line-height:inherit; text-align:left;
 }
-.sh-sky-chip:hover{ filter:brightness(1.12); }
+/* Not filter:brightness(). A filter makes the chip the containing block
+   for its own tooltip, which re-anchored the tip to a 60px pill and left
+   it one word wide, and it also traps the tip in a new stacking context
+   so the next card paints over it. A border does neither. */
+.sh-sky-chip:hover{ border-color:currentColor; }
 .sh-sky-chip:focus-visible,
 .sh-sky-kit-chip:focus-visible{
   outline:2px solid rgba(var(--accent-rgb),0.6); outline-offset:2px;

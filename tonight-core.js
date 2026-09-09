@@ -265,6 +265,23 @@ var RAD = Math.PI / 180;
 
   var LABEL = { emission:'Emission nebula', galaxy:'Galaxy', cluster:'Star cluster', wide:'Wide field' };
 
+  /* One line per type, for the pill beside each target name. Someone new
+     reads "emission nebula" and has no idea whether that is good news for
+     them, so each line says what the thing is and what it means for the
+     shot rather than repeating the classification. */
+  var TYPETIP = {
+    emission: 'A cloud of gas lit up by nearby stars. It glows in a few narrow ' +
+              'colours, which is why a narrowband filter helps so much here.',
+    galaxy:   'Another island of stars far beyond our own. The light is faint ' +
+              'and spread across all colours, so a dark sky matters more than ' +
+              'any filter.',
+    cluster:  'A group of stars that formed together and still travel together. ' +
+              'Bright and easy to catch, though the stars bloat if you give it ' +
+              'too much exposure.',
+    wide:     'A large stretch of sky rather than one object. Shot with a camera ' +
+              'lens rather than a telescope, and it needs a dark site.'
+  };
+
   /* ── Scoring ────────────────────────────────── */
   function bortleFactor(type, b) {
     if (type === 'emission') return b >= 7 ? 0.75 : 1.0;
@@ -402,6 +419,7 @@ var RAD = Math.PI / 180;
     targetAltAz: targetAltAz,
     TARGETS: TARGETS,
     LABEL: LABEL,
+    TYPETIP: TYPETIP,
     FILTERS: FILTERS,
     filterFor: filterFor,
     KIT: KIT,
