@@ -94,22 +94,22 @@ OUT = "start-here.html"
 ARTICLE_DIR = "articles"
 
 PAGE_TITLE = "Start Here"
-PAGE_DESC = ("The equipment matters less than the sky you point it at. Four "
-             "galaxies taken with a telescope that fits in a shoulder bag, one "
-             "thing to try tonight with nothing at all, and a short route "
-             "through the rest depending on where you are.")
+PAGE_DESC = ("Work out what is worth pointing at tonight from where you are, "
+             "one thing to try on the next clear night with no equipment at "
+             "all, and a short route through the rest.")
 
-SUBTITLE = "The equipment matters less than the sky you point it at."
+SUBTITLE = "What is up tonight from where you are, and where to go from there."
 
-# No claim about cost here. The images directly below cost real money and
-# real hours, and their captions say so, so a "costs nothing" line sitting
-# on top of them reads as a bait however carefully it is qualified. That
-# promise now lives in TONIGHT_LEDE, where it is the literal truth.
-INTRO = ("This page is for anyone who has looked at a picture of a galaxy and "
-         "wondered whether an ordinary person could take one. You can, and "
-         "with less equipment than you would guess. The harder part is not the "
-         "kit. It is getting under a sky dark enough to be worth the trouble, "
-         "and that is the first thing this page will help you work out.")
+# No claim about cost here. The free promise lives in TONIGHT_LEDE, where
+# it is the literal truth. This paragraph points at the sky panel instead,
+# because that is the first thing on the page and the thing a reader needs
+# an answer from before any of the rest is useful.
+INTRO = ("This page is for anyone who has looked at a picture of the night "
+         "sky and wondered whether an ordinary person could take one. You "
+         "can, and with less equipment than you would guess. The panel below "
+         "works out what is above you tonight from where you are, and how "
+         "dark your sky is. Start there, and the rest of the page follows "
+         "from it.")
 
 
 # ------------------------------------------------------------------ 1. SKY
@@ -197,14 +197,14 @@ SKY_TIPS = {
              "whether it is up while the thing you want is up."),
     "sky": ("How bright your own sky is, from the picker above. It "
             "decides which objects are realistic from where you are, and "
-            "it is the single biggest thing separating a good night from "
-            "a frustrating one."),
+            "it has more effect on what you can capture than any other "
+            "single thing."),
     "window": ("The stretch when this object sits more than 30 degrees "
-               "above the horizon and the sky is properly dark. Lower "
-               "than that you are shooting through too much atmosphere: "
-               "stars bloat, detail softens and haze near the horizon "
-               "eats the contrast. It is not when the object is visible, "
-               "it is when it is worth your time."),
+               "above the horizon and the sky is properly dark. Below "
+               "that you are shooting through more atmosphere, so stars "
+               "bloat and haze near the horizon softens the detail. Aim "
+               "for this window rather than the whole time the object is "
+               "up."),
 }
 
 # Shown before the panel fills in, and permanently if JavaScript is off.
