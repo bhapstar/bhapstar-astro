@@ -463,6 +463,7 @@ const HIDE_FIELD_NOTES = true;
       qr: 1,           // generic printed QR
       card: 1,         // printed QR cards
       x: 1,            // links posted on X
+      pwa: 1,          // launched from an installed home-screen icon
       'pdf-phone': 1,  // QR on the phone field card
       'pdf-camera': 1, // QR on the camera field card
       'pdf-meteors': 1, // QR on the meteor shower field card
