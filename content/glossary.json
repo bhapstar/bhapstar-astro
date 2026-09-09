@@ -189,7 +189,14 @@
     },
     {
       "term": "coma",
-      "def": "A fault that makes stars near the corners of the frame grow small wings, so they look like tiny comets rather than points."
+      "def": "A fault that makes stars near the corners of the frame grow small wings, so they look like tiny comets rather than points.",
+      "avoid": [
+        "constellation Coma",
+        "Coma Berenices"
+      ],
+      "except": [
+        "comets"
+      ]
     },
     {
       "term": "continuum",
@@ -843,7 +850,13 @@
         "stretched",
         "stretching"
       ],
-      "def": "Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame."
+      "def": "Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.",
+      "avoid": [
+        "stretch of",
+        "start to stretch",
+        "starts to stretch",
+        "starting to stretch"
+      ]
     },
     {
       "term": "subframe",
