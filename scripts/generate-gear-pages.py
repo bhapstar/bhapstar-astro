@@ -27,6 +27,7 @@ import json
 import os
 import re
 from datetime import datetime, timezone
+from urllib.parse import quote
 
 # Shared with generate-article-pages.py. sys.path[0] is this script's own
 # folder, so scripts/glossary.py is importable without any path juggling.
@@ -410,6 +411,122 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
     
     return html_content
 
+
+# ---------------------------------------------------------------------------
+# Tile grid inside gear.html.
+#
+# gear.html builds its grid client-side from site-data.json, which means the
+# HTML that ships contains no link to any gear page at all. A crawler that
+# does not run JavaScript sees an index that links nowhere, and a reader on a
+# slow connection sees skeletons. articles.html solved this by writing real
+# tiles at build time and letting the script re-render identical markup once
+# the JSON lands; this does the same for gear.
+#
+# The markup below must stay in step with the template in gear.html's own
+# render(). If the card structure changes there, change it here too, or the
+# tiles will visibly reflow the moment the JSON arrives.
+# ---------------------------------------------------------------------------
+INDEX_PAGE = "gear.html"
+TILES_START = "<!-- GEAR-TILES:START -->"
+TILES_END = "<!-- GEAR-TILES:END -->"
+
+ON_ARROW = ('<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+            'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
+            'aria-hidden="true"><path d="M2.5 6h7"/><path d="M6.5 3l3 3-3 3"/></svg>')
+
+OUT_ARROW = ('<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+             'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" '
+             'aria-hidden="true"><path d="M4 2.5h5.5V8"/><path d="M9.5 2.5 2.5 9.5"/></svg>')
+
+
+def cover_for(entry):
+    """First image on the entry, matching getList()/getCover() in gear.html."""
+    alt_fallback = entry.get('alt') or entry.get('title') or ''
+    images = entry.get('images') or []
+    if images:
+        first = images[0]
+        return first.get('file', ''), (first.get('alt') or alt_fallback)
+    files = entry.get('files') or []
+    if files:
+        return files[0], alt_fallback
+    return entry.get('file', ''), alt_fallback
+
+
+def buy_links_for(entry):
+    """Same filter gear.html applies: a retailer name and a real http(s) URL."""
+    if not SHOW_BUY_LINKS:
+        return []
+    out = []
+    for b in entry.get('buy') or []:
+        url = (b.get('url') or '').strip() if isinstance(b, dict) else ''
+        if not b or not isinstance(b, dict) or not b.get('retailer'):
+            continue
+        if not re.match(r'^https?://', url, re.I):
+            continue
+        out.append(b)
+    return out
+
+
+def build_tile(entry, eager=False):
+    slug = entry['slug']
+    page_url = f"/{OUT_DIR}/{quote(slug)}.html"
+    cover, alt = cover_for(entry)
+    thumb = thumb_for(cover) or ''
+
+    # The first tile is above the fold on every screen, so it loads eagerly.
+    # Everything below it waits, exactly as the article grid does.
+    loading = 'eager' if eager else 'lazy'
+
+    buys = ''.join(
+        f'<a class="card-buy" href="{esc((b.get("url") or "").strip())}" '
+        f'target="_blank" rel="'
+        + ('sponsored noopener noreferrer' if b.get('affiliate') is True
+           else 'noopener noreferrer')
+        + f'">{esc(b.get("retailer"))}{OUT_ARROW}</a>'
+        for b in buy_links_for(entry)
+    )
+    buy_block = f'<div class="card-buys">{buys}</div>' if buys else ''
+
+    return (
+        f'        <article class="card">\n'
+        f'          <a class="card-hit" href="{esc(page_url)}" tabindex="-1" '
+        f'aria-hidden="true"></a>\n'
+        f'          <img src="{esc(thumb)}" alt="{esc(alt)}" '
+        f'loading="{loading}" decoding="async">\n'
+        f'          <div class="cap">\n'
+        f'            <div class="t">{esc(entry.get("title", ""))}</div>\n'
+        f'            <div class="d">{esc(entry.get("desc", ""))}</div>\n'
+        f'            <div class="card-acts">\n'
+        f'              <a class="card-writeup" href="{esc(page_url)}">'
+        f'Read the full write-up{ON_ARROW}</a>\n'
+        f'              {buy_block}\n'
+        f'            </div>\n'
+        f'          </div>\n'
+        f'        </article>\n'
+    )
+
+
+def write_tiles(gear_items):
+    """Rewrite the marked tile block inside gear.html. Leaves the rest alone."""
+    if not os.path.exists(INDEX_PAGE):
+        print(f"  ! {INDEX_PAGE} not found, tile block skipped")
+        return
+    page = open(INDEX_PAGE, encoding='utf-8').read()
+    if TILES_START not in page or TILES_END not in page:
+        print(f"  ! markers missing in {INDEX_PAGE}, tile block skipped")
+        return
+
+    tiles = ''.join(build_tile(e, eager=(i == 0))
+                    for i, e in enumerate(gear_items))
+    new_block = f"{TILES_START}\n{tiles}        {TILES_END}"
+    pattern = re.compile(re.escape(TILES_START) + r".*?" + re.escape(TILES_END),
+                         re.DOTALL)
+    updated = pattern.sub(lambda _: new_block, page, count=1)
+    if updated != page:
+        open(INDEX_PAGE, 'w', encoding='utf-8').write(updated)
+    print(f"\u2713 {INDEX_PAGE}  ({len(gear_items)} tile(s) written)")
+
+
 def main():
     # Load data
     with open(DATA, 'r', encoding='utf-8') as f:
@@ -456,6 +573,8 @@ def main():
             os.remove(filepath)
             print(f"✗ deleted stale {filepath}")
     
+    write_tiles(gear_items)
+
     print(f"\nGenerated {len(generated_slugs)} gear pages, "
           f"{gloss_total} glossary explainers.")
 

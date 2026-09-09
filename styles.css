@@ -9607,3 +9607,81 @@ html[data-theme="light"] .sim-field select:focus{ background-color:#fff; }
 html[data-theme="light"] .sh-sky-thumb{ background:rgba(255,255,255,0.6); }
 html[data-theme="light"] .sh-sky-datebtn{ background:rgba(255,255,255,0.72); }
 html[data-theme="light"] .sh-sky-kit-chip.lvl-0{ opacity:.55; }
+
+/* ===========================================================
+   PAGE: Glossary (generate-glossary.py)
+   Terms in a two-column definition list, grouped by letter.
+   =========================================================== */
+.gp-subtitle{
+  margin:10px 0 0; font-size:1.02rem; color:var(--text);
+}
+.gp-intro{
+  margin:10px 0 0; max-width:64ch; color:var(--muted); line-height:1.62;
+}
+
+/* The A to Z rail. Letters with no terms stay in place, dimmed, rather than
+   being dropped: a rail that changes shape as terms are added is harder to
+   use than one with a few quiet gaps. */
+.gp-jump{
+  display:flex; flex-wrap:wrap; gap:2px; margin:26px 0 0;
+  padding:9px 11px; border:1px solid var(--line); border-radius:12px;
+  background:var(--bg2);
+}
+.gp-jump a, .gp-jump span{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:26px; height:26px; padding:0 4px; border-radius:7px;
+  font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+  text-decoration:none;
+}
+.gp-jump-on{
+  color:var(--accent);
+  border:1px solid transparent;
+}
+.gp-jump-on:hover{
+  border-color:rgba(var(--accent-rgb),0.45);
+  background:rgba(var(--accent-rgb),0.10);
+}
+.gp-jump-off{ color:var(--muted); opacity:0.35; }
+
+.gp-count{
+  margin:12px 0 0; font-size:0.82rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.09em;
+}
+
+.gp-group{ margin:34px 0 0; scroll-margin-top:84px; }
+.gp-letter{
+  margin:0 0 12px; font-size:1.5rem; line-height:1;
+  color:var(--accent); border-bottom:1px solid var(--line); padding-bottom:9px;
+}
+
+.gp-list{ margin:0; display:grid; gap:0; }
+
+/* Each entry is its own grid so the term column stays aligned down the page
+   on a wide screen, and collapses to stacked rows on a narrow one. The id
+   sits on this wrapper rather than the <dt>, so a deep link scrolls to the
+   term and its definition together. */
+.gp-item{
+  display:grid; grid-template-columns:minmax(150px,230px) 1fr; gap:6px 26px;
+  padding:13px 0; border-bottom:1px solid var(--line);
+  scroll-margin-top:84px;
+}
+.gp-item:last-child{ border-bottom:0; }
+.gp-item:target{
+  background:rgba(var(--accent-rgb),0.07);
+  border-radius:9px; padding-left:11px; padding-right:11px;
+}
+.gp-term{
+  margin:0; font-weight:650; color:var(--text); line-height:1.45;
+}
+.gp-alias{
+  display:block; margin-top:3px;
+  font-size:0.79rem; font-weight:400; color:var(--muted);
+}
+.gp-def{
+  margin:0; color:var(--muted); line-height:1.62;
+}
+
+@media (max-width:620px){
+  .gp-item{ grid-template-columns:1fr; gap:4px; }
+  .gp-letter{ font-size:1.3rem; }
+}

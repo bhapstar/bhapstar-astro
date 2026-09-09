@@ -32,6 +32,9 @@ Why the order matters:
               is order-independent too, but it runs last for the same reason
               as the sitemap: it describes everything above it.
   8. downloads  field-cards.html, the index of every printable field card.
+  9. glossary   glossary.html, every term in content/glossary.json on one
+                page. Last, because it depends on nothing the other stages
+                write and nothing depends on it.
               Built from site-data.json and from the PDFs on disk, so it is
               order-independent, but it runs after the article pages because
               every card links back to the article it came from.
@@ -66,6 +69,7 @@ STAGES = [
     ("starthere", "generate-start-here.py"),
     ("feed",    "generate-feed.py"),
     ("downloads", "generate-downloads.py"),
+    ("glossary", "generate-glossary.py"),
 ]
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
