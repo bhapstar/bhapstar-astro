@@ -9648,6 +9648,16 @@ html[data-theme="light"] .sh-sky-kit-chip.lvl-0{ opacity:.55; }
   text-transform:uppercase; letter-spacing:0.09em;
 }
 
+/* Picking a letter from the rail jumps a long way down a 149 entry list, and
+   an instant jump gives no sense of how far you have moved or which direction
+   you went. Scoped to this page with :has() so the rest of the site keeps its
+   instant anchor behaviour, and dropped entirely for anyone who has asked for
+   reduced motion. */
+html:has(body.page-glossary){ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){
+  html:has(body.page-glossary){ scroll-behavior:auto; }
+}
+
 .gp-group{ margin:34px 0 0; scroll-margin-top:84px; }
 .gp-letter{
   margin:0 0 12px; font-size:1.5rem; line-height:1;

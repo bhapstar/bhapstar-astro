@@ -369,6 +369,10 @@ const HIDE_FIELD_NOTES = true;
          <canvas> layered above the bg slideshow
        - Each star gently breathes in and out
          using a slow sine wave (3–9 s cycle)
+       - Plus an occasional comet crossing the
+         frame, sharing this canvas and this one
+         rAF loop rather than adding a second of
+         either
        - Skipped if prefers-reduced-motion is set
     ───────────────────────────────────────── */
     (function initHeroStars() {
@@ -384,6 +388,13 @@ const HIDE_FIELD_NOTES = true;
       const ctx = canvas.getContext('2d');
       let W, H, stars = [], raf;
       const COUNT = 160;
+
+      // Comets. One at a time is the usual case; the cap only matters if a
+      // very long, very slow one is still crossing when the next is due.
+      let comets = [], nextComet = 0, lastFrame = 0;
+      const COMET_MIN_GAP = 9000;    // ms between arrivals
+      const COMET_MAX_GAP = 26000;
+      const COMET_MAX     = 2;
 
       function rand(min, max) { return min + Math.random() * (max - min); }
 
@@ -401,10 +412,90 @@ const HIDE_FIELD_NOTES = true;
         }));
       }
 
+      /* A comet starts just outside one edge and is aimed at a random point
+         well inside the frame. Aiming rather than picking a heading is what
+         keeps the directions genuinely varied: choose an angle alone and most
+         of them end up running the same diagonal, because only a narrow band
+         of angles from any given edge actually crosses the canvas. */
+      function spawnComet() {
+        const margin = 90;
+        const edge = Math.floor(rand(0, 4));
+        let x, y;
+        if (edge === 0)      { x = rand(-margin, W + margin); y = -margin; }
+        else if (edge === 1) { x = W + margin; y = rand(-margin, H + margin); }
+        else if (edge === 2) { x = rand(-margin, W + margin); y = H + margin; }
+        else                 { x = -margin; y = rand(-margin, H + margin); }
+
+        const tx = rand(W * 0.15, W * 0.85);
+        const ty = rand(H * 0.15, H * 0.85);
+        const dx = tx - x, dy = ty - y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const speed = rand(0.20, 0.46);          // px per millisecond
+        const span  = dist + rand(0.25, 0.85) * Math.hypot(W, H);
+
+        comets.push({
+          x, y,
+          vx: (dx / dist) * speed,
+          vy: (dy / dist) * speed,
+          speed,
+          r:    rand(0.9, 2.2),                  // head radius
+          tail: rand(70, 240),                   // tail length in px
+          peak: rand(0.35, 0.80),                // brightest it ever gets
+          span,                                  // px it travels before it is gone
+          fadeIn:  rand(90, 220),                // px
+          fadeOut: Math.min(span * 0.35, 300),   // px
+          gone: 0,                               // px travelled so far
+        });
+      }
+
+      function drawComet(c, dt) {
+        c.x += c.vx * dt;
+        c.y += c.vy * dt;
+        c.gone += c.speed * dt;
+
+        // Fade in on arrival and out on departure, so one never simply pops
+        // into or out of the frame.
+        const a = c.peak
+          * Math.min(1, c.gone / c.fadeIn)
+          * Math.min(1, Math.max(0, (c.span - c.gone) / c.fadeOut));
+        if (a <= 0.01) return;
+
+        const ux = c.vx / c.speed, uy = c.vy / c.speed;   // unit heading
+        const bx = c.x - ux * c.tail, by = c.y - uy * c.tail;
+        const px = -uy, py = ux;                          // perpendicular
+
+        // The tail is a triangle, full width at the head and a point at the
+        // far end, because a stroked line cannot taper.
+        const g = ctx.createLinearGradient(c.x, c.y, bx, by);
+        g.addColorStop(0,    'rgba(255,255,255,' + a.toFixed(3) + ')');
+        g.addColorStop(0.32, 'rgba(214,205,255,' + (a * 0.34).toFixed(3) + ')');
+        g.addColorStop(1,    'rgba(167,139,250,0)');
+        ctx.beginPath();
+        ctx.moveTo(c.x + px * c.r, c.y + py * c.r);
+        ctx.lineTo(bx, by);
+        ctx.lineTo(c.x - px * c.r, c.y - py * c.r);
+        ctx.closePath();
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        // Head, with a soft halo so it reads as light rather than a dot.
+        const halo = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r * 4);
+        halo.addColorStop(0, 'rgba(255,255,255,' + a.toFixed(3) + ')');
+        halo.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r * 4, 0, Math.PI * 2);
+        ctx.fillStyle = halo;
+        ctx.fill();
+      }
+
       function resize() {
         W = canvas.width  = hero.offsetWidth;
         H = canvas.height = hero.offsetHeight;
         build();
+        // Anything mid-flight was aimed at the old dimensions.
+        comets = [];
+        nextComet = 0;
+        lastFrame = 0;
       }
 
       function draw(t) {
@@ -421,7 +512,24 @@ const HIDE_FIELD_NOTES = true;
         }
       }
 
-      function frame(t) { draw(t); raf = requestAnimationFrame(frame); }
+      function frame(t) {
+        // Clamped, so a tab that has been in the background for a minute does
+        // not resume with every comet teleported off the far side.
+        const dt = lastFrame ? Math.min(t - lastFrame, 50) : 16;
+        lastFrame = t;
+
+        draw(t);   // clears the canvas and repaints the stars
+
+        if (!nextComet) nextComet = t + rand(2500, 8000);
+        if (t >= nextComet) {
+          if (comets.length < COMET_MAX) spawnComet();
+          nextComet = t + rand(COMET_MIN_GAP, COMET_MAX_GAP);
+        }
+        for (const c of comets) drawComet(c, dt);
+        comets = comets.filter(c => c.gone < c.span);
+
+        raf = requestAnimationFrame(frame);
+      }
 
       resize();
 
