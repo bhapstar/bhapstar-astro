@@ -1397,7 +1397,10 @@ SCRIPT = """
           thumb +
           '<p class="sh-sky-head">' +
             '<a class="sh-sky-name" href="/share/' + tg.slug + '.html">' + tg.n + '</a>' +
-            '<span class="sh-sky-tag sh-sky-tag-' + tg.t + '">' + C.LABEL[tg.t] + '</span>' +
+            '<button type="button" class="sh-sky-tag sh-sky-tag-' + tg.t +
+              ' sh-sky-tip" data-tip="' + attr(C.TYPETIP[tg.t] || '') + '" ' +
+              'aria-label="' + attr(C.LABEL[tg.t] + '. Tap for what this means') + '">' +
+              C.LABEL[tg.t] + '</button>' +
           '</p>' +
           '<p class="sh-sky-desc">' + tg.d + '</p>' +
           '<p class="sh-sky-why">' + reasonFor(r) + '</p>' +
