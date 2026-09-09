@@ -109,9 +109,9 @@
       </figure>
 
       <div class="share-body">
-        <p class="lead">The Cat's Paw Nebula is a large emission nebula in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.</p>
+        <p class="lead">The Cat's Paw Nebula is a large <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-1" data-gl-term="emission nebula">emission nebula</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-1" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> in the southern constellation Scorpius, named for the rounded lobes of ionised hydrogen that resemble a giant paw print.</p>
         <p>The Cat's Paw Nebula (NGC 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy - its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.</p>
-        <p>The emission is dominated by hydrogen-alpha, so it responds very well to narrowband and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest integration. At a southern declination of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.</p>
+        <p>The emission is dominated by <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-2" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-2" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span>, so it responds very well to <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-3" data-gl-term="narrowband">narrowband</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-3" hidden>A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.</span> and dual-band filters - the paw structure and the dark dust lanes separating the lobes come through strongly even at modest <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-4" data-gl-term="integration">integration</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-4" hidden>The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.</span>. At a southern <span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-5" data-gl-term="declination">declination</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> of about -36°, it never climbs high from here, so a clean southern horizon and steady seeing make a real difference.</p>
       </div>
 
       <div class="share-specs">
@@ -404,6 +404,119 @@
 <div id="siteFooter"></div>
 
 <script src="/partials/partials.js"></script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 <script src="/protect-images.js"></script>
 </body>
 </html>

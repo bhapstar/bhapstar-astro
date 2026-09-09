@@ -108,10 +108,10 @@
       </figure>
 
       <div class="share-body">
-        <p class="lead">The brightest, densest stretch of our home galaxy - the direction of the galactic centre, thick with star clouds and threaded with the dark dust lanes of the Great Rift.</p>
+        <p class="lead">The brightest, densest <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-milky-way-1" data-gl-term="stretch">stretch</span><span class="gl-def" id="gl-the-milky-way-1" hidden>Brightening the faint parts of an image far more than the bright parts. It is the step that makes a nebula appear out of what looked like a black frame.</span> of our home galaxy - the direction of the galactic centre, thick with star clouds and threaded with the dark dust lanes of the Great Rift.</p>
         <p>This is the view toward the heart of the Milky Way. The bright, textured band running through the frame is not a nebula or a cluster but the accumulated light of hundreds of millions of stars too distant and too tightly packed to resolve individually, the galactic disc seen edge-on, from our position roughly 26,000 light-years out along the Orion Arm.</p>
-        <p>The dark channels cutting through that glow are the Great Rift: enormous clouds of cold molecular gas and dust lying between us and the core, absorbing the light of everything behind them. They are not empty space but the opposite, some of the densest material in the galaxy, and the raw ingredients from which future generations of stars will form. Scattered through the star clouds are knots of pink and teal where individual emission nebulae and open clusters sit embedded in the arm.</p>
-        <p>Wide-field Milky Way work is a different discipline from deep-sky imaging. There is no single target to frame and no guiding on a faint smudge - the challenge is composition, a genuinely dark horizon, and restraint in processing. Push the contrast too hard and the dust lanes turn to mud; too little and the core never separates from the background. The core season here runs through the summer months, and it climbs highest in the small hours.</p>
+        <p>The dark channels cutting through that glow are the Great Rift: enormous clouds of cold molecular gas and dust lying between us and the core, absorbing the light of everything behind them. They are not empty space but the opposite, some of the densest material in the galaxy, and the raw ingredients from which future generations of stars will form. Scattered through the star clouds are knots of pink and teal where individual <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-milky-way-2" data-gl-term="emission nebula">emission nebulae</span><span class="gl-def" id="gl-the-milky-way-2" hidden>A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.</span> and open clusters sit embedded in the arm.</p>
+        <p>Wide-field Milky Way work is a different discipline from <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-milky-way-3" data-gl-term="deep-sky">deep-sky</span><span class="gl-def" id="gl-the-milky-way-3" hidden>Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.</span> imaging. There is no single target to frame and no <span class="gl" role="button" tabindex="0" aria-describedby="gl-the-milky-way-4" data-gl-term="guiding">guiding</span><span class="gl-def" id="gl-the-milky-way-4" hidden>A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures.</span> on a faint smudge - the challenge is composition, a genuinely dark horizon, and restraint in processing. Push the contrast too hard and the dust lanes turn to mud; too little and the core never separates from the background. The core season here runs through the summer months, and it climbs highest in the small hours.</p>
       </div>
 
       <div class="share-specs">
@@ -404,6 +404,119 @@
 <div id="siteFooter"></div>
 
 <script src="/partials/partials.js"></script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 <script src="/protect-images.js"></script>
 </body>
 </html>

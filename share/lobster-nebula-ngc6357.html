@@ -112,7 +112,7 @@
         <p class="lead">A vast star-forming complex in Scorpius, the Lobster Nebula is carved into shape by Pismis 24 - a cluster of extraordinarily massive young stars whose radiation is steadily hollowing out the gas that made them.</p>
         <p>NGC 6357 lies roughly 5,500 light-years away in Scorpius, immediately north of the Cat's Paw Nebula - the two sit close enough that at short focal lengths they can be framed together. It is sometimes also called the War and Peace Nebula, a name earned from its appearance in infrared surveys.</p>
         <p>What drives the nebula is the open cluster Pismis 24, buried near its centre. It contains several of the most massive stars known in the Milky Way, including Pismis 24-1, long thought to be a single star of well over a hundred solar masses before higher-resolution imaging resolved it into multiple components. Their combined ultraviolet output is ionising the surrounding hydrogen and blowing enormous cavities and pillars into the cloud - the same sculpting process visible in the Eagle Nebula, but on a larger and more violent scale.</p>
-        <p>This one was shot from home under Bortle 8 skies, which makes a narrow dual-band filter essential rather than optional. At 3nm the light pollution simply disappears and the hydrogen-alpha structure comes through cleanly even at four hours. The bigger constraint from this latitude is altitude - at around -34 degrees declination the nebula never climbs far, so the usable window each night is short and you are always shooting through more atmosphere than you would like. Plan for a clean southern horizon and take the transit hours.</p>
+        <p>This one was shot from home under <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-1" data-gl-term="Bortle">Bortle</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-1" hidden>A scale from 1 to 9 for how dark a sky is. Class 1 is a truly dark desert sky and class 9 is the middle of a bright city.</span> 8 skies, which makes a narrow dual-band filter essential rather than optional. At 3nm the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-2" data-gl-term="light pollution">light pollution</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-2" hidden>Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.</span> simply disappears and the <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-3" data-gl-term="hydrogen-alpha">hydrogen-alpha</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-3" hidden>The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.</span> structure comes through cleanly even at four hours. The bigger constraint from this latitude is <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-4" data-gl-term="altitude">altitude</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-4" hidden>How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.</span> - at around -34 degrees <span class="gl" role="button" tabindex="0" aria-describedby="gl-lobster-nebula-ngc6357-5" data-gl-term="declination">declination</span><span class="gl-def" id="gl-lobster-nebula-ngc6357-5" hidden>The sky&#x27;s version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.</span> the nebula never climbs far, so the usable window each night is short and you are always shooting through more atmosphere than you would like. Plan for a clean southern horizon and take the transit hours.</p>
       </div>
 
       <div class="share-specs">
@@ -405,6 +405,119 @@
 <div id="siteFooter"></div>
 
 <script src="/partials/partials.js"></script>
+
+  <script>
+  (function () {
+    var terms = document.querySelectorAll('.gl');
+    if (!terms.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'gl-pop';
+    pop.setAttribute('role', 'tooltip');
+    var head = document.createElement('p');
+    head.className = 'gl-pop-term';
+    var body = document.createElement('p');
+    body.className = 'gl-pop-def';
+    var shut = document.createElement('button');
+    shut.className = 'gl-pop-close';
+    shut.type = 'button';
+    shut.setAttribute('aria-label', 'Close');
+    shut.innerHTML = '&#215;';
+    pop.appendChild(head);
+    pop.appendChild(body);
+    pop.appendChild(shut);
+    document.body.appendChild(pop);
+
+    var current = null;   // the word the panel is describing
+    var pinned = false;   // opened by tap or click, so hovering away leaves it
+    var hideTimer = null;
+
+    function place() {
+      if (!current) return;
+      var r = current.getBoundingClientRect();
+      var w = pop.offsetWidth, h = pop.offsetHeight;
+      var margin = 12, gap = 10;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+      // Below by default. Above only if it would otherwise run off the
+      // bottom and there is genuinely more room up top.
+      var top = r.bottom + gap;
+      if (top + h > window.innerHeight - margin && r.top - gap - h > margin) {
+        top = r.top - gap - h;
+      }
+      top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    function show(el, sticky) {
+      clearTimeout(hideTimer);
+      var def = document.getElementById(el.getAttribute('aria-describedby'));
+      if (!def) return;
+      if (current && current !== el) current.classList.remove('gl-on');
+      current = el;
+      pinned = !!sticky;
+      head.textContent = el.getAttribute('data-gl-term') || '';
+      body.textContent = def.textContent;
+      el.classList.add('gl-on');
+      pop.classList.add('open');
+      place();
+    }
+
+    function hide() {
+      clearTimeout(hideTimer);
+      if (current) current.classList.remove('gl-on');
+      current = null;
+      pinned = false;
+      pop.classList.remove('open');
+    }
+
+    for (var i = 0; i < terms.length; i++) {
+      (function (el) {
+        el.addEventListener('mouseenter', function () {
+          if (!pinned) show(el, false);
+        });
+        el.addEventListener('mouseleave', function () {
+          if (pinned) return;
+          // A short grace period, so moving the pointer down into the panel
+          // to read a long definition does not dismiss it on the way.
+          hideTimer = setTimeout(hide, 140);
+        });
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (current === el && pinned) { hide(); return; }
+          show(el, true);
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (current === el && pinned) { hide(); } else { show(el, true); }
+          }
+        });
+        el.addEventListener('focus', function () { show(el, false); });
+        el.addEventListener('blur', function () { if (!pinned) hide(); });
+      })(terms[i]);
+    }
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', function () { if (!pinned) hide(); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    shut.addEventListener('click', hide);
+
+    document.addEventListener('click', function () { if (pinned) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hide();
+    });
+    // Follow the word rather than float over the page while it scrolls away.
+    window.addEventListener('scroll', function () {
+      if (current) place();
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (current) place();
+    });
+  })();
+  </script>
+
 <script src="/protect-images.js"></script>
 </body>
 </html>
