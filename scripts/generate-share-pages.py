@@ -38,6 +38,15 @@ import re
 import sys
 from datetime import datetime
 
+# Shared with generate-article-pages.py and generate-gear-pages.py.
+# sys.path[0] is this script's own folder, so scripts/glossary.py is
+# importable without any path juggling.
+# The glossary stylesheet constant is deliberately not imported: the .gl
+# styles live in styles.css, which every page already loads, and the
+# article and gear generators do not insert it either. Only the
+# handler is per-page.
+from glossary import GLOSSARY_JS, annotate_glossary, load_glossary
+
 DOMAIN = "https://bhapstar.com"
 DATA = "site-data.json"
 OUT_DIR = "share"
@@ -340,7 +349,8 @@ def build_json_ld(entry, share_url, iso_date, media, meta_desc):
 
 # ── page template ────────────────────────────────────────────────────────────
 
-def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
+def build_page(entry, prev_link, next_link, all_photos=None,
+               global_start=None, glossary=None):
     slug = entry["slug"]
     title = entry.get("title") or SITE_NAME
     cover = cover_file(entry)
@@ -467,6 +477,22 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
     if not body_parts and entry.get("desc"):
         body_parts.append(f"        <p>{t(entry['desc'])}</p>")
     body_html = "\n".join(body_parts)
+
+    # Glossary explainers on the first mention of each technical word, exactly
+    # as the article and gear pages get them. This is the only rendering of a
+    # gallery write-up a crawler or a reader arriving from a shared link ever
+    # sees, and it is aimed at somebody who has just met the picture rather
+    # than somebody who has read the articles, so it is the page that needs
+    # the explainers most.
+    #
+    # site-data.json is never touched. The intro and body strings there stay
+    # plain text, because the same fields feed the meta description and the
+    # gallery viewer, which escape rather than render HTML.
+    body_html, gloss_count = annotate_glossary(body_html, slug, glossary or [])
+    # A page with no marked words carries no handler, so nothing is
+    # paid for on a page that cannot use it.
+    gloss_js = GLOSSARY_JS if gloss_count else ''
+    build_page.last_gloss_count = gloss_count
 
     # ── capture specs: icon tiles, identical to the viewer's info popup ──
     specs_html = ""
@@ -948,6 +974,7 @@ def build_page(entry, prev_link, next_link, all_photos=None, global_start=None):
 <div id="siteFooter"></div>
 
 <script src="/partials/partials.js"></script>
+{gloss_js}
 <script src="/protect-images.js"></script>
 </body>
 </html>
@@ -966,6 +993,8 @@ def main():
 
     os.makedirs(OUT_DIR, exist_ok=True)
     build_gear_index(items)
+    glossary = load_glossary()
+    gloss_total = 0
 
     # First pass: which entries get a page (needed for prev/next links).
     pageable = [e for e in items
@@ -1004,9 +1033,11 @@ def main():
             next_link = (f"/{OUT_DIR}/{n['slug']}.html", n.get("title") or n["slug"])
 
         page = build_page(entry, prev_link, next_link,
-                          all_photos, entry_photo_start.get(entry["slug"]))
+                          all_photos, entry_photo_start.get(entry["slug"]),
+                          glossary)
         if page is None:
             continue
+        gloss_total += getattr(build_page, 'last_gloss_count', 0)
         fname = f"{entry['slug']}.html"
         with open(os.path.join(OUT_DIR, fname), "w", encoding="utf-8") as f:
             f.write(page)
@@ -1020,6 +1051,7 @@ def main():
             removed += 1
 
     print(f"  Wrote {len(written)} share pages to {OUT_DIR}/"
+          + (f", {gloss_total} glossary explainers" if gloss_total else "")
           + (f", removed {removed} stale" if removed else "")
           + (f", skipped {skipped} (no cover image)" if skipped else ""))
 

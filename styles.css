@@ -9616,7 +9616,7 @@ html[data-theme="light"] .sh-sky-kit-chip.lvl-0{ opacity:.55; }
   margin:10px 0 0; font-size:1.02rem; color:var(--text);
 }
 .gp-intro{
-  margin:10px 0 0; max-width:64ch; color:var(--muted); line-height:1.62;
+  margin:10px 0 0; color:var(--muted); line-height:1.62;
 }
 
 /* The A to Z rail. Letters with no terms stay in place, dimmed, rather than

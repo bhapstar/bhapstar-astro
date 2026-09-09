@@ -49,11 +49,10 @@ SUBTITLE = "Every term used across the articles and gear write-ups, in plain Eng
 PAGE_DESC = ("Plain-English definitions of the astrophotography terms used "
              "across this site, from aperture and Bortle to meridian flip and "
              "quantum efficiency.")
-INTRO = ("Astrophotography carries more jargon than it needs to. Every word "
-         "below appears somewhere on this site, and each one is explained the "
-         "way it would be explained out loud, without assuming the previous "
-         "term. The same definitions appear inline on the articles and gear "
-         "pages, on the first mention of each word.")
+INTRO = ("Astrophotography carries a lot of jargon and acronyms. Every term "
+         "below is described in plain English and is used across the gallery, "
+         "articles and gear write-ups, as an inline popup on the first "
+         "mention of each word.")
 SHARE_IMAGE = "images/andromeda-galaxy-m31.webp"
 
 
