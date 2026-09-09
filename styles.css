@@ -1850,6 +1850,10 @@ footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
 .footer-brand{
   display: inline-flex; align-items: baseline; gap: 8px;
   font-family: var(--mono);
+  /* The shimmer underline below is absolutely positioned, so it needs an
+     anchor here. Without it the line would measure itself against whatever
+     happens to be the nearest positioned ancestor further up the page. */
+  position: relative;
 }
 .footer-brand .mark{
   background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
@@ -1862,8 +1866,22 @@ footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
   font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
   color: var(--muted); -webkit-text-fill-color: unset;
 }
-/* gradient-text elements need the shimmer line brightened slightly */
+/* Aurora shimmer underline, matching the header brand.
+   This rule used to set the gradient and nothing else, on the assumption that
+   a base ::after was being inherited from somewhere. It was not: the base
+   lives on .brand and on .nav-menu a, and the footer brand is neither, so the
+   pseudo element had no content and never rendered at all. The full set is
+   declared here.
+   Offset below the text rather than inset like the header, because the header
+   brand sits in a padded pill and this one does not, and adding padding here
+   would nudge the copyright line out of step with the social icons beside it.
+   The colours run slightly brighter than the header's: this sits on the
+   footer's darker panel, where the header's opacities read as washed out. */
 .footer-brand::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 1.5px;
   background: linear-gradient(
     90deg,
     transparent,
@@ -1872,8 +1890,21 @@ footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
     rgba(52,211,153,0.85),
     transparent
   );
+  opacity: 0;
+  transform: scaleX(0.3) translateY(3px);
+  transform-origin: center;
+  transition: opacity 240ms ease, transform 240ms var(--ease-out-expo);
+}
+.footer-brand:hover::after{
+  opacity: 1;
+  transform: scaleX(1) translateY(0);
 }
 .footer-brand:hover{ opacity: 1; }
+
+@media (prefers-reduced-motion: reduce){
+  .footer-brand::after{ transition: opacity 240ms ease; transform: none; }
+  .footer-brand:hover::after{ transform: none; }
+}
 
 /* Responsive grid */
 @media (max-width: 980px){ .card{ grid-column: span 6; } .cols{ grid-template-columns: 1fr; } }
