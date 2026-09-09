@@ -9695,3 +9695,30 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   .gp-item{ grid-template-columns:1fr; gap:4px; }
   .gp-letter{ font-size:1.3rem; }
 }
+
+/* ── Glossary links ──
+   The "Read more" link on a term, in both places a definition appears: the
+   floating explainer panel on articles, gear and share pages, and the row on
+   the glossary page itself.
+
+   These sit here rather than beside the rest of the .gl-pop rules further up
+   because that block exists twice in this file, once around line 7680 and
+   again around line 7940, and adding a rule to only one copy would leave the
+   two out of step. One rule at the end applies either way. */
+.gl-pop-more{
+  display:inline-block; margin:9px 0 0;
+  font-size:12px; font-weight:600; letter-spacing:0.02em;
+  color:var(--accent); text-decoration:none;
+  border-bottom:1px solid rgba(var(--accent-rgb),0.35);
+  padding-bottom:1px;
+}
+.gl-pop-more:hover{ border-bottom-color:rgba(var(--accent-rgb),0.85); }
+.gl-pop-more[hidden]{ display:none; }
+
+.gp-more{
+  display:inline; margin-left:7px; white-space:nowrap;
+  font-size:0.83rem; font-weight:600;
+  color:var(--accent); text-decoration:none;
+  border-bottom:1px solid rgba(var(--accent-rgb),0.30);
+}
+.gp-more:hover{ border-bottom-color:rgba(var(--accent-rgb),0.80); }

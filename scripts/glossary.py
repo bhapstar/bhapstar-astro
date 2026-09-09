@@ -119,6 +119,11 @@ def load_glossary():
             'avoid': [re.compile(r'(?<![\w/-])' + re.escape(a).replace(r'\ ', r'\s+')
                                  + r'(?![\w/-])', re.IGNORECASE)
                       for a in item.get('avoid', [])],
+            # Optional. Where a term has a page on this site that actually
+            # covers it, the explainer offers it as a next step. A term with
+            # no natural home simply has no link, which is the common case:
+            # most of these words are explained nowhere but here.
+            'link': (item.get('link') or '').strip(),
             'forms': forms,
             'res': [_compile_form(f) for f in forms],
             'rank': max(len(f) for f in forms),
@@ -279,7 +284,7 @@ def annotate_glossary(parts, slug, glossary):
             continue
 
         a, b = best
-        edits.append((a, b, entry['term'], entry['def']))
+        edits.append((a, b, entry['term'], entry['def'], entry['link']))
         claimed.append((a, b))
 
     if not edits:
@@ -288,11 +293,18 @@ def annotate_glossary(parts, slug, glossary):
     # Numbered in reading order, so the ids on the page run top to bottom.
     edits.sort(key=lambda e: e[0])
     out = body_html
-    for idx, (a, b, term, definition) in reversed(list(enumerate(edits, 1))):
+    for idx, (a, b, term, definition, link) in reversed(list(enumerate(edits, 1))):
         ref = f"gl-{slug}-{idx}"
+        # The link rides on the word as a data attribute rather than as an
+        # anchor nested inside it. The marked word is already a role="button"
+        # that opens the panel, and an <a> inside it would give one element
+        # two conflicting jobs. The script renders the link inside the panel,
+        # which already stops clicks bubbling and already stays open while
+        # the pointer is over it.
+        href = f' data-gl-href="{esc(link)}"' if link else ''
         out = out[:a] + (
             f'<span class="gl" role="button" tabindex="0" '
-            f'aria-describedby="{ref}" data-gl-term="{esc(term)}">'
+            f'aria-describedby="{ref}" data-gl-term="{esc(term)}"{href}>'
             f'{out[a:b]}</span>'
             f'<span class="gl-def" id="{ref}" hidden>{esc(definition)}</span>'
         ) + out[b:]
@@ -373,6 +385,8 @@ GLOSSARY_JS = """
     head.className = 'gl-pop-term';
     var body = document.createElement('p');
     body.className = 'gl-pop-def';
+    var more = document.createElement('a');
+    more.className = 'gl-pop-more';
     var shut = document.createElement('button');
     shut.className = 'gl-pop-close';
     shut.type = 'button';
@@ -380,6 +394,7 @@ GLOSSARY_JS = """
     shut.innerHTML = '&#215;';
     pop.appendChild(head);
     pop.appendChild(body);
+    pop.appendChild(more);
     pop.appendChild(shut);
     document.body.appendChild(pop);
 
@@ -414,6 +429,19 @@ GLOSSARY_JS = """
       pinned = !!sticky;
       head.textContent = el.getAttribute('data-gl-term') || '';
       body.textContent = def.textContent;
+
+      // A link to the page that covers this term, when there is one. Never
+      // to the page we are already on: offering someone a link back to where
+      // they are standing is worse than offering nothing.
+      var href = el.getAttribute('data-gl-href') || '';
+      if (href && href !== location.pathname) {
+        more.setAttribute('href', href);
+        more.textContent = 'Read more';
+        more.hidden = false;
+      } else {
+        more.removeAttribute('href');
+        more.hidden = true;
+      }
       el.classList.add('gl-on');
       pop.classList.add('open');
       place();

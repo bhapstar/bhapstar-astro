@@ -66,6 +66,22 @@ def anchor_for(term):
     return slug or 'term'
 
 
+def check_link(entry):
+    """A link is only useful if the page is really there. A typo would give a
+    404 from 149 places at once, and nothing else in the build would notice,
+    so the file is checked on disk and a bad one is dropped rather than
+    shipped."""
+    link = (entry.get('link') or '').strip()
+    if not link:
+        return ''
+    path = link.split('#')[0].lstrip('/')
+    if os.path.exists(path):
+        return link
+    print(f"  ! '{entry.get('term')}' links to {link}, which is not on disk; "
+          f"link dropped")
+    return ''
+
+
 def load_terms():
     if not os.path.exists(DATA):
         print(f"✗ {OUT}: {DATA} not found", file=sys.stderr)
@@ -137,10 +153,16 @@ def build_groups(groups):
             if aliases:
                 joined = ', '.join(esc(a) for a in aliases)
                 alias_html = f'<span class="gp-alias">also {joined}</span>'
+            link = check_link(entry)
+            link_html = ''
+            if link:
+                link_html = (f' <a class="gp-more" href="{esc(link)}">'
+                             f'Read more</a>')
             out.append(
                 f'          <div class="gp-item" id="{esc(anchor_for(term))}">\n'
                 f'            <dt class="gp-term">{esc(term)}{alias_html}</dt>\n'
-                f'            <dd class="gp-def">{esc(entry.get("def"))}</dd>\n'
+                f'            <dd class="gp-def">{esc(entry.get("def"))}'
+                f'{link_html}</dd>\n'
                 f'          </div>\n')
         out.append('        </dl>\n')
         out.append('      </section>\n')
@@ -248,7 +270,9 @@ def main():
     with open(OUT, 'w', encoding='utf-8') as f:
         f.write(build_page(terms))
     letters = len(group_terms(terms))
-    print(f"✓ {OUT}  ({len(terms)} term(s) across {letters} letter(s))")
+    linked = sum(1 for e in terms if check_link(e))
+    print(f"✓ {OUT}  ({len(terms)} term(s) across {letters} letter(s), "
+          f"{linked} linked)")
 
 
 if __name__ == '__main__':

@@ -37,7 +37,8 @@
     },
     {
       "term": "altitude",
-      "def": "How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through."
+      "def": "How high something is above the horizon, measured in degrees. Zero is the horizon and 90 is straight overhead. The higher it is, the less air you are looking through.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "aperture",
@@ -49,7 +50,8 @@
         "apochromatic",
         "APO"
       ],
-      "def": "A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo."
+      "def": "A lens design that brings the red, green and blue parts of light to the same point of focus. Without it, bright stars pick up a purple halo.",
+      "link": "/gear/askar-v-modular-apo-refractor.html"
     },
     {
       "term": "apparent field",
@@ -87,14 +89,16 @@
         "ASIAir Plus",
         "ASIAIR Plus"
       ],
-      "def": "A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope."
+      "def": "A small controller from ZWO that runs the mount, camera and focuser from a phone or tablet. It replaces the laptop at the telescope.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "astronomical darkness",
       "aliases": [
         "astronomical twilight"
       ],
-      "def": "The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly."
+      "def": "The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "autofocus",
@@ -102,11 +106,13 @@
         "autofocuser",
         "auto focuser"
       ],
-      "def": "A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals."
+      "def": "A programmed routine through an Electronic Automatic Focuser that refocuses the telescope as the temperature drifts through the night, or at set timed intervals.",
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "azimuth",
-      "def": "The compass direction of something, measured round the horizon from north. Due east is 90 degrees."
+      "def": "The compass direction of something, measured round the horizon from north. Due east is 90 degrees.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "back-illuminated",
@@ -120,7 +126,8 @@
       "aliases": [
         "back focus"
       ],
-      "def": "The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it."
+      "def": "The exact distance a flattener or reducer needs between itself and the sensor. Get it wrong and the stars at the edges of the frame stretch into little dashes, and no amount of processing will fix it.",
+      "link": "/gear/svbony-filter-drawer.html"
     },
     {
       "term": "background extraction",
@@ -142,7 +149,8 @@
       "aliases": [
         "bias frames"
       ],
-      "def": "The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame."
+      "def": "The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame.",
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "Bortle",
@@ -152,11 +160,13 @@
       ],
       "except": [
         "bortle-scale-narrowband-filters"
-      ]
+      ],
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "broadband",
-      "def": "A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few."
+      "def": "A filter that keeps most of the spectrum and blocks only a slice of it. It suits galaxies and star clusters, which shine in every colour rather than a few.",
+      "link": "/gear/optolong-l-quad-enhance-filter.html"
     },
     {
       "term": "calibration frame",
@@ -166,7 +176,8 @@
       "def": "Extra frames that are not pictures of anything. They record what the camera and the optics add to every shot, so it can be measured and taken back out.",
       "except": [
         "calibration-frames-darks-flats-biases"
-      ]
+      ],
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "celestial equator",
@@ -177,7 +188,8 @@
       "aliases": [
         "celestial poles"
       ],
-      "def": "The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it."
+      "def": "The point the whole sky appears to turn around. In the north it sits very close to Polaris, and in the south nothing bright marks it.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "celestial sphere",
@@ -224,7 +236,8 @@
     },
     {
       "term": "dark current",
-      "def": "Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled."
+      "def": "Signal that builds up in a sensor because it is warm rather than because light arrived. It roughly doubles for every six or seven degrees, which is why cameras get cooled.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "dark frame",
@@ -235,11 +248,13 @@
       "def": "An exposure with the lens capped, the same length and temperature as your real ones. It records the heat noise and the stuck-on bright pixels, so they can be subtracted.",
       "except": [
         "calibration-frames-darks-flats-biases"
-      ]
+      ],
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "declination",
-      "def": "The sky's version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees."
+      "def": "The sky's version of latitude, measured in degrees north or south of the celestial equator. Straight above the North Pole is +90 degrees.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "deconvolution",
@@ -292,7 +307,8 @@
     },
     {
       "term": "dual narrowband",
-      "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once."
+      "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.",
+      "link": "/gear/optolong-l-extreme-filter.html"
     },
     {
       "term": "EAF",
@@ -346,7 +362,8 @@
       "aliases": [
         "equatorial mounts"
       ],
-      "def": "A mount with one axis tilted to line up with Earth's own axis. That lets a single slow turn follow the stars, instead of two motors constantly correcting."
+      "def": "A mount with one axis tilted to line up with Earth's own axis. Once it is aligned, tracking the sky is one steady turn on that axis at a single constant rate. It still has a second motor for the other axis, but that one is for pointing and small guiding corrections rather than for keeping up with the stars, and the framing never rotates during an exposure.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "extender",
@@ -361,7 +378,8 @@
       "aliases": [
         "eyepieces"
       ],
-      "def": "The small lens you put your eye to at the back of a telescope. Swapping it for another one changes how much bigger everything looks."
+      "def": "The small lens you put your eye to at the back of a telescope. Swapping it for another one changes how much bigger everything looks.",
+      "link": "/gear/celestron-2in-eyepiece-kit.html"
     },
     {
       "term": "false colour",
@@ -383,7 +401,8 @@
         "flattener",
         "flatteners"
       ],
-      "def": "A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle."
+      "def": "A small lens that corrects the naturally curved focus of a telescope, so the stars in the corners are as round as the ones in the middle.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "field of view",
@@ -398,11 +417,13 @@
       "aliases": [
         "flat frames"
       ],
-      "def": "A shot of an evenly lit blank surface, taken through the same telescope. It maps the dust shadows and darkened corners so they can be divided out."
+      "def": "A shot of an evenly lit blank surface, taken through the same telescope. It maps the dust shadows and darkened corners so they can be divided out.",
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "focal length",
-      "def": "How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one."
+      "def": "How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.",
+      "link": "/gear/askar-v-modular-apo-refractor.html"
     },
     {
       "term": "focal ratio",
@@ -418,14 +439,16 @@
       "aliases": [
         "focusers"
       ],
-      "def": "The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command."
+      "def": "The part that slides the camera in and out until the stars are sharp. An electronic one does it with a small motor, on command.",
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "full-frame",
       "aliases": [
         "full frame"
       ],
-      "def": "A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark."
+      "def": "A camera whose sensor is the size of an old 35mm film frame. Bigger sensors gather more light, which is why they cope better in the dark.",
+      "link": "/gear/sony-a7iii-full-frame-camera.html"
     },
     {
       "term": "gain",
@@ -480,7 +503,8 @@
         "harmonic mount",
         "harmonic mounts"
       ],
-      "def": "A very compact gearbox that can hold a heavy telescope with no counterweight. It is the reason a mount this small can carry this much."
+      "def": "A very compact gearbox that can hold a heavy telescope with no counterweight. It is the reason a mount this small can carry this much.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "histogram",
@@ -536,11 +560,13 @@
         "lithium iron phosphate",
         "LFP"
       ],
-      "def": "A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground."
+      "def": "A battery chemistry that lasts for far more charges than ordinary lithium-ion and copes much better with heat. Heavier for the same capacity, which matters less on the ground.",
+      "link": "/gear/ecoflow-river-2.html"
     },
     {
       "term": "light pollution",
-      "def": "Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint."
+      "def": "Artificial light from streets and buildings that scatters in the air and brightens the whole night sky, hiding everything faint.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "linear",
@@ -567,7 +593,8 @@
     },
     {
       "term": "maria",
-      "def": "The large dark patches on the Moon, which are ancient lava flows rather than seas. Early astronomers named them seas before anyone knew better, and the name stuck."
+      "def": "The large dark patches on the Moon, which are ancient lava flows rather than seas. Early astronomers named them seas before anyone knew better, and the name stuck.",
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "meridian",
@@ -575,7 +602,8 @@
     },
     {
       "term": "meridian flip",
-      "def": "As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again."
+      "def": "As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "micron",
@@ -606,7 +634,8 @@
     },
     {
       "term": "narrowband",
-      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not."
+      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.",
+      "link": "/gear/optolong-l-extreme-filter.html"
     },
     {
       "term": "nebulosity",
@@ -648,7 +677,8 @@
         "passbands",
         "bandpass"
       ],
-      "def": "The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts."
+      "def": "The window of colours a filter lets through. A narrow passband blocks more streetlight, but leaves less margin if anything shifts.",
+      "link": "/gear/svbony-sv220-3nm-filter.html"
     },
     {
       "term": "payload",
@@ -675,7 +705,8 @@
         "plate-solve",
         "plate-solves"
       ],
-      "def": "The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target."
+      "def": "The software takes a quick test frame, matches the pattern of stars in it against a catalogue, and works out exactly where the telescope is really pointing. It then nudges the mount onto the target.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "polar alignment",
@@ -684,7 +715,8 @@
         "polar aligned",
         "polar aligning"
       ],
-      "def": "Lining a mount's main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night."
+      "def": "Lining a mount's main axis up with the point the sky turns around. Get it right and one slow, steady turn follows the stars all night.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "Polaris",
@@ -692,7 +724,8 @@
         "pole star",
         "North Star"
       ],
-      "def": "The bright star that sits almost exactly above the Earth's northern axis. It barely moves all night, which is why polar alignment usually starts by pointing at it."
+      "def": "The bright star that sits almost exactly above the Earth's northern axis. It barely moves all night, which is why polar alignment usually starts by pointing at it.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "quantum efficiency",
@@ -700,7 +733,8 @@
     },
     {
       "term": "radiant",
-      "def": "The point in the sky a meteor shower appears to stream out from. Meteors near it look short, and the ones further away look long."
+      "def": "The point in the sky a meteor shower appears to stream out from. Meteors near it look short, and the ones further away look long.",
+      "link": "/articles/photograph-a-meteor-shower.html"
     },
     {
       "term": "RAW",
@@ -729,7 +763,8 @@
       "aliases": [
         "refractors"
       ],
-      "def": "A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead."
+      "def": "A telescope that uses lenses to gather light, like a very good spotting scope. The other main type uses mirrors instead.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "registration",
@@ -741,7 +776,8 @@
     },
     {
       "term": "right ascension",
-      "def": "The sky's version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h."
+      "def": "The sky's version of longitude. It is measured in hours rather than degrees, going all the way round from 0h to 24h.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "shutter",
@@ -782,7 +818,8 @@
       "aliases": [
         "smart telescopes"
       ],
-      "def": "A sealed telescope with the mount, camera and processing built into one body, run from a phone. It finds the target, tracks it and stacks the frames on its own."
+      "def": "A sealed telescope with the mount, camera and processing built into one body, run from a phone. It finds the target, tracks it and stacks the frames on its own.",
+      "link": "/gear/zwo-seestar-s30-pro.html"
     },
     {
       "term": "SPCC",
@@ -801,7 +838,8 @@
       "aliases": [
         "stacked"
       ],
-      "def": "Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays."
+      "def": "Combining many frames of the same patch of sky into one. The random grain is different in every frame so it averages away, while the real detail is in the same place every time and stays.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "star tracker",
@@ -816,7 +854,8 @@
       "aliases": [
         "star trails"
       ],
-      "def": "A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end."
+      "def": "A picture where the stars are drawn as long arcs rather than points, made by leaving the shutter open, or by stacking a long run of frames end to end.",
+      "link": "/share/star-trails-stills.html"
     },
     {
       "term": "StarNet",
@@ -830,7 +869,8 @@
       "def": "Free planetarium software. You give it your location, date and time and it draws the sky as it will look, including where a target sits and how it will be framed.",
       "except": [
         "how-i-plan-every-astrophotography-session-using-stellarium"
-      ]
+      ],
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "stop down",
@@ -856,7 +896,8 @@
         "start to stretch",
         "starts to stretch",
         "starting to stretch"
-      ]
+      ],
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "subframe",
@@ -871,7 +912,8 @@
     },
     {
       "term": "terminator",
-      "def": "The curved line on the Moon between the sunlit half and the dark half. Sunlight arrives almost sideways there, so craters and mountains throw long shadows. It is where all the surface detail is."
+      "def": "The curved line on the Moon between the sunlit half and the dark half. Sunlight arrives almost sideways there, so craters and mountains throw long shadows. It is where all the surface detail is.",
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "thermoelectric",
