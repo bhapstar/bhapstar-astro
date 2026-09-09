@@ -18,7 +18,7 @@ desert sites. He manages his own commits through GitHub Desktop.
 | `content/gear/*.html` | `gear/*.html` |
 | `site-data.json` | `articles.html`, `gallery.html` |
 | `scripts/*.py` | `share/*`, `sitemap.xml`, `feed.xml` |
-| `styles.css`, `partials/*` | `field_notes.html`, `start-here.html` |
+| `styles.css`, `partials/*` | `field_notes.html`, `start-here.html`, `field-cards.html` |
 
 Everything in the right column is overwritten on every build. A change made
 there survives until the next `python build.py` and then vanishes, which is a
@@ -32,12 +32,12 @@ CI rewrites the service worker cache version on every deploy.
 ## Build
 
 ```bash
-python build.py          # runs all seven generators in order
+python build.py          # runs all eight generators in order
 ```
 
 Order is fixed and matters: gear, article, share, schema, sitemap, starthere,
-feed. The article step must run before sitemap, because sitemap only lists
-files that already exist on disk.
+feed, downloads. The article step must run before sitemap, because sitemap only
+lists files that already exist on disk.
 
 CI (`.github/workflows/site-postprocess.yml`) runs `python build.py` on push,
 bumps the SW cache version, deploys, then commits the regenerated files back.
@@ -94,8 +94,13 @@ Two layers that must be updated together:
 2. `VALID_SRC` in the Cloudflare Worker. This one is **outside this repo**,
    edited in the Cloudflare dashboard
 
-Update only one and taps are dropped with no error anywhere. Current sources
-are `pdf-phone`, `pdf-camera`, `pdf-meteors`, `pdf-calibration`, `pdf-asiair`.
+Update only one and taps are dropped with no error anywhere.
+
+Current sources: `nfc`, `qr`, `card`, `x`, `pwa`, `pdf-phone`, `pdf-camera`,
+`pdf-meteors`, `pdf-calibration`, `pdf-asiair`, `pdf-moon`.
+
+`pwa` comes from `start_url` in `manifest.json` (`/?src=pwa`), so it counts
+launches from an installed home-screen icon rather than a scan.
 
 ---
 

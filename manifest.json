@@ -1,31 +1,61 @@
 {
+  "id": "/",
   "name": "Bhapstar Astrophotography",
   "short_name": "Bhapstar",
-  "description": "Deep-sky astrophotography by Bhapinder Singh — nebulae, galaxies, star clusters and more.",
-  "start_url": "/",
+  "description": "Deep-sky astrophotography by Bhapinder Singh: nebulae, galaxies, star clusters and more.",
+  "start_url": "/?src=pwa",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#050414",
   "theme_color": "#050414",
   "orientation": "any",
-  "related_applications": [
-    {
-      "platform": "webapp",
-      "url": "https://bhapstar.com/manifest.json"
-    }
-  ],
-  "prefer_related_applications": false,
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["photography", "education", "science"],
   "icons": [
     {
       "src": "images/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "images/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "images/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Here",
+      "short_name": "Tonight",
+      "description": "What is worth pointing at tonight",
+      "url": "/start-here.html"
+    },
+    {
+      "name": "Gallery",
+      "short_name": "Gallery",
+      "description": "Deep-sky image collection",
+      "url": "/gallery.html"
+    },
+    {
+      "name": "Field Cards",
+      "short_name": "Cards",
+      "description": "Printable cards that work offline",
+      "url": "/field-cards.html"
     }
   ]
 }

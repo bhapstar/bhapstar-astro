@@ -12,7 +12,7 @@ const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0
 
 if (!IS_DEV) {
 
-const CACHE_VERSION = 'bhapstar-b1c696f';
+const CACHE_VERSION = 'bhapstar-43e3e1a';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
@@ -23,7 +23,7 @@ const SHELL_ASSETS = [
   '/articles.html',
   '/field-cards.html',
   '/prints.html',
-  '/field_notes.html',
+  '/start-here.html',
   '/quiz.html',
   '/jigsaw.html',
   '/star_word.html',
@@ -31,11 +31,16 @@ const SHELL_ASSETS = [
   '/tonight-core.js',
   '/styles.css',
   '/protect-images.js',
+  '/print-formats.js',
   '/partials/partials.js',
   '/partials/header.html',
   '/partials/footer.html',
   '/site-data.json',
   '/assets/data/starword-words.txt',
+  // Start Here does its nearest-place lookup from this file rather than a
+  // network call, so the page is only useful offline if the data is cached
+  // alongside it.
+  '/assets/data/places.js',
   // The field cards are ~130 KB for all six, and being readable with no
   // signal is the entire point of them, so they are worth the shell slot.
   '/downloads/milky-way-phone-field-card.pdf',
