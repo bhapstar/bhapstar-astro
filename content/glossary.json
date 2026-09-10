@@ -409,6 +409,14 @@
       "def": "How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy."
     },
     {
+      "term": "filament",
+      "aliases": [
+        "filaments"
+      ],
+      "def": "A thin bright thread running through a nebula. Often it is not a thread at all but a sheet of gas seen edge-on: looking along the fold stacks the same faint material over a much longer path, so it brightens into a line while the face-on parts stay invisible.",
+      "link": "/share/eastern-veil-nebula-ngc6992.html"
+    },
+    {
       "term": "FITS",
       "def": "The file format astronomy cameras and software use. As well as the picture it stores a record of how the frame was taken, such as the exposure and the temperature."
     },
@@ -780,6 +788,17 @@
       "link": "/articles/navigating-the-night-sky.html"
     },
     {
+      "term": "shock front",
+      "aliases": [
+        "shock fronts",
+        "shock wave",
+        "shock waves",
+        "blast wave"
+      ],
+      "def": "The leading edge of an expanding blast wave, where it is ploughing into gas that was already sitting in its path. The gas is compressed and heated as it is swept up, which is what makes it glow.",
+      "link": "/share/eastern-veil-nebula-ngc6992.html"
+    },
+    {
       "term": "shutter",
       "def": "How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved."
     },
@@ -909,6 +928,16 @@
         "sub length"
       ],
       "def": "One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data."
+    },
+    {
+      "term": "supernova",
+      "aliases": [
+        "supernovae",
+        "supernova remnant",
+        "supernova remnants"
+      ],
+      "def": "The explosion of a dying star, briefly bright enough to rival its whole galaxy. What is left behind is a shell of gas thrown outwards at enormous speed, still glowing thousands of years later. That wreckage is the remnant.",
+      "link": "/share/eastern-veil-nebula-ngc6992.html"
     },
     {
       "term": "terminator",
