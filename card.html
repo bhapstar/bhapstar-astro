@@ -12,7 +12,7 @@
   <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
   <link rel="canonical" href="https://bhapstar.com/card.html" />
 
-  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Gallery, prints, gear, articles and how to get in touch, in one tap." />
+  <meta name="description" content="Bhapinder (Bobby) Singh, astrophotographer in Dubai. Get in touch or sign up for updates." />
   <meta name="author" content="Bhapinder Singh" />
 
   <meta property="og:type"        content="profile" />
@@ -173,8 +173,8 @@
 
     /* ─────────── The two card faces ───────────
        86 x 54 mm is 1.593:1. The front holds that ratio exactly so it reads
-       as the card. The back has to grow to fit the links, so it keeps only
-       the corner radius, the border and the paper colour. */
+       as the card. The back sizes to its content, so it keeps only the
+       corner radius, the border and the paper colour. */
     .face{
       border-radius:14px;
       overflow:hidden;
@@ -231,7 +231,7 @@
       font-size:clamp(8.5px,2.5vw,11px); line-height:1.3;
     }
 
-    /* ── Back face: the printed back, carrying the links ── */
+    /* ── Back face: name, role and the way home ── */
     .face-back{
       background:var(--face);
       border:1px solid var(--face-line);
@@ -239,7 +239,7 @@
       margin-bottom:14px;
     }
     /* The third panel. Same paper as the back, so the three faces read as one
-       card: pictures, links, then the form. */
+       card: pictures, name, then the form. */
     .face-contact{ margin-bottom:0; scroll-margin-top:16px }
     .face-contact h2.grp-label{ margin-top:0 }
     .rule{
@@ -292,14 +292,8 @@
       padding-bottom:.10em; margin-bottom:-.10em;
     }
     .btn em{ font-style:normal; font-size:11.5px; color:var(--face-muted); letter-spacing:.01em }
-    /* The offer, said on the button it applies to rather than in a footnote */
-    .btn em.tag{
-      margin-top:4px; padding:2px 7px; border-radius:999px;
-      font-size:10px; letter-spacing:.04em; font-weight:500;
-      color:var(--code); border:1px solid var(--code-line); background:var(--code-soft);
-      white-space:nowrap;
-    }
     .btn.wide{ grid-column:1 / -1 }
+    .row-last{ margin-bottom:0 }
     .btn.pri{ background:var(--pri); border-color:var(--pri-line); font-weight:500 }
     .btn.pri em{ color:var(--pri-em) }
 
@@ -357,7 +351,7 @@
       font-size:11.5px; color:var(--face-muted);
       margin:0 0 15px; line-height:1.45;
     }
-    /* The send button borrows the tile styling from the links above it */
+    /* The send button borrows the tile styling from the Home button */
     .face-back button.btn{ font-family:inherit; cursor:pointer; width:100% }
     .face-back button.btn[disabled]{ opacity:.6; cursor:default }
     /* Off screen spam trap. A bot fills it in, a person never sees it. */
@@ -447,36 +441,9 @@
       <h1>Bhapinder (Bobby) Singh</h1>
       <p class="role">Astrophotographer</p>
 
-      <div class="row">
+      <div class="row row-last">
         <a class="btn pri wide" href="index.html">Home <em>bhapstar.com</em></a>
       </div>
-      <div class="row">
-        <a class="btn wide" href="gallery.html">Gallery <em><span class="n-img">41</span> images</em></a>
-      </div>
-    <div class="row">
-      <a class="btn wide" href="start-here.html">Start Here <em>new to astrophotography? read in this order</em></a>
-    </div>
-    <div class="row">
-      <a class="btn" href="prints.html">Prints <em class="tag">10% off &middot; BHAPSTAR10</em></a>
-      <a class="btn" href="gear.html">Gear <em>reviews and purchase links</em></a>
-    </div>
-    <div class="row">
-      <a class="btn" href="articles.html">Articles <em><span class="n-art">8</span> articles</em></a>
-      <a class="btn" href="star_word.html">Star Word <em>daily puzzle</em></a>
-    </div>
-    <div class="row">
-      <a class="btn pri wide" href="#cardContact">Get in touch</a>
-    </div>
-
-    <p class="grp-label">Socials</p>
-
-    <div class="row">
-      <a class="btn" href="https://www.instagram.com/bhapstar/" target="_blank" rel="noopener">Instagram <em>@bhapstar</em></a>
-      <a class="btn" href="https://x.com/bhapstar" target="_blank" rel="noopener">X <em>@bhapstar</em></a>
-    </div>
-    <div class="row">
-      <a class="btn pri wide" href="https://www.buymeacoffee.com/bhapstar_astro" target="_blank" rel="noopener noreferrer">Support my work <em>buy me a coffee ☕</em></a>
-    </div>
     </div>
 
     <!-- ══ Get in touch: the same form the site carries ══ -->
@@ -707,23 +674,12 @@
     for (var i = 0; i < cells.length; i++) schedule(i);
   }
 
-  /* One read of site-data.json feeds both the counts and the imagery.
-     Counts use exactly the rule index.html uses for "By the numbers",
-     so the two pages always agree. Images in a group count individually,
-     and so do videos. */
+  /* site-data.json feeds the imagery, the same source the index hero uses,
+     so new photographs appear here on their own. */
   fetch('site-data.json', { cache: 'default' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(all){
       var gal = all.filter(function(it){ return (it.section || 'gallery') === 'gallery'; });
-
-      var imgs = gal.reduce(function(n, it){
-        return n + ((Array.isArray(it.images) && it.images.length) ? it.images.length
-                  : (Array.isArray(it.videos) && it.videos.length) ? it.videos.length
-                  : 1);
-      }, 0);
-      var arts = all.filter(function(it){ return it.section === 'article'; }).length;
-      Array.prototype.forEach.call(document.querySelectorAll('.n-img'), function(el){ el.textContent = imgs; });
-      Array.prototype.forEach.call(document.querySelectorAll('.n-art'), function(el){ el.textContent = arts; });
 
       // Every still in the gallery, groups flattened. Videos are skipped:
       // their posters exist, but a still frame of a timelapse makes a poor
