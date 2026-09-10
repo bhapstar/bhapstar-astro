@@ -325,7 +325,7 @@
       padding:10px 12px; -webkit-appearance:none; appearance:none;
       transition:border-color .18s ease, background-color .18s ease;
     }
-    .contact-form textarea{ resize:vertical; min-height:84px; line-height:1.45 }
+    .contact-form textarea{ resize:vertical; min-height:66px; line-height:1.45 }
     .contact-form input:focus,
     .contact-form textarea:focus{
       outline:none; border-color:var(--pri-line); background:var(--field-focus);
@@ -335,7 +335,7 @@
        under the tick box. */
     .contact-form label.contact-check{
       display:flex; align-items:flex-start; gap:9px;
-      margin:2px 0 9px; cursor:pointer;
+      margin:2px 0 15px; cursor:pointer;
     }
     .contact-check input[type="checkbox"]{
       margin:2px 0 0; width:16px; height:16px; flex:none;
@@ -346,10 +346,6 @@
     .contact-form .contact-check > span{
       display:inline; font-size:12.5px; color:var(--face-muted);
       line-height:1.45; letter-spacing:0; margin:0;
-    }
-    .contact-privacy{
-      font-size:11.5px; color:var(--face-muted);
-      margin:0 0 15px; line-height:1.45;
     }
     /* The send button borrows the tile styling from the Home button */
     .face-back button.btn{ font-family:inherit; cursor:pointer; width:100% }
@@ -476,13 +472,9 @@
           <span>Keep me up to date when new images, gear reviews or articles are added.</span>
         </label>
 
-        <p class="contact-privacy">
-          Your email address is used only to send those updates and will never be shared or sold.
-        </p>
-
         <label>
           <span>Message (optional)</span>
-          <textarea name="message" rows="4"></textarea>
+          <textarea name="message" rows="2"></textarea>
         </label>
 
         <button type="submit" class="btn pri wide">Send message</button>
