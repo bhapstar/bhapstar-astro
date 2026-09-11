@@ -368,12 +368,14 @@ const HIDE_FIELD_NOTES = true;
        - Draws 160 slowly fading stars on a
          <canvas> layered above the bg slideshow
        - Each star gently breathes in and out
-         using a slow sine wave (3–9 s cycle)
+         using a sine wave (roughly 1–3 s cycle)
        - Plus an occasional comet crossing the
          frame, sharing this canvas and this one
          rAF loop rather than adding a second of
          either
        - Skipped if prefers-reduced-motion is set
+       - Pauses while the hero is scrolled out of
+         view, so it is not drawing for nobody
     ───────────────────────────────────────── */
     (function initHeroStars() {
       const hero = document.querySelector('.hero');
@@ -405,7 +407,9 @@ const HIDE_FIELD_NOTES = true;
           r:      rand(0.75, 2.5),
           // Gentle peak brightness — soft and visible, never harsh
           peak:   rand(0.25, 0.65),
-          // Glacially slow cycle: each star takes 30–90 seconds for one full breathe
+          // One full breathe takes roughly 1 to 3 seconds. The rAF clock is in
+          // milliseconds and draw() multiplies by 1000, so the period is
+          // 2π / (speed × 1000) ms: about 3.1 s at the slow end, 1.0 s fast.
           speed:  rand(0.000002, 0.000006),
           // Random start point in the sine cycle so stars aren't in sync
           phase:  rand(0, Math.PI * 2),
@@ -528,7 +532,24 @@ const HIDE_FIELD_NOTES = true;
         for (const c of comets) drawComet(c, dt);
         comets = comets.filter(c => c.gone < c.span);
 
+        if (running) raf = requestAnimationFrame(frame);
+      }
+
+      // The loop only runs while the hero is on screen. Browsers already
+      // pause requestAnimationFrame in a background tab, but not on a page
+      // that has simply been scrolled past, so without this the canvas kept
+      // redrawing 160 stars every frame for the rest of the visit.
+      let running = false;
+      function start() {
+        if (running) return;
+        running = true;
+        lastFrame = 0;    // no catch-up jump for comets after the pause
+        nextComet = 0;    // first comet back arrives after the usual short wait
         raf = requestAnimationFrame(frame);
+      }
+      function stop() {
+        running = false;
+        cancelAnimationFrame(raf);
       }
 
       resize();
@@ -538,13 +559,22 @@ const HIDE_FIELD_NOTES = true;
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          cancelAnimationFrame(raf);
+          const wasRunning = running;
+          stop();
           resize();
-          raf = requestAnimationFrame(frame);
+          if (wasRunning) start();
         }, 120);
       });
 
-      raf = requestAnimationFrame(frame);
+      if ('IntersectionObserver' in window) {
+        // Fires once straight away with the current state, which starts the
+        // loop on a normal page load with the hero at the top.
+        new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) start(); else stop();
+        }).observe(hero);
+      } else {
+        start();
+      }
     })();
 
 
@@ -791,12 +821,16 @@ const HIDE_FIELD_NOTES = true;
       // from the viewBox, or from the figure as drawn on the page if it has
       // none, and the stylesheet sizes it from those.
       var ratio = 0;
-      var vb = node.viewBox && node.viewBox.baseVal;
-      if (vb && vb.width > 0 && vb.height > 0) {
-        ratio = vb.width / vb.height;
+      // Read from the attribute text ("0 0 700 380") rather than the
+      // viewBox.baseVal object, which not every environment provides.
+      var vb = (node.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+      if (vb.length === 4 && vb[2] > 0 && vb[3] > 0) {
+        ratio = vb[2] / vb[3];
       } else {
-        var box = node.getBoundingClientRect();
-        if (box.width > 0 && box.height > 0) ratio = box.width / box.height;
+        // Named rect, not box: a var here is scoped to the whole of open()
+        // and would hide the overlay element, which is also called box.
+        var rect = node.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) ratio = rect.width / rect.height;
       }
       if (ratio > 0) svg.style.setProperty('--fig-ar', String(ratio));
       stage.appendChild(svg);
