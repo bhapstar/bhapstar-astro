@@ -491,7 +491,12 @@
     if (state.orient === 'landscape') landscape = true;
     else if (state.orient === 'portrait') landscape = false;
     else landscape = state.aspect ? state.aspect >= 1 : true;
-    return { landscape, ...PF.dimensions(state.size, landscape) };
+    // Turn the photo when it runs the other way to the print. Near-square
+    // photos and ones still loading are left as they are.
+    const photoLandscape = state.aspect >= 1;
+    const turn = !!state.aspect && Math.abs(state.aspect - 1) > 0.05
+                 && photoLandscape !== landscape;
+    return { landscape, turn, ...PF.dimensions(state.size, landscape) };
   }
 
   function hangHeight(room, outerH) {
@@ -592,13 +597,21 @@
      wall, and so casts a heavier shadow with a hint of the wrapped side
      edge on the right. Each piece carries its own clip path so a gallery
      wall of a dozen prints does not fight over one shared id. */
-  function artworkSVG(cx, cy, w, h, kind, framed, url, id) {
+  function artworkSVG(cx, cy, w, h, kind, framed, url, id, turn = false) {
     const href = esc(url);
     const b    = PF.FRAME_BORDER_CM;
     const x = cx - w / 2, y = cy - h / 2;
     const clip = `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath>`;
-    const img  = `<image href="${href}" xlink:href="${href}" x="${x}" y="${y}" width="${w}" height="${h}"
-                    preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
+    /* When the print is set to the other orientation from the photo, the
+       photo is turned a quarter with it rather than cropped to fit. The
+       image is laid out with width and height swapped, then rotated about
+       the centre, and the clip sits on a plain wrapper so it stays square
+       to the wall. */
+    const iw = turn ? h : w, ih = turn ? w : h;
+    const rot = turn ? ` transform="rotate(90 ${cx} ${cy})"` : '';
+    const img  = `<g clip-path="url(#${id})"><image href="${href}" xlink:href="${href}"
+                    x="${cx - iw / 2}" y="${cy - ih / 2}" width="${iw}" height="${ih}"
+                    preserveAspectRatio="xMidYMid slice"${rot}/></g>`;
     const parts = [clip];
 
     if (kind === 'canvas') {
@@ -830,7 +843,7 @@
         `centre hung ${wall.cHeight.toFixed(0)} cm above the floor`,
       ];
     } else {
-      const { landscape, w, h } = artworkSize();
+      const { landscape, turn, w, h } = artworkSize();
       const kind = PF.kindOf(state.size);
       const framed = kind === 'paper' ? state.framed : 'No';
       const outerW = framed === 'Yes' ? w + PF.FRAME_BORDER_CM * 2 : w;
@@ -838,7 +851,7 @@
       const cy = F - hangHeight(room, outerH);
       const cx = room.artX;
 
-      art = artworkSVG(cx, cy, w, h, kind, framed, state.imageUrl, 'artClip');
+      art = artworkSVG(cx, cy, w, h, kind, framed, state.imageUrl, 'artClip', turn);
 
       if (state.measure) {
         const flipUp = (F - (cy + outerH / 2)) - room.minBottom < 14;
