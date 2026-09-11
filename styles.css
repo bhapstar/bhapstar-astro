@@ -9052,7 +9052,13 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
 .fig-openable img, .fig-openable svg{
   transition: opacity 200ms var(--ease-in-out);
 }
-.fig-openable:hover img, .fig-openable:hover svg{ opacity: 0.9; }
+/* The dim follows the pointer onto the picture itself, not the whole figure.
+   Hovering anywhere in the figure used to lift every image inside it to 0.9,
+   which broke the Stellarium frame comparison: its nine stacked screenshots
+   all became visible at once, so the top one covered the selected frame
+   whenever the pointer was over the pills. It is also the honest cue, since
+   only the picture opens on click. */
+.fig-openable img:hover, .fig-openable svg:hover{ opacity: 0.9; }
 .fig-openable:focus-visible{
   outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px;
 }
