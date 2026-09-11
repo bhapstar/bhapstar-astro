@@ -503,12 +503,21 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             if credit and fig.get("credit_url"):
                 credit = (f'<a href="{a(fig["credit_url"])}" target="_blank"'
                           f' rel="noopener">{credit}</a>')
+            # The credit sits on its own line so nobody takes a third-party
+            # picture for one of the site's own. The space before the span
+            # keeps the two apart in the lightbox, which reads textContent.
             if credit:
-                cap = f'{cap} Image: {credit}' if cap else f'Image: {credit}'
+                credit = f'<span class="share-fig-credit">Image: {credit}</span>'
+                cap = f'{cap} {credit}' if cap else credit
+            # Shown small beside the text and opened full size by the figure
+            # lightbox in partials.js. The wrapper only carries the expand
+            # icon, drawn in CSS so the lightbox never mistakes it for a
+            # diagram to open.
             fig_markup[key] = (
                 '        <figure class="article-fig share-body-fig">'
+                '<span class="share-fig-thumb">'
                 f'<img src="/{a(fig["file"])}" alt="{a(fig.get("alt"))}"'
-                ' loading="lazy" decoding="async" draggable="false">'
+                ' loading="lazy" decoding="async" draggable="false"></span>'
                 + (f'<figcaption>{cap}</figcaption>' if cap else '')
                 + '</figure>'
             )
