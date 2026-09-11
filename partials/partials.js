@@ -784,6 +784,21 @@ const HIDE_FIELD_NOTES = true;
       svg.removeAttribute('height');
       svg.removeAttribute('class');
       svg.setAttribute('aria-hidden', 'true');
+      // With its size attributes gone the copy has a shape but no size, and
+      // the lightbox panel shrink-wraps whatever is inside it, so the drawing
+      // collapsed to nothing and only the panel's padding showed: a small
+      // blank square. Hand the CSS the drawing's proportions instead, taken
+      // from the viewBox, or from the figure as drawn on the page if it has
+      // none, and the stylesheet sizes it from those.
+      var ratio = 0;
+      var vb = node.viewBox && node.viewBox.baseVal;
+      if (vb && vb.width > 0 && vb.height > 0) {
+        ratio = vb.width / vb.height;
+      } else {
+        var box = node.getBoundingClientRect();
+        if (box.width > 0 && box.height > 0) ratio = box.width / box.height;
+      }
+      if (ratio > 0) svg.style.setProperty('--fig-ar', String(ratio));
       stage.appendChild(svg);
     } else {
       var img = document.createElement('img');

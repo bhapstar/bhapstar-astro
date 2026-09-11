@@ -9022,9 +9022,16 @@ html[data-theme="light"] #tagFilterLabel{ color: #6d4ae0; }
   border-radius: 14px; padding: clamp(14px, 3vw, 30px);
   box-shadow: 0 24px 70px rgba(0,0,0,0.55);
 }
+/* An explicit width, because an SVG copied without size attributes has no
+   width of its own and collapses inside the shrink-wrapped panel. The widest
+   that fits three limits: 1200px, the screen width less the panel padding,
+   and 78% of the screen height turned into a width through the drawing's
+   proportions, which partials.js supplies as --fig-ar. */
 .figbox-stage.is-diagram svg{
-  display: block; width: auto; height: auto;
-  max-width: min(1200px, 90vw); max-height: 78vh;
+  display: block;
+  width: min(1200px, 86vw, calc(78vh * var(--fig-ar, 1.6)));
+  height: auto;
+  aspect-ratio: var(--fig-ar, 1.6);
 }
 
 .figbox-cap{
