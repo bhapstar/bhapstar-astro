@@ -71,6 +71,12 @@ Things that bite:
   `datePublished`, RSS `pubDate` and sitemap `lastmod`, so reordering by
   editing dates has visible side effects.
 - **`hidden: true`** stages an entry without publishing it.
+- **`body_figures`** on a gallery entry puts extra pictures inside the share
+  page write-up, each after a numbered body paragraph (`"after": 1` follows
+  the first, `0` follows the intro). Fields: `file`, `alt`, `caption`,
+  `credit`, `credit_url`. A missing file prints a `!` warning in the share
+  stage rather than failing silently. Third-party reference images live in
+  `images/reference/` and need no thumb.
 - Never guess equipment attribution. Check the `specs` field on the gallery
   entry rather than inferring from the image.
 
@@ -185,7 +191,8 @@ children.
 
 - Minimal scope. Do what was asked; mention adjacent observations briefly
   rather than acting on them.
-- Deliver complete files, not fragments.
+- Deliver complete files, not fragments. Individual files at their repo
+  paths, never zips.
 - Validate before handing anything over: JSON parses, CSS braces balance, HTML
   tags balance, `python build.py` runs clean.
 - Commit order: CSS, then JS, then HTML. Generators before JSON before HTML.

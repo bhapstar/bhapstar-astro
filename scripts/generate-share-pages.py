@@ -472,9 +472,53 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     if entry.get("intro"):
         body_parts.append(f'        <p class="lead">{t(entry["intro"])}</p>')
     body_text = entry.get("body") or ""
-    for para in [p.strip() for p in body_text.split("\n\n") if p.strip()]:
+    paras = [p.strip() for p in body_text.split("\n\n") if p.strip()]
+
+    # Supporting pictures inside the write-up, such as a wide reference shot
+    # that shows where this frame sits in a larger object. Each one names the
+    # body paragraph it follows ("after": 1 is after the first body paragraph,
+    # 0 is straight after the intro). A placeholder comment marks the spot and
+    # the figure goes in after the glossary pass, so captions and credits are
+    # never annotated. The glossary parser ignores comments.
+    figures_by_pos = {}
+    for fig in entry.get("body_figures") or []:
+        fpath = (fig.get("file") or "").strip()
+        if not fpath or not os.path.isfile(fpath):
+            print(f"  ! {slug}: body figure '{fpath}' not found, skipped")
+            continue
+        try:
+            pos = int(fig.get("after", len(paras)))
+        except (TypeError, ValueError):
+            pos = len(paras)
+        pos = max(0, min(pos, len(paras)))
+        figures_by_pos.setdefault(pos, []).append(fig)
+
+    fig_markup = {}
+
+    def place_figures(pos):
+        for fig in figures_by_pos.get(pos, []):
+            key = f"<!--body-figure-{len(fig_markup)}-->"
+            cap = t(fig.get("caption"))
+            credit = t(fig.get("credit"))
+            if credit and fig.get("credit_url"):
+                credit = (f'<a href="{a(fig["credit_url"])}" target="_blank"'
+                          f' rel="noopener">{credit}</a>')
+            if credit:
+                cap = f'{cap} Image: {credit}' if cap else f'Image: {credit}'
+            fig_markup[key] = (
+                '        <figure class="article-fig share-body-fig">'
+                f'<img src="/{a(fig["file"])}" alt="{a(fig.get("alt"))}"'
+                ' loading="lazy" decoding="async" draggable="false">'
+                + (f'<figcaption>{cap}</figcaption>' if cap else '')
+                + '</figure>'
+            )
+            body_parts.append(f"        {key}")
+
+    place_figures(0)
+    for i, para in enumerate(paras, start=1):
         body_parts.append(f"        <p>{t(para)}</p>")
-    if not body_parts and entry.get("desc"):
+        place_figures(i)
+    if not paras and not entry.get("intro") and entry.get("desc"):
         body_parts.append(f"        <p>{t(entry['desc'])}</p>")
     body_html = "\n".join(body_parts)
 
@@ -489,6 +533,8 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     # plain text, because the same fields feed the meta description and the
     # gallery viewer, which escape rather than render HTML.
     body_html, gloss_count = annotate_glossary(body_html, slug, glossary or [])
+    for key, markup in fig_markup.items():
+        body_html = body_html.replace(f"        {key}", markup)
     # A page with no marked words carries no handler, so nothing is
     # paid for on a page that cannot use it.
     gloss_js = GLOSSARY_JS if gloss_count else ''

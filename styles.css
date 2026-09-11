@@ -8130,6 +8130,11 @@ html[data-theme="light"] .page-starword .sw-toast{
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }
+    /* Supporting picture inside a gallery write-up (body_figures in
+       site-data.json). Uses the article figure frame, caption and lightbox,
+       but held narrower than the column, since a square reference shot at
+       full width would stand taller than most screens. */
+    .share-body .share-body-fig{ max-width: 560px; margin: 26px auto; }
     /* Capture-specs panel — mirrors the viewer's info popup tiles */
     .share-specs{
       margin: 28px 0; padding: 16px 14px;
