@@ -392,8 +392,12 @@ waiting.</p>
   <script src="/partials/partials.js"></script>
   <script src="/protect-images.js"></script>
   <script>
-  /* Click any article photo to see it larger. protect-images.js does not
-     intercept plain clicks, so this needs no cooperation from it. */
+  /* Click the cover photo to see it larger. protect-images.js does not
+     intercept plain clicks, so this needs no cooperation from it.
+     Pictures inside figure.article-fig are left to the figure lightbox in
+     partials.js, which adds the caption and a close button. When this
+     overlay handled them too, one click opened both, this one on top, so
+     closing it revealed the second copy underneath. */
   (function () {
     var ov = document.createElement('div');
     ov.className = 'img-zoom';
@@ -405,7 +409,7 @@ waiting.</p>
 
     document.addEventListener('click', function (e) {
       var img = e.target.closest &&
-                e.target.closest('.article-fig img, .article-hero img');
+                e.target.closest('.article-hero img');
       if (img) {
         big.src = img.currentSrc || img.src;
         big.alt = img.alt || '';
