@@ -83,20 +83,24 @@
     "images": [
       {
         "file": "images/eagle-nebula-m16-2.webp",
-        "alt": "Eagle Nebula M16 Pillars of Creation astrophotography second render"
-      },
-      {
-        "file": "images/eagle-nebula-m16-1.webp",
         "alt": "Eagle Nebula M16 Pillars of Creation astrophotography"
       }
     ],
+    "body_figures": [
+      {
+        "after": 1,
+        "file": "images/eagle-nebula-m16-1.webp",
+        "alt": "An earlier attempt at the Eagle Nebula M16, showing less detail in the pillars and the surrounding dust",
+        "caption": "My first attempt at the Eagle. The main picture above is the same object, shot later with better equipment, more time on target and cleaner processing."
+      }
+    ],
     "title": "The Eagle Nebula (M16)",
-    "desc": "Two renders of this iconic stellar nursery in Serpens, an earlier capture and a more recent revisit with improved data and refined processing. Dense pillars of gas and dust rise from the Eagle Nebula's core, slowly sculpted by intense radiation from the young stars forming within. The Pillars of Creation, made famous by Hubble, sit at the heart of this vast region of active star birth.",
+    "desc": "An iconic stellar nursery in Serpens, and a target I came back to once my equipment and processing had moved on. Dense pillars of gas and dust rise from the Eagle Nebula's core, slowly sculpted by intense radiation from the young stars forming within. The Pillars of Creation, made famous by Hubble, sit at the heart of this vast region of active star birth.",
     "type": "nebulae",
     "slug": "eagle-nebula-m16",
     "date": "15-05-2026",
     "intro": "Home to the Pillars of Creation, the Eagle Nebula is one of the most iconic targets in all of astrophotography, a stellar nursery where new stars are being born inside towering columns of gas and dust.",
-    "body": "Messier 16, the Eagle Nebula, lies roughly 7,000 light-years away in the constellation Serpens. It was the subject of one of the most famous astronomical images ever taken, Hubble's 1995 photograph of the Pillars of Creation, three enormous columns of molecular gas and dust rising from the nebula's interior, slowly being sculpted by the radiation of newly formed stars.\n\nThis was a target I returned to more than once. The two renders in the gallery represent an earlier attempt and a later revisit with improved equipment and a better understanding of the processing. Comparing the two side by side is one of the more satisfying things about this hobby, seeing the same subject reveal more detail as your technique develops.\n\nThe Pillars themselves sit near the centre of the nebula and require good seeing and sufficient focal length to resolve properly. In narrowband, the hydrogen-alpha and OIII contrast beautifully - the pillars appear as dark silhouettes against the glowing gas behind them.",
+    "body": "Messier 16, the Eagle Nebula, lies roughly 7,000 light-years away in the constellation Serpens. It was the subject of one of the most famous astronomical images ever taken, Hubble's 1995 photograph of the Pillars of Creation, three enormous columns of molecular gas and dust rising from the nebula's interior, slowly being sculpted by the radiation of newly formed stars.\n\nThis was a target I returned to more than once. The small picture beside this text is my first attempt at it. Better equipment, more hours on target and a lot more practice with the processing account for the difference, and watching the same object give up more detail as your technique develops is one of the more satisfying things about this hobby.\n\nThe Pillars themselves sit near the centre of the nebula and require good seeing and sufficient focal length to resolve properly. In narrowband, the hydrogen-alpha and OIII contrast beautifully - the pillars appear as dark silhouettes against the glowing gas behind them.",
     "featured": true,
     "section": "gallery",
     "specs": {
