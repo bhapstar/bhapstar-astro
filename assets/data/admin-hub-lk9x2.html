@@ -319,10 +319,24 @@
       font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
       color: var(--muted); margin: 32px 0 12px;
     }
+    /* The columns are nowrap by design, so on a phone the table is wider
+       than the screen. overflow:hidden used to cut the right-hand columns
+       off with no way to reach them. */
     .table-wrap {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    /* A soft fade on the right edge, added by script only while there is
+       something further along to scroll to. Without it nothing on screen
+       says the table continues. The mask sits on the wrapper's own box, so
+       it stays put while the content moves under it. */
+    .table-wrap.has-more {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent 100%);
     }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead { background: var(--th-bg); }
@@ -685,6 +699,22 @@
   }
   const NET_MSG = 'Could not reach the server. Check your connection, then try again.';
 
+  /* Sideways-scrolling tables: flag the ones that still have content to the
+     right so the edge fade appears, and drop the flag once you reach the end. */
+  function markScrollables() {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.table-wrap').forEach(w => {
+        const more = (w.scrollWidth - w.clientWidth - w.scrollLeft) > 4;
+        w.classList.toggle('has-more', more);
+      });
+    });
+  }
+  document.addEventListener('scroll', e => {
+    const t = e.target;
+    if (t && t.classList && t.classList.contains('table-wrap')) markScrollables();
+  }, true);
+  window.addEventListener('resize', markScrollables);
+
   function esc(s) {
     return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -772,6 +802,7 @@
         renderStats();
         renderTable();
         updateHeaders();
+        markScrollables();
         return 'ok';
       } catch (e) {
         console.error('likes:', e);
@@ -888,6 +919,7 @@
         }
         updateHeaders();
         renderTable();
+        markScrollables();
       });
     });
 
@@ -1064,6 +1096,7 @@
         }
         updateSortHeaders('tpDayTable', daySortCol, daySortAsc);
         renderDayTable();
+        markScrollables();
       });
     });
 
@@ -1077,6 +1110,7 @@
         }
         updateSortHeaders('tpSrcTable', srcSortCol, srcSortAsc);
         renderSrcTable();
+        markScrollables();
       });
     });
 
@@ -1136,6 +1170,7 @@
         if (!r.ok) throw new Error('HTTP ' + r.status);
         data = await r.json();
         render();
+        markScrollables();
         return 'ok';
       } catch (err) {
         console.error('taps:', err);
