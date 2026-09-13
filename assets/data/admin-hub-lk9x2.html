@@ -513,7 +513,7 @@
     </div>
 
     <button class="btn" id="loginBtn">View</button>
-    <div class="error-msg" id="errorMsg">Neither key was accepted — please try again.</div>
+    <div class="error-msg" id="errorMsg">Neither key was accepted, please try again.</div>
 
     <div style="margin-top:20px;font-size:12px;">
       <a href="https://bhapstar.com" style="color:var(--muted);text-decoration:none;letter-spacing:0.04em;">← bhapstar.com</a>
@@ -670,6 +670,21 @@
   function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
   function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
 
+  /* Every Worker call gets a hard ceiling. A blocked or blackholed host does
+     not fail, it stalls, and a stalled fetch left the login button disabled
+     on its loading label with nothing on screen to explain why.
+     AbortSignal.timeout is missing on older Safari, hence the fallback. */
+  const FETCH_TIMEOUT_MS = 15000;
+  function timeoutSignal(ms) {
+    if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+      return AbortSignal.timeout(ms);
+    }
+    const c = new AbortController();
+    setTimeout(() => c.abort(), ms);
+    return c.signal;
+  }
+  const NET_MSG = 'Could not reach the server. Check your connection, then try again.';
+
   function esc(s) {
     return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -701,7 +716,7 @@
     /* ── Load site-data.json and build slug→thumb map ── */
     async function loadThumbMap() {
       try {
-        const r = await fetch('https://bhapstar.com/site-data.json');
+        const r = await fetch('https://bhapstar.com/site-data.json', { signal: timeoutSignal(FETCH_TIMEOUT_MS) });
         if (!r.ok) return;
         const items = await r.json();
         items.forEach(item => {
@@ -746,8 +761,10 @@
       loadingMsg.style.display = 'block';
       likesTable.style.display = 'none';
       try {
-        const r = await fetch(`${WORKER_URL}/admin?key=${encodeURIComponent(adminKey)}`);
-        if (r.status === 401) return false;
+        const r = await fetch(`${WORKER_URL}/admin?key=${encodeURIComponent(adminKey)}`, {
+          signal: timeoutSignal(FETCH_TIMEOUT_MS)
+        });
+        if (r.status === 401 || r.status === 403) return 'auth';
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const data = await r.json();
         allRows = data.rows || [];
@@ -755,9 +772,12 @@
         renderStats();
         renderTable();
         updateHeaders();
-        return true;
+        return 'ok';
       } catch (e) {
-        return false;
+        console.error('likes:', e);
+        return 'network';
+      } finally {
+        loadingMsg.style.display = 'none';
       }
     }
 
@@ -898,9 +918,9 @@
     return {
       async load(key) {
         adminKey = key;
-        const ok = await fetchData();
-        if (!ok) adminKey = '';
-        return ok;
+        const res = await fetchData();
+        if (res !== 'ok') adminKey = '';
+        return res;
       }
     };
   })();
@@ -1109,15 +1129,17 @@
       loadingMsg.style.display = 'block';
       content.style.display = 'none';
       try {
-        const r = await fetch(`${WORKER_URL}/stats?key=${encodeURIComponent(statsKey)}&days=${days}`);
-        if (r.status === 401) return false;
+        const r = await fetch(`${WORKER_URL}/stats?key=${encodeURIComponent(statsKey)}&days=${days}`, {
+          signal: timeoutSignal(FETCH_TIMEOUT_MS)
+        });
+        if (r.status === 401 || r.status === 403) return 'auth';
         if (!r.ok) throw new Error('HTTP ' + r.status);
         data = await r.json();
         render();
-        return true;
+        return 'ok';
       } catch (err) {
-        console.error(err);
-        return false;
+        console.error('taps:', err);
+        return 'network';
       } finally {
         loadingMsg.style.display = 'none';
       }
@@ -1250,9 +1272,9 @@
     return {
       async load(key) {
         statsKey = key;
-        const ok = await fetchData();
-        if (!ok) statsKey = '';
-        return ok;
+        const res = await fetchData();
+        if (res !== 'ok') statsKey = '';
+        return res;
       }
     };
   })();
@@ -1350,18 +1372,24 @@
     btn.disabled = true;
     btn.textContent = '…';
 
-    const ok = isLikes ? await Likes.load(key) : await Taps.load(key);
+    let res = 'network';
+    try {
+      res = isLikes ? await Likes.load(key) : await Taps.load(key);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Unlock';
+    }
 
-    btn.disabled = false;
-    btn.textContent = 'Unlock';
-
-    if (ok) {
+    if (res === 'ok') {
       ready[which] = true;
       ssSet(isLikes ? SS_LIKES : SS_TAPS, key);
       input.value = '';
       markTabs();
       showTab(which);
     } else {
+      err.textContent = res === 'auth' ? 'Not accepted.' : NET_MSG;
       err.style.display = 'block';
     }
   }
@@ -1382,29 +1410,49 @@
     loginBtn.disabled = true;
     loginBtn.textContent = '…';
 
-    const [likesOk, tapsOk] = await Promise.all([
-      likesKey ? Likes.load(likesKey) : Promise.resolve(false),
-      tapsKey  ? Taps.load(tapsKey)   : Promise.resolve(false)
-    ]);
+    let likesRes = 'skip';
+    let tapsRes  = 'skip';
+    try {
+      [likesRes, tapsRes] = await Promise.all([
+        likesKey ? Likes.load(likesKey) : Promise.resolve('skip'),
+        tapsKey  ? Taps.load(tapsKey)   : Promise.resolve('skip')
+      ]);
+    } catch (e) {
+      console.error(e);
+      likesRes = likesKey ? 'network' : 'skip';
+      tapsRes  = tapsKey  ? 'network' : 'skip';
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'View';
+    }
+
+    const likesOk = likesRes === 'ok';
+    const tapsOk  = tapsRes  === 'ok';
 
     ready.likes = likesOk;
     ready.taps  = tapsOk;
 
-    if (likesOk) ssSet(SS_LIKES, likesKey); else ssDel(SS_LIKES);
-    if (tapsOk)  ssSet(SS_TAPS,  tapsKey);  else ssDel(SS_TAPS);
-
-    loginBtn.disabled = false;
-    loginBtn.textContent = 'View';
+    /* A key is only cleared when the Worker actually rejected it. Dropping a
+       saved key because the network hiccuped means retyping it for nothing. */
+    if (likesOk) ssSet(SS_LIKES, likesKey); else if (likesRes === 'auth') ssDel(SS_LIKES);
+    if (tapsOk)  ssSet(SS_TAPS,  tapsKey);  else if (tapsRes  === 'auth') ssDel(SS_TAPS);
 
     if (likesOk || tapsOk) {
       enterDashboard();
       return;
     }
 
-    // Nothing worked. Say which field was rejected rather than a blanket error.
+    // Nothing worked. Say which field was rejected rather than a blanket error,
+    // and keep a server that never answered separate from a key that was refused.
     if (!silent) {
-      if (likesKey) likesError.style.display = 'block';
-      if (tapsKey)  tapsError.style.display  = 'block';
+      const unreachable = likesRes === 'network' || tapsRes === 'network';
+      if (unreachable) {
+        errorMsg.textContent = NET_MSG;
+      } else {
+        if (likesKey) { likesError.textContent = 'Not accepted.'; likesError.style.display = 'block'; }
+        if (tapsKey)  { tapsError.textContent  = 'Not accepted.'; tapsError.style.display  = 'block'; }
+        errorMsg.textContent = 'Neither key was accepted, please try again.';
+      }
       errorMsg.style.display = 'block';
     }
   }
