@@ -8896,7 +8896,7 @@ html[data-theme="light"] #gearGrid.list-view .cap .d,
 html[data-theme="light"] #articleGrid.list-view .cap .d{ color: rgba(60,54,96,0.82); }
 
 /* 5 — Image (share) page: lead paragraph + capture-spec values. */
-html[data-theme="light"] .share-body .lead{ color: rgba(60,54,96,0.88); }
+html[data-theme="light"] .share-body .lead{ color: rgba(78,68,128,0.88); }
 html[data-theme="light"] .share-spec-val{ color: rgba(40,35,72,0.90); }
 
 /* 6 — Prints: FAQ answers, the (i) tooltip, and the image picker. */
