@@ -462,21 +462,21 @@ const HIDE_FIELD_NOTES = true;
         const speed = rand(0.16, 0.50);          // px per millisecond
         const span  = dist + rand(0.25, 0.85) * Math.hypot(W, H);
 
-        /* One roll drives head size, tail length and brightness together, so
-           a comet reads as near or far rather than as a random mix of traits.
-           Tail length and width still get their own roll on top, which is
-           what stops the big ones all looking like the same comet. */
-        const size = Math.random();              // 0 small … 1 large
-
+        /* Heads stay small and near uniform on purpose: at hero scale a large
+           nucleus reads as a blob rather than a comet. The variety comes from
+           tail length, tail width, brightness and colour instead, all rolled
+           independently so no two crossings look like the same comet.
+           Tail width is a multiple of the head radius, so it tracks the head
+           rather than floating free of it. */
         comets.push({
           x, y,
           vx: (dx / dist) * speed,
           vy: (dy / dist) * speed,
           speed,
-          r:     0.8 + size * 1.5,               // head radius, 0.8–2.3 px
-          tailW: rand(1.15, 1.85),               // tail half width at the head, as a multiple of r
-          tail:  rand(60, 200) + size * rand(40, 180),  // tail length in px, 60–380
-          peak:  0.30 + size * 0.34 + rand(0, 0.16),    // brightest it ever gets
+          r:     rand(0.75, 1.15),               // head radius, 0.75–1.15 px
+          tailW: rand(1.1, 2.6),                 // tail half width at the head, as a multiple of r
+          tail:  rand(60, 380),                  // tail length in px
+          peak:  rand(0.34, 0.80),               // brightest it ever gets
           tint:  pickTint(),
           span,                                  // px it travels before it is gone
           fadeIn:  rand(90, 220),                // px
