@@ -412,11 +412,11 @@ const HIDE_FIELD_NOTES = true;
          relative chance of each being picked, so white and blue stay common
          and green and gold feel like a find. */
       const COMET_TINTS = [
-        { w: 5, head: '235,238,255', mid: '226,229,248', end: '200,198,240' }, // white
-        { w: 4, head: '203,222,255', mid: '175,205,255', end: '120,165,255' }, // blue white
-        { w: 3, head: '218,212,255', mid: '214,205,255', end: '167,139,250' }, // violet
-        { w: 2, head: '202,246,226', mid: '170,240,215', end: '90,220,180'  }, // green white
-        { w: 2, head: '255,241,206', mid: '255,230,170', end: '255,200,110' }, // gold white
+        { w: 5, head: '240,244,255', mid: '214,226,255', end: '176,194,248' }, // white
+        { w: 4, head: '168,204,255', mid: '108,174,255', end: '40,112,255'  }, // blue white
+        { w: 3, head: '200,180,255', mid: '168,128,255', end: '128,78,245'  }, // violet
+        { w: 2, head: '164,255,214', mid: '78,240,178',  end: '18,208,138'  }, // green white
+        { w: 2, head: '255,224,148', mid: '255,204,88',  end: '255,168,38'  }, // gold white
       ];
       const COMET_TINT_TOTAL = COMET_TINTS.reduce((n, t) => n + t.w, 0);
       function pickTint() {
@@ -473,8 +473,8 @@ const HIDE_FIELD_NOTES = true;
           vx: (dx / dist) * speed,
           vy: (dy / dist) * speed,
           speed,
-          r:     0.8 + size * 2.3,               // head radius, 0.8–3.1 px
-          tailW: rand(1.2, 2.2),                 // tail half width at the head, as a multiple of r
+          r:     0.8 + size * 1.5,               // head radius, 0.8–2.3 px
+          tailW: rand(1.15, 1.85),               // tail half width at the head, as a multiple of r
           tail:  rand(60, 200) + size * rand(40, 180),  // tail length in px, 60–380
           peak:  0.30 + size * 0.34 + rand(0, 0.16),    // brightest it ever gets
           tint:  pickTint(),
@@ -506,8 +506,12 @@ const HIDE_FIELD_NOTES = true;
         const T  = c.tint;
         const hw = c.r * c.tailW;                         // half width at the head
         const g = ctx.createLinearGradient(c.x, c.y, bx, by);
+        // The white core is kept short so the tint takes over early. Stretch
+        // the first stop past 0.10 and every comet starts looking white again.
         g.addColorStop(0,    'rgba(255,255,255,' + a.toFixed(3) + ')');
-        g.addColorStop(0.32, 'rgba(' + T.mid + ',' + (a * 0.34).toFixed(3) + ')');
+        g.addColorStop(0.10, 'rgba(' + T.mid + ',' + (a * 0.80).toFixed(3) + ')');
+        g.addColorStop(0.42, 'rgba(' + T.mid + ',' + (a * 0.40).toFixed(3) + ')');
+        g.addColorStop(0.78, 'rgba(' + T.end + ',' + (a * 0.14).toFixed(3) + ')');
         g.addColorStop(1,    'rgba(' + T.end + ',0)');
         ctx.beginPath();
         ctx.moveTo(c.x + px * hw, c.y + py * hw);
@@ -522,7 +526,7 @@ const HIDE_FIELD_NOTES = true;
         // coma looks through a telescope.
         const halo = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r * 4);
         halo.addColorStop(0,    'rgba(255,255,255,' + a.toFixed(3) + ')');
-        halo.addColorStop(0.35, 'rgba(' + T.head + ',' + (a * 0.55).toFixed(3) + ')');
+        halo.addColorStop(0.22, 'rgba(' + T.head + ',' + (a * 0.78).toFixed(3) + ')');
         halo.addColorStop(1,    'rgba(' + T.head + ',0)');
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r * 4, 0, Math.PI * 2);
