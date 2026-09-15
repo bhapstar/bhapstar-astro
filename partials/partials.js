@@ -391,12 +391,16 @@ const HIDE_FIELD_NOTES = true;
       let W, H, stars = [], raf;
       const COUNT = 160;
 
-      // Comets. One at a time is the usual case; the cap only matters if a
-      // very long, very slow one is still crossing when the next is due.
+      // Comets. Arrivals are frequent enough that two are often in frame at
+      // once; the cap stops a run of long, slow ones from stacking up.
       let comets = [], nextComet = 0, lastFrame = 0;
-      const COMET_MIN_GAP = 600;    // ms between arrivals
-      const COMET_MAX_GAP = 16000;
-      const COMET_MAX     = 2;
+      const COMET_MIN_GAP   = 500;   // ms between arrivals
+      const COMET_MAX_GAP   = 6000;
+      const COMET_MAX       = 3;
+      // Wait before the first comet after load, or after the hero scrolls
+      // back into view. Kept short so the hero is not empty on arrival.
+      const COMET_FIRST_MIN = 300;   // ms
+      const COMET_FIRST_MAX = 900;
 
       function rand(min, max) { return min + Math.random() * (max - min); }
 
@@ -524,7 +528,7 @@ const HIDE_FIELD_NOTES = true;
 
         draw(t);   // clears the canvas and repaints the stars
 
-        if (!nextComet) nextComet = t + rand(1500, 3000);
+        if (!nextComet) nextComet = t + rand(COMET_FIRST_MIN, COMET_FIRST_MAX);
         if (t >= nextComet) {
           if (comets.length < COMET_MAX) spawnComet();
           nextComet = t + rand(COMET_MIN_GAP, COMET_MAX_GAP);
