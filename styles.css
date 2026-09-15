@@ -6992,6 +6992,34 @@ html[data-theme="light"] .page-starword .sw-toast{
   100% { transform: scale(1);    opacity: 1; }
 }
 
+/* ── Tile legibility tuning ──────────────────────────────
+   Deep-sky thumbnails are bright and high-contrast, which made the
+   digits hard to read. Three dials, all theme-aware, live here:
+     --tile-bright / --tile-sat  calm the picture down evenly across
+       every tile so the assembled image stays continuous
+     --tile-scrim-*              the disc sitting behind each digit
+     --tile-halo                 the hard outline drawn around digits
+   Raise --tile-bright toward 1 for a punchier picture, drop it for
+   easier reading. Nothing here needs a JS change. */
+body.page-sweeper {
+  --tile-bright: 0.72;
+  --tile-sat:    0.80;
+  --tile-scrim-core: rgba(5,4,20,0.92);
+  --tile-scrim-mid:  rgba(5,4,20,0.74);
+  --tile-scrim-end:  rgba(5,4,20,0);
+  --tile-halo: #050414;
+}
+html[data-theme="light"] body.page-sweeper {
+  /* Light theme: wash the picture out instead of darkening it, so a
+     dark digit on a pale tile reads against a light page. */
+  --tile-bright: 1.16;
+  --tile-sat:    0.66;
+  --tile-scrim-core: rgba(255,255,255,0.94);
+  --tile-scrim-mid:  rgba(255,255,255,0.78);
+  --tile-scrim-end:  rgba(255,255,255,0);
+  --tile-halo: #ffffff;
+}
+
 /* Revealed image tile */
 .cell.revealed .tile-img {
   position: absolute;
@@ -6999,12 +7027,14 @@ html[data-theme="light"] .page-starword .sw-toast{
   background-size: cover;
   background-repeat: no-repeat;
   opacity: 1;
+  filter: saturate(var(--tile-sat, 1)) brightness(var(--tile-bright, 1)) contrast(0.92);
 }
 
 /* Legibility scrim — only on numbered tiles. Sits above the image
-   (z-index 1) and below the number (z-index 2). A radial fade keeps
-   it strongest behind the digit and transparent at the tile edges,
-   so the assembled picture stays continuous. */
+   (z-index 1) and below the number (z-index 2). A tight radial disc
+   keeps it near-solid directly behind the digit and clear well before
+   the tile edge, so the assembled picture stays continuous. Stops are
+   percentages, so it scales with the cell size on small screens. */
 .cell.revealed.has-num::after {
   content: '';
   position: absolute;
@@ -7012,22 +7042,32 @@ html[data-theme="light"] .page-starword .sw-toast{
   z-index: 1;
   pointer-events: none;
   background: radial-gradient(circle at center,
-    rgba(5,4,20,0.75) 0%,
-    rgba(5,4,20,0.30) 60%,
-    rgba(5,4,20,0)   100%);
+    var(--tile-scrim-core) 0%,
+    var(--tile-scrim-mid)  34%,
+    var(--tile-scrim-end)  76%);
 }
 
-/* Number overlay on image */
+/* Number overlay on image. The outline is drawn with four hard
+   offset shadows rather than -webkit-text-stroke, which would eat
+   into thin glyph strokes at this size. Size is relative to the
+   cell's own font-size (set inline by buildBoard) so digits stay
+   proportional on narrow layouts. */
 .cell.revealed .tile-num {
   position: relative;
   z-index: 2;
-  text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000;
-  font-size: 13px;
+  font-size: 1.1em;
   font-weight: 800;
   line-height: 1;
+  letter-spacing: 0;
+  text-shadow:
+    -1px -1px 0 var(--tile-halo),
+     1px -1px 0 var(--tile-halo),
+    -1px  1px 0 var(--tile-halo),
+     1px  1px 0 var(--tile-halo),
+     0 0 5px var(--tile-halo);
 }
 
-/* Number colours */
+/* Number colours — dark theme */
 .n1 { color: #60a5fa; }
 .n2 { color: #34d399; }
 .n3 { color: #f87171; }
@@ -7036,6 +7076,17 @@ html[data-theme="light"] .page-starword .sw-toast{
 .n6 { color: #22d3ee; }
 .n7 { color: #e879f9; }
 .n8 { color: #f9a8d4; }
+
+/* Number colours — light theme. Same hue order, darkened so each
+   digit carries enough contrast against a pale tile and a white halo. */
+html[data-theme="light"] .cell.revealed .n1 { color: #1d4ed8; }
+html[data-theme="light"] .cell.revealed .n2 { color: #047857; }
+html[data-theme="light"] .cell.revealed .n3 { color: #b91c1c; }
+html[data-theme="light"] .cell.revealed .n4 { color: #6d28d9; }
+html[data-theme="light"] .cell.revealed .n5 { color: #b45309; }
+html[data-theme="light"] .cell.revealed .n6 { color: #0e7490; }
+html[data-theme="light"] .cell.revealed .n7 { color: #a21caf; }
+html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
 
 /* Mine cell */
 .cell.mine-hit {
