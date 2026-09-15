@@ -404,6 +404,27 @@ const HIDE_FIELD_NOTES = true;
 
       function rand(min, max) { return min + Math.random() * (max - min); }
 
+      /* Comet tints. Real comets are not all one colour: the ion tail glows
+         blue from carbon monoxide ions, the dust tail is a warmer yellow
+         white, and an active coma often looks green from diatomic carbon.
+         Heads stay close to white, so the tint reads in the tail and the
+         halo rather than turning the nucleus into a coloured dot. w is the
+         relative chance of each being picked, so white and blue stay common
+         and green and gold feel like a find. */
+      const COMET_TINTS = [
+        { w: 5, head: '235,238,255', mid: '226,229,248', end: '200,198,240' }, // white
+        { w: 4, head: '203,222,255', mid: '175,205,255', end: '120,165,255' }, // blue white
+        { w: 3, head: '218,212,255', mid: '214,205,255', end: '167,139,250' }, // violet
+        { w: 2, head: '202,246,226', mid: '170,240,215', end: '90,220,180'  }, // green white
+        { w: 2, head: '255,241,206', mid: '255,230,170', end: '255,200,110' }, // gold white
+      ];
+      const COMET_TINT_TOTAL = COMET_TINTS.reduce((n, t) => n + t.w, 0);
+      function pickTint() {
+        let n = Math.random() * COMET_TINT_TOTAL;
+        for (const t of COMET_TINTS) { n -= t.w; if (n <= 0) return t; }
+        return COMET_TINTS[0];
+      }
+
       function build() {
         stars = Array.from({ length: COUNT }, () => ({
           x:      rand(0, W),
@@ -438,17 +459,25 @@ const HIDE_FIELD_NOTES = true;
         const ty = rand(H * 0.15, H * 0.85);
         const dx = tx - x, dy = ty - y;
         const dist = Math.hypot(dx, dy) || 1;
-        const speed = rand(0.20, 0.46);          // px per millisecond
+        const speed = rand(0.16, 0.50);          // px per millisecond
         const span  = dist + rand(0.25, 0.85) * Math.hypot(W, H);
+
+        /* One roll drives head size, tail length and brightness together, so
+           a comet reads as near or far rather than as a random mix of traits.
+           Tail length and width still get their own roll on top, which is
+           what stops the big ones all looking like the same comet. */
+        const size = Math.random();              // 0 small … 1 large
 
         comets.push({
           x, y,
           vx: (dx / dist) * speed,
           vy: (dy / dist) * speed,
           speed,
-          r:    rand(0.9, 2.2),                  // head radius
-          tail: rand(70, 240),                   // tail length in px
-          peak: rand(0.35, 0.80),                // brightest it ever gets
+          r:     0.8 + size * 2.3,               // head radius, 0.8–3.1 px
+          tailW: rand(1.2, 2.2),                 // tail half width at the head, as a multiple of r
+          tail:  rand(60, 200) + size * rand(40, 180),  // tail length in px, 60–380
+          peak:  0.30 + size * 0.34 + rand(0, 0.16),    // brightest it ever gets
+          tint:  pickTint(),
           span,                                  // px it travels before it is gone
           fadeIn:  rand(90, 220),                // px
           fadeOut: Math.min(span * 0.35, 300),   // px
@@ -474,22 +503,27 @@ const HIDE_FIELD_NOTES = true;
 
         // The tail is a triangle, full width at the head and a point at the
         // far end, because a stroked line cannot taper.
+        const T  = c.tint;
+        const hw = c.r * c.tailW;                         // half width at the head
         const g = ctx.createLinearGradient(c.x, c.y, bx, by);
         g.addColorStop(0,    'rgba(255,255,255,' + a.toFixed(3) + ')');
-        g.addColorStop(0.32, 'rgba(214,205,255,' + (a * 0.34).toFixed(3) + ')');
-        g.addColorStop(1,    'rgba(167,139,250,0)');
+        g.addColorStop(0.32, 'rgba(' + T.mid + ',' + (a * 0.34).toFixed(3) + ')');
+        g.addColorStop(1,    'rgba(' + T.end + ',0)');
         ctx.beginPath();
-        ctx.moveTo(c.x + px * c.r, c.y + py * c.r);
+        ctx.moveTo(c.x + px * hw, c.y + py * hw);
         ctx.lineTo(bx, by);
-        ctx.lineTo(c.x - px * c.r, c.y - py * c.r);
+        ctx.lineTo(c.x - px * hw, c.y - py * hw);
         ctx.closePath();
         ctx.fillStyle = g;
         ctx.fill();
 
-        // Head, with a soft halo so it reads as light rather than a dot.
+        // Head, with a soft halo so it reads as light rather than a dot. The
+        // core stays white and the tint comes in across the halo, the way a
+        // coma looks through a telescope.
         const halo = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r * 4);
-        halo.addColorStop(0, 'rgba(255,255,255,' + a.toFixed(3) + ')');
-        halo.addColorStop(1, 'rgba(255,255,255,0)');
+        halo.addColorStop(0,    'rgba(255,255,255,' + a.toFixed(3) + ')');
+        halo.addColorStop(0.35, 'rgba(' + T.head + ',' + (a * 0.55).toFixed(3) + ')');
+        halo.addColorStop(1,    'rgba(' + T.head + ',0)');
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r * 4, 0, Math.PI * 2);
         ctx.fillStyle = halo;
