@@ -33,6 +33,9 @@
       <image:loc>https://bhapstar.com/images/eagle-nebula-m16-2.webp</image:loc>
     </image:image>
     <image:image>
+      <image:loc>https://bhapstar.com/images/eagle-nebula-m16-1.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://bhapstar.com/images/jellyfish-nebula-ic443.webp</image:loc>
     </image:image>
     <image:image>
@@ -391,6 +394,9 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/eagle-nebula-m16-2.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/eagle-nebula-m16-1.webp</image:loc>
     </image:image>
   </url>
   <url>
