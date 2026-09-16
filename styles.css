@@ -8181,56 +8181,80 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     }
 
     /* ── Compare slider ("compare": true in site-data.json) ──
-       Two pictures of the same size and framing. The second is laid over
-       the first and clipped to the left of --cmp, so dragging right reveals
-       more of it. pan-y hands vertical swipes back to the page so a finger
-       resting on the picture can still scroll. */
-    .share-compare{ --cmp: 50%; }
-    .share-compare .share-slide > a{
-      touch-action: pan-y;
-      cursor: ew-resize;
-      -webkit-user-select: none; user-select: none;
+       Two pictures of the same framing. The second is laid over the first
+       and clipped to the left of --cmp, so moving the small slider along the
+       bottom edge to the right reveals more of it. The slide shrink-wraps the
+       picture so the slider is centred on the image, not the column. */
+    .share-compare{ --cmp: 0%; }
+    .share-compare .share-slide.is-active{
+      position: relative;
+      width: fit-content; max-width: 100%; margin: 0 auto;
     }
     .share-figure img.cmp-top{
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%; max-height: none;
+      object-fit: cover;
       clip-path: inset(0 calc(100% - var(--cmp)) 0 0);
       -webkit-clip-path: inset(0 calc(100% - var(--cmp)) 0 0);
       box-shadow: none;
       pointer-events: none;
     }
     html[data-theme="light"] .share-figure img.cmp-top{ box-shadow: none; }
-    .cmp-bar{
-      position: absolute; top: 0; bottom: 0; left: var(--cmp); z-index: 2;
-      width: 2px; transform: translateX(-50%);
-      background: rgba(255,255,255,0.85);
-      box-shadow: 0 0 10px rgba(167,139,250,0.7), 0 0 2px rgba(0,0,0,0.5);
-      pointer-events: none;
+    .cmp-control{
+      position: absolute; left: 50%; bottom: 14px; z-index: 3;
+      transform: translateX(-50%);
+      width: min(240px, 64%);
+      display: flex; align-items: center;
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--ov-bg);
+      border: 1px solid var(--ov-line);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+      transition: background .2s ease, border-color .2s ease;
     }
-    .cmp-knob{
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 40px; height: 40px; border-radius: 50%;
-      display: grid; place-items: center;
-      color: #fff;
-      background: rgba(5,4,20,0.55);
-      border: 1px solid rgba(167,139,250,0.7);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.45), 0 0 14px rgba(167,139,250,0.35);
-      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-      transition: transform .15s ease, background .2s ease;
+    .share-compare .share-slide > a:hover ~ .cmp-control,
+    .cmp-control:hover, .cmp-control:focus-within{
+      background: var(--ov-bg-hi); border-color: var(--ov-line-hi);
     }
-    .cmp-knob svg{ width: 18px; height: 18px; }
-    .share-compare .share-slide > a:hover .cmp-knob,
-    .share-compare.is-dragging .cmp-knob{
-      background: rgba(76,52,170,0.75);
+    .cmp-range{
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 20px; margin: 0; padding: 0;
+      border: 0; border-radius: 0; box-shadow: none;
+      background: transparent; cursor: pointer;
+      touch-action: pan-x;
     }
-    .share-compare.is-dragging .cmp-knob{ transform: translate(-50%, -50%) scale(1.1); }
-    .cmp-range:focus-visible + .share-slide .cmp-knob{
-      outline: 2px solid var(--ov-line-hi); outline-offset: 3px;
+    .cmp-range:focus{ outline: none; border: 0; box-shadow: none; }
+    .cmp-range::-webkit-slider-runnable-track{
+      height: 4px; border-radius: 999px;
+      background: linear-gradient(90deg, #a78bfa 0%, #60a5fa var(--cmp),
+                  rgba(255,255,255,0.35) var(--cmp));
+    }
+    .cmp-range::-moz-range-track{
+      height: 4px; border-radius: 999px;
+      background: rgba(255,255,255,0.35);
+    }
+    .cmp-range::-moz-range-progress{
+      height: 4px; border-radius: 999px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    }
+    .cmp-range::-webkit-slider-thumb{
+      -webkit-appearance: none; appearance: none;
+      width: 18px; height: 18px; margin-top: -7px; border-radius: 50%;
+      background: #fff; border: 2px solid #a78bfa;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+    .cmp-range::-moz-range-thumb{
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; border: 2px solid #a78bfa;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+    .cmp-range:focus-visible::-webkit-slider-thumb{
+      outline: 2px solid var(--ov-line-hi); outline-offset: 2px;
+    }
+    .cmp-range:focus-visible::-moz-range-thumb{
+      outline: 2px solid var(--ov-line-hi); outline-offset: 2px;
     }
     @media (max-width: 620px){
-      .cmp-knob{ width: 34px; height: 34px; }
-      .cmp-knob svg{ width: 16px; height: 16px; }
+      .cmp-control{ bottom: 10px; padding: 5px 12px; }
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
     .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }

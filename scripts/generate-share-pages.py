@@ -459,35 +459,34 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 
     first_cap = t(media[0][1]) if (multi and media[0][1]) else ""
     if compare:
-        # One slide holding both pictures. The base image sits in the flow and
-        # sizes the box; the top image is stretched over it and clipped to the
-        # left of --cmp. The range input comes first so the knob can show its
-        # keyboard focus ring through a sibling selector. Without JS the page
-        # still shows a static half-and-half split.
+        # One slide holding both pictures. The first sits in the flow and sizes
+        # the box; the second is laid over it and clipped to the left of --cmp,
+        # so moving the slider right reveals more of it. The slider is a small
+        # control along the bottom edge, outside the link, so the picture
+        # itself still opens full screen on a tap. object-fit: cover in the CSS
+        # keeps the second picture in proportion if its shape differs slightly.
         (file_a, alt_a), (file_b, alt_b) = media
         gidx_a = global_start if global_start is not None else 0
         gidx_b = gidx_a + 1
         pager = ""
+        cmp_cap = (entry.get("compare_caption")
+                   or "Use the slider to compare the two versions.")
         slides = [
-            '          <input class="cmp-range sr-only" type="range" min="0"'
-            ' max="100" step="1" value="50"'
-            ' aria-label="Slide to compare the two versions of the picture">\n'
             '          <div class="share-slide is-active">'
             f'<a class="share-open" data-idx="{gidx_a}" data-idx-a="{gidx_a}"'
-            f' data-idx-b="{gidx_b}" href="{a(viewer_url)}" draggable="false"'
+            f' data-idx-b="{gidx_b}" href="{a(viewer_url)}"'
             f' aria-label="Open {a(title)} full screen">'
             f'<img src="/{a(file_a)}" alt="{a(alt_a or title)}" loading="eager"'
             ' fetchpriority="high" decoding="async" draggable="false">'
             f'<img class="cmp-top" src="/{a(file_b)}" alt="{a(alt_b or title)}"'
             ' loading="eager" decoding="async" draggable="false">'
-            '<span class="cmp-bar" aria-hidden="true"><span class="cmp-knob">'
-            '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor"'
-            ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-            '<path d="M6 4.5L2.5 8 6 11.5"/><path d="M10 4.5L13.5 8 10 11.5"/>'
-            '</svg></span></span>'
-            f'{photo_hint}</a></div>'
+            f'{photo_hint}</a>'
+            '<div class="cmp-control">'
+            '<input class="cmp-range" type="range" min="0" max="100" step="0.5"'
+            f' value="0" aria-label="{a(cmp_cap)}">'
+            '</div></div>'
         ]
-        first_cap = "Drag across the picture to compare the two versions."
+        first_cap = t(cmp_cap)
     figures_html = (
         '      <figure class="share-figure">\n'
         f'        <div class="share-slides{" share-compare" if compare else ""}">\n'
@@ -624,55 +623,16 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             "          if (!link || !range) return;\n"
             "          var idxA = link.getAttribute('data-idx-a');\n"
             "          var idxB = link.getAttribute('data-idx-b');\n"
-            "          var drag = null, moved = false, justDragged = false;\n"
-            "          /* Past halfway the labelled copy is mostly on screen, so a\n"
-            "             tap opens that one full screen instead of the base. */\n"
-            "          function set(v){\n"
-            "            v = Math.max(0, Math.min(100, v));\n"
+            "          /* Past halfway the second picture is mostly on screen, so a\n"
+            "             tap on the picture opens that one full screen. */\n"
+            "          function set(){\n"
+            "            var v = Math.max(0, Math.min(100, +range.value || 0));\n"
             "            box.style.setProperty('--cmp', v + '%');\n"
-            "            range.value = Math.round(v);\n"
             "            link.setAttribute('data-idx', v > 50 ? idxB : idxA);\n"
             "          }\n"
-            "          function fromX(x){\n"
-            "            var r = link.getBoundingClientRect();\n"
-            "            return r.width ? (x - r.left) / r.width * 100 : 50;\n"
-            "          }\n"
-            "          /* Any horizontal drag on the picture moves the divider. A\n"
-            "             clean tap still opens full screen. touch-action: pan-y in\n"
-            "             the CSS leaves vertical swipes to scroll the page. */\n"
-            "          link.addEventListener('pointerdown', function(e){\n"
-            "            if (e.pointerType === 'mouse' && e.button !== 0) return;\n"
-            "            drag = { id: e.pointerId, x: e.clientX };\n"
-            "            moved = false; justDragged = false;\n"
-            "          });\n"
-            "          link.addEventListener('pointermove', function(e){\n"
-            "            if (!drag || e.pointerId !== drag.id) return;\n"
-            "            if (!moved){\n"
-            "              if (Math.abs(e.clientX - drag.x) < 5) return;\n"
-            "              moved = true;\n"
-            "              box.classList.add('is-dragging');\n"
-            "              try { link.setPointerCapture(e.pointerId); } catch (_) {}\n"
-            "            }\n"
-            "            set(fromX(e.clientX));\n"
-            "          });\n"
-            "          function end(e){\n"
-            "            if (!drag || e.pointerId !== drag.id) return;\n"
-            "            justDragged = moved;\n"
-            "            drag = null; moved = false;\n"
-            "            box.classList.remove('is-dragging');\n"
-            "          }\n"
-            "          link.addEventListener('pointerup', end);\n"
-            "          link.addEventListener('pointercancel', end);\n"
-            "          link.addEventListener('dragstart', function(e){ e.preventDefault(); });\n"
-            "          /* Capture on the wrapper runs before the lightbox handler on\n"
-            "             the link, so the click that ends a drag never opens it. */\n"
-            "          box.addEventListener('click', function(e){\n"
-            "            if (!justDragged) return;\n"
-            "            justDragged = false;\n"
-            "            e.preventDefault(); e.stopPropagation();\n"
-            "          }, true);\n"
-            "          range.addEventListener('input', function(){ set(+range.value); });\n"
-            "          set(+range.value || 50);\n"
+            "          range.addEventListener('input', set);\n"
+            "          range.addEventListener('change', set);\n"
+            "          set();\n"
             "        })();\n"
             "      </script>\n"
         )
