@@ -119,12 +119,11 @@
       <h1>The Geminids Meteor Shower</h1>
 
       <figure class="share-figure">
-        <div class="share-slides">
-          <div class="share-slide is-active" data-cap="Geminids meteor shower composite astrophotography"><a class="share-open" data-idx="28" href="/gallery.html#geminids-meteor-shower" aria-label="Open The Geminids Meteor Shower full screen"><img src="/images/geminids-meteor-shower.webp" alt="Geminids meteor shower composite astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
-          <div class="share-slide" data-cap="Geminids meteor shower composite labelled radiant point astrophotography"><a class="share-open" data-idx="29" href="/gallery.html#geminids-meteor-shower" aria-label="Open The Geminids Meteor Shower full screen"><img src="/images/geminids-meteor-shower-labelled.webp" alt="Geminids meteor shower composite labelled radiant point astrophotography" loading="lazy" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
-          <div class="share-pager"><button class="share-pager-btn prev" type="button" aria-label="Previous picture">‹</button><span class="share-pager-count" aria-live="polite">1 / 2</span><button class="share-pager-btn next" type="button" aria-label="Next picture">›</button></div>
+        <div class="share-slides share-compare">
+          <input class="cmp-range sr-only" type="range" min="0" max="100" step="1" value="50" aria-label="Slide to compare the two versions of the picture">
+          <div class="share-slide is-active"><a class="share-open" data-idx="28" data-idx-a="28" data-idx-b="29" href="/gallery.html#geminids-meteor-shower" draggable="false" aria-label="Open The Geminids Meteor Shower full screen"><img src="/images/geminids-meteor-shower.webp" alt="Geminids meteor shower composite astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><img class="cmp-top" src="/images/geminids-meteor-shower-labelled.webp" alt="Geminids meteor shower composite labelled radiant point astrophotography" loading="eager" decoding="async" draggable="false"><span class="cmp-bar" aria-hidden="true"><span class="cmp-knob"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4.5L2.5 8 6 11.5"/><path d="M10 4.5L13.5 8 10 11.5"/></svg></span></span><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
         </div>
-        <figcaption class="share-slide-cap">Geminids meteor shower composite astrophotography</figcaption>
+        <figcaption class="share-slide-cap">Drag across the picture to compare the two versions.</figcaption>
       </figure>
 
       <div class="share-body">
@@ -154,24 +153,62 @@
 
       <script>
         (function(){
-          var box = document.querySelector('.share-slides');
+          var box = document.querySelector('.share-compare');
           if (!box) return;
-          var slides = box.querySelectorAll('.share-slide');
-          var count  = box.querySelector('.share-pager-count');
-          var cap    = document.querySelector('.share-slide-cap');
-          var i = 0;
-          function show(n){
-            i = (n + slides.length) % slides.length;
-            for (var k = 0; k < slides.length; k++){
-              slides[k].classList.toggle('is-active', k === i);
-            }
-            if (count) count.textContent = (i + 1) + ' / ' + slides.length;
-            if (cap) cap.textContent = slides[i].getAttribute('data-cap') || '';
+          var link  = box.querySelector('.share-open');
+          var range = box.querySelector('.cmp-range');
+          if (!link || !range) return;
+          var idxA = link.getAttribute('data-idx-a');
+          var idxB = link.getAttribute('data-idx-b');
+          var drag = null, moved = false, justDragged = false;
+          /* Past halfway the labelled copy is mostly on screen, so a
+             tap opens that one full screen instead of the base. */
+          function set(v){
+            v = Math.max(0, Math.min(100, v));
+            box.style.setProperty('--cmp', v + '%');
+            range.value = Math.round(v);
+            link.setAttribute('data-idx', v > 50 ? idxB : idxA);
           }
-          box.querySelector('.share-pager-btn.prev')
-             .addEventListener('click', function(){ show(i - 1); });
-          box.querySelector('.share-pager-btn.next')
-             .addEventListener('click', function(){ show(i + 1); });
+          function fromX(x){
+            var r = link.getBoundingClientRect();
+            return r.width ? (x - r.left) / r.width * 100 : 50;
+          }
+          /* Any horizontal drag on the picture moves the divider. A
+             clean tap still opens full screen. touch-action: pan-y in
+             the CSS leaves vertical swipes to scroll the page. */
+          link.addEventListener('pointerdown', function(e){
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            drag = { id: e.pointerId, x: e.clientX };
+            moved = false; justDragged = false;
+          });
+          link.addEventListener('pointermove', function(e){
+            if (!drag || e.pointerId !== drag.id) return;
+            if (!moved){
+              if (Math.abs(e.clientX - drag.x) < 5) return;
+              moved = true;
+              box.classList.add('is-dragging');
+              try { link.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+            set(fromX(e.clientX));
+          });
+          function end(e){
+            if (!drag || e.pointerId !== drag.id) return;
+            justDragged = moved;
+            drag = null; moved = false;
+            box.classList.remove('is-dragging');
+          }
+          link.addEventListener('pointerup', end);
+          link.addEventListener('pointercancel', end);
+          link.addEventListener('dragstart', function(e){ e.preventDefault(); });
+          /* Capture on the wrapper runs before the lightbox handler on
+             the link, so the click that ends a drag never opens it. */
+          box.addEventListener('click', function(e){
+            if (!justDragged) return;
+            justDragged = false;
+            e.preventDefault(); e.stopPropagation();
+          }, true);
+          range.addEventListener('input', function(){ set(+range.value); });
+          set(+range.value || 50);
         })();
       </script>
       <script>
