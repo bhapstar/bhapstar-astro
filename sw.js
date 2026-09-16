@@ -25,6 +25,10 @@ const SHELL_ASSETS = [
   '/glossary.html',
   '/prints.html',
   '/start-here.html',
+  // The planner. It needs no network once cached: the astronomy is in
+  // tonight-core.js and the place names are in places.js, both below. Only
+  // the map tiles need a signal, and the panel works without them.
+  '/tonight.html',
   '/quiz.html',
   '/jigsaw.html',
   '/star_word.html',
@@ -38,9 +42,9 @@ const SHELL_ASSETS = [
   '/partials/footer.html',
   '/site-data.json',
   '/assets/data/starword-words.txt',
-  // Start Here does its nearest-place lookup from this file rather than a
-  // network call, so the page is only useful offline if the data is cached
-  // alongside it.
+  // The tonight page does its nearest-place lookup from this file rather
+  // than a network call, so the page is only useful offline if the data is
+  // cached alongside it.
   '/assets/data/places.js',
   // The field cards are ~130 KB for all six, and being readable with no
   // signal is the entire point of them, so they are worth the shell slot.

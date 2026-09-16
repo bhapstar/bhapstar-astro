@@ -28,11 +28,14 @@ Why the order matters:
               everything above.
   6. starthere  start-here.html, the guided path. Built after the article
               pages so every link it writes points at a file already on disk.
-  7. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
+  7. tonight  tonight.html, the night planner and upcoming meteor showers.
+              Built after the article pages for the same reason as Start
+              Here, and it checks every planner target's images on disk.
+  8. feed     feed.xml, the RSS feed. Also built from site-data.json, so it
               is order-independent too, but it runs last for the same reason
               as the sitemap: it describes everything above it.
-  8. downloads  field-cards.html, the index of every printable field card.
-  9. glossary   glossary.html, every term in content/glossary.json on one
+  9. downloads  field-cards.html, the index of every printable field card.
+ 10. glossary   glossary.html, every term in content/glossary.json on one
                 page. Last, because it depends on nothing the other stages
                 write and nothing depends on it.
               Built from site-data.json and from the PDFs on disk, so it is
@@ -67,6 +70,7 @@ STAGES = [
     ("schema",  "generate-schema.py"),
     ("sitemap", "generate-sitemap.py"),
     ("starthere", "generate-start-here.py"),
+    ("tonight", "generate-tonight.py"),
     ("feed",    "generate-feed.py"),
     ("downloads", "generate-downloads.py"),
     ("glossary", "generate-glossary.py"),

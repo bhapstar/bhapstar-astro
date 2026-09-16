@@ -49,6 +49,7 @@ ARTICLE_DIR = "articles"
 PAGES = [
     ("",                        "monthly",  "1.0",  None),
     ("start-here.html",         "monthly",  "0.9",  None),
+    ("tonight.html",            "monthly",  "0.8",  None),
     ("gallery.html",            "monthly",  "0.9",  "gallery"),
     ("gear.html",               "monthly",  "0.8",  "gear"),
     ("articles.html",           "monthly",  "0.8",  None),

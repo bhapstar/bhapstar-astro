@@ -2783,7 +2783,7 @@ a[href="prints.html"], a[href*="prints"] {
   .sh-route-block.sh-swapping { opacity: 1; transform: none; }
 }
 
-/* ---- Cards (shared by routes and the full path) ---- */
+/* ---- Cards (route reading lists) ---- */
 .sh-list { display: flex; flex-direction: column; gap: 10px; }
 .sh-card { display: flex; gap: 14px; align-items: flex-start;
            padding: 15px 17px; border-radius: 13px;
@@ -2813,30 +2813,16 @@ a[href="prints.html"], a[href*="prints"] {
 .sh-more:hover, .sh-more:focus-visible {
            border-color: var(--accent); color: var(--accent); }
 
-/* ---- Full path -----------------------------------------------------
-   Closed by default. The eighty-minute list is for a reader who has
-   already decided, so it should not be the first thing anyone meets. */
-.sh-full { margin: 0 0 10px; padding-top: 26px;
-           border-top: 1px solid var(--line); }
-.sh-full summary { cursor: pointer; font-size: 15.5px; font-weight: 600;
-                   color: var(--text); list-style: none; }
-.sh-full summary::-webkit-details-marker { display: none; }
-.sh-full summary::before { content: "+ "; color: var(--accent); }
-.sh-full[open] summary::before { content: "\2013 "; }
-.sh-full summary:focus-visible { outline: 2px solid var(--accent);
-                                 outline-offset: 3px; border-radius: 4px; }
-.sh-full-note { font-size: 13.5px; line-height: 1.65; color: var(--muted);
-                margin: 10px 0 20px; }
-.sh-full-stage { font-size: 10px; letter-spacing: 0.16em;
-                 text-transform: uppercase; color: var(--muted);
-                 margin: 22px 0 10px; }
-.sh-full-stage:first-of-type { margin-top: 4px; }
-
-/* The seasonal block reuses .sh-full so the two closed prompts read as a
-   pair. Only the spacing differs: it needs room below the summary line so
-   the divider under it does not crowd the text when the block is shut. */
-.sh-extras { margin-bottom: 22px; }
-.sh-extras .sh-list { margin-top: 4px; }
+/* ---- Planner link -------------------------------------------------
+   The last panel on the page. The planner itself lives on tonight.html;
+   this is only the way there, so it stays smaller than the steps above. */
+.sh-plan { margin: 10px 0 0; padding: 20px 22px; border-radius: 14px;
+           border: 1px solid var(--line); background: var(--soft); }
+.sh-plan h2 { font-size: 17px; font-weight: 600; line-height: 1.3;
+              margin: 0 0 6px; }
+.sh-plan p { font-size: 14px; line-height: 1.65; color: var(--muted);
+             margin: 0 0 14px; }
+.sh-plan-link { text-decoration: none; }
 
 .sh-veteran { font-size: 13.5px; line-height: 1.7; color: var(--muted);
               margin: 26px 0 0; padding-top: 20px;
@@ -4664,6 +4650,37 @@ body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
    Body carries .page-articles
    ============================================================ */
 
+    /* ── Order buttons (Newest / Reading order) ──
+       The same square buttons as Grid and List, widened to hold a word.
+       margin-right:auto keeps them on the left with the view controls
+       pushed to the right, as the filter dropdown does on the gallery. */
+    .sort-buttons { margin-right: auto; }
+    .view-btn.view-btn-text {
+      width: auto;
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    /* On a phone the order buttons, the view buttons and the captions
+       toggle do not fit one row. The order buttons take the first row to
+       themselves and the rest sit on the right underneath, which keeps the
+       captions divider next to the buttons it separates. */
+    @media (max-width: 720px) {
+      .view-btn.view-btn-text { padding: 0 10px; font-size: 12px; }
+      .sort-buttons { flex: 1 0 100%; margin-right: 0; }
+      .sort-buttons ~ .view-buttons { margin-left: auto; }
+    }
+
+    /* In reading order the lead tile is the first step, not the newest
+       article, so its flag says so. The class is set by the order buttons
+       in articles.html. */
+    #articleGrid.is-reading:not(.list-view) .card:first-child::before {
+      content: "Read first";
+    }
+
     /* Tiles are plain links to a real page, so the images themselves are
        inert — same treatment as the gear grid. */
     #articleGrid img {
@@ -4760,8 +4777,9 @@ body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
                   rgba(5,4,20,0) 100%);
       pointer-events: none;
     }
-    /* Decorative flag. Tiles are ordered newest first, so the first one is
-       always the latest. */
+    /* Decorative flag. Tiles are ordered newest first by default, so the
+       first one is the latest. Reading order swaps the label, see the
+       .is-reading rule under "Order buttons" above. */
     #articleGrid:not(.list-view) .card:first-child::before {
       content: "Latest";
       position: absolute;
@@ -9532,6 +9550,93 @@ html[data-theme="light"] .sh-sky-list li{ background:rgba(255,255,255,0.62); }
 html[data-theme="light"] .sh-sky-bortle select{ background:rgba(255,255,255,0.75); }
 html[data-theme="light"] .sh-sky-why{ opacity:1; }
 html[data-theme="light"] .sh-sky-i::after{ background:#fff; }
+
+/* ============================================================
+   PAGE: Tonight (tonight.html)
+   Body carries .page-tonight
+   The planner panel above (.sh-sky and friends) is shared with this
+   page and keeps its original class names. Everything below is only
+   used here. Generated by scripts/generate-tonight.py.
+   ============================================================ */
+
+/* Under the darkness picker, for a reader who cannot answer it yet. */
+.sh-sky-bortle-help{
+  margin:-8px 0 16px;
+  font-size:.79rem; line-height:1.55;
+  color:var(--muted);
+}
+.sh-sky-bortle-help a{ color:var(--accent); }
+
+.tn-showers,
+.tn-next{
+  margin:0 0 34px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--soft);
+}
+.tn-showers h2,
+.tn-next h2{ margin:0 0 10px; font-size:1.15rem; }
+
+.tn-lede,
+.tn-next p{
+  margin:0;
+  color:var(--muted);
+  font-size:.9rem; line-height:1.65;
+}
+.tn-next a,
+.tn-more a{
+  color:var(--accent); text-decoration:none;
+  border-bottom:1px solid rgba(var(--accent-rgb),0.4);
+}
+.tn-next a:hover,
+.tn-more a:hover{ border-bottom-color:var(--accent); }
+
+/* One row per shower, divided by a hairline rather than boxed, so the
+   list reads as a short calendar and not as another stack of cards. */
+.tn-shower-list{ list-style:none; margin:16px 0 0; padding:0; }
+.tn-shower{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 0;
+  border-top:1px solid var(--line);
+}
+.tn-shower-main{ flex:1 1 auto; min-width:0; }
+.tn-shower p{ margin:0; }
+.tn-shower-name{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px;
+  font-size:1rem; font-weight:600; color:var(--text);
+}
+.tn-shower-when{
+  font-size:.78rem; font-weight:600; color:var(--muted);
+}
+.tn-shower.is-next .tn-shower-when{ color:var(--accent); }
+.tn-shower .tn-shower-meta{
+  margin-top:3px;
+  font-size:.86rem; color:var(--text);
+}
+.tn-shower .tn-shower-note,
+.tn-shower .tn-shower-moon{
+  margin-top:3px;
+  font-size:.82rem; line-height:1.55; color:var(--muted);
+}
+.tn-shower-moon:empty{ display:none; }
+.tn-shower-go{ flex:0 0 auto; white-space:nowrap; }
+
+.tn-more{
+  margin:0; padding-top:14px;
+  border-top:1px solid var(--line);
+  font-size:.86rem; line-height:1.6; color:var(--muted);
+}
+
+@media (max-width:560px){
+  .tn-showers, .tn-next{ padding:18px; }
+  .tn-shower{ flex-direction:column; align-items:stretch; gap:10px; }
+  .tn-shower-go{ align-self:flex-start; }
+}
+
+html[data-theme="light"] .sh-sky-bortle-help a,
+html[data-theme="light"] .tn-next a,
+html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 
 /* ============================================================
    PAGE: Print simulator (print-simulator.html)

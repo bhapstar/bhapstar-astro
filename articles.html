@@ -163,6 +163,16 @@
         </p>
 
         <div class="gallery-controls" role="group" aria-label="Article controls">
+          <!-- Order. Newest first is the shelf a returning reader wants.
+               Reading order follows "stage" and "stageOrder" in
+               site-data.json, from planning the night to the gear behind
+               it, and replaces the full path that used to sit on Start
+               Here. /articles.html?order=reading opens in that order. -->
+          <div class="view-buttons sort-buttons" role="group" aria-label="Article order">
+            <button class="view-btn view-btn-text active" type="button" data-order="newest" aria-pressed="true">Newest</button>
+            <button class="view-btn view-btn-text" type="button" data-order="reading" aria-pressed="false">Reading order</button>
+          </div>
+
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -357,6 +367,32 @@
 
   let items = [];
 
+  /* ── Order ──
+     Newest first, or reading order. Reading order is the stage an article
+     belongs to, then its stageOrder, then newest, which is the same rule
+     the old full path on Start Here used. Articles with no stage are not
+     part of the sequence, so they come last. */
+  const STAGE_RANK = { plan: 0, capture: 1, process: 2, gear: 3 };
+
+  function dateKey(d) {
+    const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(d || '');
+    return m ? `${m[3]}${m[2]}${m[1]}` : '';
+  }
+
+  function byNewest(a, b) {
+    return dateKey(b.date).localeCompare(dateKey(a.date));
+  }
+
+  function byReading(a, b) {
+    const sa = a.stage in STAGE_RANK ? STAGE_RANK[a.stage] : 9;
+    const sb = b.stage in STAGE_RANK ? STAGE_RANK[b.stage] : 9;
+    if (sa !== sb) return sa - sb;
+    const oa = Number.isInteger(a.stageOrder) ? a.stageOrder : 999;
+    const ob = Number.isInteger(b.stageOrder) ? b.stageOrder : 999;
+    if (oa !== ob) return oa - ob;
+    return byNewest(a, b);
+  }
+
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -455,6 +491,31 @@
     viewBtnGrid?.addEventListener('click', () => { applyView('grid'); });
     viewBtnList?.addEventListener('click', () => { applyView('list'); });
 
+    /* ── Order buttons ──
+       Like the view, this is not remembered between visits. The only way
+       to arrive in reading order is the ?order=reading link. */
+    const orderBtns = Array.from(document.querySelectorAll('.sort-buttons [data-order]'));
+    function applyOrder(order) {
+      items.sort(order === 'reading' ? byReading : byNewest);
+      grid.classList.toggle('is-reading', order === 'reading');
+      orderBtns.forEach(btn => {
+        const isActive = btn.dataset.order === order;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      render();
+    }
+    orderBtns.forEach(btn => {
+      btn.addEventListener('click', () => { applyOrder(btn.dataset.order); });
+    });
+    let startOrder = 'newest';
+    try {
+      if (new URLSearchParams(location.search).get('order') === 'reading') {
+        startOrder = 'reading';
+      }
+    } catch (e) {}
+    if (startOrder !== 'newest') applyOrder(startOrder);
+
     /* ── Summary toggle ── */
     const viewBtnDesc   = document.getElementById('viewBtnDesc');
     function applyDescToggle(hide) {
@@ -484,12 +545,8 @@
                             && it.slug && !it.hidden);
 
       /* Newest first. Dates are DD-MM-YYYY, which does not sort as a string,
-         so parse before comparing. */
-      const key = d => {
-        const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(d || '');
-        return m ? `${m[3]}${m[2]}${m[1]}` : '';
-      };
-      items.sort((a, b) => key(b.date).localeCompare(key(a.date)));
+         so dateKey() parses before comparing. */
+      items.sort(byNewest);
 
       init();
     })

@@ -19,25 +19,39 @@ desert sites. He manages his own commits through GitHub Desktop.
 | `site-data.json` | `articles.html`, `gallery.html` |
 | `scripts/*.py` | `share/*`, `sitemap.xml`, `feed.xml` |
 | `styles.css`, `partials/*` | `field_notes.html`, `start-here.html`, `field-cards.html` |
+| | `tonight.html`, `glossary.html` |
 
 Everything in the right column is overwritten on every build. A change made
 there survives until the next `python build.py` and then vanishes, which is a
 confusing failure because the site looks correct locally first.
 
+`articles.html` is the one partial exception. The generator only rewrites the
+blocks between its `ARTICLE-TILES` and `ARTICLE-JSONLD` marker comments.
+Everything outside them (the controls, the runtime script, the order buttons)
+is hand-written and safe to edit. Never touch anything between the markers.
+
 **Do not touch `sw.js` or `scripts/generate-sitemap.py` without being asked.**
-CI rewrites the service worker cache version on every deploy.
+CI rewrites the service worker cache version on every deploy, so never change
+`CACHE_VERSION` by hand.
+
+A new top-level page needs a line in both, once asked: `PAGES` in
+`scripts/generate-sitemap.py` (the list is static, not read from disk) and
+`SHELL_ASSETS` in `sw.js` if it should work offline.
 
 ---
 
 ## Build
 
 ```bash
-python build.py          # runs all eight generators in order
+python build.py          # runs all ten generators in order
+python build.py tonight  # just one stage
+python build.py --list   # show the stages
 ```
 
 Order is fixed and matters: gear, article, share, schema, sitemap, starthere,
-feed, downloads. The article step must run before sitemap, because sitemap only
-lists files that already exist on disk.
+tonight, feed, downloads, glossary. The article step must run before sitemap,
+because sitemap only lists article, share and gear files that already exist on
+disk.
 
 CI (`.github/workflows/site-postprocess.yml`) runs `python build.py` on push,
 bumps the SW cache version, deploys, then commits the regenerated files back.
@@ -85,10 +99,51 @@ Things that bite:
 ## Start Here
 
 `scripts/generate-start-here.py` holds its content as Python constants, not in
-JSON. Six hard-coded routes of three cards each, plus `EXTRAS` for articles
-governed by the calendar rather than by skill level. An extras entry must have
-no `stage` in `site-data.json` or it appears twice. The script warns about any
-article that ends up on no route, no extra and no stage.
+JSON. The page answers one question, what do I do next, in three parts:
+
+1. **Try this tonight, with nothing.** Four steps in `TONIGHT_STEPS`. Step one
+   is Stellarium Web, because that is how every session starts. The intro and
+   `TONIGHT_LEDE` both say "four", so keep them in step with the list.
+2. **Where are you right now?** Six hard-coded routes in `ROUTES`, three or
+   four cards each. The same article can carry a different blurb on each
+   route. A route lede that says "these three" or "all three" must match its
+   card count.
+3. **A link to `tonight.html`.** Nothing else from the planner lives here.
+
+Copy tokens: `{route:key}`, `{article:slug|label}`, `{url:path|label}` and
+`{ext:https://...|label}`. An unknown slug or route fails the build.
+
+The script warns about any live article that is on no route card and linked
+from no copy on the page. Seasonal articles such as the meteor shower piece
+are linked from route endings rather than given a block of their own.
+
+The full path that used to sit at the bottom is now the **Reading order**
+button on `articles.html`, sorted by `stage` (plan, capture, process, gear),
+then `stageOrder`, then newest. Articles with no `stage` come last.
+`/articles.html?order=reading` opens it in that order. `stage` and
+`stageOrder` in `site-data.json` therefore still matter.
+
+---
+
+## Tonight
+
+`scripts/generate-tonight.py` writes `tonight.html`, the night planner. It is
+in the nav as Tonight.
+
+- **Planner.** The shell comes from the generator and `/tonight-core.js` does
+  all the astronomy. The CSS classes keep their `sh-sky-` prefix from when the
+  panel lived on Start Here. Leaflet loads from unpkg with SRI hashes; if the
+  map fails, the rest of the panel still works.
+- **Target images are checked at build time.** Every target in
+  `tonight-core.js` must have its image, its thumbnail and a gallery entry
+  with the same slug, or the stage fails and lists every problem.
+- **Meteor showers.** `SHOWERS` is a copy of the table in
+  `content/articles/photograph-a-meteor-shower.html`. Change one, change the
+  other. The page shows the next three peaks, with the moon for each peak
+  night from `tonight-core.js`, and a button that moves the planner to that
+  date through a `tonight:goto` event.
+- Page CSS is in `styles.css` under "PAGE: Tonight", with the shared planner
+  styles under "PAGE: Start Here — sky panel".
 
 ---
 
