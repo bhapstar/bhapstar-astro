@@ -368,7 +368,10 @@ const HIDE_FIELD_NOTES = true;
        - Draws 160 slowly fading stars on a
          <canvas> layered above the bg slideshow
        - Each star gently breathes in and out
-         using a sine wave (roughly 1–3 s cycle)
+         using a sine wave (roughly 1–3 s cycle),
+         with a faster twinkle riding on top
+       - Stars are tinted by temperature: white,
+         blue white, yellow, orange, red
        - Plus an occasional comet crossing the
          frame, sharing this canvas and this one
          rAF loop rather than adding a second of
@@ -425,6 +428,28 @@ const HIDE_FIELD_NOTES = true;
         return COMET_TINTS[0];
       }
 
+      /* Star colours. A real starfield is not white: colour follows surface
+         temperature, from hot blue white down through white, yellow and
+         orange to cool red. The weights roughly follow what the eye actually
+         picks out on a dark night, so most stars stay white and a coloured
+         one is something you notice rather than something that shouts. There
+         is no green here on purpose. No star looks green to the eye, because
+         anything peaking in green emits plenty of red and blue alongside it
+         and comes out white. */
+      const STAR_TINTS = [
+        { w: 10, rgb: '255,255,255' }, // white
+        { w:  4, rgb: '158,194,255' }, // blue white
+        { w:  4, rgb: '255,238,158' }, // yellow
+        { w:  3, rgb: '255,196,122' }, // orange
+        { w:  2, rgb: '255,150,116' }, // red
+      ];
+      const STAR_TINT_TOTAL = STAR_TINTS.reduce((n, t) => n + t.w, 0);
+      function pickStarTint() {
+        let n = Math.random() * STAR_TINT_TOTAL;
+        for (const t of STAR_TINTS) { n -= t.w; if (n <= 0) return t.rgb; }
+        return STAR_TINTS[0].rgb;
+      }
+
       function build() {
         stars = Array.from({ length: COUNT }, () => ({
           x:      rand(0, W),
@@ -438,6 +463,17 @@ const HIDE_FIELD_NOTES = true;
           speed:  rand(0.000002, 0.000006),
           // Random start point in the sine cycle so stars aren't in sync
           phase:  rand(0, Math.PI * 2),
+          // Colour, resolved once here rather than per frame
+          rgb:    pickStarTint(),
+          /* Twinkle. A second, much faster wave rides on top of the slow
+             breathe, the way atmospheric scintillation sits on top of a
+             star's steady light. The two periods do not divide into each
+             other, so the combined flicker never settles into a visible
+             loop. Depth starts at 0 for some stars, so a fair number sit
+             rock steady and the rest shimmer by varying amounts. */
+          tw:      rand(0, 0.34),                   // 0 steady … 0.34 lively
+          twSpeed: rand(0.000012, 0.000040),        // roughly 160–520 ms per flicker
+          twPhase: rand(0, Math.PI * 2),
         }));
       }
 
@@ -550,10 +586,14 @@ const HIDE_FIELD_NOTES = true;
           // sin oscillates between -1 and 1; remap to 0–1 for a clean fade
           const wave = 0.5 + 0.5 * Math.sin(t * s.speed * 1000 + s.phase);
           // Fade from near-zero (0.04) up to each star's individual peak
-          const a = 0.04 + (s.peak - 0.04) * wave;
+          const base = 0.04 + (s.peak - 0.04) * wave;
+          // Twinkle only ever takes brightness away, so no star overshoots
+          // its peak and flares into a hard white dot.
+          const flick = 1 - s.tw * (0.5 + 0.5 * Math.sin(t * s.twSpeed * 1000 + s.twPhase));
+          const a = base * flick;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
+          ctx.fillStyle = `rgba(${s.rgb},${a.toFixed(3)})`;
           ctx.fill();
         }
       }
