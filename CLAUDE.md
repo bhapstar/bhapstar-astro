@@ -113,6 +113,14 @@ JSON. The page answers one question, what do I do next, in three parts:
 Copy tokens: `{route:key}`, `{article:slug|label}`, `{url:path|label}` and
 `{ext:https://...|label}`. An unknown slug or route fails the build.
 
+Opening a route card saves that route to sessionStorage
+(`bhapstar:routeTrail`). The article page then shows a route bar above and
+below the article, with where the reader is ("2 of 3"), a link back to the
+route, and the next article, and hides the date-ordered previous/next bar. It
+only appears when the reader came from Start Here or from another article on
+the same route. The bar is built in the browser by `ROUTE_NAV_JS` in
+`scripts/generate-article-pages.py`, so changing a route needs nothing there.
+
 The script warns about any live article that is on no route card and linked
 from no copy on the page. Seasonal articles such as the meteor shower piece
 are linked from route endings rather than given a block of their own.

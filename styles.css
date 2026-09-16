@@ -7572,6 +7572,20 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
                       border-color: var(--accent); background: var(--glow2);
                       transform: translateY(-1px); }
     .gn-next { justify-content: flex-end; text-align: right; }
+
+    /* Reading route bar. Reuses the previous/next styling above. Both
+       placeholders ship hidden and are filled in by the route script in
+       generate-article-pages.py when the reader arrived from a Start Here
+       route, which also hides the date-ordered bar. The class rule above
+       sets display:flex, so [hidden] needs saying explicitly. */
+    .page-article .gear-nav[hidden] { display: none; }
+    .page-article .route-nav-end { margin: 34px 0 0; }
+    /* The labels are hidden on phones for the dated bar, but here they carry
+       "2 of 3" and "Next in this route", which is the point of the bar. */
+    @media (max-width: 768px) {
+      .page-article .route-nav .gn-label { display: block; }
+    }
+
     .page-article .gn-arrow { flex: 0 0 auto; font-size: 16px; line-height: 1; color: var(--accent); }
     .gn-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .page-article .gn-label { font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;

@@ -14,6 +14,8 @@ Each page includes:
     shared with the gear pages. The prose fragments stay clean; nothing is
     marked by hand.
   - Previous / next article navigation (wraps, so no dead ends)
+  - A reading route bar, above and below the article, when the reader
+    arrived from a route on Start Here (see ROUTE_NAV_JS)
   - JSON-LD Article schema
   - Canonical URL pointing at itself
   - OG tags for social sharing
@@ -476,6 +478,100 @@ def build_related_block(entry, articles):
               '      </section>\n')
 
 
+# The reading route bar. Start Here saves the route a card was opened from
+# to sessionStorage ("bhapstar:routeTrail": key, heading, and the cards in
+# order). When this article is on that route, and the reader arrived from
+# Start Here or from another article on the same route, two bars appear, one
+# above the article and one below it: where the reader is in the route with
+# a link back to it, and the next article. The date-ordered previous/next
+# bar is hidden while they show, so there is only ever one "next".
+#
+# Everything is built in the browser, so nothing here changes when a route
+# changes in scripts/generate-start-here.py. Arriving any other way, the
+# placeholders stay hidden and the page is exactly as it was.
+ROUTE_NAV_JS = """  <script>
+  (function () {
+    var top = document.getElementById('routeNavTop');
+    var end = document.getElementById('routeNavEnd');
+    if (!top || !end) return;
+
+    var trail = null;
+    try {
+      trail = JSON.parse(sessionStorage.getItem('bhapstar:routeTrail') || 'null');
+    } catch (e) {}
+    if (!trail || !trail.cards || !trail.cards.length) return;
+
+    function slugOf(path) {
+      return (path || '').replace(/\\/+$/, '').split('/').pop()
+                         .replace(/\\.html$/, '');
+    }
+    function onRoute(s) {
+      for (var k = 0; k < trail.cards.length; k++) {
+        if (trail.cards[k].slug === s) return k;
+      }
+      return -1;
+    }
+
+    var i = onRoute(slugOf(location.pathname));
+    if (i < 0) return;
+
+    /* Only when the reader actually came along the route. Someone who
+       reaches this article from the gallery, a search or a shared link
+       later in the same visit should not see a bar they never asked for. */
+    var from = null;
+    try { from = new URL(document.referrer); } catch (e) {}
+    if (!from || from.host !== location.host) return;
+    var fromSlug = slugOf(from.pathname);
+    var fromStart = fromSlug === 'start-here';
+    var fromRoute = from.pathname.indexOf('/articles/') === 0 &&
+                    onRoute(fromSlug) >= 0;
+    if (!fromStart && !fromRoute) return;
+
+    function esc(v) {
+      return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    var total = trail.cards.length;
+    var next = trail.cards[i + 1];
+    var place = (i + 1) + ' of ' + total + (next ? '' : ', route finished');
+
+    var back =
+      '<a class="gear-nav-link gn-prev route-nav-back" href="/start-here.html#routes" ' +
+        'aria-label="Back to the route: ' + esc(trail.heading) + '">' +
+        '<span class="gn-arrow" aria-hidden="true">&#8592;</span>' +
+        '<span class="gn-text"><span class="gn-label">' + place + '</span>' +
+        '<span class="gn-title">' + esc(trail.heading) + '</span></span>' +
+      '</a>';
+
+    var fwd = next
+      ? '<a class="gear-nav-link gn-next" href="/articles/' +
+          encodeURIComponent(next.slug) + '.html" ' +
+          'aria-label="Next in this route: ' + esc(next.title) + '">' +
+          '<span class="gn-text"><span class="gn-label">Next in this route</span>' +
+          '<span class="gn-title">' + esc(next.title) + '</span></span>' +
+          '<span class="gn-arrow" aria-hidden="true">&#8594;</span>' +
+        '</a>'
+      : '';
+
+    top.innerHTML = back + fwd;
+    end.innerHTML = back + fwd;
+    top.hidden = false;
+    end.hidden = false;
+
+    var dated = document.querySelector('.gear-nav:not(.route-nav)');
+    if (dated) dated.hidden = true;
+
+    /* Start Here reopens whichever route it last saved, so make sure that
+       is this one before going back to it. */
+    document.addEventListener('click', function (ev) {
+      if (!(ev.target.closest && ev.target.closest('.route-nav-back'))) return;
+      try { sessionStorage.setItem('bhapstar:startHereRoute', trail.key); } catch (e) {}
+    });
+  })();
+  </script>"""
+
+
 def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
                articles=None):
     """Build the full HTML page for one article."""
@@ -610,6 +706,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
 <main>
   <section class="section">
     <div class="wrap article-page">
+      <nav class="gear-nav route-nav" id="routeNavTop" aria-label="Reading route" hidden></nav>
 {nav_html}
       <div class="article-header">
 {hero_html}{meta_html}        <h1 class="article-title">{esc(title)}</h1>
@@ -620,6 +717,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
 {body_html}
       </div>
 
+      <nav class="gear-nav route-nav route-nav-end" id="routeNavEnd" aria-label="Reading route" hidden></nav>
 {related_html}{download_html}{signup_html}{build_support_block(entry)}
       <a class="article-back" href="/articles.html">&#8592; All articles</a>
     </div>
@@ -664,6 +762,7 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
     }});
   }})();
   </script>
+{ROUTE_NAV_JS}
 {gloss_js}
 </body>
 </html>'''
