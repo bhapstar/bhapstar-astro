@@ -372,6 +372,8 @@ const HIDE_FIELD_NOTES = true;
          with a faster twinkle riding on top
        - Stars are tinted by temperature: white,
          blue white, yellow, orange, red
+       - A few of the brighter ones carry a faint
+         4-point diffraction spike
        - Plus an occasional comet crossing the
          frame, sharing this canvas and this one
          rAF loop rather than adding a second of
@@ -450,6 +452,41 @@ const HIDE_FIELD_NOTES = true;
         return STAR_TINTS[0].rgb;
       }
 
+      /* Diffraction spikes. The cross you see on bright stars in a telescope
+         image comes from the vanes holding the secondary mirror, so on a real
+         frame every spike runs at the same angle. These are axis aligned for
+         the same reason: rotating them per star would read as a glitch rather
+         than as optics. Only the larger, brighter stars get them, which is
+         also what happens through a scope.
+
+         The gradient runs tip to tip with the bright point at the middle, and
+         is built once per star because star positions never move. Per frame
+         the spike is stroked under globalAlpha, so it twinkles with its star
+         for free and no gradient is rebuilt. */
+      const SPIKE_MIN_R    = 1.7;   // px, smaller stars never spike
+      const SPIKE_MIN_PEAK = 0.42;  // faint stars never spike
+      const SPIKE_CHANCE   = 0.45;  // of those that qualify
+
+      function spikeGradient(x0, y0, x1, y1, rgb) {
+        const g = ctx.createLinearGradient(x0, y0, x1, y1);
+        g.addColorStop(0,    'rgba(' + rgb + ',0)');
+        g.addColorStop(0.18, 'rgba(' + rgb + ',0.05)');
+        g.addColorStop(0.5,  'rgba(' + rgb + ',1)');
+        g.addColorStop(0.82, 'rgba(' + rgb + ',0.05)');
+        g.addColorStop(1,    'rgba(' + rgb + ',0)');
+        return g;
+      }
+
+      function addSpike(s) {
+        if (s.r < SPIKE_MIN_R || s.peak < SPIKE_MIN_PEAK) return;
+        if (Math.random() > SPIKE_CHANCE) return;
+        s.spike    = rand(0.22, 0.46);        // how strong, as a share of the star's own alpha
+        s.spikeLen = s.r * rand(3.5, 7);      // arm length from centre, px
+        s.spikeW   = rand(0.5, 0.8);          // arm thickness, px
+        s.gH = spikeGradient(s.x - s.spikeLen, s.y, s.x + s.spikeLen, s.y, s.rgb);
+        s.gV = spikeGradient(s.x, s.y - s.spikeLen, s.x, s.y + s.spikeLen, s.rgb);
+      }
+
       function build() {
         stars = Array.from({ length: COUNT }, () => ({
           x:      rand(0, W),
@@ -474,7 +511,10 @@ const HIDE_FIELD_NOTES = true;
           tw:      rand(0, 0.34),                   // 0 steady … 0.34 lively
           twSpeed: rand(0.000012, 0.000040),        // roughly 160–520 ms per flicker
           twPhase: rand(0, Math.PI * 2),
+          // Filled in by addSpike below for the few stars that qualify
+          spike:   0,
         }));
+        for (const st of stars) addSpike(st);
       }
 
       /* A comet starts just outside one edge and is aimed at a random point
@@ -591,6 +631,22 @@ const HIDE_FIELD_NOTES = true;
           // its peak and flares into a hard white dot.
           const flick = 1 - s.tw * (0.5 + 0.5 * Math.sin(t * s.twSpeed * 1000 + s.twPhase));
           const a = base * flick;
+          // Spikes go down first so the disc stays crisp on top of them
+          if (s.spike) {
+            ctx.globalAlpha = a * s.spike;
+            ctx.lineWidth   = s.spikeW;
+            ctx.strokeStyle = s.gH;
+            ctx.beginPath();
+            ctx.moveTo(s.x - s.spikeLen, s.y);
+            ctx.lineTo(s.x + s.spikeLen, s.y);
+            ctx.stroke();
+            ctx.strokeStyle = s.gV;
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y - s.spikeLen);
+            ctx.lineTo(s.x, s.y + s.spikeLen);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${s.rgb},${a.toFixed(3)})`;
