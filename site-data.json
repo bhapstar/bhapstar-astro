@@ -500,6 +500,7 @@
         "alt": "Geminids meteor shower composite labelled radiant point astrophotography"
       }
     ],
+    "compare": true,
     "title": "The Geminids Meteor Shower",
     "desc": "An annual meteor shower caused by debris from asteroid 3200 Phaethon. This composite records multiple Geminid meteors over a single night, tracing their apparent paths back to the constellation Gemini as Earth passes through the stream.",
     "type": "others",
