@@ -127,8 +127,8 @@ then `stageOrder`, then newest. Articles with no `stage` come last.
 
 ## Tonight
 
-`scripts/generate-tonight.py` writes `tonight.html`, the night planner. It is
-in the nav as Tonight.
+`scripts/generate-tonight.py` writes `tonight.html`, the night planner. In the
+nav it sits inside the Start Here dropdown, below Start Here itself.
 
 - **Planner.** The shell comes from the generator and `/tonight-core.js` does
   all the astronomy. The CSS classes keep their `sh-sky-` prefix from when the
