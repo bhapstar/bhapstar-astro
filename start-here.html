@@ -371,14 +371,63 @@
     });
   });
 
+  // Scroll the chooser to just below the sticky header. scrollIntoView
+  // would tuck the question underneath the nav, and the header's height
+  // changes as the nav wraps, so it is measured each time. The position
+  // comes from offsetTop rather than getBoundingClientRect, because the
+  // scroll reveal in partials.js holds the section 18px low while it fades
+  // in, and measuring during that would stop the scroll short.
+  function toChooser(smooth) {
+    var header = document.querySelector('header');
+    var offset = (header ? header.getBoundingClientRect().height : 0) + 16;
+    var y = 0;
+    for (var el = chooser; el; el = el.offsetParent) y += el.offsetTop;
+    window.scrollTo({
+      top: Math.max(0, y - offset),
+      behavior: smooth && !still ? 'smooth' : 'auto'
+    });
+  }
+
   // "the full rig route" inside a closing line.
   document.addEventListener('click', function (ev) {
     var jump = ev.target.closest && ev.target.closest('.sh-goto');
     if (!jump) return;
     apply(jump.getAttribute('data-goto'), true);
-    chooser.scrollIntoView({ behavior: still ? 'auto' : 'smooth',
-                             block: 'start' });
+    toChooser(true);
   });
+
+  // Remember the route a card was opened from, so the article page can say
+  // where the reader is in it and link straight to the next one. Written on
+  // click, which fires before the page unloads, and on middle click. The
+  // article page only acts on this when the reader arrived from here or
+  // from another article on the same route, so a stale trail does nothing.
+  var TRAIL = 'bhapstar:routeTrail';
+
+  function slugOf(href) {
+    return (href || '').split('/').pop().replace(/\.html$/, '');
+  }
+
+  function saveTrail(ev) {
+    var card = ev.target.closest && ev.target.closest('.sh-route-block .sh-card');
+    if (!card) return;
+    var block = card.closest('.sh-route-block');
+    var head = block.querySelector('.sh-route-head');
+    var cards = Array.prototype.slice.call(block.querySelectorAll('.sh-card'))
+      .map(function (c) {
+        var t = c.querySelector('.sh-title');
+        return { slug: slugOf(c.getAttribute('href')),
+                 title: t ? t.textContent : '' };
+      });
+    try {
+      sessionStorage.setItem(TRAIL, JSON.stringify({
+        key: block.getAttribute('data-block'),
+        heading: head ? head.textContent : '',
+        cards: cards
+      }));
+    } catch (e) {}
+  }
+  document.addEventListener('click', saveTrail);
+  document.addEventListener('auxclick', saveTrail);
 
   var saved = null;
   try { saved = sessionStorage.getItem(KEY); } catch (e) {}
@@ -389,6 +438,21 @@
   // First paint, no animation. With nothing saved this collapses every
   // route, so the page opens on the free steps.
   commit(saved && valid ? saved : 'none');
+
+  // Arriving from an article's "back to the route" link. The route is
+  // already open from sessionStorage above, so bring it into view. The
+  // header is injected by partials.js after this runs, so wait for it
+  // first, or the scroll lands short by the height of the nav.
+  if (location.hash === '#routes' && saved && valid) {
+    var tries = 0;
+    (function waitForHeader() {
+      if (document.querySelector('header') || ++tries > 60) {
+        requestAnimationFrame(function () { toChooser(false); });
+      } else {
+        setTimeout(waitForHeader, 50);
+      }
+    })();
+  }
 })();
 </script>
 </body>
