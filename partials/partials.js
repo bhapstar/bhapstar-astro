@@ -468,21 +468,23 @@ const HIDE_FIELD_NOTES = true;
       const SPIKE_CHANCE   = 0.45;  // of those that qualify
 
       function spikeGradient(x0, y0, x1, y1, rgb) {
+        // Straight ramp from each tip to the bright point at the middle. An
+        // earlier version knocked the ends down to 0.05 well before the tip,
+        // which left almost all of the visible alpha sitting underneath the
+        // star's own disc, where nothing could be seen of it.
         const g = ctx.createLinearGradient(x0, y0, x1, y1);
-        g.addColorStop(0,    'rgba(' + rgb + ',0)');
-        g.addColorStop(0.18, 'rgba(' + rgb + ',0.05)');
-        g.addColorStop(0.5,  'rgba(' + rgb + ',1)');
-        g.addColorStop(0.82, 'rgba(' + rgb + ',0.05)');
-        g.addColorStop(1,    'rgba(' + rgb + ',0)');
+        g.addColorStop(0,   'rgba(' + rgb + ',0)');
+        g.addColorStop(0.5, 'rgba(' + rgb + ',1)');
+        g.addColorStop(1,   'rgba(' + rgb + ',0)');
         return g;
       }
 
       function addSpike(s) {
         if (s.r < SPIKE_MIN_R || s.peak < SPIKE_MIN_PEAK) return;
         if (Math.random() > SPIKE_CHANCE) return;
-        s.spike    = rand(0.22, 0.46);        // how strong, as a share of the star's own alpha
-        s.spikeLen = s.r * rand(3.5, 7);      // arm length from centre, px
-        s.spikeW   = rand(0.5, 0.8);          // arm thickness, px
+        s.spike    = rand(0.55, 1.0);         // how strong, as a share of the star's own alpha
+        s.spikeLen = s.r * rand(4, 8);        // arm length from centre, px
+        s.spikeW   = rand(1.0, 1.6);          // arm thickness, px
         s.gH = spikeGradient(s.x - s.spikeLen, s.y, s.x + s.spikeLen, s.y, s.rgb);
         s.gV = spikeGradient(s.x, s.y - s.spikeLen, s.x, s.y + s.spikeLen, s.rgb);
       }
