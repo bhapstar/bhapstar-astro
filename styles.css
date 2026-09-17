@@ -8176,17 +8176,17 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     .share-slide > a{ z-index: 2; }
     .share-peek{
       position: absolute; top: 50%; z-index: 1;
-      height: 70%; aspect-ratio: 3 / 4; width: auto;
-      border-radius: 12px; overflow: hidden;
+      height: 45%; aspect-ratio: 3 / 4; width: auto;
+      border-radius: 10px; overflow: hidden;
       border: 1px solid var(--line);
       background: #050414;
-      box-shadow: 0 12px 34px rgba(0,0,0,0.45);
-      opacity: 0.5;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      opacity: 0.25;
       transition: opacity .25s ease, transform .25s ease;
     }
     .share-peek-prev{ left: 0;  transform: translate(-20%, -50%); }
     .share-peek-next{ right: 0; transform: translate(20%, -50%); }
-    .share-peek:hover, .share-peek:focus-visible{ opacity: 0.9; }
+    .share-peek:hover, .share-peek:focus-visible{ opacity: 0.8; }
     .share-peek-prev:hover, .share-peek-prev:focus-visible{ transform: translate(-27%, -50%); }
     .share-peek-next:hover, .share-peek-next:focus-visible{ transform: translate(27%, -50%); }
     .share-peek:focus-visible{ outline: 2px solid var(--ov-line-hi); outline-offset: 3px; }
@@ -8196,13 +8196,13 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       max-width: none; max-height: none; margin: 0;
       object-fit: cover; border: 0; border-radius: 0; box-shadow: none;
     }
-    html[data-theme="light"] .share-peek{ box-shadow: 0 10px 26px rgba(0,0,0,0.25); }
+    html[data-theme="light"] .share-peek{ box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
     /* The arrow sits in the strip that shows, right beside the picture's
        edge, so it stays on screen even where a phone clips the card. */
     .share-peek-arrow{
       position: absolute; top: 50%; transform: translateY(-50%);
       width: min(20%, 44px); text-align: center;
-      font-size: 30px; line-height: 1; color: #fff;
+      font-size: 22px; line-height: 1; color: #fff;
       text-shadow: 0 1px 8px rgba(0,0,0,0.7);
       pointer-events: none;
     }
@@ -8214,8 +8214,8 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
        touch screen to bring them up. */
     @media (max-width: 620px){
       .share-slides{ max-width: calc(100% - 28px); }
-      .share-peek{ opacity: 0.6; }
-      .share-peek-arrow{ font-size: 24px; width: 36px; }
+      .share-peek{ opacity: 0.35; }
+      .share-peek-arrow{ font-size: 20px; width: 36px; }
     }
     @media (prefers-reduced-motion: reduce){
       .share-peek{ transition: none; }
