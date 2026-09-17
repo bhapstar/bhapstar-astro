@@ -8165,6 +8165,64 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       margin-top: 8px; color: var(--muted); font-size: 13px;
     }
     .share-slide-cap:empty{ display: none; }
+
+    /* ── Previous / next peek cards ──
+       A faint card for the neighbouring items, tucked behind the picture with
+       about a fifth of it showing on each side. Tapping one opens that item,
+       so moving through the gallery never needs a scroll back to the bar
+       above the title. The image box shrink-wraps the active picture so the
+       cards track its edges on portrait and landscape frames alike. */
+    .share-slides{ width: fit-content; max-width: 100%; margin: 0 auto; }
+    .share-slide > a{ z-index: 2; }
+    .share-peek{
+      position: absolute; top: 50%; z-index: 1;
+      height: 70%; aspect-ratio: 3 / 4; width: auto;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--line);
+      background: #050414;
+      box-shadow: 0 12px 34px rgba(0,0,0,0.45);
+      opacity: 0.5;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .share-peek-prev{ left: 0;  transform: translate(-20%, -50%); }
+    .share-peek-next{ right: 0; transform: translate(20%, -50%); }
+    .share-peek:hover, .share-peek:focus-visible{ opacity: 0.9; }
+    .share-peek-prev:hover, .share-peek-prev:focus-visible{ transform: translate(-27%, -50%); }
+    .share-peek-next:hover, .share-peek-next:focus-visible{ transform: translate(27%, -50%); }
+    .share-peek:focus-visible{ outline: 2px solid var(--ov-line-hi); outline-offset: 3px; }
+    .share-figure .share-peek img,
+    html[data-theme="light"] .share-figure .share-peek img{
+      display: block; width: 100%; height: 100%;
+      max-width: none; max-height: none; margin: 0;
+      object-fit: cover; border: 0; border-radius: 0; box-shadow: none;
+    }
+    html[data-theme="light"] .share-peek{ box-shadow: 0 10px 26px rgba(0,0,0,0.25); }
+    /* The arrow sits in the strip that shows, right beside the picture's
+       edge, so it stays on screen even where a phone clips the card. */
+    .share-peek-arrow{
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: min(20%, 44px); text-align: center;
+      font-size: 30px; line-height: 1; color: #fff;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.7);
+      pointer-events: none;
+    }
+    .share-peek-prev .share-peek-arrow{ right: 80%; }
+    .share-peek-next .share-peek-arrow{ left: 80%; }
+    /* Phones: the picture fills the column, which leaves only the page
+       gutter for the cards. Narrow the picture slightly so a usable strip
+       shows on each side, and lift the cards, since there is no hover on a
+       touch screen to bring them up. */
+    @media (max-width: 620px){
+      .share-slides{ max-width: calc(100% - 28px); }
+      .share-peek{ opacity: 0.6; }
+      .share-peek-arrow{ font-size: 24px; width: 36px; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .share-peek{ transition: none; }
+    }
+    /* The cards reach past the column, and on a phone past the screen edge.
+       Clip them there so the page never scrolls sideways. */
+    .page-share main{ overflow-x: hidden; overflow-x: clip; }
     /* Cycles this entry's own pictures. Sits at the bottom centre of the
        image. Only rendered when there's more than one picture, and only
        usable with JS — hence the button elements. */

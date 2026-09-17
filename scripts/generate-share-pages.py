@@ -487,11 +487,32 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             '</div></div>'
         ]
         first_cap = t(cmp_cap)
+    # Faint cards for the previous and next items, tucked behind the picture
+    # with a strip showing on each side, so a reader can move through the
+    # gallery without scrolling back up to the bar above the title. They sit
+    # inside the image box so they track the picture's edges, and use the
+    # thumbnail so they cost little to load.
+    def peek_card(target, direction):
+        if not target or len(target) < 3 or not target[2]:
+            return ""
+        href, label_title, img = target[0], target[1], target[2]
+        label = "Previous" if direction == "prev" else "Next"
+        chevron = "&#8249;" if direction == "prev" else "&#8250;"
+        return (
+            f'\n          <a class="share-peek share-peek-{direction}" href="{a(href)}"'
+            f' aria-label="{label} item: {a(label_title)}" title="{a(label_title)}">'
+            f'<img src="/{a(img)}" alt="" loading="lazy" decoding="async" draggable="false">'
+            f'<span class="share-peek-arrow" aria-hidden="true">{chevron}</span></a>'
+        )
+
+    peeks = peek_card(prev_link, "prev") + peek_card(next_link, "next")
+
     figures_html = (
         '      <figure class="share-figure">\n'
         f'        <div class="share-slides{" share-compare" if compare else ""}">\n'
         + "\n".join(slides)
         + pager
+        + peeks
         + '\n        </div>\n'
         f'        <figcaption class="share-slide-cap">{first_cap}</figcaption>\n'
         '      </figure>'
@@ -682,7 +703,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     def top_nav_link(target, direction):
         if not target:
             return ""
-        href, label_title = target
+        href, label_title = target[0], target[1]
         arrow = "&#8592;" if direction == "prev" else "&#8594;"
         label = "Previous" if direction == "prev" else "Next"
         text = (f'<span class="gn-text"><span class="gn-label">{label}</span>'
@@ -1151,14 +1172,27 @@ def main():
                   if e.get("section", "gallery") == "gallery"
                   and e.get("slug") and not cover_file(e))
 
+    def peek_image(e):
+        """Thumbnail for a neighbour's peek card, or the full image if the
+        thumb is missing. None when neither is on disk, and no card is drawn."""
+        cover = cover_file(e)
+        if not cover:
+            return None
+        for candidate in (thumb_for(cover), cover):
+            if os.path.isfile(candidate):
+                return candidate
+        return None
+
     for i, entry in enumerate(pageable):
         prev_link = next_link = None
         if i > 0:
             p = pageable[i - 1]
-            prev_link = (f"/{OUT_DIR}/{p['slug']}.html", p.get("title") or p["slug"])
+            prev_link = (f"/{OUT_DIR}/{p['slug']}.html", p.get("title") or p["slug"],
+                         peek_image(p))
         if i < len(pageable) - 1:
             n = pageable[i + 1]
-            next_link = (f"/{OUT_DIR}/{n['slug']}.html", n.get("title") or n["slug"])
+            next_link = (f"/{OUT_DIR}/{n['slug']}.html", n.get("title") or n["slug"],
+                         peek_image(n))
 
         page = build_page(entry, prev_link, next_link,
                           all_photos, entry_photo_start.get(entry["slug"]),
