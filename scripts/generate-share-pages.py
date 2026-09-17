@@ -504,8 +504,15 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 
     # ── write-up ──
     body_parts = []
+    # The intro sits between the title and the picture, and the rest of the
+    # write-up follows the picture. Both go through the glossary pass as one
+    # string, so a word is still explained at its first mention on the page,
+    # and INTRO_SPLIT (a comment, which the glossary parser ignores) marks
+    # where to cut them apart afterwards.
+    INTRO_SPLIT = "<!--intro-end-->"
     if entry.get("intro"):
         body_parts.append(f'        <p class="lead">{t(entry["intro"])}</p>')
+        body_parts.append(f"        {INTRO_SPLIT}")
     body_text = entry.get("body") or ""
     paras = [p.strip() for p in body_text.split("\n\n") if p.strip()]
 
@@ -579,6 +586,13 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     body_html, gloss_count = annotate_glossary(body_html, slug, glossary or [])
     for key, markup in fig_markup.items():
         body_html = body_html.replace(f"        {key}", markup)
+    intro_html = ""
+    if INTRO_SPLIT in body_html:
+        intro_part, body_html = body_html.split(f"        {INTRO_SPLIT}", 1)
+        # Same share-body class as the write-up, so the lead keeps its styling.
+        intro_html = ('      <div class="share-body share-intro">\n'
+                      + intro_part.rstrip("\n") + "\n      </div>\n\n")
+        body_html = body_html.lstrip("\n")
     # A page with no marked words carries no handler, so nothing is
     # paid for on a page that cannot use it.
     gloss_js = GLOSSARY_JS if gloss_count else ''
@@ -1063,7 +1077,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     <div class="wrap share-wrap">
 {topnav_html}      <h1>{t(title)}</h1>
 
-{figures_html}
+{intro_html}{figures_html}
 
       <div class="share-body">
 {body_html}
