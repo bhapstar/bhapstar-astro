@@ -8121,6 +8121,24 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
        resting on whatever follows. On these pages the next thing is the
        picture, so give the title a little clearance. */
     .share-wrap h1{ margin-bottom: 14px; }
+
+    /* Decorative emoji after a share-page heading (title_emoji in
+       site-data.json). h1:first-of-type paints its text through a clipped
+       gradient with -webkit-text-fill-color: transparent, which renders colour
+       emoji unpredictably: some browsers ignore it, others erase the glyph.
+       Opting the span out of the fill, the gradient and the animation keeps
+       them rendering as normal emoji on every browser. Sized down because the
+       heading runs to 68px, where full-size emoji outweigh the words. */
+    .share-wrap h1 .h1-emoji{
+      -webkit-text-fill-color: initial;
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+      animation: none;
+      font-size: 0.62em;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
     .share-date{ margin: 6px 0 26px; color: var(--muted); font-size: 14px; }
     .share-figure{ margin: 0 0 22px; }
     /* The image box. Both arrow sets are absolutely positioned against

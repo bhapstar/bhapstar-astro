@@ -369,6 +369,12 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     nice_date = display_date(entry.get("date"))
 
     specs = entry.get("specs") or {}
+    # Optional decorative emoji after the heading. Kept out of <title>,
+    # og:title and the schema name: a browser tab and a search result are
+    # the wrong places for it. The span opts out of the gradient text-fill
+    # on h1, which would otherwise render the emoji invisible.
+    _emoji = (entry.get("title_emoji") or "").strip()
+    title_emoji_html = f'<span class="h1-emoji"> {t(_emoji)}</span>' if _emoji else ""
 
     # ── figures ──
     # The corner pill telling people the picture opens. Six desert sessions
@@ -1096,7 +1102,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 <main>
   <section class="section">
     <div class="wrap share-wrap">
-{topnav_html}      <h1>{t(title)}</h1>
+{topnav_html}      <h1>{t(title)}{title_emoji_html}</h1>
 
 {intro_html}{figures_html}
 

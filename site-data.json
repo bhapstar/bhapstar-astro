@@ -13,6 +13,24 @@
     "_bar_end": "=================================================================="
   },
   {
+    "file": "images/milky-way-and-stardust.webp",
+    "title": "Stardust with a Due Date",
+    "title_emoji": "👶🏾✨🤰🏾",
+    "desc": "My wife and our little one beneath the heart of the Milky Way at Al Qudra. A first look at the beautiful universe our baby is arriving into.",
+    "alt": "Pregnant woman in silhouette looking up at the Milky Way core above desert sand at night",
+    "type": "others",
+    "slug": "milky-way-and-stardust",
+    "date": "16-09-2026",
+    "intro": "The centre of our galaxy, glowing with the light of more than 100 billion stars, rising behind my wife in the desert. And it is still not the most impressive thing in this picture.",
+    "body": "Somewhere beneath all those stars, a new life is growing.\n\nOur baby has not seen the sky yet, but he's already here in this picture, held close under the same stars that will be waiting for him when he arrives. Much of that tiny body is made of stardust. The calcium that will build his bones and the iron in his blood were made inside stars that lived and died long before our Sun was born. So this is really a picture of a baby surrounded by family.\n\nWe can't wait to meet you, little one. What a beautiful universe you are arriving into. One day we will show you this picture, and tell you that you were already in it.\n\nNow the sciency part: the bright band is our own galaxy seen from the inside. We live in one of its spiral arms, so when we look toward the centre we see billions of stars packed together, crossed by dark lanes of dust. The brightest part, the core, lies in the direction of the constellation Sagittarius, about 26,000 light-years away. The light from the core set off around 26,000 years ago, long before the first towns were built, and arrived on the night we stood in the desert. The Sun, carrying the Earth and all of us with it, takes about 230 million years to travel once around that centre.\n\nThe picture joins two captures together. The sky is a stack of tracked exposures on a TeeSeek Nano Light Adventurer, a small star tracker that turns the camera slowly to follow the stars so they stay sharp. Tracking blurs the ground, so my wife and the desert come from a separate single frame, which was then blended with the sky.\n\nAl Qudra is close enough to Dubai that the city still lights the horizon, which is the warm glow along the bottom of the frame. The faint green above it is airglow, a natural light the upper atmosphere gives off on dark nights.",
+    "section": "gallery",
+    "specs": {
+      "telescope": "Samyang 14mm",
+      "camera": "Sony A7 III",
+      "location": "Al Qudra, UAE"
+    }
+  },
+  {
     "file": "images/eastern_veil_nebula_ngc6992.webp",
     "title": "Eastern Veil Nebula (NGC 6992)",
     "desc": "The eastern arc of a supernova remnant in Cygnus, where the blast wave of a star that exploded thousands of years ago is still ploughing into the surrounding gas. The red and teal filaments are the shock front itself, seen edge-on.",
