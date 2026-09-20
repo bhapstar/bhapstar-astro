@@ -75,12 +75,12 @@
 
     <div class="sw-toast-slot"><div class="sw-toast" id="toast" role="status" aria-live="polite"></div></div>
 
-    <div class="sw-board" id="board" aria-label="Star Word guess board"></div>
-
     <div class="sw-hint-bar">
       <button class="btn" id="hintBtn" type="button">Reveal clue</button>
     </div>
     <div class="sw-hint" id="hintBox" style="display:none;"></div>
+
+    <div class="sw-board" id="board" aria-label="Star Word guess board"></div>
 
     <div class="sw-keys" id="keyboard" aria-label="On-screen keyboard"></div>
 
@@ -860,7 +860,7 @@ function submit(){
     } else if(guesses.length >= ROWS){
       finish(false);
     } else {
-      if(guesses.length === 3 && !hintShown) toast('Stuck? A clue is waiting below.');
+      if(guesses.length === 3 && !hintShown) toast('Stuck? A clue is waiting above.');
       saveState();
     }
   }, (COLS - 1) * 260 + 560);
