@@ -620,6 +620,20 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         intro_html = ('      <div class="share-body share-intro">\n'
                       + intro_part.rstrip("\n") + "\n      </div>\n\n")
         body_html = body_html.lstrip("\n")
+    # ── optional enquiry line, closing the write-up ──
+    # Set per entry in site-data.json as
+    #   "enquiry": {"text": "...", "label": "Get in touch", "href": "https://..."}
+    # Rendered as an ordinary last paragraph with the label as an inline link.
+    # Added after the glossary pass so the link text is never annotated.
+    # Pages without it are unchanged.
+    enquiry = entry.get("enquiry") or {}
+    if enquiry.get("text"):
+        enq = t(enquiry["text"])
+        if enquiry.get("href") and enquiry.get("label"):
+            enq += (f' <a href="{a(enquiry["href"])}">'
+                    f'{t(enquiry["label"])}</a>.')
+        body_html = body_html.rstrip("\n") + f"\n        <p>{enq}</p>"
+
     # A page with no marked words carries no handler, so nothing is
     # paid for on a page that cannot use it.
     gloss_js = GLOSSARY_JS if gloss_count else ''
@@ -650,28 +664,6 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             '        <div class="share-specs-grid">\n' + tiles + "\n        </div>\n"
             "      </div>\n"
         )
-
-    # ── optional enquiry line: an invitation to get in touch ──
-    # Set per entry in site-data.json as
-    #   "enquiry": {"text": "...", "label": "Get in touch", "href": "/?goto=contact"}
-    # The text sits just above the buttons and the button leads the row, so a
-    # reader moved by the picture has somewhere to go. Pages without it are
-    # unchanged.
-    enquiry = entry.get("enquiry") or {}
-    enquiry_html = ""
-    if enquiry.get("text"):
-        enquiry_html = (
-            '      <div class="share-body share-enquiry">\n'
-            f'        <p><em>{t(enquiry["text"])}</em></p>\n'
-            "      </div>\n"
-        )
-    if enquiry.get("href") and enquiry.get("label"):
-        actions_html = (
-            f'        <a class="btn primary" href="{a(enquiry["href"])}">{t(enquiry["label"])}</a>\n'
-            '        <a class="btn" href="/gallery.html">Back to gallery</a>\n'
-        )
-    else:
-        actions_html = '        <a class="btn primary" href="/gallery.html">Back to gallery</a>\n'
 
     # ── prev / next ──
     slides_script = ""
@@ -1132,9 +1124,10 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 {body_html}
       </div>
 
-{specs_html}{enquiry_html}
+{specs_html}
       <div class="actions">
-{actions_html}        <a class="btn" href="/prints.html">Order a print</a>
+        <a class="btn primary" href="/gallery.html">Back to gallery</a>
+        <a class="btn" href="/prints.html">Order a print</a>
         <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
 
