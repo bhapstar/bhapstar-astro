@@ -12,7 +12,7 @@ const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0
 
 if (!IS_DEV) {
 
-const CACHE_VERSION = 'bhapstar-0baa8fa';
+const CACHE_VERSION = 'bhapstar-30cf7d8';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
