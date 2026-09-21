@@ -747,7 +747,8 @@ const HIDE_FIELD_NOTES = true;
       'pdf-meteors': 1, // QR on the meteor shower field card
       'pdf-calibration': 1, // QR on the calibration frames field card
       'pdf-asiair': 1, // QR on the ASIAir field card
-      'pdf-moon': 1    // QR on the Moon field card
+      'pdf-moon': 1,   // QR on the Moon field card
+      clinic: 1        // QR on the framed Milky Way print at the clinic
     };
     var tapSrc = new URLSearchParams(location.search).get('src');
 
