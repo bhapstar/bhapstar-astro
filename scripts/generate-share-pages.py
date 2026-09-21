@@ -651,6 +651,28 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             "      </div>\n"
         )
 
+    # ── optional enquiry line: an invitation to get in touch ──
+    # Set per entry in site-data.json as
+    #   "enquiry": {"text": "...", "label": "Get in touch", "href": "/?goto=contact"}
+    # The text sits just above the buttons and the button leads the row, so a
+    # reader moved by the picture has somewhere to go. Pages without it are
+    # unchanged.
+    enquiry = entry.get("enquiry") or {}
+    enquiry_html = ""
+    if enquiry.get("text"):
+        enquiry_html = (
+            '      <div class="share-body share-enquiry">\n'
+            f'        <p><em>{t(enquiry["text"])}</em></p>\n'
+            "      </div>\n"
+        )
+    if enquiry.get("href") and enquiry.get("label"):
+        actions_html = (
+            f'        <a class="btn primary" href="{a(enquiry["href"])}">{t(enquiry["label"])}</a>\n'
+            '        <a class="btn" href="/gallery.html">Back to gallery</a>\n'
+        )
+    else:
+        actions_html = '        <a class="btn primary" href="/gallery.html">Back to gallery</a>\n'
+
     # ── prev / next ──
     slides_script = ""
     if compare:
@@ -1110,10 +1132,9 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 {body_html}
       </div>
 
-{specs_html}
+{specs_html}{enquiry_html}
       <div class="actions">
-        <a class="btn primary" href="/gallery.html">Back to gallery</a>
-        <a class="btn" href="/prints.html">Order a print</a>
+{actions_html}        <a class="btn" href="/prints.html">Order a print</a>
         <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
 
