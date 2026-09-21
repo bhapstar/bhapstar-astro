@@ -114,11 +114,11 @@
 
       <div class="share-body">
         <p>Somewhere beneath all those stars, a new life is growing.</p>
-        <aside class="share-enquiry">
-          <p>If you are expecting your own little bundle of joy and would like to mark the occasion with a photoshoot like this, it would be great to hear from you. Please <a class="share-enquiry-link" href="https://bhapstar.com/?goto=contact">click here to get in touch</a>.</p>
-        </aside>
         <p>Our baby has not seen the sky yet, but he's already here in this picture, held close under the same stars that will be waiting for him when he arrives. Much of that tiny body is made of stardust. The calcium that will build his bones and the iron in his blood were made inside stars that lived and died long before our Sun was born. So this is really a picture of a baby surrounded by family.</p>
         <p>We can't wait to meet you, little one. What a beautiful universe you are arriving into. One day we will show you this picture, and tell you that you were already in it.</p>
+        <aside class="share-enquiry">
+          <p>If you are expecting your own little bundle of joy and would like to mark the occasion with a photoshoot like this, it would be great to hear from you. Please <a class="share-enquiry-link" href="https://bhapstar.com/?goto=contact" data-enquiry-open>click here to get in touch</a>.</p>
+        </aside>
         <p>Now the sciency part: the bright band is our own galaxy seen from the inside. We live in one of its spiral arms, so when we look toward the centre we see billions of stars packed together, crossed by dark lanes of dust. The brightest part, the core, lies in the direction of the constellation Sagittarius, about 26,000 light-years away. The light from the core set off around 26,000 years ago, long before the first towns were built, and arrived on the night we stood in the desert. The Sun, carrying the Earth and all of us with it, takes about 230 million years to travel once around that centre.</p>
         <p>The picture joins two captures together. The sky is a stack of tracked exposures on a TeeSeek Nano Light Adventurer, a small <span class="gl" role="button" tabindex="0" aria-describedby="gl-milky-way-and-stardust-1" data-gl-term="star tracker">star tracker</span><span class="gl-def" id="gl-milky-way-and-stardust-1" hidden>A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens.</span> that turns the camera slowly to follow the stars so they stay sharp. <span class="gl" role="button" tabindex="0" aria-describedby="gl-milky-way-and-stardust-2" data-gl-term="tracking">Tracking</span><span class="gl-def" id="gl-milky-way-and-stardust-2" hidden>The mount turning slowly to cancel out Earth&#x27;s rotation, so a star stays in the same spot on the sensor instead of drifting into a line.</span> blurs the ground, so my wife and the desert come from a separate single frame, which was then blended with the sky.</p>
         <p>Al Qudra is close enough to Dubai that the city still lights the horizon, which is the warm glow along the bottom of the frame. The faint green above it is airglow, a natural light the upper atmosphere gives off on dark nights.</p>
@@ -408,6 +408,75 @@
     })();
   </script>
 
+<dialog class="enquiry-dialog" id="enquiryDialog" aria-labelledby="enquiryTitle">
+  <button class="enquiry-close" type="button" aria-label="Close">&times;</button>
+  <h2 id="enquiryTitle">Photoshoot enquiry</h2>
+  <p class="enquiry-sub">Tell me a little about what you have in mind and I will get back to you.</p>
+  <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
+    <input type="hidden" name="_subject" value="bhapstar: Photoshoot enquiry" />
+    <input type="hidden" name="page" value="" />
+    <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+    <label><span>Name</span><input type="text" name="name" required autocomplete="name" /></label>
+    <label><span>Email</span><input type="email" name="email" required autocomplete="email" /></label>
+    <label><span>Phone or WhatsApp (optional)</span><input type="tel" name="phone" autocomplete="tel" /></label>
+    <label><span>Message</span><textarea name="message" rows="4" required></textarea></label>
+    <button type="submit" class="btn primary">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+      </svg>
+      <span>Send enquiry</span>
+    </button>
+  </form>
+  <p class="enquiry-status" role="status" aria-live="polite"></p>
+</dialog>
+<script>
+(function () {
+  var d = document.getElementById('enquiryDialog');
+  // No dialog support: the link falls back to its href (the homepage form).
+  if (!d || typeof d.showModal !== 'function') return;
+  var form = d.querySelector('form');
+  var status = d.querySelector('.enquiry-status');
+
+  document.querySelectorAll('[data-enquiry-open]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      d.showModal();
+      var first = d.querySelector('input[name="name"]');
+      if (first && !form.hidden) first.focus();
+    });
+  });
+  d.querySelector('.enquiry-close').addEventListener('click', function () { d.close(); });
+  // A click on the dimmed backdrop lands on the dialog element itself.
+  d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    form.querySelector('[name="page"]').value = location.href.split('?')[0];
+    var btn = form.querySelector('button[type="submit"]');
+    var label = btn.querySelector('span');
+    label.textContent = 'Sending...';
+    btn.disabled = true;
+    status.textContent = '';
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('send failed');
+      form.reset();
+      form.hidden = true;
+      status.textContent = 'Thank you, your enquiry has been sent. I will get back to you as soon as I can.';
+    }).catch(function () {
+      status.textContent = 'Sorry, that did not send. Please try again in a moment.';
+    }).then(function () {
+      label.textContent = 'Send enquiry';
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
 <!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
