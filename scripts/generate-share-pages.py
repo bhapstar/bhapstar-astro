@@ -349,6 +349,81 @@ def build_json_ld(entry, share_url, iso_date, media, meta_desc):
 
 # ── page template ────────────────────────────────────────────────────────────
 
+# Pop-up enquiry form for share pages that carry an "enquiry" field. Plain
+# string rather than an f-string, so the script braces need no escaping.
+# Same Formspree form as the homepage contact panel; the page address rides
+# along in a hidden field so each message says which page it came from.
+ENQUIRY_DIALOG = """<dialog class="enquiry-dialog" id="enquiryDialog" aria-labelledby="enquiryTitle">
+  <button class="enquiry-close" type="button" aria-label="Close">&times;</button>
+  <h2 id="enquiryTitle">Photoshoot enquiry</h2>
+  <p class="enquiry-sub">Tell me a little about what you have in mind and I will get back to you.</p>
+  <form class="contact-form" action="https://formspree.io/f/mjgwwblj" method="POST" novalidate>
+    <input type="hidden" name="_subject" value="bhapstar: Photoshoot enquiry" />
+    <input type="hidden" name="page" value="" />
+    <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+    <label><span>Name</span><input type="text" name="name" required autocomplete="name" /></label>
+    <label><span>Email</span><input type="email" name="email" required autocomplete="email" /></label>
+    <label><span>Phone or WhatsApp (optional)</span><input type="tel" name="phone" autocomplete="tel" /></label>
+    <label><span>Message</span><textarea name="message" rows="4" required></textarea></label>
+    <button type="submit" class="btn primary">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+      </svg>
+      <span>Send enquiry</span>
+    </button>
+  </form>
+  <p class="enquiry-status" role="status" aria-live="polite"></p>
+</dialog>
+<script>
+(function () {
+  var d = document.getElementById('enquiryDialog');
+  // No dialog support: the link falls back to its href (the homepage form).
+  if (!d || typeof d.showModal !== 'function') return;
+  var form = d.querySelector('form');
+  var status = d.querySelector('.enquiry-status');
+
+  document.querySelectorAll('[data-enquiry-open]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      d.showModal();
+      var first = d.querySelector('input[name="name"]');
+      if (first && !form.hidden) first.focus();
+    });
+  });
+  d.querySelector('.enquiry-close').addEventListener('click', function () { d.close(); });
+  // A click on the dimmed backdrop lands on the dialog element itself.
+  d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    form.querySelector('[name="page"]').value = location.href.split('?')[0];
+    var btn = form.querySelector('button[type="submit"]');
+    var label = btn.querySelector('span');
+    label.textContent = 'Sending...';
+    btn.disabled = true;
+    status.textContent = '';
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('send failed');
+      form.reset();
+      form.hidden = true;
+      status.textContent = 'Thank you, your enquiry has been sent. I will get back to you as soon as I can.';
+    }).catch(function () {
+      status.textContent = 'Sorry, that did not send. Please try again in a moment.';
+    }).then(function () {
+      label.textContent = 'Send enquiry';
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+"""
+
 def build_page(entry, prev_link, next_link, all_photos=None,
                global_start=None, glossary=None):
     slug = entry["slug"]
@@ -620,31 +695,42 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         intro_html = ('      <div class="share-body share-intro">\n'
                       + intro_part.rstrip("\n") + "\n      </div>\n\n")
         body_html = body_html.lstrip("\n")
-    # ── optional enquiry box, after the first paragraph of the write-up ──
+    # ── optional enquiry box and pop-up contact form ──
     # Set per entry in site-data.json as
-    #   "enquiry": {"text": "... Please {link}.", "label": "click here", "href": "https://..."}
-    # Rendered as a boxed callout straight after the first paragraph below the
-    # picture, so it is seen without scrolling but reads as separate from the
+    #   "enquiry": {"text": "... Please {link}.", "label": "click here",
+    #               "href": "https://...", "after": 2}
+    # Rendered as a boxed callout after paragraph number "after" of the
+    # write-up below the picture (default 1), so it reads as separate from the
     # write-up. The label becomes an inline link wherever the text says {link}.
+    # Clicking the link opens a pop-up enquiry form (ENQUIRY_DIALOG below)
+    # that sends through Formspree, so the reader never leaves the page. href
+    # is only the fallback for a browser that cannot show the pop-up.
     # Added after the glossary pass so the link text is never annotated.
     # Pages without it are unchanged.
     enquiry = entry.get("enquiry") or {}
+    enquiry_dialog = ""
     if enquiry.get("text"):
         enq = t(enquiry["text"])
         if enquiry.get("href") and enquiry.get("label"):
-            link = (f'<a class="share-enquiry-link" href="{a(enquiry["href"])}">'
-                    f'{t(enquiry["label"])}</a>')
+            link = (f'<a class="share-enquiry-link" href="{a(enquiry["href"])}" '
+                    f'data-enquiry-open>{t(enquiry["label"])}</a>')
             # "{link}" in the text marks where the link goes; without it the
             # link is added as a closing sentence.
             enq = enq.replace("{link}", link) if "{link}" in enq else f"{enq} {link}."
+            enquiry_dialog = ENQUIRY_DIALOG
         box = (f'        <aside class="share-enquiry">\n'
                f'          <p>{enq}</p>\n'
                f'        </aside>')
-        cut = body_html.find("</p>\n")
+        after = max(int(enquiry.get("after") or 1), 1)
+        cut = -1
+        for _ in range(after):
+            nxt = body_html.find("</p>\n", cut + 1 if cut != -1 else 0)
+            if nxt == -1:
+                break
+            cut = nxt + len("</p>\n")
         if cut == -1:
             body_html = body_html.rstrip("\n") + "\n" + box
         else:
-            cut += len("</p>\n")
             body_html = body_html[:cut] + box + "\n" + body_html[cut:]
 
     # A page with no marked words carries no handler, so nothing is
@@ -1152,7 +1238,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 {lightbox_script}
 {sharemenu_html}
 {sharemenu_script}
-<!-- ── Footer (injected by partials.js) ── -->
+{enquiry_dialog}<!-- ── Footer (injected by partials.js) ── -->
 <div id="siteFooter"></div>
 
 <script src="/partials/partials.js"></script>
