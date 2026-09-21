@@ -8381,6 +8381,19 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       border: 1px solid rgba(167,139,250,0.35); border-left: 3px solid var(--accent);
       background: linear-gradient(135deg, rgba(167,139,250,0.14), rgba(96,165,250,0.08)); }
     .share-body .share-enquiry p{ margin: 0; }
+    /* Pop-up enquiry form opened from the enquiry box link */
+    .enquiry-dialog{ width: min(92vw, 480px); max-height: 90vh; overflow: auto;
+      padding: 26px 24px 22px; border-radius: 18px; border: 1px solid rgba(167,139,250,0.30);
+      background: var(--bg2); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+    .enquiry-dialog::backdrop{ background: rgba(5,4,20,0.72); backdrop-filter: blur(3px); }
+    .enquiry-dialog h2{ margin: 0 0 6px; font-size: 20px; font-weight: 600; color: var(--text); }
+    .enquiry-dialog .enquiry-sub{ color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0 0 18px; }
+    .enquiry-dialog .contact-form label{ max-width: none; margin-bottom: 1rem; }
+    .enquiry-close{ position: absolute; top: 10px; right: 12px; background: none; border: 0;
+      color: var(--muted); font-size: 28px; line-height: 1; cursor: pointer; padding: 4px 8px; }
+    .enquiry-close:hover, .enquiry-close:focus-visible{ color: var(--text); }
+    .enquiry-status{ margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+    .enquiry-status:empty{ display: none; }
     .share-body .share-body-fig{
       float: right; clear: none; width: 180px;
       margin: 4px 0 14px 22px; padding: 8px 8px 6px;
@@ -9142,6 +9155,11 @@ html[data-theme="light"] #articleGrid.list-view .cap .d{ color: rgba(60,54,96,0.
 /* 5 — Image (share) page: lead paragraph + capture-spec values. */
 html[data-theme="light"] .share-body .lead{ color: rgba(78,68,128,0.88); }
 html[data-theme="light"] .share-body a.share-enquiry-link{ color: #6d4bd8; }
+html[data-theme="light"] .enquiry-dialog{ background: #f7f4ff; border-color: rgba(124,92,246,0.25);
+  box-shadow: 0 20px 60px rgba(40,30,80,0.25); }
+html[data-theme="light"] .enquiry-dialog::backdrop{ background: rgba(40,30,80,0.35); }
+html[data-theme="light"] .enquiry-dialog h2,
+html[data-theme="light"] .enquiry-status{ color: rgba(26,23,48,0.92); }
 html[data-theme="light"] .share-body .share-enquiry{ border-color: rgba(124,92,246,0.30); border-left-color: #6d4bd8;
   background: linear-gradient(135deg, rgba(124,92,246,0.10), rgba(96,165,250,0.07)); }
 html[data-theme="light"] .share-spec-val{ color: rgba(40,35,72,0.90); }
