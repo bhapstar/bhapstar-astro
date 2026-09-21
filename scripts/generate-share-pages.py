@@ -620,11 +620,12 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         intro_html = ('      <div class="share-body share-intro">\n'
                       + intro_part.rstrip("\n") + "\n      </div>\n\n")
         body_html = body_html.lstrip("\n")
-    # ── optional enquiry line, closing the write-up ──
+    # ── optional enquiry box, after the first paragraph of the write-up ──
     # Set per entry in site-data.json as
     #   "enquiry": {"text": "... Please {link}.", "label": "click here", "href": "https://..."}
-    # Rendered as an ordinary last paragraph with the label as an inline link,
-    # placed wherever the text says {link}.
+    # Rendered as a boxed callout straight after the first paragraph below the
+    # picture, so it is seen without scrolling but reads as separate from the
+    # write-up. The label becomes an inline link wherever the text says {link}.
     # Added after the glossary pass so the link text is never annotated.
     # Pages without it are unchanged.
     enquiry = entry.get("enquiry") or {}
@@ -636,7 +637,15 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             # "{link}" in the text marks where the link goes; without it the
             # link is added as a closing sentence.
             enq = enq.replace("{link}", link) if "{link}" in enq else f"{enq} {link}."
-        body_html = body_html.rstrip("\n") + f"\n        <p>{enq}</p>"
+        box = (f'        <aside class="share-enquiry">\n'
+               f'          <p>{enq}</p>\n'
+               f'        </aside>')
+        cut = body_html.find("</p>\n")
+        if cut == -1:
+            body_html = body_html.rstrip("\n") + "\n" + box
+        else:
+            cut += len("</p>\n")
+            body_html = body_html[:cut] + box + "\n" + body_html[cut:]
 
     # A page with no marked words carries no handler, so nothing is
     # paid for on a page that cannot use it.
