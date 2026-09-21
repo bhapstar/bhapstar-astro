@@ -8373,6 +8373,10 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
        partials.js opens it full size. flow-root on the body stops the float
        running into the capture details panel below. */
     .share-body{ display: flow-root; }
+    /* Enquiry link closing a share write-up (enquiry field in site-data.json) */
+    .share-body a.share-enquiry-link{ color: var(--accent); font-weight: 600; text-decoration: underline;
+      text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+    .share-body a.share-enquiry-link:hover, .share-body a.share-enquiry-link:focus-visible{ text-decoration-thickness: 2px; }
     .share-body .share-body-fig{
       float: right; clear: none; width: 180px;
       margin: 4px 0 14px 22px; padding: 8px 8px 6px;
@@ -9133,6 +9137,7 @@ html[data-theme="light"] #articleGrid.list-view .cap .d{ color: rgba(60,54,96,0.
 
 /* 5 — Image (share) page: lead paragraph + capture-spec values. */
 html[data-theme="light"] .share-body .lead{ color: rgba(78,68,128,0.88); }
+html[data-theme="light"] .share-body a.share-enquiry-link{ color: #6d4bd8; }
 html[data-theme="light"] .share-spec-val{ color: rgba(40,35,72,0.90); }
 
 /* 6 — Prints: FAQ answers, the (i) tooltip, and the image picker. */

@@ -21,8 +21,8 @@
     "type": "others",
     "slug": "milky-way-and-stardust",
     "enquiry": {
-      "text": "If you are expecting and would like a photoshoot like this to mark your own journey, I would be happy to hear from you.",
-      "label": "Get in touch",
+      "text": "If you are expecting and would like a photoshoot like this to mark your own journey, I would be happy to hear from you. Please {link}.",
+      "label": "click here to get in touch",
       "href": "https://bhapstar.com/?goto=contact"
     },
     "date": "16-09-2026",

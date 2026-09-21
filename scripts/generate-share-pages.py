@@ -622,16 +622,20 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         body_html = body_html.lstrip("\n")
     # ── optional enquiry line, closing the write-up ──
     # Set per entry in site-data.json as
-    #   "enquiry": {"text": "...", "label": "Get in touch", "href": "https://..."}
-    # Rendered as an ordinary last paragraph with the label as an inline link.
+    #   "enquiry": {"text": "... Please {link}.", "label": "click here", "href": "https://..."}
+    # Rendered as an ordinary last paragraph with the label as an inline link,
+    # placed wherever the text says {link}.
     # Added after the glossary pass so the link text is never annotated.
     # Pages without it are unchanged.
     enquiry = entry.get("enquiry") or {}
     if enquiry.get("text"):
         enq = t(enquiry["text"])
         if enquiry.get("href") and enquiry.get("label"):
-            enq += (f' <a href="{a(enquiry["href"])}">'
-                    f'{t(enquiry["label"])}</a>.')
+            link = (f'<a class="share-enquiry-link" href="{a(enquiry["href"])}">'
+                    f'{t(enquiry["label"])}</a>')
+            # "{link}" in the text marks where the link goes; without it the
+            # link is added as a closing sentence.
+            enq = enq.replace("{link}", link) if "{link}" in enq else f"{enq} {link}."
         body_html = body_html.rstrip("\n") + f"\n        <p>{enq}</p>"
 
     # A page with no marked words carries no handler, so nothing is
