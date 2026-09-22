@@ -164,11 +164,13 @@
           if (!link || !range) return;
           var idxA = link.getAttribute('data-idx-a');
           var idxB = link.getAttribute('data-idx-b');
-          /* Past halfway the second picture is mostly on screen, so a
+          /* --mix fades the second picture in over the whole of the
+             first. Past halfway it is the one mostly on screen, so a
              tap on the picture opens that one full screen. */
           function set(){
             var v = Math.max(0, Math.min(100, +range.value || 0));
             box.style.setProperty('--cmp', v + '%');
+            box.style.setProperty('--mix', v / 100);
             link.setAttribute('data-idx', v > 50 ? idxB : idxA);
           }
           range.addEventListener('input', set);
