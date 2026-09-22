@@ -8289,15 +8289,14 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     }
 
     /* ── Compare slider ("compare": true in site-data.json) ──
-       Two pictures of the same framing. The second is laid over the first
-       and masked, so moving the small slider along the bottom edge to the
-       right brings more of it through. The mask is a soft gradient rather
-       than a hard edge, so the second picture fades in over the first
-       instead of wiping across it. --fade-n is the width of that soft band,
-       as a plain number of per cent so it can be used in both forms below.
-       The slide shrink-wraps the picture so the slider is centred on the
-       image, not the column. */
-    .share-compare{ --cmp: 0%; --fade-n: 14; --fade: calc(var(--fade-n) * 1%); }
+       Two pictures of the same framing, one laid exactly over the other. The
+       small slider along the bottom edge fades the second one in over the
+       whole of the first, so both pictures are always complete, with the
+       slider setting how much of the second you see. --mix is that amount,
+       0 to 1, set by the page script; --cmp is the same number as a per cent
+       for the slider's own fill. The slide shrink-wraps the picture so the
+       slider is centred on the image, not the column. */
+    .share-compare{ --cmp: 0%; --mix: 0; }
     .share-compare .share-slide.is-active{
       position: relative;
       width: fit-content; max-width: 100%; margin: 0 auto;
@@ -8306,16 +8305,7 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%; max-height: none;
       object-fit: cover;
-      /* The band is nudged along by a little more than the slider travel, so
-         0% still hides the second picture completely and 100% shows all of
-         it, soft edge included. */
-      --cmp-band: calc(var(--cmp) * (1 + var(--fade-n) / 100));
-      -webkit-mask-image: linear-gradient(to right, #000 0,
-        #000 calc(var(--cmp-band) - var(--fade)),
-        transparent var(--cmp-band), transparent 100%);
-      mask-image: linear-gradient(to right, #000 0,
-        #000 calc(var(--cmp-band) - var(--fade)),
-        transparent var(--cmp-band), transparent 100%);
+      opacity: var(--mix);
       box-shadow: none;
       pointer-events: none;
     }
