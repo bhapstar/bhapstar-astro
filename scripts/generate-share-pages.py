@@ -541,8 +541,8 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     first_cap = t(media[0][1]) if (multi and media[0][1]) else ""
     if compare:
         # One slide holding both pictures. The first sits in the flow and sizes
-        # the box; the second is laid over it and clipped to the left of --cmp,
-        # so moving the slider right reveals more of it. The slider is a small
+        # the box; the second is laid over it and faded in as the slider moves
+        # right, so both pictures stay whole throughout. The slider is a small
         # control along the bottom edge, outside the link, so the picture
         # itself still opens full screen on a tap. object-fit: cover in the CSS
         # keeps the second picture in proportion if its shape differs slightly.
@@ -777,11 +777,13 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             "          if (!link || !range) return;\n"
             "          var idxA = link.getAttribute('data-idx-a');\n"
             "          var idxB = link.getAttribute('data-idx-b');\n"
-            "          /* Past halfway the second picture is mostly on screen, so a\n"
+            "          /* --mix fades the second picture in over the whole of the\n"
+            "             first. Past halfway it is the one mostly on screen, so a\n"
             "             tap on the picture opens that one full screen. */\n"
             "          function set(){\n"
             "            var v = Math.max(0, Math.min(100, +range.value || 0));\n"
             "            box.style.setProperty('--cmp', v + '%');\n"
+            "            box.style.setProperty('--mix', v / 100);\n"
             "            link.setAttribute('data-idx', v > 50 ? idxB : idxA);\n"
             "          }\n"
             "          range.addEventListener('input', set);\n"
