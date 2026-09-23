@@ -297,6 +297,42 @@
     .btn.pri{ background:var(--pri); border-color:var(--pri-line); font-weight:500 }
     .btn.pri em{ color:var(--pri-em) }
 
+    /* ── Scrolling-gradient buttons ──
+       Same rolling background as the download button on field-cards.html
+       (.fc-btn in styles.css): the --grad token, animated straight through
+       rather than reversed, at the same 5s pace. Uses the token rather than
+       fc-btn's hardcoded colours so it still follows this page's light/dark
+       toggle. The label is plain white here rather than clipped to its own
+       gradient, since that would fight with the moving background under it. */
+    .btn.grad{
+      background:var(--grad); background-size:300% 100%;
+      animation:gradientRoll 5s linear infinite;
+      border-color:transparent; color:#fff;
+    }
+    .btn.grad .btn-label{
+      background:none; -webkit-text-fill-color:#fff; color:#fff; animation:none;
+    }
+    .btn.grad em{ color:rgba(255,255,255,.82) }
+
+    /* Home only: a small periodic shake so it reads as the way back rather
+       than just another tile. Uses the standalone translate/rotate
+       properties (not transform) so it doesn't fight the hover lift below,
+       which still animates transform. Mostly still; the shake sits in the
+       first fifth of a 2.5s loop. */
+    .btn.grad.rattle{
+      animation:gradientRoll 5s linear infinite, rattle 2.5s ease-in-out infinite;
+    }
+    @keyframes rattle{
+      0%, 8%, 100% { rotate:0deg;   translate:0 0 }
+      1%            { rotate:-2deg; translate:-2px 0 }
+      2%            { rotate:2deg;  translate:2px 0 }
+      3%            { rotate:-2deg; translate:-2px 0 }
+      4%            { rotate:2deg;  translate:2px 0 }
+      5%            { rotate:-1deg; translate:-1px 0 }
+      6%            { rotate:1deg;  translate:1px 0 }
+      7%            { rotate:0deg;  translate:0 0 }
+    }
+
     /* Dark theme: the tiles sit on a dark face, so they need to lift off it */
     :root .face-back .btn{ background:rgba(255,255,255,.055) }
     :root .face-back .btn.pri{ background:var(--pri) }
@@ -382,6 +418,7 @@
         box-shadow:0 6px 16px var(--shadow);
       }
       .btn.pri:hover{ background:var(--pri-hover); box-shadow:0 8px 22px var(--shadow) }
+      .btn.grad:hover{ background:var(--grad); background-size:300% 100%; box-shadow:0 8px 22px var(--shadow) }
     }
 
     @media (max-width:340px){
@@ -438,7 +475,7 @@
       <p class="role">Astrophotographer</p>
 
       <div class="row row-last">
-        <a class="btn pri wide" href="index.html">Home <em>bhapstar.com</em></a>
+        <a class="btn grad rattle wide" href="index.html">Home <em>bhapstar.com</em></a>
       </div>
     </div>
 
@@ -477,7 +514,7 @@
           <textarea name="message" rows="2"></textarea>
         </label>
 
-        <button type="submit" class="btn pri wide">Send message</button>
+        <button type="submit" class="btn grad wide">Send message</button>
       </form>
     </div>
 
