@@ -887,14 +887,16 @@
 
     // label + accent colour per `type`; ORDER controls display sequence
     const META = {
-      'nebulae':       { label: 'Nebulae',       c: 'var(--accent4)' },
-      'galaxies':      { label: 'Galaxies',      c: 'var(--accent2)' },
-      'star-clusters': { label: 'Star clusters', c: 'var(--accent)'  },
-      'star-trails':   { label: 'Star trails',   c: 'var(--accent3)' },
-      'comets':        { label: 'Comets',        c: 'var(--accent5)' },
-      'others':        { label: 'Other targets', c: 'var(--accent2)' }
+      'nebulae':        { label: 'Nebulae',        c: 'var(--accent4)' },
+      'galaxies':       { label: 'Galaxies',       c: 'var(--accent2)' },
+      'star-clusters':  { label: 'Star clusters',  c: 'var(--accent)'  },
+      'milky-way':      { label: 'Milky Way',      c: 'var(--accent5)' },
+      'moon':           { label: 'Moon',           c: 'var(--accent2)' },
+      'meteor-showers': { label: 'Meteor showers', c: 'var(--accent3)' },
+      'star-trails':    { label: 'Star trails',    c: 'var(--accent3)' },
+      'comets':         { label: 'Comets',         c: 'var(--accent5)' }
     };
-    const ORDER = ['nebulae', 'galaxies', 'star-clusters', 'star-trails', 'comets', 'others'];
+    const ORDER = ['nebulae', 'galaxies', 'star-clusters', 'milky-way', 'moon', 'meteor-showers', 'star-trails', 'comets'];
 
     let items = [];
     try {

@@ -581,9 +581,11 @@
         <button class="filter-pill"         data-filter="nebulae"       type="button" aria-pressed="false">Nebulae</button>
         <button class="filter-pill"         data-filter="galaxies"      type="button" aria-pressed="false">Galaxies</button>
         <button class="filter-pill"         data-filter="star-clusters" type="button" aria-pressed="false">Star Clusters</button>
+        <button class="filter-pill"         data-filter="milky-way"     type="button" aria-pressed="false">Milky Way</button>
+        <button class="filter-pill"         data-filter="moon"          type="button" aria-pressed="false">Moon</button>
+        <button class="filter-pill"         data-filter="meteor-showers" type="button" aria-pressed="false">Meteor Showers</button>
         <button class="filter-pill"         data-filter="star-trails"   type="button" aria-pressed="false">Star Trails</button>
         <button class="filter-pill"         data-filter="comets"        type="button" aria-pressed="false">Comets</button>
-        <button class="filter-pill"         data-filter="others"        type="button" aria-pressed="false">Others</button>
       </div>
 
       <!-- Tag filter indicator (shown when filtering by tag) -->
@@ -846,12 +848,14 @@
   const tagFilterClear = document.getElementById('tagFilterClear');
 
   const TYPE_LABELS = {
-    nebulae:        'Nebulae',
-    galaxies:       'Galaxies',
-    'star-clusters':'Star Clusters',
-    'star-trails':  'Star Trails',
-    comets:         'Comets',
-    others:         'Others',
+    nebulae:          'Nebulae',
+    galaxies:         'Galaxies',
+    'star-clusters':  'Star Clusters',
+    'milky-way':      'Milky Way',
+    moon:             'Moon',
+    'meteor-showers': 'Meteor Showers',
+    'star-trails':    'Star Trails',
+    comets:           'Comets',
   };
 
   function esc(str) {
