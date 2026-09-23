@@ -85,6 +85,12 @@
       --shadow:rgba(0,0,0,.28);
       --grad:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
 
+      /* Same gradient as .fc-btn on field-cards.html. Set once here, not
+         redefined under the light-theme selector below, because that button
+         uses this exact gradient in both themes rather than following the
+         page's own light/dark tokens. */
+      --fc-grad:linear-gradient(90deg,#a78bfa,#60a5fa,#f472b6,#60a5fa,#a78bfa);
+
       /* The printed back is off-white paper. In dark theme that would glare,
          so the face takes a deep panel instead and keeps the same geometry. */
       --face:#0c0a22;
@@ -298,14 +304,13 @@
     .btn.pri em{ color:var(--pri-em) }
 
     /* ── Scrolling-gradient buttons ──
-       Same rolling background as the download button on field-cards.html
-       (.fc-btn in styles.css): the --grad token, animated straight through
-       rather than reversed, at the same 5s pace. Uses the token rather than
-       fc-btn's hardcoded colours so it still follows this page's light/dark
-       toggle. The label is plain white here rather than clipped to its own
-       gradient, since that would fight with the moving background under it. */
+       Same fixed gradient as .fc-btn on field-cards.html (--fc-grad, not
+       --grad — that one changes with the theme, .fc-btn doesn't), animated
+       straight through rather than reversed, at the same 5s pace. Label is
+       plain white here rather than clipped to its own gradient, since that
+       would fight with the moving background under it. */
     .btn.grad{
-      background:var(--grad); background-size:300% 100%;
+      background:var(--fc-grad); background-size:300% 100%;
       animation:gradientRoll 5s linear infinite;
       border-color:transparent; color:#fff;
     }
@@ -314,28 +319,32 @@
     }
     .btn.grad em{ color:rgba(255,255,255,.82) }
 
-    /* Home only: a small periodic shake so it reads as the way back rather
-       than just another tile. Uses the standalone translate/rotate
-       properties (not transform) so it doesn't fight the hover lift below,
-       which still animates transform. Mostly still; the shake sits in the
-       first fifth of a 2.5s loop. */
+    /* Home only: the whole button shakes every 2.5s, the way the CTA at the
+       bottom of a Linktree page does, not just the label inside it. Plain
+       translate (no rotate), on the standalone translate property rather
+       than transform, so it doesn't fight the hover lift below, which still
+       animates transform. Mostly still; the shake sits in the last ~15% of
+       the loop so it reads as a nudge rather than a constant jitter. */
     .btn.grad.rattle{
       animation:gradientRoll 5s linear infinite, rattle 2.5s ease-in-out infinite;
     }
     @keyframes rattle{
-      0%, 8%, 100% { rotate:0deg;   translate:0 0 }
-      1%            { rotate:-2deg; translate:-2px 0 }
-      2%            { rotate:2deg;  translate:2px 0 }
-      3%            { rotate:-2deg; translate:-2px 0 }
-      4%            { rotate:2deg;  translate:2px 0 }
-      5%            { rotate:-1deg; translate:-1px 0 }
-      6%            { rotate:1deg;  translate:1px 0 }
-      7%            { rotate:0deg;  translate:0 0 }
+      0%, 84%, 100% { translate:0 0 }
+      86% { translate:-4px 0 }
+      88% { translate:4px 0 }
+      90% { translate:-4px 0 }
+      92% { translate:4px 0 }
+      94% { translate:-3px 0 }
+      96% { translate:3px 0 }
+      98% { translate:-1px 0 }
     }
 
-    /* Dark theme: the tiles sit on a dark face, so they need to lift off it */
+    /* Dark theme: the tiles sit on a dark face, so they need to lift off it.
+       .btn.grad repeats here (4 classes beats 3) because the plain .btn rule
+       above it would otherwise win and paint over the gradient background. */
     :root .face-back .btn{ background:rgba(255,255,255,.055) }
     :root .face-back .btn.pri{ background:var(--pri) }
+    :root .face-back .btn.grad{ background:var(--fc-grad); background-size:300% 100% }
 
     /* ─────────── Contact and Updates ───────────
        The same panel the site carries, kept on the card so someone met at an
@@ -418,7 +427,7 @@
         box-shadow:0 6px 16px var(--shadow);
       }
       .btn.pri:hover{ background:var(--pri-hover); box-shadow:0 8px 22px var(--shadow) }
-      .btn.grad:hover{ background:var(--grad); background-size:300% 100%; box-shadow:0 8px 22px var(--shadow) }
+      .btn.grad:hover{ background:var(--fc-grad); background-size:300% 100%; box-shadow:0 8px 22px var(--shadow) }
     }
 
     @media (max-width:340px){
