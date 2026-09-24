@@ -9152,6 +9152,34 @@ html[data-theme="light"] .filter-select option{ background:#ffffff; color: rgba(
 html[data-theme="light"] .filter-pill{ color: rgba(60,54,96,0.85); }
 html[data-theme="light"] .view-btn{ color: rgba(60,54,96,0.70); }
 
+/* Caption toggle (gallery + gear). The base rules are scoped per page
+   (.page-gallery / .page-gear .caption-toggle[aria-pressed="false"]) and
+   carry a light lavender "off" colour and a white hover colour, both made
+   for the dark theme. Those out-rank the one-line override above, so on
+   the light theme the off state faded into the page and the hover went
+   white on white. These selectors sit one step higher in specificity. */
+html[data-theme="light"] .caption-toggle{
+  background: rgba(124,92,246,0.08);
+  border-color: rgba(124,92,246,0.32);
+  color: rgba(26,23,48,0.90);
+}
+html[data-theme="light"] .caption-toggle::before{ background: rgba(124,92,246,0.28); }
+html[data-theme="light"] .caption-toggle:hover{
+  background: rgba(124,92,246,0.14);
+  border-color: rgba(124,92,246,0.48);
+  color: rgba(26,23,48,0.96);
+}
+html[data-theme="light"] .caption-toggle[aria-pressed="false"]{
+  background: transparent;
+  border-color: rgba(124,92,246,0.30);
+  color: rgba(60,54,96,0.80);
+}
+html[data-theme="light"] .caption-toggle[aria-pressed="false"]:hover{
+  background: rgba(124,92,246,0.10);
+  border-color: rgba(124,92,246,0.45);
+  color: rgba(26,23,48,0.94);
+}
+
 /* Card caption *descriptions* sit on a dark scrim (kept dark), so they
    must stay light rather than following var(--muted) into dark.
    Covers both the gallery and gear grids. */
