@@ -7927,6 +7927,18 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     .gear-review p { margin: 12px 0; }
     .gear-review ul, .gear-review ol { margin: 12px 0; padding-left: 22px; }
     .gear-review li { margin: 6px 0; }
+    /* Photos in the write-up use the article figure classes
+       (figure.article-fig fig-float, fig-left, fig-portrait), so they float
+       and collapse on phones exactly as they do in articles, and open in the
+       figure lightbox in partials.js. flow-root keeps a float inside the
+       write-up so it never runs into the buy links below. Headings flow
+       beside a float rather than clearing it, which avoids a column of empty
+       space after a short section. Two floats never sit side by side: each
+       one starts below the last. Tables and lists start below any float
+       rather than being squeezed in beside it. */
+    .gear-review { display: flow-root; }
+    .gear-review .article-fig.fig-float { clear: both; }
+    .gear-review table, .gear-review ul, .gear-review ol { clear: both; }
     /* Links carry an underline as well as colour, so they stay identifiable
        without relying on hue alone. */
     .gear-review a { color: var(--accent); text-decoration: none;
