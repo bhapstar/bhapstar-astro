@@ -151,7 +151,14 @@ would quietly break your spacing.</p>
   <script>
     /* Carousel: arrows, thumbnails, keyboard and touch swipe.
        All slides are already in the DOM, so changing image is only a class
-       swap. Nothing is resized or reloaded, so the page cannot shift. */
+       swap. Nothing is resized or reloaded, so the page cannot shift.
+
+       Clicking the main picture (or Enter on the focused carousel) opens it
+       full screen in its own lightbox, with the same arrows, keys and swipe.
+       Moving through the lightbox moves the carousel too, so closing it
+       leaves the page on the picture that was last looked at. The overlay
+       borrows the article figure lightbox styles (.figbox in styles.css) so
+       both look the same, and is built on first use. */
     (function () {
       var root = document.getElementById('gearCarousel');
       if (!root) return;
@@ -160,9 +167,10 @@ would quietly break your spacing.</p>
       var thumbs = Array.prototype.slice.call(root.querySelectorAll('.gc-thumb'));
       var counter = root.querySelector('.gc-current');
       var stage = root.querySelector('.gc-stage');
-      if (slides.length < 2) return;
+      if (!slides.length) return;
 
       var index = 0;
+      var multi = slides.length > 1;
 
       function show(next) {
         var n = (next + slides.length) % slides.length;
@@ -178,6 +186,152 @@ would quietly break your spacing.</p>
         }
       }
 
+      /* ── Lightbox ── */
+      var title = (document.querySelector('.gear-title') || {}).textContent || '';
+      var box = null, boxImg = null, boxCap = null;
+      var ARROW_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+      var ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>';
+
+      function build() {
+        box = document.createElement('div');
+        box.className = 'figbox gcbox';
+        box.hidden = true;
+        box.setAttribute('role', 'dialog');
+        box.setAttribute('aria-modal', 'true');
+        box.setAttribute('aria-label', 'Enlarged product image');
+        box.tabIndex = -1;
+
+        var x = document.createElement('button');
+        x.type = 'button';
+        x.className = 'figbox-x';
+        x.setAttribute('aria-label', 'Close');
+        x.innerHTML = '&#215;';
+        box.appendChild(x);
+
+        if (multi) {
+          [['gcbox-prev', 'Previous image', ARROW_L, -1],
+           ['gcbox-next', 'Next image', ARROW_R, 1]].forEach(function (b) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'gcbox-arrow ' + b[0];
+            btn.setAttribute('aria-label', b[1]);
+            btn.innerHTML = b[2];
+            // The overlay closes on any click, so the arrows stop theirs
+            // from reaching it.
+            btn.addEventListener('click', function (ev) {
+              ev.stopPropagation();
+              go(index + b[3]);
+            });
+            box.appendChild(btn);
+          });
+        }
+
+        var st = document.createElement('div');
+        st.className = 'figbox-stage';
+        boxImg = document.createElement('img');
+        boxImg.decoding = 'async';
+        boxImg.draggable = false;
+        st.appendChild(boxImg);
+        box.appendChild(st);
+
+        boxCap = document.createElement('p');
+        boxCap.className = 'figbox-cap';
+        box.appendChild(boxCap);
+
+        var hint = document.createElement('p');
+        hint.className = 'figbox-hint';
+        var coarse = false;
+        try { coarse = window.matchMedia('(pointer: coarse)').matches; } catch (e) {}
+        hint.textContent = (coarse ? 'Tap' : 'Click') + ' anywhere to close';
+        box.appendChild(hint);
+
+        document.body.appendChild(box);
+
+        box.addEventListener('click', close);
+        box.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); close(); }
+          else if (multi && e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
+          else if (multi && e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
+        });
+
+        // Swipe between pictures. A swipe produces no click, so it never
+        // closes the overlay; a plain tap still does.
+        var bx = null, by = null;
+        box.addEventListener('touchstart', function (e) {
+          var t = e.changedTouches[0];
+          bx = t.clientX; by = t.clientY;
+        }, { passive: true });
+        box.addEventListener('touchend', function (e) {
+          if (bx === null) return;
+          var t = e.changedTouches[0];
+          var dx = t.clientX - bx, dy = t.clientY - by;
+          if (multi && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+            go(dx < 0 ? index + 1 : index - 1);
+          }
+          bx = null; by = null;
+        }, { passive: true });
+      }
+
+      function render() {
+        var s = slides[index];
+        boxImg.src = s.currentSrc || s.src;
+        boxImg.alt = s.alt || '';
+        boxCap.textContent = multi
+          ? title.trim() + '  ·  ' + (index + 1) + ' / ' + slides.length
+          : title.trim();
+      }
+
+      function go(n) {
+        show(n);
+        render();
+      }
+
+      function open() {
+        if (!box) build();
+        render();
+        box.hidden = false;
+        // Next frame, so the opening transition has a state to move from.
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { box.classList.add('open'); });
+        });
+        document.documentElement.style.overflow = 'hidden';
+        box.focus();
+      }
+
+      function close() {
+        if (!box || box.hidden) return;
+        box.classList.remove('open');
+        document.documentElement.style.overflow = '';
+        var done = function () {
+          box.hidden = true;
+          try { root.focus({ preventScroll: true }); } catch (e) { root.focus(); }
+        };
+        var reduce = false;
+        try {
+          reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) {}
+        if (reduce) { done(); return; }
+        window.setTimeout(done, 200);
+      }
+
+      // The slides ignore the pointer (so the controls above them work),
+      // so the click is taken on the stage. The arrows and thumbnails are
+      // buttons and keep their own job.
+      stage.classList.add('gc-openable');
+      stage.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('button')) return;
+        open();
+      });
+
+      root.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target === root) { e.preventDefault(); open(); return; }
+        if (!multi) return;
+        if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+      });
+
+      if (!multi) return;
+
       var prev = root.querySelector('.gc-prev');
       var next = root.querySelector('.gc-next');
       if (prev) prev.addEventListener('click', function () { show(index - 1); });
@@ -187,11 +341,6 @@ would quietly break your spacing.</p>
         t.addEventListener('click', function () {
           show(Number(t.getAttribute('data-idx')));
         });
-      });
-
-      root.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
-        else if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
       });
 
       /* Touch swipe. Only treat it as a swipe if the gesture is clearly
