@@ -7910,6 +7910,32 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     @media (prefers-reduced-motion: reduce) {
       .gc-slide { transition: none; }
     }
+
+    /* ── Carousel lightbox ──
+       The main picture opens full screen (script in generate-gear-pages.py).
+       The overlay reuses the figure lightbox (.figbox, below) so articles and
+       gear pages look the same. Only the arrows are new. The zoom cursor is
+       added by the script, so a page without JS never offers a click it
+       cannot honour. */
+    .gc-stage.gc-openable { cursor: zoom-in; }
+    .gcbox-arrow { position: absolute; top: 50%; transform: translateY(-50%);
+                    z-index: 2; width: 46px; height: 46px; border-radius: 50%;
+                    display: grid; place-items: center; cursor: pointer;
+                    color: #fff; background: rgba(0,0,0,0.42);
+                    border: 1px solid rgba(255,255,255,0.18);
+                    transition: background 200ms ease; }
+    .gcbox-arrow:hover, .gcbox-arrow:focus-visible { background: rgba(0,0,0,0.68); }
+    .gcbox-arrow svg { width: 22px; height: 22px; }
+    .gcbox-prev { left: 14px; }
+    .gcbox-next { right: 14px; }
+    /* Room either side of the picture for the arrows on wide screens. */
+    .gcbox .figbox-stage, .gcbox .figbox-stage img { max-width: min(1400px, 88vw); }
+    @media (max-width: 640px) {
+      .gcbox-arrow { width: 40px; height: 40px; }
+      .gcbox-prev { left: 8px; }
+      .gcbox-next { right: 8px; }
+      .gcbox .figbox-stage, .gcbox .figbox-stage img { max-width: 96vw; }
+    }
     .gear-title { font-size: 32px; font-weight: 600; margin: 0 0 16px; 
                     background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
                     background-size: 300% 100%;
