@@ -28,13 +28,19 @@
     },
     "date": "16-09-2026",
     "intro": "The centre of our galaxy, glowing with the light of more than 100 billion stars, rising behind my wife in the desert. And it is still not the most impressive thing in this picture.",
-    "body": "Somewhere beneath all those stars, a new life is growing.\n\nOur baby has not seen the sky yet, but he's already here in this picture, held close under the same stars that will be waiting for him when he arrives. Much of that tiny body is made of stardust. The calcium that will build his bones and the iron in his blood were made inside stars that lived and died long before our Sun was born. So this is really a picture of a baby surrounded by family.\n\nWe can't wait to meet you, little one. What a beautiful universe you are arriving into. One day we will show you this picture, and tell you that you were already in it.\n\nNow the sciency part: the bright band is our own galaxy seen from the inside. We live in one of its spiral arms, so when we look toward the centre we see billions of stars packed together, crossed by dark lanes of dust. The brightest part, the core, lies in the direction of the constellation Sagittarius, about 26,000 light-years away. The light from the core set off around 26,000 years ago, long before the first towns were built, and arrived on the night we stood in the desert. The Sun, carrying the Earth and all of us with it, takes about 230 million years to travel once around that centre.\n\nThe picture joins two captures together. The sky is a stack of tracked exposures on a TeeSeek Nano Light Adventurer, a small star tracker that turns the camera slowly to follow the stars so they stay sharp. Tracking blurs the ground, so my wife and the desert come from a separate single frame, which was then blended with the sky.\n\nAl Qudra is close enough to Dubai that the city still lights the horizon, which is the warm glow along the bottom of the frame. The faint green above it is airglow, a natural light the upper atmosphere gives off on dark nights.",
+    "body": "Somewhere beneath all those stars, a new life is growing.\n\nOur baby has not seen the sky yet, but he's already here in this picture, held close under the same stars that will be waiting for him when he arrives. Much of that tiny body is made of stardust. The calcium that will build his bones and the iron in his blood were made inside stars that lived and died long before our Sun was born. So this is really a picture of a baby surrounded by family.\n\nWe can't wait to meet you, little one. What a beautiful universe you are arriving into. One day we will show you this picture, and tell you that you were already in it.\n\nNow the sciency part: the bright band is our own galaxy seen from the inside. We live in one of its spiral arms, so when we look toward the centre we see billions of stars packed together, crossed by dark lanes of dust. The brightest part, the core, lies in the direction of the constellation Sagittarius, about 26,000 light-years away. The light from the core set off around 26,000 years ago, long before the first towns were built, and arrived on the night we stood in the desert. The Sun, carrying the Earth and all of us with it, takes about 230 million years to travel once around that centre.\n\nThe picture joins two captures together. The sky is a stack of tracked exposures on a TeSeek Nano Light Adventurer, a small star tracker that turns the camera slowly to follow the stars so they stay sharp. Tracking blurs the ground, so my wife and the desert come from a separate single frame, which was then blended with the sky.\n\nAl Qudra is close enough to Dubai that the city still lights the horizon, which is the warm glow along the bottom of the frame. The faint green above it is airglow, a natural light the upper atmosphere gives off on dark nights.",
     "section": "gallery",
     "specs": {
       "telescope": "Samyang 14mm",
       "camera": "Sony A7 III",
       "location": "Al Qudra, UAE"
-    }
+    },
+    "body_links": [
+      {
+        "text": "TeSeek Nano Light Adventurer",
+        "gear": "teseek-nano-light-adventurer-star-tracker"
+      }
+    ]
   },
   {
     "file": "images/eastern_veil_nebula_ngc6992.webp",
@@ -650,7 +656,7 @@
     "section": "_divider",
     "_bar": "==================================================================",
     "_section": "GEAR",
-    "_count": "18 entries",
+    "_count": "19 entries",
     "_note": [
       "Equipment. Shown on gear.html. generate-gear-pages.py builds",
       "one gear/<slug>.html per entry. Retailer links live in \"buy\";",
@@ -735,6 +741,40 @@
         "retailer": "AliExpress",
         "url": "https://s.click.aliexpress.com/e/_c3ZqdUDV",
         "affiliate": true
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/TeSeek-Nano-Light-Adventure4.webp",
+        "alt": "TeSeek Nano Light Adventurer star tracker on a tripod pan head, carrying a ball head, a Sony A7 III and a Samyang 14mm lens"
+      },
+      {
+        "file": "images/gear/TeSeek-Nano-Light-Adventure3.webp",
+        "alt": "Side view of the TeSeek Nano Light Adventurer with the ball head and camera on top, showing the USB-C power port"
+      },
+      {
+        "file": "images/gear/TeSeek-Nano-Light-Adventurer1.webp",
+        "alt": "TeSeek Nano Light Adventurer output plate with its 1/4 inch camera screw and locking collar, and the laser pointer housing on top"
+      },
+      {
+        "file": "images/gear/TeSeek-Nano-Light-Adventure2.webp",
+        "alt": "Back of the TeSeek Nano Light Adventurer showing the four DIP switches and the power switch that set the tracking mode"
+      }
+    ],
+    "title": "TeSeek Nano Light Adventurer Star Tracker",
+    "desc": "A half-kilo star tracker in a carbon fibre filled PETG housing, with a green laser pointer built in for polar alignment. It turns the camera slowly with the sky, so a wide-angle lens can take exposures of minutes rather than seconds without the stars trailing.",
+    "alt": "TeSeek Nano Light Adventurer star tracker with built-in laser pointer",
+    "type": "mount",
+    "section": "gear",
+    "slug": "teseek-nano-light-adventurer-star-tracker",
+    "hidden": false,
+    "buy": [
+      {
+        "retailer": "TeSeek",
+        "url": "https://teseek.com/products/nano-light-adventurer-equatorial-mount-with-petg-cf-housing-integrated-built-in-laser-pointer",
+        "affiliate": false
       }
     ]
   },
@@ -1225,6 +1265,10 @@
       {
         "file": "images/gear/Rokinon 18mm F2-8.webp",
         "alt": "Rokinon 18mm f/2.8 ultra-wide lens for Milky Way and meteor photography 1"
+      },
+      {
+        "file": "images/gear/Samyang 14mm F2.8.webp",
+        "alt": "Samyang 14mm f/2.8 manual ultra-wide lens standing upright, with its fixed petal hood and the focus and aperture scales"
       }
     ],
     "title": "Rokinon 18mm f/2.8 & Samyang 14mm f/2.8",
@@ -1273,12 +1317,28 @@
   {
     "images": [
       {
-        "file": "images/gear/cf-60_tripod_1.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, legs extended, showing the flat mount plate and foam-wrapped upper leg sections"
+        "file": "images/gear/cf-60-tripod-real1.webp",
+        "alt": "Angeleyes CF-60 unboxed, with the folded tripod, storage bag, sandbag, grass spikes, centre rod, triangular brace and tools laid out on the floor"
       },
       {
-        "file": "images/gear/cf-60_tripod_7.webp",
-        "alt": "Close view of the CF-60 top plate and the triangular centre brace that ties the three legs together"
+        "file": "images/gear/cf-60-tripod-real4.webp",
+        "alt": "Underside of the CF-60 top plate with a mount fitted, showing the central threaded rod, the triangular brace and the sandbag hook"
+      },
+      {
+        "file": "images/gear/cf-60-tripod-real3.webp",
+        "alt": "An equatorial mount being lowered onto the CF-60 top plate"
+      },
+      {
+        "file": "images/gear/cf-60-tripod-real2.webp",
+        "alt": "Close view of the CF-60 top ring and leg hinge, with the silver centre disc, grass spikes and a locking knob alongside"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_1.webp",
+        "alt": "Angeleyes CF-60 carbon fibre tripod, product shot with legs extended"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_2.webp",
+        "alt": "Angeleyes CF-60 product parameters: 50kg load capacity, 1.97kg weight, 520mm storage height, two leg sections"
       },
       {
         "file": "images/gear/cf-60_tripod_3.webp",
@@ -1287,34 +1347,6 @@
       {
         "file": "images/gear/cf-60_tripod_5.webp",
         "alt": "CF-60 height range diagram, 46.5cm folded to 80.5cm extended"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_2.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, alternative view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_4.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_6.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_8.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_9.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_10.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_11.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, detail view"
       }
     ],
     "title": "Angeleyes CF-60 Carbon Fibre Tripod",

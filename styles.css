@@ -8389,6 +8389,14 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     .share-body a.share-enquiry-link{ color: var(--accent); font-weight: 600; text-decoration: underline;
       text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
     .share-body a.share-enquiry-link:hover, .share-body a.share-enquiry-link:focus-visible{ text-decoration-thickness: 2px; }
+    /* Inline links in a share write-up (body_links in site-data.json). Same
+       look as links in the gear write-ups: colour plus an underline. */
+    .share-body a.share-body-link{ color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid var(--line); transition: border-color 180ms ease, color 180ms ease; }
+    .share-body a.share-body-link:hover, .share-body a.share-body-link:focus-visible{ border-bottom-color: var(--accent); }
+    html[data-theme="light"] .share-body a.share-body-link{ color: #6d4bd8; }
+    html[data-theme="light"] .share-body a.share-body-link:hover,
+    html[data-theme="light"] .share-body a.share-body-link:focus-visible{ border-bottom-color: #6d4bd8; }
     .share-body .share-enquiry{ margin: 8px 0 26px; padding: 16px 20px; border-radius: 14px;
       border: 1px solid rgba(167,139,250,0.35); border-left: 3px solid var(--accent);
       background: linear-gradient(135deg, rgba(167,139,250,0.14), rgba(96,165,250,0.08)); }

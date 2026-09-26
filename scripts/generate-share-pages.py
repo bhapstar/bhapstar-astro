@@ -675,6 +675,28 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         body_parts.append(f"        <p>{t(entry['desc'])}</p>")
     body_html = "\n".join(body_parts)
 
+    # ── optional inline links in the write-up ──
+    # Set per entry in site-data.json as
+    #   "body_links": [{"text": "TeSeek Nano Light Adventurer",
+    #                   "gear": "teseek-nano-light-adventurer-star-tracker"}]
+    # The first place "text" appears in the intro or body becomes a link.
+    # "gear" names a gear page by slug (linked only once that page exists);
+    # "href" can be used instead for any other address. The intro and body
+    # strings stay plain text in site-data.json, because the gallery viewer
+    # and the meta description read them too. Done before the glossary pass,
+    # which never marks words inside a link.
+    for bl in entry.get("body_links") or []:
+        needle = t(bl.get("text"))
+        href = gear_href(bl["gear"]) if bl.get("gear") else bl.get("href")
+        if not needle or not href:
+            print(f"  ! {slug}: body link '{bl.get('text')}' has no target, skipped")
+            continue
+        if needle not in body_html:
+            print(f"  ! {slug}: body link text '{bl.get('text')}' not found, skipped")
+            continue
+        body_html = body_html.replace(
+            needle, f'<a class="share-body-link" href="{a(href)}">{needle}</a>', 1)
+
     # Glossary explainers on the first mention of each technical word, exactly
     # as the article and gear pages get them. This is the only rendering of a
     # gallery write-up a crawler or a reader arriving from a shared link ever
