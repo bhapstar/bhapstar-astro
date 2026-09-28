@@ -1138,7 +1138,7 @@
       }
     ],
     "title": "ZWO TC20 Tripod + TH10 Fluid Head",
-    "desc": "A lightweight portable tripod paired with a smooth fluid head for smooth panning during visual observing or casual imaging. The combination is compact enough to travel but stable enough for DSLR work.",
+    "desc": "A tripod and fluid head pair that on a Seestar unlocks equatorial mode: tilt the whole unit to the celestial pole and sub length goes from a 10 to 30 second alt-az ceiling up to 60 seconds, with round stars into the corners. Off a Seestar, it works as a smooth, damped panning head for visual and casual imaging.",
     "alt": "ZWO TC20 tripod TH10 fluid head astrophotography",
     "type": "accessories",
     "section": "gear",
@@ -1383,6 +1383,12 @@
     "desc": "A tour of the setup that takes every deep-sky image on this site. Why the mount has no counterweight, why the camera replaced a laptop, and how the whole thing runs all night on eleven watts.",
     "type": "gear",
     "category": "Gear",
+    "tags": [
+      "main-rig",
+      "deep-sky",
+      "equipment-tour",
+      "power"
+    ],
     "readTime": "8 min read",
     "section": "article",
     "slug": "main-rig-tour",
@@ -1573,6 +1579,8 @@
       "label": "Meteor shower field card",
       "note": "The eight showers worth planning around with their dates and rates, the radiant diagram, and what to set on a phone or a camera. One side of A4."
     },
+    "stage": "capture",
+    "stageOrder": 6,
     "paths": [
       "phone",
       "camera"
@@ -1586,6 +1594,12 @@
     "desc": "The software I open before every session. What is up tonight, how high it gets, when it is highest, and whether it will actually fit inside the frame.",
     "type": "capture",
     "category": "Capture",
+    "tags": [
+      "planning",
+      "stellarium",
+      "framing",
+      "balcony"
+    ],
     "readTime": "9 min read",
     "section": "article",
     "slug": "how-i-plan-every-astrophotography-session-using-stellarium",
@@ -1619,6 +1633,12 @@
     "desc": "The free, open-source route from raw data to a finished picture. Calibration, stacking, and the one rule about stretching that quietly ruins images when it is broken.",
     "type": "processing",
     "category": "Processing",
+    "tags": [
+      "siril",
+      "stacking",
+      "calibration",
+      "stretching"
+    ],
     "readTime": "9 min read",
     "section": "article",
     "slug": "siril-post-processing-guide",
@@ -1666,6 +1686,12 @@
     "desc": "Plate solving, autofocus, guiding and an unattended imaging plan, all driven from a handset. What the box does, the order a night actually runs in, and where the closed ecosystem bites.",
     "type": "capture",
     "category": "Capture",
+    "tags": [
+      "asiair",
+      "plate-solving",
+      "guiding",
+      "autofocus"
+    ],
     "readTime": "7 min read",
     "section": "article",
     "slug": "asiair-astrophotography-control",
@@ -1716,6 +1742,12 @@
     "desc": "Why a city sky buries a nebula instead of dimming it, how to score your own sky from one to nine tonight, and what 7nm and 3nm narrowband filters really do about it.",
     "type": "capture",
     "category": "Capture",
+    "tags": [
+      "bortle-scale",
+      "light-pollution",
+      "narrowband",
+      "filters"
+    ],
     "readTime": "9 min read",
     "section": "article",
     "slug": "bortle-scale-narrowband-filters",
@@ -1764,6 +1796,12 @@
     "desc": "Deep sky and the Milky Way from the same 1.65kg box. Why the dual-lens Pro changed which rig I actually carry, and where a 30mm aperture stops.",
     "type": "gear",
     "category": "Gear",
+    "tags": [
+      "seestar",
+      "smart-telescope",
+      "equipment-tour",
+      "milky-way"
+    ],
     "readTime": "8 min read",
     "section": "article",
     "slug": "seestar-s30-pro-tour",
@@ -1809,6 +1847,12 @@
     "desc": "What calibration frames actually are and what they remove, how to take each one, and why the flats are the ones that catch everybody out. Twenty minutes that decide the picture.",
     "type": "processing",
     "category": "Processing",
+    "tags": [
+      "calibration",
+      "darks-flats-biases",
+      "siril",
+      "asiair"
+    ],
     "readTime": "7 min read",
     "section": "article",
     "slug": "calibration-frames-darks-flats-biases",
@@ -1860,6 +1904,12 @@
     "desc": "The sky is a giant ball and you are standing in the middle of it. How to find Polaris, why the south has no north star, and what the celestial equator and the meridian actually are.",
     "type": "gear",
     "category": "Sky basics",
+    "tags": [
+      "sky-basics",
+      "polaris",
+      "celestial-coordinates",
+      "beginner-friendly"
+    ],
     "readTime": "6 min read",
     "section": "article",
     "slug": "navigating-the-night-sky",
@@ -1908,6 +1958,12 @@
     "desc": "Most city astrophotography advice assumes a garden. A balcony takes away your view of Polaris, most of the sky, and half the night. Here is how to work with all three, and why it is still worth doing.",
     "type": "guide",
     "category": "Capture",
+    "tags": [
+      "balcony",
+      "polar-alignment",
+      "light-pollution",
+      "beginner-friendly"
+    ],
     "readTime": "7 min read",
     "section": "article",
     "slug": "imaging-from-a-city-balcony",
@@ -1928,6 +1984,12 @@
     "desc": "It is bright enough to cut through a city sky, and it needs no tracking and no dark-site drive. How to tell whether it is up tonight, why the full moon is the worst night to shoot it, what the terminator gives you, and the settings to start from on a phone or a camera.",
     "type": "capture",
     "category": "Capture",
+    "tags": [
+      "moon",
+      "lunar-imaging",
+      "stacking",
+      "terminator"
+    ],
     "readTime": "10 min read",
     "section": "article",
     "slug": "photograph-the-moon",
