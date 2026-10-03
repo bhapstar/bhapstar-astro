@@ -84,7 +84,7 @@
     "section": "gallery",
     "specs": {
       "telescope": "ZWO Seestar S30 Pro",
-      "camera": "Sony IMX585",
+      "camera": "Sony IMX586",
       "filter": "None",
       "integration": "3 hours",
       "location": "Al Quaa, UAE"
@@ -614,8 +614,7 @@
     "body": "Star trail photography captures something that the eye alone cannot perceive - the steady, continuous rotation of the Earth, revealed by tracing the paths of stars across the sky over minutes or hours. Near the celestial pole, the stars trace tight, concentric circles. Further from the pole, the arcs lengthen and sweep more dramatically.\n\nThese images can be created either through a single very long exposure or by stacking many shorter exposures - the latter approach avoids the noise accumulation of an extremely long single frame and allows more control over the final result.\n\nThe time-lapse videos in the gallery show the same phenomenon in motion - the still composites and the video sequences complement each other, the stills showing the full geometry of the night's movement and the videos making the rotation viscerally apparent.",
     "section": "gallery",
     "specs": {
-      "telescope": "Rokinon 18mm f/2.8",
-      "camera": "Sony A7 III",
+      "camera": "Samsung Galaxy S23 Ultra",
       "filter": "None",
       "integration": "Various",
       "location": "Al Qudra, UAE"
@@ -1219,7 +1218,7 @@
       }
     ],
     "title": "Sony A7 III",
-    "desc": "The camera I got started in astrophotography with, paired with the Samyang 135mm, the Samyang 14mm and the Rokinon 18mm. A 24-megapixel full-frame mirrorless body that has aged into one of the best-value low-light cameras available. Clean at ISO 6400, dependable on long exposures, and the camera behind every wide-field Milky Way and star trail frame in the gallery.",
+    "desc": "The camera I got started in astrophotography with, paired with the Samyang 135mm, the Samyang 14mm and the Rokinon 18mm. A 24-megapixel full-frame mirrorless body that has aged into one of the best-value low-light cameras available. Clean at ISO 6400, dependable on long exposures, and the camera behind the Milky Way landscapes and the Geminids composite in the gallery.",
     "alt": "Sony A7 III full-frame mirrorless camera for astrophotography",
     "type": "camera",
     "section": "gear",
