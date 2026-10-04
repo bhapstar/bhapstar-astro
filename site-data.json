@@ -849,28 +849,33 @@
   {
     "images": [
       {
-        "file": "images/gear/Seestar S30 1.webp",
-        "alt": "ZWO Seestar S30 smart telescope for astrophotography 1"
+        "file": "images/gear/Seestar-S30-Pro-3.webp",
+        "alt": "ZWO Seestar S30 Pro on its bundled feet with the optical tube tilted up"
       },
       {
-        "file": "images/gear/Seestar S30 2.webp",
-        "alt": "ZWO Seestar S30 smart telescope for astrophotography 2"
+        "file": "images/gear/Seestar-S30-Pro-2.webp",
+        "alt": "ZWO Seestar S30 Pro parked on its bundled feet, rear three quarter view"
       },
       {
-        "file": "images/gear/Seestar S30 3.webp",
-        "alt": "ZWO Seestar S30 smart telescope for astrophotography 3"
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-2.webp",
+        "alt": "ZWO Seestar S30 Pro on the TC20 tripod, twin lens window facing the camera"
       },
       {
-        "file": "images/gear/Seestar S30 4.webp",
-        "alt": "ZWO Seestar S30 smart telescope for astrophotography 4"
+        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
+        "alt": "ZWO Seestar S30 Pro set up on the TC20 tripod and TH10 fluid head"
+      },
+      {
+        "file": "images/gear/Seestar-S30-Pro-1.webp",
+        "alt": "ZWO Seestar S30 Pro packed flat in its carry case with the bundled feet alongside"
       }
     ],
-    "title": "ZWO Seestar S30 Smart Telescope",
-    "desc": "A self-contained smart telescope that plate-solves, tracks and stacks without a laptop or a mount to set up. It is the fastest route from carrying a bag outside to watching an image build on a phone screen, which makes it the one piece of kit that gets used on nights when nothing else would.",
-    "alt": "ZWO Seestar S30 smart telescope portable astrophotography",
+    "title": "ZWO Seestar S30 Pro Smart Telescope",
+    "desc": "Keeps the S30's 30mm aperture but moves to an 8.3MP IMX585 behind a 160mm f/5.3 quadruplet, and adds a wide-angle camera for Milky Way and star-trail work. More resolution and more coverage, not more light.",
+    "alt": "ZWO Seestar S30 Pro smart telescope",
     "type": "smart-telescope",
     "section": "gear",
-    "slug": "zwo-seestar-s30-smart-telescope",
+    "slug": "zwo-seestar-s30-pro",
+    "hidden": false,
     "buy": [
       {
         "retailer": "ZWO",
@@ -884,7 +889,7 @@
       },
       {
         "retailer": "First Light Optics (UK)",
-        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
+        "url": "https://www.firstlightoptics.com/beginner-telescopes/zwo_seestar_s30_pro/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -1096,33 +1101,28 @@
   {
     "images": [
       {
-        "file": "images/gear/Seestar-S30-Pro-3.webp",
-        "alt": "ZWO Seestar S30 Pro on its bundled feet with the optical tube tilted up"
+        "file": "images/gear/Seestar S30 1.webp",
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 1"
       },
       {
-        "file": "images/gear/Seestar-S30-Pro-2.webp",
-        "alt": "ZWO Seestar S30 Pro parked on its bundled feet, rear three quarter view"
+        "file": "images/gear/Seestar S30 2.webp",
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 2"
       },
       {
-        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-2.webp",
-        "alt": "ZWO Seestar S30 Pro on the TC20 tripod, twin lens window facing the camera"
+        "file": "images/gear/Seestar S30 3.webp",
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 3"
       },
       {
-        "file": "images/gear/Seestar-S30-Pro-TC20-TH10-1.webp",
-        "alt": "ZWO Seestar S30 Pro set up on the TC20 tripod and TH10 fluid head"
-      },
-      {
-        "file": "images/gear/Seestar-S30-Pro-1.webp",
-        "alt": "ZWO Seestar S30 Pro packed flat in its carry case with the bundled feet alongside"
+        "file": "images/gear/Seestar S30 4.webp",
+        "alt": "ZWO Seestar S30 smart telescope for astrophotography 4"
       }
     ],
-    "title": "ZWO Seestar S30 Pro Smart Telescope",
-    "desc": "Keeps the S30's 30mm aperture but moves to an 8.3MP IMX585 behind a 160mm f/5.3 quadruplet, and adds a wide-angle camera for Milky Way and star-trail work. More resolution and more coverage, not more light.",
-    "alt": "ZWO Seestar S30 Pro smart telescope",
+    "title": "ZWO Seestar S30 Smart Telescope",
+    "desc": "A self-contained smart telescope that plate-solves, tracks and stacks without a laptop or a mount to set up. It is the fastest route from carrying a bag outside to watching an image build on a phone screen, which makes it the one piece of kit that gets used on nights when nothing else would.",
+    "alt": "ZWO Seestar S30 smart telescope portable astrophotography",
     "type": "smart-telescope",
     "section": "gear",
-    "slug": "zwo-seestar-s30-pro",
-    "hidden": false,
+    "slug": "zwo-seestar-s30-smart-telescope",
     "buy": [
       {
         "retailer": "ZWO",
@@ -1136,7 +1136,7 @@
       },
       {
         "retailer": "First Light Optics (UK)",
-        "url": "https://www.firstlightoptics.com/beginner-telescopes/zwo_seestar_s30_pro/ref/bhapstar/",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
