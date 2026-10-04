@@ -3,7 +3,7 @@
     "section": "_divider",
     "_bar": "==================================================================",
     "_section": "GALLERY",
-    "_count": "26 entries",
+    "_count": "28 entries",
     "_note": [
       "Photographs. Shown on gallery.html and index.html, and rotated",
       "through the six thumbnails on card.html.",
@@ -70,6 +70,31 @@
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
     }
+  },
+  {
+    "file": "images/the_sun.webp",
+    "title": "The Sun",
+    "desc": "Our nearest star, photographed in daylight through a solar filter. The small dark dots are sunspots, cooler patches on its surface. The biggest one here is about as wide as the Earth.",
+    "alt": "The Sun photographed through a solar filter, an orange disc with small dark sunspots and a darker edge",
+    "type": "sun",
+    "slug": "the-sun",
+    "date": "04-10-2026",
+    "intro": "Our own star, photographed in daylight from my balcony in Dubai. A solar filter cuts the light down to a safe level, and what is left shows sunspots and a disc that is darker at the edge than in the middle.",
+    "body": "The Sun is a star. It is the same kind of object as the points of light in the night sky, only much closer. It sits about 150 million kilometres away, and its light takes a little over eight minutes to reach us. It is about 109 times wider than the Earth. At the scale of this picture, our whole planet would be a dot about the size of the biggest sunspot.\n\nThe small dark dots are sunspots. There are three groups in this picture: one close to the left edge, one to the right of centre, and one below and to the left of centre. A sunspot is a patch where strong magnetic fields hold back some of the heat rising from inside the Sun. It is still thousands of degrees hot, but cooler than the surface around it, so it looks dark next to it. Sunspots last for days or weeks, and the Sun turns about once every 27 days as seen from Earth, so the pattern is different each time you look.\n\nThe edge of the disc is darker than the middle. The Sun is a ball of hot gas with no solid surface, and the part we see is about 5,500°C. In the middle of the disc we look straight down into deeper, hotter, brighter layers. Near the edge we look in at a slant and only see the higher, cooler layers. The Sun's light is really white. The orange comes from the filter and the processing, and is how pictures of the Sun are usually shown.\n\nThis was taken with the Seestar S30 Pro and a solar filter over the lens. The filter blocks almost all of the Sun's light, so the telescope stays safe and the camera gets a level of light it can record. I filmed a three-minute video and processed it in Strata, a Mac app that grades every frame by sharpness and stacks the best ones into one picture. The air between us and the Sun is always moving, so some frames come out sharper than others, and stacking the good ones gives a cleaner result than any single frame. The finishing touches were made in Affinity.\n\nThe Sun is the one target where city lights make no difference, so a balcony in Dubai works as well as the darkest desert. One rule comes before everything else: always fit a proper solar filter over the front of a telescope, camera or binoculars before pointing them at the Sun. Without one, the Sun can damage eyes and equipment in an instant.",
+    "section": "gallery",
+    "specs": {
+      "telescope": "ZWO Seestar S30 Pro",
+      "camera": "Sony IMX585",
+      "filter": "Solar filter",
+      "integration": "3 minute video",
+      "location": "Dubai, UAE"
+    },
+    "body_links": [
+      {
+        "text": "Seestar S30 Pro",
+        "gear": "zwo-seestar-s30-pro"
+      }
+    ]
   },
   {
     "file": "images/the_milky_way.webp",
