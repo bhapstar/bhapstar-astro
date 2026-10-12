@@ -75,7 +75,7 @@
     <div class="ss-bottom">
 
     <div class="ss-caption" id="ssCaption" aria-live="polite">
-      <span class="ss-title" id="ssTitle"></span>
+      <a class="ss-title" id="ssTitle" href="/gallery.html" title="Open the write-up for this image"></a>
       <span class="ss-part" id="ssPart"></span>
       <span class="ss-count" id="ssCount" aria-hidden="true"></span>
     </div>
@@ -197,6 +197,7 @@
       files.forEach((f, i) => out.push({
         src:   '/' + String(f.file).replace(/^\/+/, ''),
         title: e.title || '',
+        slug:  e.slug || '',
         part:  files.length > 1 ? (i + 1) + ' of ' + files.length : '',
         alt:   f.alt
       }));
@@ -287,6 +288,8 @@
 
   function setCaption(slide) {
     titleEl.textContent = slide ? slide.title : '';
+    // Every gallery entry has a share page at /share/<slug>.html
+    titleEl.href = slide && slide.slug ? '/share/' + encodeURIComponent(slide.slug) + '.html' : '/gallery.html';
     partEl.textContent  = slide ? slide.part  : '';
     countEl.textContent = slide ? (pos + 1) + ' / ' + order.length : '';
   }
@@ -470,6 +473,32 @@
     new ResizeObserver(fitStage).observe(document.getElementById('siteHeader'));
   }
 
+  /* ── Coming back from a share page ──
+     Following a title link remembers which image was showing, so the
+     browser's back button returns to that image rather than the first.
+     sessionStorage, so it only lasts for this tab. */
+  const KEY_RESUME = 'bhapstar:ssResume';
+  titleEl.addEventListener('click', () => {
+    const slide = slides[order[pos]];
+    if (!slide) return;
+    try { sessionStorage.setItem(KEY_RESUME, slide.src); } catch (e) {}
+  });
+
+  function takeResume() {
+    let src = null;
+    try {
+      src = sessionStorage.getItem(KEY_RESUME);
+      sessionStorage.removeItem(KEY_RESUME);
+    } catch (e) {}
+    return src ? slides.findIndex(s => s.src === src) : -1;
+  }
+
+  // If the browser restores this page from its back cache, the slideshow is
+  // already where it was, so just drop the saved position.
+  window.addEventListener('pageshow', e => {
+    if (e.persisted) { try { sessionStorage.removeItem(KEY_RESUME); } catch (err) {} }
+  });
+
   /* ── Start ── */
   async function load() {
     try {
@@ -485,8 +514,14 @@
 
     setSpeed(secs);
     randBtn.setAttribute('aria-pressed', String(random));
-    order = random ? shuffledOrder(Math.floor(Math.random() * slides.length)) : naturalOrder();
-    pos = 0;
+    const resume = takeResume();
+    if (random) {
+      order = shuffledOrder(resume >= 0 ? resume : Math.floor(Math.random() * slides.length));
+      pos = 0;
+    } else {
+      order = naturalOrder();
+      pos = resume >= 0 ? resume : 0;
+    }
     setPlaying(true);
     show();
   }

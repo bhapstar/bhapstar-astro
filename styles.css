@@ -10335,6 +10335,16 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* The title links to the image's share page */
+.ss-title:hover,
+.ss-title:focus-visible{
+  text-decoration: underline;
+  text-decoration-color: rgba(167,139,250,0.55);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 .ss-part{
   font-size: 0.9rem;
