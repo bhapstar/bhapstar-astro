@@ -98,15 +98,20 @@
       </div>
 
       <div class="ss-group ss-speed" role="group" aria-label="Time on each image">
-        <button class="ss-chip" type="button" data-secs="1" aria-pressed="false">1s</button>
         <button class="ss-chip" type="button" data-secs="3" aria-pressed="false">3s</button>
         <button class="ss-chip" type="button" data-secs="5" aria-pressed="true">5s</button>
+        <button class="ss-chip" type="button" data-secs="7" aria-pressed="false">7s</button>
+        <button class="ss-chip" type="button" data-secs="10" aria-pressed="false">10s</button>
       </div>
 
       <div class="ss-group">
         <button class="ss-chip ss-chip-icon" type="button" id="ssShuffle" aria-pressed="false" title="Show images in random order">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
           <span>Random</span>
+        </button>
+        <button class="ss-chip ss-chip-icon" type="button" id="ssCinema" aria-pressed="false" title="Slow pan and zoom on each image (C)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5v14M16 5v14M3 9.5h5M3 14.5h5M16 9.5h5M16 14.5h5"/></svg>
+          <span>Cinematic</span>
         </button>
         <button class="ss-btn" type="button" id="ssFull" aria-label="Full screen" title="Full screen (F)">
           <svg class="ss-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
@@ -141,11 +146,14 @@
      Order follows site-data.json, the same as the gallery page.
   ═══════════════════════════════════════════════════════════════ */
 
-  const SPEEDS     = [1, 3, 5];
+  const SPEEDS     = [3, 5, 7, 10];
   const FADE_MS    = 450;
   const IDLE_MS    = 3500;   // full screen controls fade after this
   const KEY_SPEED  = 'bhapstar:ssSpeed';
   const KEY_RANDOM = 'bhapstar:ssRandom';
+  const KEY_CINEMA = 'bhapstar:ssCinema';
+  const KB_ZOOM    = 1.16;   // cinematic: how far each image zooms
+  const KB_PAN     = 3;      // cinematic: how far it drifts, % of the frame
 
   const stage    = document.getElementById('ssStage');
   const view     = document.getElementById('ssView');
@@ -158,6 +166,7 @@
   const prevBtn  = document.getElementById('ssPrev');
   const nextBtn  = document.getElementById('ssNext');
   const randBtn  = document.getElementById('ssShuffle');
+  const cineBtn  = document.getElementById('ssCinema');
   const fullBtn  = document.getElementById('ssFull');
   const speedBtns = Array.from(document.querySelectorAll('.ss-speed .ss-chip'));
 
@@ -167,7 +176,12 @@
   let playing = true;
   let random  = false;
   let secs    = 5;
+  let cinema  = false;
   let timer   = null;
+  let remaining = 0;     // ms left on the current image (kept across a pause)
+  let deadline  = 0;     // when the running timer fires
+  let live    = false;   // an image is on screen and the timer may run
+  let motion  = null;    // the cinematic pan/zoom on the current image
   let token   = 0;       // guards against a slow load landing after a newer one
   let failRun = 0;       // consecutive images that would not load
   let wakeLock = null;
@@ -179,6 +193,7 @@
   const savedSpeed = parseInt(readPref(KEY_SPEED), 10);
   if (SPEEDS.includes(savedSpeed)) secs = savedSpeed;
   random = readPref(KEY_RANDOM) === '1';
+  cinema = readPref(KEY_CINEMA) === '1';
 
   /* ── Build the slide list ── */
   function buildSlides(all) {
@@ -216,21 +231,86 @@
     return [first, ...rest];
   }
 
-  /* ── Timer + progress bar ── */
-  function stopTimer() {
-    clearTimeout(timer);
-    timer = null;
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
+  /* ── Timer + progress bar ──
+     A pause holds the timer, the bar and the cinematic motion where they
+     are, and play carries on from there rather than starting the image
+     over. Moving to another image resets all three. */
+  function progress() {
+    const total = secs * 1000;
+    const left = timer ? Math.max(0, deadline - performance.now()) : remaining;
+    return Math.max(0, Math.min(1, 1 - left / total));
   }
 
-  function startTimer() {
-    stopTimer();
-    if (!playing || document.hidden || !slides.length) return;
-    void bar.offsetWidth;                         // restart the bar from zero
-    bar.style.transition = 'width ' + secs + 's linear';
+  function drawBar(f) {
+    bar.style.transition = 'none';
+    bar.style.width = (f * 100) + '%';
+  }
+
+  function resetTimer() {
+    clearTimeout(timer);
+    timer = null;
+    remaining = secs * 1000;
+    drawBar(0);
+  }
+
+  function runTimer() {
+    clearTimeout(timer);
+    timer = null;
+    if (!playing || document.hidden || !live) return;
+    drawBar(1 - remaining / (secs * 1000));
+    void bar.offsetWidth;
+    bar.style.transition = 'width ' + remaining + 'ms linear';
     bar.style.width = '100%';
-    timer = setTimeout(() => go(1), secs * 1000);
+    deadline = performance.now() + remaining;
+    timer = setTimeout(() => go(1), remaining);
+    if (motion) motion.play();
+  }
+
+  function holdTimer() {
+    const f = progress();
+    if (timer) remaining = Math.max(0, deadline - performance.now());
+    clearTimeout(timer);
+    timer = null;
+    drawBar(f);
+    if (motion) motion.pause();
+  }
+
+  /* ── Cinematic pan and zoom (Ken Burns) ──
+     Each image gets a slow zoom, in or out, with a gentle drift in a
+     random direction. It runs for the image's whole time on screen plus
+     the crossfade, so it never stops before the next image arrives. The
+     image stays fully fitted (no cropping) at the start of a zoom in. */
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  function kbFrames() {
+    const zoomIn = Math.random() < 0.6;
+    const ang = rnd(0, Math.PI * 2);
+    const dx = Math.cos(ang) * KB_PAN, dy = Math.sin(ang) * KB_PAN;
+    const near = 'scale(' + KB_ZOOM + ') translate(' + dx.toFixed(2) + '%, ' + dy.toFixed(2) + '%)';
+    const far  = 'scale(1) translate(0%, 0%)';
+    return zoomIn ? [{ transform: far }, { transform: near }]
+                  : [{ transform: near }, { transform: far }];
+  }
+
+  function motionMs() { return secs * 1000 + FADE_MS + 300; }
+
+  function startMotion(img, fromNow) {
+    if (!img.animate) return null;
+    let frames = kbFrames();
+    let dur = motionMs();
+    // Switched on part way through an image: start from where it sits now
+    if (fromNow) {
+      frames = [{ transform: 'scale(1) translate(0%, 0%)' }, frames[frames.length - 1]];
+      dur = Math.max(1200, remaining + FADE_MS + 300);
+    }
+    const a = img.animate(frames, { duration: dur, easing: 'linear', fill: 'forwards' });
+    if (!playing || document.hidden) a.pause();
+    return a;
+  }
+
+  function currentImg() {
+    const all = view.querySelectorAll('.ss-img.is-in');
+    return all.length ? all[all.length - 1] : null;
   }
 
   /* ── Show one slide ──
@@ -240,7 +320,8 @@
   function show() {
     const slide = slides[order[pos]];
     const my = ++token;
-    stopTimer();
+    live = false;
+    resetTimer();
 
     const img = new Image();
     img.className = 'ss-img';
@@ -262,9 +343,11 @@
         view.appendChild(img);
         void img.offsetWidth;
         img.classList.add('is-in');
+        motion = cinema ? startMotion(img, false) : null;
         setCaption(slide);
         preloadNext();
-        startTimer();
+        live = true;
+        runTimer();
       });
     };
 
@@ -323,7 +406,7 @@
     playing = on;
     stage.classList.toggle('is-paused', !on);
     playBtn.setAttribute('aria-label', on ? 'Pause slideshow' : 'Play slideshow');
-    if (on) startTimer(); else stopTimer();
+    if (on) runTimer(); else holdTimer();
     syncWakeLock();
   }
 
@@ -343,10 +426,40 @@
 
   /* ── Speed ── */
   function setSpeed(s) {
+    // Keep how far through the current image we are, at the new pace
+    const f = live ? progress() : 0;
     secs = s;
     speedBtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.secs === s)));
     writePref(KEY_SPEED, String(s));
-    if (playing && timer) startTimer();
+    remaining = (1 - f) * secs * 1000;
+    if (motion && motion.effect) {
+      const t = motion.effect.getComputedTiming();
+      const mf = t.duration ? (motion.currentTime || 0) / t.duration : 0;
+      motion.effect.updateTiming({ duration: motionMs() });
+      motion.currentTime = mf * motionMs();
+    }
+    if (!live) return;
+    if (playing && !document.hidden) runTimer(); else drawBar(f);
+  }
+
+  /* ── Cinematic on / off ── */
+  function setCinema(on) {
+    cinema = on;
+    cineBtn.setAttribute('aria-pressed', String(on));
+    writePref(KEY_CINEMA, on ? '1' : '0');
+    const img = currentImg();
+    if (!img) return;
+    if (on && !motion) {
+      motion = startMotion(img, true);
+    } else if (!on && motion) {
+      // Ease back to the plain fitted view rather than snapping
+      const now = getComputedStyle(img).transform;
+      motion.cancel();
+      motion = null;
+      if (img.animate && now && now !== 'none') {
+        img.animate([{ transform: now }, { transform: 'none' }], { duration: 700, easing: 'ease-out' });
+      }
+    }
   }
 
   /* ── Random ── */
@@ -440,6 +553,7 @@
   nextBtn.addEventListener('click', () => { go(1);  poke(); });
   playBtn.addEventListener('click', () => { setPlaying(!playing); poke(); });
   randBtn.addEventListener('click', () => { setRandom(!random); poke(); });
+  cineBtn.addEventListener('click', () => { setCinema(!cinema); poke(); });
   fullBtn.addEventListener('click', () => { isFull() ? exitFull() : enterFull(); });
   speedBtns.forEach(b => b.addEventListener('click', () => { setSpeed(+b.dataset.secs); poke(); }));
 
@@ -452,12 +566,13 @@
     else if (e.key === 'ArrowLeft') { go(-1); poke(); e.preventDefault(); }
     else if (e.key === ' ' && tag !== 'button') { setPlaying(!playing); poke(); e.preventDefault(); }
     else if (e.key === 'f' || e.key === 'F') { isFull() ? exitFull() : enterFull(); }
+    else if (e.key === 'c' || e.key === 'C') { setCinema(!cinema); poke(); }
     else if (e.key === 'Escape' && stage.classList.contains('is-pseudo-fs')) { setPseudo(false); }
   });
 
   /* ── Pause while the tab is hidden, carry on when it comes back ── */
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopTimer(); else if (playing) startTimer();
+    if (document.hidden) holdTimer(); else if (playing) runTimer();
     syncWakeLock();
   });
 
@@ -514,6 +629,7 @@
 
     setSpeed(secs);
     randBtn.setAttribute('aria-pressed', String(random));
+    cineBtn.setAttribute('aria-pressed', String(cinema));
     const resume = takeResume();
     if (random) {
       order = shuffledOrder(resume >= 0 ? resume : Math.floor(Math.random() * slides.length));

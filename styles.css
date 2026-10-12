@@ -10278,6 +10278,7 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
 .ss-view{
   position: relative;
   flex: 1 1 auto; min-height: 0;
+  overflow: hidden;             /* keeps the cinematic zoom inside the frame */
   touch-action: pan-y;          /* vertical scroll still works, sideways is a swipe */
   cursor: pointer;
   -webkit-user-select: none; user-select: none;
@@ -10475,7 +10476,7 @@ html.ss-lock body{ overflow: hidden; }
   .page-slideshow .ss-main{ padding: 8px 8px 16px; }
   .ss-stage{ min-height: 300px; border-radius: 14px; }
   .ss-controls{ gap: 10px 12px; }
-  .ss-chip{ padding: 0 12px; }
+  .ss-chip{ padding: 0 11px; }
   .ss-chip-icon span{ display: none; }
 }
 
