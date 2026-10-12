@@ -788,6 +788,16 @@
       "link": "/articles/navigating-the-night-sky.html"
     },
     {
+      "term": "seeing",
+      "aliases": [
+        "atmospheric seeing"
+      ],
+      "def": "How steady the air is. Moving air makes stars twinkle and blurs fine detail on the Moon, the Sun and the planets. Good seeing means steady air and sharper pictures.",
+      "avoid": [
+        "we are seeing"
+      ]
+    },
+    {
       "term": "shock front",
       "aliases": [
         "shock fronts",
@@ -839,6 +849,13 @@
       ],
       "def": "A sealed telescope with the mount, camera and processing built into one body, run from a phone. It finds the target, tracks it and stacks the frames on its own.",
       "link": "/gear/zwo-seestar-s30-pro.html"
+    },
+    {
+      "term": "solar filter",
+      "aliases": [
+        "solar filters"
+      ],
+      "def": "A filter that covers the front of a telescope, lens or binoculars and blocks almost all of the Sun's light and heat, so the Sun can be viewed or photographed safely."
     },
     {
       "term": "SPCC",
@@ -902,6 +919,10 @@
     {
       "term": "strain wave",
       "def": "The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package."
+    },
+    {
+      "term": "Strata",
+      "def": "A Mac app for stacking videos of the Sun, the Moon and the planets. It grades every frame by sharpness, keeps the best ones and sharpens the result."
     },
     {
       "term": "stretch",
