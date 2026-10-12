@@ -10431,6 +10431,43 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
 
 
 .ss-sound[hidden]{ display: none; }
+
+/* "Tap for music": browsers hold sound back until the screen is touched */
+.ss-tap{
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.60);
+  border: 1px solid rgba(167,139,250,0.55);
+  color: #fff; font-family: inherit; font-size: 12.5px; letter-spacing: 0.03em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ss-tap svg{ width: 16px; height: 16px; }
+.ss-tap[hidden]{ display: none; }
+
+/* Write-up viewer: a share page in a frame over the slideshow */
+.ss-share{
+  position: fixed; inset: 0; z-index: 3500;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+.ss-share[hidden]{ display: none; }
+.ss-share-bar{
+  flex: 0 0 auto;
+  display: flex; align-items: center;
+  padding: 10px 14px;
+  padding-top: max(10px, env(safe-area-inset-top, 0px));
+  background: #0b0920;
+  border-bottom: 1px solid rgba(167,139,250,0.25);
+}
+.ss-share-frame{
+  flex: 1 1 auto;
+  width: 100%; min-height: 0;
+  border: 0;
+  background: var(--bg);
+}
 .ss-icon-sound-off{ display: none; }
 .ss-stage.is-muted .ss-icon-sound-off{ display: block; }
 .ss-stage.is-muted .ss-icon-sound-on{ display: none; }

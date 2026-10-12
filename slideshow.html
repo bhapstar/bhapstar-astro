@@ -70,6 +70,12 @@
       <div class="ss-msg" id="ssMsg">Loading images…</div>
     </div>
 
+    <!-- Shown while the browser is holding the music back until a tap -->
+    <button class="ss-tap" type="button" id="ssTap" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+      Tap for music
+    </button>
+
     <!-- Caption, progress and controls. In full screen this block sits
          over the bottom of the image and the controls fade when idle. -->
     <div class="ss-bottom">
@@ -99,8 +105,8 @@
 
       <div class="ss-group ss-speed" role="group" aria-label="Time on each image">
         <button class="ss-chip" type="button" data-secs="3" aria-pressed="false">3s</button>
-        <button class="ss-chip" type="button" data-secs="5" aria-pressed="true">5s</button>
-        <button class="ss-chip" type="button" data-secs="7" aria-pressed="false">7s</button>
+        <button class="ss-chip" type="button" data-secs="5" aria-pressed="false">5s</button>
+        <button class="ss-chip" type="button" data-secs="7" aria-pressed="true">7s</button>
         <button class="ss-chip" type="button" data-secs="10" aria-pressed="false">10s</button>
       </div>
 
@@ -125,6 +131,18 @@
       </div>
     </div>
 
+    </div>
+
+    <!-- Write-up viewer. A title opens its share page in here, over the
+         slideshow, so this page stays open and the music keeps playing.
+         The frame is made fresh on each opening (see openShare). -->
+    <div class="ss-share" id="ssShare" hidden role="dialog" aria-modal="true" aria-label="Image write-up">
+      <div class="ss-share-bar">
+        <button class="ss-chip" type="button" id="ssShareClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          <span>Back to slideshow</span>
+        </button>
+      </div>
     </div>
   </div>
 </main>
@@ -154,7 +172,6 @@
   const SPEEDS     = [3, 5, 7, 10];
   const FADE_MS    = 450;
   const IDLE_MS    = 3500;   // full screen controls fade after this
-  const KEY_SPEED  = 'bhapstar:ssSpeed';
   const KEY_RANDOM = 'bhapstar:ssRandom';
   const KB_ZOOM    = 1.16;   // cinematic: how far each image zooms
   const KB_PAN     = 3;      // cinematic: how far it drifts, % of the frame
@@ -179,7 +196,7 @@
   let pos     = 0;       // position within order
   let playing = true;
   let random  = false;
-  let secs    = 5;
+  let secs    = 7;
   let cinema  = false;
   let timer   = null;
   let remaining = 0;     // ms left on the current image (kept across a pause)
@@ -194,13 +211,11 @@
   function readPref(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
   function writePref(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
 
-  const savedSpeed = parseInt(readPref(KEY_SPEED), 10);
-  if (SPEEDS.includes(savedSpeed)) secs = savedSpeed;
   random = readPref(KEY_RANDOM) === '1';
-  // Cinematic and music start ON every time the page opens. Turning either
-  // off lasts for this visit only, so a tap by someone else on the tablet
-  // never leaves the next showing without them. Speed and Random are
-  // remembered as before.
+  // Every time the page opens it starts the same way: 7 seconds, cinematic
+  // on, music on. Changing any of them lasts for this visit only, so a tap
+  // by someone else on the tablet never carries over to the next showing.
+  // Only Random is remembered.
   cinema = true;
 
   /* ── Build the slide list ── */
@@ -438,7 +453,6 @@
     const f = live ? progress() : 0;
     secs = s;
     speedBtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.secs === s)));
-    writePref(KEY_SPEED, String(s));
     remaining = (1 - f) * secs * 1000;
     if (motion && motion.effect) {
       const t = motion.effect.getComputedTiming();
@@ -508,9 +522,14 @@
     setPseudo(false);
   }
 
+  function syncLock() {
+    document.documentElement.classList.toggle('ss-lock',
+      stage.classList.contains('is-pseudo-fs') || stage.classList.contains('is-sharing'));
+  }
+
   function setPseudo(on) {
     stage.classList.toggle('is-pseudo-fs', on);
-    document.documentElement.classList.toggle('ss-lock', on);
+    syncLock();
     syncFull();
   }
 
@@ -569,6 +588,10 @@
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (stage.classList.contains('is-sharing')) {
+      if (e.key === 'Escape') { requestCloseShare(); e.preventDefault(); }
+      return;
+    }
     if (e.key === 'ArrowRight') { go(1);  poke(); e.preventDefault(); }
     else if (e.key === 'ArrowLeft') { go(-1); poke(); e.preventDefault(); }
     else if (e.key === ' ' && tag !== 'button') { setPlaying(!playing); poke(); e.preventDefault(); }
@@ -596,32 +619,6 @@
     new ResizeObserver(fitStage).observe(document.getElementById('siteHeader'));
   }
 
-  /* ── Coming back from a share page ──
-     Following a title link remembers which image was showing, so the
-     browser's back button returns to that image rather than the first.
-     sessionStorage, so it only lasts for this tab. */
-  const KEY_RESUME = 'bhapstar:ssResume';
-  titleEl.addEventListener('click', () => {
-    const slide = slides[order[pos]];
-    if (!slide) return;
-    try { sessionStorage.setItem(KEY_RESUME, slide.src); } catch (e) {}
-  });
-
-  function takeResume() {
-    let src = null;
-    try {
-      src = sessionStorage.getItem(KEY_RESUME);
-      sessionStorage.removeItem(KEY_RESUME);
-    } catch (e) {}
-    return src ? slides.findIndex(s => s.src === src) : -1;
-  }
-
-  // If the browser restores this page from its back cache, the slideshow is
-  // already where it was, so just drop the saved position.
-  window.addEventListener('pageshow', e => {
-    if (e.persisted) { try { sessionStorage.removeItem(KEY_RESUME); } catch (err) {} }
-  });
-
   /* ── Background music ──
      One track, looped, from sounds/slideshow-music.mp3. To change it,
      replace that file (keep the name). The button stays hidden until the
@@ -639,6 +636,11 @@
   let musicOk   = false;
   let fadeRaf   = null;
   let gestureArmed = false;
+  const tapHint   = document.getElementById('ssTap');
+
+  function drawTapHint() {
+    tapHint.hidden = !(gestureArmed && musicOk && !muted);
+  }
 
   function fadeTo(target, ms, done) {
     cancelAnimationFrame(fadeRaf);
@@ -661,10 +663,12 @@
       document.removeEventListener('pointerdown', go, true);
       document.removeEventListener('keydown', go, true);
       gestureArmed = false;
+      drawTapHint();
       startMusic();
     };
     document.addEventListener('pointerdown', go, true);
     document.addEventListener('keydown', go, true);
+    drawTapHint();
   }
 
   function startMusic() {
@@ -690,6 +694,7 @@
   function setMuted(on) {
     muted = on;
     drawSound();
+    drawTapHint();
     if (on) stopMusic(); else startMusic();
   }
 
@@ -712,6 +717,84 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopMusic(); else startMusic();
   });
+  // Coming back with the browser's back button can restore this page
+  // without a fresh load. The browser stopped the music when it left, and
+  // most will not let it restart without a tap, so the "Tap for music"
+  // button appears until then.
+  window.addEventListener('pageshow', e => { if (e.persisted) startMusic(); });
+  tapHint.addEventListener('click', () => { startMusic(); poke(); });
+
+  /* ── Write-up viewer ──
+     Opening a share page by following a link would unload this page and
+     cut the music. Instead the share page opens in a frame over the
+     slideshow; the slides pause, the music carries on a little quieter,
+     and closing it picks up where things were. A history entry is added
+     on opening, so the browser's back button (or back swipe) closes the
+     viewer instead of leaving the slideshow. */
+  const shareBox   = document.getElementById('ssShare');
+  const shareClose = document.getElementById('ssShareClose');
+  let shareFrame = null;
+  let shareWasPlaying = false;
+  let shareNavs = 0;       // pages opened inside the frame after the first
+
+  function shareIsOpen() { return stage.classList.contains('is-sharing'); }
+
+  function openShare(url) {
+    if (shareIsOpen()) return;
+    shareWasPlaying = playing;
+    if (playing) setPlaying(false);
+    shareNavs = 0;
+    // A new frame each time: its first page then adds no history entry
+    shareFrame = document.createElement('iframe');
+    shareFrame.className = 'ss-share-frame';
+    shareFrame.title = 'Image write-up';
+    let first = true;
+    shareFrame.addEventListener('load', () => { if (first) first = false; else shareNavs++; });
+    shareFrame.src = url;
+    shareBox.appendChild(shareFrame);
+    shareBox.hidden = false;
+    stage.classList.add('is-sharing');
+    syncLock();
+    try { history.pushState({ ssShare: true }, ''); } catch (e) {}
+    if (!music.paused) fadeTo(MUSIC_VOL * 0.55, 800);
+    shareClose.focus();
+  }
+
+  function closeShare() {
+    if (!shareIsOpen()) return;
+    stage.classList.remove('is-sharing');
+    shareBox.hidden = true;
+    if (shareFrame) { shareFrame.remove(); shareFrame = null; }
+    syncLock();
+    if (!music.paused && !muted) fadeTo(MUSIC_VOL, 800);
+    if (shareWasPlaying) setPlaying(true);
+    poke();
+  }
+
+  // Step back past the viewer's history entry (and any pages opened inside
+  // it); the popstate below then closes it.
+  function requestCloseShare() {
+    if (history.state && history.state.ssShare) {
+      history.go(-(1 + shareNavs));
+      setTimeout(closeShare, 600);     // in case the browser sends no popstate
+    } else {
+      closeShare();
+    }
+  }
+
+  window.addEventListener('popstate', () => {
+    if (shareIsOpen() && !(history.state && history.state.ssShare)) closeShare();
+  });
+  shareClose.addEventListener('click', requestCloseShare);
+
+  titleEl.addEventListener('click', e => {
+    // Ctrl/Cmd/middle click still opens the page in a new tab as normal
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    const slide = slides[order[pos]];
+    if (!slide || !slide.slug) return;
+    e.preventDefault();
+    openShare(titleEl.href);
+  });
 
   /* ── Start ── */
   async function load() {
@@ -729,14 +812,8 @@
     setSpeed(secs);
     randBtn.setAttribute('aria-pressed', String(random));
     cineBtn.setAttribute('aria-pressed', String(cinema));
-    const resume = takeResume();
-    if (random) {
-      order = shuffledOrder(resume >= 0 ? resume : Math.floor(Math.random() * slides.length));
-      pos = 0;
-    } else {
-      order = naturalOrder();
-      pos = resume >= 0 ? resume : 0;
-    }
+    order = random ? shuffledOrder(Math.floor(Math.random() * slides.length)) : naturalOrder();
+    pos = 0;
     setPlaying(true);
     show();
   }
