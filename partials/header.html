@@ -4,13 +4,14 @@
      - Nav links sit on a second row beneath it,
        always visible and wrapping like the footer
        (the burger menu has been removed)
-     - Start Here, Prints, Articles and Puzzles are
+     - Start Here, Gallery, Prints, Articles and Puzzles are
        click-to-expand groups
        (dropdown popovers) — toggled by partials.js.
-       "Start Here" and "All Articles" are the first item
+       "Start Here", "Gallery" and "All Articles" are the first item
        in their groups because the group button itself does
        not navigate, it only opens the popover. Tonight sits
-       under Start Here as its planning sub page.
+       under Start Here as its planning sub page, and
+       Slideshow sits under Gallery.
      - Active link (.active + aria-current) and the
        active Puzzles-button state are set by partials.js
 ========================= -->
@@ -37,7 +38,18 @@
             <a href="/tonight.html">Tonight</a>
           </div>
         </div>
-        <a href="/gallery.html">Gallery</a>
+        <div class="nav-group">
+          <button class="nav-group-btn" aria-expanded="false" aria-controls="gallerySubmenu" type="button">
+            <span class="btn-label">Gallery</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-submenu" id="gallerySubmenu">
+            <a href="/gallery.html">Gallery</a>
+            <a href="/slideshow.html">Slideshow</a>
+          </div>
+        </div>
         <div class="nav-group">
           <button class="nav-group-btn" aria-expanded="false" aria-controls="printsSubmenu" type="button">
             <span class="btn-label">Prints</span>

@@ -12,13 +12,16 @@ const IS_DEV = location.hostname === 'localhost' || location.hostname === '127.0
 
 if (!IS_DEV) {
 
-const CACHE_VERSION = 'bhapstar-64a1199';
+const CACHE_VERSION = 'bhapstar-58f37ba';
 
 // Core shell — cached on install
 const SHELL_ASSETS = [
   '/',
   '/index.html',
   '/gallery.html',
+  // The field slideshow. Its images are not pre-cached here (about 9 MB);
+  // the page's "Save for offline" button fetches them into the image cache.
+  '/slideshow.html',
   '/gear.html',
   '/articles.html',
   '/field-cards.html',

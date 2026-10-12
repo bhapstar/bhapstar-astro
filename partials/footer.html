@@ -1,7 +1,7 @@
 <!-- =========================
      Footer
      - Mirrors the header: gradient nav links + Start Here,
-       Prints, Articles and Puzzles dropdown menus, sitting ABOVE
+       Gallery, Prints, Articles and Puzzles dropdown menus, sitting ABOVE
        the © line
      - Reuses the header's .nav-menu / .nav-group classes,
        sized down via footer-scoped CSS overrides
@@ -27,7 +27,18 @@
             <a href="/tonight.html">Tonight</a>
           </div>
         </div>
-        <a href="/gallery.html">Gallery</a>
+        <div class="nav-group">
+          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerGallerySubmenu" type="button">
+            <span class="btn-label">Gallery</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-submenu" id="footerGallerySubmenu">
+            <a href="/gallery.html">Gallery</a>
+            <a href="/slideshow.html">Slideshow</a>
+          </div>
+        </div>
         <div class="nav-group">
           <button class="nav-group-btn" aria-expanded="false" aria-controls="footerPrintsSubmenu" type="button">
             <span class="btn-label">Prints</span>

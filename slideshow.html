@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Slideshow — bhapstar Astrophotography</title>
+  <!-- Favicon & theme -->
+  <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#050414" />
+
+  <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bhapstar.com/slideshow.html" />
+
+  <!-- A viewing tool for the gallery images. The gallery page is the one to
+       index, so this page stays out of search results and the sitemap. -->
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Primary SEO -->
+  <meta name="description" content="A full-screen slideshow of every image in the bhapstar astrophotography gallery." />
+  <meta name="author" content="Bhapinder Singh" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Slideshow — bhapstar Astrophotography" />
+  <meta property="og:description" content="A full-screen slideshow of every image in the bhapstar astrophotography gallery." />
+  <meta property="og:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+  <meta property="og:url"         content="https://bhapstar.com/slideshow.html" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Slideshow — bhapstar Astrophotography" />
+  <meta name="twitter:description" content="A full-screen slideshow of every image in the bhapstar astrophotography gallery." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"b3353c7dd8764a64baee57fd09c3dbb9"}'></script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Page CSS lives in /styles.css under the
+       "PAGE: Slideshow (slideshow.html)" section. Do not add a <style> block here. -->
+  <link rel="manifest" href="/manifest.json" />
+</head>
+
+<body class="page-slideshow">
+
+<!-- =========================
+     Header / navigation
+========================= -->
+<div id="siteHeader"></div>
+
+<main class="ss-main">
+  <h1 class="ss-sr">Gallery slideshow</h1>
+
+  <!-- =========================
+       Slideshow stage
+       - Built from site-data.json at runtime, so a new gallery entry
+         appears here with no edit to this page
+       - The stage is what goes full screen, so the caption and controls
+         come with it
+  ========================= -->
+  <div class="ss-stage protect-zone" id="ssStage">
+
+    <div class="ss-view" id="ssView" aria-live="off">
+      <div class="ss-msg" id="ssMsg">Loading images…</div>
+    </div>
+
+    <!-- Caption, progress and controls. In full screen this block sits
+         over the bottom of the image and the controls fade when idle. -->
+    <div class="ss-bottom">
+
+    <div class="ss-caption" id="ssCaption" aria-live="polite">
+      <span class="ss-title" id="ssTitle"></span>
+      <span class="ss-part" id="ssPart"></span>
+      <span class="ss-count" id="ssCount" aria-hidden="true"></span>
+    </div>
+
+    <div class="ss-progress" aria-hidden="true"><span id="ssBar"></span></div>
+
+    <div class="ss-controls" id="ssControls">
+
+      <div class="ss-group">
+        <button class="ss-btn" type="button" id="ssPrev" aria-label="Previous image" title="Previous (left arrow)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="ss-btn ss-play" type="button" id="ssPlay" aria-label="Pause slideshow" title="Play or pause (space)">
+          <svg class="ss-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+          <svg class="ss-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+        </button>
+        <button class="ss-btn" type="button" id="ssNext" aria-label="Next image" title="Next (right arrow)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="ss-group ss-speed" role="group" aria-label="Time on each image">
+        <button class="ss-chip" type="button" data-secs="1" aria-pressed="false">1s</button>
+        <button class="ss-chip" type="button" data-secs="3" aria-pressed="false">3s</button>
+        <button class="ss-chip" type="button" data-secs="5" aria-pressed="true">5s</button>
+      </div>
+
+      <div class="ss-group">
+        <button class="ss-chip ss-chip-icon" type="button" id="ssShuffle" aria-pressed="false" title="Show images in random order">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          <span>Random</span>
+        </button>
+        <button class="ss-btn" type="button" id="ssFull" aria-label="Full screen" title="Full screen (F)">
+          <svg class="ss-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          <svg class="ss-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+        </button>
+      </div>
+
+      <!-- Shown only when the service worker is running (never on localhost) -->
+      <button class="ss-chip ss-offline" type="button" id="ssOffline" hidden title="Download every slideshow image to this device so the slideshow works with no signal">Save for offline</button>
+    </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- =========================
+     Footer
+========================= -->
+<div id="siteFooter"></div>
+
+<script>
+(() => {
+  /* ═══════════════════════════════════════════════════════════════
+     SLIDESHOW
+     Which images are shown, from site-data.json:
+       - every gallery entry that is not hidden
+       - an entry with an `images` list shows each one in turn
+         ("The Moon, 1 of 3"), EXCEPT when `compare: true`, where
+         the extra images are an older attempt or a labelled copy,
+         so only the first (newest) image is shown
+       - video-only entries (no `file`, no `images`) are skipped,
+         as Vimeo cannot play offline
+     Order follows site-data.json, the same as the gallery page.
+  ═══════════════════════════════════════════════════════════════ */
+
+  const SPEEDS     = [1, 3, 5];
+  const FADE_MS    = 450;
+  const IDLE_MS    = 3500;   // full screen controls fade after this
+  const KEY_SPEED  = 'bhapstar:ssSpeed';
+  const KEY_RANDOM = 'bhapstar:ssRandom';
+
+  const stage    = document.getElementById('ssStage');
+  const view     = document.getElementById('ssView');
+  const msg      = document.getElementById('ssMsg');
+  const titleEl  = document.getElementById('ssTitle');
+  const partEl   = document.getElementById('ssPart');
+  const countEl  = document.getElementById('ssCount');
+  const bar      = document.getElementById('ssBar');
+  const playBtn  = document.getElementById('ssPlay');
+  const prevBtn  = document.getElementById('ssPrev');
+  const nextBtn  = document.getElementById('ssNext');
+  const randBtn  = document.getElementById('ssShuffle');
+  const fullBtn  = document.getElementById('ssFull');
+  const offBtn   = document.getElementById('ssOffline');
+  const speedBtns = Array.from(document.querySelectorAll('.ss-speed .ss-chip'));
+
+  let slides  = [];      // { src, title, part, alt }
+  let order   = [];      // indices into slides, in play order
+  let pos     = 0;       // position within order
+  let playing = true;
+  let random  = false;
+  let secs    = 5;
+  let timer   = null;
+  let token   = 0;       // guards against a slow load landing after a newer one
+  let failRun = 0;       // consecutive images that would not load
+  let wakeLock = null;
+
+  /* ── Saved choices (per device) ── */
+  function readPref(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function writePref(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+
+  const savedSpeed = parseInt(readPref(KEY_SPEED), 10);
+  if (SPEEDS.includes(savedSpeed)) secs = savedSpeed;
+  random = readPref(KEY_RANDOM) === '1';
+
+  /* ── Build the slide list ── */
+  function buildSlides(all) {
+    const out = [];
+    all.filter(e => (e.section || 'gallery') === 'gallery' && !e.hidden).forEach(e => {
+      let files;
+      if (Array.isArray(e.images) && e.images.length) {
+        files = e.images.filter(im => im && im.file)
+                        .map(im => ({ file: im.file, alt: im.alt || e.alt || e.title || '' }));
+      } else if (e.file) {
+        files = [{ file: e.file, alt: e.alt || e.title || '' }];
+      } else {
+        return;
+      }
+      if (e.compare) files = files.slice(0, 1);
+      files.forEach((f, i) => out.push({
+        src:   '/' + String(f.file).replace(/^\/+/, ''),
+        title: e.title || '',
+        part:  files.length > 1 ? (i + 1) + ' of ' + files.length : '',
+        alt:   f.alt
+      }));
+    });
+    return out;
+  }
+
+  function naturalOrder() { return slides.map((_, i) => i); }
+
+  function shuffledOrder(first) {
+    const rest = slides.map((_, i) => i).filter(i => i !== first);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    return [first, ...rest];
+  }
+
+  /* ── Timer + progress bar ── */
+  function stopTimer() {
+    clearTimeout(timer);
+    timer = null;
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+  }
+
+  function startTimer() {
+    stopTimer();
+    if (!playing || document.hidden || !slides.length) return;
+    void bar.offsetWidth;                         // restart the bar from zero
+    bar.style.transition = 'width ' + secs + 's linear';
+    bar.style.width = '100%';
+    timer = setTimeout(() => go(1), secs * 1000);
+  }
+
+  /* ── Show one slide ──
+     A fresh <img> is made for every slide and the old one removed after
+     the fade. Reusing one element lets iOS Safari pile up GPU layers
+     across changes on long runs, which this avoids. */
+  function show() {
+    const slide = slides[order[pos]];
+    const my = ++token;
+    stopTimer();
+
+    const img = new Image();
+    img.className = 'ss-img';
+    img.alt = slide.alt;
+    img.decoding = 'async';
+    img.draggable = false;
+
+    img.onload = () => {
+      if (my !== token) return;
+      const ready = img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+      ready.then(() => {
+        if (my !== token) return;
+        failRun = 0;
+        msg.hidden = true;
+        view.querySelectorAll('.ss-img').forEach(old => {
+          old.classList.remove('is-in');
+          setTimeout(() => old.remove(), FADE_MS + 50);
+        });
+        view.appendChild(img);
+        void img.offsetWidth;
+        img.classList.add('is-in');
+        setCaption(slide);
+        preloadNext();
+        startTimer();
+      });
+    };
+
+    img.onerror = () => {
+      if (my !== token) return;
+      failRun++;
+      if (failRun >= slides.length) {
+        view.querySelectorAll('.ss-img').forEach(old => old.remove());
+        msg.textContent = 'These images are not saved on this device yet. Connect to the internet and they will load.';
+        msg.hidden = false;
+        setCaption(null);
+        return;
+      }
+      // Skip anything missing (usually offline and not saved), same direction
+      pos = (pos + lastDir + order.length) % order.length;
+      show();
+    };
+
+    img.src = slide.src;
+  }
+
+  function setCaption(slide) {
+    titleEl.textContent = slide ? slide.title : '';
+    partEl.textContent  = slide ? slide.part  : '';
+    countEl.textContent = slide ? (pos + 1) + ' / ' + order.length : '';
+  }
+
+  function preloadNext() {
+    if (order.length < 2) return;
+    const n = slides[order[(pos + 1) % order.length]];
+    const p = new Image();
+    p.decoding = 'async';
+    p.src = n.src;
+  }
+
+  let lastDir = 1;
+  function go(dir) {
+    if (!slides.length) return;
+    lastDir = dir;
+    pos = (pos + dir + order.length) % order.length;
+    // A full pass of a random order gets a fresh shuffle for the next pass
+    // (never starting the new pass on the image that ended the last one).
+    if (random && dir > 0 && pos === 0 && slides.length > 1) {
+      const last = order[order.length - 1];
+      let first = last;
+      while (first === last) first = Math.floor(Math.random() * slides.length);
+      order = shuffledOrder(first);
+    }
+    show();
+  }
+
+  /* ── Play / pause ── */
+  function setPlaying(on) {
+    playing = on;
+    stage.classList.toggle('is-paused', !on);
+    playBtn.setAttribute('aria-label', on ? 'Pause slideshow' : 'Play slideshow');
+    if (on) startTimer(); else stopTimer();
+    syncWakeLock();
+  }
+
+  /* ── Keep the screen awake while playing (tablet on a table) ── */
+  async function syncWakeLock() {
+    const want = playing && !document.hidden;
+    try {
+      if (want && !wakeLock && 'wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => { wakeLock = null; });
+      } else if (!want && wakeLock) {
+        await wakeLock.release();
+        wakeLock = null;
+      }
+    } catch (e) { wakeLock = null; }
+  }
+
+  /* ── Speed ── */
+  function setSpeed(s) {
+    secs = s;
+    speedBtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.secs === s)));
+    writePref(KEY_SPEED, String(s));
+    if (playing && timer) startTimer();
+  }
+
+  /* ── Random ── */
+  function setRandom(on) {
+    random = on;
+    randBtn.setAttribute('aria-pressed', String(on));
+    writePref(KEY_RANDOM, on ? '1' : '0');
+    if (!slides.length) return;
+    const current = order[pos];
+    order = on ? shuffledOrder(current) : naturalOrder();
+    pos = on ? 0 : current;
+    setCaption(slides[current]);
+    preloadNext();
+  }
+
+  /* ── Full screen ──
+     Uses the browser's full screen mode where it exists (desktop, Android,
+     iPad). Where it does not (iPhone), the stage simply fills the window. */
+  function fsElement() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+  function isFull() { return !!fsElement() || stage.classList.contains('is-pseudo-fs'); }
+
+  function enterFull() {
+    const req = stage.requestFullscreen || stage.webkitRequestFullscreen;
+    if (req) {
+      try {
+        const r = req.call(stage);
+        if (r && r.catch) r.catch(() => setPseudo(true));
+        return;
+      } catch (e) { /* fall through */ }
+    }
+    setPseudo(true);
+  }
+
+  function exitFull() {
+    if (fsElement()) {
+      const ex = document.exitFullscreen || document.webkitExitFullscreen;
+      if (ex) ex.call(document);
+    }
+    setPseudo(false);
+  }
+
+  function setPseudo(on) {
+    stage.classList.toggle('is-pseudo-fs', on);
+    document.documentElement.classList.toggle('ss-lock', on);
+    syncFull();
+  }
+
+  function syncFull() {
+    const on = isFull();
+    stage.classList.toggle('is-full', on);
+    fullBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+    if (on) poke(); else stage.classList.remove('is-idle');
+  }
+
+  document.addEventListener('fullscreenchange', syncFull);
+  document.addEventListener('webkitfullscreenchange', syncFull);
+
+  /* ── Controls fade in full screen after a few idle seconds ── */
+  let idleTimer = null;
+  function poke() {
+    stage.classList.remove('is-idle');
+    clearTimeout(idleTimer);
+    if (isFull()) idleTimer = setTimeout(() => stage.classList.add('is-idle'), IDLE_MS);
+  }
+  stage.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') poke(); });
+  stage.addEventListener('focusin', poke);
+
+  /* ── Swipe left / right on the image, tap to show controls ── */
+  let sx = 0, sy = 0, tracking = false;
+  view.addEventListener('pointerdown', e => {
+    tracking = true; sx = e.clientX; sy = e.clientY;
+  });
+  view.addEventListener('pointerup', e => {
+    if (!tracking) return;
+    tracking = false;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      go(dx < 0 ? 1 : -1);
+      poke();
+    } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+      // Tap: in full screen, bring the controls back; otherwise play/pause
+      if (isFull() && stage.classList.contains('is-idle')) poke();
+      else if (isFull()) { stage.classList.add('is-idle'); clearTimeout(idleTimer); }
+      else setPlaying(!playing);
+    }
+  });
+  view.addEventListener('pointercancel', () => { tracking = false; });
+
+  /* ── Buttons ── */
+  prevBtn.addEventListener('click', () => { go(-1); poke(); });
+  nextBtn.addEventListener('click', () => { go(1);  poke(); });
+  playBtn.addEventListener('click', () => { setPlaying(!playing); poke(); });
+  randBtn.addEventListener('click', () => { setRandom(!random); poke(); });
+  fullBtn.addEventListener('click', () => { isFull() ? exitFull() : enterFull(); });
+  speedBtns.forEach(b => b.addEventListener('click', () => { setSpeed(+b.dataset.secs); poke(); }));
+
+  /* ── Keyboard ── */
+  document.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'ArrowRight') { go(1);  poke(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { go(-1); poke(); e.preventDefault(); }
+    else if (e.key === ' ' && tag !== 'button') { setPlaying(!playing); poke(); e.preventDefault(); }
+    else if (e.key === 'f' || e.key === 'F') { isFull() ? exitFull() : enterFull(); }
+    else if (e.key === 'Escape' && stage.classList.contains('is-pseudo-fs')) { setPseudo(false); }
+  });
+
+  /* ── Pause while the tab is hidden, carry on when it comes back ── */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopTimer(); else if (playing) startTimer();
+    syncWakeLock();
+  });
+
+  /* ── Fit the stage to the space under the sticky header ── */
+  function fitStage() {
+    const h = document.querySelector('#siteHeader header');
+    const top = h ? Math.round(h.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--ss-top', top + 'px');
+  }
+  fitStage();
+  window.addEventListener('resize', fitStage);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(fitStage).observe(document.getElementById('siteHeader'));
+  }
+
+  /* ── Save for offline ──
+     The service worker stores each image the first time it is fetched, so
+     fetching them all here is enough. The worker clears its store whenever
+     the site is updated, so the count below shows what is on this device
+     right now. */
+  async function countSaved() {
+    let n = 0;
+    for (const s of slides) {
+      try { if (await caches.match(s.src)) n++; } catch (e) {}
+    }
+    return n;
+  }
+
+  async function refreshOffline() {
+    const n = await countSaved();
+    offBtn.dataset.done = n === slides.length ? '1' : '';
+    offBtn.textContent = n === slides.length
+      ? 'Saved for offline'
+      : (n ? 'Save for offline (' + n + ' of ' + slides.length + ' saved)' : 'Save for offline');
+  }
+
+  async function saveOffline() {
+    if (offBtn.disabled) return;
+    offBtn.disabled = true;
+    let done = 0, failed = 0;
+    const queue = slides.map(s => s.src);
+    async function worker() {
+      while (queue.length) {
+        const src = queue.shift();
+        try {
+          const r = await fetch(src);
+          if (!r.ok) failed++;
+        } catch (e) { failed++; }
+        done++;
+        offBtn.textContent = 'Saving ' + done + ' of ' + slides.length + '…';
+      }
+    }
+    await Promise.all([worker(), worker(), worker()]);
+    offBtn.disabled = false;
+    if (failed) {
+      offBtn.textContent = navigator.onLine === false
+        ? 'No connection. Try again online'
+        : failed + ' could not be saved. Tap to retry';
+      setTimeout(refreshOffline, 4000);
+    } else {
+      await refreshOffline();
+    }
+  }
+
+  function initOffline() {
+    if (!('caches' in window) || !('serviceWorker' in navigator)) return;
+    const reveal = () => {
+      if (!navigator.serviceWorker.controller) return;
+      offBtn.hidden = false;
+      refreshOffline();
+    };
+    reveal();
+    navigator.serviceWorker.addEventListener('controllerchange', reveal);
+    offBtn.addEventListener('click', saveOffline);
+  }
+
+  /* ── Start ── */
+  async function load() {
+    try {
+      const res = await fetch('site-data.json', { cache: 'default' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      slides = buildSlides(await res.json());
+    } catch (err) {
+      console.error('Slideshow data load error:', err);
+      msg.textContent = 'The slideshow could not load. Please refresh the page.';
+      return;
+    }
+    if (!slides.length) { msg.textContent = 'No images to show.'; return; }
+
+    setSpeed(secs);
+    randBtn.setAttribute('aria-pressed', String(random));
+    order = random ? shuffledOrder(Math.floor(Math.random() * slides.length)) : naturalOrder();
+    pos = 0;
+    setPlaying(true);
+    show();
+    initOffline();
+  }
+
+  load();
+})();
+</script>
+
+<script src="protect-images.js"></script>
+<script src="partials/partials.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
