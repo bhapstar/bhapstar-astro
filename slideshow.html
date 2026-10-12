@@ -113,9 +113,6 @@
           <svg class="ss-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
         </button>
       </div>
-
-      <!-- Shown only when the service worker is running (never on localhost) -->
-      <button class="ss-chip ss-offline" type="button" id="ssOffline" hidden title="Download every slideshow image to this device so the slideshow works with no signal">Save for offline</button>
     </div>
 
     </div>
@@ -135,8 +132,10 @@
        - every gallery entry that is not hidden
        - an entry with an `images` list shows each one in turn
          ("The Moon, 1 of 3"), EXCEPT when `compare: true`, where
-         the extra images are an older attempt or a labelled copy,
-         so only the first (newest) image is shown
+         the extra image is an older attempt (Eagle Nebula v1), so
+         only the first (newest) image is shown
+       - `slideshow_all: true` on a compare entry overrides that and
+         shows every image (the Geminids, plain and labelled)
        - video-only entries (no `file`, no `images`) are skipped,
          as Vimeo cannot play offline
      Order follows site-data.json, the same as the gallery page.
@@ -160,7 +159,6 @@
   const nextBtn  = document.getElementById('ssNext');
   const randBtn  = document.getElementById('ssShuffle');
   const fullBtn  = document.getElementById('ssFull');
-  const offBtn   = document.getElementById('ssOffline');
   const speedBtns = Array.from(document.querySelectorAll('.ss-speed .ss-chip'));
 
   let slides  = [];      // { src, title, part, alt }
@@ -195,7 +193,7 @@
       } else {
         return;
       }
-      if (e.compare) files = files.slice(0, 1);
+      if (e.compare && !e.slideshow_all) files = files.slice(0, 1);
       files.forEach((f, i) => out.push({
         src:   '/' + String(f.file).replace(/^\/+/, ''),
         title: e.title || '',
@@ -274,12 +272,12 @@
       failRun++;
       if (failRun >= slides.length) {
         view.querySelectorAll('.ss-img').forEach(old => old.remove());
-        msg.textContent = 'These images are not saved on this device yet. Connect to the internet and they will load.';
+        msg.textContent = 'The images could not be loaded. Please refresh the page.';
         msg.hidden = false;
         setCaption(null);
         return;
       }
-      // Skip anything missing (usually offline and not saved), same direction
+      // Skip any image that will not load, keeping the same direction
       pos = (pos + lastDir + order.length) % order.length;
       show();
     };
@@ -472,67 +470,6 @@
     new ResizeObserver(fitStage).observe(document.getElementById('siteHeader'));
   }
 
-  /* ── Save for offline ──
-     The service worker stores each image the first time it is fetched, so
-     fetching them all here is enough. The worker clears its store whenever
-     the site is updated, so the count below shows what is on this device
-     right now. */
-  async function countSaved() {
-    let n = 0;
-    for (const s of slides) {
-      try { if (await caches.match(s.src)) n++; } catch (e) {}
-    }
-    return n;
-  }
-
-  async function refreshOffline() {
-    const n = await countSaved();
-    offBtn.dataset.done = n === slides.length ? '1' : '';
-    offBtn.textContent = n === slides.length
-      ? 'Saved for offline'
-      : (n ? 'Save for offline (' + n + ' of ' + slides.length + ' saved)' : 'Save for offline');
-  }
-
-  async function saveOffline() {
-    if (offBtn.disabled) return;
-    offBtn.disabled = true;
-    let done = 0, failed = 0;
-    const queue = slides.map(s => s.src);
-    async function worker() {
-      while (queue.length) {
-        const src = queue.shift();
-        try {
-          const r = await fetch(src);
-          if (!r.ok) failed++;
-        } catch (e) { failed++; }
-        done++;
-        offBtn.textContent = 'Saving ' + done + ' of ' + slides.length + '…';
-      }
-    }
-    await Promise.all([worker(), worker(), worker()]);
-    offBtn.disabled = false;
-    if (failed) {
-      offBtn.textContent = navigator.onLine === false
-        ? 'No connection. Try again online'
-        : failed + ' could not be saved. Tap to retry';
-      setTimeout(refreshOffline, 4000);
-    } else {
-      await refreshOffline();
-    }
-  }
-
-  function initOffline() {
-    if (!('caches' in window) || !('serviceWorker' in navigator)) return;
-    const reveal = () => {
-      if (!navigator.serviceWorker.controller) return;
-      offBtn.hidden = false;
-      refreshOffline();
-    };
-    reveal();
-    navigator.serviceWorker.addEventListener('controllerchange', reveal);
-    offBtn.addEventListener('click', saveOffline);
-  }
-
   /* ── Start ── */
   async function load() {
     try {
@@ -552,7 +489,6 @@
     pos = 0;
     setPlaying(true);
     show();
-    initOffline();
   }
 
   load();

@@ -10325,10 +10325,16 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   padding: 12px 18px 8px;
   min-height: 2.6em;
 }
+/* Same scrolling gradient as the brand mark and puzzle headings */
 .ss-title{
   font-size: clamp(1.02rem, 2.3vw, 1.45rem);
   font-weight: 600; letter-spacing: 0.01em;
-  color: #fff;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 .ss-part{
   font-size: 0.9rem;
@@ -10342,14 +10348,16 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Progress to the next image ── */
+/* ── Progress to the next image ──
+   Kept faint on purpose: a hairline you can find if you look for it,
+   not something that pulls the eye off the picture. */
 .ss-progress{
-  height: 2px;
-  background: rgba(255,255,255,0.08);
+  height: 1px;
+  background: rgba(255,255,255,0.05);
 }
 .ss-progress span{
   display: block; height: 100%; width: 0%;
-  background: linear-gradient(90deg, #a78bfa, #60a5fa 55%, #f472b6);
+  background: rgba(200,195,235,0.28);
 }
 
 /* ── Controls ── */
@@ -10410,16 +10418,6 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   box-shadow: 0 0 18px rgba(167,139,250,0.30);
 }
 
-.ss-offline{
-  font-size: 12px;
-  color: rgba(200,195,235,0.90);
-}
-.ss-offline[data-done="1"]{
-  border-color: rgba(52,211,153,0.55);
-  color: #a7f3d0;
-}
-.ss-offline[disabled]{ cursor: progress; opacity: 0.85; }
-.ss-offline[hidden]{ display: none; }
 
 .ss-icon-exit{ display: none; }
 .ss-stage.is-full .ss-icon-exit{ display: block; }
@@ -10451,7 +10449,8 @@ html.ss-lock body{ overflow: hidden; }
 }
 .ss-stage.is-full .ss-bottom > *{ pointer-events: auto; }
 .ss-stage.is-full .ss-caption{ padding-top: 34px; }
-.ss-stage.is-full .ss-title{ text-shadow: 0 1px 8px rgba(0,0,0,0.8); }
+/* drop-shadow, not text-shadow: text-shadow paints over gradient-clipped text */
+.ss-stage.is-full .ss-title{ filter: drop-shadow(0 1px 6px rgba(0,0,0,0.85)); }
 
 .ss-stage.is-full.is-idle{ cursor: none; }
 .ss-stage.is-full.is-idle .ss-view{ cursor: none; }
@@ -10460,7 +10459,7 @@ html.ss-lock body{ overflow: hidden; }
   padding-top: 0; padding-bottom: 0;
   pointer-events: none;
 }
-.ss-stage.is-full.is-idle .ss-progress{ opacity: 0.6; }
+.ss-stage.is-full.is-idle .ss-progress{ opacity: 0; }
 
 @media (max-width: 620px){
   .page-slideshow .ss-main{ padding: 8px 8px 16px; }
@@ -10472,4 +10471,5 @@ html.ss-lock body{ overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce){
   .ss-img{ transition: none; }
+  .ss-title{ animation: none; }
 }

@@ -19,9 +19,6 @@ const SHELL_ASSETS = [
   '/',
   '/index.html',
   '/gallery.html',
-  // The field slideshow. Its images are not pre-cached here (about 9 MB);
-  // the page's "Save for offline" button fetches them into the image cache.
-  '/slideshow.html',
   '/gear.html',
   '/articles.html',
   '/field-cards.html',
