@@ -10430,6 +10430,11 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
 }
 
 
+.ss-sound[hidden]{ display: none; }
+.ss-icon-sound-off{ display: none; }
+.ss-stage.is-muted .ss-icon-sound-off{ display: block; }
+.ss-stage.is-muted .ss-icon-sound-on{ display: none; }
+
 .ss-icon-exit{ display: none; }
 .ss-stage.is-full .ss-icon-exit{ display: block; }
 .ss-stage.is-full .ss-icon-enter{ display: none; }
