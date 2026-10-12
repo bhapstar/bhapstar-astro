@@ -156,7 +156,6 @@
   const IDLE_MS    = 3500;   // full screen controls fade after this
   const KEY_SPEED  = 'bhapstar:ssSpeed';
   const KEY_RANDOM = 'bhapstar:ssRandom';
-  const KEY_CINEMA = 'bhapstar:ssCinema';
   const KB_ZOOM    = 1.16;   // cinematic: how far each image zooms
   const KB_PAN     = 3;      // cinematic: how far it drifts, % of the frame
 
@@ -198,7 +197,11 @@
   const savedSpeed = parseInt(readPref(KEY_SPEED), 10);
   if (SPEEDS.includes(savedSpeed)) secs = savedSpeed;
   random = readPref(KEY_RANDOM) === '1';
-  cinema = readPref(KEY_CINEMA) === '1';
+  // Cinematic and music start ON every time the page opens. Turning either
+  // off lasts for this visit only, so a tap by someone else on the tablet
+  // never leaves the next showing without them. Speed and Random are
+  // remembered as before.
+  cinema = true;
 
   /* ── Build the slide list ── */
   function buildSlides(all) {
@@ -451,7 +454,6 @@
   function setCinema(on) {
     cinema = on;
     cineBtn.setAttribute('aria-pressed', String(on));
-    writePref(KEY_CINEMA, on ? '1' : '0');
     const img = currentImg();
     if (!img) return;
     if (on && !motion) {
@@ -624,17 +626,16 @@
      One track, looped, from sounds/slideshow-music.mp3. To change it,
      replace that file (keep the name). The button stays hidden until the
      file is found, so the page works the same with no music file at all.
-     Mute uses the same saved setting as the puzzle pages, so muting in
-     one place mutes everywhere. Browsers will not start sound until the
+     Music is on whenever the page opens (see the note at the top); the
+     button mutes it for this visit only. Browsers will not start sound until the
      viewer touches the page, so the music begins on the first tap or key
      press if it could not start on its own. iPhones and iPads ignore page
      volume, so there the device volume sets how loud it is. */
   const MUSIC_SRC = '/sounds/slideshow-music.mp3';
   const MUSIC_VOL = 0.45;
-  const MUTE_KEY  = 'bhapstar_sound_muted';
   const soundBtn  = document.getElementById('ssSound');
   const music     = new Audio();
-  let muted     = readPref(MUTE_KEY) === '1';
+  let muted     = false;
   let musicOk   = false;
   let fadeRaf   = null;
   let gestureArmed = false;
@@ -688,7 +689,6 @@
 
   function setMuted(on) {
     muted = on;
-    writePref(MUTE_KEY, on ? '1' : '0');
     drawSound();
     if (on) stopMusic(); else startMusic();
   }
