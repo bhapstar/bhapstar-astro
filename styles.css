@@ -370,13 +370,33 @@ header{
     0 0 0 1px rgba(167,139,250,0.06) inset;
   z-index: 120;
 }
+/* Open: slides down into place. Close: partials.js adds .closing,
+   which slides it back up and fades it, then removes .open after
+   SUBMENU_CLOSE_MS (180ms, matches submenuOut below). Only one menu
+   is open at a time; the newest sits on top while the old one leaves. */
 .nav-submenu.open{
   display: flex;
-  animation: submenuIn 180ms var(--ease-out-expo) both;
+  z-index: 121;
+  animation: submenuIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.nav-submenu.open.closing{
+  z-index: 120;
+  pointer-events: none;
+  animation: submenuOut 180ms ease-in forwards;
 }
 @keyframes submenuIn{
-  from{ opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  from{ opacity: 0; transform: translateX(-50%) translateY(-14px); }
   to{   opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes submenuOut{
+  from{ opacity: 1; transform: translateX(-50%) translateY(0); }
+  to{   opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+@keyframes submenuFadeIn{  from{ opacity: 0; } to{ opacity: 1; } }
+@keyframes submenuFadeOut{ from{ opacity: 1; } to{ opacity: 0; } }
+@media (prefers-reduced-motion: reduce){
+  .nav-submenu.open{ animation: submenuFadeIn 120ms ease both; }
+  .nav-submenu.open.closing{ animation: submenuFadeOut 120ms ease forwards; }
 }
 .nav-submenu a{
   display: block !important;
@@ -1827,8 +1847,23 @@ footer .nav-group-btn svg{ width: 9px; height: 5px; }
    active link invisible (text-fill is transparent). */
 footer .nav-menu a.active,
 footer .nav-group-btn.active{ background-color: transparent; border-color: transparent; }
-/* Footer is at the page bottom, so the Puzzles menu opens UPWARD */
+/* Footer is at the page bottom, so its menus open UPWARD and slide up
+   from below (and drop back down when closing) */
 footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
+footer .nav-submenu.open{ animation-name: submenuInUp; }
+footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
+@keyframes submenuInUp{
+  from{ opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to{   opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes submenuOutDown{
+  from{ opacity: 1; transform: translateX(-50%) translateY(0); }
+  to{   opacity: 0; transform: translateX(-50%) translateY(8px); }
+}
+@media (prefers-reduced-motion: reduce){
+  footer .nav-submenu.open{ animation: submenuFadeIn 120ms ease both; }
+  footer .nav-submenu.open.closing{ animation: submenuFadeOut 120ms ease forwards; }
+}
 
 /* Meta row: copyright line + social icons, centred beneath the links */
 .footer-meta{

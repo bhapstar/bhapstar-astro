@@ -161,17 +161,24 @@ const HIDE_FIELD_NOTES = true;
 
 
     /* ─────────────────────────────────────────
-       PUZZLES DROPDOWN
-       - The burger has been removed; the header nav
-         links are always visible now, so only the
-         Puzzles group needs interaction.
+       NAV DROPDOWNS (header and footer)
+       - Start Here, Gallery, Prints, Articles and
+         Puzzles are click-to-open groups.
+       - Only one menu is open at a time across the
+         whole page: opening one closes any other,
+         header or footer.
        - Click toggles the submenu popover; it closes
          on outside click, Escape, or choosing a link.
+       - Opening slides in via CSS (.open). Closing adds
+         .closing for the slide-out, then removes both
+         after SUBMENU_CLOSE_MS so the menu returns to
+         display:none (keeps hidden menus from widening
+         the page on phones). Keep SUBMENU_CLOSE_MS in
+         step with submenuOut in styles.css.
        - Must bind AFTER header HTML is injected;
          double-bind guard via data-bound.
     ───────────────────────────────────────── */
-    // Bind EVERY .nav-group (the header's Puzzles group AND the footer's),
-    // each toggling its own submenu. Per-button double-bind guard.
+    const SUBMENU_CLOSE_MS = 180;
     const navGroups = document.querySelectorAll('.nav-group');
 
     navGroups.forEach((group) => {
@@ -180,18 +187,32 @@ const HIDE_FIELD_NOTES = true;
       if (!btn || !submenu || btn.dataset.bound) return;
       btn.dataset.bound = '1';
 
+      let closeTimer = null;
+      const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
+
       const closeSubmenu = () => {
-        submenu.classList.remove('open');
+        if (!isOpen()) return;
         btn.setAttribute('aria-expanded', 'false');
+        submenu.classList.add('closing');
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          submenu.classList.remove('open', 'closing');
+        }, SUBMENU_CLOSE_MS);
       };
       const openSubmenu = () => {
+        // Close every other menu first so they never stack up
+        document.querySelectorAll('.nav-group').forEach((other) => {
+          if (other !== group && other._closeSubmenu) other._closeSubmenu();
+        });
+        clearTimeout(closeTimer);
+        submenu.classList.remove('closing');
         submenu.classList.add('open');
         btn.setAttribute('aria-expanded', 'true');
       };
 
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        submenu.classList.contains('open') ? closeSubmenu() : openSubmenu();
+        isOpen() ? closeSubmenu() : openSubmenu();
       });
 
       // Close after a link is chosen (navigation happens anyway)
