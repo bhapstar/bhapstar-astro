@@ -10423,7 +10423,10 @@ html:has(body.page-glossary){ scroll-behavior:smooth; }
   font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
 }
 .ss-chip svg{ width: 17px; height: 17px; }
-.ss-chip[aria-pressed="true"]{
+.ss-speed span{ min-width: 2.2em; text-align: left; font-variant-numeric: tabular-nums; }
+/* Lit state for anything switched on: Random, Cinematic, music, full screen */
+.ss-chip[aria-pressed="true"],
+.ss-btn[aria-pressed="true"]{
   background: linear-gradient(150deg, rgba(167,139,250,0.55), rgba(96,165,250,0.42));
   border-color: rgba(196,181,253,0.90);
   box-shadow: 0 0 18px rgba(167,139,250,0.30);
@@ -10520,6 +10523,7 @@ html.ss-lock body{ overflow: hidden; }
   .ss-controls{ gap: 10px 12px; }
   .ss-chip{ padding: 0 11px; }
   .ss-chip-icon span{ display: none; }
+  .ss-chip-icon{ width: 46px; height: 46px; padding: 0; border-radius: 50%; }
 }
 
 @media (prefers-reduced-motion: reduce){

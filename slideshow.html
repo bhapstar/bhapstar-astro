@@ -103,11 +103,12 @@
         </button>
       </div>
 
-      <div class="ss-group ss-speed" role="group" aria-label="Time on each image">
-        <button class="ss-chip" type="button" data-secs="3" aria-pressed="false">3s</button>
-        <button class="ss-chip" type="button" data-secs="5" aria-pressed="false">5s</button>
-        <button class="ss-chip" type="button" data-secs="7" aria-pressed="true">7s</button>
-        <button class="ss-chip" type="button" data-secs="10" aria-pressed="false">10s</button>
+      <div class="ss-group">
+        <!-- One button that steps through the times: 3s, 5s, 7s, 10s, 3s... -->
+        <button class="ss-chip ss-speed" type="button" id="ssSpeed" aria-label="Time on each image: 7 seconds. Tap to change" title="Time on each image (tap to change)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></svg>
+          <span id="ssSpeedLabel">7s</span>
+        </button>
       </div>
 
       <div class="ss-group">
@@ -120,11 +121,11 @@
           <span>Cinematic</span>
         </button>
         <!-- Shown once sounds/slideshow-music.mp3 is found -->
-        <button class="ss-btn ss-sound" type="button" id="ssSound" hidden aria-label="Mute music" aria-pressed="false" title="Music on or off (M)">
+        <button class="ss-btn ss-sound" type="button" id="ssSound" hidden aria-label="Mute music" aria-pressed="true" title="Music on or off (M)">
           <svg class="ss-icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
           <svg class="ss-icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
         </button>
-        <button class="ss-btn" type="button" id="ssFull" aria-label="Full screen" title="Full screen (F)">
+        <button class="ss-btn" type="button" id="ssFull" aria-label="Full screen" aria-pressed="false" title="Full screen (F)">
           <svg class="ss-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           <svg class="ss-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
         </button>
@@ -189,7 +190,8 @@
   const randBtn  = document.getElementById('ssShuffle');
   const cineBtn  = document.getElementById('ssCinema');
   const fullBtn  = document.getElementById('ssFull');
-  const speedBtns = Array.from(document.querySelectorAll('.ss-speed .ss-chip'));
+  const speedBtn   = document.getElementById('ssSpeed');
+  const speedLabel = document.getElementById('ssSpeedLabel');
 
   let slides  = [];      // { src, title, part, alt }
   let order   = [];      // indices into slides, in play order
@@ -452,7 +454,8 @@
     // Keep how far through the current image we are, at the new pace
     const f = live ? progress() : 0;
     secs = s;
-    speedBtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.secs === s)));
+    speedLabel.textContent = s + 's';
+    speedBtn.setAttribute('aria-label', 'Time on each image: ' + s + ' seconds. Tap to change');
     remaining = (1 - f) * secs * 1000;
     if (motion && motion.effect) {
       const t = motion.effect.getComputedTiming();
@@ -537,6 +540,7 @@
     const on = isFull();
     stage.classList.toggle('is-full', on);
     fullBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+    fullBtn.setAttribute('aria-pressed', String(on));
     if (on) poke(); else stage.classList.remove('is-idle');
   }
 
@@ -581,7 +585,10 @@
   randBtn.addEventListener('click', () => { setRandom(!random); poke(); });
   cineBtn.addEventListener('click', () => { setCinema(!cinema); poke(); });
   fullBtn.addEventListener('click', () => { isFull() ? exitFull() : enterFull(); });
-  speedBtns.forEach(b => b.addEventListener('click', () => { setSpeed(+b.dataset.secs); poke(); }));
+  speedBtn.addEventListener('click', () => {
+    setSpeed(SPEEDS[(SPEEDS.indexOf(secs) + 1) % SPEEDS.length]);
+    poke();
+  });
 
   /* ── Keyboard ── */
   document.addEventListener('keydown', e => {
@@ -687,7 +694,7 @@
 
   function drawSound() {
     stage.classList.toggle('is-muted', muted);
-    soundBtn.setAttribute('aria-pressed', String(muted));
+    soundBtn.setAttribute('aria-pressed', String(!muted));
     soundBtn.setAttribute('aria-label', muted ? 'Play music' : 'Mute music');
   }
 
