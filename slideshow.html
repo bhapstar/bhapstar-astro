@@ -541,7 +541,17 @@
     stage.classList.toggle('is-full', on);
     fullBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
     fullBtn.setAttribute('aria-pressed', String(on));
-    if (on) poke(); else stage.classList.remove('is-idle');
+    if (!on) { stage.classList.remove('is-idle'); return; }
+    // On touch screens, Chrome on Android puts its own "To exit full screen"
+    // notice over the bottom of the screen for several seconds. Pages
+    // cannot turn it off, so the controls fold away straight away and the
+    // notice sits over the picture instead. A tap brings them back.
+    if (fsElement() && window.matchMedia('(pointer: coarse)').matches) {
+      clearTimeout(idleTimer);
+      stage.classList.add('is-idle');
+    } else {
+      poke();
+    }
   }
 
   document.addEventListener('fullscreenchange', syncFull);
