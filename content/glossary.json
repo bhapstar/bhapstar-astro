@@ -76,6 +76,15 @@
       "def": "A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across."
     },
     {
+      "term": "artefact",
+      "aliases": [
+        "artefacts",
+        "artifact",
+        "artifacts"
+      ],
+      "def": "Something in a picture that was added by the camera or by the processing, rather than being there in the sky. A dark ring around a bright star is a common one."
+    },
+    {
       "term": "ASCOM",
       "aliases": [
         "Alpaca"
@@ -151,6 +160,10 @@
       ],
       "def": "The shortest exposure the camera can take, with the lens capped. It records the small electrical signal the sensor adds to every single frame.",
       "link": "/articles/calibration-frames-darks-flats-biases.html"
+    },
+    {
+      "term": "blooming",
+      "def": "When a star is so bright that its light overflows the pixels it lands on and spills into the ones next to it, so it looks swollen or streaked in the picture."
     },
     {
       "term": "Bortle",
@@ -279,6 +292,13 @@
       "def": "A low-power heater strip wrapped round the front of the telescope. Holding the glass a degree or two above the air temperature is enough to stop dew ever forming on it."
     },
     {
+      "term": "diffraction spike",
+      "aliases": [
+        "diffraction spikes"
+      ],
+      "def": "Straight lines of light that stick out from bright stars in some pictures. They come from something in the light path bending the light, such as the supports that hold a telescope's mirror, not from the star itself."
+    },
+    {
       "term": "dithering",
       "aliases": [
         "dither",
@@ -308,7 +328,15 @@
     {
       "term": "dual narrowband",
       "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.",
-      "link": "/gear/optolong-l-extreme-filter.html"
+      "link": "/gear/optolong-l-extreme-filter.html",
+      "aliases": [
+        "dual-band",
+        "dual band"
+      ],
+      "avoid": [
+        "dual-band WiFi",
+        "dual band WiFi"
+      ]
     },
     {
       "term": "EAF",
@@ -515,6 +543,15 @@
       "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
+      "term": "HII region",
+      "aliases": [
+        "HII regions",
+        "H II region",
+        "H II regions"
+      ],
+      "def": "A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. In other galaxies they show up as small pink knots along the spiral arms."
+    },
+    {
       "term": "histogram",
       "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right."
     },
@@ -528,6 +565,10 @@
       "def": "A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later."
     },
     {
+      "term": "Hubble palette",
+      "def": "A way of colouring narrowband pictures made famous by the Hubble Space Telescope. Sulphur, hydrogen and oxygen are shown as red, green and blue, so a nebula usually comes out gold and blue instead of its natural red."
+    },
+    {
       "term": "hydrogen-alpha",
       "aliases": [
         "hydrogen alpha",
@@ -535,6 +576,13 @@
         "Ha"
       ],
       "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud."
+    },
+    {
+      "term": "IC",
+      "aliases": [
+        "Index Catalogue"
+      ],
+      "def": "The Index Catalogue, two additions to the NGC published in 1895 and 1908 that listed more than 5,000 extra objects. IC 443 means number 443 on that list."
     },
     {
       "term": "imaging train",
@@ -557,6 +605,16 @@
     {
       "term": "inverter",
       "def": "The part of a power station that turns its battery power into mains power for a normal plug. It uses some power itself just by being switched on."
+    },
+    {
+      "term": "ionised",
+      "aliases": [
+        "ionising",
+        "ionise",
+        "ionized",
+        "ionizing"
+      ],
+      "def": "Gas whose atoms have had an electron knocked off by strong light from hot stars. As the electrons are caught again the gas glows, which is what makes many nebulae shine."
     },
     {
       "term": "ISO",
@@ -614,6 +672,13 @@
       "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
+      "term": "Messier",
+      "aliases": [
+        "Messier catalogue"
+      ],
+      "def": "A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list."
+    },
+    {
       "term": "micron",
       "aliases": [
         "microns"
@@ -623,6 +688,14 @@
     {
       "term": "Milky Way core",
       "def": "The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer."
+    },
+    {
+      "term": "molecular cloud",
+      "aliases": [
+        "molecular clouds",
+        "molecular gas"
+      ],
+      "def": "A cold, dense cloud of gas and dust where the atoms have joined up into molecules. These clouds are where new stars are born."
     },
     {
       "term": "mosaic",
@@ -654,6 +727,13 @@
       "def": "A filter that dims everything evenly without changing the colours. On the Moon it simply makes the view comfortable to look at."
     },
     {
+      "term": "NGC",
+      "aliases": [
+        "New General Catalogue"
+      ],
+      "def": "The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list."
+    },
+    {
       "term": "NINA",
       "def": "A free Windows program that runs an imaging session from a laptop, controlling the mount, camera and focuser through the night."
     },
@@ -678,6 +758,15 @@
         "O III"
       ],
       "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around."
+    },
+    {
+      "term": "open cluster",
+      "aliases": [
+        "open clusters",
+        "open star cluster",
+        "open star clusters"
+      ],
+      "def": "A loose group of a few dozen to a few thousand young stars that were born together from the same cloud. Over millions of years they slowly drift apart."
     },
     {
       "term": "passband",
@@ -971,6 +1060,15 @@
         "thermoelectric cooling"
       ],
       "def": "Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise."
+    },
+    {
+      "term": "tidal stream",
+      "aliases": [
+        "tidal streams",
+        "tidal tail",
+        "tidal tails"
+      ],
+      "def": "A long, faint trail of stars pulled out of a galaxy by the gravity of a neighbour that came too close."
     },
     {
       "term": "timelapse",
