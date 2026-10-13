@@ -22,6 +22,9 @@
     "          also part of a name: 'triplet' avoids 'Leo Triplet'.",
     "  except  slugs where the term should not be marked, normally because the",
     "          page itself is the explanation of it.",
+    "  link    optional page on this site that covers the term: an article, a",
+    "          gear page or a gallery image. Shown as Read more in the popup and",
+    "          on glossary.html. A path not on disk is dropped at build time.",
     "",
     "To add a term: add an entry anywhere, run python build.py, done. Longer",
     "terms win over shorter ones, so 'dual narrowband' beats 'narrowband'."
@@ -33,7 +36,8 @@
         "altazimuth",
         "alt-azimuth"
       ],
-      "def": "A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure."
+      "def": "A mount that moves up and down and left and right, like a camera tripod. Simple to use, but the view slowly rotates during a long exposure.",
+      "link": "/articles/seestar-s30-pro-tour.html"
     },
     {
       "term": "altitude",
@@ -42,7 +46,8 @@
     },
     {
       "term": "aperture",
-      "def": "The size of the opening the light comes through, written as an f number such as f/2.8. Confusingly, a smaller f number means a bigger opening and more light."
+      "def": "The width of the opening the light comes through. A telescope's is given in millimetres. On a camera lens it is set as an f number such as f/2.8, and confusingly a smaller f number means a bigger opening and more light.",
+      "link": "/gear/samyang-135mm-widefield-astrograph.html"
     },
     {
       "term": "apochromat",
@@ -58,22 +63,26 @@
       "aliases": [
         "apparent fields"
       ],
-      "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw."
+      "def": "How wide the view looks through an eyepiece, as opposed to how much sky it actually covers. A wide apparent field feels like looking through a window rather than a straw.",
+      "link": "/gear/celestron-2in-eyepiece-kit.html"
     },
     {
       "term": "apparent size",
-      "def": "How big something looks from Earth, rather than how big it really is. Measured as an angle, so the Moon and the Sun have almost the same apparent size even though one is vastly larger."
+      "def": "How big something looks from Earth, rather than how big it really is. Measured as an angle, so the Moon and the Sun have almost the same apparent size even though one is vastly larger.",
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "APS-C",
-      "def": "A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers."
+      "def": "A sensor size smaller than full frame and larger than the ones in most astronomy cameras. It sits in the middle of the range for how much sky it covers.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "arcsecond",
       "aliases": [
         "arcseconds"
       ],
-      "def": "A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across."
+      "def": "A very small angle, one 3600th of a degree. The full Moon is about 1800 arcseconds across.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "artefact",
@@ -82,14 +91,16 @@
         "artifact",
         "artifacts"
       ],
-      "def": "Something in a picture that was added by the camera or by the processing, rather than being there in the sky. A dark ring around a bright star is a common one."
+      "def": "Something in a picture that was added by the camera or by the processing, rather than being there in the sky. A dark ring around a bright star is a common one.",
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "ASCOM",
       "aliases": [
         "Alpaca"
       ],
-      "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another."
+      "def": "A shared language that lets astronomy software and hardware from different makers talk to each other, so a mount from one company works with software from another.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "ASIAir",
@@ -107,7 +118,7 @@
         "astronomical twilight"
       ],
       "def": "The part of the night when the Sun is far enough below the horizon that it adds no light to the sky at all. It starts well after sunset and is the only time the faintest things can be photographed properly.",
-      "link": "/articles/navigating-the-night-sky.html"
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "autofocus",
@@ -128,7 +139,8 @@
       "aliases": [
         "back illuminated"
       ],
-      "def": "A sensor built with its wiring behind the light-sensitive layer rather than in front of it, so less of the incoming light is blocked on the way in."
+      "def": "A sensor built with its wiring behind the light-sensitive layer rather than in front of it, so less of the incoming light is blocked on the way in.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "backfocus",
@@ -140,18 +152,21 @@
     },
     {
       "term": "background extraction",
-      "def": "The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target."
+      "def": "The processing step that measures that uneven glow across the frame and removes it, leaving an even sky behind the target.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "backlash",
-      "def": "The small amount of free play in a gear or a focuser before it starts moving. Measuring it once lets the software allow for it."
+      "def": "The small amount of free play in a gear or a focuser before it starts moving. Measuring it once lets the software allow for it.",
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "Bahtinov mask",
       "aliases": [
         "Bahtinov"
       ],
-      "def": "A slotted cover placed over the front of a telescope. It turns a bright star into crossed spikes that line up only when the focus is exactly right."
+      "def": "A slotted cover placed over the front of a telescope. It turns a bright star into crossed spikes that line up only when the focus is exactly right.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "bias frame",
@@ -163,7 +178,8 @@
     },
     {
       "term": "blooming",
-      "def": "When a star is so bright that its light overflows the pixels it lands on and spills into the ones next to it, so it looks swollen or streaked in the picture."
+      "def": "When a star is so bright that its light overflows the pixels it lands on and spills into the ones next to it, so it looks swollen or streaked in the picture.",
+      "link": "/share/flame-horsehead-nebulae.html"
     },
     {
       "term": "Bortle",
@@ -194,7 +210,8 @@
     },
     {
       "term": "celestial equator",
-      "def": "Earth's equator projected out onto the sky, exactly halfway between the two celestial poles."
+      "def": "Earth's equator projected out onto the sky, exactly halfway between the two celestial poles.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "celestial pole",
@@ -206,11 +223,13 @@
     },
     {
       "term": "celestial sphere",
-      "def": "A useful pretend picture: the sky as a giant ball with Earth at the centre and everything painted on the inside of it."
+      "def": "A useful pretend picture: the sky as a giant ball with Earth at the centre and everything painted on the inside of it.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "clipping",
-      "def": "When part of the picture is so bright it records as pure white, with no detail left in it. Nothing can bring that detail back afterwards."
+      "def": "When part of the picture is so bright it records as pure white, with no detail left in it. Nothing can bring that detail back afterwards.",
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "coma",
@@ -221,22 +240,26 @@
       ],
       "except": [
         "comets"
-      ]
+      ],
+      "link": "/gear/rokinon-18mm-samyang-14mm-ultrawides.html"
     },
     {
       "term": "continuum",
-      "def": "Light spread smoothly across every colour, which is how stars and galaxies shine. Glowing gas clouds do the opposite and emit at a few exact colours."
+      "def": "Light spread smoothly across every colour, which is how stars and galaxies shine. Glowing gas clouds do the opposite and emit at a few exact colours.",
+      "link": "/gear/optolong-l-quad-enhance-filter.html"
     },
     {
       "term": "counterweight",
       "aliases": [
         "counterweights"
       ],
-      "def": "The heavy block on the far end of a traditional mount's shaft. It balances the weight of the telescope so the motors are not fighting gravity."
+      "def": "The heavy block on the far end of a traditional mount's shaft. It balances the weight of the telescope so the motors are not fighting gravity.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "Crayford",
-      "def": "A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves."
+      "def": "A focuser design that grips the tube against a smooth rod rather than a toothed rack. It is smooth and it does not shift the image sideways as it moves.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "culmination",
@@ -245,7 +268,8 @@
         "culminates",
         "culminating"
       ],
-      "def": "The moment an object reaches its highest point in the sky before it starts back down. It is the best time to photograph something, because that is when you are looking through the least air."
+      "def": "The moment an object reaches its highest point in the sky before it starts back down. It is the best time to photograph something, because that is when you are looking through the least air.",
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "dark current",
@@ -271,25 +295,29 @@
     },
     {
       "term": "deconvolution",
-      "def": "A sharpening step that tries to undo the blurring added by the air and the optics, using the shape of the stars to work out how much blur there was."
+      "def": "A sharpening step that tries to undo the blurring added by the air and the optics, using the shape of the stars to work out how much blur there was.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "deep-sky",
       "aliases": [
         "deep sky"
       ],
-      "def": "Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures."
+      "def": "Anything beyond our own solar system: nebulae, galaxies and star clusters. Faint, far away, and the reason for long exposures.",
+      "link": "/gallery.html"
     },
     {
       "term": "dew",
-      "def": "Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off."
+      "def": "Water that condenses out of the air onto cold glass overnight and quietly fogs everything. A small heater strip or a cloth hood keeps it off.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "dew heater",
       "aliases": [
         "dew heaters"
       ],
-      "def": "A low-power heater strip wrapped round the front of the telescope. Holding the glass a degree or two above the air temperature is enough to stop dew ever forming on it."
+      "def": "A low-power heater strip wrapped round the front of the telescope. Holding the glass a degree or two above the air temperature is enough to stop dew ever forming on it.",
+      "link": "/gear/samyang-135mm-widefield-astrograph.html"
     },
     {
       "term": "diffraction spike",
@@ -304,14 +332,16 @@
         "dither",
         "dithered"
       ],
-      "def": "Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack."
+      "def": "Shifting the aim by a few pixels between frames on purpose. Faults in the sensor then land somewhere different each time and average away in the stack.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "doublet",
       "aliases": [
         "doublets"
       ],
-      "def": "A lens made of two pieces of glass. Cheaper and lighter than three, at the cost of slightly less perfect colour correction."
+      "def": "A lens made of two pieces of glass. Cheaper and lighter than three, at the cost of slightly less perfect colour correction.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "drizzle",
@@ -319,11 +349,13 @@
         "drizzling",
         "drizzled"
       ],
-      "def": "A stacking method that uses the tiny shifts between frames to recover a little more real detail than a single frame holds."
+      "def": "A stacking method that uses the tiny shifts between frames to recover a little more real detail than a single frame holds.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "dual gain",
-      "def": "A sensor with two amplifier settings built in. At the point it switches, the grain drops sharply, so one particular ISO is quieter than several lower ones."
+      "def": "A sensor with two amplifier settings built in. At the point it switches, the grain drops sharply, so one particular ISO is quieter than several lower ones.",
+      "link": "/gear/sony-a7iii-full-frame-camera.html"
     },
     {
       "term": "dual narrowband",
@@ -346,15 +378,18 @@
       "def": "ZWO's motorised focuser. A small motor takes the place of the focus knob, so focus can be set and corrected by software instead of by hand.",
       "except": [
         "zwo-eaf-electronic-focuser"
-      ]
+      ],
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "earthshine",
-      "def": "The faint glow on the unlit part of a crescent Moon. It is sunlight that has bounced off Earth and lit the Moon's night side."
+      "def": "The faint glow on the unlit part of a crescent Moon. It is sunlight that has bounced off Earth and lit the Moon's night side.",
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "ecliptic",
-      "def": "The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it."
+      "def": "The path the Sun traces across the sky over a year. The Moon and the planets are always found close to it.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "ED",
@@ -362,28 +397,32 @@
         "ED element",
         "ED glass"
       ],
-      "def": "Extra-low dispersion glass, a specific type of glass used in better lenses. It keeps the different colours of light travelling together, which is how a two-element lens gets close to the colour correction of a three-element one."
+      "def": "Extra-low dispersion glass, a specific type of glass used in better lenses. It keeps the different colours of light travelling together, which is how a two-element lens gets close to the colour correction of a three-element one.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "emission line",
       "aliases": [
         "emission lines"
       ],
-      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one, oxygen a blue-green one, and filters are built around their positions."
+      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one, oxygen a blue-green one, and filters are built around their positions.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "emission nebula",
       "aliases": [
         "emission nebulae"
       ],
-      "def": "A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for."
+      "def": "A cloud of gas that glows with its own light, in a few exact colours, because nearby stars are energising it. This is the kind that narrowband filters are built for.",
+      "link": "/share/cats-paw-nebula-ngc6334.html"
     },
     {
       "term": "EQ mode",
       "aliases": [
         "equatorial mode"
       ],
-      "def": "Tilting an ordinary up-down, left-right telescope so one axis lines up with Earth's axis. The view then stops slowly rotating, which allows much longer exposures."
+      "def": "Tilting an ordinary up-down, left-right telescope so one axis lines up with Earth's axis. The view then stops slowly rotating, which allows much longer exposures.",
+      "link": "/gear/zwo-tc20-tripod-th10-fluid-head.html"
     },
     {
       "term": "equatorial mount",
@@ -395,11 +434,13 @@
     },
     {
       "term": "extender",
-      "def": "The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky."
+      "def": "The opposite of a reducer: an extra lens that lengthens the focal length, so you get a closer view of a smaller patch of sky.",
+      "link": "/gear/askar-v-modular-apo-refractor.html"
     },
     {
       "term": "eye relief",
-      "def": "How far your eye can sit from an eyepiece and still see the whole view. Generous eye relief matters if you wear glasses."
+      "def": "How far your eye can sit from an eyepiece and still see the whole view. Generous eye relief matters if you wear glasses.",
+      "link": "/gear/celestron-2in-eyepiece-kit.html"
     },
     {
       "term": "eyepiece",
@@ -414,14 +455,16 @@
       "aliases": [
         "chromatic aberration"
       ],
-      "def": "A coloured fringe, usually purple, around bright stars. It happens when a lens cannot quite bring every colour of light to the same point of focus."
+      "def": "A coloured fringe, usually purple, around bright stars. It happens when a lens cannot quite bring every colour of light to the same point of focus.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "fast optics",
       "aliases": [
         "fast optic"
       ],
-      "def": "A telescope or lens with a small f number, which gathers light quickly. It is more demanding: focus is more critical and narrow filters work less well."
+      "def": "A telescope or lens with a small f number, which gathers light quickly. It is more demanding: focus is more critical and narrow filters work less well.",
+      "link": "/gear/samyang-135mm-widefield-astrograph.html"
     },
     {
       "term": "field flattener",
@@ -434,7 +477,8 @@
     },
     {
       "term": "field of view",
-      "def": "How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy."
+      "def": "How much sky fits inside one frame. A wide field shows a whole constellation, a narrow one a single small galaxy.",
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "filament",
@@ -468,7 +512,8 @@
         "f number",
         "f/number"
       ],
-      "def": "The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical."
+      "def": "The focal length divided by the width of the lens, written like f/5.8 and often called the f-number. Smaller numbers gather light faster, so you need less time on the target, but focus becomes more critical.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "focuser",
@@ -497,14 +542,16 @@
     },
     {
       "term": "goto",
-      "def": "A mount that will drive itself to any object you name, once it knows where it is pointing."
+      "def": "A mount that will drive itself to any object you name, once it knows where it is pointing.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "gradient",
       "aliases": [
         "gradients"
       ],
-      "def": "An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out."
+      "def": "An uneven brightness across the frame, usually because light pollution was worse on one side of the sky. Software measures it and takes it back out.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "GraXpert",
@@ -516,7 +563,8 @@
         "guide cameras",
         "guide sensor"
       ],
-      "def": "A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working."
+      "def": "A small second camera that watches one star and reports any drift, so the mount can be corrected while the main camera keeps working.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "guidescope",
@@ -524,14 +572,16 @@
         "guide scope",
         "guidescopes"
       ],
-      "def": "The small telescope the guide camera looks through, riding alongside the main one."
+      "def": "The small telescope the guide camera looks through, riding alongside the main one.",
+      "link": "/articles/main-rig-tour.html"
     },
     {
       "term": "guiding",
       "aliases": [
         "autoguiding"
       ],
-      "def": "A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures."
+      "def": "A second small camera watches one star and sends tiny corrections to the mount, keeping the target locked in place over long exposures.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "harmonic drive",
@@ -549,11 +599,13 @@
         "H II region",
         "H II regions"
       ],
-      "def": "A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. In other galaxies they show up as small pink knots along the spiral arms."
+      "def": "A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. In other galaxies they show up as small pink knots along the spiral arms.",
+      "link": "/share/triangulum-galaxy-m33.html"
     },
     {
       "term": "histogram",
-      "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right."
+      "def": "A chart of how many pixels in the picture are dark, middling and bright. It tells you at a glance whether an exposure is about right.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "hot pixel",
@@ -562,7 +614,8 @@
         "stuck pixel",
         "stuck pixels"
       ],
-      "def": "A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later."
+      "def": "A pixel that reads bright whether or not any light reached it. Dark frames record where they are so they can be taken out later.",
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "Hubble palette",
@@ -575,36 +628,42 @@
         "H-alpha",
         "Ha"
       ],
-      "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud."
+      "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "IC",
       "aliases": [
         "Index Catalogue"
       ],
-      "def": "The Index Catalogue, two additions to the NGC published in 1895 and 1908 that listed more than 5,000 extra objects. IC 443 means number 443 on that list."
+      "def": "The Index Catalogue, two additions to the NGC published in 1895 and 1908 that listed more than 5,000 extra objects. IC 443 means number 443 on that list.",
+      "link": "/share/jellyfish-nebula-ic443.html"
     },
     {
       "term": "imaging train",
-      "def": "The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter."
+      "def": "The chain of parts between the telescope and the sensor: flattener, spacers, filter drawer, camera. Every one of them takes up length, which is why the order and the spacing matter.",
+      "link": "/gear/svbony-filter-drawer.html"
     },
     {
       "term": "integration",
       "def": "The total time of every frame added together. Three hours of integration might be one hundred and eighty frames of one minute.",
       "except": [
         "asiair-astrophotography-control"
-      ]
+      ],
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "intervalometer",
       "aliases": [
         "intervalometers"
       ],
-      "def": "A timer that presses the camera's shutter over and over on its own, so you can take hundreds of frames without touching it. Many cameras have one built into the menus, and if yours does not, a small plug-in remote does the same job."
+      "def": "A timer that presses the camera's shutter over and over on its own, so you can take hundreds of frames without touching it. Many cameras have one built into the menus, and if yours does not, a small plug-in remote does the same job.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "inverter",
-      "def": "The part of a power station that turns its battery power into mains power for a normal plug. It uses some power itself just by being switched on."
+      "def": "The part of a power station that turns its battery power into mains power for a normal plug. It uses some power itself just by being switched on.",
+      "link": "/gear/ecoflow-river-2.html"
     },
     {
       "term": "ionised",
@@ -614,11 +673,13 @@
         "ionized",
         "ionizing"
       ],
-      "def": "Gas whose atoms have had an electron knocked off by strong light from hot stars. As the electrons are caught again the gas glows, which is what makes many nebulae shine."
+      "def": "Gas whose atoms have had an electron knocked off by strong light from hot stars. As the electrons are caught again the gas glows, which is what makes many nebulae shine.",
+      "link": "/share/orion-nebula-m42.html"
     },
     {
       "term": "ISO",
-      "def": "How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky."
+      "def": "How strongly the camera amplifies the light it has collected. A higher number makes a dark scene look brighter, but it also makes the picture grainier, so you use the lowest number that still shows the sky.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "LiFePO4",
@@ -636,26 +697,31 @@
     },
     {
       "term": "linear",
-      "def": "How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched."
+      "def": "How an image comes out of stacking, with the numbers still in proportion to the light that arrived. It looks almost black on screen until it is stretched.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "live view",
-      "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp."
+      "def": "The camera's rear screen showing what the lens is pointed at right now. You can magnify it to check that a star is properly sharp.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "lucky imaging",
-      "def": "Recording hundreds or thousands of very short frames, then keeping only the sharpest ones and averaging them. It works because the air is not equally unsteady every moment."
+      "def": "Recording hundreds or thousands of very short frames, then keeping only the sharpest ones and averaging them. It works because the air is not equally unsteady every moment.",
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "magnification",
       "aliases": [
         "magnifications"
       ],
-      "def": "How much bigger a telescope makes something look. It is the telescope's focal length divided by the eyepiece's focal length."
+      "def": "How much bigger a telescope makes something look. It is the telescope's focal length divided by the eyepiece's focal length.",
+      "link": "/gear/celestron-2in-eyepiece-kit.html"
     },
     {
       "term": "magnitude",
-      "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times."
+      "def": "The brightness scale for stars, and it runs backwards. Smaller numbers are brighter, and each step of one is about two and a half times.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "maria",
@@ -664,30 +730,34 @@
     },
     {
       "term": "meridian",
-      "def": "The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line."
+      "def": "The imaginary line running from due north, straight up over your head, and down to due south. Everything is at its highest as it crosses this line.",
+      "link": "/articles/navigating-the-night-sky.html"
     },
     {
       "term": "meridian flip",
       "def": "As a target crosses the meridian, a tracking mount has to swing the telescope over to the other side so the tube does not collide with the tripod. Software handles it and then finds the target again.",
-      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
+      "link": "/articles/main-rig-tour.html"
     },
     {
       "term": "Messier",
       "aliases": [
         "Messier catalogue"
       ],
-      "def": "A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list."
+      "def": "A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list.",
+      "link": "/share/orion-nebula-m42.html"
     },
     {
       "term": "micron",
       "aliases": [
         "microns"
       ],
-      "def": "A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter."
+      "def": "A thousandth of a millimetre. Sensor pixels and focus tolerances are both measured in them, and both are small enough that a few tens of microns matter.",
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "Milky Way core",
-      "def": "The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer."
+      "def": "The bright, crowded middle of our own galaxy, seen edge on. From the northern half of the world it sits low in the south in summer.",
+      "link": "/share/the-milky-way.html"
     },
     {
       "term": "molecular cloud",
@@ -695,14 +765,16 @@
         "molecular clouds",
         "molecular gas"
       ],
-      "def": "A cold, dense cloud of gas and dust where the atoms have joined up into molecules. These clouds are where new stars are born."
+      "def": "A cold, dense cloud of gas and dust where the atoms have joined up into molecules. These clouds are where new stars are born.",
+      "link": "/share/eagle-nebula-m16.html"
     },
     {
       "term": "mosaic",
       "aliases": [
         "mosaics"
       ],
-      "def": "Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view."
+      "def": "Several overlapping frames joined together into one much wider picture, for targets too big to fit in a single view.",
+      "link": "/articles/seestar-s30-pro-tour.html"
     },
     {
       "term": "nanometre",
@@ -711,7 +783,8 @@
         "nanometer",
         "nm"
       ],
-      "def": "A billionth of a metre, the unit colours of light are measured in. A 7nm filter opens a window seven of those wide."
+      "def": "A billionth of a metre, the unit colours of light are measured in. A 7nm filter opens a window seven of those wide.",
+      "link": "/gear/optolong-l-extreme-filter.html"
     },
     {
       "term": "narrowband",
@@ -720,44 +793,52 @@
     },
     {
       "term": "nebulosity",
-      "def": "The faint glowing gas itself, as opposed to the stars in front of it. Fainter than it looks in a finished picture, which is why it takes hours to record."
+      "def": "The faint glowing gas itself, as opposed to the stars in front of it. Fainter than it looks in a finished picture, which is why it takes hours to record.",
+      "link": "/share/pleiades-m45.html"
     },
     {
       "term": "neutral density",
-      "def": "A filter that dims everything evenly without changing the colours. On the Moon it simply makes the view comfortable to look at."
+      "def": "A filter that dims everything evenly without changing the colours. On the Moon it simply makes the view comfortable to look at.",
+      "link": "/gear/celestron-2in-eyepiece-kit.html"
     },
     {
       "term": "NGC",
       "aliases": [
         "New General Catalogue"
       ],
-      "def": "The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list."
+      "def": "The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.",
+      "link": "/share/rosette-nebula-ngc2244.html"
     },
     {
       "term": "NINA",
-      "def": "A free Windows program that runs an imaging session from a laptop, controlling the mount, camera and focuser through the night."
+      "def": "A free Windows program that runs an imaging session from a laptop, controlling the mount, camera and focuser through the night.",
+      "link": "/articles/asiair-astrophotography-control.html"
     },
     {
       "term": "NPF rule",
-      "def": "A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule."
+      "def": "A formula for the longest exposure you can use before stars stop being points and start being short lines. It takes account of the lens, the aperture and the size of the pixels, so it is stricter than the older 500 rule.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "objective",
       "aliases": [
         "objectives"
       ],
-      "def": "The main lens at the front of a refractor. Its width is the telescope's aperture, and it is the part that does the real work."
+      "def": "The main lens at the front of a refractor. Its width is the telescope's aperture, and it is the part that does the real work.",
+      "link": "/gear/askar-v-modular-apo-refractor.html"
     },
     {
       "term": "OD",
-      "def": "Optical density, the measure of how hard a filter blocks. Each step of one blocks ten times more, so OD5 stops all but about one part in a hundred thousand."
+      "def": "Optical density, the measure of how hard a filter blocks. Each step of one blocks ten times more, so OD5 stops all but about one part in a hundred thousand.",
+      "link": "/gear/svbony-sv220-3nm-filter.html"
     },
     {
       "term": "OIII",
       "aliases": [
         "O III"
       ],
-      "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around."
+      "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "open cluster",
@@ -766,7 +847,8 @@
         "open star cluster",
         "open star clusters"
       ],
-      "def": "A loose group of a few dozen to a few thousand young stars that were born together from the same cloud. Over millions of years they slowly drift apart."
+      "def": "A loose group of a few dozen to a few thousand young stars that were born together from the same cloud. Over millions of years they slowly drift apart.",
+      "link": "/share/little-beehive-cluster-m41.html"
     },
     {
       "term": "passband",
@@ -779,11 +861,13 @@
     },
     {
       "term": "payload",
-      "def": "The weight a mount is built to carry. Loading one near its limit works, but everything about it behaves worse than it does at half."
+      "def": "The weight a mount is built to carry. Loading one near its limit works, but everything about it behaves worse than it does at half.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "periodic error",
-      "def": "A small tracking error that repeats every turn of the mount's gears, because no gear is perfectly round. Guiding corrects it."
+      "def": "A small tracking error that repeats every turn of the mount's gears, because no gear is perfectly round. Guiding corrects it.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "planetarium software",
@@ -791,7 +875,8 @@
         "planetarium app",
         "planetarium program"
       ],
-      "def": "A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside."
+      "def": "A program that draws the sky as it appears from a chosen place at a chosen time, and lets you run time forwards and backwards. Used for working out what is visible before going outside.",
+      "link": "/articles/how-i-plan-every-astrophotography-session-using-stellarium.html"
     },
     {
       "term": "plate solving",
@@ -826,7 +911,8 @@
     },
     {
       "term": "quantum efficiency",
-      "def": "How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost."
+      "def": "How much of the light landing on a sensor actually gets recorded. Eighty per cent means four photons in five are counted and the rest are lost.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "radiant",
@@ -835,25 +921,29 @@
     },
     {
       "term": "RAW",
-      "def": "The camera's unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture."
+      "def": "The camera's unprocessed file, holding everything the sensor recorded. A JPEG throws most of that away, and you need it when you come to brighten a very dark picture.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "read noise",
-      "def": "A small amount of unavoidable grain added each time a frame is read off the sensor. Fewer, longer frames collect it fewer times."
+      "def": "A small amount of unavoidable grain added each time a frame is read off the sensor. Fewer, longer frames collect it fewer times.",
+      "link": "/gear/zwo-tc20-tripod-th10-fluid-head.html"
     },
     {
       "term": "reducer",
       "aliases": [
         "reducers"
       ],
-      "def": "An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time."
+      "def": "An extra lens that shortens the focal length, giving a wider view and gathering light faster. The picture covers more sky and needs less time.",
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "reflection nebula",
       "aliases": [
         "reflection nebulae"
       ],
-      "def": "A cloud of dust that has no light of its own and simply reflects the light of nearby stars, usually a soft blue. A narrowband filter blocks it almost completely."
+      "def": "A cloud of dust that has no light of its own and simply reflects the light of nearby stars, usually a soft blue. A narrowband filter blocks it almost completely.",
+      "link": "/share/pleiades-m45.html"
     },
     {
       "term": "refractor",
@@ -865,11 +955,13 @@
     },
     {
       "term": "registration",
-      "def": "Lining every frame up on the same stars before stacking, so nothing is blurred by the small drifts between them."
+      "def": "Lining every frame up on the same stars before stacking, so nothing is blurred by the small drifts between them.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "remote release",
-      "def": "A cable or wireless button that fires the shutter for you. Pressing the camera itself shakes it, and at these exposure lengths that is enough to smear the stars."
+      "def": "A cable or wireless button that fires the shutter for you. Pressing the camera itself shakes it, and at these exposure lengths that is enough to smear the stars.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "right ascension",
@@ -884,7 +976,8 @@
       "def": "How steady the air is. Moving air makes stars twinkle and blurs fine detail on the Moon, the Sun and the planets. Good seeing means steady air and sharper pictures.",
       "avoid": [
         "we are seeing"
-      ]
+      ],
+      "link": "/articles/photograph-the-moon.html"
     },
     {
       "term": "shock front",
@@ -899,28 +992,32 @@
     },
     {
       "term": "shutter",
-      "def": "How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved."
+      "def": "How long the camera collects light for one frame. Twenty seconds means the sensor is gathering light for twenty seconds before the frame is saved.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "sidereal rate",
       "aliases": [
         "sidereal"
       ],
-      "def": "The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate."
+      "def": "The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate.",
+      "link": "/gear/teseek-nano-light-adventurer-star-tracker.html"
     },
     {
       "term": "Siril",
       "def": "A free, open source program for turning a folder of raw frames into a finished astrophotograph. It does the stacking and most of the processing.",
       "except": [
         "siril-post-processing-guide"
-      ]
+      ],
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "skyglow",
       "aliases": [
         "sky glow"
       ],
-      "def": "The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black."
+      "def": "The glow of that scattered artificial light coming back down at you. It is what makes a city sky look washed out rather than black.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "slew",
@@ -929,7 +1026,8 @@
         "slewing",
         "slewed"
       ],
-      "def": "The mount moving quickly from one part of the sky to another."
+      "def": "The mount moving quickly from one part of the sky to another.",
+      "link": "/articles/main-rig-tour.html"
     },
     {
       "term": "smart telescope",
@@ -944,19 +1042,23 @@
       "aliases": [
         "solar filters"
       ],
-      "def": "A filter that covers the front of a telescope, lens or binoculars and blocks almost all of the Sun's light and heat, so the Sun can be viewed or photographed safely."
+      "def": "A filter that covers the front of a telescope, lens or binoculars and blocks almost all of the Sun's light and heat, so the Sun can be viewed or photographed safely.",
+      "link": "/share/the-sun.html"
     },
     {
       "term": "SPCC",
-      "def": "Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste."
+      "def": "Spectrophotometric colour calibration. It compares the stars in your picture against a catalogue of real measured star colours, and sets the colour balance from that rather than from taste.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "spectrum",
-      "def": "The full spread of colours light can be, from deep blue through to deep red and beyond at both ends."
+      "def": "The full spread of colours light can be, from deep blue through to deep red and beyond at both ends.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "SQM",
-      "def": "Sky quality meter, a proper measurement of how bright the night sky is. Higher numbers mean a darker sky."
+      "def": "Sky quality meter, a proper measurement of how bright the night sky is. Higher numbers mean a darker sky.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "stacking",
@@ -972,7 +1074,8 @@
         "star trackers",
         "tracker"
       ],
-      "def": "A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens."
+      "def": "A small motorised mount that turns a camera slowly to follow the stars. Much lighter than a full mount and enough for a camera lens.",
+      "link": "/gear/teseek-nano-light-adventurer-star-tracker.html"
     },
     {
       "term": "star trail",
@@ -984,7 +1087,8 @@
     },
     {
       "term": "StarNet",
-      "def": "A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together."
+      "def": "A tool that separates the stars from everything else in the picture, so the nebula and the stars can be worked on separately and put back together.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "Stellarium",
@@ -1003,15 +1107,18 @@
         "stopping down",
         "stopped down"
       ],
-      "def": "Making the lens opening smaller, from f/2 to f/2.8 for instance. The corners of the picture get tidier and less light comes in."
+      "def": "Making the lens opening smaller, from f/2 to f/2.8 for instance. The corners of the picture get tidier and less light comes in.",
+      "link": "/gear/samyang-135mm-widefield-astrograph.html"
     },
     {
       "term": "strain wave",
-      "def": "The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package."
+      "def": "The gearing inside a harmonic drive. A flexible toothed cup is squeezed into an outer ring, which gives a huge reduction in a very small package.",
+      "link": "/gear/juwei-14-harmonic-equatorial-mount.html"
     },
     {
       "term": "Strata",
-      "def": "A Mac app for stacking videos of the Sun, the Moon and the planets. It grades every frame by sharpness, keeps the best ones and sharpens the result."
+      "def": "A Mac app for stacking videos of the Sun, the Moon and the planets. It grades every frame by sharpness, keeps the best ones and sharpens the result.",
+      "link": "/share/the-sun.html"
     },
     {
       "term": "stretch",
@@ -1037,7 +1144,8 @@
         "sub-exposures",
         "sub length"
       ],
-      "def": "One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data."
+      "def": "One single exposure out of the many that get stacked together. Sixty subs of one minute each make one hour of data.",
+      "link": "/articles/siril-post-processing-guide.html"
     },
     {
       "term": "supernova",
@@ -1059,7 +1167,8 @@
       "aliases": [
         "thermoelectric cooling"
       ],
-      "def": "Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise."
+      "def": "Electrically driven cooling with no moving parts, used to hold a camera sensor well below the air temperature so it collects less heat noise.",
+      "link": "/gear/zwo-asi585mc-air-camera.html"
     },
     {
       "term": "tidal stream",
@@ -1068,7 +1177,8 @@
         "tidal tail",
         "tidal tails"
       ],
-      "def": "A long, faint trail of stars pulled out of a galaxy by the gravity of a neighbour that came too close."
+      "def": "A long, faint trail of stars pulled out of a galaxy by the gravity of a neighbour that came too close.",
+      "link": "/share/leo-triplet-m65-m66-ngc3628.html"
     },
     {
       "term": "timelapse",
@@ -1076,18 +1186,21 @@
         "timelapses",
         "time-lapse"
       ],
-      "def": "Hundreds of still frames played back one after another as a short video, so hours of sky movement pass in seconds."
+      "def": "Hundreds of still frames played back one after another as a short video, so hours of sky movement pass in seconds.",
+      "link": "/share/star-trails-videos.html"
     },
     {
       "term": "tracking",
-      "def": "The mount turning slowly to cancel out Earth's rotation, so a star stays in the same spot on the sensor instead of drifting into a line."
+      "def": "The mount turning slowly to cancel out Earth's rotation, so a star stays in the same spot on the sensor instead of drifting into a line.",
+      "link": "/articles/main-rig-tour.html"
     },
     {
       "term": "transmission",
       "aliases": [
         "transmittance"
       ],
-      "def": "How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for."
+      "def": "How much of the light a filter is meant to pass actually gets through. Ninety per cent transmission means a tenth is lost even in the window it is designed for.",
+      "link": "/gear/optolong-l-quad-enhance-filter.html"
     },
     {
       "term": "triplet",
@@ -1097,7 +1210,8 @@
       "def": "A lens made of three pieces of glass. More expensive, but it brings the colours together more completely than a doublet.",
       "avoid": [
         "Leo Triplet"
-      ]
+      ],
+      "link": "/gear/skywatcher-evostar-72ed-refractor.html"
     },
     {
       "term": "UV/IR",
@@ -1105,29 +1219,34 @@
     },
     {
       "term": "V-curve",
-      "def": "Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus."
+      "def": "Plot how big the stars look against where the focuser is, and you get a V shape. The bottom of the V is perfect focus.",
+      "link": "/gear/zwo-eaf-electronic-focuser.html"
     },
     {
       "term": "vignetting",
       "aliases": [
         "vignette"
       ],
-      "def": "The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor."
+      "def": "The corners of the frame coming out darker than the middle, because less light reaches the edges of the sensor.",
+      "link": "/articles/calibration-frames-darks-flats-biases.html"
     },
     {
       "term": "wavelength",
       "aliases": [
         "wavelengths"
       ],
-      "def": "What colour a piece of light is, written as a number in nanometres. Around 400 is deep blue, around 700 is deep red."
+      "def": "What colour a piece of light is, written as a number in nanometres. Around 400 is deep blue, around 700 is deep red.",
+      "link": "/gear/optolong-l-extreme-filter.html"
     },
     {
       "term": "white balance",
-      "def": "The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other."
+      "def": "The setting that decides whether the picture looks warm and orange or cool and blue. Setting it by hand keeps hundreds of night frames matching each other.",
+      "link": "/articles/photograph-milky-way-camera.html"
     },
     {
       "term": "zenith",
-      "def": "The point straight up above your head."
+      "def": "The point straight up above your head.",
+      "link": "/articles/navigating-the-night-sky.html"
     }
   ]
 }
