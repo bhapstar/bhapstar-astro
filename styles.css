@@ -7004,19 +7004,75 @@ html[data-theme="light"] .page-starword .sw-toast{
   flex-shrink: 0;
 }
 
+/* ── Board look ──────────────────────────────────────────
+   Covered and cleared cells need to look clearly different in both
+   themes. Every colour below comes from a token, set once per theme:
+     --cover-*   covered cells read as raised tiles: a firm fill,
+                 visible border, top highlight and a small drop shadow
+     --open-*    cleared cells get a hairline border in contrast to
+                 the page, so a pale or dark patch of picture still
+                 has a clear edge
+     --chip-*    each digit sits on a small solid chip
+     --tile-bright / --tile-sat  picture tone (1 = as photographed)
+     --tile-halo the hard outline drawn around digits
+   Nothing here needs a JS change. */
+body.page-sweeper {
+  --cover-top:       rgba(167,139,250,0.26);
+  --cover-bot:       rgba(124,92,246,0.16);
+  --cover-hover-top: rgba(167,139,250,0.38);
+  --cover-hover-bot: rgba(124,92,246,0.26);
+  --cover-line:      rgba(167,139,250,0.38);
+  --cover-flag-line: rgba(196,181,253,0.72);
+  --cover-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 1px 2px rgba(0,0,0,0.55);
+  --open-bg:   #050414;
+  --open-line: rgba(220,214,255,0.26);
+  --chip-bg:   rgba(5,4,20,0.9);
+  --chip-shadow:
+    0 0 0 1px rgba(220,214,255,0.22),
+    0 1px 3px rgba(0,0,0,0.6);
+  --tile-bright: 0.9;
+  --tile-sat:    0.92;
+  --tile-halo:   #050414;
+}
+html[data-theme="light"] body.page-sweeper {
+  --cover-top:       #e6e0fc;
+  --cover-bot:       #d5cbf6;
+  --cover-hover-top: #efebfe;
+  --cover-hover-bot: #dfd7f9;
+  --cover-line:      rgba(124,92,246,0.36);
+  --cover-flag-line: rgba(124,92,246,0.62);
+  --cover-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    0 1px 2px rgba(60,50,110,0.18);
+  --open-bg:   #ffffff;
+  --open-line: rgba(26,23,48,0.32);
+  --chip-bg:   rgba(255,255,255,0.95);
+  --chip-shadow:
+    0 0 0 1px rgba(26,23,48,0.12),
+    0 1px 3px rgba(26,23,48,0.32);
+  --tile-bright: 0.97;
+  --tile-sat:    0.92;
+  --tile-halo:   #ffffff;
+}
+
 /* Unrevealed cell */
 .cell.hidden {
-  background: rgba(167,139,250,0.14);
-  border: 1px solid rgba(167,139,250,0.25);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, var(--cover-top) 0%, var(--cover-bot) 100%);
+  border: 1px solid var(--cover-line);
+  box-shadow: var(--cover-shadow);
 }
-.cell.hidden:hover { background: rgba(167,139,250,0.24); }
+.cell.hidden:hover {
+  background: linear-gradient(180deg, var(--cover-hover-top) 0%, var(--cover-hover-bot) 100%);
+}
 .cell.hidden:active { transform: scale(0.93); }
 
 /* Flagged cell */
 .cell.flagged {
-  background: rgba(167,139,250,0.14);
-  border: 1px solid rgba(167,139,250,0.5);
+  background: linear-gradient(180deg, var(--cover-top) 0%, var(--cover-bot) 100%);
+  border: 1px solid var(--cover-flag-line);
+  box-shadow: var(--cover-shadow);
 }
 .cell.flagged::after {
   content: '🚩';
@@ -7031,8 +7087,8 @@ html[data-theme="light"] .page-starword .sw-toast{
 
 /* Revealed — safe */
 .cell.revealed {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: var(--open-bg);
+  border: 1px solid var(--open-line);
   cursor: default;
   /* Cascade pop — each cell's delay (--d) is set from its ring
      distance to the click, so a cleared region ripples open. */
@@ -7045,36 +7101,6 @@ html[data-theme="light"] .page-starword .sw-toast{
   100% { transform: scale(1);    opacity: 1; }
 }
 
-/* ── Tile legibility tuning ──────────────────────────────
-   Deep-sky thumbnails are bright and high-contrast, which made the
-   digits hard to read. Three dials, all theme-aware, live here:
-     --tile-bright / --tile-sat  calm the picture down evenly across
-       every tile so the assembled image stays continuous
-     --tile-scrim-*              the disc sitting behind each digit
-     --tile-halo                 the hard outline drawn around digits
-   Raise --tile-bright toward 1 for a punchier picture, drop it for
-   easier reading. Nothing here needs a JS change. */
-body.page-sweeper {
-  --tile-bright: 0.72;
-  --tile-sat:    0.80;
-  --tile-scrim-core: rgba(5,4,20,0.92);
-  --tile-scrim-mid:  rgba(5,4,20,0.74);
-  --tile-scrim-end:  rgba(5,4,20,0);
-  --tile-halo: #050414;
-}
-html[data-theme="light"] body.page-sweeper {
-  /* Light theme: keep the pictures close to their real tones. Washing
-     them out made pale tiles look like covered cells on the light page.
-     Digits sit on a small solid chip instead (see "Light theme: board"
-     below), so the picture no longer has to be lightened for them. */
-  --tile-bright: 0.97;
-  --tile-sat:    0.92;
-  --tile-scrim-core: rgba(255,255,255,0.94);
-  --tile-scrim-mid:  rgba(255,255,255,0.78);
-  --tile-scrim-end:  rgba(255,255,255,0);
-  --tile-halo: #ffffff;
-}
-
 /* Revealed image tile */
 .cell.revealed .tile-img {
   position: absolute;
@@ -7085,21 +7111,19 @@ html[data-theme="light"] body.page-sweeper {
   filter: saturate(var(--tile-sat, 1)) brightness(var(--tile-bright, 1)) contrast(0.92);
 }
 
-/* Legibility scrim — only on numbered tiles. Sits above the image
-   (z-index 1) and below the number (z-index 2). A tight radial disc
-   keeps it near-solid directly behind the digit and clear well before
-   the tile edge, so the assembled picture stays continuous. Stops are
-   percentages, so it scales with the cell size on small screens. */
+/* Digit chip, only on numbered tiles. Sits above the image
+   (z-index 1) and below the number (z-index 2). The inset is a
+   percentage, so it scales with the cell size on small screens and
+   leaves the tile edges clear for the picture. */
 .cell.revealed.has-num::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 16%;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(circle at center,
-    var(--tile-scrim-core) 0%,
-    var(--tile-scrim-mid)  34%,
-    var(--tile-scrim-end)  76%);
+  border-radius: 50%;
+  background: var(--chip-bg);
+  box-shadow: var(--chip-shadow);
 }
 
 /* Number overlay on image. The outline is drawn with four hard
@@ -7142,43 +7166,6 @@ html[data-theme="light"] .cell.revealed .n5 { color: #b45309; }
 html[data-theme="light"] .cell.revealed .n6 { color: #0e7490; }
 html[data-theme="light"] .cell.revealed .n7 { color: #a21caf; }
 html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
-
-/* ── Light theme: board ──────────────────────────────────
-   On the pale page, covered and cleared cells were both light and
-   both edgeless, so the cleared area was hard to make out. Three
-   changes, light theme only (dark theme is untouched):
-     1. Covered cells read as raised tiles: firmer lavender fill,
-        visible border, top highlight and a small drop shadow.
-     2. Cleared cells get a dark hairline border, so even a white
-        or beige patch of picture has a clear edge.
-     3. Digits sit on a small solid white chip instead of a wide soft
-        glow, which read as a bright blob on dark pictures. */
-html[data-theme="light"] .page-sweeper .cell.hidden,
-html[data-theme="light"] .page-sweeper .cell.flagged {
-  background: linear-gradient(180deg, #e6e0fc 0%, #d5cbf6 100%);
-  border: 1px solid rgba(124,92,246,0.36);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.8),
-    0 1px 2px rgba(60,50,110,0.18);
-}
-html[data-theme="light"] .page-sweeper .cell.hidden:hover {
-  background: linear-gradient(180deg, #efebfe 0%, #dfd7f9 100%);
-}
-html[data-theme="light"] .page-sweeper .cell.flagged {
-  border-color: rgba(124,92,246,0.62);
-}
-html[data-theme="light"] .page-sweeper .cell.revealed {
-  background: #ffffff;
-  border-color: rgba(26,23,48,0.32);
-}
-html[data-theme="light"] .page-sweeper .cell.revealed.has-num::after {
-  inset: 16%;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.95);
-  box-shadow:
-    0 0 0 1px rgba(26,23,48,0.12),
-    0 1px 3px rgba(26,23,48,0.32);
-}
 
 /* Mine cell */
 .cell.mine-hit {
