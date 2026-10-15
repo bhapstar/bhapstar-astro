@@ -247,6 +247,146 @@ const HIDE_FIELD_NOTES = true;
 
 
     /* ─────────────────────────────────────────
+       BACKGROUND MUSIC (footer button)
+       - Plays sounds/slideshow-music.mp3 on a loop, off by default
+       - On/off and the play position are kept in sessionStorage, so the
+         music carries on from the same point on the next page of the
+         visit. A page change still means a short gap, because every
+         page load stops sound in the browser.
+       - Browsers only allow sound after a tap. If the next page is not
+         allowed to start it, it starts on the first tap anywhere.
+       - The file is only downloaded once someone turns the music on.
+       - On the slideshow the button drives the slideshow's own player
+         (via bhapstar:music-* events) instead, so only one plays.
+    ───────────────────────────────────────── */
+    (function initSiteMusic(){
+      const btn = document.querySelector('.footer-music');
+      if (!btn || btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+
+      const SRC = '/sounds/slideshow-music.mp3';
+      const VOL = 0.35;
+      const KEY_ON  = 'bhapstar:music';
+      const KEY_POS = 'bhapstar:musicPos';
+      const ss = {
+        get(k){ try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+        set(k, v){ try { sessionStorage.setItem(k, v); } catch (e) {} }
+      };
+
+      function draw(on){
+        btn.classList.toggle('is-on', on);
+        btn.setAttribute('aria-pressed', String(on));
+        btn.setAttribute('aria-label', on ? 'Turn background music off' : 'Play background music');
+      }
+
+      // Slideshow page: hand the button to the slideshow's player
+      if (document.body.classList.contains('page-slideshow')) {
+        btn.hidden = true;
+        document.addEventListener('bhapstar:music-state', (e) => {
+          btn.hidden = !e.detail.available;
+          draw(!!e.detail.on);
+        });
+        btn.addEventListener('click', () => {
+          document.dispatchEvent(new CustomEvent('bhapstar:music-toggle'));
+        });
+        document.dispatchEvent(new CustomEvent('bhapstar:music-query'));
+        return;
+      }
+
+      const audio = new Audio();
+      audio.loop = true;
+      audio.preload = 'none';
+      let wanted = ss.get(KEY_ON) === '1';
+      let fadeRaf = null, waitingTap = false, lastSave = 0;
+
+      function fadeTo(target, ms, done){
+        cancelAnimationFrame(fadeRaf);
+        const from = audio.volume, t0 = performance.now();
+        (function step(now){
+          const k = Math.min(1, ((now || t0) - t0) / ms);
+          try { audio.volume = from + (target - from) * k; } catch (e) {}
+          if (k < 1) fadeRaf = requestAnimationFrame(step);
+          else if (done) done();
+        })(t0);
+      }
+
+      function savePos(){
+        if (audio.src && isFinite(audio.currentTime)) ss.set(KEY_POS, String(audio.currentTime));
+      }
+
+      function load(){
+        if (audio.src) return;
+        audio.src = SRC;
+        const pos = parseFloat(ss.get(KEY_POS));
+        if (pos > 0) {
+          audio.addEventListener('loadedmetadata', () => {
+            try { audio.currentTime = pos % (audio.duration || Infinity); } catch (e) {}
+          }, { once: true });
+        }
+      }
+
+      function waitForTap(){
+        if (waitingTap) return;
+        waitingTap = true;
+        const go = (e) => {
+          if (e && btn.contains(e.target)) return;   // the button's own click handles it
+          document.removeEventListener('pointerdown', go, true);
+          document.removeEventListener('keydown', go, true);
+          waitingTap = false;
+          start();
+        };
+        document.addEventListener('pointerdown', go, true);
+        document.addEventListener('keydown', go, true);
+      }
+
+      function start(){
+        if (!wanted || document.hidden) return;
+        load();
+        if (!audio.paused) { fadeTo(VOL, 600); return; }
+        try { audio.volume = 0; } catch (e) {}
+        const p = audio.play();
+        if (p && p.then) p.then(() => fadeTo(VOL, 1500)).catch((err) => {
+          if (err && err.name === 'NotAllowedError') waitForTap();
+        });
+        else fadeTo(VOL, 1500);
+      }
+
+      function stop(){
+        savePos();
+        if (audio.paused) return;
+        fadeTo(0, 400, () => audio.pause());
+      }
+
+      btn.addEventListener('click', () => {
+        // Turned on but held back by the browser: this tap starts it
+        if (wanted && audio.paused) { start(); return; }
+        wanted = !wanted;
+        ss.set(KEY_ON, wanted ? '1' : '0');
+        draw(wanted);
+        if (wanted) start(); else stop();
+      });
+
+      audio.addEventListener('error', () => {
+        // No music file: hide the button rather than leave a dead control
+        if (!audio.src) return;
+        wanted = false; ss.set(KEY_ON, '0'); draw(false); btn.hidden = true;
+      });
+      audio.addEventListener('timeupdate', () => {
+        const now = performance.now();
+        if (now - lastSave > 2000) { lastSave = now; savePos(); }
+      });
+      window.addEventListener('pagehide', savePos);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(); else start();
+      });
+      window.addEventListener('pageshow', (e) => { if (e.persisted) start(); });
+
+      draw(wanted);
+      start();
+    })();
+
+
+    /* ─────────────────────────────────────────
        THEME TOGGLE (button injected with the header)
        - Flips html[data-theme] between dark and light
        - Persists the choice to localStorage

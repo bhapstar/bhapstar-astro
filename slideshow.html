@@ -702,7 +702,31 @@
     fadeTo(0, 450, () => music.pause());
   }
 
+  // Keeps the footer music button in step with this player
+  function announce() {
+    document.dispatchEvent(new CustomEvent('bhapstar:music-state',
+      { detail: { available: musicOk, on: musicOk && !muted } }));
+  }
+  document.addEventListener('bhapstar:music-query', announce);
+  document.addEventListener('bhapstar:music-toggle', () => soundBtn.click());
+
+  // Shares its place in the track with the site-wide footer player, so the
+  // music carries on from the same point between this page and the others
+  const KEY_POS = 'bhapstar:musicPos';
+  let lastSave = 0;
+  function savePos() {
+    if (musicOk && isFinite(music.currentTime)) {
+      try { sessionStorage.setItem(KEY_POS, String(music.currentTime)); } catch (e) {}
+    }
+  }
+  music.addEventListener('timeupdate', () => {
+    const now = performance.now();
+    if (now - lastSave > 2000) { lastSave = now; savePos(); }
+  });
+  window.addEventListener('pagehide', savePos);
+
   function drawSound() {
+    announce();
     stage.classList.toggle('is-muted', muted);
     soundBtn.setAttribute('aria-pressed', String(!muted));
     soundBtn.setAttribute('aria-label', muted ? 'Play music' : 'Mute music');
@@ -719,6 +743,9 @@
   music.preload = 'auto';
   music.addEventListener('loadedmetadata', () => {
     if (musicOk) return;
+    let pos = NaN;
+    try { pos = parseFloat(sessionStorage.getItem(KEY_POS)); } catch (e) {}
+    if (pos > 0 && music.duration) { try { music.currentTime = pos % music.duration; } catch (e) {} }
     musicOk = true;
     soundBtn.hidden = false;
     drawSound();

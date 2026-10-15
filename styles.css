@@ -1881,6 +1881,23 @@ footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
   color: var(--accent2);
 }
 
+/* Background music button: same look as the icons beside it, lit violet
+   with a soft glow while the music is on */
+.footer-music{
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.footer-music[hidden]{ display: none; }
+.footer-music .fm-on{ display: none; }
+.footer-music.is-on .fm-on{ display: block; }
+.footer-music.is-on .fm-off{ display: none; }
+.footer-social .footer-music.is-on{
+  opacity: 1;
+  color: var(--accent);
+  filter: drop-shadow(0 0 6px rgba(167,139,250,0.65));
+}
+
 /* Brand link in footer keeps its gradient text treatment */
 .footer-brand{
   display: inline-flex; align-items: baseline; gap: 8px;
