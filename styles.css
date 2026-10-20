@@ -6778,6 +6778,16 @@ html[data-theme="light"] .page-starword .sw-swatch.absent{
   font-size: 11px;
   letter-spacing: .10em;
 }
+/* Sound on/off key beside CLEAR, so the win fanfare can be muted
+   without scrolling back up to the button by the heading. */
+.sw-key.mute{
+  flex: 0 0 auto;
+  width: 52px;
+  height: 38px;
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+}
 
 /* Action keys (Enter, backspace, clear) sit apart from the letters:
    stronger accent fill and border so they read as controls rather
@@ -6942,6 +6952,7 @@ html[data-theme="light"] .page-starword .sw-toast{
   .sw-key{ height: 46px; font-size: 12px; }
   .sw-key.wide{ font-size: 10px; }
   .sw-key.clear{ height: 36px; font-size: 10px; max-width: 200px; }
+  .sw-key.mute{ height: 36px; width: 48px; font-size: 15px; }
   .sw-keys{ gap: 5px; }
   .sw-krow{ gap: 4px; }
 }
@@ -9235,6 +9246,44 @@ html[data-theme="light"] .theme-toggle .icon-moon{ display: block; }
 @media (max-width: 720px){
   .theme-toggle{ top: 8px; right: 0; width: 34px; height: 34px; }
   .theme-toggle svg{ width: 16px; height: 16px; }
+}
+
+/* ── Background music button in the header ──
+   Same round button as the theme toggle and driven by the same code as
+   the footer music button (partials.js), so both always match.
+   Wide screens: sits just left of the theme toggle.
+   Phones: there is no room beside the toggle without covering the brand,
+   so it mirrors the toggle in the top-left corner instead. */
+.header-music{
+  position: absolute; top: 12px; right: 48px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border-radius: 999px; cursor: pointer;
+  background: none; border: 1px solid var(--line);
+  color: var(--accent);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+.header-music:hover{
+  background: var(--soft);
+  border-color: rgba(167,139,250,0.45);
+  transform: translateY(-1px);
+}
+.header-music:active{ transform: translateY(0); }
+.header-music[hidden]{ display: none; }
+.header-music svg{ width: 18px; height: 18px; display: block; }
+.header-music .fm-on{ display: none; }
+.header-music.is-on .fm-on{ display: block; }
+.header-music.is-on .fm-off{ display: none; }
+.header-music.is-on{
+  border-color: rgba(167,139,250,0.65);
+  background: rgba(167,139,250,0.14);
+  box-shadow: 0 0 10px rgba(167,139,250,0.40);
+}
+
+@media (max-width: 720px){
+  .header-music{ top: 8px; right: auto; left: 0; width: 34px; height: 34px; }
+  .header-music svg{ width: 16px; height: 16px; }
 }
 
 

@@ -247,7 +247,9 @@ const HIDE_FIELD_NOTES = true;
 
 
     /* ─────────────────────────────────────────
-       BACKGROUND MUSIC (footer button)
+       BACKGROUND MUSIC (header + footer buttons)
+       - One player, two buttons: .header-music and .footer-music both
+         toggle it and always show the same state
        - Plays sounds/slideshow-music.mp3 on a loop, off by default
        - On/off and the play position are kept in sessionStorage, so the
          music carries on from the same point on the next page of the
@@ -260,9 +262,12 @@ const HIDE_FIELD_NOTES = true;
          (via bhapstar:music-* events) instead, so only one plays.
     ───────────────────────────────────────── */
     (function initSiteMusic(){
-      const btn = document.querySelector('.footer-music');
-      if (!btn || btn.dataset.bound) return;
-      btn.dataset.bound = '1';
+      const btns = Array.from(document.querySelectorAll('.header-music, .footer-music'));
+      if (!btns.length || btns.some(b => b.dataset.bound)) return;
+      btns.forEach(b => { b.dataset.bound = '1'; });
+      const onAny  = (fn) => btns.forEach(b => b.addEventListener('click', fn));
+      const isBtn  = (el) => btns.some(b => b.contains(el));
+      const hideAll = (hide) => btns.forEach(b => { b.hidden = hide; });
 
       const SRC = '/sounds/slideshow-music.mp3';
       const VOL = 0.35;
@@ -274,19 +279,21 @@ const HIDE_FIELD_NOTES = true;
       };
 
       function draw(on){
-        btn.classList.toggle('is-on', on);
-        btn.setAttribute('aria-pressed', String(on));
-        btn.setAttribute('aria-label', on ? 'Turn background music off' : 'Play background music');
+        btns.forEach(b => {
+          b.classList.toggle('is-on', on);
+          b.setAttribute('aria-pressed', String(on));
+          b.setAttribute('aria-label', on ? 'Turn background music off' : 'Play background music');
+        });
       }
 
       // Slideshow page: hand the button to the slideshow's player
       if (document.body.classList.contains('page-slideshow')) {
-        btn.hidden = true;
+        hideAll(true);
         document.addEventListener('bhapstar:music-state', (e) => {
-          btn.hidden = !e.detail.available;
+          hideAll(!e.detail.available);
           draw(!!e.detail.on);
         });
-        btn.addEventListener('click', () => {
+        onAny(() => {
           document.dispatchEvent(new CustomEvent('bhapstar:music-toggle'));
         });
         document.dispatchEvent(new CustomEvent('bhapstar:music-query'));
@@ -329,7 +336,7 @@ const HIDE_FIELD_NOTES = true;
         if (waitingTap) return;
         waitingTap = true;
         const go = (e) => {
-          if (e && btn.contains(e.target)) return;   // the button's own click handles it
+          if (e && isBtn(e.target)) return;   // the buttons' own click handles it
           document.removeEventListener('pointerdown', go, true);
           document.removeEventListener('keydown', go, true);
           waitingTap = false;
@@ -357,7 +364,7 @@ const HIDE_FIELD_NOTES = true;
         fadeTo(0, 400, () => audio.pause());
       }
 
-      btn.addEventListener('click', () => {
+      onAny(() => {
         // Turned on but held back by the browser: this tap starts it
         if (wanted && audio.paused) { start(); return; }
         wanted = !wanted;
@@ -367,9 +374,9 @@ const HIDE_FIELD_NOTES = true;
       });
 
       audio.addEventListener('error', () => {
-        // No music file: hide the button rather than leave a dead control
+        // No music file: hide the buttons rather than leave dead controls
         if (!audio.src) return;
-        wanted = false; ss.set(KEY_ON, '0'); draw(false); btn.hidden = true;
+        wanted = false; ss.set(KEY_ON, '0'); draw(false); hideAll(true);
       });
       audio.addEventListener('timeupdate', () => {
         const now = performance.now();

@@ -18,18 +18,23 @@
   <meta name="description" content="Star Word — a daily five-letter astronomy word puzzle by bhapstar. Six guesses, one word from the night sky, a new one every day." />
   <meta name="author" content="Bhapinder Singh" />
 
-  <!-- Open Graph -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:title"       content="Star Word — bhapstar Astrophotography" />
-  <meta property="og:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
-  <meta property="og:image"       content="https://bhapstar.com/images/icons/star-word-og.jpg" />
-  <meta property="og:url"         content="https://bhapstar.com/star_word.html" />
+  <!-- Open Graph
+       Deliberately a small square image (under 300px wide) so WhatsApp and
+       other chat apps show a compact link card under shared results,
+       instead of a full-width banner. Keep it under 300px. -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="Star Word by bhapstar" />
+  <meta property="og:description"  content="A daily five-letter astronomy word puzzle." />
+  <meta property="og:image"        content="https://bhapstar.com/images/icons/star-word-thumb.jpg" />
+  <meta property="og:image:width"  content="256" />
+  <meta property="og:image:height" content="256" />
+  <meta property="og:url"          content="https://bhapstar.com/star_word.html" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Star Word — bhapstar Astrophotography" />
-  <meta name="twitter:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
-  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/star-word-og.jpg" />
+  <!-- Twitter Card (small square card, to match) -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="Star Word by bhapstar" />
+  <meta name="twitter:description" content="A daily five-letter astronomy word puzzle." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/star-word-thumb.jpg" />
 
   <!-- Preconnect for fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -378,12 +383,18 @@ function isMuted(){ return muted; }
 let winAudioCtl = null;
 
 const muteBtn = document.getElementById('muteBtn');
+// Two mute controls share one state: the button by the heading and the
+// sound key beside CLEAR on the keyboard, which is still on screen when
+// the win fanfare plays.
 function syncMuteBtn(){
-  if(!muteBtn) return;
-  muteBtn.textContent = muted ? '🔇' : '🔊';
-  muteBtn.setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
-  muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
-  muteBtn.title = muted ? 'Sound off' : 'Sound on';
+  const btns = [muteBtn, document.querySelector('.sw-key[data-key="MUTE"]')];
+  btns.forEach(function(b){
+    if(!b) return;
+    b.textContent = muted ? '🔇' : '🔊';
+    b.setAttribute('aria-label', muted ? 'Unmute sounds' : 'Mute sounds');
+    b.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    b.title = muted ? 'Sound off' : 'Sound on';
+  });
 }
 function toggleMute(){
   muted = !muted;
@@ -675,7 +686,7 @@ const KEY_ROWS = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
   ['ENTER'].concat('ZXCVBNM'.split(''), ['DEL']),
-  ['CLEAR']
+  ['CLEAR', 'MUTE']
 ];
 
 const KEY_LABEL = { DEL: '⌫', CLEAR: 'CLEAR' };
@@ -686,7 +697,7 @@ function buildKeyboard(){
   KEY_ROWS.forEach(function(rowKeys){
     const row = document.createElement('div');
     row.className = 'sw-krow';
-    if(rowKeys.length === 1 && rowKeys[0] === 'CLEAR') row.className += ' clear-row';
+    if(rowKeys[0] === 'CLEAR') row.className += ' clear-row';
     rowKeys.forEach(function(k){
       const b = document.createElement('button');
       b.type = 'button';
@@ -695,16 +706,24 @@ function buildKeyboard(){
       if(k === 'ENTER') cls += ' wide';
       if(k === 'DEL') cls += ' util';
       if(k === 'CLEAR') cls += ' clear';
+      if(k === 'MUTE') cls += ' mute';
       b.className = cls;
-      b.textContent = KEY_LABEL[k] || k;
       b.dataset.key = k;
-      b.setAttribute('aria-label', KEY_ARIA[k] || k);
-      b.addEventListener('click', function(){ handleKey(k); });
+      if(k === 'MUTE'){
+        // Its own handler, not handleKey, so it still works once the game
+        // is over and the fireworks are playing. syncMuteBtn sets the label.
+        b.addEventListener('click', toggleMute);
+      } else {
+        b.textContent = KEY_LABEL[k] || k;
+        b.setAttribute('aria-label', KEY_ARIA[k] || k);
+        b.addEventListener('click', function(){ handleKey(k); });
+      }
       row.appendChild(b);
     });
     keyboard.appendChild(row);
   });
   syncClearKey();
+  syncMuteBtn();
 }
 
 // Clear is only useful with letters on the row, so it dims when empty.
@@ -948,8 +967,10 @@ const EMOJI = { correct: '🟩', present: '🟨', absent: '⬛' };
 
 function buildShare(){
   const solved = guesses.length && guesses[guesses.length - 1] === answer;
+  /* The ' · ' keeps the puzzle number and score apart. With a plain space,
+     WhatsApp read "#293 5/6" as a phone number and underlined it as a link. */
   const head = 'bhapstar Star Word ' + (practiceMode ? '(practice)' : '#' + (DAY + 1)) +
-               ' ' + (solved ? guesses.length : 'X') + '/' + ROWS;
+               ' · ' + (solved ? guesses.length : 'X') + '/' + ROWS;
   const grid = guesses.map(function(g){
     return score(g, answer).map(function(s){ return EMOJI[s]; }).join('');
   }).join('\n');
