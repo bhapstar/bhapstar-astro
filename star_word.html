@@ -18,18 +18,23 @@
   <meta name="description" content="Star Word — a daily five-letter astronomy word puzzle by bhapstar. Six guesses, one word from the night sky, a new one every day." />
   <meta name="author" content="Bhapinder Singh" />
 
-  <!-- Open Graph -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:title"       content="Star Word — bhapstar Astrophotography" />
-  <meta property="og:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
-  <meta property="og:image"       content="https://bhapstar.com/images/icons/star-word-og.jpg" />
-  <meta property="og:url"         content="https://bhapstar.com/star_word.html" />
+  <!-- Open Graph
+       Deliberately a small square image (under 300px wide) so WhatsApp and
+       other chat apps show a compact link card under shared results,
+       instead of a full-width banner. Keep it under 300px. -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="Star Word by bhapstar" />
+  <meta property="og:description"  content="A daily five-letter astronomy word puzzle." />
+  <meta property="og:image"        content="https://bhapstar.com/images/icons/star-word-thumb.jpg" />
+  <meta property="og:image:width"  content="256" />
+  <meta property="og:image:height" content="256" />
+  <meta property="og:url"          content="https://bhapstar.com/star_word.html" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Star Word — bhapstar Astrophotography" />
-  <meta name="twitter:description" content="A daily five-letter astronomy word puzzle. Six guesses, one word from the night sky." />
-  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/star-word-og.jpg" />
+  <!-- Twitter Card (small square card, to match) -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="Star Word by bhapstar" />
+  <meta name="twitter:description" content="A daily five-letter astronomy word puzzle." />
+  <meta name="twitter:image"       content="https://bhapstar.com/images/icons/star-word-thumb.jpg" />
 
   <!-- Preconnect for fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -948,8 +953,10 @@ const EMOJI = { correct: '🟩', present: '🟨', absent: '⬛' };
 
 function buildShare(){
   const solved = guesses.length && guesses[guesses.length - 1] === answer;
+  /* The ' · ' keeps the puzzle number and score apart. With a plain space,
+     WhatsApp read "#293 5/6" as a phone number and underlined it as a link. */
   const head = 'bhapstar Star Word ' + (practiceMode ? '(practice)' : '#' + (DAY + 1)) +
-               ' ' + (solved ? guesses.length : 'X') + '/' + ROWS;
+               ' · ' + (solved ? guesses.length : 'X') + '/' + ROWS;
   const grid = guesses.map(function(g){
     return score(g, answer).map(function(s){ return EMOJI[s]; }).join('');
   }).join('\n');
