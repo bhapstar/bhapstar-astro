@@ -939,7 +939,7 @@
       }
     ],
     "title": "Optolong L-eXtreme Filter",
-    "desc": "A dual narrowband filter passing 7nm bands at Hydrogen-alpha and Oxygen-III, and blocking nearly everything else, including most city skyglow. That is what makes emission nebulae workable from a Bortle 8 balcony. The trade is exposure time, because rejecting that much light means much longer sub-exposures.",
+    "desc": "A dual narrowband filter passing 7nm bands at Hydrogen-alpha and Oxygen-III, and blocking nearly everything else, including most city skyglow. That is what makes emission nebulae workable from a Bortle 8 balcony. It is just as effective from a dark desert sky, where it brings out faint gas with striking contrast. The trade is exposure time, because rejecting that much light means much longer sub-exposures.",
     "alt": "Optolong L-eXtreme 7nm dual narrowband filter Ha OIII",
     "type": "filters",
     "section": "gear",
