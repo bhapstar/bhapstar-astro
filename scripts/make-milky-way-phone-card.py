@@ -217,7 +217,7 @@ TL = [
      'A star trail is that hour drawn as one picture. A timelapse is the same '
      'hour as video. Hyperlapse on a Samsung, Time-lapse on an iPhone, both '
      'happier once the phone is already on a tripod.'),
-    ('The exchange rate is brutal',
+    ('More frames than you might think',
      'Video runs at about 25 frames a second, so a satisfying ten second clip '
      'needs a few hundred separate exposures. That is an hour or two of real '
      'time for a few seconds of video.'),

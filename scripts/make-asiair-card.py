@@ -184,7 +184,7 @@ FIRST = [
     ('Flats before teardown', 'The moment the camera rotates in the focuser, '
      'that night\u2019s flats stop matching. Two minutes at the end of the '
      'session saves a re-shoot.', PINK),
-    ('It is a closed system', 'It expects ZWO cameras and a defined list of '
+    ('Built around ZWO kit', 'It expects ZWO cameras and a defined list of '
      'mounts, not anything that speaks ASCOM. Less choice, and far fewer things '
      'to debug in the dark.', VIOLET),
 ]
@@ -195,7 +195,7 @@ for i, (heading, body, accent) in enumerate(FIRST):
 
 
 # ── the three in the morning section ───────────────────────────────────
-y = card.section(MARGIN, min(bottoms) - 16, CONTENT, 'When it goes wrong at three in the morning')
+y = card.section(MARGIN, min(bottoms) - 16, CONTENT, 'Quick fixes in the field')
 
 TROUBLE_COLS = [(0, 132, 'label'), (142, 150, 'value'), (302, 225, 'note')]
 TROUBLE_HEAD = ['What you see', 'Usually', 'What to do']
@@ -223,8 +223,8 @@ y = card.table(MARGIN, y + 3, TROUBLE_COLS, TROUBLE_ROWS, head=TROUBLE_HEAD,
 card.footer(
     'The full guide, with examples',
     'Screenshots from a live session, how polar alignment works without seeing '
-    'Polaris, what plate solving actually does, and where a mini PC running '
-    'NINA makes more sense than a closed box.',
+    'Polaris, what plate solving actually does, and when a mini PC running '
+    'NINA suits a mixed setup better.',
     URL)
 
 card.save()

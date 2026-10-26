@@ -154,7 +154,7 @@ for i, (heading, body) in enumerate(RULES):
 y = min(ly, ry)
 
 # ── what skipping costs, and where it all happens ──────────────────────
-y = card.section(MARGIN, y - 6, CONTENT, 'What it costs to skip them, and where it happens')
+y = card.section(MARGIN, y - 6, CONTENT, 'Why they are worth taking, and how Siril uses them')
 
 CARD_W = (CONTENT - 2 * 12) / 3.0
 y3 = y + 2
