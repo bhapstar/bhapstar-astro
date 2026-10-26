@@ -400,6 +400,8 @@
     /* Downloads get their own colour so the two field card families are
        distinguishable at a glance, not just by reading the label. */
     .src-dl   { background: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.55); }
+    /* Launches from an installed home-screen icon, not a scan or a link. */
+    .src-pwa  { background: var(--accent5); box-shadow: 0 0 8px rgba(251,146,60,0.55); }
     .num-cell { text-align: center; font-weight: 700; font-size: 16px; color: var(--accent4); }
     .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
     .day-cell { white-space: nowrap; }
@@ -981,6 +983,7 @@
       qr:           { label: 'QR code',            cls: 'src-qr'   },
       x:            { label: 'Link posted on X',   cls: 'src-x'    },
       clinic:       { label: 'Clinic print QR',    cls: 'src-qr'   },
+      pwa:          { label: 'Home-screen app',    cls: 'src-pwa'  },
 
       'pdf-phone':       { label: 'Scanned: phone card',         cls: 'src-pdf' },
       'pdf-camera':      { label: 'Scanned: camera card',        cls: 'src-pdf' },
