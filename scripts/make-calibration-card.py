@@ -119,7 +119,7 @@ for i, (name, body) in enumerate(STEPS, start=1):
     ly = card.para(MARGIN + 18, ly, LEFT_W - 18, body, F_REG, 6.9, 8.2, MUTED)
     ly -= 3.6
 
-ry = card.section(RIGHT_X, col_top, RIGHT_W, 'The rules people break')
+ry = card.section(RIGHT_X, col_top, RIGHT_W, 'Rules for good flats')
 
 RULES = [
     ('Take flats before you take anything apart',
@@ -171,7 +171,7 @@ bottoms.append(card.note_card(
     'cannot model them. The result looks nearly right and is subtly wrong '
     'everywhere.', VIOLET))
 bottoms.append(card.note_card(
-    MARGIN + 2 * (CARD_W + 12), y3, CARD_W, 'Where it actually happens',
+    MARGIN + 2 * (CARD_W + 12), y3, CARD_W, 'Letting Siril do the work',
     'Folders named lights, darks, flats and biases. Point Siril at the parent '
     'folder and run its one-shot-colour script: it stacks the calibration frames '
     'into masters, applies them, aligns everything and stacks the result, all '
