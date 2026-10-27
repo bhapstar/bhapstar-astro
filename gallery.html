@@ -1751,6 +1751,21 @@
     date:        '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.4" width="11" height="10.1" rx="1.4"/><path d="M2.5 6.4h11"/><path d="M5.4 2.1v2.4"/><path d="M10.6 2.1v2.4"/></svg>',
   };
 
+  // Imaging sites with a Google Maps pin; a location value naming one links to
+  // it in a new tab. Keep in step with LOCATION_MAPS in
+  // scripts/generate-share-pages.py, which does the same on the share pages.
+  const LOCATION_MAPS = {
+    'al quaa':  'https://maps.app.goo.gl/b3Q4kfeMtAZNLwi47',
+    'al qudra': 'https://maps.app.goo.gl/J1yhBShzMm8W5mcH6',
+  };
+  function locationHref(v) {
+    const n = String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    for (const name in LOCATION_MAPS) {
+      if ((' ' + n + ' ').indexOf(' ' + name + ' ') !== -1) return LOCATION_MAPS[name];
+    }
+    return null;
+  }
+
   // Entry dates are DD-MM-YYYY → "Month YYYY"; falls back to the raw value.
   function fmtSpecDate(d) {
     if (!d) return '';
@@ -1777,9 +1792,14 @@
       dvDetailSpecs.style.display = 'none';
       return;
     }
-    dvDetailSpecs.innerHTML = rows.map(([k, v]) =>
-      `<div class="dv-spec"><span class="dv-spec-ico">${SPEC_ICONS[k] || ''}</span><span class="dv-spec-val">${esc(String(v))}</span></div>`
-    ).join('');
+    dvDetailSpecs.innerHTML = rows.map(([k, v]) => {
+      const txt = esc(String(v));
+      const map = k === 'location' ? locationHref(v) : null;
+      const val = map
+        ? `<a href="${map}" target="_blank" rel="noopener" title="Open ${txt} in Google Maps">${txt}</a>`
+        : txt;
+      return `<div class="dv-spec"><span class="dv-spec-ico">${SPEC_ICONS[k] || ''}</span><span class="dv-spec-val">${val}</span></div>`;
+    }).join('');
     dvDetailSpecs.style.display = '';
   }
 

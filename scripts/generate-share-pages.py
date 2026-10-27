@@ -77,8 +77,8 @@ SPEC_ICONS = [
 #   2. GEAR_ALIASES below covers the shorthand actually used in the specs
 #      fields, which rarely matches the full product title.
 #
-# Only telescope / camera / filter values are linked. Integration, location and
-# date are never gear.
+# Only telescope / camera / filter values are linked to gear pages. Integration,
+# location and date are never gear (locations link to a map instead, below).
 GEAR_DIR = "gear"
 LINKABLE_SPEC_KEYS = {"telescope", "camera", "filter"}
 SPEC_VALUE_SKIP = {"none", "various", "n a", "na", "tbc", "unknown"}
@@ -119,6 +119,27 @@ GEAR_ALIASES = {
     "svbony sv220":         "svbony-sv220-3nm-filter",
     "sv220":                "svbony-sv220-3nm-filter",
 }
+
+# ── Capture-detail location linking ──────────────────────────────────────────
+# Imaging sites with a Google Maps pin. A location value containing one of
+# these names (after norm_spec) links to the pin in a new tab. Keep in step
+# with LOCATION_MAPS in gallery.html, which does the same in the viewer popup.
+LOCATION_MAPS = {
+    "al quaa":  "https://maps.app.goo.gl/b3Q4kfeMtAZNLwi47",
+    "al qudra": "https://maps.app.goo.gl/J1yhBShzMm8W5mcH6",
+}
+
+
+def location_href(key, value):
+    """Google Maps link for a known imaging site, or None."""
+    if key != "location":
+        return None
+    n = norm_spec(value)
+    for name, url in LOCATION_MAPS.items():
+        if re.search(rf"(?<![a-z0-9]){re.escape(name)}(?![a-z0-9])", n):
+            return url
+    return None
+
 
 # Aliases shorter than this are only matched when the spec value is exactly
 # that alias, never as a fragment of a longer value.
@@ -771,8 +792,12 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         for key, lbl, val, icon in rows:
             val_html = t(val)
             href = gear_href(gear_slug_for(key, val))
+            map_href = location_href(key, val)
             if href:
                 val_html = f'<a href="{a(href)}">{val_html}</a>'
+            elif map_href:
+                val_html = (f'<a href="{a(map_href)}" target="_blank" rel="noopener" '
+                            f'title="Open {a(val)} in Google Maps">{val_html}</a>')
             tile_list.append(
                 f'          <div class="share-spec" title="{a(lbl)}">'
                 f'<span class="share-spec-ico" aria-hidden="true">{icon}</span>'
