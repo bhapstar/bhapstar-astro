@@ -1886,8 +1886,10 @@ footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
 .footer-social .social-icon:hover{
   opacity: 1;
 }
-/* Holds the shared icon gradient. Positioned out of the layout so it adds
-   no space. Not display:none, which stops some browsers using the gradient. */
+/* Hold the icon gradients (one in header.html, one in footer.html).
+   Positioned out of the layout so they add no space. Not display:none,
+   which stops some browsers using the gradient. */
+.header-defs,
 .footer-defs{
   position: absolute; width: 0; height: 0; overflow: hidden;
 }
