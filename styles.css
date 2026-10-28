@@ -237,8 +237,12 @@ header{
   font-size: 10px;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--muted);
-  -webkit-text-fill-color: unset;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 
 /* Aurora shimmer underline */
@@ -1871,14 +1875,21 @@ footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
   gap: 14px;
 }
 .footer-social{ display: inline-flex; align-items: center; gap: 14px; }
+/* The icons are painted with the animated #footerIconGrad gradient defined
+   at the top of footer.html (SVG can't use background-clip:text), so hover
+   only lifts the opacity. */
 .footer-social .social-icon{
   display: inline-flex; align-items: center;
   color: inherit; opacity: 0.80;
-  transition: color 200ms ease, opacity 200ms ease;
+  transition: opacity 200ms ease;
 }
 .footer-social .social-icon:hover{
   opacity: 1;
-  color: var(--accent2);
+}
+/* Holds the shared icon gradient. Positioned out of the layout so it adds
+   no space. Not display:none, which stops some browsers using the gradient. */
+.footer-defs{
+  position: absolute; width: 0; height: 0; overflow: hidden;
 }
 
 /* Background music button: same look as the icons beside it, lit violet
@@ -1894,7 +1905,6 @@ footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
 .footer-music.is-on .fm-off{ display: none; }
 .footer-social .footer-music.is-on{
   opacity: 1;
-  color: var(--accent);
   filter: drop-shadow(0 0 6px rgba(167,139,250,0.65));
 }
 
@@ -1915,8 +1925,19 @@ footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
   font-size: 13px; letter-spacing: 0.20em; text-transform: uppercase;
 }
 .footer-brand .sub{
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
   font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
-  color: var(--muted); -webkit-text-fill-color: unset;
+}
+/* "© 2026" beside the brand. The year span (#y) sits inside this one, so
+   the gradient runs across both as one piece. */
+.footer-year{
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
 }
 /* Aurora shimmer underline, matching the header brand.
    This rule used to set the gradient and nothing else, on the assumption that
