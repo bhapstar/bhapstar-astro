@@ -3,8 +3,8 @@
 Generates one REAL, indexable page per gear item in site-data.json, under
 gear/<slug>.html. Mirrors the logic of generate-share-pages.py but for gear.
 
-Each page includes:
-  - Hero image (first image from entry.images)
+Each page follows the same order as the gallery share pages:
+  - Title, then the short description as an intro paragraph
   - Fixed-height carousel: arrows, in-stage thumbnails, keyboard, swipe
   - Review prose (read from content/gear/<slug>.html if it exists, else placeholder)
   - Buy links from the entry's buy array
@@ -321,14 +321,11 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None):
 <main>
   <section class="section">
     <div class="wrap gear-page">
-{nav_html}
+{nav_html}      <h1 class="gear-title">{esc(title)}</h1>
 
-      <div class="gear-header">
-{carousel_html}        <h1 class="gear-title">{esc(title)}</h1>
-        <p class="gear-desc">{desc_html}</p>
-      </div>
+      <p class="gear-desc">{desc_html}</p>
 
-
+{carousel_html}
       <div class="gear-review">
 {review_html}      </div>
 

@@ -7952,13 +7952,14 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
    Body carries .page-gear-detail
    ============================================================ */
 
-    .gear-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
-    .gear-header { margin-bottom: 40px; }
+    /* Laid out to match the gallery share pages: same column, same spacing,
+       and the same order of title, intro, pictures, then the write-up. */
+    .gear-page { max-width: 900px; margin: 0 auto; }
     /* ── Carousel ──
        The stage has a fixed aspect-ratio and slides are absolutely
        positioned with object-fit: contain, so its height never changes.
        Mixing portrait and landscape shots cannot shift the page. */
-    .gear-carousel { margin-bottom: 42px; outline: none; }
+    .gear-carousel { margin-bottom: 22px; outline: none; }
     .gear-carousel:focus-visible .gc-stage { border-color: var(--accent); }
     .gc-stage { position: relative; width: 100%; aspect-ratio: 3 / 2;
                  border-radius: 16px; overflow: hidden;
@@ -8068,21 +8069,25 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       .gcbox-next { right: 8px; }
       .gcbox .figbox-stage, .gcbox .figbox-stage img { max-width: 96vw; }
     }
-    .gear-title { font-size: 32px; font-weight: 600; margin: 0 0 16px; 
-                    background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
-                    background-size: 300% 100%;
-                    -webkit-background-clip: text;
-                    background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    animation: gdGradientRoll 4s linear infinite reverse; }
-    .gear-desc { font-size: 16px; line-height: 1.6; color: var(--muted); margin: 0; }
-    .gear-review { margin: 40px 0; font-size: 15px; line-height: 1.7;
+    /* The title takes the site's main h1 (size and rolling gradient) exactly
+       as the gallery share pages do. Only the gap below it is set here, to
+       the same 14px .share-wrap h1 uses. */
+    .gear-title { margin-bottom: 14px; }
+    /* Intro paragraph under the title. Same values as the share page lead
+       (.share-body .lead). */
+    .gear-desc { font-size: 17px; line-height: 1.7; margin: 0 0 20px;
+                  color: rgba(200,195,235,0.85); }
+    html[data-theme="light"] .gear-desc { color: rgba(78,68,128,0.88); }
+    /* Write-up below the pictures. Text size, line height and paragraph
+       spacing match the share page write-up (.share-body p). */
+    .gear-review { margin: 0 0 40px; line-height: 1.7;
                     color: var(--text); }
+    .gear-review > :first-child { margin-top: 0; }
     .gear-review h2 { font-size: 20px; font-weight: 600; margin: 24px 0 12px;
                        color: var(--text); }
     .gear-review h3 { font-size: 17px; font-weight: 600; margin: 18px 0 10px;
                        color: var(--text); }
-    .gear-review p { margin: 12px 0; }
+    .gear-review p { margin: 0 0 16px; }
     .gear-review ul, .gear-review ol { margin: 12px 0; padding-left: 22px; }
     .gear-review li { margin: 6px 0; }
     /* Photos in the write-up use the article figure classes
@@ -8171,15 +8176,6 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       .page-gear-detail .gn-label { display: none; }
       .page-gear-detail .gn-title { font-size: 12px; }
       .page-gear-detail .gear-nav-link { padding: 9px 11px; }
-    }
-    @keyframes gdGradientRoll {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @media (max-width: 768px) {
-      .gear-page { margin: 24px auto; padding: 0 12px; }
-      .gear-title { font-size: 24px; }
     }
 
     /* ── Glossary explainers ──
