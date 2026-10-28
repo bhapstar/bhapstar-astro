@@ -107,18 +107,18 @@ LEAFLET_VERSION = "1.9.4"
 LEAFLET_CSS_SRI = "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
 LEAFLET_JS_SRI = "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
 
-# Worded as what the reader can see rather than as a Bortle class, because
-# someone who has never heard of Bortle can still answer "can I see the
-# Milky Way from here". The number is what the engine uses.
+# Worded as where the reader is and what they can see rather than as a
+# Bortle class, so someone who has never heard of Bortle, or never seen the
+# Milky Way, can still pick one. The number is what the engine uses.
 SKY_BORTLE_Q = "How dark is your night sky?"
 SKY_BORTLE_DEFAULT = 5
 SKY_BORTLE_SCALE = [
-    (1, "1: Pristine. The Milky Way casts a shadow", "Pristine"),
-    (2, "2: Truly dark. Milky Way full of detail", "Truly dark"),
-    (3, "3: Rural. Milky Way clear, slight glow low down", "Rural"),
-    (4, "4: Edge of town. Milky Way washed out low down", "Edge of town"),
-    (5, "5: Suburban. Milky Way faint overhead at best", "Suburban"),
-    (6, "6: Bright suburb. No Milky Way, sky looks grey", "Bright suburb"),
+    (1, "1: Pristine. Pure dark sky, zero light pollution", "Pristine"),
+    (2, "2: Truly dark. Remote site, no glow on any horizon", "Truly dark"),
+    (3, "3: Rural. Countryside, faint glow low on one side", "Rural"),
+    (4, "4: Edge of town. Lots of stars, glow over nearby towns", "Edge of town"),
+    (5, "5: Suburban. Stars mostly overhead, glow low down", "Suburban"),
+    (6, "6: Bright suburb. Grey sky, constellations easy to trace", "Bright suburb"),
     (7, "7: Town. Only the brighter stars, sky glows all round", "Town"),
     (8, "8: City. Brightest stars and planets only", "City"),
     (9, "9: Inner city. A handful of stars at most", "Inner city"),
