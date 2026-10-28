@@ -206,10 +206,10 @@ var RAD = Math.PI / 180;
             w:'Moonlight is sunlight bounced off rock, so it carries the same broad spread of colour as the starlight you are collecting. Nothing can filter one out and leave the other. Shoot this when the moon is down, or accept the loss of contrast.' },
     wide: { s:'Wide narrowband',  l:'Wide narrowband, L-Quad style',
             w:'A wide multi-band filter holds back skyglow without throwing away the star colour. A good middle rung for a nebula from a suburban sky, or under a modest moon.' },
-    nb:   { s:'7nm narrowband',   l:'Dual narrowband, around 7nm',
-            w:'Passes only hydrogen alpha and oxygen three. This is the filter that makes emission nebulae work from a bright sky or under a moon.' },
+    nb:   { s:'7 or 3nm narrowband', l:'Dual narrowband, 7nm or 3nm',
+            w:'Passes only hydrogen alpha and oxygen three. This is the filter that makes emission nebulae work from a bright sky or under a moon. A 7nm filter does the job here, and a 3nm one gives a little more contrast.' },
     xnb:  { s:'3nm narrowband',   l:'Extreme narrowband, around 3nm',
-            w:'A very tight pass band. It throws away most of the sky and keeps the nebula, which is what a city sky or a bright moon calls for. Needs longer exposures to make up for it.' }
+            w:'A very tight pass band. It throws away most of the sky and keeps the nebula, which is what a city sky or a bright moon calls for. Needs longer exposures to make up for it. A 7nm filter still works here, with a little less contrast.' }
   };
 
   /* Emission objects climb the ladder as the sky brightens or the moon
