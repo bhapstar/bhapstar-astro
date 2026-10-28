@@ -5630,6 +5630,14 @@ body.post-open #siteHeader { opacity: 0.4; pointer-events: none; }
    Body carries .page-prints
    ============================================================ */
 
+/* ── enquiry builder label column ──
+   "Print details" plus its info icon is wider than the shared 110px
+   label column, which pushed the icon onto a second line. Phones
+   already stack the label above the field, so this is wide screens only. */
+@media (min-width: 521px){
+  #enquiryPicker .row{ grid-template-columns: 124px 1fr; }
+}
+
 /* ── optional field label ── */
 .field-optional {
   font-size: .78rem;
