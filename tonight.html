@@ -586,6 +586,9 @@
         var lvl = levels[i] || 0;
         var best = (tg.k && tg.k[i]) || 0;
         var ceiling = (tg.b && tg.b[i]);
+        /* The eye is looking, not photographing, so it gets its own
+           wording rather than talk of images and contrast. */
+        var eye = slot.key === 'eye';
         var why;
 
         if (!best) {
@@ -594,7 +597,16 @@
         } else if (lvl === 0) {
           why = slot.l + ': not worth trying from a Bortle ' + state.bortle +
                 ' sky. It holds up to about Bortle ' + ceiling +
-                ', so this needs a darker site rather than more patience.';
+                (eye ? ', so you need a darker site to see it.'
+                     : ', so this needs a darker site rather than more patience.');
+        } else if (eye && lvl === 1 && state.bortle === ceiling) {
+          why = slot.l + ': only just. Bortle ' + ceiling + ' is as bright as ' +
+                'it takes, so it will be hard to pick out.';
+        } else if (eye && lvl === 1) {
+          why = slot.l + ': you can see it as a faint patch. A photo shows ' +
+                'far more.';
+        } else if (eye) {
+          why = slot.l + ': easy to see, no kit needed.';
         } else if (lvl === 1 && state.bortle === ceiling) {
           why = slot.l + ': works, but Bortle ' + ceiling + ' is as bright as ' +
                 'it takes. Expect a fight for contrast.';
