@@ -3,7 +3,7 @@
     "section": "_divider",
     "_bar": "==================================================================",
     "_section": "GALLERY",
-    "_count": "30 entries",
+    "_count": "31 entries",
     "_note": [
       "Photographs. Shown on gallery.html and index.html, and rotated",
       "through the six thumbnails on card.html.",
@@ -11,32 +11,6 @@
       "entry, and generate-sitemap.py lists them."
     ],
     "_bar_end": "=================================================================="
-  },
-  {
-    "file": "images/elephant-trunk-nebula-ic1396a.webp",
-    "title": "The Elephant's Trunk Nebula (IC 1396A)",
-    "desc": "A dark column of gas and dust reaching into IC 1396, a huge glowing cloud in Cepheus, with new stars forming inside it. The data comes from The Wizard's Library, Luke's free collection of practice data, and I processed it in AstroWizard.",
-    "alt": "Elephant's Trunk Nebula IC 1396A, a dark dust column with a bright rim inside the IC 1396 emission nebula in Cepheus, processed from dual-band data",
-    "type": "nebulae",
-    "slug": "elephant-trunk-nebula-ic1396a",
-    "date": "03-11-2026",
-    "intro": "The Elephant's Trunk is a long, dark column of gas and dust reaching into the middle of IC 1396, a huge glowing cloud in Cepheus. Its bright edge shows where starlight is slowly wearing it away.",
-    "body": "IC 1396 lies about 3,000 light-years away in Cepheus. It covers around three degrees of sky, about six times the width of the full moon, and this frame shows most of it. Edward Barnard found it on a photograph in 1893.\n\nThe cloud glows because of a group of very hot, very big stars near the middle of the picture, called HD 206267. Their light makes the gas around them shine, and over time it pushes that gas away. The Elephant's Trunk, to the right of centre, is a thicker patch of gas and dust. It is harder to push away, so it has stayed behind while the thinner gas around it was cleared. It is more than 20 light-years long. The bright curl at its tip is the part facing the stars, where their light hits it hardest.\n\nThe same starlight is also squashing the trunk, and that is helping new stars to form inside it. The dust hides them, so normal cameras cannot see them. In 2003 the Spitzer Space Telescope, which can see heat (infrared light) through dust, spotted young stars inside the trunk. The other dark blobs and streaks in the picture are thick clouds like this one.\n\nThe data comes from Luke, who makes the AstroWizard processing software. He captures data with his own telescopes and shares it free in The Wizard's Library, so anyone can practise processing. This set is two hours through a dual-band filter, which lets through only the light given off by glowing hydrogen and oxygen and blocks most of the rest, including light pollution. I downloaded it and processed it in AstroWizard.\n\nFrom the UAE the Elephant's Trunk is a late summer and autumn target. It climbs to almost 60 degrees above the northern horizon, and in early November it is highest soon after dark.",
-    "body_links": [
-      {
-        "text": "AstroWizard",
-        "href": "https://astrowizard.lukomatico.com/"
-      },
-      {
-        "text": "The Wizard's Library",
-        "href": "https://astrowizard.lukomatico.com/library.html"
-      }
-    ],
-    "section": "gallery",
-    "specs": {
-      "filter": "Dual-band",
-      "integration": "2 hours"
-    }
   },
   {
     "file": "images/heart-nebula-ic1805.webp",
@@ -102,6 +76,32 @@
     ]
   },
   {
+    "file": "images/elephant-trunk-nebula-ic1396a.webp",
+    "title": "The Elephant's Trunk Nebula (IC 1396A)",
+    "desc": "A dark column of gas and dust reaching into IC 1396, a huge glowing cloud in Cepheus, with new stars forming inside it. The data comes from The Wizard's Library, Luke's free collection of practice data, and I processed it in AstroWizard.",
+    "alt": "Elephant's Trunk Nebula IC 1396A, a dark dust column with a bright rim inside the IC 1396 emission nebula in Cepheus, processed from dual-band data",
+    "type": "nebulae",
+    "slug": "elephant-trunk-nebula-ic1396a",
+    "date": "03-11-2026",
+    "intro": "The Elephant's Trunk is a long, dark column of gas and dust reaching into the middle of IC 1396, a huge glowing cloud in Cepheus. Its bright edge shows where starlight is slowly wearing it away.",
+    "body": "IC 1396 lies about 3,000 light-years away in Cepheus. It covers around three degrees of sky, about six times the width of the full moon, and this frame shows most of it. Edward Barnard found it on a photograph in 1893.\n\nThe cloud glows because of a group of very hot, very big stars near the middle of the picture, called HD 206267. Their light makes the gas around them shine, and over time it pushes that gas away. The Elephant's Trunk, to the right of centre, is a thicker patch of gas and dust. It is harder to push away, so it has stayed behind while the thinner gas around it was cleared. It is more than 20 light-years long. The bright curl at its tip is the part facing the stars, where their light hits it hardest.\n\nThe same starlight is also squashing the trunk, and that is helping new stars to form inside it. The dust hides them, so normal cameras cannot see them. In 2003 the Spitzer Space Telescope, which can see heat (infrared light) through dust, spotted young stars inside the trunk. The other dark blobs and streaks in the picture are thick clouds like this one.\n\nThe data comes from Luke, who makes the AstroWizard processing software. He captures data with his own telescopes and shares it free in The Wizard's Library, so anyone can practise processing. This set is two hours through a dual-band filter, which lets through only the light given off by glowing hydrogen and oxygen and blocks most of the rest, including light pollution. I downloaded it and processed it in AstroWizard.\n\nFrom the UAE the Elephant's Trunk is a late summer and autumn target. It climbs to almost 60 degrees above the northern horizon, and in early November it is highest soon after dark.",
+    "body_links": [
+      {
+        "text": "AstroWizard",
+        "href": "https://astrowizard.lukomatico.com/"
+      },
+      {
+        "text": "The Wizard's Library",
+        "href": "https://astrowizard.lukomatico.com/library.html"
+      }
+    ],
+    "section": "gallery",
+    "specs": {
+      "filter": "Dual-band",
+      "integration": "2 hours"
+    }
+  },
+  {
     "file": "images/eastern_veil_nebula_ngc6992.webp",
     "title": "Eastern Veil Nebula (NGC 6992)",
     "desc": "The eastern arc of a supernova remnant in Cygnus, where the blast wave of a star that exploded thousands of years ago is still ploughing into the surrounding gas. The red and teal filaments are the shock front itself, seen edge-on.",
@@ -128,6 +128,32 @@
       "filter": "SVBony SV220 3nm Dual Narrowband",
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
+    }
+  },
+  {
+    "file": "images/bubble-nebula-ngc7635.webp",
+    "title": "The Bubble Nebula (NGC 7635)",
+    "desc": "A bubble of gas blown out by one huge, very hot star in Cassiopeia. The data comes from The Wizard's Library, Luke's free collection of practice data, and I processed it in AstroWizard.",
+    "alt": "Bubble Nebula NGC 7635 in Cassiopeia, a round shell of glowing gas around a bright star inside a larger orange cloud, processed from dual-band data",
+    "type": "nebulae",
+    "slug": "bubble-nebula-ngc7635",
+    "date": "03-11-2026",
+    "intro": "The Bubble Nebula is a round shell of gas in Cassiopeia, blown out by a single star. The star is so hot and so bright that the wind coming off it has pushed the gas around it into a bubble.",
+    "body": "The Bubble lies about 7,100 light-years away in Cassiopeia. The bubble itself is about 7 light-years across, more than one and a half times the distance from the Sun to the nearest other star. It sits inside a much bigger cloud of glowing gas, which fills the rest of the picture. William Herschel found it in 1787.\n\nThe bubble is made by one star, about 45 times heavier than the Sun. It is so hot that it blows out a constant stream of gas, called a stellar wind, at more than 6 million kilometres an hour. That wind pushes into the cooler gas around the star and piles it up, like a snowplough pushing snow. The edge of that pile is the thin shell you can see.\n\nThe star is not in the middle of its bubble. On one side the bubble has run into thicker gas, which slows it down, so it has grown further the other way. The star is about 4 million years old, which is young for a star. It uses up its fuel so quickly that it will probably explode as a supernova in 10 to 20 million years.\n\nThe data comes from Luke, who makes the AstroWizard processing software. He captures data with his own telescopes and shares it free in The Wizard's Library, so anyone can practise processing. This set was taken with an Askar 120 telescope through a dual-band filter, which lets through only the light given off by glowing hydrogen and oxygen and blocks most of the rest, including light pollution. I downloaded it and processed it in AstroWizard.\n\nFrom the UAE the Bubble is an autumn target. It climbs to just over 50 degrees above the northern horizon, and in early November it is highest at around 9pm.",
+    "body_links": [
+      {
+        "text": "AstroWizard",
+        "href": "https://astrowizard.lukomatico.com/"
+      },
+      {
+        "text": "The Wizard's Library",
+        "href": "https://astrowizard.lukomatico.com/library.html"
+      }
+    ],
+    "section": "gallery",
+    "specs": {
+      "telescope": "Askar 120",
+      "filter": "Dual-band"
     }
   },
   {
