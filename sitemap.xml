@@ -25,16 +25,19 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://bhapstar.com/images/elephant-trunk-nebula-ic1396a.webp</image:loc>
-    </image:image>
-    <image:image>
       <image:loc>https://bhapstar.com/images/heart-nebula-ic1805.webp</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/milky-way-and-stardust.webp</image:loc>
     </image:image>
     <image:image>
+      <image:loc>https://bhapstar.com/images/elephant-trunk-nebula-ic1396a.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://bhapstar.com/images/eastern_veil_nebula_ngc6992.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/bubble-nebula-ngc7635.webp</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://bhapstar.com/images/the_sun.webp</image:loc>
@@ -374,14 +377,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bhapstar.com/share/elephant-trunk-nebula-ic1396a.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://bhapstar.com/images/elephant-trunk-nebula-ic1396a.webp</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://bhapstar.com/share/heart-nebula-ic1805.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
@@ -398,11 +393,27 @@
     </image:image>
   </url>
   <url>
+    <loc>https://bhapstar.com/share/elephant-trunk-nebula-ic1396a.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/elephant-trunk-nebula-ic1396a.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://bhapstar.com/share/eastern-veil-nebula-ngc6992.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/eastern_veil_nebula_ngc6992.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://bhapstar.com/share/bubble-nebula-ngc7635.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/bubble-nebula-ngc7635.webp</image:loc>
     </image:image>
   </url>
   <url>
