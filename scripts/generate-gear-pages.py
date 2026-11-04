@@ -71,7 +71,15 @@ def read_review(slug):
     return "<p><em>Review coming soon.</em></p>"
 
 def build_json_ld(entry, page_url, cover_src):
-    """Build Article + Product schema."""
+    """Build Article schema.
+
+    The item is described with "about" as a plain Thing, not as a Product.
+    Google treats any Product as a product snippet candidate and flags it as
+    a critical error unless it carries offers (with a price), a review (with
+    a star rating) or an aggregateRating. These pages have none of those,
+    because the site does not sell the gear and the reviews are not scored,
+    so a Product here only ever produced a Search Console error.
+    """
     iso_date = PUBLISHED_DATE
     schema = {
         "@context": "https://schema.org",
@@ -90,8 +98,8 @@ def build_json_ld(entry, page_url, cover_src):
         },
         "datePublished": iso_date,
         "dateModified": iso_date,
-        "mainEntity": {
-            "@type": "Product",
+        "about": {
+            "@type": "Thing",
             "name": entry.get('title', ''),
             "image": url_for(cover_src) if cover_src else None,
             "description": entry.get('desc', '')
