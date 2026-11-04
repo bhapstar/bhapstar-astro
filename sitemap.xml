@@ -76,6 +76,9 @@
       <image:loc>https://bhapstar.com/images/flame-horsehead-nebulae.webp</image:loc>
     </image:image>
     <image:image>
+      <image:loc>https://bhapstar.com/images/flame-horsehead-nebulae2.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://bhapstar.com/images/andromeda-galaxy-m31.webp</image:loc>
     </image:image>
     <image:image>
@@ -505,6 +508,9 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://bhapstar.com/images/flame-horsehead-nebulae.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://bhapstar.com/images/flame-horsehead-nebulae2.webp</image:loc>
     </image:image>
   </url>
   <url>
