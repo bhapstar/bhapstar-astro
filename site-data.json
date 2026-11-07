@@ -3,7 +3,7 @@
     "section": "_divider",
     "_bar": "==================================================================",
     "_section": "GALLERY",
-    "_count": "31 entries",
+    "_count": "32 entries",
     "_note": [
       "Photographs. Shown on gallery.html and index.html, and rotated",
       "through the six thumbnails on card.html.",
@@ -594,6 +594,32 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
+    }
+  },
+  {
+    "file": "images/whirlpool-galaxy-m51.webp",
+    "title": "The Whirlpool Galaxy (M51)",
+    "desc": "A spiral galaxy seen face-on, with a smaller galaxy at the end of one of its arms. The data comes from The Wizard's Library, Luke's free collection of practice data, and I processed it in AstroWizard.",
+    "alt": "Whirlpool Galaxy M51 in Canes Venatici, a face-on spiral galaxy with blue arms and its small yellow companion galaxy NGC 5195",
+    "type": "galaxies",
+    "slug": "whirlpool-galaxy-m51",
+    "date": "07-11-2026",
+    "intro": "The Whirlpool is a spiral galaxy that we see face-on, so its arms wind neatly around its bright centre. A smaller galaxy, NGC 5195, sits at the end of one of those arms.",
+    "body": "The Whirlpool lies around 30 million light-years away in Canes Venatici, near the end of the Big Dipper's handle. It is a little smaller than our own Milky Way. Charles Messier found it in 1773, and Pierre Méchain spotted the small companion in 1781. In 1845 Lord Rosse looked at it through what was then the biggest telescope in the world and saw its spiral shape. It was the first galaxy ever seen to have one.\n\nThe two galaxies are pulling on each other. The small one passed close to the Whirlpool millions of years ago, and astronomers think that is why the Whirlpool's arms are so clear and bright. The pull squeezed the gas in the arms, and squeezed gas makes new stars. The blue in the arms is light from those young stars, and the small pink spots are clouds where more stars are forming now.\n\nFrom here it looks as if one arm reaches out and touches the small galaxy, but the small galaxy is actually behind it. The dark line across its face is dust in the Whirlpool's arm, passing in front of it. The faint grey wisps around the small galaxy are stars and gas pulled loose when the two met.\n\nThe data comes from Luke, who makes the AstroWizard processing software. He captures data with his own telescopes and shares it free in The Wizard's Library, so anyone can practise processing. This set is just over eight hours, taken through a telescope fitted with a HyperStar. I downloaded it and processed it in AstroWizard.\n\nFrom the UAE the Whirlpool is a spring target. It climbs to almost 70 degrees above the northern horizon, and in mid April it is highest around midnight.",
+    "body_links": [
+      {
+        "text": "AstroWizard",
+        "href": "https://astrowizard.lukomatico.com/"
+      },
+      {
+        "text": "The Wizard's Library",
+        "href": "https://astrowizard.lukomatico.com/library.html"
+      }
+    ],
+    "section": "gallery",
+    "specs": {
+      "telescope": "HyperStar",
+      "integration": "8.1 hours"
     }
   },
   {
