@@ -2650,20 +2650,26 @@ a[href="prints.html"], a[href*="prints"] {
 }
 .ts-short { display: none; }
 
+/* The two items share the row equally, with the divider in the middle.
+   If only one is showing it takes the whole row. */
+.ts-cal, .ts-app { flex: 1 1 0; }
+
 /* calendar: the whole item is the link */
-.ts-cal { flex: 1 1 auto; color: inherit; text-decoration: none; }
+.ts-cal { color: inherit; text-decoration: none; padding-right: 16px; }
 .ts-cal:hover .pwa-banner-btn { color: #fff; border-color: rgba(167,139,250,0.7); }
 
-/* app install: compact, on the right, after a thin divider */
-.ts-app {
-  flex: 0 0 auto; margin-left: 16px; padding-left: 16px;
-  border-left: 1px solid rgba(167,139,250,0.2);
+/* app install: the right half, after a thin divider */
+.ts-app { padding-left: 16px; border-left: 1px solid rgba(167,139,250,0.2); }
+.ts-app .ts-text strong { color: #c4b5fd; }
+.ts-cal[hidden] + .ts-app { padding-left: 0; border-left: 0; }
+
+/* the short description after each title, only where there is room */
+.ts-sub, .ts-app .pwa-banner-sub { display: none; }
+@media (min-width: 1100px) {
+  .ts-sub { display: inline; }
+  .ts-app .pwa-banner-sub { display: inline; }
+  .ts-app .pwa-banner-sub::before { content: "\00a0\00a0\00b7\00a0\00a0"; }
 }
-.ts-app .ts-text { flex: 0 1 auto; color: #c4b5fd; }
-.ts-app .pwa-banner-sub { display: none; }
-/* on its own (no calendar), it takes the whole row as before */
-.ts-cal[hidden] + .ts-app { flex: 1 1 auto; margin-left: 0; padding-left: 0; border-left: 0; }
-.ts-cal[hidden] + .ts-app .ts-text { flex: 1 1 auto; }
 
 /* The strip stays dark in both themes, so the buttons cannot take
    var(--text) or they turn near-black on near-black under the light theme.
@@ -2693,9 +2699,6 @@ a[href="prints.html"], a[href*="prints"] {
 }
 .pwa-ios-tip[hidden] { display: none; }
 
-@media (max-width: 960px) {
-  .ts-cal .ts-sub { display: none; }
-}
 /* Phones: shorter labels, and the calendar item drops its button (the
    whole item is the link, marked with an arrow) so nothing gets cut off */
 @media (max-width: 600px) {
@@ -2704,9 +2707,13 @@ a[href="prints.html"], a[href*="prints"] {
   .ts-cal .pwa-banner-btn { display: none; }
   .ts-cal .ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
   .ts-item { gap: 8px; }
-  .ts-app { margin-left: 10px; padding-left: 10px; }
+  .ts-cal { padding-right: 10px; }
+  .ts-app { padding-left: 10px; }
   .ts-text { font-size: 0.82rem; }
   .pwa-banner-btn { padding: 5px 11px; font-size: 0.74rem; }
+}
+@media (max-width: 380px) {
+  .ts-app .ts-icon { display: none; }
 }
 @media (max-width: 340px) {
   .ts-icon { display: none; }
