@@ -10045,8 +10045,12 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 .sim-callout-arrow{ flex:0 0 auto; color:var(--accent); font-size:1.5rem; line-height:1; }
 
 /* ── Page intro ── */
-.sim-intro{ max-width:74ch; margin:-.25rem 0 1.35rem; line-height:1.6; }
-.sim-intro a{ color:var(--accent); }
+.sim-intro{ max-width:none; margin:-.25rem 0 1.35rem; line-height:1.6; }
+/* The site-wide a[href*="prints"] rule makes every prints link a flex
+   box, which drops this inline link onto its own line with the full stop
+   below it. Force it back to inline, as star_word.html and quiz.html do.
+   Keep the !important: the site rule carries one too. */
+.sim-intro a{ color:var(--accent); display:inline !important; }
 
 /* ── Layout ── */
 .sim-layout{ display:grid; gap:18px; }

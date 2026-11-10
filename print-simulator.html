@@ -126,8 +126,7 @@
             <p class="sim-note">
               The preview is a guide to scale and proportion, not a colour proof. Screens vary,
               and a print on paper or canvas will always look a little different from a
-              backlit display. Images shown here carry the site watermark. The print you
-              receive does not.
+              backlit display.
             </p>
           </div>
 
@@ -369,10 +368,13 @@
     host._setValue = renderTrigger;   // so init can show the opening selection
   }
 
-  /* Load the image once so its real aspect ratio decides the orientation. */
+  /* Load the image once so its real aspect ratio decides the orientation.
+     The preview uses the thumbnail from images/thumbs/, which carries no
+     watermark and is ample for a print drawn a few hundred pixels across.
+     FULL_MAP is still the list of valid picker labels. */
   function selectImage(label) {
     state.imageLabel = label;
-    state.imageUrl   = FULL_MAP[label] || '';
+    state.imageUrl   = THUMB_MAP[label] || '';
     state.aspect     = 0;
     render();
     if (!state.imageUrl) return;
