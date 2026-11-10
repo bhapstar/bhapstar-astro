@@ -10705,6 +10705,16 @@ html.ss-lock body{ overflow: hidden; }
   .ss-title{ animation: none; }
 }
 
+/* ── Room for the site header before it arrives ──
+   partials.js fills #siteHeader after the page has drawn, which used to push
+   everything below it down. Holding its height while it is empty stops that
+   jump. These are the measured heights of partials/header.html (Outfit
+   loaded); the steps are where the nav wraps onto another line. If the header
+   gains or loses links, measure again. */
+#siteHeader:empty{ min-height: 101px; }
+@media (max-width: 619px){ #siteHeader:empty{ min-height: 134px; } }
+@media (max-width: 358px){ #siteHeader:empty{ min-height: 168px; } }
+
 /* ── Footnote on a gallery picture's page (site-data "footnote") ──
    Small print at the foot of the page, after the capture details, for a
    credit such as data captured by someone else. The gallery viewer shows the

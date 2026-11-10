@@ -307,8 +307,12 @@
 
 <!-- ─────────────────────────────────────────
      2027 CALENDAR POP-UP (and the banner at the top of the page)
-     - The banner shows on every visit until CAL_PROMO_END
-     - The pop-up appears a second after the homepage loads
+     - The banner shows on every visit until CAL_PROMO_END. It is switched on
+       as the page is read, so it is already in place on the first paint
+       (styles.css holds the header's space until partials.js fills it)
+     - The pop-up appears a second after the homepage loads, but not before
+       the header is in and its picture has loaded, so it opens once at full
+       size instead of opening small and then jumping
      - Closed: shown again after 4 days. "Enquire now": never again
      - Not shown to anyone arriving from the calendar's own QR codes or
        NFC tag (?src=calendar / calendar-nfc), since they have one already
@@ -321,7 +325,8 @@
      aria-labelledby="calPromoTitle" aria-describedby="calPromoText">
   <button type="button" class="cal-promo-close" id="calPromoClose" aria-label="Close">&#10005;</button>
   <img class="cal-promo-img" src="images/calendar/calendar-2027-trio.webp" width="1100" height="871"
-       alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it" loading="lazy" />
+       alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it"
+       decoding="async" fetchpriority="low" />
   <span class="cal-promo-tag">New for 2027</span>
   <h2 id="calPromoTitle">The bhapstar 2027 calendar</h2>
   <p id="calPromoText">Fragments of the Universe: twelve of my deep-sky images, one for every month, with moon phases,
@@ -340,6 +345,20 @@
   var DELAY_MS = 1000;
 
   if (new Date() >= CAL_PROMO_END) return;
+
+  /* Calls cb once the site header has been added by partials.js (or after
+     4 s, in case it is slow or fails). */
+  function whenHeaderReady(cb) {
+    var done = false;
+    function go() { if (!done) { done = true; cb(); } }
+    var h = document.getElementById('siteHeader');
+    if (!h || h.childElementCount) { go(); return; }
+    var mo = new MutationObserver(function () {
+      if (h.childElementCount) { mo.disconnect(); go(); }
+    });
+    mo.observe(h, { childList: true });
+    setTimeout(function () { mo.disconnect(); go(); }, 4000);
+  }
 
   // The banner is always on until CAL_PROMO_END, whatever happens to the pop-up
   var calBanner = document.getElementById('calBanner');
@@ -401,7 +420,16 @@
     document.getElementById('calPromoLater').addEventListener('click', close);
     document.getElementById('calPromoOverlay').addEventListener('click', close);
     document.getElementById('calPromoGo').addEventListener('click', function () { save({ done: true }); });
-    setTimeout(open, DELAY_MS);
+
+    // Open when all three are true: DELAY_MS has passed, the header is in,
+    // and the picture is loaded and decoded
+    var waiting = 3;
+    function ready() { if (--waiting === 0) open(); }
+    setTimeout(ready, DELAY_MS);
+    whenHeaderReady(ready);
+    var img = document.querySelector('#calPromo .cal-promo-img');
+    if (img && img.decode) img.decode().then(ready, ready);
+    else ready();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
