@@ -1290,9 +1290,10 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .support-right{ display: flex; flex-direction: column; gap: 8px; align-items: flex-end; justify-content: center; }
 .support-btn{ width: fit-content; }
 
-/* Scrolling gradient text on "Support my work", "Submit enquiry" and "Send message" buttons */
+/* Scrolling gradient text on "Support my work" and "Send message" buttons.
+   (The prints page Submit enquiry button is a filled gradient instead: see
+   .submit-cta.) */
 .support-btn span,
-#submitEnquiry,
 .contact-form .btn[type="submit"] {
   background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
@@ -10702,6 +10703,54 @@ html.ss-lock body{ overflow: hidden; }
 @media (prefers-reduced-motion: reduce){
   .ss-img{ transition: none; }
   .ss-title{ animation: none; }
+}
+
+/* ── Footnote on a gallery picture's page (site-data "footnote") ──
+   Small print at the foot of the page, after the capture details, for a
+   credit such as data captured by someone else. The gallery viewer shows the
+   same text under the write-up (.dv-detail-footnote). */
+.share-footnote{
+  margin: 26px 0 24px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.share-footnote p{ margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+.share-footnote a.share-body-link{
+  color: inherit; text-decoration: underline;
+  text-decoration-color: rgba(167,139,250,0.5); text-underline-offset: 2px;
+}
+.share-footnote a.share-body-link:hover,
+.share-footnote a.share-body-link:focus-visible{ color: var(--accent); }
+.dv-detail-footnote{
+  margin: 6px 0 0; padding-top: 10px;
+  border-top: 1px solid rgba(167,139,250,0.18);
+  font-size: 12.5px; line-height: 1.6; color: rgba(232,230,247,0.6);
+}
+
+/* ── Prints page: the Submit enquiry button ──
+   Styled like the Download button on the field cards page, so the last step
+   of the form stands out from the other buttons. */
+.submit-cta{
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 28px; border-radius: 12px; border: 1px solid transparent; cursor: pointer;
+  font-family: var(--font); font-size: 16px; font-weight: 600; letter-spacing: 0.02em; color: #fff;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  animation: gradientRoll 5s linear infinite;
+  box-shadow: 0 8px 26px rgba(167,139,250,0.28);
+  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+.submit-cta:hover, .submit-cta:focus-visible{
+  transform: translateY(-2px); box-shadow: 0 12px 34px rgba(167,139,250,0.42);
+}
+.submit-cta:focus-visible{ outline: 2px solid #fff; outline-offset: 3px; }
+.submit-cta svg{ width: 17px; height: 17px; flex-shrink: 0; }
+.submit-cta:disabled{ opacity: 0.7; cursor: progress; transform: none; }
+@media (max-width: 768px){
+  .submit-cta{ width: 100%; }
+}
+@media (prefers-reduced-motion: reduce){
+  .submit-cta{ animation: none; }
+  .submit-cta:hover{ transform: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════

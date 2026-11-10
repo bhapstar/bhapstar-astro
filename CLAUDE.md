@@ -30,6 +30,16 @@ blocks between its `ARTICLE-TILES` and `ARTICLE-JSONLD` marker comments.
 Everything outside them (the controls, the runtime script, the order buttons)
 is hand-written and safe to edit. Never touch anything between the markers.
 
+`gallery.html` works the same way: the build only rewrites its structured
+data block (the `application/ld+json` script between the schema markers).
+The viewer markup and script around it are hand-written and safe to edit.
+
+A gallery entry in `site-data.json` can carry a `footnote`: small print shown
+at the foot of the picture's page (after Capture details) and under the
+write-up in the gallery viewer. It is used to credit data captured by someone
+else, so the description and write-up stay about the object itself.
+`body_links` whose text is not in the write-up are linked in the footnote.
+
 **Do not touch `sw.js` or `scripts/generate-sitemap.py` without being asked.**
 CI rewrites the service worker cache version on every deploy, so never change
 `CACHE_VERSION` by hand.

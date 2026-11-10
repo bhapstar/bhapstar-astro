@@ -115,6 +115,20 @@
   </div>
 </div>
 
+<!-- 2027 CALENDAR BANNER
+     Same look as the install banner above, with no close button. Shown by the
+     2027 CALENDAR POP-UP script further down, until CAL_PROMO_END. -->
+<div id="calBanner" class="pwa-banner" role="complementary" aria-label="2027 calendar" hidden>
+  <div class="pwa-banner-inner wrap">
+    <span class="pwa-banner-icon" aria-hidden="true">🗓️</span>
+    <div class="pwa-banner-text">
+      <strong>New: the bhapstar 2027 calendar</strong>
+      <span class="pwa-banner-sub">Twelve deep-sky images. A great Christmas gift for the astro lover</span>
+    </div>
+    <a class="btn primary pwa-banner-btn" href="prints.html?calendar=1">Enquire</a>
+  </div>
+</div>
+
 
 <script>
 (function () {
@@ -292,13 +306,14 @@
 </script>
 
 <!-- ─────────────────────────────────────────
-     2027 CALENDAR POP-UP
-     - Appears a few seconds after the homepage loads
-     - Closed: not shown again for 14 days. "Enquire now": never again
+     2027 CALENDAR POP-UP (and the banner at the top of the page)
+     - The banner shows on every visit until CAL_PROMO_END
+     - The pop-up appears a second after the homepage loads
+     - Closed: shown again after 4 days. "Enquire now": never again
      - Not shown to anyone arriving from the calendar's own QR codes or
        NFC tag (?src=calendar / calendar-nfc), since they have one already
-     - Switches itself off from CAL_PROMO_END, so it can stay in place
-       until it is convenient to delete
+     - Both switch themselves off from CAL_PROMO_END, so they can stay in
+       place until it is convenient to delete
      Styles: the "2027 CALENDAR" block at the end of styles.css
 ───────────────────────────────────────── -->
 <div id="calPromoOverlay" class="cal-promo-overlay" hidden></div>
@@ -321,10 +336,14 @@
 (function () {
   var CAL_PROMO_END = new Date('2027-02-01T00:00:00');   // stops showing from 1 Feb 2027
   var KEY = 'calPromo2027';
-  var SNOOZE_DAYS = 14;
-  var DELAY_MS = 3500;
+  var SNOOZE_DAYS = 4;
+  var DELAY_MS = 1000;
 
   if (new Date() >= CAL_PROMO_END) return;
+
+  // The banner is always on until CAL_PROMO_END, whatever happens to the pop-up
+  var calBanner = document.getElementById('calBanner');
+  if (calBanner) calBanner.hidden = false;
   var src = new URLSearchParams(location.search).get('src');
   if (src === 'calendar' || src === 'calendar-nfc') return;
 

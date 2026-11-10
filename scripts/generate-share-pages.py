@@ -706,17 +706,31 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     # strings stay plain text in site-data.json, because the gallery viewer
     # and the meta description read them too. Done before the glossary pass,
     # which never marks words inside a link.
+    #
+    # ── optional footnote ──
+    # "footnote" in site-data.json is a short note shown in small type at the
+    # foot of the page, after the capture details, instead of in the write-up.
+    # It is used to credit data captured by someone else. A body link whose
+    # text is not in the write-up is looked for in the footnote instead.
+    footnote_text = t(entry.get("footnote") or "")
     for bl in entry.get("body_links") or []:
         needle = t(bl.get("text"))
         href = gear_href(bl["gear"]) if bl.get("gear") else bl.get("href")
         if not needle or not href:
             print(f"  ! {slug}: body link '{bl.get('text')}' has no target, skipped")
             continue
-        if needle not in body_html:
+        link = f'<a class="share-body-link" href="{a(href)}">{needle}</a>'
+        if needle in body_html:
+            body_html = body_html.replace(needle, link, 1)
+        elif needle in footnote_text:
+            footnote_text = footnote_text.replace(needle, link, 1)
+        else:
             print(f"  ! {slug}: body link text '{bl.get('text')}' not found, skipped")
-            continue
-        body_html = body_html.replace(
-            needle, f'<a class="share-body-link" href="{a(href)}">{needle}</a>', 1)
+    footnote_html = ""
+    if footnote_text:
+        footnote_html = ('      <aside class="share-footnote" aria-label="About the data">\n'
+                         f'        <p>{footnote_text}</p>\n'
+                         '      </aside>\n\n')
 
     # Glossary explainers on the first mention of each technical word, exactly
     # as the article and gear pages get them. This is the only rendering of a
@@ -1272,7 +1286,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 {body_html}
       </div>
 
-{specs_html}
+{specs_html}{footnote_html}
       <div class="actions">
         <a class="btn primary" href="/gallery.html">Back to gallery</a>
         <a class="btn" href="/prints.html">Order a print</a>

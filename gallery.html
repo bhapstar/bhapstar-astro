@@ -1124,6 +1124,7 @@
       <h2 class="dv-detail-title"  id="dvDetailTitle"></h2>
       <p class="dv-detail-intro"   id="dvDetailIntro"></p>
       <div class="dv-detail-body"  id="dvDetailBody"></div>
+      <p class="dv-detail-footnote" id="dvDetailFootnote"></p>
       <a class="dv-detail-page-link" id="dvDetailPageLink" href="#">Open this image’s page →</a>
     </div>
   </div>
@@ -1257,6 +1258,7 @@
   const dvDetailTitle = document.getElementById('dvDetailTitle');
   const dvDetailIntro = document.getElementById('dvDetailIntro');
   const dvDetailBody  = document.getElementById('dvDetailBody');
+  const dvDetailFootnote = document.getElementById('dvDetailFootnote');
   const dvDetailPageLink = document.getElementById('dvDetailPageLink');
   const dvDetailSpecs = document.getElementById('dvDetailSpecs');
   const dvBasic       = document.getElementById('dvBasic');
@@ -1805,6 +1807,9 @@
     dvDetailIntro.style.display = it.intro ? '' : 'none';
     dvDetailBody.innerHTML = detailBodyToHtml(it.body);
     dvDetailBody.style.display = it.body ? '' : 'none';
+    // site-data "footnote": small print under the write-up, e.g. a data credit
+    dvDetailFootnote.textContent = it.footnote || '';
+    dvDetailFootnote.style.display = it.footnote ? '' : 'none';
     if (dvDetailPageLink) {
       if (it.slug) {
         dvDetailPageLink.href = `share/${it.slug}.html`;
