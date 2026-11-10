@@ -2658,6 +2658,14 @@ a[href="prints.html"], a[href*="prints"] {
 .ts-cal { color: inherit; text-decoration: none; padding-right: 16px; }
 .ts-cal:hover .pwa-banner-btn { color: #fff; border-color: rgba(167,139,250,0.7); }
 
+/* the app's words are a button too (they do what Install does) */
+.ts-textbtn {
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; text-align: left; cursor: pointer;
+  display: block;
+}
+.ts-textbtn:focus-visible { outline: 2px solid rgba(167,139,250,0.8); outline-offset: 3px; border-radius: 4px; }
+
 /* app install: the right half, after a thin divider */
 .ts-app { padding-left: 16px; border-left: 1px solid rgba(167,139,250,0.2); }
 .ts-app .ts-text strong { color: #c4b5fd; }
@@ -2699,24 +2707,27 @@ a[href="prints.html"], a[href*="prints"] {
 }
 .pwa-ios-tip[hidden] { display: none; }
 
-/* Phones: shorter labels, and the calendar item drops its button (the
-   whole item is the link, marked with an arrow) so nothing gets cut off */
+/* Phones: no buttons. Each half is just its words, which are the link
+   ("2027 calendar enquiry" / "Download the app"), marked with an arrow. */
 @media (max-width: 600px) {
   .ts-long { display: none; }
   .ts-short { display: inline; }
-  .ts-cal .pwa-banner-btn { display: none; }
-  .ts-cal .ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
+  .ts-cal .pwa-banner-btn, .ts-app .pwa-banner-btn, .ts-app .pwa-banner-close { display: none; }
+  .ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
   .ts-item { gap: 8px; }
   .ts-cal { padding-right: 10px; }
-  .ts-app { padding-left: 10px; }
-  .ts-text { font-size: 0.82rem; }
-  .pwa-banner-btn { padding: 5px 11px; font-size: 0.74rem; }
+  .ts-app { padding-left: 12px; }
+  .ts-text { font-size: 0.84rem; }
 }
-@media (max-width: 380px) {
-  .ts-app .ts-icon { display: none; }
-}
-@media (max-width: 340px) {
+@media (max-width: 400px) {
   .ts-icon { display: none; }
+}
+/* the smallest phones: "Calendar enquiry", without the year */
+.ts-noyear { display: none; }
+@media (max-width: 340px) {
+  .ts-text { font-size: 0.8rem; }
+  .ts-year { display: none; }
+  .ts-noyear { display: inline; }
 }
 
 .app-discount-overlay {
