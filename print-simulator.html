@@ -641,12 +641,34 @@
   /* Dimension arrows in centimetres. The labels sit on solid chips and the
      rules carry a pale halo, so they stay readable where the artwork hangs
      close to a headboard or a counter. The width rule moves above the
-     picture when there is no clear space beneath it. */
-  function measureSVG(cx, cy, w, h, flipUp) {
+     picture when there is no clear space beneath it.
+
+     The height rule sits on the left of the picture. When the picture
+     hangs near the left end of the wall (a large canvas in the corridor,
+     for example) its label would run off the wall, so the rule moves to
+     the right instead. If neither side has room, it takes the side with
+     more space and the label is nudged back onto the wall. Every label is
+     kept inside the room view the same way. */
+  function measureSVG(cx, cy, w, h, flipUp, room) {
     const x = cx - w / 2, y = cy - h / 2;
     const dy = flipUp ? y - 9 : y + h + 9;
-    const dx = x - 9;
     const tick = 3;
+    const pad  = 2;   // clear space kept between a label and the edge of the view
+
+    /* A chip sized from the character count. Outfit at 8 units sits close
+       to 4.4 units per character, which is near enough for a background. */
+    const chipW = text => text.length * 4.4 + 6;
+
+    const wTxt = `${w.toFixed(1)} cm`;
+    const hTxt = `${h.toFixed(1)} cm`;
+    const wy = flipUp ? dy - 3.5 : dy + 8;
+
+    // Room left of the picture for the rule and its label, and the same on the right.
+    const hw        = chipW(hTxt);
+    const spaceLeft  = (x - 10 - hw) - pad;
+    const spaceRight = room.w - pad - (x + w + 10 + hw);
+    const onLeft = spaceLeft >= 0 || (spaceRight < 0 && spaceLeft >= spaceRight);
+    const dx = onLeft ? x - 9 : x + w + 9;
 
     const rules = `
       <line x1="${x}" y1="${dy}" x2="${x + w}" y2="${dy}"/>
@@ -656,19 +678,20 @@
       <line x1="${dx - tick}" y1="${y}" x2="${dx + tick}" y2="${y}"/>
       <line x1="${dx - tick}" y1="${y + h}" x2="${dx + tick}" y2="${y + h}"/>`;
 
-    /* A chip sized from the character count. Outfit at 8 units sits close
-       to 4.4 units per character, which is near enough for a background. */
+    /* The chip and its text move together, so a label pushed back onto the
+       wall still reads as one piece. */
     function chip(text, tx, ty, anchor) {
-      const cw = text.length * 4.4 + 6;
-      const chx = anchor === 'middle' ? tx - cw / 2 : (anchor === 'end' ? tx - cw + 3 : tx - 3);
-      return `<rect x="${chx}" y="${ty - 8}" width="${cw}" height="11" rx="2.5"
+      const cw = chipW(text);
+      let chx = anchor === 'middle' ? tx - cw / 2 : (anchor === 'end' ? tx - cw + 3 : tx - 3);
+      let chy = ty - 8;
+      const sx = Math.min(Math.max(chx, pad), room.w - pad - cw) - chx;
+      const sy = Math.min(Math.max(chy, pad), room.viewH - pad - 11) - chy;
+      chx += sx; tx += sx;
+      chy += sy; ty += sy;
+      return `<rect x="${chx}" y="${chy}" width="${cw}" height="11" rx="2.5"
                 fill="#ffffff" opacity=".9"/>
               <text x="${tx}" y="${ty}" text-anchor="${anchor}">${text}</text>`;
     }
-
-    const wTxt = `${w.toFixed(1)} cm`;
-    const hTxt = `${h.toFixed(1)} cm`;
-    const wy = flipUp ? dy - 3.5 : dy + 8;
 
     return `
       <g class="sim-measure">
@@ -676,7 +699,7 @@
         <g stroke="#5b2fd6" stroke-width=".7" fill="none" stroke-linecap="round">${rules}</g>
         <g fill="#3f1fa8" font-family="Outfit, sans-serif" font-size="8" font-weight="600">
           ${chip(wTxt, cx, wy, 'middle')}
-          ${chip(hTxt, dx - 4, cy + 3, 'end')}
+          ${onLeft ? chip(hTxt, dx - 4, cy + 3, 'end') : chip(hTxt, dx + 4, cy + 3, 'start')}
         </g>
       </g>`;
   }
@@ -834,7 +857,7 @@
 
       if (state.measure) {
         const flipUp = (F - (wall.cy + wall.h / 2)) - room.minBottom < 14;
-        measure = measureSVG(wall.cx, wall.cy, wall.w, wall.h, flipUp);
+        measure = measureSVG(wall.cx, wall.cy, wall.w, wall.h, flipUp, room);
       }
 
       label = `a gallery wall of ${wall.count} framed prints`;
@@ -857,7 +880,7 @@
 
       if (state.measure) {
         const flipUp = (F - (cy + outerH / 2)) - room.minBottom < 14;
-        measure = measureSVG(cx, cy, outerW, outerH, flipUp);
+        measure = measureSVG(cx, cy, outerW, outerH, flipUp, room);
       }
 
       label = `${state.imageLabel} at ${w.toFixed(0)} by ${h.toFixed(0)} centimetres`;
