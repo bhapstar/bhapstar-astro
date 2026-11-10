@@ -10703,3 +10703,106 @@ html.ss-lock body{ overflow: hidden; }
   .ss-img{ transition: none; }
   .ss-title{ animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   2027 CALENDAR
+   The homepage pop-up (index.html) and, on prints.html, the callout, the
+   calendar line in the enquiry builder and the "See inside" viewer.
+   The pop-up switches itself off after January 2027 (CAL_PROMO_END in
+   index.html). When the calendar is finished with, delete this block and
+   the blocks marked "2027 CALENDAR" in index.html and prints.html.
+═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Homepage pop-up. Always dark, like the app thank-you modal ── */
+.cal-promo-overlay{
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(3,2,12,0.72);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  opacity: 0; transition: opacity 260ms ease;
+}
+.cal-promo{
+  position: fixed; z-index: 301; left: 50%; top: 50%;
+  transform: translate(-50%, -46%) scale(0.98); opacity: 0;
+  width: min(92vw, 440px); max-height: 92vh; overflow-y: auto;
+  padding: 1.1rem 1.4rem 1.4rem; text-align: center;
+  font-family: var(--font); color: #fff;
+  background: linear-gradient(160deg, #0d0b2a 0%, #160f38 60%, #1d1240 100%);
+  border: 1px solid rgba(167,139,250,0.35); border-radius: 22px;
+  box-shadow: 0 0 70px rgba(124,58,237,0.35), 0 40px 120px rgba(0,0,0,0.6);
+  transition: opacity 300ms ease, transform 420ms var(--ease-out-expo);
+}
+.cal-promo:focus{ outline: none; }
+.cal-promo.show, .cal-promo-overlay.show{ opacity: 1; }
+.cal-promo.show{ transform: translate(-50%, -50%) scale(1); }
+.cal-promo[hidden], .cal-promo-overlay[hidden]{ display: none; }
+.cal-promo-close{
+  position: absolute; top: 10px; right: 12px; z-index: 1;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(167,139,250,0.30); background: rgba(13,11,42,0.75);
+  color: #fff; font-size: 15px; line-height: 1; cursor: pointer;
+}
+.cal-promo-close:hover{ border-color: rgba(167,139,250,0.7); }
+.cal-promo-img{
+  display: block; width: auto; max-width: 100%; max-height: 38vh; height: auto;
+  margin: 0.3rem auto 0.5rem;
+}
+.cal-promo-tag{
+  display: inline-block; margin-bottom: 0.35rem;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #c4b5fd;
+}
+.cal-promo h2{
+  margin: 0 0 0.5rem; font-size: 1.45rem; line-height: 1.2; font-weight: 700;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.cal-promo p{ margin: 0 0 1.1rem; color: rgba(220,215,250,0.86); font-size: 0.95rem; line-height: 1.55; }
+.cal-promo-actions{ display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.cal-promo .btn{ color: #fff; }
+@media (prefers-reduced-motion: reduce){
+  .cal-promo, .cal-promo-overlay{ transition: none; }
+}
+
+/* ── Prints page callout ── */
+.cal-callout{
+  display: grid; grid-template-columns: minmax(0, 210px) 1fr; gap: 16px; align-items: center;
+  padding: 14px 16px; margin: 0 0 1.25rem;
+  border: 1px solid rgba(167,139,250,0.22); border-radius: 16px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.10), rgba(244,114,182,0.06));
+}
+.cal-callout-img{ display: block; width: 100%; height: auto; }
+.cal-callout-tag{
+  display: inline-block; margin-bottom: 0.25rem;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+}
+.cal-callout-title{ display: block; margin-bottom: 0.3rem; font-size: 1.05rem; color: var(--text); }
+.cal-callout p{ margin: 0 0 0.85rem; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+.cal-callout-actions{ display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 560px){
+  .cal-callout{ grid-template-columns: 1fr; }
+  .cal-callout-img{ max-width: 300px; margin: 0 auto; }
+}
+
+/* ── Calendar line in the enquiry builder ── */
+.cal-row-hint{ margin: 0.45rem 0 0; }
+#calendarRow.flash{ animation: calRowFlash 1.8s ease; border-radius: 12px; }
+@keyframes calRowFlash{
+  0%  { box-shadow: 0 0 0 0 rgba(167,139,250,0); }
+  25% { box-shadow: 0 0 0 6px rgba(167,139,250,0.35); }
+  100%{ box-shadow: 0 0 0 0 rgba(167,139,250,0); }
+}
+
+/* ── "See inside" viewer, inside the existing .calendar-modal ── */
+.calendar-modal-inner .cal-viewer-main{
+  display: block; width: auto; max-width: 100%; height: auto;
+  max-height: calc(90vh - 140px); margin: 0 auto; border-radius: 0;
+}
+.cal-viewer-caption{ margin: 8px 0 0; text-align: center; font-size: 0.85rem; color: rgba(220,215,250,0.8); }
+.cal-viewer-thumbs{ display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+.cal-viewer-thumbs button{
+  width: 54px; padding: 3px; cursor: pointer; opacity: 0.55;
+  border: 1px solid rgba(167,139,250,0.25); border-radius: 9px; background: rgba(167,139,250,0.06);
+  transition: opacity 160ms ease, border-color 160ms ease;
+}
+.cal-viewer-thumbs button:hover{ opacity: 0.85; }
+.cal-viewer-thumbs button[aria-current="true"]{ opacity: 1; border-color: rgba(167,139,250,0.8); }
+.calendar-modal-inner .cal-viewer-thumbs img{ width: 100%; height: auto; display: block; border-radius: 6px; }

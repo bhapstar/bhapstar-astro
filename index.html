@@ -291,6 +291,105 @@
 })();
 </script>
 
+<!-- ─────────────────────────────────────────
+     2027 CALENDAR POP-UP
+     - Appears a few seconds after the homepage loads
+     - Closed: not shown again for 14 days. "Enquire now": never again
+     - Not shown to anyone arriving from the calendar's own QR codes or
+       NFC tag (?src=calendar / calendar-nfc), since they have one already
+     - Switches itself off from CAL_PROMO_END, so it can stay in place
+       until it is convenient to delete
+     Styles: the "2027 CALENDAR" block at the end of styles.css
+───────────────────────────────────────── -->
+<div id="calPromoOverlay" class="cal-promo-overlay" hidden></div>
+<div id="calPromo" class="cal-promo" hidden role="dialog" aria-modal="true"
+     aria-labelledby="calPromoTitle" aria-describedby="calPromoText">
+  <button type="button" class="cal-promo-close" id="calPromoClose" aria-label="Close">&#10005;</button>
+  <img class="cal-promo-img" src="images/calendar/calendar-2027-trio.webp" width="1100" height="871"
+       alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it" loading="lazy" />
+  <span class="cal-promo-tag">New for 2027</span>
+  <h2 id="calPromoTitle">The bhapstar 2027 calendar</h2>
+  <p id="calPromoText">Fragments of the Universe: twelve of my deep-sky images, one for every month, with moon phases,
+    meteor showers and eclipses marked on the dates. A great Christmas gift for the astro lover in your life.</p>
+  <div class="cal-promo-actions">
+    <a class="btn primary" id="calPromoGo" href="prints.html?calendar=1">Enquire now</a>
+    <button type="button" class="btn" id="calPromoLater">Maybe later</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var CAL_PROMO_END = new Date('2027-02-01T00:00:00');   // stops showing from 1 Feb 2027
+  var KEY = 'calPromo2027';
+  var SNOOZE_DAYS = 14;
+  var DELAY_MS = 3500;
+
+  if (new Date() >= CAL_PROMO_END) return;
+  var src = new URLSearchParams(location.search).get('src');
+  if (src === 'calendar' || src === 'calendar-nfc') return;
+
+  var state = null;
+  try { state = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (state && (state.done || (Date.now() - (state.closed || 0)) < SNOOZE_DAYS * 864e5)) return;
+
+  function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+
+  var modal, overlay, lastFocus, focusables = [];
+
+  function onKey(e) {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab' || !focusables.length) return;
+    var first = focusables[0], last = focusables[focusables.length - 1];
+    if (document.activeElement === modal) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function open() {
+    modal = document.getElementById('calPromo');
+    overlay = document.getElementById('calPromoOverlay');
+    if (!modal || !overlay) return;
+    // Never on top of the app install thank-you
+    var other = document.getElementById('appDiscountModal');
+    if (other && !other.hidden) return;
+    lastFocus = document.activeElement;
+    focusables = Array.prototype.slice.call(modal.querySelectorAll('button, a[href]'));
+    modal.hidden = false;
+    overlay.hidden = false;
+    requestAnimationFrame(function () {
+      modal.classList.add('show');
+      overlay.classList.add('show');
+    });
+    // Focus the dialog itself, so the close button only shows a focus ring
+    // once someone starts moving through it with the keyboard
+    modal.setAttribute('tabindex', '-1');
+    modal.focus({ preventScroll: true });
+    document.addEventListener('keydown', onKey);
+  }
+
+  function close() {
+    if (!modal) return;
+    save({ closed: Date.now() });
+    modal.classList.remove('show');
+    overlay.classList.remove('show');
+    document.removeEventListener('keydown', onKey);
+    setTimeout(function () { modal.hidden = true; overlay.hidden = true; }, 320);
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+
+  function init() {
+    document.getElementById('calPromoClose').addEventListener('click', close);
+    document.getElementById('calPromoLater').addEventListener('click', close);
+    document.getElementById('calPromoOverlay').addEventListener('click', close);
+    document.getElementById('calPromoGo').addEventListener('click', function () { save({ done: true }); });
+    setTimeout(open, DELAY_MS);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
 <main>
   <!-- ─────────────────────────────
        HERO

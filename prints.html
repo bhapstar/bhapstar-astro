@@ -61,6 +61,7 @@
           <p class="helper" style="margin-top:-.5rem;margin-bottom:.9rem;">
             Every print is produced from the full-resolution master file: uncompressed, unwatermarked, and at the highest quality.
             Choose paper in A3, A4 or A5, canvas in three sizes, or a high-resolution digital file.
+            The 2027 calendar can be added to any enquiry too.
           </p>
 
           <!-- Link to the wall simulator -->
@@ -78,6 +79,23 @@
             </span>
             <span class="sim-callout-arrow" aria-hidden="true">&rsaquo;</span>
           </a>
+
+          <!-- 2027 CALENDAR: callout. Styles in the "2027 CALENDAR" block of styles.css -->
+          <div class="cal-callout" id="calendar2027">
+            <img class="cal-callout-img" src="images/calendar/calendar-2027-trio.webp" width="1100" height="871"
+                 alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it" loading="lazy" />
+            <div>
+              <span class="cal-callout-tag">New</span>
+              <strong class="cal-callout-title">The bhapstar 2027 calendar</strong>
+              <p>Fragments of the Universe: twelve of my deep-sky images, one for every month, each with a short
+                description. Moon phases, meteor showers, eclipses, equinoxes and solstices are marked on the dates.
+                An A4 wall calendar, spiral bound at the top, and a great Christmas gift for the astro lover in your life.</p>
+              <div class="cal-callout-actions">
+                <button type="button" class="btn primary" id="calAddBtn">Add to my enquiry</button>
+                <button type="button" class="btn" id="calInsideBtn">See inside</button>
+              </div>
+            </div>
+          </div>
 
           <!-- 2) Enquiry builder -->
           <div class="panel prints-panel">
@@ -123,6 +141,7 @@
                     <ol>
                       <li><strong>Select an image</strong> - select the image title in the enquiry builder.</li>
                       <li><strong>Select a format</strong> - A3, A4 or A5 paper print framed or unframed, a canvas print in one of three sizes, or a high-resolution digital file. Repeat steps 1 and 2 as many times as needed.</li>
+                      <li><strong>Add the 2027 calendar</strong> if you'd like one, by choosing how many.</li>
                       <li><strong>Add any notes</strong> you want.</li>
                       <li><strong>Send an enquiry</strong> - I'll confirm availability, finish options, lead time, and delivery based on your location.</li>
                     </ol>
@@ -134,6 +153,28 @@
                       <button type="button" class="btn" id="addItemBtn">+ Add another image</button>
                     </div>
                     <input type="hidden" id="itemsSummary" name="items_summary" value="" />
+                  </div>
+                </div>
+
+                <!-- 2027 CALENDAR: quantity in the enquiry -->
+                <div class="row row-start" id="calendarRow">
+                  <label for="pCalendarQty">2027 Calendar</label>
+                  <div>
+                    <select id="pCalendarQty" name="calendar_2027">
+                      <option value="">None</option>
+                      <option value="1">1 calendar</option>
+                      <option value="2">2 calendars</option>
+                      <option value="3">3 calendars</option>
+                      <option value="4">4 calendars</option>
+                      <option value="5">5 calendars</option>
+                      <option value="6">6 calendars</option>
+                      <option value="7">7 calendars</option>
+                      <option value="8">8 calendars</option>
+                      <option value="9">9 calendars</option>
+                      <option value="10">10 calendars</option>
+                    </select>
+                    <p class="helper cal-row-hint">Fragments of the Universe, an A4 wall calendar with twelve of my images.
+                      <a href="#" class="faq-link" id="openCalendarExample">See inside</a></p>
                   </div>
                 </div>
 
@@ -156,21 +197,6 @@
                   </p>
                 </div>
 
-                <!-- Calendar interest — hidden, re-enable when ready
-                <div class="row row-start">
-                  <label for="pCalendar">Calendar</label>
-                  <div>
-                    <label class="checkline" for="pCalendar">
-                      <input id="pCalendar" name="calendar_interest" type="checkbox" value="Yes" />
-                      <span>
-                        Please click here if you would also like to enquire about a custom
-                        astrophotography calendar made from any 12 of my images of your choosing.
-                        <a href="#" class="faq-link" id="openCalendarExample">View example</a>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                -->
 
               </div>
 
@@ -325,10 +351,10 @@
               </details>
 
              <details class="faq-item" id="faq-calendar">
-                <summary>Can I have a calendar made from the images?</summary>
-                <p>Yes this is possible. Please add it as a note in the enquiry builder. The calendar will include 12 images from the gallery (chosen at random or by your choice), each with a short description. It will also be pre-populated with key astronomical events and dates other dates and will be bound at the top to allow easy flipping through pages.</p>
-                <p class="helper mt-10">Example layout:</p>
-                <img src="images/calendar/calendar-example.webp" alt="Example calendar layout" class="calendar-example-img" loading="lazy" />
+                <summary>Is there a calendar?</summary>
+                <p>Yes. The bhapstar 2027 calendar, Fragments of the Universe, has twelve of my images, one for each month, each with a short description of what it shows. The dates are marked with moon phases, meteor shower peaks, eclipses, equinoxes and solstices, and a QR code on every page links back to this site. It is an A4 wall calendar, spiral bound along the top.</p>
+                <p>To order, choose how many under 2027 Calendar in the enquiry builder. If you would like a calendar made from your own choice of twelve gallery images instead, mention it in the notes.</p>
+                <img src="images/calendar/calendar-2027-trio.webp" alt="The bhapstar 2027 calendar: the cover and two month pages" class="calendar-example-img" loading="lazy" />
               </details>
 
               <details class="faq-item" id="faq-usage">
@@ -353,11 +379,23 @@
 <!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Calendar example modal -->
-<div class="calendar-modal" id="calendarModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Calendar example">
+<!-- 2027 CALENDAR: "See inside" viewer -->
+<div class="calendar-modal" id="calendarModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Inside the 2027 calendar">
   <div class="calendar-modal-inner">
-    <button class="calendar-close" aria-label="Close">&times;</button>
-    <img src="images/calendar/calendar-example.webp" alt="Example astrophotography calendar layout" loading="lazy" />
+    <button type="button" class="calendar-close" aria-label="Close">&times;</button>
+    <img class="cal-viewer-main" id="calViewerMain" src="images/calendar/calendar-2027-cover.webp" width="1000" height="1425"
+         alt="The cover, with all twelve images" />
+    <p class="cal-viewer-caption" id="calViewerCaption">The cover, with all twelve images</p>
+    <div class="cal-viewer-thumbs" id="calViewerThumbs">
+      <button type="button" aria-current="true" data-src="images/calendar/calendar-2027-cover.webp" data-caption="The cover, with all twelve images">
+        <img src="images/calendar/calendar-2027-cover.webp" alt="" loading="lazy" /></button>
+      <button type="button" data-src="images/calendar/calendar-2027-inside.webp" data-caption="Inside the cover: the story behind the images">
+        <img src="images/calendar/calendar-2027-inside.webp" alt="" loading="lazy" /></button>
+      <button type="button" data-src="images/calendar/calendar-2027-february.webp" data-caption="February: the Rosette Nebula">
+        <img src="images/calendar/calendar-2027-february.webp" alt="" loading="lazy" /></button>
+      <button type="button" data-src="images/calendar/calendar-2027-october.webp" data-caption="October: the Eastern Veil Nebula">
+        <img src="images/calendar/calendar-2027-october.webp" alt="" loading="lazy" /></button>
+    </div>
   </div>
 </div>
 
@@ -380,7 +418,7 @@
   const pPhone      = $('pPhone');
   const pEmail      = $('pEmail');
   const pNotes      = $('pNotes');
-  const pCalendar   = $('pCalendar');
+  const pCalQty     = $('pCalendarQty');
   const toast       = $('toast');
 
   /* Formats come from print-formats.js, shared with the wall simulator so the
@@ -668,6 +706,14 @@
     build();
   }
 
+  /* 2027 CALENDAR: how many calendars are in the enquiry (0 = none) */
+  function calendarQty() {
+    const n = parseInt(pCalQty?.value || '', 10);
+    return n > 0 ? n : 0;
+  }
+  const CAL_ROW = { image: '2027 Calendar, Fragments of the Universe', finish: 'Spiral bound' };
+  function calSize(n) { return 'A4 wall calendar x ' + n; }
+
   function getItems() {
     return Array.from(itemsWrap?.querySelectorAll('.item-row') || []).map(r => {
       const imgHidden = r.querySelector('input[name="item_image[]"]');
@@ -704,7 +750,8 @@
     // ── Items table ──
     const filledItems = items.filter(it => it.image.trim());
     const completeItems = items.filter(it => it.image.trim() && it.type);
-    if (eqItemsWrap) eqItemsWrap.style.display = filledItems.length ? '' : 'none';
+    const calQty = calendarQty();
+    if (eqItemsWrap) eqItemsWrap.style.display = (filledItems.length || calQty) ? '' : 'none';
     if (eqTableBody) {
       eqTableBody.innerHTML = '';
       filledItems.forEach((it, i) => {
@@ -718,6 +765,15 @@
           <td>${frame}</td>`;
         eqTableBody.appendChild(tr);
       });
+      if (calQty) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${filledItems.length + 1}</td>
+          <td>${CAL_ROW.image}</td>
+          <td>${calSize(calQty)}</td>
+          <td>${CAL_ROW.finish}</td>`;
+        eqTableBody.appendChild(tr);
+      }
     }
 
     // ── Notes block ──
@@ -743,6 +799,9 @@
         size:  typeLabel(it.type),
         frame: finishLabel(it.type, it.framed),
       }));
+      if (calQty) {
+        rows.push({ num: String(rows.length + 1), image: CAL_ROW.image, size: calSize(calQty), frame: CAL_ROW.finish });
+      }
 
       const colW = {
         num:   2,
@@ -827,7 +886,7 @@
   })();
 
   [pCity, pName, pPhone, pEmail, pNotes].forEach(x => x?.addEventListener('input', build));
-  pCalendar?.addEventListener('change', build);
+  pCalQty?.addEventListener('change', build);
   addItemBtn?.addEventListener('click', () => addItem());
 
   if (form) {
@@ -835,11 +894,28 @@
       e.preventDefault();
 
       const items = getItems();
-      if (!items.length || !items.some(it => it.image.trim() && it.type && it.framed)) {
-        showToast('Please select an image, a size or type, and a finish for at least one item.');
+      const hasPrint = items.some(it => it.image.trim() && it.type && it.framed);
+      if (!hasPrint && !calendarQty()) {
+        showToast('Please select an image, a size or type, and a finish for at least one item, or add the 2027 calendar.');
         return;
       }
-      if (!form.checkValidity()) { form.reportValidity(); return; }
+      /* With a calendar in the enquiry, an untouched print row is not an
+         error: switch its fields off so it neither blocks the form nor
+         arrives as an empty line. They are switched back on afterwards. */
+      const parked = [];
+      if (calendarQty()) {
+        itemsWrap.querySelectorAll('.item-row').forEach(r => {
+          const img = r.querySelector('input[name="item_image[]"]');
+          const typ = r.querySelector('select[name="item_type[]"]');
+          if (img && !img.value.trim() && typ && !typ.value) {
+            r.querySelectorAll('input, select').forEach(el => {
+              if (!el.disabled) { el.disabled = true; parked.push(el); }
+            });
+          }
+        });
+      }
+      const unpark = () => parked.forEach(el => { el.disabled = false; });
+      if (!form.checkValidity()) { unpark(); form.reportValidity(); return; }
 
       const btn = form.querySelector('#submitEnquiry');
       const originalText = btn.textContent;
@@ -861,6 +937,7 @@
       } catch {
         showToast('Something went wrong — please try again or contact me directly.');
       } finally {
+        unpark();
         btn.textContent = originalText; btn.disabled = false;
       }
     });
@@ -893,16 +970,80 @@
       .filter(it => it.image);
   }
 
+  /* 2027 CALENDAR: the callout button, the "See inside" viewer, and
+     prints.html?calendar=1 from the homepage pop-up */
+  const calRow = $('calendarRow');
+  function addCalendar(scroll) {
+    if (pCalQty && !calendarQty()) pCalQty.value = '1';
+    build();
+    if (scroll && calRow) {
+      calRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      calRow.classList.remove('flash'); void calRow.offsetWidth; calRow.classList.add('flash');
+    }
+  }
+  $('calAddBtn')?.addEventListener('click', () => {
+    addCalendar(true);
+    showToast('The 2027 calendar has been added. Fill in your details and send it over.');
+  });
+
+  (function viewer() {
+    const modal = $('calendarModal');
+    if (!modal) return;
+    const main = $('calViewerMain');
+    const caption = $('calViewerCaption');
+    const thumbs = Array.from(modal.querySelectorAll('#calViewerThumbs button'));
+    const closeBtn = modal.querySelector('.calendar-close');
+    let lastFocus = null;
+    function show(btn) {
+      thumbs.forEach(b => b.setAttribute('aria-current', b === btn ? 'true' : 'false'));
+      main.src = btn.dataset.src;
+      main.alt = btn.dataset.caption;
+      caption.textContent = btn.dataset.caption;
+    }
+    function open(e) {
+      e?.preventDefault();
+      lastFocus = document.activeElement;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      closeBtn?.focus();
+    }
+    function close() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      lastFocus?.focus?.();
+    }
+    thumbs.forEach(b => b.addEventListener('click', () => show(b)));
+    closeBtn?.addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', e => {
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const i = thumbs.findIndex(b => b.getAttribute('aria-current') === 'true');
+        const n = (i + (e.key === 'ArrowRight' ? 1 : thumbs.length - 1)) % thumbs.length;
+        show(thumbs[n]);
+      }
+    });
+    $('calInsideBtn')?.addEventListener('click', open);
+    $('openCalendarExample')?.addEventListener('click', open);
+  })();
+
   (async function init() {
     await loadGalleryTitles();
     if (itemsWrap) itemsWrap.innerHTML = '';
     const prefills = prefillsFromQuery();
+    const calPrefill = parseInt(new URLSearchParams(location.search).get('calendar') || '', 10);
+    if (pCalQty && calPrefill >= 1 && calPrefill <= 10) pCalQty.value = String(calPrefill);
     if (prefills.length) {
       prefills.forEach(pre => addItem(pre));
     } else {
       addItem();
     }
     build();
+    if (calendarQty() && !prefills.length) {
+      addCalendar(true);
+      showToast('The 2027 calendar has been added. Fill in your details and send it over.');
+    }
     if (prefills.length) {
       const target = document.getElementById('printsEnquiryForm');
       if (typeof target?.scrollIntoView === 'function') {
