@@ -1035,25 +1035,103 @@
   {
     "images": [
       {
-        "file": "images/gear/Optolong L-Quad Enhance.webp",
-        "alt": "Optolong L-Quad Enhance broadband light pollution filter for astrophotography"
+        "file": "images/gear/cf-60-tripod-real1.webp",
+        "alt": "Angeleyes CF-60 unboxed, with the folded tripod, storage bag, sandbag, grass spikes, centre rod, triangular brace and tools laid out on the floor"
+      },
+      {
+        "file": "images/gear/cf-60-tripod-real4.webp",
+        "alt": "Underside of the CF-60 top plate with a mount fitted, showing the central threaded rod, the triangular brace and the sandbag hook"
+      },
+      {
+        "file": "images/gear/cf-60-tripod-real3.webp",
+        "alt": "An equatorial mount being lowered onto the CF-60 top plate"
+      },
+      {
+        "file": "images/gear/cf-60-tripod-real2.webp",
+        "alt": "Close view of the CF-60 top ring and leg hinge, with the silver centre disc, grass spikes and a locking knob alongside"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_1.webp",
+        "alt": "Angeleyes CF-60 carbon fibre tripod, product shot with legs extended"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_2.webp",
+        "alt": "Angeleyes CF-60 product parameters: 50kg load capacity, 1.97kg weight, 520mm storage height, two leg sections"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_3.webp",
+        "alt": "CF-60 leg tube, 40.4mm carbon fibre with a 1.2mm wall in eleven layers"
+      },
+      {
+        "file": "images/gear/cf-60_tripod_5.webp",
+        "alt": "CF-60 height range diagram, 46.5cm folded to 80.5cm extended"
       }
     ],
-    "title": "Optolong L-Quad Enhance Filter",
-    "desc": "A broadband light pollution filter for one-shot-colour cameras, intended for galaxies, star clusters and reflection nebulae, the targets where a dual narrowband filter is no help at all. Optolong themselves do not recommend it above Bortle 7, which makes it an interesting thing to test from a Bortle 8 balcony.",
-    "alt": "Optolong L-Quad Enhance broadband light pollution filter",
-    "type": "filters",
+    "title": "Angeleyes CF-60 Carbon Fibre Tripod",
+    "desc": "A short, stiff carbon fibre tripod built for equatorial mounts rather than cameras. Two leg sections instead of three, 40.4mm tubes and a triangular centre brace, with a flat drilled plate on top for a mount head to bolt straight down onto.",
+    "alt": "Angeleyes CF-60 carbon fibre tripod for equatorial mounts",
+    "type": "accessories",
     "section": "gear",
-    "slug": "optolong-l-quad-enhance-filter",
+    "slug": "angeleyes-cf-60-carbon-fibre-tripod",
+    "hidden": false,
+    "buy": []
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/Ecoflow River 2 1.webp",
+        "alt": "EcoFlow River 2 portable power station powering an astrophotography rig in the field"
+      },
+      {
+        "file": "images/gear/Ecoflow River 2 2.webp",
+        "alt": "EcoFlow River 2 showing its output ports and display"
+      },
+      {
+        "file": "images/gear/Ecoflow River 2 3.webp",
+        "alt": "EcoFlow River 2 portable power station"
+      }
+    ],
+    "title": "EcoFlow River 2 Power Station",
+    "desc": "256Wh of lithium iron phosphate in a box the size of a shoebox, running the entire rig from its 12V car socket. A 300W AC outlet, a 12.6V DC output rated to 100W, and a measured eleven-watt draw that turns a night's power into something you stop thinking about.",
+    "alt": "EcoFlow River 2 portable power station for astrophotography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "ecoflow-river-2",
     "buy": [
       {
-        "retailer": "High Point Scientific (US)",
-        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/SVBony-SV220-2.webp",
+        "alt": "Svbony SV220 3nm dual band filter in its case, cell engraved with the model name"
+      },
+      {
+        "file": "images/gear/SVBony-SV220-1.webp",
+        "alt": "Svbony SV220 3nm filter face on in its case, showing the coating and the 2 inch cell"
+      }
+    ],
+    "title": "Svbony SV220 3nm Filter",
+    "desc": "A 3nm dual narrowband filter, tighter than the 7nm L-eXtreme on both the Hydrogen-alpha and Oxygen-III bands. Narrower passbands mean better contrast against skyglow and a heavier penalty in signal, so it suits slower optics and longer integrations.",
+    "alt": "Svbony SV220 3nm dual narrowband filter Ha OIII",
+    "type": "filters",
+    "section": "gear",
+    "slug": "svbony-sv220-3nm-filter",
+    "hidden": false,
+    "buy": [
+      {
+        "retailer": "Svbony",
+        "url": "https://www.svbony.com/?ref=BHAPSTAR",
         "affiliate": true
       },
       {
-        "retailer": "First Light Optics (UK)",
-        "url": "https://www.firstlightoptics.com/optolong-filters/ref/bhapstar/",
+        "retailer": "High Point Scientific (US)",
+        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
         "affiliate": true
       },
       {
@@ -1097,30 +1175,61 @@
   {
     "images": [
       {
-        "file": "images/gear/SVBony-SV220-2.webp",
-        "alt": "Svbony SV220 3nm dual band filter in its case, cell engraved with the model name"
-      },
-      {
-        "file": "images/gear/SVBony-SV220-1.webp",
-        "alt": "Svbony SV220 3nm filter face on in its case, showing the coating and the 2 inch cell"
+        "file": "images/gear/Optolong L-Quad Enhance.webp",
+        "alt": "Optolong L-Quad Enhance broadband light pollution filter for astrophotography"
       }
     ],
-    "title": "Svbony SV220 3nm Filter",
-    "desc": "A 3nm dual narrowband filter, tighter than the 7nm L-eXtreme on both the Hydrogen-alpha and Oxygen-III bands. Narrower passbands mean better contrast against skyglow and a heavier penalty in signal, so it suits slower optics and longer integrations.",
-    "alt": "Svbony SV220 3nm dual narrowband filter Ha OIII",
+    "title": "Optolong L-Quad Enhance Filter",
+    "desc": "A broadband light pollution filter for one-shot-colour cameras, intended for galaxies, star clusters and reflection nebulae, the targets where a dual narrowband filter is no help at all. Optolong themselves do not recommend it above Bortle 7, which makes it an interesting thing to test from a Bortle 8 balcony.",
+    "alt": "Optolong L-Quad Enhance broadband light pollution filter",
     "type": "filters",
     "section": "gear",
-    "slug": "svbony-sv220-3nm-filter",
-    "hidden": false,
+    "slug": "optolong-l-quad-enhance-filter",
     "buy": [
       {
-        "retailer": "Svbony",
-        "url": "https://www.svbony.com/?ref=BHAPSTAR",
+        "retailer": "High Point Scientific (US)",
+        "url": "https://www.highpointscientific.com/brands/optolong-astronomy-filters?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/optolong-filters/ref/bhapstar/",
+        "affiliate": true
+      },
+      {
+        "retailer": "Amazon",
+        "url": "https://amzn.to/4q14VRT",
+        "affiliate": true
+      }
+    ]
+  },
+  {
+    "images": [
+      {
+        "file": "images/gear/ZWO EAF.webp",
+        "alt": "ZWO EAF electronic automatic focuser fitted to a telescope focuser"
+      }
+    ],
+    "title": "ZWO EAF Electronic Focuser",
+    "desc": "An electronic autofocuser that fits over the focuser knob and is driven from the ASIAIR. It refocuses as the temperature drifts through the night, which matters more than expected on a fast optical system where the usable focus tolerance is a few tens of microns.",
+    "alt": "ZWO EAF electronic automatic focuser astrophotography",
+    "type": "accessories",
+    "section": "gear",
+    "slug": "zwo-eaf-electronic-focuser",
+    "buy": [
+      {
+        "retailer": "ZWO",
+        "url": "https://www.zwoastro.com/product/eaf/?ref=sfbuvxv1",
         "affiliate": true
       },
       {
         "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
+        "affiliate": true
+      },
+      {
+        "retailer": "First Light Optics (UK)",
+        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -1186,42 +1295,6 @@
       {
         "retailer": "High Point Scientific (US)",
         "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
-        "affiliate": true
-      },
-      {
-        "retailer": "Amazon",
-        "url": "https://amzn.to/4q14VRT",
-        "affiliate": true
-      }
-    ]
-  },
-  {
-    "images": [
-      {
-        "file": "images/gear/ZWO EAF.webp",
-        "alt": "ZWO EAF electronic automatic focuser fitted to a telescope focuser"
-      }
-    ],
-    "title": "ZWO EAF Electronic Focuser",
-    "desc": "An electronic autofocuser that fits over the focuser knob and is driven from the ASIAIR. It refocuses as the temperature drifts through the night, which matters more than expected on a fast optical system where the usable focus tolerance is a few tens of microns.",
-    "alt": "ZWO EAF electronic automatic focuser astrophotography",
-    "type": "accessories",
-    "section": "gear",
-    "slug": "zwo-eaf-electronic-focuser",
-    "buy": [
-      {
-        "retailer": "ZWO",
-        "url": "https://www.zwoastro.com/product/eaf/?ref=sfbuvxv1",
-        "affiliate": true
-      },
-      {
-        "retailer": "High Point Scientific (US)",
-        "url": "https://www.highpointscientific.com/?rfsn=9263467.792bf8",
-        "affiliate": true
-      },
-      {
-        "retailer": "First Light Optics (UK)",
-        "url": "https://www.firstlightoptics.com/index/ref/bhapstar/",
         "affiliate": true
       },
       {
@@ -1446,79 +1519,6 @@
         "affiliate": true
       }
     ]
-  },
-  {
-    "images": [
-      {
-        "file": "images/gear/Ecoflow River 2 1.webp",
-        "alt": "EcoFlow River 2 portable power station powering an astrophotography rig in the field"
-      },
-      {
-        "file": "images/gear/Ecoflow River 2 2.webp",
-        "alt": "EcoFlow River 2 showing its output ports and display"
-      },
-      {
-        "file": "images/gear/Ecoflow River 2 3.webp",
-        "alt": "EcoFlow River 2 portable power station"
-      }
-    ],
-    "title": "EcoFlow River 2 Power Station",
-    "desc": "256Wh of lithium iron phosphate in a box the size of a shoebox, running the entire rig from its 12V car socket. A 300W AC outlet, a 12.6V DC output rated to 100W, and a measured eleven-watt draw that turns a night's power into something you stop thinking about.",
-    "alt": "EcoFlow River 2 portable power station for astrophotography",
-    "type": "accessories",
-    "section": "gear",
-    "slug": "ecoflow-river-2",
-    "buy": [
-      {
-        "retailer": "Amazon",
-        "url": "https://amzn.to/4q14VRT",
-        "affiliate": true
-      }
-    ]
-  },
-  {
-    "images": [
-      {
-        "file": "images/gear/cf-60-tripod-real1.webp",
-        "alt": "Angeleyes CF-60 unboxed, with the folded tripod, storage bag, sandbag, grass spikes, centre rod, triangular brace and tools laid out on the floor"
-      },
-      {
-        "file": "images/gear/cf-60-tripod-real4.webp",
-        "alt": "Underside of the CF-60 top plate with a mount fitted, showing the central threaded rod, the triangular brace and the sandbag hook"
-      },
-      {
-        "file": "images/gear/cf-60-tripod-real3.webp",
-        "alt": "An equatorial mount being lowered onto the CF-60 top plate"
-      },
-      {
-        "file": "images/gear/cf-60-tripod-real2.webp",
-        "alt": "Close view of the CF-60 top ring and leg hinge, with the silver centre disc, grass spikes and a locking knob alongside"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_1.webp",
-        "alt": "Angeleyes CF-60 carbon fibre tripod, product shot with legs extended"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_2.webp",
-        "alt": "Angeleyes CF-60 product parameters: 50kg load capacity, 1.97kg weight, 520mm storage height, two leg sections"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_3.webp",
-        "alt": "CF-60 leg tube, 40.4mm carbon fibre with a 1.2mm wall in eleven layers"
-      },
-      {
-        "file": "images/gear/cf-60_tripod_5.webp",
-        "alt": "CF-60 height range diagram, 46.5cm folded to 80.5cm extended"
-      }
-    ],
-    "title": "Angeleyes CF-60 Carbon Fibre Tripod",
-    "desc": "A short, stiff carbon fibre tripod built for equatorial mounts rather than cameras. Two leg sections instead of three, 40.4mm tubes and a triangular centre brace, with a flat drilled plate on top for a mount head to bolt straight down onto.",
-    "alt": "Angeleyes CF-60 carbon fibre tripod for equatorial mounts",
-    "type": "accessories",
-    "section": "gear",
-    "slug": "angeleyes-cf-60-carbon-fibre-tripod",
-    "hidden": false,
-    "buy": []
   },
   {
     "section": "_divider",
