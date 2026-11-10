@@ -104,19 +104,19 @@
   <div class="top-strip-inner wrap">
 
     <!-- 2027 CALENDAR: shown by the 2027 CALENDAR POP-UP script further
-         down, until CAL_PROMO_END. No close button. -->
+         down, until CAL_PROMO_END. -->
     <a id="calBanner" class="ts-item ts-cal" href="prints.html?calendar=1" hidden>
       <span class="ts-icon" aria-hidden="true">🗓️</span>
-      <span class="ts-text"><strong><span class="ts-long">New: the bhapstar 2027 calendar</span><span class="ts-short"><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar enquiry</span></strong><span class="ts-sub"> &nbsp;·&nbsp; A great Christmas gift</span></span>
-      <span class="btn primary pwa-banner-btn">Enquire</span>
+      <span class="ts-text"><strong><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar enquiry</strong><span class="ts-sub">A great Christmas gift</span></span>
     </a>
 
     <!-- App install: shown by the script below -->
     <div id="pwaBanner" class="ts-item ts-app" role="complementary" aria-label="Install app" hidden>
       <span class="ts-icon" aria-hidden="true">🔭</span>
-      <button type="button" class="ts-text ts-textbtn" id="pwaBannerText"><strong><span class="ts-long">Get the app</span><span class="ts-short">Download the app</span></strong><span class="pwa-banner-sub" id="pwaBannerSub">Add it to your home screen</span></button>
-      <button class="btn primary pwa-banner-btn" id="pwaBannerBtn">Install</button>
-      <button class="pwa-banner-close" id="pwaBannerClose" aria-label="Dismiss">✕</button>
+      <button type="button" class="ts-text ts-textbtn" id="pwaBannerText"><strong>Download the app</strong><span class="ts-sub pwa-banner-sub" id="pwaBannerSub">Add it to your home screen</span></button>
+      <!-- not shown: the install script below drives these -->
+      <button class="pwa-banner-btn" id="pwaBannerBtn" tabindex="-1" aria-hidden="true">Install</button>
+      <button class="pwa-banner-close" id="pwaBannerClose" tabindex="-1" aria-hidden="true">✕</button>
       <!-- install help, opened by the button on iOS and where no prompt is available -->
       <div class="pwa-ios-tip" id="pwaIosTip" hidden>
         Tap <strong>Share</strong> <span aria-hidden="true">⎋</span> then <strong>"Add to Home Screen"</strong>
@@ -132,7 +132,7 @@
   const btnClose  = document.getElementById('pwaBannerClose');
   const iosTip    = document.getElementById('pwaIosTip');
   const subText   = document.getElementById('pwaBannerSub');
-  // The words work the same as the Install button (on phones they replace it)
+  // The words do what the (hidden) Install button does
   const btnText   = document.getElementById('pwaBannerText');
   if (btnText && btnInstall) btnText.addEventListener('click', () => btnInstall.click());
 

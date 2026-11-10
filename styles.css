@@ -2617,11 +2617,14 @@ a[href="prints.html"], a[href*="prints"] {
    ============================================================ */
 
 /* ── Homepage top strip ──
-   One slim bar under the header for short notices: the 2027 calendar on the
-   left (#calBanner) and the app install on the right (#pwaBanner). Each item
-   is shown or hidden on its own; the strip disappears when both are hidden.
-   Both sit in one row, so the install item can appear a moment after the
-   page has drawn without pushing the page down. Always dark, in both themes. */
+   One slim bar under the header for short notices, text only: "2027
+   calendar enquiry" on the left (#calBanner, a link) and "Download the app"
+   on the right (#pwaBanner, whose words do what the hidden Install button
+   does). They share the row equally, each centred in its half with a divider
+   between. Each is shown or hidden on its own and the strip disappears when
+   both are hidden. Both sit in one row, so the app link can appear a moment
+   after the page has drawn without pushing the page down. Always dark, in
+   both themes. */
 .top-strip {
   background: linear-gradient(90deg, #0d0b2a 0%, #1a0f3c 100%);
   border-bottom: 1px solid rgba(167,139,250,0.2);
@@ -2629,17 +2632,22 @@ a[href="prints.html"], a[href*="prints"] {
   z-index: 50;
 }
 .top-strip:not(:has(.ts-item:not([hidden]))) { display: none; }
-.top-strip-inner { display: flex; align-items: center; min-height: 48px; }
+.top-strip-inner { display: flex; align-items: center; min-height: 46px; }
 .ts-item {
-  display: flex; align-items: center; gap: 10px;
-  min-width: 0; padding: 7px 0;
+  flex: 1 1 0; min-width: 0;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 8px 12px;
 }
 .ts-item[hidden] { display: none !important; }
-.ts-icon { font-size: 1.15rem; line-height: 1; flex-shrink: 0; }
+.ts-app { border-left: 1px solid rgba(167,139,250,0.2); }
+.ts-cal[hidden] + .ts-app { border-left: 0; }
+
+.ts-icon { font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
 .ts-text {
-  min-width: 0; flex: 1 1 auto;
+  flex: 0 1 auto; min-width: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  font-size: 0.86rem; color: #9c8abf;
+  font-size: 0.88rem; color: #9c8abf;
+  transition: filter 160ms ease;
 }
 .ts-text strong {
   font-weight: 600;
@@ -2648,55 +2656,33 @@ a[href="prints.html"], a[href*="prints"] {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
 }
-.ts-short { display: none; }
+/* the arrow that marks each one as a link */
+.ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
+.ts-cal:hover .ts-text, .ts-textbtn:hover { filter: brightness(1.3); }
 
-/* The two items share the row equally, with the divider in the middle.
-   If only one is showing it takes the whole row. */
-.ts-cal, .ts-app { flex: 1 1 0; }
+/* the calendar: the whole item is the link */
+.ts-cal { color: inherit; text-decoration: none; }
+.ts-cal:focus-visible { outline: 2px solid rgba(167,139,250,0.8); outline-offset: -2px; border-radius: 6px; }
 
-/* calendar: the whole item is the link */
-.ts-cal { color: inherit; text-decoration: none; padding-right: 16px; }
-.ts-cal:hover .pwa-banner-btn { color: #fff; border-color: rgba(167,139,250,0.7); }
-
-/* the app's words are a button too (they do what Install does) */
+/* the app: its words are a button that does what Install does */
 .ts-textbtn {
   background: none; border: 0; padding: 0; margin: 0;
-  font: inherit; text-align: left; cursor: pointer;
+  font: inherit; font-size: 0.88rem; text-align: left; cursor: pointer;
   display: block;
 }
 .ts-textbtn:focus-visible { outline: 2px solid rgba(167,139,250,0.8); outline-offset: 3px; border-radius: 4px; }
+/* the Install and dismiss buttons stay in the page for the install script,
+   but are not shown */
+.ts-app .pwa-banner-btn, .ts-app .pwa-banner-close { display: none; }
 
-/* app install: the right half, after a thin divider */
-.ts-app { padding-left: 16px; border-left: 1px solid rgba(167,139,250,0.2); }
-.ts-app .ts-text strong { color: #c4b5fd; }
-.ts-cal[hidden] + .ts-app { padding-left: 0; border-left: 0; }
-
-/* the short description after each title, only where there is room */
-.ts-sub, .ts-app .pwa-banner-sub { display: none; }
+/* the short description after each label, only where there is room */
+.ts-sub { display: none; }
 @media (min-width: 1100px) {
   .ts-sub { display: inline; }
-  .ts-app .pwa-banner-sub { display: inline; }
-  .ts-app .pwa-banner-sub::before { content: "\00a0\00a0\00b7\00a0\00a0"; }
+  .ts-sub::before { content: "\00a0\00a0\00b7\00a0\00a0"; }
 }
 
-/* The strip stays dark in both themes, so the buttons cannot take
-   var(--text) or they turn near-black on near-black under the light theme.
-   They are pinned to the light ink instead. */
-.pwa-banner-btn {
-  flex-shrink: 0;
-  padding: 5px 14px;
-  font-size: 0.78rem;
-  color: rgba(240,238,250,0.96);
-}
-.pwa-banner-btn:hover { color: #fff; }
-.pwa-banner-close {
-  background: none; border: none; cursor: pointer;
-  color: #6b5f8a; font-size: 0.85rem; line-height: 1;
-  padding: 4px 2px 4px 6px; flex-shrink: 0;
-}
-.pwa-banner-close:hover { color: #a78bfa; }
-
-/* The install help ("How?") drops down under the strip, on the right */
+/* The install help drops down under the strip, on the right */
 .pwa-ios-tip {
   position: absolute; top: calc(100% + 6px); right: 12px; z-index: 60;
   width: min(360px, calc(100vw - 24px));
@@ -2707,25 +2693,19 @@ a[href="prints.html"], a[href*="prints"] {
 }
 .pwa-ios-tip[hidden] { display: none; }
 
-/* Phones: no buttons. Each half is just its words, which are the link
-   ("2027 calendar enquiry" / "Download the app"), marked with an arrow. */
 @media (max-width: 600px) {
-  .ts-long { display: none; }
-  .ts-short { display: inline; }
-  .ts-cal .pwa-banner-btn, .ts-app .pwa-banner-btn, .ts-app .pwa-banner-close { display: none; }
-  .ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
-  .ts-item { gap: 8px; }
-  .ts-cal { padding-right: 10px; }
-  .ts-app { padding-left: 12px; }
-  .ts-text { font-size: 0.84rem; }
+  .ts-item { gap: 8px; padding: 8px 8px; }
+  .ts-text, .ts-textbtn { font-size: 0.84rem; }
 }
-@media (max-width: 400px) {
+@media (max-width: 440px) {
   .ts-icon { display: none; }
+  .ts-item { padding: 8px 4px; }
+  .ts-text, .ts-textbtn { font-size: 0.8rem; }
 }
 /* the smallest phones: "Calendar enquiry", without the year */
 .ts-noyear { display: none; }
 @media (max-width: 340px) {
-  .ts-text { font-size: 0.8rem; }
+  .ts-text, .ts-textbtn { font-size: 0.8rem; }
   .ts-year { display: none; }
   .ts-noyear { display: inline; }
 }
