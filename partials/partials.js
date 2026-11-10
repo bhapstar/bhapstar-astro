@@ -916,7 +916,9 @@ const HIDE_FIELD_NOTES = true;
       'pdf-calibration': 1, // QR on the calibration frames field card
       'pdf-asiair': 1, // QR on the ASIAir field card
       'pdf-moon': 1,   // QR on the Moon field card
-      clinic: 1        // QR on the framed Milky Way print at the clinic
+      clinic: 1,       // QR on the framed Milky Way print at the clinic
+      calendar: 1,     // QR codes on the printed 2027 calendar
+      'calendar-nfc': 1 // NFC tag on the 2027 calendar cover
     };
     var tapSrc = new URLSearchParams(location.search).get('src');
 

@@ -165,8 +165,12 @@ Two layers that must be updated together:
 
 Update only one and taps are dropped with no error anywhere.
 
-Current sources: `nfc`, `qr`, `card`, `x`, `pwa`, `pdf-phone`, `pdf-camera`,
-`pdf-meteors`, `pdf-calibration`, `pdf-asiair`, `pdf-moon`.
+Current sources: `nfc`, `qr`, `card`, `x`, `pwa`, `clinic`, `calendar`,
+`calendar-nfc`, `pdf-phone`, `pdf-camera`, `pdf-meteors`, `pdf-calibration`,
+`pdf-asiair`, `pdf-moon`.
+
+`calendar` is every QR code on the printed 2027 calendar (`/?src=calendar`);
+`calendar-nfc` is the NFC tag stuck on its cover (`/?src=calendar-nfc`).
 
 `pwa` comes from `start_url` in `manifest.json` (`/?src=pwa`), so it counts
 launches from an installed home-screen icon rather than a scan.

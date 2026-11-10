@@ -402,6 +402,8 @@
     .src-dl   { background: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.55); }
     /* Launches from an installed home-screen icon, not a scan or a link. */
     .src-pwa  { background: var(--accent5); box-shadow: 0 0 8px rgba(251,146,60,0.55); }
+    /* The printed calendar's QR codes. Its NFC tag shares the pink NFC dot. */
+    .src-cal  { background: var(--accent); box-shadow: 0 0 8px rgba(167,139,250,0.55); }
     .num-cell { text-align: center; font-weight: 700; font-size: 16px; color: var(--accent4); }
     .dev-cell { text-align: center; color: var(--accent2); font-size: 13px; }
     .day-cell { white-space: nowrap; }
@@ -983,6 +985,8 @@
       qr:           { label: 'QR code',            cls: 'src-qr'   },
       x:            { label: 'Link posted on X',   cls: 'src-x'    },
       clinic:       { label: 'Clinic print QR',    cls: 'src-qr'   },
+      calendar:     { label: 'Calendar QR Code',   cls: 'src-cal'  },
+      'calendar-nfc': { label: 'Calendar NFC Tag', cls: 'src-nfc'  },
       pwa:          { label: 'Home-screen app',    cls: 'src-pwa'  },
 
       'pdf-phone':       { label: 'Scanned: phone card',         cls: 'src-pdf' },
