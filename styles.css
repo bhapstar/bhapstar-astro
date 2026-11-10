@@ -2616,72 +2616,100 @@ a[href="prints.html"], a[href*="prints"] {
    Body carries .page-home
    ============================================================ */
 
-.pwa-banner {
+/* ── Homepage top strip ──
+   One slim bar under the header for short notices: the 2027 calendar on the
+   left (#calBanner) and the app install on the right (#pwaBanner). Each item
+   is shown or hidden on its own; the strip disappears when both are hidden.
+   Both sit in one row, so the install item can appear a moment after the
+   page has drawn without pushing the page down. Always dark, in both themes. */
+.top-strip {
   background: linear-gradient(90deg, #0d0b2a 0%, #1a0f3c 100%);
   border-bottom: 1px solid rgba(167,139,250,0.2);
-  padding: 10px 0;
   position: relative;
   z-index: 50;
 }
-.pwa-banner-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.top-strip:not(:has(.ts-item:not([hidden]))) { display: none; }
+.top-strip-inner { display: flex; align-items: center; min-height: 48px; }
+.ts-item {
+  display: flex; align-items: center; gap: 10px;
+  min-width: 0; padding: 7px 0;
 }
-.pwa-banner-icon {
-  font-size: 1.4rem;
-  flex-shrink: 0;
+.ts-item[hidden] { display: none !important; }
+.ts-icon { font-size: 1.15rem; line-height: 1; flex-shrink: 0; }
+.ts-text {
+  min-width: 0; flex: 1 1 auto;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 0.86rem; color: #9c8abf;
 }
-.pwa-banner-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.pwa-banner-text strong {
-  font-size: 0.9rem;
+.ts-text strong {
+  font-weight: 600;
   background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8, #7c3aed);
   background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradientRoll 4s linear infinite reverse;
 }
-.pwa-banner-sub {
-  color: #9c8abf;
-  font-size: 0.78rem;
+.ts-short { display: none; }
+
+/* calendar: the whole item is the link */
+.ts-cal { flex: 1 1 auto; color: inherit; text-decoration: none; }
+.ts-cal:hover .pwa-banner-btn { color: #fff; border-color: rgba(167,139,250,0.7); }
+
+/* app install: compact, on the right, after a thin divider */
+.ts-app {
+  flex: 0 0 auto; margin-left: 16px; padding-left: 16px;
+  border-left: 1px solid rgba(167,139,250,0.2);
 }
-/* The banner keeps its dark gradient in both themes, so the button cannot
-   take var(--text) or it turns near-black on near-black under the light
-   theme. It is pinned to the light ink instead. */
+.ts-app .ts-text { flex: 0 1 auto; color: #c4b5fd; }
+.ts-app .pwa-banner-sub { display: none; }
+/* on its own (no calendar), it takes the whole row as before */
+.ts-cal[hidden] + .ts-app { flex: 1 1 auto; margin-left: 0; padding-left: 0; border-left: 0; }
+.ts-cal[hidden] + .ts-app .ts-text { flex: 1 1 auto; }
+
+/* The strip stays dark in both themes, so the buttons cannot take
+   var(--text) or they turn near-black on near-black under the light theme.
+   They are pinned to the light ink instead. */
 .pwa-banner-btn {
   flex-shrink: 0;
-  padding: 6px 16px;
-  font-size: 0.82rem;
+  padding: 5px 14px;
+  font-size: 0.78rem;
   color: rgba(240,238,250,0.96);
 }
 .pwa-banner-btn:hover { color: #fff; }
 .pwa-banner-close {
-  background: none;
-  border: none;
-  color: #6b5f8a;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 4px 6px;
-  flex-shrink: 0;
-  line-height: 1;
+  background: none; border: none; cursor: pointer;
+  color: #6b5f8a; font-size: 0.85rem; line-height: 1;
+  padding: 4px 2px 4px 6px; flex-shrink: 0;
 }
 .pwa-banner-close:hover { color: #a78bfa; }
+
+/* The install help ("How?") drops down under the strip, on the right */
 .pwa-ios-tip {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #c4b5fd;
-  padding: 6px 16px 2px;
+  position: absolute; top: calc(100% + 6px); right: 12px; z-index: 60;
+  width: min(360px, calc(100vw - 24px));
+  padding: 10px 14px; border-radius: 12px;
+  background: #140e36; border: 1px solid rgba(167,139,250,0.3);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  font-size: 0.8rem; line-height: 1.5; color: #c4b5fd; text-align: left;
 }
-@media (max-width: 480px) {
-  .pwa-banner-text strong { font-size: 0.82rem; }
-  .pwa-banner-sub { display: none; }
-  .pwa-banner-btn { padding: 6px 12px; font-size: 0.78rem; }
+.pwa-ios-tip[hidden] { display: none; }
+
+@media (max-width: 960px) {
+  .ts-cal .ts-sub { display: none; }
+}
+/* Phones: shorter labels, and the calendar item drops its button (the
+   whole item is the link, marked with an arrow) so nothing gets cut off */
+@media (max-width: 600px) {
+  .ts-long { display: none; }
+  .ts-short { display: inline; }
+  .ts-cal .pwa-banner-btn { display: none; }
+  .ts-cal .ts-text::after { content: " \203A"; color: #c4b5fd; font-weight: 600; }
+  .ts-item { gap: 8px; }
+  .ts-app { margin-left: 10px; padding-left: 10px; }
+  .ts-text { font-size: 0.82rem; }
+  .pwa-banner-btn { padding: 5px 11px; font-size: 0.74rem; }
+}
+@media (max-width: 340px) {
+  .ts-icon { display: none; }
 }
 
 .app-discount-overlay {

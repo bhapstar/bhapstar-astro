@@ -93,43 +93,38 @@
 <div id="siteHeader"></div>
 
 <!-- ─────────────────────────────────────────
-     PWA INSTALL BANNER
-     - Hidden by default, shown by JS
+     TOP STRIP: 2027 calendar + PWA install
+     - One row under the header (styles: "Homepage top strip" in styles.css)
+     - Install item hidden by default, shown by JS
      - Android/desktop: triggers native prompt
      - iOS: shows "Add to Home Screen" tip
      - Dismissed state stored in sessionStorage
 ───────────────────────────────────────── -->
-<div id="pwaBanner" class="pwa-banner" role="complementary" aria-label="Install app" hidden>
-  <div class="pwa-banner-inner wrap">
-    <span class="pwa-banner-icon" aria-hidden="true">🔭</span>
-    <div class="pwa-banner-text">
-      <strong>Install the Bhapstar Astrophotography app</strong>
-      <span class="pwa-banner-sub" id="pwaBannerSub">Add to your home screen for quick access</span>
+<div class="top-strip" id="topStrip">
+  <div class="top-strip-inner wrap">
+
+    <!-- 2027 CALENDAR: shown by the 2027 CALENDAR POP-UP script further
+         down, until CAL_PROMO_END. No close button. -->
+    <a id="calBanner" class="ts-item ts-cal" href="prints.html?calendar=1" hidden>
+      <span class="ts-icon" aria-hidden="true">🗓️</span>
+      <span class="ts-text"><strong><span class="ts-long">New: the bhapstar 2027 calendar</span><span class="ts-short">2027 calendar</span></strong><span class="ts-sub"> &nbsp;·&nbsp; A great Christmas gift for the astro lover</span></span>
+      <span class="btn primary pwa-banner-btn">Enquire</span>
+    </a>
+
+    <!-- App install: shown by the script below -->
+    <div id="pwaBanner" class="ts-item ts-app" role="complementary" aria-label="Install app" hidden>
+      <span class="ts-icon" aria-hidden="true">🔭</span>
+      <span class="ts-text"><strong><span class="ts-long">Get the app</span><span class="ts-short">App</span></strong><span class="pwa-banner-sub" id="pwaBannerSub">Add to your home screen for quick access</span></span>
+      <button class="btn primary pwa-banner-btn" id="pwaBannerBtn">Install</button>
+      <button class="pwa-banner-close" id="pwaBannerClose" aria-label="Dismiss">✕</button>
+      <!-- install help, opened by the button on iOS and where no prompt is available -->
+      <div class="pwa-ios-tip" id="pwaIosTip" hidden>
+        Tap <strong>Share</strong> <span aria-hidden="true">⎋</span> then <strong>"Add to Home Screen"</strong>
+      </div>
     </div>
-    <button class="btn primary pwa-banner-btn" id="pwaBannerBtn">Install</button>
-    <button class="pwa-banner-close" id="pwaBannerClose" aria-label="Dismiss">✕</button>
-  </div>
-  <!-- iOS tooltip -->
-  <div class="pwa-ios-tip" id="pwaIosTip" hidden>
-    Tap <strong>Share</strong> <span aria-hidden="true">⎋</span> then <strong>"Add to Home Screen"</strong>
+
   </div>
 </div>
-
-<!-- 2027 CALENDAR BANNER
-     Same look as the install banner above, with no close button. Shown by the
-     2027 CALENDAR POP-UP script further down, until CAL_PROMO_END. -->
-<div id="calBanner" class="pwa-banner" role="complementary" aria-label="2027 calendar" hidden>
-  <div class="pwa-banner-inner wrap">
-    <span class="pwa-banner-icon" aria-hidden="true">🗓️</span>
-    <div class="pwa-banner-text">
-      <strong>New: the bhapstar 2027 calendar</strong>
-      <span class="pwa-banner-sub">Twelve deep-sky images. A great Christmas gift for the astro lover</span>
-    </div>
-    <a class="btn primary pwa-banner-btn" href="prints.html?calendar=1">Enquire</a>
-  </div>
-</div>
-
-
 <script>
 (function () {
   const banner    = document.getElementById('pwaBanner');
