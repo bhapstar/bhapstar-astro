@@ -546,24 +546,14 @@
           <p>
             Any image can be ordered as a <a href="prints.html">print</a> on paper or canvas, supplied at full resolution and without the watermark.<span class="cal-promo-only"> You can also order the <a href="prints.html#calendar2027">bhapstar 2027 wall calendar</a>, with twelve of my best images.</span>
           </p>
-        </div>
 
-        <div class="astro-divider" aria-hidden="true">
-          <span>✦ ✦ ✦</span>
-        </div>
-
-        <!-- By the numbers: a count of the gallery, the gear and the articles,
-             in small tiles. Each tile links to that page with the same tile
-             already selected (gallery.html?type=nebulae and so on). Filled
-             from site-data.json by the script in this block. The wrapper
-             carries the divider below the tile, so if the data fails to load
-             the whole block goes and the page reads as before. -->
-        <div class="home-stats-section" id="homeStatsSection">
-
-          <div class="panel stats-panel stats-panel--home" id="homeStats">
-            <div class="section-head section-head--inline">
-              <h3>By the numbers</h3>
-            </div>
+          <!-- By the numbers: a count of the gallery, the gear and the
+               articles, in small tiles. Each tile links to that page with the
+               same tile already selected (gallery.html?type=nebulae and so on).
+               Filled from site-data.json by the script below; if the data
+               fails to load, this part is hidden and the tile reads as before. -->
+          <div class="home-stats" id="homeStats">
+            <h4 class="home-stats-title">By the numbers</h4>
             <p class="home-stats-intro">A running count of what is on the site. Select a tile to go straight to those.</p>
             <div class="home-stats-group">
               <h4 class="home-stats-label">Gallery</h4>
@@ -585,9 +575,8 @@
              gallery.html (STAT_TYPES), gear.html (CATEGORY_ORDER) and
              articles.html (STAGES), which these tiles link into. */
           (function () {
-            var section = document.getElementById('homeStatsSection');
             var panel = document.getElementById('homeStats');
-            if (!section || !panel) return;
+            if (!panel) return;
 
             var GROUPS = {
               gallery: {
@@ -706,15 +695,14 @@
                 }, { threshold: 0.45 });
                 Array.prototype.forEach.call(els, function (el) { io.observe(el); });
               })
-              .catch(function () { section.hidden = true; });
+              .catch(function () { panel.hidden = true; });
           })();
           </script>
-
-          <div class="astro-divider" aria-hidden="true">
-            <span>✦ ✦ ✦</span>
-          </div>
         </div>
 
+        <div class="astro-divider" aria-hidden="true">
+          <span>✦ ✦ ✦</span>
+        </div>
 
         <!-- About Me -->
         <div class="panel about-me-panel">

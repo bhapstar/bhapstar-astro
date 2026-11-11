@@ -1613,8 +1613,8 @@ details.faq-item p{
 /* ==========================================================================
    HOMEPAGE TILES — single source of truth
    --------------------------------------------------------------------------
-   Every tile inside the about panel on index.html: About this site, By the
-   numbers, About Me, Latest from Instagram, Latest articles, Support my work, Contact &
+   Every tile inside the about panel on index.html: About this site (which
+   also holds By the numbers), About Me, Latest from Instagram, Latest articles, Support my work, Contact &
    Updates. Box geometry, accent hairline, hover glow and heading position
    are all set here and nowhere else. Change a value once and all six tiles
    move together. Do not add tile rules to index.html.
@@ -1629,7 +1629,6 @@ details.faq-item p{
    names carry width caps from older layouts, and without this one tile ends
    up narrower than its neighbours. */
 .index-about-section .about-site-panel,
-.index-about-section .stats-panel--home,
 .index-about-section .latest-articles-panel,
 .index-about-section .instagram-panel,
 .index-about-section .about-me-panel,
@@ -1648,7 +1647,6 @@ details.faq-item p{
 
 /* Accent hairline across the top of every tile. */
 .index-about-section .about-site-panel::before,
-.index-about-section .stats-panel--home::before,
 .index-about-section .latest-articles-panel::before,
 .index-about-section .instagram-panel::before,
 .index-about-section .about-me-panel::before,
@@ -1666,7 +1664,6 @@ details.faq-item p{
 /* Hover lift and glow. */
 @media (hover:hover){
   .index-about-section .about-site-panel,
-  .index-about-section .stats-panel--home,
   .index-about-section .latest-articles-panel,
   .index-about-section .instagram-panel,
   .index-about-section .about-me-panel,
@@ -1675,7 +1672,6 @@ details.faq-item p{
     transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease;
   }
   .index-about-section .about-site-panel:hover,
-  .index-about-section .stats-panel--home:hover,
   .index-about-section .latest-articles-panel:hover,
   .index-about-section .instagram-panel:hover,
   .index-about-section .about-me-panel:hover,
@@ -2571,14 +2567,28 @@ a[href="prints.html"], a[href*="prints"] {
   transition:color .22s ease;
 }
 .stat--total{ background:rgba(167,139,250,.06); border-color:rgba(167,139,250,.2); }
+/* The panel round the tiles lifts on hover (below), so the tiles only
+   light up: lifting both made the whole thing jump twice */
 @media (hover:hover){
-  .stat:hover{
-    border-color:rgba(167,139,250,.36); background:rgba(167,139,250,.07);
-    box-shadow:0 8px 22px rgba(0,0,0,.38); transform:translateY(-2px);
-  }
+  .stat:hover{ border-color:rgba(167,139,250,.5); background:rgba(167,139,250,.12); }
   .stat:hover .label{ color:rgba(235,232,252,.9); }
+
+  .page-gallery .stats-panel,
+  .page-gear .stats-panel,
+  .page-articles .stats-panel{ transition:box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
+  .page-gallery .stats-panel:hover,
+  .page-gear .stats-panel:hover,
+  .page-articles .stats-panel:hover{
+    border-color:rgba(167,139,250,0.30);
+    box-shadow:0 0 0 1px rgba(167,139,250,0.08), 0 14px 44px rgba(0,0,0,0.48);
+    transform:translateY(-2px);
+  }
 }
-.stat:active{ transform:translateY(0); }
+@media (hover:hover) and (prefers-reduced-motion: reduce){
+  .page-gallery .stats-panel:hover,
+  .page-gear .stats-panel:hover,
+  .page-articles .stats-panel:hover{ transform:none; }
+}
 .stat:focus-visible{ outline:2px solid rgba(167,139,250,.7); outline-offset:2px; }
 /* the one being shown */
 .stat[aria-pressed="true"]{
@@ -2602,47 +2612,48 @@ a[href="prints.html"], a[href*="prints"] {
    top of the screen, with a little space above them */
 .stats-panel{ scroll-margin-top:18px; }
 
-/* Homepage: the gallery, gear and articles tiles together in one homepage
-   tile (index.html), smaller, and each a link into its page. The homepage
-   tile itself lifts on hover like its neighbours, so the small tiles inside
-   only light up rather than lifting too. Box, hairline and hover of the
-   homepage tile: HOMEPAGE TILES. */
-.stats-panel--home .home-stats-intro{ margin:0 0 14px !important; }
+/* Homepage: the gallery, gear and articles tiles together, smaller, each a
+   link into its page, as the second half of the About this site tile
+   (index.html). A line separates them from the text above. The tile lifts
+   on hover like its neighbours (HOMEPAGE TILES) and the small tiles light
+   up, as everywhere. */
+.home-stats{ margin-top:22px; padding-top:20px; border-top:1px solid var(--line); }
+.home-stats-title{
+  margin:0 0 12px; font-size:12px; font-weight:700; letter-spacing:.22em;
+  text-transform:uppercase; color:rgba(255,255,255,0.92);
+}
+.home-stats .home-stats-intro{ margin:0 0 14px !important; }
 .home-stats-group + .home-stats-group{ margin-top:14px; }
 .home-stats-label{
   margin:0 0 7px; font-size:11px; font-weight:700; letter-spacing:.18em;
   text-transform:uppercase; color:var(--muted);
 }
-.stats-panel--home .stats-grid{ gap:6px; }
-.stats-panel--home .stat{ padding:8px 10px 7px; gap:4px; border-radius:10px; text-decoration:none; }
-.stats-panel--home .stat .num{ font-size:19px; }
-.stats-panel--home .stat .label{ font-size:9.5px; letter-spacing:.1em; }
-@media (hover:hover){
-  .stats-panel--home .stat:hover{ transform:none; box-shadow:none; border-color:rgba(167,139,250,.5); background:rgba(167,139,250,.12); }
-  html[data-theme="light"] .stats-panel--home .stat:hover{ box-shadow:none; border-color:rgba(124,92,246,.5); background:rgba(124,92,246,.12); }
-}
+.home-stats .stats-grid{ gap:6px; }
+.home-stats .stat{ padding:8px 10px 7px; gap:4px; border-radius:10px; text-decoration:none; }
+.home-stats .stat .num{ font-size:19px; }
+.home-stats .stat .label{ font-size:9.5px; letter-spacing:.1em; }
 /* Phones: 22 tiles in rows of three would make this the tallest thing on
    the homepage, so here they become a wrapping row of compact chips, number
    and label side by side, each group still opening with its "All" chip */
 @media (max-width:600px){
-  .stats-panel--home .stats-grid{ display:flex; flex-wrap:wrap; gap:6px; }
-  .stats-panel--home .stat,
-  .stats-panel--home .stats-grid--stack .stat--total{
+  .home-stats .stats-grid{ display:flex; flex-wrap:wrap; gap:6px; }
+  .home-stats .stat,
+  .home-stats .stats-grid--stack .stat--total{
     flex:0 0 auto; flex-direction:row; align-items:baseline; gap:6px;
     padding:6px 10px; grid-column:auto;
   }
-  .stats-panel--home .stat .num{ font-size:15px; }
-  .stats-panel--home .stat .label{ white-space:nowrap; }
+  .home-stats .stat .num{ font-size:15px; }
+  .home-stats .stat .label{ white-space:nowrap; }
 }
 /* space for the tiles before the data arrives (it is below the hero, so
    this only matters for a jump straight down the page) */
-.stats-panel--home [data-stats="gallery"]:empty{ min-height:112px; }
-.stats-panel--home [data-stats="gear"]:empty{ min-height:66px; }
-.stats-panel--home [data-stats="articles"]:empty{ min-height:53px; }
+.home-stats [data-stats="gallery"]:empty{ min-height:112px; }
+.home-stats [data-stats="gear"]:empty{ min-height:66px; }
+.home-stats [data-stats="articles"]:empty{ min-height:53px; }
 @media (max-width:600px){
-  .stats-panel--home [data-stats="gallery"]:empty{ min-height:140px; }
-  .stats-panel--home [data-stats="gear"]:empty{ min-height:104px; }
-  .stats-panel--home [data-stats="articles"]:empty{ min-height:66px; }
+  .home-stats [data-stats="gallery"]:empty{ min-height:140px; }
+  .home-stats [data-stats="gear"]:empty{ min-height:104px; }
+  .home-stats [data-stats="articles"]:empty{ min-height:66px; }
 }
 
 /* Gallery and gear: with the filter gone from the controls row, the view
@@ -9481,7 +9492,11 @@ html[data-theme="light"] .stat .num{
 html[data-theme="light"] .stat .label{ color: rgba(60,54,96,0.82); }
 html[data-theme="light"] .stats-panel .stats-title{ color: rgba(26,23,48,0.92); }
 html[data-theme="light"] .stat{ background: rgba(124,92,246,0.04); border-color: rgba(124,92,246,0.18); }
-html[data-theme="light"] .stat:hover{ border-color: rgba(124,92,246,0.40); box-shadow: 0 8px 20px rgba(60,54,96,0.16); }
+html[data-theme="light"] .stat:hover{ border-color: rgba(124,92,246,0.50); background: rgba(124,92,246,0.12); }
+html[data-theme="light"] .page-gallery .stats-panel:hover,
+html[data-theme="light"] .page-gear .stats-panel:hover,
+html[data-theme="light"] .page-articles .stats-panel:hover{ border-color: rgba(124,92,246,0.42); }
+html[data-theme="light"] .home-stats-title{ color: rgba(26,23,48,0.92); }
 html[data-theme="light"] .stat[aria-pressed="true"]{
   background: rgba(124,92,246,0.14); border-color: rgba(124,92,246,0.62);
   box-shadow: 0 0 0 1px rgba(124,92,246,0.30), 0 0 18px rgba(124,92,246,0.18);
