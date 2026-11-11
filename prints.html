@@ -89,7 +89,12 @@
               <strong class="cal-callout-title">The bhapstar 2027 calendar</strong>
               <p>Fragments of the Universe: twelve of my deep-sky images, one for every month, each with a short
                 description. Moon phases, meteor showers, eclipses, equinoxes and solstices are marked on the dates.
-                An A4 wall calendar, spiral bound at the top, and a great Christmas gift for the astro lover in your life.</p>
+                An A4 wall calendar, spiral bound at the top, and a great <span class="gift-occasion">Christmas</span> gift for the astro lover in your life.</p>
+              <script>
+                /* From 26 Dec 2026: "a great New Year gift". Runs here, before the text is drawn */
+                if (new Date() >= new Date('2026-12-26T00:00:00'))
+                  document.querySelectorAll('#calendar2027 .gift-occasion').forEach(function (s) { s.textContent = 'New Year'; });
+              </script>
               <div class="cal-callout-actions">
                 <button type="button" class="btn primary" id="calAddBtn">Add to my enquiry</button>
                 <button type="button" class="btn" id="calInsideBtn">See inside</button>
@@ -973,7 +978,8 @@
   }
 
   /* 2027 CALENDAR: the callout button, the "See inside" viewer, and
-     prints.html?calendar=1 from the homepage pop-up */
+     prints.html?calendar=N, which adds N calendars to the enquiry. The
+     homepage links to the callout itself (prints.html#calendar2027) */
   const calRow = $('calendarRow');
   function addCalendar(scroll) {
     if (pCalQty && !calendarQty()) pCalQty.value = '1';

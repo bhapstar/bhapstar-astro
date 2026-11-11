@@ -9,6 +9,14 @@
   "background_color": "#050414",
   "theme_color": "#050414",
   "orientation": "any",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/manifest.json",
+      "id": "https://bhapstar.com/"
+    }
+  ],
+  "prefer_related_applications": false,
   "lang": "en-GB",
   "dir": "ltr",
   "categories": ["photography", "education", "science"],

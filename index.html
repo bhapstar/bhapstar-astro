@@ -48,6 +48,42 @@
   <!-- Preload gallery data for faster hero slideshow -->
   <link rel="preload" href="site-data.json" as="fetch" crossorigin />
 
+  <!-- Preload the main font, so text (and the calendar pop-up) is drawn in
+       Outfit from the start instead of swapping fonts a moment later -->
+  <link rel="preload" href="fonts/outfit-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- 2027 CALENDAR: settings, and whether the pop-up shows on this visit.
+       Worked out here, before the stylesheet, so that when it is going to
+       show, its picture downloads alongside the stylesheet and is ready
+       the moment the page appears. Used by the 2027 CALENDAR POP-UP script
+       in the body. Must stay above the stylesheet link. -->
+  <script>
+  window.calPromo = (function () {
+    var now = new Date();
+    var p = {
+      live: now < new Date('2027-02-01T00:00:00'),     // banner and pop-up stop from 1 Feb 2027
+      newYear: now >= new Date('2026-12-26T00:00:00'), // "Christmas gift" becomes "New Year gift"
+      key: 'calPromo2027',
+      due: false                                       // pop-up shows on this visit
+    };
+    if (!p.live) return p;
+    // Not for people arriving from the calendar's QR codes or NFC tag
+    var src = new URLSearchParams(location.search).get('src');
+    if (src === 'calendar' || src === 'calendar-nfc') return p;
+    // "Enquire now" tapped: never again. Closed: not again until tomorrow.
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(p.key) || 'null'); } catch (e) {}
+    if (s && (s.done || (s.closed && new Date(s.closed).toDateString() === now.toDateString()))) return p;
+    p.due = true;
+    var l = document.createElement('link');
+    l.rel = 'preload'; l.as = 'image';
+    l.href = 'images/calendar/calendar-2027-trio.webp';
+    l.setAttribute('fetchpriority', 'high');
+    document.head.appendChild(l);
+    return p;
+  })();
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
   <!-- Page CSS lives in /styles.css under the
        "PAGE: Home (index.html)" section. Do not add a <style> block here. -->
@@ -104,10 +140,11 @@
   <div class="top-strip-inner wrap">
 
     <!-- 2027 CALENDAR: shown by the 2027 CALENDAR POP-UP script further
-         down, until CAL_PROMO_END. -->
-    <a id="calBanner" class="ts-item ts-cal" href="prints.html?calendar=1" hidden>
+         down, until 1 Feb 2027. Links to the calendar section of the prints
+         page. "Christmas" becomes "New Year" from 26 Dec. -->
+    <a id="calBanner" class="ts-item ts-cal" href="prints.html#calendar2027" hidden>
       <span class="ts-icon" aria-hidden="true">🗓️</span>
-      <span class="ts-text"><strong><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar enquiry</strong><span class="ts-sub">A great Christmas gift</span></span>
+      <span class="ts-text"><strong><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar enquiry</strong><span class="ts-sub">A great <span class="gift-occasion">Christmas</span> gift</span></span>
     </a>
 
     <!-- App install: shown by the script below -->
@@ -143,7 +180,9 @@
   if (window.matchMedia('(display-mode: standalone)').matches) return;
   if (window.navigator.standalone === true) return; // iOS standalone
 
-  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  // iPads report themselves as a Mac, so they are picked out by their touch screen
+  const isIos = (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream) ||
+                (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 
   let deferredPrompt = null;
   let promptAvailable = false;
@@ -161,7 +200,8 @@
     setTimeout(async () => {
       if (promptAvailable) return; // native prompt already showing
 
-      // Check if already installed via Relationship API (Chrome/Edge)
+      // Check if already installed via Relationship API (Chrome/Edge). This
+      // relies on the related_applications entry in manifest.json
       if ('getInstalledRelatedApps' in navigator) {
         try {
           const related = await navigator.getInstalledRelatedApps();
@@ -305,16 +345,21 @@
 
 <!-- ─────────────────────────────────────────
      2027 CALENDAR POP-UP (and the banner at the top of the page)
-     - The banner shows on every visit until CAL_PROMO_END. It is switched on
-       as the page is read, so it is already in place on the first paint
-       (styles.css holds the header's space until partials.js fills it)
-     - The pop-up appears a second after the homepage loads, but not before
-       the header is in and its picture has loaded, so it opens once at full
-       size instead of opening small and then jumping
-     - Closed: shown again after 4 days. "Enquire now": never again
+     - Settings and the "show it on this visit?" decision are in the
+       2027 CALENDAR script in <head>, which also starts the picture
+       downloading early
+     - The banner shows on every visit until 1 Feb 2027
+     - The pop-up is part of the page from the first moment it appears:
+       this script runs straight after the markup, before the page is drawn,
+       so it never opens late, closes or reopens. Its picture has a fixed
+       size, so nothing moves when it arrives (it fades in if it is still
+       downloading)
+     - Closed (X, "Maybe later", outside, Esc): not again until the next
+       day. "Enquire now": never again
      - Not shown to anyone arriving from the calendar's own QR codes or
        NFC tag (?src=calendar / calendar-nfc), since they have one already
-     - Both switch themselves off from CAL_PROMO_END, so they can stay in
+     - Both links go to the calendar section of the prints page
+     - Both switch themselves off from 1 Feb 2027, so they can stay in
        place until it is convenient to delete
      Styles: the "2027 CALENDAR" block at the end of styles.css
 ───────────────────────────────────────── -->
@@ -322,55 +367,42 @@
 <div id="calPromo" class="cal-promo" hidden role="dialog" aria-modal="true"
      aria-labelledby="calPromoTitle" aria-describedby="calPromoText">
   <button type="button" class="cal-promo-close" id="calPromoClose" aria-label="Close">&#10005;</button>
-  <img class="cal-promo-img" src="images/calendar/calendar-2027-trio.webp" width="1100" height="871"
-       alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it"
-       decoding="async" fetchpriority="low" />
+  <!-- src is set by the script only when the pop-up shows -->
+  <img class="cal-promo-img" data-src="images/calendar/calendar-2027-trio.webp" width="1100" height="871"
+       alt="The bhapstar 2027 calendar: the cover showing all twelve images, with two month pages behind it" />
   <span class="cal-promo-tag">New for 2027</span>
   <h2 id="calPromoTitle">The bhapstar 2027 calendar</h2>
   <p id="calPromoText">Fragments of the Universe: twelve of my deep-sky images, one for every month, with moon phases,
-    meteor showers and eclipses marked on the dates. A great Christmas gift for the astro lover in your life.</p>
+    meteor showers and eclipses marked on the dates. A great <span class="gift-occasion">Christmas</span> gift for the astro lover in your life.</p>
   <div class="cal-promo-actions">
-    <a class="btn primary" id="calPromoGo" href="prints.html?calendar=1">Enquire now</a>
+    <a class="btn primary" id="calPromoGo" href="prints.html#calendar2027">Enquire now</a>
     <button type="button" class="btn" id="calPromoLater">Maybe later</button>
   </div>
 </div>
 
 <script>
 (function () {
-  var CAL_PROMO_END = new Date('2027-02-01T00:00:00');   // stops showing from 1 Feb 2027
-  var KEY = 'calPromo2027';
-  var SNOOZE_DAYS = 4;
-  var DELAY_MS = 1000;
+  var P = window.calPromo;
+  if (!P || !P.live) return;
 
-  if (new Date() >= CAL_PROMO_END) return;
-
-  /* Calls cb once the site header has been added by partials.js (or after
-     4 s, in case it is slow or fails). */
-  function whenHeaderReady(cb) {
-    var done = false;
-    function go() { if (!done) { done = true; cb(); } }
-    var h = document.getElementById('siteHeader');
-    if (!h || h.childElementCount) { go(); return; }
-    var mo = new MutationObserver(function () {
-      if (h.childElementCount) { mo.disconnect(); go(); }
-    });
-    mo.observe(h, { childList: true });
-    setTimeout(function () { mo.disconnect(); go(); }, 4000);
+  // From 26 Dec: "A great New Year gift"
+  if (P.newYear) {
+    var occ = document.querySelectorAll('.gift-occasion');
+    for (var i = 0; i < occ.length; i++) occ[i].textContent = 'New Year';
   }
 
-  // The banner is always on until CAL_PROMO_END, whatever happens to the pop-up
+  // The banner is always on until 1 Feb 2027, whatever happens to the pop-up
   var calBanner = document.getElementById('calBanner');
   if (calBanner) calBanner.hidden = false;
-  var src = new URLSearchParams(location.search).get('src');
-  if (src === 'calendar' || src === 'calendar-nfc') return;
 
-  var state = null;
-  try { state = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
-  if (state && (state.done || (Date.now() - (state.closed || 0)) < SNOOZE_DAYS * 864e5)) return;
+  if (!P.due) return;
 
-  function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  var modal = document.getElementById('calPromo');
+  var overlay = document.getElementById('calPromoOverlay');
+  if (!modal || !overlay) return;
+  var focusables = Array.prototype.slice.call(modal.querySelectorAll('button, a[href]'));
 
-  var modal, overlay, lastFocus, focusables = [];
+  function save(v) { try { localStorage.setItem(P.key, JSON.stringify(v)); } catch (e) {} }
 
   function onKey(e) {
     if (e.key === 'Escape') { close(); return; }
@@ -381,57 +413,57 @@
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 
-  function open() {
-    modal = document.getElementById('calPromo');
-    overlay = document.getElementById('calPromoOverlay');
-    if (!modal || !overlay) return;
-    // Never on top of the app install thank-you
-    var other = document.getElementById('appDiscountModal');
-    if (other && !other.hidden) return;
-    lastFocus = document.activeElement;
-    focusables = Array.prototype.slice.call(modal.querySelectorAll('button, a[href]'));
-    modal.hidden = false;
-    overlay.hidden = false;
-    requestAnimationFrame(function () {
-      modal.classList.add('show');
-      overlay.classList.add('show');
-    });
-    // Focus the dialog itself, so the close button only shows a focus ring
-    // once someone starts moving through it with the keyboard
-    modal.setAttribute('tabindex', '-1');
-    modal.focus({ preventScroll: true });
-    document.addEventListener('keydown', onKey);
+  function hideNow() {
+    modal.classList.remove('show');
+    overlay.classList.remove('show');
+    modal.hidden = true;
+    overlay.hidden = true;
+    document.removeEventListener('keydown', onKey);
   }
 
   function close() {
-    if (!modal) return;
+    if (modal.hidden) return;
     save({ closed: Date.now() });
     modal.classList.remove('show');
     overlay.classList.remove('show');
     document.removeEventListener('keydown', onKey);
     setTimeout(function () { modal.hidden = true; overlay.hidden = true; }, 320);
-    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
 
-  function init() {
-    document.getElementById('calPromoClose').addEventListener('click', close);
-    document.getElementById('calPromoLater').addEventListener('click', close);
-    document.getElementById('calPromoOverlay').addEventListener('click', close);
-    document.getElementById('calPromoGo').addEventListener('click', function () { save({ done: true }); });
-
-    // Open when all three are true: DELAY_MS has passed, the header is in,
-    // and the picture is loaded and decoded
-    var waiting = 3;
-    function ready() { if (--waiting === 0) open(); }
-    setTimeout(ready, DELAY_MS);
-    whenHeaderReady(ready);
-    var img = document.querySelector('#calPromo .cal-promo-img');
-    if (img && img.decode) img.decode().then(ready, ready);
-    else ready();
+  // The picture: already downloading (see <head>). It fades in if it is not
+  // ready yet, in a space that is already the right size.
+  var img = modal.querySelector('.cal-promo-img');
+  if (img) {
+    img.onload = function () { img.classList.add('loaded'); };
+    img.setAttribute('fetchpriority', 'high');
+    img.src = img.getAttribute('data-src');
+    if (img.complete && img.naturalWidth) img.classList.add('loaded');
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  // Open now, before the page is drawn
+  modal.hidden = false;
+  overlay.hidden = false;
+  modal.classList.add('show');
+  overlay.classList.add('show');
+  // Focus the dialog itself, so the close button only shows a focus ring
+  // once someone starts moving through it with the keyboard
+  modal.setAttribute('tabindex', '-1');
+  modal.focus({ preventScroll: true });
+  document.addEventListener('keydown', onKey);
+
+  document.getElementById('calPromoClose').addEventListener('click', close);
+  document.getElementById('calPromoLater').addEventListener('click', close);
+  overlay.addEventListener('click', close);
+  document.getElementById('calPromoGo').addEventListener('click', function () { save({ done: true }); });
+
+  // Coming back with the Back button can restore the page exactly as it was
+  // left, pop-up and all. After "Enquire now" it should stay gone.
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted || modal.hidden) return;
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(P.key) || 'null'); } catch (err) {}
+    if (s && s.done) hideNow();
+  });
 })();
 </script>
 

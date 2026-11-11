@@ -10817,8 +10817,17 @@ html.ss-lock body{ overflow: hidden; }
   transition: opacity 300ms ease, transform 420ms var(--ease-out-expo);
 }
 .cal-promo:focus{ outline: none; }
+/* It is opened before the page is first drawn, so the entrance is an
+   animation (which plays from the first frame); closing uses the transitions
+   above as .show is removed */
 .cal-promo.show, .cal-promo-overlay.show{ opacity: 1; }
-.cal-promo.show{ transform: translate(-50%, -50%) scale(1); }
+.cal-promo.show{ transform: translate(-50%, -50%) scale(1); animation: calPromoIn 420ms var(--ease-out-expo); }
+.cal-promo-overlay.show{ animation: calPromoFade 260ms ease; }
+@keyframes calPromoIn{
+  from{ opacity: 0; transform: translate(-50%, -46%) scale(0.98); }
+  to{   opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes calPromoFade{ from{ opacity: 0; } to{ opacity: 1; } }
 .cal-promo[hidden], .cal-promo-overlay[hidden]{ display: none; }
 .cal-promo-close{
   position: absolute; top: 10px; right: 12px; z-index: 1;
@@ -10827,10 +10836,15 @@ html.ss-lock body{ overflow: hidden; }
   color: #fff; font-size: 15px; line-height: 1; cursor: pointer;
 }
 .cal-promo-close:hover{ border-color: rgba(167,139,250,0.7); }
+/* A fixed size worked out from the picture's shape (1100 x 871), no taller
+   than 38% of the screen, so the pop-up is the same size before and after
+   the picture arrives. The picture fades in once it has loaded. */
 .cal-promo-img{
-  display: block; width: auto; max-width: 100%; max-height: 38vh; height: auto;
-  margin: 0.3rem auto 0.5rem;
+  display: block; margin: 0.3rem auto 0.5rem;
+  width: min(100%, calc(38vh * 1100 / 871)); height: auto; aspect-ratio: 1100 / 871;
+  opacity: 0; transition: opacity 300ms ease;
 }
+.cal-promo-img.loaded{ opacity: 1; }
 .cal-promo-tag{
   display: inline-block; margin-bottom: 0.35rem;
   font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #c4b5fd;
@@ -10844,7 +10858,8 @@ html.ss-lock body{ overflow: hidden; }
 .cal-promo-actions{ display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .cal-promo .btn{ color: #fff; }
 @media (prefers-reduced-motion: reduce){
-  .cal-promo, .cal-promo-overlay{ transition: none; }
+  .cal-promo, .cal-promo-overlay, .cal-promo-img{ transition: none; }
+  .cal-promo.show, .cal-promo-overlay.show{ animation: none; }
 }
 
 /* ── Prints page callout ── */
@@ -10853,6 +10868,8 @@ html.ss-lock body{ overflow: hidden; }
   padding: 14px 16px; margin: 0 0 1.25rem;
   border: 1px solid rgba(167,139,250,0.22); border-radius: 16px;
   background: linear-gradient(135deg, rgba(167,139,250,0.10), rgba(244,114,182,0.06));
+  /* the homepage links straight here (prints.html#calendar2027): leave a gap above it */
+  scroll-margin-top: 18px;
 }
 .cal-callout-img{ display: block; width: 100%; height: auto; }
 .cal-callout-tag{
