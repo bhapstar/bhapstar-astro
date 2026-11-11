@@ -520,6 +520,16 @@
     document.querySelectorAll('#statsGrid .stat').forEach(t =>
       t.setAttribute('aria-pressed', t.dataset.filter === value ? 'true' : 'false'));
   }
+  // The address follows the selected tile (?type=...), so a reload or a
+  // shared link opens the same view
+  function syncUrl() {
+    try {
+      const q = new URLSearchParams(location.search);
+      if (activeType === 'all') q.delete('type'); else q.set('type', activeType);
+      const qs = q.toString();
+      history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+    } catch (e) {}
+  }
 
   function buildStats() {
     const statsGrid = document.getElementById('statsGrid');
@@ -537,6 +547,13 @@
       const n = counts.get(k) || 0;
       if (n > 0) tiles.push([k, label, c, n]);
     });
+
+    // Arriving with ?type=... (the homepage "By the numbers" tiles link like
+    // this): start on that tile and bring the tiles into view. An unknown
+    // type is ignored.
+    const wanted = new URLSearchParams(location.search).get('type');
+    const deepLinked = !!wanted && wanted !== 'all' && tiles.some(([k]) => k === wanted);
+    if (deepLinked) activeType = wanted;
 
     statsGrid.innerHTML = tiles.map(([k, label, c, n], i) =>
       `<button type="button" class="stat${k === 'all' ? ' stat--total' : ''}" data-filter="${esc(k)}"` +
@@ -566,8 +583,13 @@
       if (!tile) return;
       const v = tile.dataset.filter;
       setActiveFilter(v !== 'all' && v === activeType ? 'all' : v);
+      syncUrl();
       render();
     });
+
+    if (deepLinked && !location.hash && section) {
+      requestAnimationFrame(() => section.scrollIntoView({ block: 'start' }));
+    }
 
     // Count up slowly, one at a time, as the tiles come into view
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

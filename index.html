@@ -552,6 +552,170 @@
           <span>✦ ✦ ✦</span>
         </div>
 
+        <!-- By the numbers: a count of the gallery, the gear and the articles,
+             in small tiles. Each tile links to that page with the same tile
+             already selected (gallery.html?type=nebulae and so on). Filled
+             from site-data.json by the script in this block. The wrapper
+             carries the divider below the tile, so if the data fails to load
+             the whole block goes and the page reads as before. -->
+        <div class="home-stats-section" id="homeStatsSection">
+
+          <div class="panel stats-panel stats-panel--home" id="homeStats">
+            <div class="section-head section-head--inline">
+              <h3>By the numbers</h3>
+            </div>
+            <p class="home-stats-intro">A running count of what is on the site. Select a tile to go straight to those.</p>
+            <div class="home-stats-group">
+              <h4 class="home-stats-label">Gallery</h4>
+              <div class="stats-grid" data-stats="gallery" aria-label="The gallery by type"></div>
+            </div>
+            <div class="home-stats-group">
+              <h4 class="home-stats-label">Gear</h4>
+              <div class="stats-grid" data-stats="gear" aria-label="The gear by type"></div>
+            </div>
+            <div class="home-stats-group">
+              <h4 class="home-stats-label">Articles</h4>
+              <div class="stats-grid" data-stats="articles" aria-label="The articles by what they cover"></div>
+            </div>
+          </div>
+
+          <script>
+          /* By the numbers (homepage). The types, labels and colours here
+             must stay in step with the "By the numbers" scripts on
+             gallery.html (STAT_TYPES), gear.html (CATEGORY_ORDER) and
+             articles.html (STAGES), which these tiles link into. */
+          (function () {
+            var section = document.getElementById('homeStatsSection');
+            var panel = document.getElementById('homeStats');
+            if (!section || !panel) return;
+
+            var GROUPS = {
+              gallery: {
+                page: 'gallery.html', all: 'All images',
+                types: [
+                  ['nebulae', 'Nebulae', 'var(--accent4)'], ['galaxies', 'Galaxies', 'var(--accent2)'],
+                  ['star-clusters', 'Star clusters', 'var(--accent)'], ['milky-way', 'Milky Way', 'var(--accent5)'],
+                  ['moon', 'Moon', 'var(--accent2)'], ['sun', 'Sun', 'var(--accent5)'],
+                  ['meteor-showers', 'Meteor showers', 'var(--accent3)'], ['star-trails', 'Star trails', 'var(--accent3)'],
+                  ['comets', 'Comets', 'var(--accent5)']
+                ],
+                pick: function (it) { return (it.section || 'gallery') === 'gallery'; },
+                key: function (it) { return it.type || 'others'; },
+                // every image in a group and every video counts, as on the gallery page
+                weight: function (it) {
+                  return (it.images && it.images.length) || (it.videos && it.videos.length) || 1;
+                }
+              },
+              gear: {
+                page: 'gear.html', all: 'All gear',
+                types: [
+                  ['telescope', 'Telescopes', 'var(--accent2)'], ['smart-telescope', 'Smart telescopes', 'var(--accent)'],
+                  ['mount', 'Mounts', 'var(--accent3)'], ['camera', 'Cameras', 'var(--accent4)'],
+                  ['filters', 'Filters', 'var(--accent5)'], ['accessories', 'Accessories', 'var(--accent2)']
+                ],
+                pick: function (it) { return it.section === 'gear' && !it.hidden; },
+                key: function (it) { return it.type || 'accessories'; },
+                weight: function () { return 1; }
+              },
+              articles: {
+                page: 'articles.html', all: 'All articles',
+                types: [
+                  ['plan', 'Planning', 'var(--accent2)'], ['capture', 'Capturing', 'var(--accent4)'],
+                  ['process', 'Processing', 'var(--accent3)'], ['gear', 'Gear and set-up', 'var(--accent5)']
+                ],
+                pick: function (it) { return it.section === 'article' && it.slug && !it.hidden; },
+                key: function (it) { return it.stage || 'other'; },
+                weight: function () { return 1; }
+              }
+            };
+
+            function esc(s) {
+              return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            }
+
+            // Columns: one row, two even rows, or rows of three with the
+            // first tile across the top, taking the first that fits with no
+            // label cut off. On phones the tiles are a wrapping row of chips
+            // instead (styles.css), and this does nothing.
+            function fitter(grid, n) {
+              var half = Math.ceil(n / 2);
+              return function () {
+                if (getComputedStyle(grid).display !== 'grid') return;
+                var w = grid.clientWidth;
+                var gap = parseFloat(getComputedStyle(grid).columnGap) || 6;
+                var fits = function (c) { return c * 84 + (c - 1) * gap <= w; };
+                var cut = function () {
+                  return Array.prototype.some.call(grid.querySelectorAll('.label'),
+                    function (l) { return l.scrollWidth > l.clientWidth + 1; });
+                };
+                var tries = [];
+                if (fits(n)) tries.push([n, false]);
+                if (fits(half)) tries.push([half, false]);
+                tries.push([3, true], [2, true]);
+                for (var i = 0; i < tries.length; i++) {
+                  grid.classList.toggle('stats-grid--stack', tries[i][1]);
+                  grid.style.setProperty('--cols', tries[i][0]);
+                  if (!cut()) return;
+                }
+              };
+            }
+
+            var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            function countUp(el) {
+              var target = +el.getAttribute('data-count');
+              if (reduce || target <= 0) { el.textContent = target; return; }
+              var step = Math.max(60, Math.min(220, Math.round(3000 / target))), v = 0;
+              var id = setInterval(function () { v += 1; el.textContent = v; if (v >= target) clearInterval(id); }, step);
+            }
+
+            fetch('site-data.json', { cache: 'default' })
+              .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+              .then(function (all) {
+                if (!Array.isArray(all)) throw 0;
+                var shown = 0;
+                Object.keys(GROUPS).forEach(function (name) {
+                  var g = GROUPS[name];
+                  var grid = panel.querySelector('[data-stats="' + name + '"]');
+                  var items = all.filter(g.pick);
+                  if (!grid || !items.length) { if (grid) grid.parentNode.hidden = true; return; }
+                  var counts = {}, total = 0;
+                  items.forEach(function (it) { var k = g.key(it), n = g.weight(it); counts[k] = (counts[k] || 0) + n; total += n; });
+                  var tiles = [['all', g.all, 'var(--accent)', total, g.page]];
+                  g.types.forEach(function (t) {
+                    if (counts[t[0]]) tiles.push([t[0], t[1], t[2], counts[t[0]], g.page + '?type=' + t[0]]);
+                  });
+                  grid.innerHTML = tiles.map(function (t, i) {
+                    return '<a class="stat' + (t[0] === 'all' ? ' stat--total' : '') + '" href="' + esc(t[4]) + '"' +
+                      ' aria-label="' + esc(t[1]) + ': ' + t[3] + '" style="--c:' + t[2] + ';--i:' + i + '">' +
+                      '<span class="num" data-count="' + t[3] + '" aria-hidden="true">0</span>' +
+                      '<span class="label" aria-hidden="true">' + esc(t[1]) + '</span></a>';
+                  }).join('');
+                  var fit = fitter(grid, tiles.length);
+                  fit();
+                  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(grid);
+                  else window.addEventListener('resize', fit);
+                  shown++;
+                });
+                if (!shown) throw 0;
+
+                var els = panel.querySelectorAll('.stat');
+                var show = function (el) { el.classList.add('in'); countUp(el.querySelector('.num')); };
+                if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(els, show); return; }
+                var io = new IntersectionObserver(function (entries) {
+                  entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+                }, { threshold: 0.45 });
+                Array.prototype.forEach.call(els, function (el) { io.observe(el); });
+              })
+              .catch(function () { section.hidden = true; });
+          })();
+          </script>
+
+          <div class="astro-divider" aria-hidden="true">
+            <span>✦ ✦ ✦</span>
+          </div>
+        </div>
+
+
         <!-- About Me -->
         <div class="panel about-me-panel">
         <div class="section-head section-head--inline">
