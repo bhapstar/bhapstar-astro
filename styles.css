@@ -10972,3 +10972,75 @@ html.ss-lock body{ overflow: hidden; }
 .cal-viewer-thumbs button:hover{ opacity: 0.85; }
 .cal-viewer-thumbs button[aria-current="true"]{ opacity: 1; border-color: rgba(167,139,250,0.8); }
 .calendar-modal-inner .cal-viewer-thumbs img{ width: 100%; height: auto; display: block; border-radius: 6px; }
+
+/* ============================================================
+   TILE HOVER: Start Here, Tonight, Field cards, Glossary
+   The same lift and shadow as the prints page panels and the
+   homepage tiles. Only outer tiles lift: the target cards inside
+   Tonight's "What is worth looking at" panel stay put, so nothing
+   jumps twice. Nothing inside these tiles is pinned to the screen
+   (Tonight's picture viewer is added to <body>), so the lift cannot
+   move a pop-up.
+   ============================================================ */
+
+/* Glossary: each letter is a tile of its own */
+.page-glossary .gp-group{
+  padding:18px 22px 6px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--soft);
+}
+@media (max-width:600px){
+  .page-glossary .gp-group{ padding:15px 15px 4px; }
+}
+
+@media (hover:hover){
+  .page-start-here .sh-tonight,
+  .page-start-here .sh-chooser,
+  .page-start-here .sh-plan,
+  .page-start-here .sh-card,
+  .page-tonight .sh-sky,
+  .page-tonight .tn-showers,
+  .page-tonight .tn-next,
+  .page-field-cards .fc-card,
+  .page-glossary .gp-group{
+    transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease, background .32s ease;
+  }
+  .page-start-here .sh-tonight:hover,
+  .page-start-here .sh-chooser:hover,
+  .page-start-here .sh-plan:hover,
+  .page-start-here .sh-card:hover,
+  .page-tonight .sh-sky:hover,
+  .page-tonight .tn-showers:hover,
+  .page-tonight .tn-next:hover,
+  .page-field-cards .fc-card:hover,
+  .page-glossary .gp-group:hover{
+    border-color: rgba(167,139,250,0.30);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.08), 0 14px 44px rgba(0,0,0,0.48);
+    transform: translateY(-2px);
+  }
+  /* the reading list cards keep their own accent edge and glow */
+  .page-start-here .sh-card:hover{ border-color: var(--accent); }
+
+  html[data-theme="light"] .page-start-here .sh-tonight:hover,
+  html[data-theme="light"] .page-start-here .sh-chooser:hover,
+  html[data-theme="light"] .page-start-here .sh-plan:hover,
+  html[data-theme="light"] .page-tonight .sh-sky:hover,
+  html[data-theme="light"] .page-tonight .tn-showers:hover,
+  html[data-theme="light"] .page-tonight .tn-next:hover,
+  html[data-theme="light"] .page-field-cards .fc-card:hover,
+  html[data-theme="light"] .page-glossary .gp-group:hover{
+    border-color: rgba(124,92,246,0.42);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .page-start-here .sh-tonight:hover,
+  .page-start-here .sh-chooser:hover,
+  .page-start-here .sh-plan:hover,
+  .page-start-here .sh-card:hover,
+  .page-tonight .sh-sky:hover,
+  .page-tonight .tn-showers:hover,
+  .page-tonight .tn-next:hover,
+  .page-field-cards .fc-card:hover,
+  .page-glossary .gp-group:hover{ transform: none; }
+}
