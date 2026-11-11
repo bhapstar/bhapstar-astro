@@ -1216,10 +1216,13 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   grid-template-columns: 1fr;
   justify-items: center;
 }
+/* The column that holds the homepage tiles. No padding or box: the tiles
+   are the boxes, at the width they had inside the old outer panel. */
 .index-about-section .about-panel{
   width: 100%;
-  max-width: 860px;
-  padding: 36px 40px;
+  max-width: 780px;
+  min-width: 0;  /* lets the column shrink to a phone screen (the Instagram row is wide) */
+  padding: 0;
 }
 .index-about-section .about-panel p{
   margin: 0 0 16px;
@@ -1232,12 +1235,6 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-}
-@media (max-width: 760px){
-  .index-about-section .about-panel{ padding: 24px 20px; }
-}
-@media (max-width: 480px){
-  .index-about-section .about-panel{ padding: 18px 14px; }
 }
 
 /* max-width is set to `none` further down, where the submit button is
@@ -1623,25 +1620,10 @@ details.faq-item p{
    move together. Do not add tile rules to index.html.
    ========================================================================== */
 
-/* Outer panel that holds the six tiles. */
-.about-panel{ position: relative; overflow: hidden; }
-.about-panel::before{
-  content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
-  background: linear-gradient(
-    90deg, transparent,
-    rgba(167,139,250,0.40), rgba(96,165,250,0.55),
-    rgba(52,211,153,0.35), transparent
-  );
-  opacity: 0.50;
-}
-@media (hover:hover){
-  .about-panel{ transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease; }
-  .about-panel:hover{
-    border-color: rgba(167,139,250,0.26);
-    box-shadow: 0 0 0 1px rgba(167,139,250,0.07), 0 14px 40px rgba(0,0,0,0.46);
-    transform: translateY(-2px);
-  }
-}
+/* The six tiles sit straight on the page in a plain column (.about-panel,
+   sized under "Index page" above). That column used to be a panel too, with
+   its own hairline and hover lift, so moving onto a tile lifted the column
+   and the tile together. Only the tiles have a box and a hover now. */
 
 /* Tile box. max-width is pinned to none on purpose: several of these class
    names carry width caps from older layouts, and without this one tile ends
