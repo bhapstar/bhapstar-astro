@@ -46,11 +46,19 @@
           The telescopes, mounts, cameras and filters behind every image in the gallery, with a write-up on each covering the specifications, how it performs in the field, and what to know if you want to buy one.
         </p>
 
-        <div class="gallery-controls" role="group" aria-label="Gear controls">
-          <!-- Filter pills are rendered by JS once site-data.json is in, so
-               the counts are real and empty categories are dropped. -->
-          <div id="gearFilterPills" class="filter-pills" role="group" aria-label="Filter gear by category"></div>
+        <!-- By the numbers: one tile per kind of gear, counted live from
+             site-data.json by the script below, so empty kinds are dropped.
+             The tiles are also the filter. Styles: the "BY THE NUMBERS"
+             block in styles.css -->
+        <div class="panel stats-panel" id="statsSection">
+          <div class="stats-head">
+            <h2 class="stats-title">By the numbers</h2>
+            <p class="stats-sub">Everything I use, counted by type. Select a tile to show just those.</p>
+          </div>
+          <div class="stats-grid" id="statsGrid" role="group" aria-label="Show gear by type"></div>
+        </div>
 
+        <div class="gallery-controls" role="group" aria-label="Gear controls">
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -483,66 +491,104 @@
   }
   let infoVisible     = true;
 
-  /* ── Filter pills ──
-     CATEGORY_ORDER fixes the order they appear in; anything in the data with
-     a type not listed here falls into Accessories, which is what render()
-     already assumed. */
+  /* ── By the numbers: the tiles under the intro, which are also the filter ──
+     CATEGORY_ORDER sets the order, labels and colours of the tiles, after a
+     first tile for everything. Each item counts once, and a kind with
+     nothing in it gets no tile. Selecting a tile shows just that kind;
+     selecting it again, or the first tile, shows everything. The columns
+     are worked out to suit the space: all in one row if they fit, otherwise
+     two even rows, otherwise rows of three with the first tile across the
+     top (phones). An item without a type counts as Accessories, as
+     render() already assumed. */
   const CATEGORY_ORDER = [
-    ['telescope',       'Telescopes'],
-    ['smart-telescope', 'Smart telescopes'],
-    ['mount',           'Mounts'],
-    ['camera',          'Cameras'],
-    ['filters',         'Filters'],
-    ['accessories',     'Accessories']
+    ['telescope',       'Telescopes',       'var(--accent2)'],
+    ['smart-telescope', 'Smart telescopes', 'var(--accent)'],
+    ['mount',           'Mounts',           'var(--accent3)'],
+    ['camera',          'Cameras',          'var(--accent4)'],
+    ['filters',         'Filters',          'var(--accent5)'],
+    ['accessories',     'Accessories',      'var(--accent2)']
   ];
 
   function itemType(item) {
     return item.type || 'accessories';
   }
 
-  function getActiveFilter() {
-    return document.querySelector('#gearFilterPills .filter-pill.active')?.dataset.filter || 'all';
-  }
+  let activeType = 'all';
+  function getActiveFilter() { return activeType; }
   function setActiveFilter(value) {
-    document.querySelectorAll('#gearFilterPills .filter-pill').forEach(btn => {
-      const on = btn.dataset.filter === value;
-      btn.classList.toggle('active', on);
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
+    activeType = value;
+    document.querySelectorAll('#statsGrid .stat').forEach(t =>
+      t.setAttribute('aria-pressed', t.dataset.filter === value ? 'true' : 'false'));
   }
 
-  /* Every item is counted into its category up front, so each pill shows how
-     much sits behind it and a category with nothing in it is never offered. */
-  function buildFilterPills() {
-    const host = document.getElementById('gearFilterPills');
-    if (!host) return;
+  function buildStats() {
+    const statsGrid = document.getElementById('statsGrid');
+    const section   = document.getElementById('statsSection');
+    if (!statsGrid) return;
+    if (!items.length) { if (section) section.hidden = true; return; }
 
     const counts = new Map();
     items.forEach(it => {
       const t = itemType(it);
       counts.set(t, (counts.get(t) || 0) + 1);
     });
-
-    const buttons = [
-      { value: 'all', label: 'All gear', n: items.length }
-    ];
-    CATEGORY_ORDER.forEach(([value, label]) => {
-      const n = counts.get(value) || 0;
-      if (n > 0) buttons.push({ value, label, n });
+    const tiles = [['all', 'All gear', 'var(--accent)', items.length]];
+    CATEGORY_ORDER.forEach(([k, label, c]) => {
+      const n = counts.get(k) || 0;
+      if (n > 0) tiles.push([k, label, c, n]);
     });
 
-    host.innerHTML = buttons.map((b, i) => `
-      <button type="button"
-              class="filter-pill${i === 0 ? ' active' : ''}"
-              data-filter="${esc(b.value)}"
-              aria-pressed="${i === 0 ? 'true' : 'false'}">${esc(b.label)}<span class="fpill-n">${b.n}</span></button>`).join('');
+    statsGrid.innerHTML = tiles.map(([k, label, c, n], i) =>
+      `<button type="button" class="stat${k === 'all' ? ' stat--total' : ''}" data-filter="${esc(k)}"` +
+      ` aria-pressed="${k === activeType}" aria-label="${esc(label)}: ${n}" style="--c:${c};--i:${i}">` +
+      `<span class="num" data-count="${n}" aria-hidden="true">0</span>` +
+      `<span class="label" aria-hidden="true">${esc(label)}</span></button>`).join('');
 
-    host.addEventListener('click', (e) => {
-      const btn = e.target.closest('.filter-pill');
-      if (!btn || !host.contains(btn)) return;
-      setActiveFilter(btn.dataset.filter);
+    // Columns: one row, two even rows, or rows of three (two on the
+    // narrowest phones, if a label would not fit in a third of the width)
+    const half = Math.ceil(tiles.length / 2);
+    function fit() {
+      const w = statsGrid.clientWidth;
+      const gap = parseFloat(getComputedStyle(statsGrid).columnGap) || 8;
+      const fits = c => c * 100 + (c - 1) * gap <= w;
+      const stack = !fits(half);
+      statsGrid.classList.toggle('stats-grid--stack', stack);
+      statsGrid.style.setProperty('--cols', fits(tiles.length) ? tiles.length : stack ? 3 : half);
+      if (stack && [...statsGrid.querySelectorAll('.label')].some(l => l.scrollWidth > l.clientWidth + 1))
+        statsGrid.style.setProperty('--cols', 2);
+    }
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(statsGrid);
+    else window.addEventListener('resize', fit);
+
+    statsGrid.addEventListener('click', e => {
+      const tile = e.target.closest('.stat');
+      if (!tile) return;
+      const v = tile.dataset.filter;
+      setActiveFilter(v !== 'all' && v === activeType ? 'all' : v);
       render();
     });
+
+    // Count up slowly, one at a time, as the tiles come into view
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function countUp(numEl) {
+      const target = +numEl.dataset.count;
+      if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
+      const stepMs = Math.max(60, Math.min(220, Math.round(3000 / target)));
+      let v = 0;
+      const id = setInterval(() => {
+        v += 1;
+        numEl.textContent = v.toLocaleString();
+        if (v >= target) clearInterval(id);
+      }, stepMs);
+    }
+    const els = statsGrid.querySelectorAll('.stat');
+    const show = el => { el.classList.add('in'); countUp(el.querySelector('.num')); };
+    if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
+    }), { threshold: 0.45 });
+    els.forEach(el => io.observe(el));
   }
 
   async function loadData() {
@@ -959,9 +1005,9 @@
   }
 
   function init() {
-    /* Pills first: applyView() below calls render(), which reads the active
-       pill to decide what to show. */
-    buildFilterPills();
+    /* Tiles first: applyView() below calls render(), which reads the
+       selected tile to decide what to show. */
+    buildStats();
 
     const viewBtnGrid = document.getElementById('viewBtnGrid');
     const viewBtnList = document.getElementById('viewBtnList');
@@ -1012,7 +1058,7 @@
       applyDescToggle(!grid.classList.contains('hide-desc'));
     });
 
-    /* Filter pill clicks are bound inside buildFilterPills(). */
+    /* Tile clicks are bound inside buildStats(). */
 
     /* Tiles navigate to /gear/<slug>.html. No click interception: the
        lightbox is no longer used on this page. */

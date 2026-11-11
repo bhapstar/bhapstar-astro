@@ -828,26 +828,20 @@
           All images shown here are my own (unless otherwise stated on its page) created through patient hours of long-exposure imaging under dark, often cold night skies, followed by careful processing to reveal faint structures and subtle detail hidden in the data.
         </p><br>
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
-        <p class="gallery-hint">Click any image to open its own page, with the story behind it, how it was captured, and the equipment and conditions on the night.</p><br>
-        <p class="gallery-hint">On that page, click the image to view it full screen. Use the arrow keys or the on-screen arrows to move between images, pinch or scroll to zoom, and use the share button (top left) to send it to someone.</p><br>
+        <p class="gallery-hint">Click any image to open its own page, with the story behind it, how it was captured, and the equipment and conditions on the night.</p>
+
+        <!-- By the numbers: one tile per type, counted live from site-data.json
+             by the script below. The tiles are also the filter. Styles: the
+             "BY THE NUMBERS" block in styles.css -->
+        <div class="panel stats-panel" id="statsSection">
+          <div class="stats-head">
+            <h2 class="stats-title">By the numbers</h2>
+            <p class="stats-sub">A running tally of every image in the gallery. Select a tile to show just those.</p>
+          </div>
+          <div class="stats-grid" id="statsGrid" role="group" aria-label="Show images by type"></div>
+        </div>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
-          <div class="filter-select-wrap">
-            <label for="galleryFilter" class="filter-select-label">Filter</label>
-            <select id="galleryFilter" class="filter-select" aria-label="Filter by type">
-              <option value="all" selected>All images</option>
-              <option value="nebulae">Nebulae</option>
-              <option value="galaxies">Galaxies</option>
-              <option value="star-clusters">Star Clusters</option>
-              <option value="milky-way">Milky Way</option>
-              <option value="moon">Moon</option>
-              <option value="sun">Sun</option>
-              <option value="meteor-showers">Meteor Showers</option>
-              <option value="star-trails">Star Trails</option>
-              <option value="comets">Comets</option>
-            </select>
-          </div>
-
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -1290,13 +1284,109 @@
     return item.slug || (window.Likes ? window.Likes.slugify(item.title || '') : '');
   }
 
-  /* ── Filter helpers (dropdown) ── */
-  function getActiveFilter() {
-    return document.getElementById('galleryFilter')?.value || 'all';
-  }
+  /* ── By the numbers: the tiles under the intro, which are also the filter ──
+     One tile per type, counted from site-data.json (each image in a group
+     and each video counts), with a first tile for everything. Selecting a
+     tile shows just that type; selecting it again, or the first tile, shows
+     everything. The columns are worked out to suit the space: all in one
+     row if they fit, otherwise two even rows, otherwise rows of three with
+     the first tile across the top (phones). STAT_TYPES sets the order,
+     labels and colours; a new type in the data still gets a tile. */
+  const STAT_TYPES = [
+    ['nebulae',        'Nebulae',        'var(--accent4)'],
+    ['galaxies',       'Galaxies',       'var(--accent2)'],
+    ['star-clusters',  'Star clusters',  'var(--accent)'],
+    ['milky-way',      'Milky Way',      'var(--accent5)'],
+    ['moon',           'Moon',           'var(--accent2)'],
+    ['sun',            'Sun',            'var(--accent5)'],
+    ['meteor-showers', 'Meteor showers', 'var(--accent3)'],
+    ['star-trails',    'Star trails',    'var(--accent3)'],
+    ['comets',         'Comets',         'var(--accent5)']
+  ];
+  let activeType = 'all';
+  function getActiveFilter() { return activeType; }
   function setActiveFilter(value) {
-    const sel = document.getElementById('galleryFilter');
-    if (sel) sel.value = value;
+    activeType = value;
+    document.querySelectorAll('#statsGrid .stat').forEach(t =>
+      t.setAttribute('aria-pressed', t.dataset.filter === value ? 'true' : 'false'));
+  }
+
+  function buildStats(onChange) {
+    const statsGrid = document.getElementById('statsGrid');
+    const section   = document.getElementById('statsSection');
+    if (!statsGrid) return;
+    if (!items.length) { if (section) section.hidden = true; return; }
+
+    const counts = {};
+    let total = 0;
+    items.forEach(it => {
+      const t = it.type || 'others';
+      const n = (Array.isArray(it.images) && it.images.length) ? it.images.length
+              : (Array.isArray(it.videos) && it.videos.length) ? it.videos.length
+              : 1;
+      counts[t] = (counts[t] || 0) + n;
+      total += n;
+    });
+    const titleCase = s => s.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const types = [
+      ...STAT_TYPES.filter(([k]) => counts[k]),
+      ...Object.keys(counts).filter(k => !STAT_TYPES.some(([x]) => x === k))
+        .map(k => [k, titleCase(k), 'var(--accent)'])
+    ];
+    const tiles = [['all', 'All images', 'var(--accent)', total],
+                   ...types.map(([k, label, c]) => [k, label, c, counts[k]])];
+
+    statsGrid.innerHTML = tiles.map(([k, label, c, n], i) =>
+      `<button type="button" class="stat${k === 'all' ? ' stat--total' : ''}" data-filter="${esc(k)}"` +
+      ` aria-pressed="${k === activeType}" aria-label="${esc(label)}: ${n}" style="--c:${c};--i:${i}">` +
+      `<span class="num" data-count="${n}" aria-hidden="true">0</span>` +
+      `<span class="label" aria-hidden="true">${esc(label)}</span></button>`).join('');
+
+    // Columns: one row, two even rows, or rows of three (two on the
+    // narrowest phones, if a label would not fit in a third of the width)
+    const half = Math.ceil(tiles.length / 2);
+    function fit() {
+      const w = statsGrid.clientWidth;
+      const gap = parseFloat(getComputedStyle(statsGrid).columnGap) || 8;
+      const fits = c => c * 100 + (c - 1) * gap <= w;
+      const stack = !fits(half);
+      statsGrid.classList.toggle('stats-grid--stack', stack);
+      statsGrid.style.setProperty('--cols', fits(tiles.length) ? tiles.length : stack ? 3 : half);
+      if (stack && [...statsGrid.querySelectorAll('.label')].some(l => l.scrollWidth > l.clientWidth + 1))
+        statsGrid.style.setProperty('--cols', 2);
+    }
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(statsGrid);
+    else window.addEventListener('resize', fit);
+
+    statsGrid.addEventListener('click', e => {
+      const tile = e.target.closest('.stat');
+      if (!tile) return;
+      const v = tile.dataset.filter;
+      setActiveFilter(v !== 'all' && v === activeType ? 'all' : v);
+      onChange();
+    });
+
+    // Count up slowly, one at a time, as the tiles come into view
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function countUp(numEl) {
+      const target = +numEl.dataset.count;
+      if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
+      const stepMs = Math.max(60, Math.min(220, Math.round(3000 / target)));
+      let v = 0;
+      const id = setInterval(() => {
+        v += 1;
+        numEl.textContent = v.toLocaleString();
+        if (v >= target) clearInterval(id);
+      }, stepMs);
+    }
+    const els = statsGrid.querySelectorAll('.stat');
+    const show = el => { el.classList.add('in'); countUp(el.querySelector('.num')); };
+    if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
+    }), { threshold: 0.45 });
+    els.forEach(el => io.observe(el));
   }
 
   /* ── Load gallery data ── */
@@ -2105,6 +2195,12 @@
      INIT
   ══════════════════════════════════════ */
   function init() {
+    // The "By the numbers" tiles are the filter
+    buildStats(() => {
+      if (currentView === 'chaos') { renderChaos(); }
+      else { render(); if (window.Likes) window.Likes.hydrate(); }
+    });
+
     const viewBtnGrid  = document.getElementById('viewBtnGrid');
     const viewBtnList  = document.getElementById('viewBtnList');
     const viewBtnChaos = document.getElementById('viewBtnChaos');
@@ -2150,10 +2246,6 @@
     if (currentView === 'chaos') { renderChaos(); }
     else { render(); if (window.Likes) window.Likes.hydrate(); }
 
-    document.getElementById('galleryFilter')?.addEventListener('change', () => {
-      if (currentView === 'chaos') { renderChaos(); }
-      else { render(); if (window.Likes) window.Likes.hydrate(); }
-    });
 
     viewBtnGrid?.addEventListener('click', () => {
       if (chaosRafId) { cancelAnimationFrame(chaosRafId); chaosRafId = null; }
