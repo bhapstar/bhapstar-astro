@@ -1708,6 +1708,13 @@ details.faq-item p{
    it back to inline, as quiz.html and the print simulator do. Keep the
    !important: the site rule carries one too. */
 .about-site-panel p a[href*="prints"]{ display: inline !important; }
+/* The calendar sentence shows only while the 2027 calendar is on offer: the
+   2027 CALENDAR script in index.html's <head> adds .cal-promo-live to <html>
+   until 1 Feb 2027 */
+.cal-promo-only{ display: none; }
+html.cal-promo-live .cal-promo-only{ display: inline; }
+/* "You can also install the site as an app" means nothing inside the app */
+@media (display-mode: standalone){ .not-in-app{ display: none; } }
 
 /* ── Tile content: Latest articles ──────────────────────────────────────
    Text-only list on purpose, so the homepage gains crawlable routes into
@@ -2510,7 +2517,7 @@ a[href="prints.html"], a[href*="prints"] {
 @media (min-width:680px){ .ig-carousel .instagram-embed-wrap{ flex-basis:46%; } }
 @media (min-width:1000px){ .ig-carousel .instagram-embed-wrap{ flex-basis:31%; } }
 
-/* ── BY THE NUMBERS (gallery.html and gear.html) ──
+/* ── BY THE NUMBERS (gallery.html, gear.html and articles.html) ──
    A compact row of tiles under the page intro, one per type, counted live
    from site-data.json, plus a first tile for everything. The tiles are also
    the page's filter: select one to show just that type, select it again (or
@@ -2544,6 +2551,9 @@ a[href="prints.html"], a[href*="prints"] {
 @media (max-width:825px){  .page-gear .stats-grid:empty{ min-height:131px; } }
 @media (max-width:501px){  .page-gear .stats-grid:empty{ min-height:182px; } }
 @media (max-width:359px){  .page-gear .stats-grid:empty{ min-height:247px; } }
+.page-articles .stats-grid:empty{ min-height:67px; }
+@media (max-width:609px){ .page-articles .stats-grid:empty{ min-height:135px; } }
+@media (max-width:385px){ .page-articles .stats-grid:empty{ min-height:170px; } }
 
 .stat{
   appearance:none; -webkit-appearance:none; margin:0; font:inherit; color:inherit;
@@ -2603,7 +2613,7 @@ a[href="prints.html"], a[href*="prints"] {
 }
 
 /* Gallery and gear: with the filter gone from the controls row, the view
-   buttons sit on the right on their own */
+   buttons sit on the right on their own (articles.html already does this) */
 .page-gallery .gallery-controls,
 .page-gear .gallery-controls{ justify-content:flex-end; }
 

@@ -67,6 +67,8 @@
       due: false                                       // pop-up shows on this visit
     };
     if (!p.live) return p;
+    // Shows the calendar sentence in "About this site" (styles.css)
+    document.documentElement.classList.add('cal-promo-live');
     // Not for people arriving from the calendar's QR codes or NFC tag
     var src = new URLSearchParams(location.search).get('src');
     if (src === 'calendar' || src === 'calendar-nfc') return p;
@@ -172,6 +174,16 @@
   // The words do what the (hidden) Install button does
   const btnText   = document.getElementById('pwaBannerText');
   if (btnText && btnInstall) btnText.addEventListener('click', () => btnInstall.click());
+  // "install the site as an app" in About this site: back to the top, where
+  // the install prompt or the install help appears. If the strip's app link
+  // is not showing, the link just goes to the top of the page.
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-install-app]');
+    if (!link || !banner || banner.hidden || !btnInstall) return;
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    btnInstall.click();
+  });
 
   if (!banner) return;
   if (sessionStorage.getItem('pwaBannerDismissed')) return;
@@ -519,13 +531,18 @@
             <h3>About this site</h3>
           </div>
           <p>
-            This is where I share my astrophotography, most of it captured from in and around Dubai: nebulae, galaxies, star clusters, the Moon and the Sun, the Milky Way, star trails, comets and meteor showers. Every image in the <a href="gallery.html">gallery</a> has its own page, with the story behind it and how it was captured, including the equipment and conditions on the night.
+            Hi, I'm Bhapinder (Bobby) Singh. This is where I share my astrophotography, most of it captured from in and around the UAE. Every image in the <a href="gallery.html">gallery</a> has its own page, with the story behind it and how it was captured, including the equipment and conditions on the night.
           </p>
           <p>
-            Alongside the images, the <a href="articles.html">articles</a> cover planning a night, capturing the data and processing it, and the <a href="gear.html">gear</a> pages cover the telescopes, mounts, cameras and filters I use. If you are just starting out, <a href="start-here.html">Start Here</a> has things to try on the next clear night, and <a href="tonight.html">Tonight</a> shows what is worth pointing at from where you are. There are also free printable <a href="field-cards.html">field cards</a>, a <a href="glossary.html">glossary</a> of the terms used across the site, and a few astronomy games, including a <a href="quiz.html">quiz</a> and a <a href="jigsaw.html">jigsaw</a>.
+            Alongside the images, there are <a href="articles.html">articles</a> that cover planning a night, capturing the data and processing it, and the <a href="gear.html">gear</a> pages cover the telescopes, mounts, cameras and filters I use. If you are just starting out, <a href="start-here.html">Start Here</a> has things to try on the next clear night, and <a href="tonight.html">Tonight</a> shows what is worth pointing at from where you are. There are also free printable <a href="field-cards.html">field cards</a>, a <a href="glossary.html">glossary</a> of the terms used across the site, and a few astronomy games, including a <a href="quiz.html">quiz</a> and a <a href="jigsaw.html">jigsaw</a>.
+          </p>
+          <!-- Hidden inside the installed app itself (see styles.css). The link
+               does what "Download the app" in the top strip does. -->
+          <p class="not-in-app">
+            You can also <a href="#topStrip" data-install-app>install the site as an app</a> on your phone, tablet or computer, and the main pages and field cards still open with no signal.
           </p>
           <p>
-            Any image can be ordered as a <a href="prints.html">print</a> on paper or canvas, supplied at full resolution and without the watermark.
+            Any image can be ordered as a <a href="prints.html">print</a> on paper or canvas, supplied at full resolution and without the watermark.<span class="cal-promo-only"> You can also order the <a href="prints.html#calendar2027">2027 wall calendar</a>, with twelve of my images, one for each month.</span>
           </p>
         </div>
 
@@ -551,7 +568,7 @@
         </div>
 
         <p>
-          Hi, I'm Bhapinder (Bobby) Singh, an astrophotographer focused on the quiet structure of the deep night sky: nebulae, star-forming regions and distant galaxies, alongside the Moon, star trails and our own Milky Way.
+          I'm an astrophotographer focused on the quiet structure of the deep night sky: nebulae, star-forming regions and distant galaxies, alongside the Moon, star trails and our own Sun and Milky Way.
         </p>
         <p>
           I like images that feel honest. They may not be perfect, but they are real <strong><em>Fragments of the Universe</em></strong>, showing the structure, dust lanes and faint halos of these beautiful celestial forms, shaped through careful processing that allows faint signal to emerge from the noise.

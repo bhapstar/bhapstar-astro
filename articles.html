@@ -162,6 +162,19 @@
           Write-ups on how the images on this site get made: the gear, the capture, and the processing that turns a night of data into a picture. Each one sets out the steps and the settings I use, in the order I use them.
         </p>
 
+        <!-- By the numbers: one tile per stage (Planning, Capturing,
+             Processing, Gear and set-up), counted live from the "stage" of
+             each article in site-data.json by the script below. The tiles
+             are also the filter. Styles: the "BY THE NUMBERS" block in
+             styles.css -->
+        <div class="panel stats-panel" id="statsSection">
+          <div class="stats-head">
+            <h2 class="stats-title">By the numbers</h2>
+            <p class="stats-sub">Every article, grouped by what it covers. Select a tile to show just those.</p>
+          </div>
+          <div class="stats-grid" id="statsGrid" role="group" aria-label="Show articles by what they cover"></div>
+        </div>
+
         <div class="gallery-controls" role="group" aria-label="Article controls">
           <!-- Order. Newest first is the shelf a returning reader wants.
                Reading order follows "stage" and "stageOrder" in
@@ -431,13 +444,105 @@
     return item.readTime ? esc(item.readTime) : '';
   }
 
+  /* ── By the numbers: the tiles under the intro, which are also the filter ──
+     One tile per stage, the same "stage" that sets the reading order, after
+     a first tile for every article. Selecting a tile shows just that stage;
+     selecting it again, or the first tile, shows everything. It works with
+     either order. The columns are worked out to suit the space: all in one
+     row if they fit, otherwise two even rows, otherwise rows of three with
+     the first tile across the top (phones). An article with no stage counts
+     under Other. */
+  const STAGES = [
+    ['plan',    'Planning',        'var(--accent2)'],
+    ['capture', 'Capturing',       'var(--accent4)'],
+    ['process', 'Processing',      'var(--accent3)'],
+    ['gear',    'Gear and set-up', 'var(--accent5)']
+  ];
+  function stageOf(item) {
+    return STAGES.some(([k]) => k === item.stage) ? item.stage : 'other';
+  }
+
+  let activeType = 'all';
+  function setActiveFilter(value) {
+    activeType = value;
+    document.querySelectorAll('#statsGrid .stat').forEach(t =>
+      t.setAttribute('aria-pressed', t.dataset.filter === value ? 'true' : 'false'));
+  }
+
+  function buildStats() {
+    const statsGrid = document.getElementById('statsGrid');
+    const section   = document.getElementById('statsSection');
+    if (!statsGrid) return;
+    if (!items.length) { if (section) section.hidden = true; return; }
+
+    const counts = {};
+    items.forEach(it => { const k = stageOf(it); counts[k] = (counts[k] || 0) + 1; });
+    const tiles = [['all', 'All articles', 'var(--accent)', items.length]];
+    [...STAGES, ['other', 'Other', 'var(--accent)']].forEach(([k, label, c]) => {
+      if (counts[k]) tiles.push([k, label, c, counts[k]]);
+    });
+
+    statsGrid.innerHTML = tiles.map(([k, label, c, n], i) =>
+      `<button type="button" class="stat${k === 'all' ? ' stat--total' : ''}" data-filter="${esc(k)}"` +
+      ` aria-pressed="${k === activeType}" aria-label="${esc(label)}: ${n}" style="--c:${c};--i:${i}">` +
+      `<span class="num" data-count="${n}" aria-hidden="true">0</span>` +
+      `<span class="label" aria-hidden="true">${esc(label)}</span></button>`).join('');
+
+    // Columns: one row, two even rows, or rows of three (two on the
+    // narrowest phones, if a label would not fit in a third of the width)
+    const half = Math.ceil(tiles.length / 2);
+    function fit() {
+      const w = statsGrid.clientWidth;
+      const gap = parseFloat(getComputedStyle(statsGrid).columnGap) || 8;
+      const fits = c => c * 100 + (c - 1) * gap <= w;
+      const stack = !fits(half);
+      statsGrid.classList.toggle('stats-grid--stack', stack);
+      statsGrid.style.setProperty('--cols', fits(tiles.length) ? tiles.length : stack ? 3 : half);
+      if (stack && [...statsGrid.querySelectorAll('.label')].some(l => l.scrollWidth > l.clientWidth + 1))
+        statsGrid.style.setProperty('--cols', 2);
+    }
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(statsGrid);
+    else window.addEventListener('resize', fit);
+
+    statsGrid.addEventListener('click', e => {
+      const tile = e.target.closest('.stat');
+      if (!tile) return;
+      const v = tile.dataset.filter;
+      setActiveFilter(v !== 'all' && v === activeType ? 'all' : v);
+      render();
+    });
+
+    // Count up slowly, one at a time, as the tiles come into view
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function countUp(numEl) {
+      const target = +numEl.dataset.count;
+      if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
+      const stepMs = Math.max(60, Math.min(220, Math.round(3000 / target)));
+      let v = 0;
+      const id = setInterval(() => {
+        v += 1;
+        numEl.textContent = v.toLocaleString();
+        if (v >= target) clearInterval(id);
+      }, stepMs);
+    }
+    const els = statsGrid.querySelectorAll('.stat');
+    const show = el => { el.classList.add('in'); countUp(el.querySelector('.num')); };
+    if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
+    }), { threshold: 0.45 });
+    els.forEach(el => io.observe(el));
+  }
+
   function render() {
-    if (!items.length) {
+    const shown = activeType === 'all' ? items : items.filter(it => stageOf(it) === activeType);
+    if (!shown.length) {
       grid.innerHTML = '<p class="gallery-hint grid-span-all">Nothing here yet.</p>';
       return;
     }
 
-    grid.innerHTML = items.map((item) => {
+    grid.innerHTML = shown.map((item) => {
       const cover = item.file || '';
       const alt   = item.alt || item.title || '';
       const media = cover
@@ -460,6 +565,9 @@
   }
 
   function init() {
+    // The "By the numbers" tiles are the filter
+    buildStats();
+
     const viewBtnGrid = document.getElementById('viewBtnGrid');
     const viewBtnList = document.getElementById('viewBtnList');
 
