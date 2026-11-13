@@ -72,10 +72,11 @@
     // Not for people arriving from the calendar's QR codes or NFC tag
     var src = new URLSearchParams(location.search).get('src');
     if (src === 'calendar' || src === 'calendar-nfc') return p;
-    // "Enquire now" tapped: never again. Closed: not again until tomorrow.
+    // Closed or "Enquire now" tapped: not again until tomorrow. (An old
+    // {"done": true} saved by the earlier "never again" rule is ignored.)
     var s = null;
     try { s = JSON.parse(localStorage.getItem(p.key) || 'null'); } catch (e) {}
-    if (s && (s.done || (s.closed && new Date(s.closed).toDateString() === now.toDateString()))) return p;
+    if (s && s.closed && new Date(s.closed).toDateString() === now.toDateString()) return p;
     p.due = true;
     var l = document.createElement('link');
     l.rel = 'preload'; l.as = 'image';
@@ -366,8 +367,8 @@
        so it never opens late, closes or reopens. Its picture has a fixed
        size, so nothing moves when it arrives (it fades in if it is still
        downloading)
-     - Closed (X, "Maybe later", outside, Esc): not again until the next
-       day. "Enquire now": never again
+     - Closed (X, "Maybe later", outside, Esc) or "Enquire now" tapped:
+       not again until the next day
      - Not shown to anyone arriving from the calendar's own QR codes or
        NFC tag (?src=calendar / calendar-nfc), since they have one already
      - Both links go to the calendar section of the prints page
@@ -466,15 +467,15 @@
   document.getElementById('calPromoClose').addEventListener('click', close);
   document.getElementById('calPromoLater').addEventListener('click', close);
   overlay.addEventListener('click', close);
-  document.getElementById('calPromoGo').addEventListener('click', function () { save({ done: true }); });
+  document.getElementById('calPromoGo').addEventListener('click', function () { save({ closed: Date.now() }); });
 
   // Coming back with the Back button can restore the page exactly as it was
-  // left, pop-up and all. After "Enquire now" it should stay gone.
+  // left, pop-up and all. After "Enquire now" it should stay gone that day.
   window.addEventListener('pageshow', function (e) {
     if (!e.persisted || modal.hidden) return;
     var s = null;
     try { s = JSON.parse(localStorage.getItem(P.key) || 'null'); } catch (err) {}
-    if (s && s.done) hideNow();
+    if (s && s.closed && new Date(s.closed).toDateString() === new Date().toDateString()) hideNow();
   });
 })();
 </script>
