@@ -4,16 +4,16 @@
      - Nav links sit on a second row beneath it,
        always visible and wrapping like the footer
        (the burger menu has been removed)
-     - Start Here, Gallery, Prints, Articles and Puzzles are
-       click-to-expand groups
-       (dropdown popovers) — toggled by partials.js.
-       "Start Here", "Gallery" and "All Articles" are the first item
-       in their groups because the group button itself does
-       not navigate, it only opens the popover. Tonight sits
-       under Start Here as its planning sub page, and
-       Slideshow sits under Gallery.
-     - Active link (.active + aria-current) and the
-       active Puzzles-button state are set by partials.js
+     - Every nav entry is a plain link, no dropdowns. Sub pages
+       are reached from a link on their parent page:
+         Start Here  -> Tonight
+         Gallery     -> Slideshow
+         Prints      -> Print Simulator
+         Articles    -> Field Cards, Glossary
+         Puzzles     -> the four games (puzzles.html)
+       Keep the footer menu in step with this one.
+     - Active link (.active + aria-current) is set by partials.js.
+       On a sub page it lights the parent entry (NAV_PARENT there)
      - Background music button sits beside the theme toggle
        (top left on phones); it shares its code with the
        footer music button in partials.js
@@ -47,72 +47,12 @@
 
       <nav id="siteNav" class="nav-menu" aria-label="Site navigation">
         <a href="/index.html">Home</a>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="startSubmenu" type="button">
-            <span class="btn-label">Start Here</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="startSubmenu">
-            <a href="/start-here.html">Start Here</a>
-            <a href="/tonight.html">Tonight</a>
-          </div>
-        </div>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="gallerySubmenu" type="button">
-            <span class="btn-label">Gallery</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="gallerySubmenu">
-            <a href="/gallery.html">Gallery</a>
-            <a href="/slideshow.html">Slideshow</a>
-          </div>
-        </div>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="printsSubmenu" type="button">
-            <span class="btn-label">Prints</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="printsSubmenu">
-            <a href="/prints.html">Print Enquiries</a>
-            <a href="/print-simulator.html">Print Simulator</a>
-          </div>
-        </div>
+        <a href="/start-here.html">Start Here</a>
+        <a href="/gallery.html">Gallery</a>
+        <a href="/prints.html">Prints</a>
         <a href="/gear.html">Gear</a>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="articlesSubmenu" type="button">
-            <span class="btn-label">Articles</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="articlesSubmenu">
-            <a href="/articles.html">All Articles</a>
-            <a href="/field-cards.html">Field Cards</a>
-            <a href="/glossary.html">Glossary</a>
-          </div>
-        </div>
-
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="puzzleSubmenu" type="button">
-            <span class="btn-label">Puzzles</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="puzzleSubmenu">
-            <a href="/jigsaw.html">Jigsaw</a>
-            <a href="/quiz.html">Quiz</a>
-            <a href="/star_word.html">Star Word</a>
-            <a href="/supernova_sweeper.html">Supernova Sweeper</a>
-          </div>
-        </div>
-
+        <a href="/articles.html">Articles</a>
+        <a href="/puzzles.html">Puzzles</a>
       </nav>
 
       <!-- Background music on/off. Same control as the footer button,

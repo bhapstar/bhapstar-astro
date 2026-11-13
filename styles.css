@@ -10172,8 +10172,11 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 /* ============================================================
    PAGE: Print simulator (print-simulator.html)
    Body carries .page-print-simulator
-   The .sim-callout rule also runs on prints.html, where it is the
-   card that links across to the simulator.
+   The .sim-callout rule is shared. It is the card that links a page
+   to its sub page now the nav has no dropdowns: prints.html to the
+   simulator, gallery.html to the slideshow, articles.html to field
+   cards and the glossary, and start-here.html to tonight.html.
+   Two side by side sit in a .callout-row (end of this file).
    ============================================================ */
 
 /* ── Callout on the prints page ── */
@@ -11109,4 +11112,87 @@ html.ss-lock body{ overflow: hidden; }
   .page-tonight .tn-next:hover,
   .page-field-cards .fc-card:hover,
   .page-glossary .gp-group:hover{ transform: none; }
+}
+
+/* ============================================================
+   CALLOUT ROW
+   Two .sim-callout cards side by side, used on articles.html for
+   Field Cards and Glossary. One column on phones.
+   ============================================================ */
+.callout-row{ display:grid; gap:12px; margin:0 0 1.25rem; }
+.callout-row .sim-callout{ margin:0; }
+@media (min-width:700px){
+  .callout-row{ grid-template-columns:1fr 1fr; }
+}
+/* The intro paragraphs above these carry no bottom margin */
+.page-gallery .gallery-head > .sim-callout,
+.page-articles .gallery-head > .callout-row{ margin-top:18px; }
+
+/* ============================================================
+   PAGE: Puzzles (puzzles.html)
+   Body carries .page-puzzles
+   The single nav entry for the four games. Two cards a row from
+   640px, one on phones. Each card is one link, so the whole card
+   is the tap target.
+   ============================================================ */
+.page-puzzles .pz-header{ margin-bottom:26px; }
+.page-puzzles .pz-intro{ margin:14px 0 0; font-size:14.5px; line-height:1.7; color:var(--muted); }
+
+.page-puzzles .pz-grid{
+  list-style:none; margin:0; padding:0;
+  display:grid; gap:18px; grid-template-columns:1fr;
+}
+@media (min-width:640px){
+  .page-puzzles .pz-grid{ grid-template-columns:1fr 1fr; }
+}
+.page-puzzles .pz-grid > li{ display:flex; }
+
+.page-puzzles .pz-card{
+  flex:1; display:flex; flex-direction:column; gap:14px;
+  padding:22px 24px;
+  border-radius:var(--radius); border:1px solid var(--line);
+  background:var(--soft);
+  color:var(--text); text-decoration:none;
+  transition:border-color 200ms ease, transform 200ms ease;
+}
+.page-puzzles .pz-card:hover,
+.page-puzzles .pz-card:focus-visible{
+  border-color:rgba(167,139,250,0.38);
+  transform:translateY(-2px);
+}
+.page-puzzles .pz-icon{
+  display:grid; place-items:center;
+  width:44px; height:44px; border-radius:12px;
+  background:rgba(167,139,250,0.16); color:var(--accent);
+}
+.page-puzzles .pz-icon svg{ width:24px; height:24px; }
+.page-puzzles .pz-body{ display:flex; flex-direction:column; gap:8px; }
+.page-puzzles .pz-title{ font-size:17px; font-weight:600; line-height:1.35; color:var(--text); }
+.page-puzzles .pz-desc{ font-size:14px; line-height:1.6; color:var(--muted); }
+.page-puzzles .pz-prize{ font-size:13px; line-height:1.5; color:var(--accent); }
+
+/* margin-top:auto pins the button to the foot of the card, so the
+   buttons line up across a row whatever the length of the text. */
+.page-puzzles .pz-play{
+  margin-top:auto; align-self:flex-start;
+  padding:10px 18px; border-radius:12px;
+  font-size:14px; font-weight:600; color:#fff;
+  background:linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size:300% 100%;
+  animation:gradientRoll 5s linear infinite;
+}
+
+.page-puzzles .pz-note{ margin:22px 0 0; font-size:13.5px; line-height:1.6; color:var(--muted); }
+/* The site-wide a[href*="prints"] rule makes every prints link display:flex
+   with !important, which would push this one onto its own line. */
+.page-puzzles .pz-note a{ display:inline !important; color:var(--accent2); }
+
+html[data-theme="light"] .page-puzzles .pz-prize{ color:#6d4bd8; }
+html[data-theme="light"] .page-puzzles .pz-card:hover,
+html[data-theme="light"] .page-puzzles .pz-card:focus-visible{ border-color:rgba(124,92,246,0.42); }
+
+@media (prefers-reduced-motion: reduce){
+  .page-puzzles .pz-card:hover,
+  .page-puzzles .pz-card:focus-visible{ transform:none; }
+  .page-puzzles .pz-play{ animation:none; }
 }

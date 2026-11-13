@@ -29,6 +29,7 @@ const SHELL_ASSETS = [
   // tonight-core.js and the place names are in places.js, both below. Only
   // the map tiles need a signal, and the panel works without them.
   '/tonight.html',
+  '/puzzles.html',
   '/quiz.html',
   '/jigsaw.html',
   '/star_word.html',

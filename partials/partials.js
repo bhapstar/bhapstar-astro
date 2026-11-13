@@ -3,9 +3,9 @@
    ---------------------------------------------------------
    Loads the shared header + footer HTML partials, then runs:
    1. Dynamic year in footer
-   2. Puzzles dropdown toggle (with double-bind + double-load guards)
-   3. Active nav link highlighting
-   4. Puzzles / Articles submenu toggles + active-child highlighting
+   2. Nav dropdown toggles (none in use now; kept for a future group)
+   3. Active nav link highlighting, including the parent entry for
+      sub pages such as Tonight or a puzzle (NAV_PARENT)
    5. Scroll reveal (with MutationObserver for dynamic cards)
    6. Hero star-particle canvas (index page only)
    7. Instagram references (footer icon + homepage panel), gated by the
@@ -162,8 +162,12 @@ const HIDE_FIELD_NOTES = true;
 
     /* ─────────────────────────────────────────
        NAV DROPDOWNS (header and footer)
-       - Start Here, Gallery, Prints, Articles and
-         Puzzles are click-to-open groups.
+       - Not in use: every nav entry is now a plain
+         link, and sub pages are linked from their
+         parent page instead. The code and the
+         .nav-group styles stay so a dropdown can come
+         back by adding the markup alone. With no
+         .nav-group on the page this block does nothing.
        - Only one menu is open at a time across the
          whole page: opening one closes any other,
          header or footer.
@@ -452,14 +456,31 @@ const HIDE_FIELD_NOTES = true;
       });
     }
 
-    // If a submenu child is the active page (a puzzle, a field card page, or
-    // an individual article), highlight that group's button — but don't force
-    // the popover open now that the nav is always visible.
-    //
-    // This runs AFTER the directory match above, not before. "All Articles"
-    // now lives inside the Articles popover, so on /articles/<slug>.html it is
-    // the directory rule that marks it active. Highlighting the buttons first
-    // would leave the Articles button unlit on every article page.
+    // Sub pages that have no nav entry of their own. Each is linked from its
+    // parent page, so light the parent while the reader is on it. Add a line
+    // here when a new sub page is added.
+    const NAV_PARENT = {
+      'tonight.html':           'start-here.html',
+      'slideshow.html':         'gallery.html',
+      'print-simulator.html':   'prints.html',
+      'field-cards.html':       'articles.html',
+      'glossary.html':          'articles.html',
+      'jigsaw.html':            'puzzles.html',
+      'quiz.html':              'puzzles.html',
+      'star_word.html':         'puzzles.html',
+      'supernova_sweeper.html': 'puzzles.html',
+    };
+    const navParent = NAV_PARENT[path];
+    if (navParent) {
+      document.querySelectorAll(`.nav-menu a[href$="/${navParent}"]`).forEach(a => {
+        a.classList.add('active');
+        a.setAttribute('aria-current', 'page');
+      });
+    }
+
+    // If a dropdown child is the active page, light that group's button.
+    // No dropdowns are in use now; this only matters if one comes back.
+    // It runs after the rules above so a child they lit still counts.
     document.querySelectorAll('.nav-submenu a.active').forEach(a => {
       a.closest('.nav-group')?.querySelector('.nav-group-btn')?.classList.add('active');
     });

@@ -1,11 +1,9 @@
 <!-- =========================
      Footer
-     - Mirrors the header: gradient nav links + Start Here,
-       Gallery, Prints, Articles and Puzzles dropdown menus, sitting ABOVE
-       the © line
-     - Reuses the header's .nav-menu / .nav-group classes,
-       sized down via footer-scoped CSS overrides
-     - Both menus open upward (footer is page-bottom)
+     - Mirrors the header: the same plain gradient nav links,
+       sitting ABOVE the © line. Keep the two lists in step
+     - Reuses the header's .nav-menu classes, sized down via
+       footer-scoped CSS overrides
      - © line + Instagram/X socials sit beneath the links
      - Copyright year (#y) populated by partials.js from the
        visitor's clock, so it rolls over on 1 January by itself
@@ -33,71 +31,12 @@
 
       <nav class="nav-menu footer-menu" aria-label="Footer navigation">
         <a href="/index.html">Home</a>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerStartSubmenu" type="button">
-            <span class="btn-label">Start Here</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="footerStartSubmenu">
-            <a href="/start-here.html">Start Here</a>
-            <a href="/tonight.html">Tonight</a>
-          </div>
-        </div>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerGallerySubmenu" type="button">
-            <span class="btn-label">Gallery</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="footerGallerySubmenu">
-            <a href="/gallery.html">Gallery</a>
-            <a href="/slideshow.html">Slideshow</a>
-          </div>
-        </div>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerPrintsSubmenu" type="button">
-            <span class="btn-label">Prints</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="footerPrintsSubmenu">
-            <a href="/prints.html">Print Enquiries</a>
-            <a href="/print-simulator.html">Print Simulator</a>
-          </div>
-        </div>
+        <a href="/start-here.html">Start Here</a>
+        <a href="/gallery.html">Gallery</a>
+        <a href="/prints.html">Prints</a>
         <a href="/gear.html">Gear</a>
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerArticlesSubmenu" type="button">
-            <span class="btn-label">Articles</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="footerArticlesSubmenu">
-            <a href="/articles.html">All Articles</a>
-            <a href="/field-cards.html">Field Cards</a>
-            <a href="/glossary.html">Glossary</a>
-          </div>
-        </div>
-
-        <div class="nav-group">
-          <button class="nav-group-btn" aria-expanded="false" aria-controls="footerPuzzleSubmenu" type="button">
-            <span class="btn-label">Puzzles</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="nav-submenu" id="footerPuzzleSubmenu">
-            <a href="/jigsaw.html">Jigsaw</a>
-            <a href="/quiz.html">Quiz</a>
-            <a href="/star_word.html">Star Word</a>
-            <a href="/supernova_sweeper.html">Supernova Sweeper</a>
-          </div>
-        </div>
+        <a href="/articles.html">Articles</a>
+        <a href="/puzzles.html">Puzzles</a>
       </nav>
 
       <div class="footer-meta">
