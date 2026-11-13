@@ -11043,7 +11043,8 @@ html.ss-lock body{ overflow: hidden; }
 .calendar-modal-inner .cal-viewer-thumbs img{ width: 100%; height: auto; display: block; border-radius: 6px; }
 
 /* ============================================================
-   TILE HOVER: Start Here, Tonight, Field cards, Glossary
+   TILE HOVER: Start Here, Tonight, Field cards, Glossary, Puzzles,
+   and the .sim-callout link cards (gallery, articles, start here)
    The same lift and shadow as the prints page panels and the
    homepage tiles. Only outer tiles lift: the target cards inside
    Tonight's "What is worth looking at" panel stay put, so nothing
@@ -11072,7 +11073,9 @@ html.ss-lock body{ overflow: hidden; }
   .page-tonight .tn-showers,
   .page-tonight .tn-next,
   .page-field-cards .fc-card,
-  .page-glossary .gp-group{
+  .page-glossary .gp-group,
+  .page-puzzles .pz-card,
+  .sim-callout{
     transition: box-shadow .32s ease, border-color .32s ease, transform .32s ease, background .32s ease;
   }
   .page-start-here .sh-tonight:hover,
@@ -11083,7 +11086,11 @@ html.ss-lock body{ overflow: hidden; }
   .page-tonight .tn-showers:hover,
   .page-tonight .tn-next:hover,
   .page-field-cards .fc-card:hover,
-  .page-glossary .gp-group:hover{
+  .page-glossary .gp-group:hover,
+  .page-puzzles .pz-card:hover,
+  .page-puzzles .pz-card:focus-visible,
+  .sim-callout:hover,
+  .sim-callout:focus-visible{
     border-color: rgba(167,139,250,0.30);
     box-shadow: 0 0 0 1px rgba(167,139,250,0.08), 0 14px 44px rgba(0,0,0,0.48);
     transform: translateY(-2px);
@@ -11098,7 +11105,11 @@ html.ss-lock body{ overflow: hidden; }
   html[data-theme="light"] .page-tonight .tn-showers:hover,
   html[data-theme="light"] .page-tonight .tn-next:hover,
   html[data-theme="light"] .page-field-cards .fc-card:hover,
-  html[data-theme="light"] .page-glossary .gp-group:hover{
+  html[data-theme="light"] .page-glossary .gp-group:hover,
+  html[data-theme="light"] .page-puzzles .pz-card:hover,
+  html[data-theme="light"] .page-puzzles .pz-card:focus-visible,
+  html[data-theme="light"] .sim-callout:hover,
+  html[data-theme="light"] .sim-callout:focus-visible{
     border-color: rgba(124,92,246,0.42);
   }
 }
@@ -11111,7 +11122,11 @@ html.ss-lock body{ overflow: hidden; }
   .page-tonight .tn-showers:hover,
   .page-tonight .tn-next:hover,
   .page-field-cards .fc-card:hover,
-  .page-glossary .gp-group:hover{ transform: none; }
+  .page-glossary .gp-group:hover,
+  .page-puzzles .pz-card:hover,
+  .page-puzzles .pz-card:focus-visible,
+  .sim-callout:hover,
+  .sim-callout:focus-visible{ transform: none; }
 }
 
 /* ============================================================
@@ -11153,13 +11168,8 @@ html.ss-lock body{ overflow: hidden; }
   border-radius:var(--radius); border:1px solid var(--line);
   background:var(--soft);
   color:var(--text); text-decoration:none;
-  transition:border-color 200ms ease, transform 200ms ease;
 }
-.page-puzzles .pz-card:hover,
-.page-puzzles .pz-card:focus-visible{
-  border-color:rgba(167,139,250,0.38);
-  transform:translateY(-2px);
-}
+/* Hover lift and shadow: the TILE HOVER block above */
 .page-puzzles .pz-icon{
   display:grid; place-items:center;
   width:44px; height:44px; border-radius:12px;
@@ -11188,11 +11198,7 @@ html.ss-lock body{ overflow: hidden; }
 .page-puzzles .pz-note a{ display:inline !important; color:var(--accent2); }
 
 html[data-theme="light"] .page-puzzles .pz-prize{ color:#6d4bd8; }
-html[data-theme="light"] .page-puzzles .pz-card:hover,
-html[data-theme="light"] .page-puzzles .pz-card:focus-visible{ border-color:rgba(124,92,246,0.42); }
 
 @media (prefers-reduced-motion: reduce){
-  .page-puzzles .pz-card:hover,
-  .page-puzzles .pz-card:focus-visible{ transform:none; }
   .page-puzzles .pz-play{ animation:none; }
 }

@@ -35,6 +35,8 @@ The page has three parts:
               used to sit at the top of this page. It asked for a location
               and a darkness rating before the page had explained either,
               and it is a tool people return to, so it has its own page.
+              A small card under the intro (SHORTCUT_*) links there too,
+              because the nav has no Tonight entry of its own.
 
 What used to be here and where it went:
 
@@ -343,6 +345,13 @@ PLAN_TEXT = ("Drop a pin where you will be observing from, and the tonight "
              "next meteor shower peaks.")
 PLAN_LINK = "Open the tonight page"
 
+# The same page again, as a small card just under the intro. Tonight has no
+# nav entry of its own (the nav links to Start Here only), so a reader who
+# came back for the planner finds it without scrolling past the routes.
+SHORTCUT_TITLE = "Planning a night out?"
+SHORTCUT_TEXT = ("The tonight page shows when it gets dark, what the moon is "
+                 "doing, and what is worth pointing at from where you are.")
+
 # Carries inline markup, so this one is not escaped.
 VETERAN = ('Already shooting? You probably want '
            '<a href="/gallery.html">the gallery</a> or '
@@ -522,6 +531,26 @@ def build_plan():
         f'        <a class="btn sh-plan-link" href="/tonight.html">'
         f'{esc(PLAN_LINK)}</a>\n'
         '      </section>\n'
+    )
+
+
+def build_shortcut():
+    # Uses the shared .sim-callout card from styles.css, the same one that
+    # links prints.html to the print simulator.
+    return (
+        '      <a class="sim-callout" href="/tonight.html">\n'
+        '        <span class="sim-callout-icon" aria-hidden="true">\n'
+        '          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">\n'
+        '            <path d="M16.6 11.6A6.8 6.8 0 1 1 8.4 3.4a5.3 5.3 0 0 0 8.2 8.2z"'
+        ' stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>\n'
+        '          </svg>\n'
+        '        </span>\n'
+        '        <span class="sim-callout-text">\n'
+        f'          <strong>{esc(SHORTCUT_TITLE)}</strong>\n'
+        f'          {esc(SHORTCUT_TEXT)}\n'
+        '        </span>\n'
+        '        <span class="sim-callout-arrow" aria-hidden="true">&rsaquo;</span>\n'
+        '      </a>\n'
     )
 
 
@@ -772,6 +801,7 @@ def build_page(articles):
         <p class="sh-intro">{esc(INTRO)}</p>
       </div>
 
+{build_shortcut()}
 {build_tonight(articles)}
 {build_chooser()}
 {build_routes(articles)}
