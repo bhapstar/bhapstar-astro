@@ -842,7 +842,7 @@
           </span>
           <span class="sim-callout-text">
             <strong>Watch the slideshow</strong>
-            Every image in the gallery, one after another, full screen if you like.
+            <span class="sim-callout-desc">Every image in the gallery, one after another, full screen if you like.</span>
           </span>
           <span class="sim-callout-arrow" aria-hidden="true">&rsaquo;</span>
         </a>
@@ -1422,6 +1422,17 @@
     const els = statsGrid.querySelectorAll('.stat');
     const show = el => { el.classList.add('in'); countUp(el.querySelector('.num')); };
     if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
+    // Phones: the tiles are one row that scrolls sideways (styles.css,
+    // GALLERY: PHONES). Tiles past the right edge never count as in view,
+    // so they would stay hidden and the row would not look scrollable.
+    // Reveal the whole row together there instead.
+    if (getComputedStyle(statsGrid).overflowX === 'auto') {
+      const rowIo = new IntersectionObserver(entries => {
+        if (entries.some(e => e.isIntersecting)) { els.forEach(show); rowIo.disconnect(); }
+      }, { threshold: 0.45 });
+      rowIo.observe(statsGrid);
+      return;
+    }
     const io = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
     }), { threshold: 0.45 });

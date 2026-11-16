@@ -11144,6 +11144,51 @@ html.ss-lock body{ overflow: hidden; }
 .page-articles .gallery-head > .callout-row{ margin-top:18px; }
 
 /* ============================================================
+   GALLERY: PHONES
+   Everything above the first image, tightened so the images start
+   on the first screen: less space round the intro, the slideshow
+   card down to one line, and the By the numbers tiles as one row of
+   small chips that scrolls sideways (the same chip as the homepage
+   tiles on phones). The tiles still filter the gallery.
+   ============================================================ */
+@media (max-width:600px){
+  .page-gallery main .section{ padding-top:22px; }
+  .page-gallery .section-head.gallery-head{ margin-bottom:14px; }
+  /* the <br>s between the intro paragraphs */
+  .page-gallery .gallery-head br{ display:none; }
+  .page-gallery .gallery-intro{ margin-top:10px; line-height:1.55; }
+  .page-gallery .gallery-hint{ margin-top:8px; line-height:1.5; }
+
+  .page-gallery .gallery-head > .sim-callout{ margin:12px 0 0; padding:9px 12px; gap:12px; }
+  .page-gallery .gallery-head > .sim-callout .sim-callout-icon{ width:32px; height:32px; border-radius:10px; }
+  .page-gallery .gallery-head > .sim-callout .sim-callout-text strong{ margin-bottom:0; }
+  .page-gallery .gallery-head > .sim-callout .sim-callout-desc{ display:none; }
+
+  .page-gallery .stats-panel{ margin-top:12px; padding:11px 12px 12px; }
+  .page-gallery .stats-head{ margin-bottom:8px; }
+  .page-gallery .stats-panel .stats-sub{ display:none; }
+  .page-gallery .stats-grid{
+    display:flex; flex-wrap:nowrap; gap:6px;
+    overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none;
+    margin:0 -12px; padding:2px 12px;
+  }
+  .page-gallery .stats-grid::-webkit-scrollbar{ display:none; }
+  .page-gallery .stats-grid .stat,
+  .page-gallery .stats-grid--stack .stat--total{
+    flex:0 0 auto; grid-column:auto;
+    flex-direction:row; align-items:baseline; gap:6px;
+    padding:6px 10px; border-radius:10px;
+  }
+  .page-gallery .stats-grid .stat .num{ font-size:15px; }
+  .page-gallery .stats-grid .stat .label{ white-space:nowrap; }
+  /* the outer glow would be cut off by the scrolling row */
+  .page-gallery .stats-grid .stat[aria-pressed="true"]{ box-shadow:0 0 0 1px rgba(167,139,250,.28); }
+  .page-gallery .stats-grid:empty{ min-height:32px; }
+
+  .page-gallery .gallery-controls{ margin-top:10px; }
+}
+
+/* ============================================================
    PAGE: Puzzles (puzzles.html)
    Body carries .page-puzzles
    The single nav entry for the four games. Every card is a row:
