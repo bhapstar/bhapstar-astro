@@ -11146,46 +11146,46 @@ html.ss-lock body{ overflow: hidden; }
 /* ============================================================
    PAGE: Puzzles (puzzles.html)
    Body carries .page-puzzles
-   The single nav entry for the four games. Two cards a row from
-   640px. Below that each card becomes a compact row (icon, text,
-   arrow, no Play button) so all four fit on one phone screen.
-   Each card is one link, so the whole card is the tap target.
+   The single nav entry for the four games. Every card is a row:
+   icon, text, then the Play button from 900px or an arrow below
+   that, so no card carries empty space. One column of rows below
+   760px, two from 760px. Phones get tighter spacing so all four
+   fit on one screen. Each card is one link, so the whole card is
+   the tap target.
    ============================================================ */
-.page-puzzles .pz-header{ margin-bottom:26px; }
-.page-puzzles .pz-intro{ margin:14px 0 0; font-size:14.5px; line-height:1.7; color:var(--muted); }
+.page-puzzles .pz-header{ margin-bottom:22px; }
+.page-puzzles .pz-intro{ margin:12px 0 0; font-size:14.5px; line-height:1.7; color:var(--muted); }
 
 .page-puzzles .pz-grid{
   list-style:none; margin:0; padding:0;
-  display:grid; gap:18px; grid-template-columns:1fr;
+  display:grid; gap:14px; grid-template-columns:1fr;
 }
-@media (min-width:640px){
+@media (min-width:760px){
   .page-puzzles .pz-grid{ grid-template-columns:1fr 1fr; }
 }
 .page-puzzles .pz-grid > li{ display:flex; }
 
 .page-puzzles .pz-card{
-  flex:1; display:flex; flex-direction:column; gap:14px;
-  padding:22px 24px;
+  flex:1; display:flex; align-items:center; gap:18px;
+  padding:18px 22px;
   border-radius:var(--radius); border:1px solid var(--line);
   background:var(--soft);
   color:var(--text); text-decoration:none;
 }
 /* Hover lift and shadow: the TILE HOVER block above */
 .page-puzzles .pz-icon{
-  display:grid; place-items:center;
+  flex:none; display:grid; place-items:center;
   width:44px; height:44px; border-radius:12px;
   background:rgba(167,139,250,0.16); color:var(--accent);
 }
 .page-puzzles .pz-icon svg{ width:24px; height:24px; }
-.page-puzzles .pz-body{ display:flex; flex-direction:column; gap:8px; }
+.page-puzzles .pz-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .page-puzzles .pz-title{ font-size:17px; font-weight:600; line-height:1.35; color:var(--text); }
-.page-puzzles .pz-desc{ font-size:14px; line-height:1.6; color:var(--muted); }
+.page-puzzles .pz-desc{ font-size:14px; line-height:1.5; color:var(--muted); }
 .page-puzzles .pz-prize{ font-size:13px; line-height:1.5; color:var(--accent); }
 
-/* margin-top:auto pins the button to the foot of the card, so the
-   buttons line up across a row whatever the length of the text. */
 .page-puzzles .pz-play{
-  margin-top:auto; align-self:flex-start;
+  display:none; flex:none;
   padding:10px 18px; border-radius:12px;
   font-size:14px; font-weight:600; color:#fff;
   background:linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
@@ -11193,35 +11193,35 @@ html.ss-lock body{ overflow: hidden; }
   animation:gradientRoll 5s linear infinite;
 }
 
-/* Phone-only arrow, standing in for the Play button */
-.page-puzzles .pz-arrow{ display:none; }
+/* The arrow stands in for the Play button below 900px, where a
+   two-column row has no room for both the button and the text */
+.page-puzzles .pz-arrow{
+  display:block; flex:none;
+  font-size:24px; line-height:1; color:var(--accent);
+}
+@media (min-width:900px){
+  .page-puzzles .pz-play{ display:block; }
+  .page-puzzles .pz-arrow{ display:none; }
+}
 
-.page-puzzles .pz-note{ margin:22px 0 0; font-size:13.5px; line-height:1.6; color:var(--muted); }
+.page-puzzles .pz-note{ margin:20px 0 0; font-size:13.5px; line-height:1.6; color:var(--muted); }
 /* The site-wide a[href*="prints"] rule makes every prints link display:flex
    with !important, which would push this one onto its own line. */
 .page-puzzles .pz-note a{ display:inline !important; color:var(--accent2); }
 
-/* Phones: compact rows so the whole page fits on one screen */
+/* Phones: tighter rows so the whole page fits on one screen */
 @media (max-width:639px){
   .page-puzzles main .section{ padding:22px 0 28px; }
   .page-puzzles .pz-header{ margin-bottom:14px; }
   .page-puzzles .pz-intro{ margin-top:8px; font-size:14px; line-height:1.55; }
   .page-puzzles .pz-grid{ gap:10px; }
-  .page-puzzles .pz-card{
-    flex-direction:row; align-items:center; gap:12px;
-    padding:12px 14px;
-  }
-  .page-puzzles .pz-icon{ flex:none; width:40px; height:40px; border-radius:11px; }
+  .page-puzzles .pz-card{ gap:12px; padding:12px 14px; }
+  .page-puzzles .pz-icon{ width:40px; height:40px; border-radius:11px; }
   .page-puzzles .pz-icon svg{ width:22px; height:22px; }
-  .page-puzzles .pz-body{ flex:1; min-width:0; gap:2px; }
+  .page-puzzles .pz-body{ gap:2px; }
   .page-puzzles .pz-title{ font-size:15.5px; }
   .page-puzzles .pz-desc{ font-size:13px; line-height:1.45; }
   .page-puzzles .pz-prize{ font-size:12.5px; line-height:1.45; }
-  .page-puzzles .pz-play{ display:none; }
-  .page-puzzles .pz-arrow{
-    display:block; flex:none;
-    font-size:24px; line-height:1; color:var(--accent);
-  }
   .page-puzzles .pz-note{ margin-top:14px; font-size:13px; line-height:1.5; }
 }
 
