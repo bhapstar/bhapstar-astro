@@ -11147,9 +11147,10 @@ html.ss-lock body{ overflow: hidden; }
    GALLERY: PHONES
    Everything above the first image, tightened so the images start
    on the first screen: less space round the intro, the slideshow
-   card down to one line, and the By the numbers tiles as one row of
-   small chips that scrolls sideways (the same chip as the homepage
-   tiles on phones). The tiles still filter the gallery.
+   card down to one line, and By the numbers closed behind its
+   heading like the prints FAQ. The page script toggles .is-open on
+   the panel and replays the tiles and the count on every opening.
+   While it is closed, #statsCurrent names the tile being shown.
    ============================================================ */
 @media (max-width:600px){
   .page-gallery main .section{ padding-top:22px; }
@@ -11164,28 +11165,51 @@ html.ss-lock body{ overflow: hidden; }
   .page-gallery .gallery-head > .sim-callout .sim-callout-text strong{ margin-bottom:0; }
   .page-gallery .gallery-head > .sim-callout .sim-callout-desc{ display:none; }
 
-  .page-gallery .stats-panel{ margin-top:12px; padding:11px 12px 12px; }
-  .page-gallery .stats-head{ margin-bottom:8px; }
-  .page-gallery .stats-panel .stats-sub{ display:none; }
-  .page-gallery .stats-grid{
-    display:flex; flex-wrap:nowrap; gap:6px;
-    overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none;
-    margin:0 -12px; padding:2px 12px;
+  /* The second row (the tiles) slides between 0fr and 1fr */
+  .page-gallery .stats-panel{
+    margin-top:12px; padding:12px 14px;
+    display:grid; grid-template-rows:auto 0fr;
+    transition:grid-template-rows 320ms cubic-bezier(0.16,1,0.3,1);
   }
-  .page-gallery .stats-grid::-webkit-scrollbar{ display:none; }
-  .page-gallery .stats-grid .stat,
-  .page-gallery .stats-grid--stack .stat--total{
-    flex:0 0 auto; grid-column:auto;
-    flex-direction:row; align-items:baseline; gap:6px;
-    padding:6px 10px; border-radius:10px;
+  .page-gallery .stats-panel.is-open{ grid-template-rows:auto 1fr; }
+  .page-gallery .stats-head{
+    margin:0; align-items:center; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:margin-bottom 280ms ease;
   }
-  .page-gallery .stats-grid .stat .num{ font-size:15px; }
-  .page-gallery .stats-grid .stat .label{ white-space:nowrap; }
-  /* the outer glow would be cut off by the scrolling row */
+  .page-gallery .stats-panel.is-open .stats-head{ margin-bottom:11px; }
+  .page-gallery .stats-head:focus-visible{ outline:2px solid rgba(167,139,250,.7); outline-offset:4px; border-radius:6px; }
+  /* Chevron, as on the prints FAQ */
+  .page-gallery .stats-head::after{
+    content:""; order:2; flex-shrink:0; margin:-4px 2px 0 auto;
+    width:9px; height:9px;
+    border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor;
+    color:var(--accent); opacity:.75;
+    transform:rotate(45deg);
+    transition:transform 300ms cubic-bezier(0.16,1,0.3,1), margin-top 300ms ease;
+  }
+  .page-gallery .stats-panel.is-open .stats-head::after{ transform:rotate(-135deg); margin-top:4px; }
+  .page-gallery .stats-current{ order:1; font-size:12.5px; color:var(--accent); }
+  .page-gallery .stats-panel.is-open .stats-current{ display:none; }
+  .page-gallery .stats-panel .stats-sub{ order:3; flex-basis:100%; display:none; }
+  .page-gallery .stats-panel.is-open .stats-sub{ display:block; margin-top:4px; }
+  .page-gallery .stats-grid{ min-height:0; overflow:hidden; }
+  /* A little room inside the clip for the tiles' focus ring, only while
+     open, or the edge of a selected tile shows under a closed heading */
+  .page-gallery .stats-panel.is-open .stats-grid{ padding:3px; margin:-3px; }
+  .page-gallery .stats-grid:empty{ min-height:0; }
+  /* the outer glow would be cut off by the clip */
   .page-gallery .stats-grid .stat[aria-pressed="true"]{ box-shadow:0 0 0 1px rgba(167,139,250,.28); }
-  .page-gallery .stats-grid:empty{ min-height:32px; }
 
   .page-gallery .gallery-controls{ margin-top:10px; }
+}
+.stats-current:empty{ display:none; }
+@media (min-width:601px){ .stats-current{ display:none; } }
+html[data-theme="light"] .page-gallery .stats-current{ color:#6d4bd8; }
+@media (prefers-reduced-motion: reduce){
+  .page-gallery .stats-panel,
+  .page-gallery .stats-head,
+  .page-gallery .stats-head::after{ transition:none; }
 }
 
 /* ============================================================

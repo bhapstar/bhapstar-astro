@@ -849,10 +849,13 @@
 
         <!-- By the numbers: one tile per type, counted live from site-data.json
              by the script below. The tiles are also the filter. Styles: the
-             "BY THE NUMBERS" block in styles.css -->
+             "BY THE NUMBERS" block in styles.css. On phones the panel closes
+             behind its heading (GALLERY: PHONES), and #statsCurrent names
+             the tile being shown while it is closed. -->
         <div class="panel stats-panel" id="statsSection">
           <div class="stats-head">
             <h2 class="stats-title">By the numbers</h2>
+            <span class="stats-current" id="statsCurrent" aria-hidden="true"></span>
             <p class="stats-sub">A running tally of every image in the gallery. Select a tile to show just those.</p>
           </div>
           <div class="stats-grid" id="statsGrid" role="group" aria-label="Show images by type"></div>
@@ -1326,6 +1329,15 @@
     activeType = value;
     document.querySelectorAll('#statsGrid .stat').forEach(t =>
       t.setAttribute('aria-pressed', t.dataset.filter === value ? 'true' : 'false'));
+    showCurrent();
+  }
+  // Names the tile being shown next to the heading, for when the panel is
+  // closed on phones. Empty for All images.
+  function showCurrent() {
+    const cur = document.getElementById('statsCurrent');
+    if (!cur) return;
+    const on = document.querySelector('#statsGrid .stat[aria-pressed="true"] .label');
+    cur.textContent = activeType !== 'all' && on ? on.textContent : '';
   }
   // The address follows the selected tile (?type=...), so a reload or a
   // shared link opens the same view
@@ -1409,30 +1421,62 @@
     // Count up slowly, one at a time, as the tiles come into view
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function countUp(numEl) {
+      clearInterval(numEl._countId);   // a replay stops the last count first
       const target = +numEl.dataset.count;
       if (reduce || target <= 0) { numEl.textContent = target.toLocaleString(); return; }
       const stepMs = Math.max(60, Math.min(220, Math.round(3000 / target)));
       let v = 0;
-      const id = setInterval(() => {
+      numEl.textContent = '0';
+      numEl._countId = setInterval(() => {
         v += 1;
         numEl.textContent = v.toLocaleString();
-        if (v >= target) clearInterval(id);
+        if (v >= target) clearInterval(numEl._countId);
       }, stepMs);
     }
     const els = statsGrid.querySelectorAll('.stat');
     const show = el => { el.classList.add('in'); countUp(el.querySelector('.num')); };
-    if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
-    // Phones: the tiles are one row that scrolls sideways (styles.css,
-    // GALLERY: PHONES). Tiles past the right edge never count as in view,
-    // so they would stay hidden and the row would not look scrollable.
-    // Reveal the whole row together there instead.
-    if (getComputedStyle(statsGrid).overflowX === 'auto') {
-      const rowIo = new IntersectionObserver(entries => {
-        if (entries.some(e => e.isIntersecting)) { els.forEach(show); rowIo.disconnect(); }
-      }, { threshold: 0.45 });
-      rowIo.observe(statsGrid);
-      return;
+    showCurrent();
+
+    // Phones: the panel is closed behind its heading, like the prints FAQ
+    // (styles.css, GALLERY: PHONES). Tapping the heading opens or closes it,
+    // and every opening replays the tiles and the count from zero. Arriving
+    // on a tile (?type=...) opens it.
+    const phone = window.matchMedia('(max-width:600px)');
+    const head  = section && section.querySelector('.stats-head');
+    let open = deepLinked;
+    const replay = () => els.forEach(el => { el.classList.remove('in'); void el.offsetWidth; show(el); });
+    function setOpen(v) {
+      open = v;
+      section.classList.toggle('is-open', open);
+      head.setAttribute('aria-expanded', String(open));
+      if (open) replay();
     }
+    function setupHead() {
+      if (phone.matches) {
+        head.setAttribute('role', 'button');
+        head.tabIndex = 0;
+        head.setAttribute('aria-controls', 'statsGrid');
+        head.setAttribute('aria-expanded', String(open));
+      } else {
+        ['role', 'tabindex', 'aria-controls', 'aria-expanded'].forEach(a => head.removeAttribute(a));
+        // Turned from a phone-sized window to a wider one: show any tiles
+        // that never had their turn
+        els.forEach(el => { if (!el.classList.contains('in')) show(el); });
+      }
+    }
+    if (head) {
+      section.classList.toggle('is-open', open);
+      setupHead();
+      if (phone.addEventListener) phone.addEventListener('change', setupHead);
+      else if (phone.addListener) phone.addListener(setupHead);
+      head.addEventListener('click', () => { if (phone.matches) setOpen(!open); });
+      head.addEventListener('keydown', e => {
+        if (phone.matches && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setOpen(!open); }
+      });
+      if (phone.matches) { if (open) replay(); return; }
+    }
+
+    if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
     const io = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
     }), { threshold: 0.45 });
