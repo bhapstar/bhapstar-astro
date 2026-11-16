@@ -45,7 +45,9 @@
      The one nav entry for the four games. Each card is a single link
      to its game, so the whole card is the tap target on a tablet.
      The prize lines match the prize text on each game page; change
-     one, change the other.
+     one, change the other. On phones the cards turn into compact rows
+     (Play button swapped for the arrow) so all four fit on one screen,
+     so keep each description to one short sentence.
 ========================= -->
 <body class="page-puzzles">
 
@@ -61,25 +63,45 @@
           <h1>Puzzles</h1>
         </div>
         <p class="pz-intro">
-          Four free astronomy games. Pick one to play. Every game has a prize for anyone who masters it.
+          Four free astronomy games, each with a prize for anyone who masters it.
         </p>
       </div>
 
       <ul class="pz-grid">
-
         <li>
-          <a class="pz-card" href="jigsaw.html">
+          <a class="pz-card" href="star_word.html">
             <span class="pz-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <path d="M4 6.75h4.25a2.5 2.5 0 1 1 5 0h4.25V11a2.5 2.5 0 1 1 0 5v3.75H4z"/>
+                <rect x="2" y="8.5" width="5.5" height="7" rx="1.2"/>
+                <rect x="9.25" y="8.5" width="5.5" height="7" rx="1.2"/>
+                <rect x="16.5" y="8.5" width="5.5" height="7" rx="1.2"/>
               </svg>
             </span>
             <span class="pz-body">
-              <span class="pz-title">Jigsaw</span>
-              <span class="pz-desc">Piece together one of my deep-sky images. Choose the picture and the size, from 9 pieces up to 100.</span>
-              <span class="pz-prize">Prize: finish the Multiverse level.</span>
+              <span class="pz-title">Star Word</span>
+              <span class="pz-desc">Guess the daily astronomy word.</span>
+              <span class="pz-prize">Prize: solve it within two guesses.</span>
             </span>
             <span class="pz-play" aria-hidden="true">Play &rsaquo;</span>
+            <span class="pz-arrow" aria-hidden="true">&rsaquo;</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="pz-card" href="supernova_sweeper.html">
+            <span class="pz-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.8 2.8M15.9 15.9l2.8 2.8M5.3 18.7l2.8-2.8M15.9 8.1l2.8-2.8"/>
+              </svg>
+            </span>
+            <span class="pz-body">
+              <span class="pz-title">Supernova Sweeper</span>
+              <span class="pz-desc">Minesweeper in space.</span>
+              <span class="pz-prize">Prize: clear the Multiverse level.</span>
+            </span>
+            <span class="pz-play" aria-hidden="true">Play &rsaquo;</span>
+            <span class="pz-arrow" aria-hidden="true">&rsaquo;</span>
           </a>
         </li>
 
@@ -94,45 +116,28 @@
             </span>
             <span class="pz-body">
               <span class="pz-title">Quiz</span>
-              <span class="pz-desc">100 space questions in five sets of ten: multiple choice, drag and drop, and true or false.</span>
-              <span class="pz-prize">Prize: score 10 out of 10 in all five sets.</span>
+              <span class="pz-desc">100 space questions in five sets.</span>
+              <span class="pz-prize">Prize: 10 out of 10 in all five sets.</span>
             </span>
             <span class="pz-play" aria-hidden="true">Play &rsaquo;</span>
+            <span class="pz-arrow" aria-hidden="true">&rsaquo;</span>
           </a>
         </li>
 
         <li>
-          <a class="pz-card" href="star_word.html">
+          <a class="pz-card" href="jigsaw.html">
             <span class="pz-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <rect x="2" y="8.5" width="5.5" height="7" rx="1.2"/>
-                <rect x="9.25" y="8.5" width="5.5" height="7" rx="1.2"/>
-                <rect x="16.5" y="8.5" width="5.5" height="7" rx="1.2"/>
+                <path d="M4 6.75h4.25a2.5 2.5 0 1 1 5 0h4.25V11a2.5 2.5 0 1 1 0 5v3.75H4z"/>
               </svg>
             </span>
             <span class="pz-body">
-              <span class="pz-title">Star Word</span>
-              <span class="pz-desc">Guess the five-letter astronomy word in six tries. There is a new word every day.</span>
-              <span class="pz-prize">Prize: solve it in two guesses or fewer.</span>
+              <span class="pz-title">Jigsaw</span>
+              <span class="pz-desc">Piece together one of my images.</span>
+              <span class="pz-prize">Prize: finish the Multiverse level.</span>
             </span>
             <span class="pz-play" aria-hidden="true">Play &rsaquo;</span>
-          </a>
-        </li>
-
-        <li>
-          <a class="pz-card" href="supernova_sweeper.html">
-            <span class="pz-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.8 2.8M15.9 15.9l2.8 2.8M5.3 18.7l2.8-2.8M15.9 8.1l2.8-2.8"/>
-              </svg>
-            </span>
-            <span class="pz-body">
-              <span class="pz-title">Supernova Sweeper</span>
-              <span class="pz-desc">A space version of Minesweeper. Clear the field without setting off a supernova, at one of four levels.</span>
-              <span class="pz-prize">Prize: clear the Multiverse level.</span>
-            </span>
-            <span class="pz-play" aria-hidden="true">Play &rsaquo;</span>
+            <span class="pz-arrow" aria-hidden="true">&rsaquo;</span>
           </a>
         </li>
 

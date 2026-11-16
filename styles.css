@@ -11147,8 +11147,9 @@ html.ss-lock body{ overflow: hidden; }
    PAGE: Puzzles (puzzles.html)
    Body carries .page-puzzles
    The single nav entry for the four games. Two cards a row from
-   640px, one on phones. Each card is one link, so the whole card
-   is the tap target.
+   640px. Below that each card becomes a compact row (icon, text,
+   arrow, no Play button) so all four fit on one phone screen.
+   Each card is one link, so the whole card is the tap target.
    ============================================================ */
 .page-puzzles .pz-header{ margin-bottom:26px; }
 .page-puzzles .pz-intro{ margin:14px 0 0; font-size:14.5px; line-height:1.7; color:var(--muted); }
@@ -11192,12 +11193,40 @@ html.ss-lock body{ overflow: hidden; }
   animation:gradientRoll 5s linear infinite;
 }
 
+/* Phone-only arrow, standing in for the Play button */
+.page-puzzles .pz-arrow{ display:none; }
+
 .page-puzzles .pz-note{ margin:22px 0 0; font-size:13.5px; line-height:1.6; color:var(--muted); }
 /* The site-wide a[href*="prints"] rule makes every prints link display:flex
    with !important, which would push this one onto its own line. */
 .page-puzzles .pz-note a{ display:inline !important; color:var(--accent2); }
 
-html[data-theme="light"] .page-puzzles .pz-prize{ color:#6d4bd8; }
+/* Phones: compact rows so the whole page fits on one screen */
+@media (max-width:639px){
+  .page-puzzles main .section{ padding:22px 0 28px; }
+  .page-puzzles .pz-header{ margin-bottom:14px; }
+  .page-puzzles .pz-intro{ margin-top:8px; font-size:14px; line-height:1.55; }
+  .page-puzzles .pz-grid{ gap:10px; }
+  .page-puzzles .pz-card{
+    flex-direction:row; align-items:center; gap:12px;
+    padding:12px 14px;
+  }
+  .page-puzzles .pz-icon{ flex:none; width:40px; height:40px; border-radius:11px; }
+  .page-puzzles .pz-icon svg{ width:22px; height:22px; }
+  .page-puzzles .pz-body{ flex:1; min-width:0; gap:2px; }
+  .page-puzzles .pz-title{ font-size:15.5px; }
+  .page-puzzles .pz-desc{ font-size:13px; line-height:1.45; }
+  .page-puzzles .pz-prize{ font-size:12.5px; line-height:1.45; }
+  .page-puzzles .pz-play{ display:none; }
+  .page-puzzles .pz-arrow{
+    display:block; flex:none;
+    font-size:24px; line-height:1; color:var(--accent);
+  }
+  .page-puzzles .pz-note{ margin-top:14px; font-size:13px; line-height:1.5; }
+}
+
+html[data-theme="light"] .page-puzzles .pz-prize,
+html[data-theme="light"] .page-puzzles .pz-arrow{ color:#6d4bd8; }
 
 @media (prefers-reduced-motion: reduce){
   .page-puzzles .pz-play{ animation:none; }
