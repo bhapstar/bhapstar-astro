@@ -10174,8 +10174,9 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
    Body carries .page-print-simulator
    The .sim-callout rule is shared. It is the card that links a page
    to its sub page now the nav has no dropdowns: prints.html to the
-   simulator, gallery.html to the slideshow, articles.html to field
-   cards and the glossary, and start-here.html to tonight.html.
+   simulator, articles.html to field cards and the glossary, and
+   start-here.html to tonight.html. (gallery.html reaches the
+   slideshow from a button in its controls row instead.)
    Two side by side sit in a .callout-row (end of this file).
    ============================================================ */
 
@@ -11044,7 +11045,7 @@ html.ss-lock body{ overflow: hidden; }
 
 /* ============================================================
    TILE HOVER: Start Here, Tonight, Field cards, Glossary, Puzzles,
-   and the .sim-callout link cards (gallery, articles, start here)
+   and the .sim-callout link cards (articles, start here)
    The same lift and shadow as the prints page panels and the
    homepage tiles. Only outer tiles lift: the target cards inside
    Tonight's "What is worth looking at" panel stay put, so nothing
@@ -11140,15 +11141,58 @@ html.ss-lock body{ overflow: hidden; }
   .callout-row{ grid-template-columns:1fr 1fr; }
 }
 /* The intro paragraphs above these carry no bottom margin */
-.page-gallery .gallery-head > .sim-callout,
 .page-articles .gallery-head > .callout-row{ margin-top:18px; }
+
+/* ============================================================
+   GALLERY: SLIDESHOW BUTTON
+   The link to slideshow.html, first in the controls row and pushed
+   to the left, with the view buttons and Captions on the right.
+   Styled to match the Captions button. On the narrowest phones the
+   gaps and padding tighten so the row still fits on one line.
+   ============================================================ */
+.page-gallery .slideshow-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  height:34px; padding:0 13px 0 11px; margin-right:auto;
+  border-radius:8px;
+  border:1px solid rgba(167,139,250,0.30);
+  background:rgba(167,139,250,0.06);
+  color:rgba(220,216,245,0.92); text-decoration:none;
+  font-size:13px; font-weight:600; letter-spacing:0.02em; line-height:1;
+  white-space:nowrap; flex-shrink:0;
+  transition:background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.page-gallery .slideshow-btn svg{ flex-shrink:0; }
+.page-gallery .slideshow-btn:hover{
+  background:rgba(167,139,250,0.13);
+  border-color:rgba(167,139,250,0.45);
+  color:#fff;
+}
+.page-gallery .slideshow-btn:active{ transform:translateY(1px); }
+.page-gallery .slideshow-btn:focus-visible{ outline:2px solid rgba(167,139,250,0.6); outline-offset:2px; }
+@media (max-width:720px){
+  .page-gallery .slideshow-btn{ padding:0 11px 0 9px; font-size:12px; }
+}
+@media (max-width:380px){
+  .page-gallery .gallery-controls{ gap:6px; }
+  .page-gallery .slideshow-btn,
+  .page-gallery .caption-toggle{ padding:0 9px 0 8px; gap:5px; }
+}
+html[data-theme="light"] .page-gallery .slideshow-btn{
+  background:rgba(124,92,246,0.08);
+  border-color:rgba(124,92,246,0.32);
+  color:rgba(26,23,48,0.90);
+}
+html[data-theme="light"] .page-gallery .slideshow-btn:hover{
+  background:rgba(124,92,246,0.14);
+  border-color:rgba(124,92,246,0.48);
+  color:rgba(26,23,48,0.96);
+}
 
 /* ============================================================
    GALLERY: PHONES
    Everything above the first image, tightened so the images start
-   on the first screen: less space round the intro, the slideshow
-   card down to one line, and By the numbers closed behind its
-   heading like the prints FAQ. The page script toggles .is-open on
+   on the first screen: less space round the intro, and By the
+   numbers closed behind its heading like the prints FAQ. The page script toggles .is-open on
    the panel and replays the tiles and the count on every opening.
    While it is closed, #statsCurrent names the tile being shown.
    ============================================================ */
@@ -11160,10 +11204,6 @@ html.ss-lock body{ overflow: hidden; }
   .page-gallery .gallery-intro{ margin-top:10px; line-height:1.55; }
   .page-gallery .gallery-hint{ margin-top:8px; line-height:1.5; }
 
-  .page-gallery .gallery-head > .sim-callout{ margin:12px 0 0; padding:9px 12px; gap:12px; }
-  .page-gallery .gallery-head > .sim-callout .sim-callout-icon{ width:32px; height:32px; border-radius:10px; }
-  .page-gallery .gallery-head > .sim-callout .sim-callout-text strong{ margin-bottom:0; }
-  .page-gallery .gallery-head > .sim-callout .sim-callout-desc{ display:none; }
 
   /* The second row (the tiles) slides between 0fr and 1fr */
   .page-gallery .stats-panel{

@@ -830,23 +830,6 @@
         <p class="gallery-hint">Images are optimised for web viewing and carry a watermark. <a href="prints.html">Prints</a> are supplied at full resolution, without the watermark.</p><br>
         <p class="gallery-hint">Click any image to open its own page, with the story behind it, how it was captured, and the equipment and conditions on the night.</p>
 
-        <!-- Link to the slideshow. The nav has no Gallery dropdown, so this
-             is how the slideshow is reached from here. Styles: .sim-callout
-             in styles.css -->
-        <a class="sim-callout" href="slideshow.html">
-          <span class="sim-callout-icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="2.4" y="3.4" width="15.2" height="13.2" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8.2 7.2v5.6l4.6-2.8z" fill="currentColor"/>
-            </svg>
-          </span>
-          <span class="sim-callout-text">
-            <strong>Watch the slideshow</strong>
-            <span class="sim-callout-desc">Every image in the gallery, one after another, full screen if you like.</span>
-          </span>
-          <span class="sim-callout-arrow" aria-hidden="true">&rsaquo;</span>
-        </a>
-
         <!-- By the numbers: one tile per type, counted live from site-data.json
              by the script below. The tiles are also the filter. Styles: the
              "BY THE NUMBERS" block in styles.css. On phones the panel closes
@@ -862,6 +845,17 @@
         </div>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
+          <!-- Slideshow, on the left of the controls row. The nav has no
+               Gallery dropdown, so this is how the slideshow is reached from
+               here. Styles: GALLERY: SLIDESHOW BUTTON in styles.css -->
+          <a class="slideshow-btn" href="slideshow.html">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="1.5" y="2.5" width="13" height="11" rx="1.6" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M6.6 5.6v4.8l4-2.4z" fill="currentColor"/>
+            </svg>
+            <span>Slideshow</span>
+          </a>
+
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
