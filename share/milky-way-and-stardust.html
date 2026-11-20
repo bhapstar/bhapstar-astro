@@ -422,13 +422,15 @@
     <label><span>Email</span><input type="email" name="email" required autocomplete="email" /></label>
     <label><span>Phone or WhatsApp (optional)</span><input type="tel" name="phone" autocomplete="tel" /></label>
     <label><span>Message</span><textarea name="message" rows="4" required></textarea></label>
-    <button type="submit" class="btn primary">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
-      </svg>
-      <span>Send enquiry</span>
-    </button>
+    <div class="cta-row">
+      <button type="submit" class="btn-cta">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+        </svg>
+        <span>Send enquiry</span>
+      </button>
+    </div>
   </form>
   <p class="enquiry-status" role="status" aria-live="polite"></p>
 </dialog>
