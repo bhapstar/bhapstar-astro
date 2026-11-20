@@ -54,7 +54,7 @@
 
       <div class="prints-layout">
 
-        <!-- LEFT: How it works + enquiry form + framed mockup -->
+        <!-- LEFT: How it works + print request form -->
         <div class="prints-main">
 
           <!-- Print quality note -->
@@ -247,38 +247,6 @@
                 <button class="submit-cta" id="submitEnquiry" type="submit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 1.5L7 9"/><path d="M14.5 1.5l-4.5 13-3-6.5-6.5-3z"/></svg><span>Submit print request</span></button>
               </div>
             </form>
-          </div>
-
-          <!-- 3) Support -->
-          <div class="panel support-panel">
-            <div class="support-left">
-              <h2 class="support-title">Support my work</h2>
-              <p class="support-text">
-                If you enjoy my astrophotography or the outreach work I do, you're welcome to support the time and effort behind it by clicking the button here.
-              </p>
-            </div>
-            <div class="support-right">
-              <a
-                href="https://www.buymeacoffee.com/bhapstar_astro"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn primary support-btn"
-              >☕ <span>Support my work</span></a>
-            </div>
-          </div>
-
-          <!-- 4) Frame styles -->
-          <div class="panel prints-panel">
-            <h3>Frame Styles</h3>
-            <div class="framed-carousel" id="framedCarousel">
-              <!-- Add or remove <img> tags here to manage the carousel images -->
-              <img src="images/framed/Frames_1.webp"  alt="Framed prints" loading="lazy" class="fc-slide active" />
-              <img src="images/framed/Frames_2.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
-              <img src="images/framed/Frames_3.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
-              <img src="images/framed/Frames_4.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
-              <!-- <img src="images/framed/Frames2.webp" alt="Framed prints" loading="lazy" class="fc-slide" /> -->
-              <!-- <img src="images/framed/Frames3.webp" alt="Framed prints" loading="lazy" class="fc-slide" /> -->
-            </div>
           </div>
 
         </div>
@@ -1077,35 +1045,6 @@
 
 
 
-<!-- ─────────────────────────────────────────
-     FRAME STYLES CAROUSEL
-───────────────────────────────────────── -->
-
-<script>
-(function () {
-  const carousel = document.getElementById('framedCarousel');
-  if (!carousel) return;
-
-  const slides = Array.from(carousel.querySelectorAll('.fc-slide'));
-  if (slides.length <= 1) return;
-
-  let current = 0;
-
-  setInterval(() => {
-    slides[current].classList.remove('active');
-    current = (current + 1) % slides.length;
-    slides[current].classList.add('active');
-  }, 4000);
-
-  // Pass pinch-to-zoom gestures through to the browser when zoomed in
-  carousel.addEventListener('touchstart', function (e) {
-    if (e.touches.length >= 2) e.stopPropagation();
-  }, { passive: true });
-  carousel.addEventListener('touchmove', function (e) {
-    if (e.touches.length >= 2) e.stopPropagation();
-  }, { passive: true });
-})();
-</script>
 <script>
 /* ── FAQ slide animation ──
    Intercepts the native <details> toggle so the answer slides open/closed

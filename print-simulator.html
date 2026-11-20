@@ -140,6 +140,18 @@
               <li>Deep sky images carry a lot of fine detail, so bigger is usually better if the wall allows it.</li>
             </ul>
           </div>
+
+          <!-- Frame styles: photos of framed prints. Add or remove <img> tags to
+               manage the carousel; the script near the end of the page rotates them -->
+          <div class="panel prints-panel">
+            <h3>Frame Styles</h3>
+            <div class="framed-carousel" id="framedCarousel">
+              <img src="images/framed/Frames_1.webp"  alt="Framed prints" loading="lazy" class="fc-slide active" />
+              <img src="images/framed/Frames_2.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
+              <img src="images/framed/Frames_3.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
+              <img src="images/framed/Frames_4.webp"  alt="Framed prints" loading="lazy" class="fc-slide" />
+            </div>
+          </div>
         </div>
 
       </div>
@@ -975,6 +987,36 @@
     }
     render();
   })();
+})();
+</script>
+
+<!-- ─────────────────────────────────────────
+     FRAME STYLES CAROUSEL
+───────────────────────────────────────── -->
+
+<script>
+(function () {
+  const carousel = document.getElementById('framedCarousel');
+  if (!carousel) return;
+
+  const slides = Array.from(carousel.querySelectorAll('.fc-slide'));
+  if (slides.length <= 1) return;
+
+  let current = 0;
+
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 4000);
+
+  // Pass pinch-to-zoom gestures through to the browser when zoomed in
+  carousel.addEventListener('touchstart', function (e) {
+    if (e.touches.length >= 2) e.stopPropagation();
+  }, { passive: true });
+  carousel.addEventListener('touchmove', function (e) {
+    if (e.touches.length >= 2) e.stopPropagation();
+  }, { passive: true });
 })();
 </script>
 

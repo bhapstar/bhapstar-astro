@@ -674,6 +674,16 @@ h1:first-of-type{
 .section-head p{
   margin: 0; color: var(--muted); font-size: 13px;
 }
+/* Larger page titles on these six pages, the same size as the
+   "Build your print request" heading on the prints page */
+.page-start-here .section-head h1,
+.page-gallery .section-head h1,
+.page-prints .section-head h1,
+.page-gear .section-head h1,
+.page-articles .section-head h1,
+.page-puzzles .section-head h1{
+  font-size: clamp(20px, 2.6vw, 26px);
+}
 
 /* Card grid */
 .grid{
@@ -1365,15 +1375,6 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .prints-main{ display: grid; gap: 18px; }
 .prints-side{ display: grid; gap: 18px; }
 @media (min-width: 980px){ .prints-layout{ grid-template-columns: 1fr 360px; } }
-
-.page-prints .support-panel{ max-width: 960px; margin: 0 auto; grid-template-columns: 1fr auto; }
-.page-prints .support-right{ align-items: flex-end; }
-.page-prints .support-mini{ text-align: right; }
-@media (max-width: 860px){
-  .page-prints .support-panel{ grid-template-columns: 1fr; }
-  .page-prints .support-right{ align-items: flex-start; }
-  .page-prints .support-mini{ text-align: left; }
-}
 
 .prints-panel{ position: relative; overflow: hidden; }
 .prints-panel::before{
@@ -10303,6 +10304,11 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 .sim-tips-list{ margin:.4rem 0 0; padding-left:1.1rem; }
 .sim-tips-list li{ font-size:.86rem; color:var(--muted); line-height:1.55; margin-bottom:.5rem; }
 .sim-tips-list li:last-child{ margin-bottom:0; }
+
+/* ── Frame Styles carousel (moved here from the prints page) ──
+   The photos are mostly portrait and this column is narrow, so the box is
+   taller than the 4:3 default to let them show at a useful size */
+.page-print-simulator .framed-carousel{ aspect-ratio: 4 / 5; }
 
 /* ── Light theme ────────────────────────────── */
 html[data-theme="light"] .sim-callout{
