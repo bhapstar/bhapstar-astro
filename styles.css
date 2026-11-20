@@ -684,6 +684,17 @@ h1:first-of-type{
 .page-puzzles .section-head h1{
   font-size: clamp(20px, 2.6vw, 26px);
 }
+/* Phones: the same small gap between the header and the title on these
+   six pages. Gallery and Puzzles had it already; the rest kept the full
+   64px section padding */
+@media (max-width: 639px){
+  .page-start-here main > .section:first-child,
+  .page-gallery main > .section:first-child,
+  .page-prints main > .section:first-child,
+  .page-gear main > .section:first-child,
+  .page-articles main > .section:first-child,
+  .page-puzzles main > .section:first-child{ padding-top: 22px; }
+}
 
 /* Card grid */
 .grid{
