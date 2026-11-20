@@ -61,7 +61,7 @@
           <p class="helper" style="margin-top:-.5rem;margin-bottom:.9rem;">
             Every print is produced from the full-resolution master file: uncompressed, unwatermarked, and at the highest quality.
             Choose paper in A3, A4 or A5, canvas in three sizes, or a high-resolution digital file.
-            The 2027 calendar can be added to any enquiry too.
+            The 2027 calendar can be added to any print request too.
           </p>
 
           <!-- Link to the wall simulator -->
@@ -153,11 +153,11 @@
                   </button>
                   <div class="items-info-tooltip" id="itemsInfoTooltip" role="tooltip" hidden>
                     <ol>
-                      <li><strong>Select an image</strong> - select the image title in the enquiry builder.</li>
+                      <li><strong>Select an image</strong> - select the image title in the print request builder.</li>
                       <li><strong>Select a format</strong> - A3, A4 or A5 paper print framed or unframed, a canvas print in one of three sizes, or a high-resolution digital file. Repeat steps 1 and 2 as many times as needed.</li>
                       <li><strong>Add the 2027 calendar</strong> if you'd like one, by choosing how many.</li>
                       <li><strong>Add any notes</strong> you want.</li>
-                      <li><strong>Send an enquiry</strong> - I'll confirm availability, finish options, lead time, and delivery based on your location.</li>
+                      <li><strong>Send your print request</strong> - I'll confirm availability, finish options, lead time, and delivery based on your location.</li>
                     </ol>
                   </div>
                   </label>
@@ -194,7 +194,7 @@
 
                 <div class="row">
                   <label for="pNotes">Notes</label>
-                  <textarea id="pNotes" name="notes" placeholder="Any further information about your enquiry" rows="3"></textarea>
+                  <textarea id="pNotes" name="notes" placeholder="Any further information about your print request" rows="3"></textarea>
                   <p class="discount-hint">Have a discount code? Pop it in the notes above.
                     <span style="position:relative;display:inline-flex;align-items:center;">
                       <button type="button" class="items-info-btn" id="discountInfoBtn" aria-label="How to earn a discount code" aria-expanded="false">
@@ -316,7 +316,7 @@
 
               <details class="faq-item">
                 <summary>Can I see what a print looks like on my wall?</summary>
-                <p>Yes. The <a href="print-simulator.html" class="faq-link">print simulator</a> puts any image from the gallery on a wall at its real size, in a living room, corridor, kitchen or bedroom, with furniture drawn to scale so you can judge it properly. When you have a combination you like, it carries straight through to the enquiry builder.</p>
+                <p>Yes. The <a href="print-simulator.html" class="faq-link">print simulator</a> puts any image from the gallery on a wall at its real size, in a living room, corridor, kitchen or bedroom, with furniture drawn to scale so you can judge it properly. When you have a combination you like, it carries straight through to the print request builder.</p>
               </details>
 
               <details class="faq-item">
@@ -346,7 +346,7 @@
 
               <details class="faq-item">
                 <summary>Do you ship internationally?</summary>
-                <p>It depends on destination and courier options. Tell me your location in the enquiry and I'll confirm what's possible.</p>
+                <p>It depends on destination and courier options. Tell me your location in your print request and I'll confirm what's possible.</p>
               </details>
 
               <details class="faq-item">
@@ -367,14 +367,14 @@
              <details class="faq-item" id="faq-calendar">
                 <summary>Is there a calendar?</summary>
                 <p>Yes. The bhapstar 2027 calendar, Fragments of the Universe, has twelve of my images, one for each month, each with a short description of what it shows. The dates are marked with moon phases, meteor shower peaks, eclipses, equinoxes and solstices, and a QR code on every page links back to this site. It is an A4 wall calendar, spiral bound along the top.</p>
-                <p>To order, choose how many under 2027 Calendar in the enquiry builder. If you would like a calendar made from your own choice of twelve gallery images instead, mention it in the notes.</p>
+                <p>To order, choose how many under 2027 Calendar in the print request builder. If you would like a calendar made from your own choice of twelve gallery images instead, mention it in the notes.</p>
                 <img src="images/calendar/calendar-2027-trio.webp" alt="The bhapstar 2027 calendar: the cover and two month pages" class="calendar-example-img" loading="lazy" />
               </details>
 
               <details class="faq-item" id="faq-usage">
                 <summary>How may I use the images?</summary>
                 <p>All images on this site are © Bhapinder Singh and remain my copyright. A print or digital file is supplied for personal, non-commercial display and enjoyment.<br><br>
-                Commercial use, redistribution, or publication isn't included by default; but it is usually possible. If you'd like to license an image for that kind of use, mention it in the enquiry and I'll arrange terms with you directly.</p>
+                Commercial use, redistribution, or publication isn't included by default; but it is usually possible. If you'd like to license an image for that kind of use, mention it in your print request and I'll arrange terms with you directly.</p>
               </details>
 
             </div>
@@ -949,7 +949,7 @@
         itemsWrap.innerHTML = '';
         addItem();
         build();
-        showToast('Thank you — your enquiry has been submitted. I\'ll be in touch as soon as possible.');
+        showToast('Thank you, your print request has been submitted. I\'ll be in touch as soon as possible.');
       } catch {
         showToast('Something went wrong — please try again or contact me directly.');
       } finally {
