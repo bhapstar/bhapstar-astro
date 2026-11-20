@@ -647,6 +647,36 @@ h1:first-of-type{
 }
 .btn:hover::before{ opacity: 1; }
 
+/* Filled gradient call-to-action, for the main action on a page or panel:
+   Submit print request, the homepage's Follow on Instagram, Support my work
+   and Send message, and the photoshoot enquiry pop-up. Full width on phones.
+   .cta-row centres one on a line of its own. */
+.btn-cta{
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 28px; border-radius: 12px; border: 1px solid transparent; cursor: pointer;
+  font-family: var(--font); font-size: 16px; font-weight: 600; letter-spacing: 0.02em;
+  color: #fff; text-decoration: none;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  animation: gradientRoll 5s linear infinite;
+  box-shadow: 0 8px 26px rgba(167,139,250,0.28);
+  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+.btn-cta:hover, .btn-cta:focus-visible{
+  transform: translateY(-2px); box-shadow: 0 12px 34px rgba(167,139,250,0.42);
+}
+.btn-cta:focus-visible{ outline: 2px solid #fff; outline-offset: 3px; }
+.btn-cta svg{ width: 17px; height: 17px; flex-shrink: 0; }
+.btn-cta:disabled{ opacity: 0.7; cursor: progress; transform: none; }
+.cta-row{ display: flex; justify-content: center; }
+@media (max-width: 768px){
+  .btn-cta{ width: 100%; }
+}
+@media (prefers-reduced-motion: reduce){
+  .btn-cta{ animation: none; }
+  .btn-cta:hover{ transform: none; }
+}
+
 /* =========================
    Sections
 ========================= */
@@ -854,7 +884,7 @@ h1:first-of-type{
 .panel h3, .stats-panel .stats-title, .home-stats-title, .support-title,
 .enquiry-summary-title, .gear-support h2, .related h2, .article-download h2,
 .article-signup-block h2, .article-support h2, .share-specs h2,
-.gear-buy-label, .dv-buy-label{
+.gear-buy-label, .dv-buy-label, .fs-col a.fs-head{
   font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
   background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
   background-size: 300% 100%;
@@ -1274,7 +1304,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 /* max-width is set to `none` further down, where the submit button is
    centred across the full panel; only the label keeps a reading width. */
 .contact-form label{ display: block; margin-bottom: 1.25rem; }
-.contact-form span{
+.contact-form label span{
   display: block; font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
   color: rgba(200,195,235,0.58); margin-bottom: 6px;
 }
@@ -1309,20 +1339,6 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .support-title{ margin: 0 0 8px; }
 .support-text{ margin: 0; color: rgba(200,195,235,0.76); font-size: 13px; line-height: 1.62; }
 .support-right{ display: flex; flex-direction: column; gap: 8px; align-items: flex-end; justify-content: center; }
-.support-btn{ width: fit-content; }
-
-/* Scrolling gradient text on "Support my work" and "Send message" buttons.
-   (The prints page Submit print request button is a filled gradient instead:
-   see .submit-cta.) */
-.support-btn span,
-.contact-form .btn[type="submit"] {
-  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientRoll 4s linear infinite reverse;
-}
 .support-mini{ font-size: 12px; color: rgba(200,195,235,0.60); line-height: 1.4; text-align: right; }
 .support-panel::before{
   content: ""; position: absolute; top: 0; left: 16px; right: 16px; height: 1.5px;
@@ -1382,7 +1398,6 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   display: block; padding: 32px 20px; text-align: center;
   color: var(--muted); font-size: 13px; text-decoration: none;
 }
-.instagram-follow{ display: flex; justify-content: center; }
 
 /* Prints */
 .prints-layout{ display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
@@ -1850,43 +1865,26 @@ footer{
   box-shadow: var(--chrome-shadow-up);
   color: var(--muted); font-size: 11.5px; letter-spacing: 0.08em;
 }
-/* Footer nav — mirrors the header (gradient links + Puzzles menu),
-   just sized down. Links sit on top; © line + socials sit beneath. */
+/* Footer site map: one column per header section, the section name on
+   top (styled as a tile label, see the heading levels) and its sub pages
+   beneath. Columns wrap onto more rows on narrow screens. */
 .footer-nav{
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
 }
-
-/* Reuse the header's .nav-menu / .nav-group styling, but smaller here.
-   (Gradient text + shimmer underline + dropdown popover come for free.) */
-footer .nav-menu{ gap: 3px; }
-footer .nav-menu a,
-footer .nav-group-btn{
-  font-size: 10px; letter-spacing: 0.16em; padding: 5px 9px;
+.footer-sitemap{
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, max-content));
+  justify-content: center; gap: 18px 36px; width: 100%;
 }
-footer .nav-menu a::after{ left: 9px; right: 9px; bottom: 2px; }
-footer .nav-group-btn svg{ width: 9px; height: 5px; }
-/* The current page shouldn't show the header's "active" pill down here.
-   NOTE: clear background-COLOR only — the `background` shorthand would
-   also wipe the gradient image that the text is clipped from, making the
-   active link invisible (text-fill is transparent). */
-footer .nav-menu a.active,
-footer .nav-group-btn.active{ background-color: transparent; border-color: transparent; }
-/* Footer is at the page bottom, so its menus open UPWARD and slide up
-   from below (and drop back down when closing) */
-footer .nav-submenu{ top: auto; bottom: calc(100% + 8px); }
-footer .nav-submenu.open{ animation-name: submenuInUp; }
-footer .nav-submenu.open.closing{ animation-name: submenuOutDown; }
-@keyframes submenuInUp{
-  from{ opacity: 0; transform: translateX(-50%) translateY(14px); }
-  to{   opacity: 1; transform: translateX(-50%) translateY(0); }
+.fs-col{ display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+.fs-col a{
+  font-size: 12.5px; letter-spacing: 0.01em; line-height: 1.35;
+  color: var(--muted); text-decoration: none; transition: color 150ms ease;
 }
-@keyframes submenuOutDown{
-  from{ opacity: 1; transform: translateX(-50%) translateY(0); }
-  to{   opacity: 0; transform: translateX(-50%) translateY(8px); }
-}
-@media (prefers-reduced-motion: reduce){
-  footer .nav-submenu.open{ animation: submenuFadeIn 120ms ease both; }
-  footer .nav-submenu.open.closing{ animation: submenuFadeOut 120ms ease forwards; }
+.fs-col a:hover, .fs-col a:focus-visible{ color: var(--text); }
+.fs-col a.fs-head{ margin-bottom: 2px; transition: opacity 150ms ease; }
+.fs-col a.fs-head:hover, .fs-col a.fs-head:focus-visible{ opacity: 0.75; }
+@media (max-width: 639px){
+  .footer-sitemap{ grid-template-columns: repeat(3, max-content); gap: 18px 26px; }
 }
 
 /* Meta row: copyright line + social icons, centred beneath the links */
@@ -2676,64 +2674,20 @@ a[href="prints.html"], a[href*="prints"] {
   .ig-carousel .instagram-grid{ scroll-behavior:auto; }
 }
 
-/* ── "Follow on Instagram" button: scrolling gradient text + logo,
-      matching the "Support my work" button ── */
-.instagram-follow .btn span{
-  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientRoll 4s linear infinite reverse;
-}
-/* The logo is stroke/fill:currentColor — cycle its colour through the same
-   hues on the same 4s cadence so it shifts in step with the text. */
-.instagram-follow .btn svg{
-  animation: igLogoHue 4s linear infinite reverse;
-}
-@keyframes igLogoHue{
-  0%   { color:#a78bfa; }
-  25%  { color:#60a5fa; }
-  50%  { color:#f472b6; }
-  75%  { color:#60a5fa; }
-  100% { color:#a78bfa; }
-}
-@media (prefers-reduced-motion: reduce){
-  .instagram-follow .btn span,
-  .instagram-follow .btn svg{ animation:none !important; }
-}
-
 /* =========================================================
-   Uniform, centred action buttons
-   (Follow on Instagram · Support my work · Send message)
+   Homepage action buttons (Follow on Instagram · Support my work ·
+   Send message): .btn-cta, each centred under its panel
 ========================================================= */
 
-/* "Follow on Instagram" is already centred via .instagram-follow. */
-
-/* "Support my work" — stack the about panel so the button centres
-   beneath the text instead of hugging the right column. Scoped to the
-   homepage variant so the Prints page layout is untouched. */
+/* "Support my work": stack the about panel so the button centres
+   beneath the text instead of hugging the right column. */
 .support-panel--about{ grid-template-columns: 1fr; }
 .support-panel--about .support-right{ align-items: center; text-align: center; }
 
-/* "Send message" — centre the submit button under the form fields. */
-.contact-form .btn[type="submit"]{
-  display: flex;
-  width: fit-content;
-  margin: 6px auto 0;
-}
-
-/* Contact form: keep the fields left-aligned (in line with the intro) but
-   let the "Send message" button centre across the full panel width, so it
-   matches the Follow and Support buttons. */
+/* Contact form: keep the fields left-aligned (in line with the intro),
+   while the "Send message" row centres across the full panel width. */
 .contact-form{ max-width: none; }
 .contact-form label{ max-width: 520px; }
-
-/* "Send message" icon — same gentle hue shift as the Instagram logo. */
-.contact-form .btn[type="submit"] svg{ animation: igLogoHue 4s linear infinite reverse; }
-@media (prefers-reduced-motion: reduce){
-  .contact-form .btn[type="submit"] svg{ animation: none !important; }
-}
 
 
 /* ############################################################
@@ -7663,10 +7617,12 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
        measure is the quickest way to make a long article feel like work. */
     .article-page { max-width: 760px; margin: 40px auto; padding: 0 16px; }
     .article-header { margin-bottom: 34px; }
-    .article-hero { margin: 0 0 26px; }
+    /* The picture sits under the title and intro, as on the picture and
+       gear pages. */
+    .article-hero { margin: 0; }
     /* Covers come from the gallery, so they arrive in whatever shape the
        photograph was taken in. Left to run at their natural aspect a portrait
-       cover fills 1300px of screen before the headline, which buries the
+       cover fills 1300px of screen before the text starts, which buries the
        article. Capping the height and cropping to fill keeps every hero to
        roughly one band: landscape covers are barely touched, portrait ones are
        centre-cropped to the same depth. */
@@ -7685,8 +7641,6 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
     .article-meta { font-size: 10.5px; letter-spacing: 0.16em;
                      text-transform: uppercase; color: var(--muted);
                      margin: 0 0 12px; }
-    .article-standfirst { font-size: 16.5px; line-height: 1.6; color: var(--muted);
-                           margin: 0; }
 
     /* ── Body ── */
     .article-body { margin: 34px 0 10px; font-size: 15.5px; line-height: 1.75;
@@ -7857,7 +7811,6 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
 
     @media (max-width: 768px) {
       .article-page { margin: 24px auto; padding: 0 14px; }
-      .article-standfirst { font-size: 15px; }
       .page-article .gn-label { display: none; }
     }
 
@@ -8185,11 +8138,6 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       .gcbox-next { right: 8px; }
       .gcbox .figbox-stage, .gcbox .figbox-stage img { max-width: 96vw; }
     }
-    /* Intro paragraph under the title. Same values as the share page lead
-       (.share-body .lead). */
-    .gear-desc { font-size: 17px; line-height: 1.7; margin: 0 0 20px;
-                  color: rgba(200,195,235,0.85); }
-    html[data-theme="light"] .gear-desc { color: rgba(78,68,128,0.88); }
     /* Write-up below the pictures. Text size, line height and paragraph
        spacing match the share page write-up (.share-body p). */
     .gear-review { margin: 0 0 40px; line-height: 1.7;
@@ -8400,6 +8348,12 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
        27px on phones. Picture, gear and article pages share it so their
        titles match. */
     .share-wrap h1, .gear-title, .article-title{ margin-bottom: 14px; font-size: clamp(27px, 3.75vw, 48px); }
+    /* The intro paragraph under that title, then the picture */
+    .share-body .lead, .gear-desc, .article-standfirst{ font-size: 17px; line-height: 1.7; margin: 0 0 20px;
+                  color: rgba(200,195,235,0.85); }
+    html[data-theme="light"] .share-body .lead,
+    html[data-theme="light"] .gear-desc,
+    html[data-theme="light"] .article-standfirst{ color: rgba(78,68,128,0.88); }
 
     /* Decorative emoji after a share-page heading (title_emoji in
        site-data.json). h1:first-of-type paints its text through a clipped
@@ -8656,7 +8610,7 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       .cmp-control{ bottom: 10px; padding: 5px 12px; }
     }
     .share-body p{ color: var(--text); line-height: 1.7; margin: 0 0 16px; }
-    .share-body .lead{ font-size: 17px; color: rgba(200,195,235,0.85); margin: 0 0 20px; max-width: none; }
+    .share-body .lead{ max-width: none; }
     /* Supporting picture inside a gallery write-up (body_figures in
        site-data.json). Kept small and floated beside the text so it reads as
        a reference rather than a second photo competing with the main one.
@@ -9464,7 +9418,7 @@ html[data-theme="light"] .support-text,
 html[data-theme="light"] .support-mini{ color: rgba(60,54,96,0.82); }
 
 /* 3 — Form labels (contact + prints/gear pickers). */
-html[data-theme="light"] .contact-form span,
+html[data-theme="light"] .contact-form label span,
 html[data-theme="light"] .picker label{ color: rgba(60,54,96,0.82); }
 
 /* 4 — Gallery controls. */
@@ -9515,8 +9469,7 @@ html[data-theme="light"] #galleryGrid.list-view .cap .d,
 html[data-theme="light"] #gearGrid.list-view .cap .d,
 html[data-theme="light"] #articleGrid.list-view .cap .d{ color: rgba(60,54,96,0.82); }
 
-/* 5 — Image (share) page: lead paragraph + capture-spec values. */
-html[data-theme="light"] .share-body .lead{ color: rgba(78,68,128,0.88); }
+/* 5 — Image (share) page: enquiry box and pop-up, capture-spec values. */
 html[data-theme="light"] .share-body a.share-enquiry-link{ color: #6d4bd8; }
 html[data-theme="light"] .enquiry-dialog{ background: #f7f4ff; border-color: rgba(124,92,246,0.25);
   box-shadow: 0 20px 60px rgba(40,30,80,0.25); }
@@ -10845,33 +10798,6 @@ html.ss-lock body{ overflow: hidden; }
   margin: 6px 0 0; padding-top: 10px;
   border-top: 1px solid rgba(167,139,250,0.18);
   font-size: 12.5px; line-height: 1.6; color: rgba(232,230,247,0.6);
-}
-
-/* ── Prints page: the Submit print request button ──
-   Styled like the Download button on the field cards page, so the last step
-   of the form stands out from the other buttons. */
-.submit-cta{
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 14px 28px; border-radius: 12px; border: 1px solid transparent; cursor: pointer;
-  font-family: var(--font); font-size: 16px; font-weight: 600; letter-spacing: 0.02em; color: #fff;
-  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
-  background-size: 300% 100%;
-  animation: gradientRoll 5s linear infinite;
-  box-shadow: 0 8px 26px rgba(167,139,250,0.28);
-  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
-}
-.submit-cta:hover, .submit-cta:focus-visible{
-  transform: translateY(-2px); box-shadow: 0 12px 34px rgba(167,139,250,0.42);
-}
-.submit-cta:focus-visible{ outline: 2px solid #fff; outline-offset: 3px; }
-.submit-cta svg{ width: 17px; height: 17px; flex-shrink: 0; }
-.submit-cta:disabled{ opacity: 0.7; cursor: progress; transform: none; }
-@media (max-width: 768px){
-  .submit-cta{ width: 100%; }
-}
-@media (prefers-reduced-motion: reduce){
-  .submit-cta{ animation: none; }
-  .submit-cta:hover{ transform: none; }
 }
 
 /* ── Prints page: the "Build your print request" heading ──

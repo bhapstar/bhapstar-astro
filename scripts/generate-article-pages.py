@@ -709,9 +709,9 @@ def build_page(entry, slug, prev_entry=None, next_entry=None, glossary=None,
       <nav class="gear-nav route-nav" id="routeNavTop" aria-label="Reading route" hidden></nav>
 {nav_html}
       <div class="article-header">
-{hero_html}{meta_html}        <h1 class="article-title">{esc(title)}</h1>
+{meta_html}        <h1 class="article-title">{esc(title)}</h1>
         <p class="article-standfirst">{standfirst_html}</p>
-      </div>
+{hero_html}      </div>
 
       <div class="article-body">
 {body_html}

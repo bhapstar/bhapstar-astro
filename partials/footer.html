@@ -1,9 +1,9 @@
 <!-- =========================
      Footer
-     - Mirrors the header: the same plain gradient nav links,
-       sitting ABOVE the © line. Keep the two lists in step
-     - Reuses the header's .nav-menu classes, sized down via
-       footer-scoped CSS overrides
+     - A site map: the header's seven sections, each with its
+       sub pages listed beneath it, sitting ABOVE the © line.
+       Keep the sections in step with the header, and the sub
+       pages in step with NAV_PARENT in partials.js
      - © line + Instagram/X socials sit beneath the links
      - Copyright year (#y) populated by partials.js from the
        visitor's clock, so it rolls over on 1 January by itself
@@ -29,14 +29,37 @@
   <div class="wrap">
     <div class="footer-nav">
 
-      <nav class="nav-menu footer-menu" aria-label="Footer navigation">
-        <a href="/index.html">Home</a>
-        <a href="/start-here.html">Start Here</a>
-        <a href="/gallery.html">Gallery</a>
-        <a href="/prints.html">Prints</a>
-        <a href="/gear.html">Gear</a>
-        <a href="/articles.html">Articles</a>
-        <a href="/puzzles.html">Puzzles</a>
+      <nav class="footer-sitemap" aria-label="Footer navigation">
+        <div class="fs-col">
+          <a class="fs-head" href="/index.html">Home</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/start-here.html">Start Here</a>
+          <a href="/tonight.html">Tonight</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/gallery.html">Gallery</a>
+          <a href="/slideshow.html">Slideshow</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/prints.html">Prints</a>
+          <a href="/print-simulator.html">Print Simulator</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/gear.html">Gear</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/articles.html">Articles</a>
+          <a href="/field-cards.html">Field Cards</a>
+          <a href="/glossary.html">Glossary</a>
+        </div>
+        <div class="fs-col">
+          <a class="fs-head" href="/puzzles.html">Puzzles</a>
+          <a href="/star_word.html">Star Word</a>
+          <a href="/supernova_sweeper.html">Supernova Sweeper</a>
+          <a href="/quiz.html">Quiz</a>
+          <a href="/jigsaw.html">Jigsaw</a>
+        </div>
       </nav>
 
       <div class="footer-meta">
