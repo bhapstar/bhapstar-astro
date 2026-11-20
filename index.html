@@ -72,7 +72,7 @@
     // Not for people arriving from the calendar's QR codes or NFC tag
     var src = new URLSearchParams(location.search).get('src');
     if (src === 'calendar' || src === 'calendar-nfc') return p;
-    // Closed or "Enquire now" tapped: not again until tomorrow. (An old
+    // Closed or "Request a calendar" tapped: not again until tomorrow. (An old
     // {"done": true} saved by the earlier "never again" rule is ignored.)
     var s = null;
     try { s = JSON.parse(localStorage.getItem(p.key) || 'null'); } catch (e) {}
@@ -147,7 +147,7 @@
          page. "Christmas" becomes "New Year" from 26 Dec. -->
     <a id="calBanner" class="ts-item ts-cal" href="prints.html#calendar2027" hidden>
       <span class="ts-icon" aria-hidden="true">🗓️</span>
-      <span class="ts-text"><strong><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar enquiry</strong><span class="ts-sub">A great <span class="gift-occasion">Christmas</span> gift</span></span>
+      <span class="ts-text"><strong><span class="ts-year">2027 c</span><span class="ts-noyear">C</span>alendar request</strong><span class="ts-sub">A great <span class="gift-occasion">Christmas</span> gift</span></span>
     </a>
 
     <!-- App install: shown by the script below -->
@@ -367,7 +367,7 @@
        so it never opens late, closes or reopens. Its picture has a fixed
        size, so nothing moves when it arrives (it fades in if it is still
        downloading)
-     - Closed (X, "Maybe later", outside, Esc) or "Enquire now" tapped:
+     - Closed (X, "Maybe later", outside, Esc) or "Request a calendar" tapped:
        not again until the next day
      - Not shown to anyone arriving from the calendar's own QR codes or
        NFC tag (?src=calendar / calendar-nfc), since they have one already
@@ -388,7 +388,7 @@
   <p id="calPromoText">Fragments of the Universe: twelve of my deep-sky images, one for every month, with moon phases,
     meteor showers and eclipses marked on the dates. A great <span class="gift-occasion">Christmas</span> gift for the astro lover in your life.</p>
   <div class="cal-promo-actions">
-    <a class="btn primary" id="calPromoGo" href="prints.html#calendar2027">Enquire now</a>
+    <a class="btn primary" id="calPromoGo" href="prints.html#calendar2027">Request a calendar</a>
     <button type="button" class="btn" id="calPromoLater">Maybe later</button>
   </div>
 </div>
@@ -470,7 +470,7 @@
   document.getElementById('calPromoGo').addEventListener('click', function () { save({ closed: Date.now() }); });
 
   // Coming back with the Back button can restore the page exactly as it was
-  // left, pop-up and all. After "Enquire now" it should stay gone that day.
+  // left, pop-up and all. After "Request a calendar" it should stay gone that day.
   window.addEventListener('pageshow', function (e) {
     if (!e.persisted || modal.hidden) return;
     var s = null;
@@ -512,7 +512,7 @@
 
       <div class="actions">
         <a class="btn primary" href="gallery.html">View the gallery</a>
-        <a class="btn"         href="prints.html">Print enquiries</a>
+        <a class="btn"         href="prints.html">Print requests</a>
         <a class="btn"         href="articles.html">Read the articles</a>
       </div>
     </div>
