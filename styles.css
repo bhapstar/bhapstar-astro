@@ -1288,8 +1288,8 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .support-btn{ width: fit-content; }
 
 /* Scrolling gradient text on "Support my work" and "Send message" buttons.
-   (The prints page Submit enquiry button is a filled gradient instead: see
-   .submit-cta.) */
+   (The prints page Submit print request button is a filled gradient instead:
+   see .submit-cta.) */
 .support-btn span,
 .contact-form .btn[type="submit"] {
   background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
@@ -10896,7 +10896,7 @@ html.ss-lock body{ overflow: hidden; }
   font-size: 12.5px; line-height: 1.6; color: rgba(232,230,247,0.6);
 }
 
-/* ── Prints page: the Submit enquiry button ──
+/* ── Prints page: the Submit print request button ──
    Styled like the Download button on the field cards page, so the last step
    of the form stands out from the other buttons. */
 .submit-cta{
@@ -10921,6 +10921,45 @@ html.ss-lock body{ overflow: hidden; }
 @media (prefers-reduced-motion: reduce){
   .submit-cta{ animation: none; }
   .submit-cta:hover{ transform: none; }
+}
+
+/* ── Prints page: the "Build your print request" heading ──
+   A proper title rather than the small uppercase .panel h3 label, so it is
+   clear this is where a print request is made. Same moving gradient as the
+   page h1, with a printer icon beside it. */
+.panel h3.request-title{
+  display: flex; align-items: center; gap: 12px;
+  margin: 0 0 10px;
+  font-size: clamp(20px, 2.6vw, 26px); font-weight: 700;
+  letter-spacing: -0.01em; text-transform: none; line-height: 1.25;
+}
+.request-title-icon{
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 12px;
+  color: #c4b5fd;
+  background: rgba(167,139,250,0.12);
+  border: 1px solid rgba(167,139,250,0.35);
+  box-shadow: 0 6px 18px rgba(167,139,250,0.18);
+}
+.request-title-icon svg{ width: 21px; height: 21px; }
+.request-title-text{
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6, #60a5fa, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientRoll 4s linear infinite reverse;
+  /* room for the descenders in "your", "print" and "request" */
+  padding-bottom: 0.1em;
+}
+html[data-theme="light"] .request-title-icon{
+  color: #7c5cf6;
+  background: rgba(124,92,246,0.08);
+  border-color: rgba(124,92,246,0.30);
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce){
+  .request-title-text{ animation: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════

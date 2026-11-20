@@ -96,7 +96,7 @@
                   document.querySelectorAll('#calendar2027 .gift-occasion').forEach(function (s) { s.textContent = 'New Year'; });
               </script>
               <div class="cal-callout-actions">
-                <button type="button" class="btn primary" id="calAddBtn">Add to my enquiry</button>
+                <button type="button" class="btn primary" id="calAddBtn">Add to my print request</button>
                 <button type="button" class="btn" id="calInsideBtn">See inside</button>
               </div>
             </div>
@@ -104,7 +104,16 @@
 
           <!-- 2) Enquiry builder -->
           <div class="panel prints-panel">
-            <h3>Build your enquiry</h3>
+            <h3 class="request-title">
+              <span class="request-title-icon" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5.5 7V2.5h9V7"/>
+                  <path d="M5.5 14.5H4a1.5 1.5 0 0 1-1.5-1.5V8.5A1.5 1.5 0 0 1 4 7h12a1.5 1.5 0 0 1 1.5 1.5V13a1.5 1.5 0 0 1-1.5 1.5h-1.5"/>
+                  <rect x="5.5" y="11.5" width="9" height="6" rx="0.6"/>
+                </svg>
+              </span>
+              <span class="request-title-text">Build your print request</span>
+            </h3>
             <p class="helper">Fill this in and submit. I'll get back to you as soon as possible.</p>
 
             <form id="printsEnquiryForm" action="https://formspree.io/f/xykwwgvr" method="POST" novalidate>
@@ -207,9 +216,9 @@
 
               <div class="spacer-12" aria-hidden="true"></div>
 
-              <h4 class="enquiry-summary-title">Enquiry Summary</h4>
+              <h4 class="enquiry-summary-title">Print request summary</h4>
                <div class="template-box">
-                <div id="enquiryPreview" aria-label="Enquiry preview">
+                <div id="enquiryPreview" aria-label="Print request summary">
                   <div class="eq-meta" id="eqMeta"></div>
                   <div class="eq-items-wrap" id="eqItemsWrap" style="display:none">
                     <table class="eq-table" id="eqTable">
@@ -231,11 +240,11 @@
               <div class="spacer-14" aria-hidden="true"></div>
 
               <p class="enquiry-confirm-hint">
-                Once you're happy with the summary above, hit Submit Enquiry and I'll be in touch with all the details.
+                Once you're happy with the summary above, hit Submit print request and I'll be in touch with all the details.
               </p>
 
               <div class="actions actions-left">
-                <button class="submit-cta" id="submitEnquiry" type="submit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 1.5L7 9"/><path d="M14.5 1.5l-4.5 13-3-6.5-6.5-3z"/></svg><span>Submit enquiry</span></button>
+                <button class="submit-cta" id="submitEnquiry" type="submit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 1.5L7 9"/><path d="M14.5 1.5l-4.5 13-3-6.5-6.5-3z"/></svg><span>Submit print request</span></button>
               </div>
             </form>
           </div>
