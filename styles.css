@@ -656,6 +656,12 @@ h1:first-of-type{
     radial-gradient(circle at 22% 18%, rgba(167,139,250,0.04), transparent 44%),
     radial-gradient(circle at 78% 70%, rgba(96,165,250,0.03),  transparent 48%);
 }
+/* Phones: a smaller gap between the header and the page title. Only the
+   section directly under the header, so the homepage's mid-page section
+   keeps its full spacing */
+@media (max-width: 639px){
+  main > .section:first-child{ padding-top: 22px; }
+}
 
 .section-head{
   display: flex; align-items: baseline;
@@ -683,17 +689,6 @@ h1:first-of-type{
 .page-articles .section-head h1,
 .page-puzzles .section-head h1{
   font-size: clamp(20px, 2.6vw, 26px);
-}
-/* Phones: the same small gap between the header and the title on these
-   six pages. Gallery and Puzzles had it already; the rest kept the full
-   64px section padding */
-@media (max-width: 639px){
-  .page-start-here main > .section:first-child,
-  .page-gallery main > .section:first-child,
-  .page-prints main > .section:first-child,
-  .page-gear main > .section:first-child,
-  .page-articles main > .section:first-child,
-  .page-puzzles main > .section:first-child{ padding-top: 22px; }
 }
 
 /* Card grid */
@@ -11253,7 +11248,6 @@ html[data-theme="light"] .page-gallery .slideshow-btn:hover{
    While it is closed, #statsCurrent names the tile being shown.
    ============================================================ */
 @media (max-width:600px){
-  .page-gallery main .section{ padding-top:22px; }
   .page-gallery .section-head.gallery-head{ margin-bottom:14px; }
   /* the <br>s between the intro paragraphs */
   .page-gallery .gallery-head br{ display:none; }
@@ -11376,7 +11370,7 @@ html[data-theme="light"] .page-gallery .stats-current{ color:#6d4bd8; }
 
 /* Phones: tighter rows so the whole page fits on one screen */
 @media (max-width:639px){
-  .page-puzzles main .section{ padding:22px 0 28px; }
+  .page-puzzles main .section{ padding-bottom:28px; }
   .page-puzzles .pz-header{ margin-bottom:14px; }
   .page-puzzles .pz-intro{ margin-top:8px; font-size:14px; line-height:1.55; }
   .page-puzzles .pz-grid{ gap:10px; }
