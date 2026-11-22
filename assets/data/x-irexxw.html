@@ -24,7 +24,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Currency & Unit Converter — bhapstar">
+<meta property="og:image:alt" content="Currency & Unit Converter - bhapstar">
 <!-- twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Currency &amp; Unit Converter">
@@ -345,14 +345,14 @@
 
       <div class="faq-item">
         <button class="faq-q" type="button">What does it tell me?<span class="chev">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Whether today is a relatively good or poor moment to convert — compared with the past, not the future. <b>Favourable</b> means you’re getting more of the target currency per unit sent than on most recent days.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Whether today is a relatively good or poor moment to convert, compared with the past, not the future. <b>Favourable</b> means you’re getting more of the target currency per unit sent than on most recent days.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button">The labels<span class="chev">+</span></button>
         <div class="faq-a"><div class="faq-a-inner">
           <span class="legend pill good">▲ favourable</span> top third of the window’s range.<br>
           <span class="legend pill warn">◆ around avg</span> middle of the range.<br>
-          <span class="legend pill low">▼ below avg</span> bottom third — weaker than usual.<br>
+          <span class="legend pill low">▼ below avg</span> bottom third, weaker than usual.<br>
           <span class="legend pill flat">◆ pegged / flat</span> the pair barely moves.
         </div></div>
       </div>
@@ -362,11 +362,11 @@
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button">Is this a prediction?<span class="chev">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">No. It’s purely descriptive — how today compares to history, not where rates are heading. Nobody reliably forecasts FX. Treat it as context, not financial advice.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">No. It’s purely descriptive - how today compares to history, not where rates are heading. Nobody reliably forecasts FX. Treat it as context, not financial advice.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button">Why does AED show “pegged”?<span class="chev">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">The dirham is fixed to the US dollar (~3.6725), so AED↔USD barely moves. But AED↔GBP and AED↔INR <b>do</b> move, because the pound and rupee float against the dollar — that’s where the signal matters for you.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">The dirham is fixed to the US dollar (~3.6725), so AED↔USD barely moves. But AED↔GBP and AED↔INR <b>do</b> move, because the pound and rupee float against the dollar - that’s where the signal matters for you.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button">Where’s the data from?<span class="chev">+</span></button>
@@ -374,7 +374,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button">Which currencies have history?<span class="chev">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Major floating currencies (GBP, EUR, INR, CAD, JPY, AUD, CHF and more) plus USD-pegged ones including AED, SAR, QAR, OMR and BHD. A few thinly-traded currencies may show “no history” — live conversion still works for all of them.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Major floating currencies (GBP, EUR, INR, CAD, JPY, AUD, CHF and more) plus USD-pegged ones including AED, SAR, QAR, OMR and BHD. A few thinly-traded currencies may show “no history” - live conversion still works for all of them.</div></div>
       </div>
     </div>
   </aside>
@@ -619,7 +619,7 @@
     var p=run(0).then(function(res){
       var rec=res?{ts:Date.now(),win:win,dates:res.dates,rates:res.rates}:null;
       if(rec){serCache[key]=rec;try{localStorage.setItem(SER_PREFIX+key,JSON.stringify(rec));}catch(e){} setDiag("✓ history via "+res.__src);}
-      else setDiag("✗ history unreachable — tried: "+tried.join(", "));
+      else setDiag("✗ history unreachable, tried: "+tried.join(", "));
       delete serLoading[key]; return rec;
     }).catch(function(){delete serLoading[key];setDiag("✗ history error");return null;});
     serLoading[key]=p; return p;
@@ -682,10 +682,10 @@
       if(code===state.base.code){
         el.innerHTML="";
         var fn=row.querySelector(".from-note");
-        if(fn) fn.textContent="Sending from "+code+" — rows below show how today compares over "+WINMAP[currentWindow][2]+".";
+        if(fn) fn.textContent="Sending from "+code+" - rows below show how today compares over "+WINMAP[currentWindow][2]+".";
         return;
       }
-      if(!rec){el.innerHTML='<span class="detail" style="opacity:.7">'+(loading?"loading "+currentWindow+" history…":"history unavailable — re-tap "+currentWindow)+'</span>';return;}
+      if(!rec){el.innerHTML='<span class="detail" style="opacity:.7">'+(loading?"loading "+currentWindow+" history…":"history unavailable, re-tap "+currentWindow)+'</span>';return;}
       var vals=pairSeries(rec,state.base.code,code);
       var v=verdict(vals);
       if(!v){el.innerHTML='<span class="detail" style="opacity:.7">no '+currentWindow+' history</span>';return;}

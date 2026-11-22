@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Star Word — bhapstar Astrophotography</title>
+  <title>Star Word - bhapstar Astrophotography</title>
 
   <!-- Favicon & theme -->
   <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://bhapstar.com/star_word.html" />
 
   <!-- Primary SEO -->
-  <meta name="description" content="Star Word — a daily five-letter astronomy word puzzle by bhapstar. Six guesses, one word from the night sky, a new one every day." />
+  <meta name="description" content="Star Word - a daily five-letter astronomy word puzzle by bhapstar. Six guesses, one word from the night sky, a new one every day." />
   <meta name="author" content="Bhapinder Singh" />
 
   <!-- Open Graph
@@ -61,7 +61,7 @@
 
     <div class="sw-top">
       <div class="sub">
-        Guess the five-letter word in six tries. Every answer comes from astronomy or astrophotography —
+        Guess the five-letter word in six tries. Every answer comes from astronomy or astrophotography -
         constellations, nebulae, moons, gear and technique. After each guess the tiles show how close you were.
         A new word appears each day.
       </div>
@@ -96,7 +96,7 @@
 
       <div class="sw-prize" id="prizeBox">
         <div class="trophy">🏆</div>
-        <h4 id="prizeTitle">Two guesses — outstanding</h4>
+        <h4 id="prizeTitle">Two guesses - outstanding</h4>
         <p>Use code <code>STARWORD10</code> in the notes of any
            <a href="prints.html">print request</a> for&nbsp;10%&nbsp;off.</p>
       </div>
@@ -888,7 +888,7 @@ function submit(){
 /* ══════════════════════════════════════════════════════════════
    FINISH + STATS
    ══════════════════════════════════════════════════════════════ */
-const WIN_LINES = ['Extraordinary','Superb','Sharp','Solid','Got there','Phew — just in time'];
+const WIN_LINES = ['Extraordinary','Superb','Sharp','Solid','Got there','Phew, just in time'];
 
 // The prize threshold: solved in two guesses or fewer.
 function prizeEarned(won){ return !!won && guesses.length <= 2; }
@@ -899,8 +899,8 @@ function syncPrize(won){
     // The heading has to follow the actual guess count — a one-guess
     // solve reading "two guesses" is worse than no heading at all.
     prizeTitle.textContent = guesses.length === 1
-      ? 'First guess \u2014 unbelievable'
-      : 'Two guesses \u2014 outstanding';
+      ? 'First guess - unbelievable'
+      : 'Two guesses - outstanding';
   }
 }
 
@@ -1040,7 +1040,7 @@ function replay(saved){
     hintBox.textContent = clue;
     hintBox.style.display = 'block';
     hintBtn.style.display = 'none';
-    toast('You have already played today — try a practice word', 2600);
+    toast('You have already played today - try a practice word', 2600);
   }
 }
 
@@ -1067,7 +1067,7 @@ function startPractice(){
   answer = w[0]; clue = w[1]; fullDef = DEFS[answer] || w[1];
   resetBoardState();
   renderBadges();
-  toast('New practice word — this one does not affect your streak', 2400);
+  toast('New practice word - this one does not affect your streak', 2400);
 }
 
 function resetBoardState(){

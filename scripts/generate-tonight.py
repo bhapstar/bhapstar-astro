@@ -1058,7 +1058,7 @@ def build_page(articles):
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{esc(PAGE_TITLE)} — Bhapstar Astrophotography</title>
+  <title>{esc(PAGE_TITLE)} - Bhapstar Astrophotography</title>
   <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
@@ -1067,12 +1067,12 @@ def build_page(articles):
   <meta name="description" content="{esc(PAGE_DESC)}" />
   <meta name="author" content="Bhapinder Singh" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{esc(PAGE_TITLE)} — Bhapstar Astrophotography" />
+  <meta property="og:title" content="{esc(PAGE_TITLE)} - Bhapstar Astrophotography" />
   <meta property="og:description" content="{esc(PAGE_DESC)}" />
   <meta property="og:url" content="{esc(page_url)}" />
   <meta property="og:image" content="{esc(share_url)}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{esc(PAGE_TITLE)} — Bhapstar Astrophotography" />
+  <meta name="twitter:title" content="{esc(PAGE_TITLE)} - Bhapstar Astrophotography" />
   <meta name="twitter:description" content="{esc(PAGE_DESC)}" />
   <meta name="twitter:image" content="{esc(share_url)}" />
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />

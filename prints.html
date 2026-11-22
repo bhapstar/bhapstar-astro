@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Print Requests — Bhapstar Astrophotography</title>
+  <title>Print Requests - Bhapstar Astrophotography</title>
   <!-- Favicon & theme -->
   <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
@@ -16,7 +16,7 @@
 
   <!-- Open Graph (social sharing) -->
   <meta property="og:type"         content="website" />
-  <meta property="og:title"        content="Print Requests — Bhapstar Astrophotography" />
+  <meta property="og:title"        content="Print Requests - Bhapstar Astrophotography" />
   <meta property="og:description"  content="Order astrophotography prints. A3, A4 and A5 paper, framed or unframed, canvas in three sizes, and digital downloads." />
   <meta property="og:image"        content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:image:width"  content="1200" />
@@ -25,7 +25,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Print Requests — Bhapstar Astrophotography" />
+  <meta name="twitter:title"       content="Print Requests - Bhapstar Astrophotography" />
   <meta name="twitter:description" content="Order astrophotography prints. A3, A4 and A5 paper, framed or unframed, canvas in three sizes, and digital downloads." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
 
@@ -421,13 +421,13 @@
     const kind = PF.kindOf(type);
     if (kind === 'digital') return 'Not applicable';
     if (kind === 'canvas')  return 'Ready to hang';
-    if (!type) return '\u2014';
+    if (!type) return '-';
     if (framed === 'Yes') return 'Framed';
     if (framed === 'No')  return 'Unframed';
-    return '\u2014';
+    return '-';
   }
   function typeLabel(type) {
-    return PF.tableLabelOf(type) || '\u2014';
+    return PF.tableLabelOf(type) || '-';
   }
 
   let GALLERY_TITLES = [];
@@ -919,7 +919,7 @@
         build();
         showToast('Thank you, your print request has been submitted. I\'ll be in touch as soon as possible.');
       } catch {
-        showToast('Something went wrong — please try again or contact me directly.');
+        showToast('Something went wrong, please try again or contact me directly.');
       } finally {
         unpark();
         btnLabel.textContent = originalText; btn.disabled = false;

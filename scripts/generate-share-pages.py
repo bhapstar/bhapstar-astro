@@ -315,7 +315,7 @@ def build_json_ld(entry, share_url, iso_date, media, meta_desc):
         "@type": "WebPage",
         "@id": share_url,
         "url": share_url,
-        "name": f"{entry.get('title')} — {SITE_NAME}",
+        "name": f"{entry.get('title')} - {SITE_NAME}",
         "description": meta_desc or None,
         "author": {"@id": PERSON_ID},
         "isPartOf": {"@id": WEBSITE_ID},
@@ -334,7 +334,7 @@ def build_json_ld(entry, share_url, iso_date, media, meta_desc):
                 continue
             node = {
                 "@type": "VideoObject",
-                "name": f"{entry.get('title')} — {i}",
+                "name": f"{entry.get('title')} - {i}",
                 "description": entry.get("desc") or entry.get("intro"),
                 "thumbnailUrl": url_for(v["poster"]) if v.get("poster") else None,
                 "embedUrl": f"https://player.vimeo.com/video/{v['vimeoId']}",
@@ -623,7 +623,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     )
     if is_video_entry:
         figures_html += (
-            '\n      <p class="share-date">Stills from the time-lapse videos — '
+            '\n      <p class="share-date">Stills from the time-lapse videos - '
             'watch them in the gallery viewer below.</p>'
         )
 
@@ -942,7 +942,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             lb_count = '\n    <div class="slb-count" aria-live="polite"></div>'
         lightbox_html = (
             '\n  <div class="share-lightbox" id="shareLightbox" aria-hidden="true"'
-            ' role="dialog" aria-modal="true" aria-label="' + a(title) + ' — full screen">'
+            ' role="dialog" aria-modal="true" aria-label="' + a(title) + ', full screen">'
             '\n    <button class="slb-close" type="button" aria-label="Close full screen">✕</button>'
             '\n    <button class="slb-share" type="button" aria-label="Share this photo">'
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"'
@@ -1236,7 +1236,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{t(title)} — {t(SITE_NAME)}</title>
+  <title>{t(title)} - {t(SITE_NAME)}</title>
 
   <link rel="icon" href="/images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />

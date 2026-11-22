@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gallery — Bhapstar Astrophotography</title>
+  <title>Gallery - Bhapstar Astrophotography</title>
   <link rel="icon" href="images/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png" />
   <meta name="theme-color" content="#050414" />
   <link rel="alternate" type="application/rss+xml" title="Fragments of the Universe" href="/feed.xml" />
   <link rel="canonical" href="https://bhapstar.com/gallery.html" />
-  <meta name="description" content="Deep-sky astrophotography gallery — nebulae, galaxies, star clusters, star trails and more by Bhapinder Singh." />
+  <meta name="description" content="Deep-sky astrophotography gallery - nebulae, galaxies, star clusters, star trails and more by Bhapinder Singh." />
   <meta property="og:type"         content="website" />
-  <meta property="og:title"        content="Gallery — Bhapstar Astrophotography" />
+  <meta property="og:title"        content="Gallery - Bhapstar Astrophotography" />
   <meta property="og:description"  content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
   <meta property="og:image"        content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url"          content="https://bhapstar.com/gallery.html" />
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Gallery — Bhapstar Astrophotography" />
+  <meta name="twitter:title"       content="Gallery - Bhapstar Astrophotography" />
   <meta name="twitter:description" content="Browse deep-sky astrophotography images including nebulae, galaxies, and star clusters." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
@@ -1777,7 +1777,7 @@
       dvTitle.textContent = snapItem?.title || '';
       dvDesc.textContent  = snapItem?.desc  || '';
       if (dvCaption) { dvCaption.textContent = snapItem?.title || ''; fitCaption(); }
-      if (snapItem?.title) document.title = `${snapItem.title} — Bhapstar Astrophotography`;
+      if (snapItem?.title) document.title = `${snapItem.title} - Bhapstar Astrophotography`;
       dvCount.textContent = dvList.length > 1 ? `${dvIdx + 1} / ${dvList.length}` : '';
 
       /* Update like button */
@@ -2486,7 +2486,7 @@
         // correct og:image and redirects human visitors to gallery.html#slug.
         const url  = slug ? SHARE_PAGES + encodeURIComponent(slug) + '.html' : SHARE_BASE;
         const title = (item && item.title) ? item.title : 'Bhapstar Astrophotography';
-        const text  = title + ' — astrophotography by Bhapstar';
+        const text  = title + ' - astrophotography by Bhapstar';
         let image = SHARE_OG;
         let filePath = '';
         if (cur && cur.file && cur.kind !== 'vimeo') {
