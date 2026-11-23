@@ -124,6 +124,13 @@ body{
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+/* On a page shorter than the window (Puzzles on a desktop), main grows to
+   fill the gap so the footer sits at the foot of the window rather than
+   halfway up it with bare background beneath. Only pages with the shared
+   footer; nothing shrinks, so long pages are unchanged. */
+body:has(> #siteFooter){ display: flex; flex-direction: column; }
+body:has(> #siteFooter) > *{ flex-shrink: 0; }
+body:has(> #siteFooter) > main{ flex-grow: 1; }
 
 a{ color: inherit; text-decoration: none; }
 a:hover{ opacity: 1; }
@@ -300,7 +307,10 @@ header{
 .nav-menu a:hover{
   background-color: transparent;
 }
-.nav-menu a::after{
+/* Hover underline, shared with the footer site map links (.fs-col a,
+   positioned in the Footer block) */
+.nav-menu a::after,
+.fs-col a::after{
   content: "";
   position: absolute;
   left: 11px; right: 11px; bottom: 3px;
@@ -319,7 +329,9 @@ header{
   transition: opacity 240ms ease, transform 240ms var(--ease-out-expo);
   pointer-events: none;
 }
-.nav-menu a:hover::after{
+.nav-menu a:hover::after,
+.fs-col a:hover::after,
+.fs-col a:focus-visible::after{
   opacity: 1;
   transform: scaleX(1) translateY(0);
 }
@@ -1878,12 +1890,14 @@ footer{
 }
 .fs-col{ display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
 .fs-col a{
+  position: relative;
   font-size: 12.5px; letter-spacing: 0.01em; line-height: 1.35;
   color: var(--muted); text-decoration: none; transition: color 150ms ease;
 }
+/* The header's hover underline (see .nav-menu a::after), set under the text */
+.fs-col a::after{ left: 0; right: 0; bottom: -3px; }
 .fs-col a:hover, .fs-col a:focus-visible{ color: var(--text); }
-.fs-col a.fs-head{ margin-bottom: 2px; transition: opacity 150ms ease; }
-.fs-col a.fs-head:hover, .fs-col a.fs-head:focus-visible{ opacity: 0.75; }
+.fs-col a.fs-head{ margin-bottom: 2px; }
 @media (max-width: 639px){
   .footer-sitemap{ grid-template-columns: repeat(3, max-content); gap: 18px 26px; }
 }
@@ -10073,9 +10087,10 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
    Body carries .page-print-simulator
    The .sim-callout rule is shared. It is the card that links a page
    to its sub page now the nav has no dropdowns: prints.html to the
-   simulator, articles.html to field cards and the glossary, and
-   start-here.html to tonight.html. (gallery.html reaches the
-   slideshow from a button in its controls row instead.)
+   simulator, and articles.html to field cards and the glossary.
+   (gallery.html reaches the slideshow from a button in its controls
+   row, and start-here.html reaches tonight.html from its closing
+   "What is up from where you are" block.)
    Two side by side sit in a .callout-row (end of this file).
    ============================================================ */
 
