@@ -10119,9 +10119,9 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 .sim-callout-text strong{ display:block; margin-bottom:2px; }
 .sim-callout-arrow{ flex:0 0 auto; color:var(--accent); font-size:1.5rem; line-height:1; }
 
-/* ── Page intro ── */
-.sim-intro{ max-width:none; margin:-.25rem 0 1.35rem; line-height:1.6; }
-/* The site-wide a[href*="prints"] rule makes every prints link a flex
+/* ── Page intro ──
+   Spacing comes from the shared page intro rule (.gallery-topline + p).
+   The site-wide a[href*="prints"] rule makes every prints link a flex
    box, which drops this inline link onto its own line with the full stop
    below it. Force it back to inline, as star_word.html and quiz.html do.
    Keep the !important: the site rule carries one too. */
@@ -10133,6 +10133,10 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
   .sim-layout{ grid-template-columns:360px minmax(0,1fr); align-items:start; }
   .sim-controls{    grid-column:1; grid-row:1; }
   .sim-stage-wrap{  grid-column:2; grid-row:1; position:sticky; top:86px; }
+  /* The room photos are square, so capping the stage's width caps its
+     height too. This keeps the whole room, with the room buttons and the
+     readout, inside the window beside the controls. */
+  .sim-stage{ width:min(100%, calc(100vh - 220px)); margin-inline:auto; }
 }
 .sim-controls{ display:grid; gap:18px; align-content:start; }
 
@@ -10200,6 +10204,9 @@ html[data-theme="light"] .tn-more a{ color:#6d4bd8; }
 
 .sim-mode{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
 .sim-mode .btn{ flex:1 1 auto; text-align:center; }
+/* .btn sets display:flex, which beats the hidden attribute, so "Back to
+   a single print" showed in single print mode. */
+.sim-mode .btn[hidden]{ display:none; }
 .sim-wall-note{
   margin:0 0 14px; padding:11px 13px; border-radius:12px;
   border:1px solid rgba(167,139,250,0.18);
