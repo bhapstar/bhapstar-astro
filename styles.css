@@ -710,6 +710,10 @@ h1:first-of-type{
 .section-head p{
   margin: 0; color: var(--muted); font-size: 13px;
 }
+/* The first line of text under a page title (the p straight after
+   .gallery-topline). One rule for every page, so it sits the same distance
+   below the title everywhere. Page rules set its size and colour only. */
+.section-head .gallery-topline + p{ margin-top: 10px; line-height: 1.6; }
 /* ── Heading levels ──
    One style per job, used across the site:
    1. Page title   .section-head h1 (and the item title further down,
@@ -928,10 +932,7 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 .section-head.gallery-head{ display: block; margin-bottom: 24px; }
 .gallery-topline{ display: flex; align-items: baseline; justify-content: flex-start; gap: 12px; }
 .gallery-topline h2{ margin: 0; }
-.gallery-intro{
-  margin: 16px 0 0; color: rgba(200,195,235,0.72); font-size: 14px;
-  line-height: 1.72;
-}
+.gallery-intro{ color: rgba(200,195,235,0.72); font-size: 14px; }
 .gallery-hint{ margin-top: 10px; font-size: 12px; color: rgba(200,195,235,0.46); }
 .gallery-hint a,
 .page-gallery .gallery-hint a[href*="prints"] {
@@ -2895,8 +2896,7 @@ a[href="prints.html"], a[href*="prints"] {
    supplies the letterspaced gradient roll. Only the subtitle and the
    intro paragraph need styling here. */
 .sh-header { margin-bottom: 30px; }
-.sh-subtitle { font-size: 24px; line-height: 1.28; font-weight: 600;
-               color: var(--text); margin: 16px 0 0; }
+.sh-subtitle { font-size: 24px; font-weight: 600; color: var(--text); }
 .sh-intro { font-size: 14px; line-height: 1.72; color: var(--muted);
             margin: 14px 0 0; }
 
@@ -9107,8 +9107,7 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
    ============================================================ */
 
 .page-field-cards .fc-header { margin-bottom: 26px; }
-.page-field-cards .fc-subtitle { margin: 14px 0 0; font-size: 16px;
-                                 color: var(--text); opacity: 0.9; }
+.page-field-cards .fc-subtitle { font-size: 16px; color: var(--text); opacity: 0.9; }
 /* No max-width: the intro runs the full width of .wrap, matching the grid
    below it rather than stopping halfway across the page. */
 .page-field-cards .fc-intro { margin: 14px 0 0;
@@ -9520,7 +9519,7 @@ html[data-theme="light"] .page-quiz .tf-btn.correct{ color: rgba(6,120,80,0.98);
 html[data-theme="light"] .page-quiz .mc-btn.wrong,
 html[data-theme="light"] .page-quiz .tf-btn.wrong{ color: rgba(190,40,110,0.96); }
 
-/* 8 — Generic .helper note text (e.g. the prints intro line).
+/* 8 — Generic .helper note text (e.g. the prints form note).
    It uses a hardcoded lavender literal rather than var(--muted),
    so it needed an explicit light override like the others. */
 html[data-theme="light"] .helper,
@@ -10372,7 +10371,7 @@ html[data-theme="light"] .sh-sky-kit-chip.lvl-0{ opacity:.55; }
    Terms in a two-column definition list, grouped by letter.
    =========================================================== */
 .gp-subtitle{
-  margin:10px 0 0; font-size:1.02rem; color:var(--text);
+  font-size:1.02rem; color:var(--text);
 }
 .gp-intro{
   margin:10px 0 0; color:var(--muted); line-height:1.62;
@@ -11104,7 +11103,6 @@ html[data-theme="light"] .page-gallery .slideshow-btn:hover{
   .page-gallery .section-head.gallery-head{ margin-bottom:14px; }
   /* the <br>s between the intro paragraphs */
   .page-gallery .gallery-head br{ display:none; }
-  .page-gallery .gallery-intro{ margin-top:10px; line-height:1.55; }
   .page-gallery .gallery-hint{ margin-top:8px; line-height:1.5; }
 
 
@@ -11166,7 +11164,7 @@ html[data-theme="light"] .page-gallery .stats-current{ color:#6d4bd8; }
    the tap target.
    ============================================================ */
 .page-puzzles .pz-header{ margin-bottom:22px; }
-.page-puzzles .pz-intro{ margin:12px 0 0; font-size:14.5px; line-height:1.7; color:var(--muted); }
+.page-puzzles .pz-intro{ font-size:14.5px; color:var(--muted); }
 
 .page-puzzles .pz-grid{
   list-style:none; margin:0; padding:0;
@@ -11224,7 +11222,7 @@ html[data-theme="light"] .page-gallery .stats-current{ color:#6d4bd8; }
 @media (max-width:639px){
   .page-puzzles main .section{ padding-bottom:28px; }
   .page-puzzles .pz-header{ margin-bottom:14px; }
-  .page-puzzles .pz-intro{ margin-top:8px; font-size:14px; line-height:1.55; }
+  .page-puzzles .pz-intro{ font-size:14px; }
   .page-puzzles .pz-grid{ gap:10px; }
   .page-puzzles .pz-card{ gap:12px; padding:12px 14px; }
   .page-puzzles .pz-icon{ width:40px; height:40px; border-radius:11px; }
