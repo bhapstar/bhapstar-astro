@@ -17,7 +17,7 @@
   <!-- Open Graph (social sharing) -->
   <meta property="og:type"         content="website" />
   <meta property="og:title"        content="Print Simulator - Bhapstar Astrophotography" />
-  <meta property="og:description"  content="Try any image at any print size on a wall, drawn to real scale, before you order." />
+  <meta property="og:description"  content="Try any image at any print size on a wall, shown to real scale, before you order." />
   <meta property="og:image"        content="https://bhapstar.com/images/icons/og-preview.jpg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
@@ -26,7 +26,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Print Simulator - Bhapstar Astrophotography" />
-  <meta name="twitter:description" content="Try any image at any print size on a wall, drawn to real scale, before you order." />
+  <meta name="twitter:description" content="Try any image at any print size on a wall, shown to real scale, before you order." />
   <meta name="twitter:image"       content="https://bhapstar.com/images/icons/og-preview.jpg" />
 
   <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
@@ -49,16 +49,17 @@
   <section class="section">
     <div class="wrap">
 
-      <div class="section-head featured-head">
-        <h1>Print Simulator</h1>
+      <div class="section-head gallery-head">
+        <div class="gallery-topline">
+          <h1>Print Simulator</h1>
+        </div>
+        <p class="gallery-intro sim-intro">
+          Pick an image, a size and a finish, then see it hanging on a wall. Every room is shown
+          to real scale, so a 50 cm canvas is 50 cm across next to the sofa.
+          It is the quickest way to work out which size actually suits your space.
+          When you find a combination you like, send it straight to the <a href="prints.html">print request builder</a>.
+        </p>
       </div>
-
-      <p class="helper sim-intro">
-        Pick an image, a size and a finish, then see it hanging on a wall. Every room is drawn
-        to real scale, so a sofa is a sofa-sized sofa and a 50 cm canvas is 50 cm across.
-        It is the quickest way to work out which size actually suits your space.
-        When you find a combination you like, send it straight to the <a href="prints.html">print request builder</a>.
-      </p>
 
       <div class="sim-layout">
 
@@ -172,12 +173,13 @@
 <!-- ─────────────────────────────────────────
      PRINT SIMULATOR
 
-     The rooms are drawn as SVG in centimetres. One SVG user unit is one
-     centimetre, so the artwork is placed at its real printed size with no
-     scaling maths at all, and the furniture around it is drawn at real
-     furniture dimensions. That is what makes the preview honest: if a
-     70 cm canvas looks small above the sofa here, it will look small above
-     a real sofa too.
+     Each room is a photograph laid into an SVG measured in centimetres.
+     One SVG user unit is one centimetre, so the artwork is placed at its
+     real printed size with no scaling maths at all. The photographs are
+     square-on shots of a wall, and each one is scaled so a known object in
+     it (a door, a worktop, a sofa back) comes out at its real size. That
+     is what makes the preview honest: if a 70 cm canvas looks small above
+     the sofa here, it will look small above a real sofa too.
 ───────────────────────────────────────── -->
 <script>
 (function () {
@@ -193,34 +195,45 @@
   const toast    = $('toast');
 
   /* ── Room definitions ──────────────────────────────────────────────────
-     All measurements in centimetres. floorY is where the floor meets the
-     wall, so a point at height h above the floor sits at y = floorY - h.
+     Each photo is 1600 x 1600 px, in images/rooms/. pxPerCm is its scale
+     at the wall, set from the ruler named above each room, and floorPx is
+     the pixel row where the floor meets the wall. photoRoom() turns those
+     into the size of the view in centimetres (w, viewH) and floorY, so a
+     point at height h above the floor sits at y = floorY - h. If a photo
+     is replaced, measure these two again and the rest follows.
 
-     The walls are deliberately narrow, around 250 to 330 cm, which is a
-     realistic run of wall rather than a whole room. A wider view would be
-     just as accurate but it pushes a small print down to a few pixels,
-     which tells you nothing.
-
+     Everything below is in centimetres:
      artX      centre of the hanging position, across
      centre    preferred height of the centre of the picture above the floor
      minBottom lowest the bottom edge may sit, to clear the furniture
      maxTop    highest the top edge may sit, to stay clear of the ceiling
      wallX     centre of a gallery wall arrangement
      wallSpan  width available for a gallery wall                          */
+  const PHOTO_PX = 1600;
+  function photoRoom(r) {
+    const size = PHOTO_PX / r.pxPerCm;
+    return Object.assign(r, { w: size, viewH: size, floorY: r.floorPx / r.pxPerCm });
+  }
   const ROOMS = [
-    { id:'living',   label:'Living room', w:330, floorY:250, viewH:286,
-      artX:165, centre:152, minBottom:108, maxTop:236, wallX:165, wallSpan:230,
-      wall:'#ece8e0', wall2:'#d8d2c6', floor:'#b0895f', skirt:'#f2efe9' },
-    { id:'corridor', label:'Corridor',    w:250, floorY:250, viewH:286,
-      artX:78,  centre:150, minBottom:92,  maxTop:236, wallX:78,  wallSpan:130,
-      wall:'#e9e8e3', wall2:'#d3d1c9', floor:'#a67f57', skirt:'#f4f2ee' },
-    { id:'kitchen',  label:'Kitchen',     w:330, floorY:250, viewH:286,
-      artX:255, centre:150, minBottom:92,  maxTop:236, wallX:255, wallSpan:142,
-      wall:'#edefec', wall2:'#d6d9d5', floor:'#c6c5bf', skirt:'#f5f6f4' },
-    { id:'bedroom',  label:'Bedroom',     w:330, floorY:250, viewH:286,
-      artX:165, centre:158, minBottom:130, maxTop:236, wallX:165, wallSpan:220,
-      wall:'#e8e5ec', wall2:'#d2cedb', floor:'#b08f6b', skirt:'#f3f1f6' },
-  ];
+    // Ruler: the sofa back, 82 cm. Ceiling 2.72 m.
+    { id:'living',   label:'Living room', photo:'images/rooms/living-room.webp',
+      pxPerCm:4.4,  floorPx:1284,
+      artX:192, centre:146, minBottom:102, maxTop:258, wallX:192, wallSpan:240 },
+    // Ruler: the door, 2.08 m. The console table comes out at 77 cm, which
+    // agrees. minBottom clears the olive branches in the vase.
+    { id:'corridor', label:'Corridor',    photo:'images/rooms/corridor.webp',
+      pxPerCm:5.02, floorPx:1371,
+      artX:56,  centre:152, minBottom:128, maxTop:242, wallX:100, wallSpan:180 },
+    // Ruler: the worktop, 92 cm. The picture hangs on the open wall to the
+    // right of the tiles.
+    { id:'kitchen',  label:'Kitchen',     photo:'images/rooms/kitchen.webp',
+      pxPerCm:5.34, floorPx:1466,
+      artX:233, centre:150, minBottom:95,  maxTop:260, wallX:233, wallSpan:120 },
+    // Ruler: the headboard, 1.63 m wide for a 1.6 m bed. Ceiling 2.68 m.
+    { id:'bedroom',  label:'Bedroom',     photo:'images/rooms/bedroom.webp',
+      pxPerCm:4.2,  floorPx:1225,
+      artX:190, centre:145, minBottom:107, maxTop:254, wallX:190, wallSpan:200 },
+  ].map(photoRoom);
 
   /* ── State ── */
   const state = {
@@ -716,130 +729,6 @@
       </g>`;
   }
 
-  /* ── Room scenery ──────────────────────────────────────────────────────
-     Each of these returns the furniture for one room, in centimetres, with
-     the floor line at F. Nothing here scales with the artwork, which is the
-     point: the furniture is the ruler. A three-seat sofa is 202 cm across
-     the arms, an internal door is 86 cm wide and 208 cm tall, a kitchen
-     worktop is 92 cm off the floor and a headboard tops out at 118 cm. */
-  function sceneLiving(F) {
-    return `
-      <ellipse cx="165" cy="268" rx="145" ry="13" fill="#8a6a45" opacity=".28"/>
-      <!-- plant -->
-      <path d="M14 ${F} l5-34h28l5 34z" fill="#9c6b4f"/>
-      <path d="M33 216 C21 202 16 184 21 170 C30 181 34 198 33 216Z" fill="#4a7a55"/>
-      <path d="M33 216 C45 202 52 184 47 168 C36 181 32 198 33 216Z" fill="#3f6b4a"/>
-      <path d="M33 216 C31 196 33 177 38 161 C43 179 38 200 33 216Z" fill="#55875f"/>
-      <!-- sofa -->
-      <rect x="64" y="188" width="22" height="52" rx="11" fill="#48526a"/>
-      <rect x="244" y="188" width="22" height="52" rx="11" fill="#48526a"/>
-      <rect x="78" y="162" width="174" height="56" rx="14" fill="#525d78"/>
-      <rect x="72" y="208" width="186" height="32" rx="13" fill="#48526a"/>
-      <rect x="84" y="198" width="162" height="20" rx="10" fill="#5b6785"/>
-      <rect x="102" y="170" width="40" height="40" rx="10" fill="#6f7b98" transform="rotate(-6 122 190)"/>
-      <rect x="188" y="170" width="40" height="40" rx="10" fill="#6f7b98" transform="rotate(6 208 190)"/>
-      <rect x="84" y="238" width="9" height="12" fill="#3a2c21"/>
-      <rect x="237" y="238" width="9" height="12" fill="#3a2c21"/>
-      <!-- floor lamp -->
-      <rect x="302" y="96" width="3.5" height="154" fill="#3c3a46"/>
-      <path d="M286 60h36l5 36h-46z" fill="#e6d7b6"/>
-      <ellipse cx="303.7" cy="250" rx="18" ry="4.5" fill="#3c3a46"/>
-    `;
-  }
-
-  function sceneCorridor(F) {
-    return `
-      <rect x="12" y="256" width="226" height="14" rx="5" fill="#8a6b4d" opacity=".38"/>
-      <!-- door -->
-      <rect x="162" y="42" width="86" height="208" fill="#e2ddd3"/>
-      <rect x="168" y="48" width="74" height="202" fill="#cdc6b9"/>
-      <rect x="177" y="60" width="56" height="74" rx="2" fill="#c2baab"/>
-      <rect x="177" y="148" width="56" height="88" rx="2" fill="#c2baab"/>
-      <circle cx="176" cy="146" r="3.2" fill="#8d7d62"/>
-      <!-- console table -->
-      <rect x="26" y="174" width="104" height="6" rx="2.5" fill="#7d5c3d"/>
-      <rect x="32" y="180" width="5" height="70" fill="#6b4e33"/>
-      <rect x="119" y="180" width="5" height="70" fill="#6b4e33"/>
-      <rect x="32" y="216" width="92" height="4" fill="#6b4e33"/>
-      <!-- vase and bowl -->
-      <path d="M46 174 c-6-10 -2-22 6-24 8 2 12 14 6 24z" fill="#8fa3a8"/>
-      <path d="M55 152 c4-11 10-18 15-21 -2 10 -7 17 -12 22z" fill="#5d8060"/>
-      <ellipse cx="106" cy="170" rx="13" ry="4.6" fill="#b09a7c"/>
-    `;
-  }
-
-  function sceneKitchen(F) {
-    return `
-      <!-- backsplash -->
-      <rect x="0" y="105" width="175" height="53" fill="#e3e7e5"/>
-      <g stroke="#d3d8d6" stroke-width="0.8">
-        <line x1="0" y1="122.7" x2="175" y2="122.7"/>
-        <line x1="0" y1="140.3" x2="175" y2="140.3"/>
-        <line x1="35" y1="105" x2="35" y2="158"/>
-        <line x1="70" y1="105" x2="70" y2="158"/>
-        <line x1="105" y1="105" x2="105" y2="158"/>
-        <line x1="140" y1="105" x2="140" y2="158"/>
-      </g>
-      <!-- counter -->
-      <rect x="0" y="158" width="181" height="9" rx="2" fill="#5f6668"/>
-      <rect x="0" y="167" width="175" height="71" fill="#ced5d5"/>
-      <g stroke="#b6bfbf" stroke-width="1">
-        <line x1="44" y1="167" x2="44" y2="238"/>
-        <line x1="88" y1="167" x2="88" y2="238"/>
-        <line x1="132" y1="167" x2="132" y2="238"/>
-      </g>
-      <g fill="#8d9898">
-        <rect x="36" y="176" width="6" height="20" rx="3"/>
-        <rect x="80" y="176" width="6" height="20" rx="3"/>
-        <rect x="124" y="176" width="6" height="20" rx="3"/>
-      </g>
-      <rect x="6" y="238" width="169" height="12" fill="#9aa0a0"/>
-      <!-- kettle, jars, board, plant -->
-      <path d="M22 158 v-22 a13 13 0 0 1 26 0 v22z" fill="#6b7378"/>
-      <rect x="32" y="128" width="6" height="6" rx="2" fill="#4d5458"/>
-      <rect x="58" y="136" width="14" height="22" rx="3" fill="#c8b48d"/>
-      <rect x="76" y="141" width="12" height="17" rx="3" fill="#b8a17a"/>
-      <rect x="92" y="145" width="11" height="13" rx="3" fill="#d0c0a0"/>
-      <path d="M112 158 v-34 a8 8 0 0 1 16 0 v34z" fill="#a3743f"/>
-      <path d="M140 158 l4-24h20l4 24z" fill="#9c6b4f"/>
-      <path d="M154 134 C144 122 140 109 145 100 C152 109 156 122 154 134Z" fill="#4a7a55"/>
-      <path d="M154 134 C164 122 169 109 164 100 C156 109 152 122 154 134Z" fill="#3f6b4a"/>
-      <!-- stool on the open wall side -->
-      <rect x="234" y="203" width="44" height="6" rx="3" fill="#7d5c3d"/>
-      <rect x="239" y="209" width="4.5" height="41" fill="#6b4e33"/>
-      <rect x="269" y="209" width="4.5" height="41" fill="#6b4e33"/>
-      <rect x="239" y="230" width="34" height="3.5" fill="#6b4e33"/>
-    `;
-  }
-
-  function sceneBedroom(F) {
-    return `
-      <ellipse cx="165" cy="268" rx="140" ry="13" fill="#8a6a45" opacity=".26"/>
-      <!-- headboard -->
-      <rect x="88" y="132" width="154" height="118" rx="9" fill="#5c4c66"/>
-      <rect x="96" y="140" width="138" height="102" rx="6" fill="#66566f"/>
-      <!-- bed -->
-      <rect x="80" y="214" width="170" height="30" rx="6" fill="#4d4055"/>
-      <rect x="80" y="192" width="170" height="24" rx="7" fill="#efeaf3"/>
-      <rect x="80" y="204" width="170" height="14" rx="6" fill="#cfc6dd"/>
-      <rect x="88" y="244" width="8" height="6" fill="#3a3040"/>
-      <rect x="234" y="244" width="8" height="6" fill="#3a3040"/>
-      <!-- pillows -->
-      <rect x="100" y="158" width="62" height="35" rx="12" fill="#f7f4fa"/>
-      <rect x="168" y="158" width="62" height="35" rx="12" fill="#f7f4fa"/>
-      <!-- bedside table and lamp -->
-      <rect x="256" y="194" width="52" height="6" rx="2.5" fill="#7d5c3d"/>
-      <rect x="260" y="200" width="5" height="50" fill="#6b4e33"/>
-      <rect x="299" y="200" width="5" height="50" fill="#6b4e33"/>
-      <rect x="280" y="176" width="4" height="18" fill="#4a4450"/>
-      <path d="M272 176h20l4 -22h-28z" fill="#e9dcc0"/>
-      <!-- rug edge -->
-      <rect x="40" y="256" width="250" height="14" rx="5" fill="#7d6a52" opacity=".35"/>
-    `;
-  }
-
-  const SCENES = { living:sceneLiving, corridor:sceneCorridor, kitchen:sceneKitchen, bedroom:sceneBedroom };
-
   /* ── Render ── */
   function render() {
     const room = ROOMS.find(r => r.id === state.room) || ROOMS[0];
@@ -910,18 +799,6 @@
            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
            role="img" aria-label="${esc(label)} shown on a ${esc(room.label.toLowerCase())} wall">
         <defs>
-          <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="${room.wall}"/>
-            <stop offset="100%" stop-color="${room.wall2}"/>
-          </linearGradient>
-          <radialGradient id="wallVig" cx="50%" cy="42%" r="72%">
-            <stop offset="55%"  stop-color="#000" stop-opacity="0"/>
-            <stop offset="100%" stop-color="#000" stop-opacity=".16"/>
-          </radialGradient>
-          <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="${room.floor}"/>
-            <stop offset="100%" stop-color="#000" stop-opacity=".35"/>
-          </linearGradient>
           <filter id="artShadow" x="-30%" y="-30%" width="180%" height="180%">
             <feDropShadow dx="1.2" dy="2.2" stdDeviation="1.6" flood-color="#000" flood-opacity=".38"/>
           </filter>
@@ -930,13 +807,8 @@
           </filter>
         </defs>
 
-        <rect x="0" y="0" width="${room.w}" height="${F}" fill="url(#wallGrad)"/>
-        <rect x="0" y="0" width="${room.w}" height="${F}" fill="url(#wallVig)"/>
-        <rect x="0" y="${F}" width="${room.w}" height="${room.viewH - F}" fill="url(#floorGrad)"/>
-        <rect x="0" y="${F - 11}" width="${room.w}" height="11" fill="${room.skirt}"/>
-        <rect x="0" y="${F - 11}" width="${room.w}" height="1.2" fill="#000" opacity=".08"/>
-
-        ${SCENES[room.id](F)}
+        <image href="${room.photo}" xlink:href="${room.photo}" x="0" y="0"
+               width="${room.w}" height="${room.viewH}" preserveAspectRatio="none"/>
         ${art}
         ${measure}
       </svg>
@@ -967,6 +839,8 @@
 
   /* ── Init ── */
   (async function init() {
+    // Fetch all four room photos up front, so switching rooms is instant.
+    ROOMS.forEach(r => { new Image().src = r.photo; });
     buildControls();
     setMode('single');
     await loadGallery();
