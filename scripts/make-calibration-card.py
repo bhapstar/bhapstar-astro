@@ -21,8 +21,8 @@ register_fonts()
 
 card = Card(OUT,
             'Calibration frames: field card',
-            'Printable crib sheet for taking darks, flats, bias and dark flat '
-            'frames at the end of an imaging session')
+            'Printable crib sheet for taking darks, flats and bias frames at '
+            'the end of an imaging session')
 c = card.c
 
 y = card.header('Calibration frames',
@@ -39,8 +39,8 @@ y = card.callout(
     'minutes at the end of the night, and it is the difference between a clean '
     'picture and a blotchy one.')
 
-# ── the four frames ────────────────────────────────────────────────────
-y = card.section(MARGIN, y - 14, CONTENT, 'The four frames, and what each one removes')
+# ── the three frames ───────────────────────────────────────────────────
+y = card.section(MARGIN, y - 14, CONTENT, 'The three frames, and what each one removes')
 
 COLS = [
     (0,   52,  'label'),
@@ -61,9 +61,6 @@ ROWS = [
     ('Flat', 'Dust shadows and darker corners',
      'Even light through the whole imaging train, with nothing moved or refocused',
      'About 30', 'That session, that filter'),
-    ('Dark flat', 'The offset, out of the flats',
-     'Cap on. Same exposure as the flats you have just taken',
-     'Match the flats', 'With the flats'),
 ]
 
 y = card.table(MARGIN, y - 2, COLS, ROWS, head=HEAD, total=CONTENT)
@@ -99,13 +96,12 @@ STEPS = [
     ('Flats', 'Dawn sky, a flat panel, or a white T-shirt over the front with a '
               'tablet behind it. Same focus, same rotation, same filter. Set the '
               'exposure so the histogram peak sits near the middle.'),
-    ('Dark flats', 'Cap on. Same exposure as the flats you just took, and the same '
-                   'number of them. Take these and you do not need biases at all.'),
     ('Darks', 'Cap on. Same exposure, gain and temperature as the lights. If the '
               'camera is not cooled, take them now while the air is still the '
               'temperature it was.'),
-    ('Biases', 'Cap on. A thousandth of a second. They cost nothing and they keep '
-               'for months, so they can be done indoors another day.'),
+    ('Biases', 'Cap on. A thousandth of a second. These take the offset out of '
+               'your flats. They cost nothing and they keep for months, so they '
+               'can be done indoors another day.'),
     ('Now pack up', 'Only once the flats are safely on the card is it safe to '
                     'loosen, rotate or take anything apart.'),
 ]

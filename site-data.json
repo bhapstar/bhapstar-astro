@@ -2049,7 +2049,7 @@
     "download": {
       "file": "downloads/calibration-frames-field-card.pdf",
       "label": "Calibration frames field card",
-      "note": "All four frames on one side of A4: what each one removes, how to take it, how many, and the order to shoot them in at the end of a session."
+      "note": "All three frames on one side of A4: what each one removes, how to take it, how many, and the order to shoot them in at the end of a session."
     },
     "stage": "process",
     "stageOrder": 1,
