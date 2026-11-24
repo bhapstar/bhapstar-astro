@@ -926,7 +926,7 @@ input:focus, textarea:focus{
 textarea{ min-height: 130px; resize: vertical; }
 input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
 
-.note{ color: rgba(200,195,235,0.48); font-size: 12px; letter-spacing: 0.02em; }
+.note{ color: var(--muted); font-size: 12px; letter-spacing: 0.02em; }
 
 /* Scroll reveal */
 .reveal{
