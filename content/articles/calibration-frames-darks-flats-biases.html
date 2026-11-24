@@ -383,13 +383,16 @@ flats.</p>
 the cap on. A thousandth of a second, in the dark. They cost nothing, so take
 fifty or a hundred.</p>
 
-<p>You will see biases described as optional on modern cameras, and there is
-something in that. What is not optional is removing the offset from the flats
-before they are used, and there are two ways to do it. One is a bias frame. The
-other is a dark flat, which is a frame taken at the same exposure as the flat,
-with the cap on. On a lot of current sensors the dark flat is the better
-behaved of the two, and if you take dark flats you do not need biases at
-all.</p>
+<p>Biases matter most for the flats. A flat carries the same starting number as
+every other frame, and it has to come off before the flat is used, or the
+division in the formula above corrects by slightly the wrong amount. That is
+the bias frame's job. Siril's standard preprocessing scripts expect a
+<code>biases</code> folder for exactly this, so a set of biases is all your
+flats need.</p>
+
+<p class="note">Some guides use dark flats instead of biases. A dark flat is a
+capped frame at the same exposure as the flats. It does the same job, so you
+only need one or the other.</p>
 
 
 <h2>Flats: mapping the light path</h2>
@@ -476,7 +479,6 @@ always for the same handful of reasons.</p>
     <tr><td>Dark</td><td>Heat signal and hot pixels</td><td>Cap on, same exposure, gain and temperature as your lights</td><td>20 to 30</td><td>Yes, for months, if the camera is cooled</td></tr>
     <tr><td>Bias</td><td>The sensor's fixed offset</td><td>Cap on, shortest exposure the camera allows</td><td>50 to 100</td><td>Yes, until you change gain</td></tr>
     <tr><td>Flat</td><td>Dust shadows and darkened corners</td><td>Even light source, through the whole train, nothing moved</td><td>About 30</td><td>No. Every session, every filter.</td></tr>
-    <tr><td>Dark flat</td><td>The offset, from the flats</td><td>Cap on, same exposure as the flats</td><td>Match the flats</td><td>With the flats</td></tr>
   </tbody>
 </table>
 
