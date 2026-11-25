@@ -107,8 +107,8 @@ var RAD = Math.PI / 180;
 
      band  what the light actually is, which is the only thing that
            decides whether a filter helps:
-             'narrow' emission line objects, strong in hydrogen alpha
-                      and oxygen three. Narrowband filters work here.
+             'narrow' emission line objects, strong in Ha
+                      and OIII. Narrowband filters work here.
              'broad'  continuum objects: galaxies, star clusters, dust
                       lit by starlight. Narrowband filters block the
                       very light you are trying to collect.
@@ -131,7 +131,7 @@ var RAD = Math.PI / 180;
       d:"Bright enough to show colour in a short stack. The easiest deep sky object there is." },
     { n:"Flame &amp; Horsehead",     ra:5.683,  dec:-2.45,  t:"emission", slug:"flame-horsehead-nebulae",
       f:"images/flame-horsehead-nebulae.webp", band:"narrow", k:[0,0,1,2], b:[0,0,6,9],
-      d:"The Horsehead is faint and wants a hydrogen alpha filter. The Flame comes easily." },
+      d:"The Horsehead is faint and wants an Ha filter. The Flame comes easily." },
     { n:"Rosette Nebula (NGC 2244)", ra:6.528,  dec:4.95,   t:"emission", slug:"rosette-nebula-ngc2244",
       f:"images/rosette-nebula-ngc2244.webp", band:"narrow", k:[0,0,2,2], b:[0,0,8,9],
       d:"Big and round, and a good match for a short focal length. Responds well to dual narrowband." },
@@ -140,7 +140,7 @@ var RAD = Math.PI / 180;
       d:"A supernova remnant. Faint, so give it plenty of total time." },
     { n:"Monkey Head (NGC 2174)",    ra:6.162,  dec:20.50,  t:"emission", slug:"monkey-head-nebula-ngc2174",
       f:"images/monkey-head-nebula-ngc2174.webp", band:"narrow", k:[0,0,1,2], b:[0,0,7,9],
-      d:"Strong in hydrogen alpha, which makes it a solid city target with the right filter." },
+      d:"Strong in Ha, which makes it a solid city target with the right filter." },
     { n:"Christmas Tree (NGC 2264)", ra:6.683,  dec:9.88,   t:"emission", slug:"christmas-tree-nebula-ngc2264",
       f:"images/christmas-tree-nebula-ngc2264.webp", band:"narrow", k:[0,0,2,2], b:[0,0,7,9],
       d:"A star cluster sitting inside faint nebulosity. The cluster shows up fast." },
@@ -207,7 +207,7 @@ var RAD = Math.PI / 180;
     wide: { s:'Wide narrowband',  l:'Wide narrowband, L-Quad style',
             w:'A wide multi-band filter holds back skyglow without throwing away the star colour. A good middle rung for a nebula from a suburban sky, or under a modest moon.' },
     nb:   { s:'7 or 3nm narrowband', l:'Dual narrowband, 7nm or 3nm',
-            w:'Passes only hydrogen alpha and oxygen three. This is the filter that makes emission nebulae work from a bright sky or under a moon. A 7nm filter does the job here, and a 3nm one gives a little more contrast.' },
+            w:'Passes only Ha and OIII, the red of hydrogen and the blue-green of oxygen. This is the filter that makes emission nebulae work from a bright sky or under a moon. A 7nm filter does the job here, and a 3nm one gives a little more contrast.' },
     xnb:  { s:'3nm narrowband',   l:'Extreme narrowband, around 3nm',
             w:'A very tight pass band. It throws away most of the sky and keeps the nebula, which is what a city sky or a bright moon calls for. Needs longer exposures to make up for it. A 7nm filter still works here, with a little less contrast.' }
   };

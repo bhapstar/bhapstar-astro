@@ -359,7 +359,7 @@
     },
     {
       "term": "dual narrowband",
-      "def": "One filter with two windows open at the same time, usually the red light from hydrogen and the blue-green light from oxygen. It suits a colour camera, which records both at once.",
+      "def": "One filter with two windows open at the same time, usually Ha, the red light from hydrogen, and OIII, the blue-green light from oxygen. It suits a colour camera, which records both at once.",
       "link": "/gear/optolong-l-extreme-filter.html",
       "aliases": [
         "dual-band",
@@ -405,7 +405,7 @@
       "aliases": [
         "emission lines"
       ],
-      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one, oxygen a blue-green one, and filters are built around their positions.",
+      "def": "One exact colour that a glowing gas gives off. Hydrogen produces a strong red one (Ha), oxygen a blue-green one (OIII), and filters are built around their positions.",
       "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
@@ -584,6 +584,16 @@
       "link": "/articles/asiair-astrophotography-control.html"
     },
     {
+      "term": "Ha",
+      "aliases": [
+        "H-alpha",
+        "hydrogen-alpha",
+        "hydrogen alpha"
+      ],
+      "def": "Short for hydrogen-alpha, the deep red light given off by hydrogen, at 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
+    },
+    {
       "term": "harmonic drive",
       "aliases": [
         "harmonic mount",
@@ -599,8 +609,8 @@
         "H II region",
         "H II regions"
       ],
-      "def": "A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. In other galaxies they show up as small pink knots along the spiral arms.",
-      "link": "/share/triangulum-galaxy-m33.html"
+      "def": "A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. HII means hydrogen that has been ionised, and Ha is the red light it gives off. In other galaxies these clouds show up as small pink knots along the spiral arms.",
+      "link": "/share/monkey-head-nebula-ngc2174.html"
     },
     {
       "term": "histogram",
@@ -619,17 +629,7 @@
     },
     {
       "term": "Hubble palette",
-      "def": "A way of colouring narrowband pictures made famous by the Hubble Space Telescope. Sulphur, hydrogen and oxygen are shown as red, green and blue, so a nebula usually comes out gold and blue instead of its natural red."
-    },
-    {
-      "term": "hydrogen-alpha",
-      "aliases": [
-        "hydrogen alpha",
-        "H-alpha",
-        "Ha"
-      ],
-      "def": "The deep red light given off by hydrogen, at a wavelength of 656 nanometres. It is the single most common thing being photographed in a glowing gas cloud.",
-      "link": "/articles/bortle-scale-narrowband-filters.html"
+      "def": "A way of colouring narrowband pictures made famous by the Hubble Space Telescope. SII from sulphur, Ha from hydrogen and OIII from oxygen are shown as red, green and blue, so a nebula usually comes out gold and blue instead of its natural red."
     },
     {
       "term": "IC",
@@ -788,7 +788,7 @@
     },
     {
       "term": "narrowband",
-      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.",
+      "def": "A filter that only lets through the few exact colours that glowing gas clouds give off, such as Ha, OIII and SII, and blocks nearly everything else. Streetlight is mostly blocked, the nebula is not.",
       "link": "/gear/optolong-l-extreme-filter.html"
     },
     {
@@ -837,7 +837,7 @@
       "aliases": [
         "O III"
       ],
-      "def": "The blue-green light given off by oxygen in a glowing gas cloud. It is one of the two colours most nebula filters are built around.",
+      "def": "The blue-green light given off by oxygen in a glowing gas cloud, at 501 nanometres, said as 'oxygen three'. With Ha, it is one of the two colours most nebula filters are built around.",
       "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
@@ -1002,6 +1002,14 @@
       ],
       "def": "The speed the sky appears to turn, one full circle in just under twenty four hours. A tracking mount turns at exactly this rate.",
       "link": "/gear/teseek-nano-light-adventurer-star-tracker.html"
+    },
+    {
+      "term": "SII",
+      "aliases": [
+        "S II"
+      ],
+      "def": "The deep red light given off by sulphur in a glowing gas cloud, at 672 nanometres, said as 'sulphur two'. It is fainter than Ha and needs a filter of its own, and it is the third colour in the Hubble palette.",
+      "link": "/articles/bortle-scale-narrowband-filters.html"
     },
     {
       "term": "Siril",
