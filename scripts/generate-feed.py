@@ -37,8 +37,8 @@ DATA = "site-data.json"
 OUT = "feed.xml"
 
 SITE_TITLE = "Fragments of the Universe - Bhapstar Astrophotography"
-SITE_DESC = ("Astrophotography from a Dubai balcony and the dark skies of "
-             "the UAE desert. Deep-sky images, gear notes and guides for "
+SITE_DESC = ("Astrophotography from in and around Dubai and the dark skies "
+             "of the UAE desert. Deep-sky images, gear notes and guides for "
              "anyone starting out under the stars.")
 AUTHOR = "Bhapinder Singh"
 LANGUAGE = "en-gb"

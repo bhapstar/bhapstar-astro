@@ -3,8 +3,10 @@
 A static astrophotography site on GitHub Pages. Hand-written HTML, CSS and JS,
 with Python generators that build most pages from one JSON file.
 
-Bob (Bhapinder Singh) shoots from a Bortle 8 balcony in Dubai and from UAE
-desert sites. He manages his own commits through GitHub Desktop.
+Bob (Bhapinder Singh) shoots in and around Dubai: mostly at UAE desert sites
+(Al Qudra, Al Quaa), occasionally from a Bortle 8 balcony at home. Site copy
+should not present the balcony as the norm. Check a picture's `specs.location`
+before saying where it was taken. He manages his own commits through GitHub Desktop.
 
 ---
 
