@@ -130,6 +130,7 @@
         </div>
         <figcaption class="share-slide-cap">Use the slider to compare this image with my first attempt.</figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Eagle Nebula set off around 7,000 years ago, before writing was invented.</p>
 
       <div class="share-body">
         <p><span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-1" data-gl-term="Messier" data-gl-href="/share/orion-nebula-m42.html">Messier</span><span class="gl-def" id="gl-eagle-nebula-m16-1" hidden>A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list.</span> 16, the Eagle Nebula, lies roughly 7,000 light-years away in the constellation Serpens. It was the subject of one of the most famous astronomical images ever taken, Hubble's 1995 photograph of the Pillars of Creation, three enormous columns of <span class="gl" role="button" tabindex="0" aria-describedby="gl-eagle-nebula-m16-2" data-gl-term="molecular cloud" data-gl-href="/share/eagle-nebula-m16.html">molecular gas</span><span class="gl-def" id="gl-eagle-nebula-m16-2" hidden>A cold, dense cloud of gas and dust where the atoms have joined up into molecules. These clouds are where new stars are born.</span> and dust rising from the nebula's interior, slowly being sculpted by the radiation of newly formed stars.</p>
@@ -187,6 +188,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

@@ -130,6 +130,7 @@
         </div>
         <figcaption class="share-slide-cap">Use the slider to see a second, wider version.</figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Flame and Horsehead Nebulae set off around 1,400 years ago, in the early Middle Ages.</p>
 
       <div class="share-body">
         <p>The Flame Nebula (<span class="gl" role="button" tabindex="0" aria-describedby="gl-flame-horsehead-nebulae-2" data-gl-term="NGC" data-gl-href="/share/rosette-nebula-ngc2244.html">NGC</span><span class="gl-def" id="gl-flame-horsehead-nebulae-2" hidden>The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.</span> 2024) and the Horsehead Nebula (Barnard 33) sit just to the south of Alnitak, the easternmost star of Orion's Belt, around 1,400 light-years from Earth. They are physically close to one another, so both fit in the same picture.</p>
@@ -192,6 +193,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

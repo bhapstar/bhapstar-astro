@@ -150,6 +150,7 @@
         </div>
         <figcaption class="share-slide-cap">Moon surface craters astrophotography 1</figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>Moonlight takes just over a second to reach us, so even the Moon is seen a moment in the past.</p>
 
       <div class="share-body">
         <p>The Moon is both the easiest and the hardest target in astrophotography. Easy, because it is big, close and extremely bright. Hard, because that same brightness and all that surface detail mean there is always more to make out, a wider spread from bright to dark to balance, and more to learn in processing.</p>
@@ -206,6 +207,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

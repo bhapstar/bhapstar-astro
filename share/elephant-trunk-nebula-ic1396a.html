@@ -107,12 +107,16 @@
 
       <figure class="share-figure">
         <div class="share-slides">
-          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="2" href="/gallery.html#elephant-trunk-nebula-ic1396a" aria-label="Open The Elephant&#x27;s Trunk Nebula (IC 1396A) full screen"><img src="/images/elephant-trunk-nebula-ic1396a.webp" alt="Elephant&#x27;s Trunk Nebula IC 1396A, a dark dust column with a bright rim inside the IC 1396 emission nebula in Cepheus, processed from dual-band data" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
+          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="2" href="/gallery.html#elephant-trunk-nebula-ic1396a" aria-label="Open The Elephant&#x27;s Trunk Nebula (IC 1396A) full screen"><img src="/images/elephant-trunk-nebula-ic1396a.webp" alt="Elephant&#x27;s Trunk Nebula IC 1396A, a dark dust column with a bright rim inside the IC 1396 emission nebula in Cepheus, processed from dual-band data" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="sky-ov" aria-hidden="true"><span class="sky-moon" style="--x:0.2163;--y:0.1545;--d:0.3127;background-image:url(/images/overlays/moon-scale.webp)"></span><span class="sky-lbl sky-dso" style="--x:0.5105;--y:0.4813">IC 1396</span></span><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
           <a class="share-peek share-peek-prev" href="/share/milky-way-and-stardust.html" aria-label="Previous item: Stardust with a Due Date" title="Stardust with a Due Date"><img src="/images/thumbs/milky-way-and-stardust.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8249;</span></a>
           <a class="share-peek share-peek-next" href="/share/eastern-veil-nebula-ngc6992.html" aria-label="Next item: Eastern Veil Nebula (NGC 6992)" title="Eastern Veil Nebula (NGC 6992)"><img src="/images/thumbs/eastern_veil_nebula_ngc6992.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8250;</span></a>
         </div>
+        <div class="sky-tools" role="group" aria-label="Picture overlays"><button type="button" class="sky-btn" data-sky="moon" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" fill="currentColor"/></svg>Moon for scale</button><button type="button" class="sky-btn" data-sky="labels" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="9" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7.4 7.2 9.8 4.8H15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Labels</button></div>
+        <p class="sky-note" data-for="moon" hidden>The full Moon at the same scale. This picture is about 5 Moons tall.</p>
+        <p class="sky-note" data-for="labels" hidden>Labelled: IC 1396.</p>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Elephant's Trunk Nebula set off around 3,000 years ago, about a thousand years before the Colosseum was built.</p>
 
       <div class="share-body">
         <p>IC 1396 lies about 3,000 light-years away in Cepheus. It covers around three degrees of sky, about six times the width of the full moon, and this frame shows most of it. Edward Barnard found it on a photograph in 1893.</p>
@@ -142,6 +146,22 @@
 
       <script>
         (function(){
+          var fig = document.querySelector('.share-figure');
+          if (!fig) return;
+          fig.querySelectorAll('.sky-btn').forEach(function(btn){
+            btn.addEventListener('click', function(){
+              var key = btn.getAttribute('data-sky');
+              var on = btn.getAttribute('aria-pressed') !== 'true';
+              btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+              fig.classList.toggle('show-' + key, on);
+              var note = fig.querySelector('.sky-note[data-for="' + key + '"]');
+              if (note) note.hidden = !on;
+            });
+          });
+        })();
+      </script>
+      <script>
+        (function(){
           var prev = "/share/milky-way-and-stardust.html", next = "/share/eastern-veil-nebula-ngc6992.html";
           document.addEventListener('keydown', function(e){
             if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -149,6 +169,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

@@ -130,6 +130,7 @@
         </div>
         <figcaption class="share-slide-cap">Use the slider to compare this image with my first attempt.</figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Bode's and Cigar Galaxies set off around 12 million years ago, after the dinosaurs had died out, and long before the first humans.</p>
 
       <div class="share-body">
         <p><span class="gl" role="button" tabindex="0" aria-describedby="gl-bodes-cigar-galaxies-m81-m82-1" data-gl-term="Messier" data-gl-href="/share/orion-nebula-m42.html">Messier</span><span class="gl-def" id="gl-bodes-cigar-galaxies-m81-m82-1" hidden>A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list.</span> 81 and Messier 82 lie around 12 million light-years away in Ursa Major and are among the most studied galaxy pairs in the sky. M81 (Bode's Galaxy) is a large, well-defined spiral whose structure has been distorted by repeated close encounters with its neighbour. M82 (the Cigar Galaxy) shows the more dramatic consequences, a burst of intense star formation triggered by the gravitational interaction, driving enormous plumes of gas and dust out from its plane.</p>
@@ -187,6 +188,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

@@ -107,12 +107,15 @@
 
       <figure class="share-figure">
         <div class="share-slides">
-          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="28" href="/gallery.html#thors-helmet-ngc2359" aria-label="Open Thor’s Helmet (NGC 2359) full screen"><img src="/images/thors-helmet-ngc2359.webp" alt="Thor&#x27;s Helmet Nebula NGC 2359 Wolf-Rayet emission nebula astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
+          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="28" href="/gallery.html#thors-helmet-ngc2359" aria-label="Open Thor’s Helmet (NGC 2359) full screen"><img src="/images/thors-helmet-ngc2359.webp" alt="Thor&#x27;s Helmet Nebula NGC 2359 Wolf-Rayet emission nebula astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="sky-ov" aria-hidden="true"><span class="sky-moon" style="--x:0.7163;--y:0.1725;--d:0.4473;background-image:url(/images/overlays/moon-scale.webp)"></span></span><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
           <a class="share-peek share-peek-prev" href="/share/leo-triplet-m65-m66-ngc3628.html" aria-label="Previous item: The Leo Triplet (M65, M66 &amp; NGC 3628)" title="The Leo Triplet (M65, M66 &amp; NGC 3628)"><img src="/images/thumbs/leo-triplet-m65-m66-ngc3628.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8249;</span></a>
           <a class="share-peek share-peek-next" href="/share/little-beehive-cluster-m41.html" aria-label="Next item: The Little Beehive Cluster (M41)" title="The Little Beehive Cluster (M41)"><img src="/images/thumbs/little-beehive-cluster-m41.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8250;</span></a>
         </div>
+        <div class="sky-tools" role="group" aria-label="Picture overlays"><button type="button" class="sky-btn" data-sky="moon" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" fill="currentColor"/></svg>Moon for scale</button></div>
+        <p class="sky-note" data-for="moon" hidden>The full Moon at the same scale. This picture is about 4 Moons tall.</p>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from Thor’s Helmet set off around 15,000 years ago, during the last Ice Age, when woolly mammoths roamed.</p>
 
       <div class="share-body">
         <p>Thor's Helmet lies around 15,000 light-years away in Canis Major. At its heart is WR7, a Wolf–Rayet star - one of the most luminous and short-lived stellar types known, a massive star in the final stages of its life that is blasting material into space at extraordinary speed. The expanding bubble of gas around it, compressed and shaped by the stellar wind, creates the distinctive helmet form.</p>
@@ -140,6 +143,22 @@
 
       <script>
         (function(){
+          var fig = document.querySelector('.share-figure');
+          if (!fig) return;
+          fig.querySelectorAll('.sky-btn').forEach(function(btn){
+            btn.addEventListener('click', function(){
+              var key = btn.getAttribute('data-sky');
+              var on = btn.getAttribute('aria-pressed') !== 'true';
+              btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+              fig.classList.toggle('show-' + key, on);
+              var note = fig.querySelector('.sky-note[data-for="' + key + '"]');
+              if (note) note.hidden = !on;
+            });
+          });
+        })();
+      </script>
+      <script>
+        (function(){
           var prev = "/share/leo-triplet-m65-m66-ngc3628.html", next = "/share/little-beehive-cluster-m41.html";
           document.addEventListener('keydown', function(e){
             if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -147,6 +166,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>

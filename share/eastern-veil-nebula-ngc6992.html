@@ -113,6 +113,7 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
+      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Eastern Veil Nebula set off around 2,400 years ago, in the time of ancient Greece.</p>
 
       <div class="share-body">
         <p>The Veil is what is left of a star that exploded somewhere between 10,000 and 20,000 years ago, about 2,400 light-years away in Cygnus. The whole remnant covers around six times the width of the full moon, far too large for one frame at this <span class="gl" role="button" tabindex="0" aria-describedby="gl-eastern-veil-nebula-ngc6992-3" data-gl-term="focal length" data-gl-href="/gear/askar-v-modular-apo-refractor.html">focal length</span><span class="gl-def" id="gl-eastern-veil-nebula-ngc6992-3" hidden>How much a lens or telescope magnifies, measured in millimetres. A small number gives a wide view of the sky, a large number a narrow, closer one.</span>, so it is usually shot in pieces. This is <span class="gl" role="button" tabindex="0" aria-describedby="gl-eastern-veil-nebula-ngc6992-4" data-gl-term="NGC" data-gl-href="/share/rosette-nebula-ngc2244.html">NGC</span><span class="gl-def" id="gl-eastern-veil-nebula-ngc6992-4" hidden>The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.</span> 6992, the eastern arc, and the brightest section of it.</p>
@@ -149,6 +150,16 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
+          });
+          /* A tapped peek card hands the picture name over, so its
+             thumbnail grows into the next page's main picture. */
+          document.querySelectorAll('.share-peek').forEach(function(card){
+            card.addEventListener('click', function(){
+              var main = document.querySelector('.share-slide.is-active > .share-open > img');
+              var img = card.querySelector('img');
+              if (main) main.style.viewTransitionName = 'none';
+              if (img) img.style.viewTransitionName = 'share-pic';
+            });
           });
         })();
       </script>
