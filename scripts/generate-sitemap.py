@@ -120,9 +120,9 @@ def has_cover(it):
 
 
 def has_review(slug):
-    """Check if content/gear/<slug>.html exists."""
+    """Check if content/gear/<slug>.source.html exists."""
     import os
-    path = os.path.join(GEAR_REVIEWS_DIR, f"{slug}.html")
+    path = os.path.join(GEAR_REVIEWS_DIR, f"{slug}.source.html")
     return os.path.isfile(path)
 
 

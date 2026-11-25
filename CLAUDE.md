@@ -14,8 +14,8 @@ desert sites. He manages his own commits through GitHub Desktop.
 
 | Edit these | Never edit these |
 | --- | --- |
-| `content/articles/*.html` | `articles/*.html` |
-| `content/gear/*.html` | `gear/*.html` |
+| `content/articles/*.source.html` | `articles/*.html` |
+| `content/gear/*.source.html` | `gear/*.html` |
 | `site-data.json` | `articles.html`, `gallery.html` |
 | `scripts/*.py` | `share/*`, `sitemap.xml`, `feed.xml` |
 | `styles.css`, `partials/*` | `field_notes.html`, `start-here.html`, `field-cards.html` |
@@ -24,6 +24,12 @@ desert sites. He manages his own commits through GitHub Desktop.
 Everything in the right column is overwritten on every build. A change made
 there survives until the next `python build.py` and then vanishes, which is a
 confusing failure because the site looks correct locally first.
+
+Article and gear sources end in `.source.html` on purpose. They used to share
+exact names with their built pages, and in November 2026 five sources copied
+into `articles/` and `gear/` instead of `content/` replaced live pages. Keep
+the suffix on every new source: a plain `content/articles/<slug>.html` is not
+read by the build, and the article shows "coming soon" instead.
 
 `articles.html` is the one partial exception. The generator only rewrites the
 blocks between its `ARTICLE-TILES` and `ARTICLE-JSONLD` marker comments.
@@ -156,7 +162,7 @@ nav it sits inside the Start Here dropdown, below Start Here itself.
   `tonight-core.js` must have its image, its thumbnail and a gallery entry
   with the same slug, or the stage fails and lists every problem.
 - **Meteor showers.** `SHOWERS` is a copy of the table in
-  `content/articles/photograph-a-meteor-shower.html`. Change one, change the
+  `content/articles/photograph-a-meteor-shower.source.html`. Change one, change the
   other. The page shows the next three peaks, with the moon for each peak
   night from `tonight-core.js`, and a button that moves the planner to that
   date through a `tonight:goto` event.
@@ -207,7 +213,7 @@ Add the old slug to a `redirects` array on the article entry:
 `generate-article-pages.py` then writes a stub at the old path and exempts it
 from the stale-file cleanup. Renaming a slug also means renaming its body file
 in `content/articles/`, which the generator looks up as
-`content/articles/<slug>.html`.
+`content/articles/<slug>.source.html`.
 
 Three things about the stub are load-bearing.
 

@@ -77,8 +77,10 @@ All gallery, gear, article, and write-up content is driven by a single source-of
 
 Long-form prose lives outside the JSON, as plain HTML fragments:
 
-- `content/gear/<slug>.html` — the review body for a gear item
-- `content/articles/<slug>.html` — the body of an article
+- `content/gear/<slug>.source.html` — the review body for a gear item
+- `content/articles/<slug>.source.html` — the body of an article
+
+The `.source.html` ending keeps every source file's name different from the page built from it (`gear/<slug>.html`, `articles/<slug>.html`), so a source copied into the wrong folder cannot overwrite a live page.
 
 Fragments are ordinary HTML (`<h2>`, `<p>`, `<ul>`, `<table>`). Diagrams are hand-drawn inline `<svg>` inside a `<figure class="article-fig">` (or `.passband-fig` on gear reviews) rather than binary assets, so they scale, follow the light/dark theme through CSS variables, and cost nothing extra to load. Photographs use the same `.article-fig` frame and can be floated beside the text with `.fig-float` (add `.fig-left` to flip the side), or paired two-up with `.article-figrow`, which collapses to a single column on narrow screens. Every image inside an `.article-fig` opens larger on click. Vimeo clips sit in a `.article-video` box, with a fixed-width wrapper and `padding-top: 177.78%` for portrait footage. An article may open with a `<div class="event-callout">` block for a dated, real-world event, or for a short summary above the body.
 

@@ -46,8 +46,8 @@ Layout this expects:
 
     build.py            this file, at the repository root
     scripts/            the generators
-    content/articles/   hand-written article prose, one file per slug
-    content/gear/       hand-written gear review prose, one file per slug
+    content/articles/   hand-written article prose, <slug>.source.html
+    content/gear/       hand-written gear review prose, <slug>.source.html
     site-data.json      the single source of data for all of it
     articles/ gear/ share/   generated output, never edited by hand
 

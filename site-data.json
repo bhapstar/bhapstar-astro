@@ -1534,7 +1534,7 @@
       "Long-form write-ups. Shown on articles.html.",
       "generate-article-pages.py builds one articles/<slug>.html per",
       "entry, pairing it with the prose in",
-      "content/articles/<slug>.html. \"file\" is the hero image."
+      "content/articles/<slug>.source.html. \"file\" is the hero image."
     ],
     "_bar_end": "=================================================================="
   },
