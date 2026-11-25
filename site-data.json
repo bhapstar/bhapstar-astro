@@ -44,8 +44,7 @@
     "section": "gallery",
     "specs": {
       "telescope": "DWARFLAB Draco"
-    },
-    "distance_ly": 7500
+    }
   },
   {
     "file": "images/milky-way-and-stardust.webp",
@@ -102,8 +101,7 @@
     "specs": {
       "filter": "Dual-band",
       "integration": "2 hours"
-    },
-    "distance_ly": 3000
+    }
   },
   {
     "file": "images/eastern_veil_nebula_ngc6992.webp",
@@ -132,8 +130,7 @@
       "filter": "SVBony SV220 3nm Dual Narrowband",
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 2400
+    }
   },
   {
     "file": "images/bubble-nebula-ngc7635.webp",
@@ -160,8 +157,7 @@
     "specs": {
       "telescope": "Askar 120",
       "filter": "Dual-band"
-    },
-    "distance_ly": 7100
+    }
   },
   {
     "file": "images/the_sun.webp",
@@ -181,7 +177,6 @@
       "integration": "3 minute video",
       "location": "Dubai, UAE"
     },
-    "light_note": "The light in this picture left the Sun about eight minutes before it reached the camera.",
     "body_links": [
       {
         "text": "Seestar S30 Pro",
@@ -206,9 +201,7 @@
       "filter": "None",
       "integration": "3 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 26000,
-    "light_name": "the centre of the Milky Way"
+    }
   },
   {
     "file": "images/rosette-nebula-ngc2244.webp",
@@ -227,8 +220,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 5000
+    }
   },
   {
     "images": [
@@ -258,8 +250,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 7000
+    }
   },
   {
     "file": "images/jellyfish-nebula-ic443.webp",
@@ -278,8 +269,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 5000
+    }
   },
   {
     "file": "images/lobster-nebula-ngc6357.webp",
@@ -298,8 +288,7 @@
       "filter": "SVBony SV220 3nm Dual Narrowband",
       "integration": "4 hours",
       "location": "Dubai, UAE"
-    },
-    "distance_ly": 5500
+    }
   },
   {
     "file": "images/cats_paw_nebula_ngc6334.webp",
@@ -318,8 +307,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Dubai, UAE"
-    },
-    "distance_ly": 5500
+    }
   },
   {
     "file": "images/christmas-tree-nebula-ngc2264.webp",
@@ -338,8 +326,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 2500
+    }
   },
   {
     "file": "images/pleiades-m45.webp",
@@ -358,8 +345,7 @@
       "filter": "None",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 440
+    }
   },
   {
     "file": "images/orion-nebula-m42.webp",
@@ -378,8 +364,7 @@
       "filter": "Optolong L-Quad Enhance",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 1344
+    }
   },
   {
     "images": [
@@ -420,8 +405,7 @@
       "filter": "None",
       "integration": "6 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 1400
+    }
   },
   {
     "file": "images/andromeda-galaxy-m31.webp",
@@ -440,8 +424,7 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Quaa, UAE"
-    },
-    "distance_ly": 2537000
+    }
   },
   {
     "file": "images/monkey-head-nebula-ngc2174.webp",
@@ -460,8 +443,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 6400
+    }
   },
   {
     "file": "images/needle-galaxy-ngc4565.webp",
@@ -480,11 +462,7 @@
       "filter": "Optolong L-Quad Enhance",
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": [
-      30000000,
-      50000000
-    ]
+    }
   },
   {
     "images": [
@@ -515,8 +493,7 @@
       "filter": "None",
       "integration": "Various",
       "location": "Various"
-    },
-    "light_note": "Moonlight takes just over a second to reach us, so even the Moon is seen a moment in the past."
+    }
   },
   {
     "images": [
@@ -545,8 +522,7 @@
       "filter": "Optolong L-Quad Enhance",
       "integration": "6 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 12000000
+    }
   },
   {
     "file": "images/pinwheel-galaxy-m101.webp",
@@ -565,8 +541,7 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 21000000
+    }
   },
   {
     "file": "images/leo-triplet-m65-m66-ngc3628.webp",
@@ -585,8 +560,7 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 35000000
+    }
   },
   {
     "file": "images/thors-helmet-ngc2359.webp",
@@ -605,8 +579,7 @@
       "filter": "Optolong L-eXtreme",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 15000
+    }
   },
   {
     "file": "images/little-beehive-cluster-m41.webp",
@@ -625,8 +598,7 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 2300
+    }
   },
   {
     "file": "images/whirlpool-galaxy-m51.webp",
@@ -653,8 +625,7 @@
     "specs": {
       "telescope": "HyperStar",
       "integration": "8.1 hours"
-    },
-    "distance_ly": 30000000
+    }
   },
   {
     "file": "images/triangulum-galaxy-m33.webp",
@@ -673,8 +644,7 @@
       "filter": "None",
       "integration": "4 hours",
       "location": "Al Qudra, UAE"
-    },
-    "distance_ly": 2730000
+    }
   },
   {
     "images": [

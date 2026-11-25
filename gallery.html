@@ -1609,9 +1609,6 @@
     if (!r.width || !r.height) return;
     if (e.clientX < r.left || e.clientX > r.right) return;
     if (e.clientY < r.top  || e.clientY > r.bottom) return;
-    // Name the picture so it grows into the share page's main picture in
-    // browsers with page transitions (see "Page transitions" in styles.css).
-    dvImg.style.viewTransitionName = 'share-pic';
     window.location.href = 'share/' + encodeURIComponent(slug) + '.html';
   }
   dvImgPanel.addEventListener('click', dvClickToPage);

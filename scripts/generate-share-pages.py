@@ -295,148 +295,6 @@ def entry_media(entry):
             for v in vids if v.get("poster")]
 
 
-# ── Sky overlays ─────────────────────────────────────────────────────────────
-# content/sky-overlays.json holds plate solutions for some pictures: where
-# named stars and deep-sky objects fall in the frame, and how big the full
-# Moon would be at the same scale. A single picture listed there gets a
-# "Moon for scale" button, plus a "Labels" button when it has labels. The file
-# is built outside the site build, by matching the stars in each photo against
-# a star catalogue; the build only reads it. x, y and moon are fractions of the
-# picture, so the overlay lines up at any display size.
-SKY_FILE = os.path.join("content", "sky-overlays.json")
-MOON_IMG = "/images/overlays/moon-scale.webp"
-MOON_ARCSEC = 1860      # the full Moon, about 31 arcminutes across
-
-
-def load_sky():
-    if not os.path.isfile(SKY_FILE):
-        return {}
-    with open(SKY_FILE, encoding="utf-8") as fh:
-        return json.load(fh).get("images", {})
-
-
-SKY = load_sky()
-
-_MOON_ICON = ('<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2"'
-              ' fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.8a6.2 6.2'
-              ' 0 0 1 0 12.4z" fill="currentColor"/></svg>')
-_LABEL_ICON = ('<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="9" r="2.6"'
-               ' fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7.4 7.2 9.8 4.8H15"'
-               ' fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>')
-
-
-def half_text(x):
-    """4.5 -> '4½', 5.0 -> '5'."""
-    n = round(x * 2) / 2
-    whole = int(n)
-    return f"{whole}½" if n != whole else str(whole)
-
-
-def sky_overlay(file):
-    """(overlay markup for inside the picture link, controls markup) or ('', '')."""
-    sky = SKY.get(file)
-    if not sky:
-        return "", ""
-    parts = [f'<span class="sky-moon" style="--x:{sky["moon_x"]};--y:{sky["moon_y"]};'
-             f'--d:{sky["moon"]};background-image:url({MOON_IMG})"></span>']
-    labels = sky.get("labels") or []
-    for lbl in labels:
-        # Names sit to the right of their ring, unless that runs off the
-        # picture or into a neighbour's ring just to the right.
-        crowded = any(0 < o["x"] - lbl["x"] < 0.2 and abs(o["y"] - lbl["y"]) < 0.025
-                      for o in labels if o is not lbl)
-        side = " sky-left" if lbl["x"] > 0.68 or (crowded and lbl["x"] > 0.2) else ""
-        kind = "sky-star" if lbl.get("kind") == "star" else "sky-dso"
-        parts.append(f'<span class="sky-lbl {kind}{side}" style="--x:{lbl["x"]};--y:{lbl["y"]}">'
-                     f'{t(lbl["name"])}</span>')
-    overlay = '<span class="sky-ov" aria-hidden="true">' + "".join(parts) + '</span>'
-    moons_tall = sky["h"] * sky["scale"] / MOON_ARCSEC
-    buttons = ('<button type="button" class="sky-btn" data-sky="moon" aria-pressed="false">'
-               f'{_MOON_ICON}Moon for scale</button>')
-    names = [l["name"] for l in sky.get("labels") or []]
-    if names:
-        buttons += ('<button type="button" class="sky-btn" data-sky="labels" aria-pressed="false">'
-                    f'{_LABEL_ICON}Labels</button>')
-    tools = (
-        '\n        <div class="sky-tools" role="group" aria-label="Picture overlays">'
-        f'{buttons}</div>'
-        f'\n        <p class="sky-note" data-for="moon" hidden>The full Moon at the same scale.'
-        f' This picture is about {half_text(moons_tall)} Moons tall.</p>'
-    )
-    if names:
-        tools += (f'\n        <p class="sky-note" data-for="labels" hidden>Labelled: '
-                  f'{t(", ".join(names))}.</p>')
-    return overlay, tools
-
-
-# ── When this light left ─────────────────────────────────────────────────────
-# distance_ly on a gallery entry (a number, or [low, high]) is how far away
-# the object is in light-years, which is also how many years its light has
-# been travelling. The line under the picture turns that into a moment in
-# history. Each era is a span of departure years (negative is BC), so the
-# wording stays true across the usual uncertainty in a distance. light_note
-# replaces the line outright (the Sun, the Moon); light_name replaces the name
-# taken from the title.
-THIS_YEAR = datetime.now().year
-LIGHT_ERAS = [
-    (1564, 1616, "in Shakespeare's lifetime"),
-    (500, 1000, "in the early Middle Ages"),
-    (-500, -150, "in the time of ancient Greece"),
-    (-1100, -900, "about a thousand years before the Colosseum was built"),
-    (-3500, -2700, "before the pyramids of Egypt were built"),
-    (-6000, -3500, "before writing was invented"),
-    (-30000, -10000, "during the last Ice Age, when woolly mammoths roamed"),
-    (-5_000_000, -1_000_000, "long before modern humans existed"),
-    (-66_000_000, -5_000_000, "after the dinosaurs had died out, and long before the first humans"),
-]
-
-
-def fmt_years(n):
-    if n >= 1_000_000:
-        m = n / 1_000_000
-        return (f"{m:.1f}".rstrip("0").rstrip(".") if m < 10 else f"{round(m):,}") + " million"
-    digits = len(str(int(n)))
-    return f"{int(round(n, -max(0, digits - 2))):,}"
-
-
-def light_era(years):
-    year = THIS_YEAR - years
-    for start, end, phrase in LIGHT_ERAS:
-        if start <= year <= end:
-            return phrase
-    return None
-
-
-def light_line(entry):
-    if entry.get("light_note"):
-        return entry["light_note"]
-    dist = entry.get("distance_ly")
-    if not dist:
-        return ""
-    lo, hi = (dist if isinstance(dist, list) else (dist, dist))
-    era_lo, era_hi = light_era(lo), light_era(hi)
-    if not era_lo or era_lo != era_hi:
-        print(f"  ! {entry.get('slug')}: no single era fits distance_ly {dist}, light line skipped")
-        return ""
-    if lo == hi:
-        when = f"around {fmt_years(lo)} years ago"
-    else:
-        a_txt, b_txt = fmt_years(lo), fmt_years(hi)
-        if a_txt.endswith(" million") and b_txt.endswith(" million"):
-            a_txt = a_txt[:-8]
-        when = f"between {a_txt} and {b_txt} years ago"
-    name = entry.get("light_name")
-    if not name:
-        title = re.sub(r"\s*\([^)]*\)", "", entry.get("title", "")).strip()
-        if title.startswith("The "):
-            name = "the " + title[4:]
-        elif re.match(r"^\S+['’]s\b", title):
-            name = title
-        else:
-            name = "the " + title
-    return f"The light from {name} set off {when}, {era_lo}."
-
-
 # ── JSON-LD ──────────────────────────────────────────────────────────────────
 
 def build_json_ld(entry, share_url, iso_date, media, meta_desc):
@@ -655,7 +513,6 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     compare = (not is_video_entry and len(media) == 2
                and bool(entry.get("compare")))
     slides = []
-    sky_html, sky_tools = "", ""
     for i, (file, img_alt) in enumerate(media):
         eager = 'loading="eager" fetchpriority="high"' if i == 0 else 'loading="lazy"'
         cap = t(img_alt) if (multi and img_alt) else ""
@@ -683,15 +540,13 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             # Photo opens the in-page lightbox (JS intercepts via .share-open +
             # data-idx). Fallback href -> gallery viewer for no-JS / crawlers.
             gidx = (global_start + i) if (global_start is not None) else i
-            if not multi:
-                sky_html, sky_tools = sky_overlay(file)
             slides.append(
                 f'          <div class="share-slide{" is-active" if i == 0 else ""}"'
                 f' data-cap="{a(cap)}">'
                 f'<a class="share-open" data-idx="{gidx}" href="{a(viewer_url)}"'
                 f' aria-label="Open {a(title)} full screen">'
                 f'<img src="/{a(file)}" alt="{a(img_alt or title)}" {eager} '
-                f'decoding="async" draggable="false">{sky_html}{photo_hint}</a></div>'
+                f'decoding="async" draggable="false">{photo_hint}</a></div>'
             )
 
     pager = ""
@@ -762,17 +617,10 @@ def build_page(entry, prev_link, next_link, all_photos=None,
         + "\n".join(slides)
         + pager
         + peeks
-        + '\n        </div>'
-        + sky_tools + '\n'
+        + '\n        </div>\n'
         f'        <figcaption class="share-slide-cap">{first_cap}</figcaption>\n'
         '      </figure>'
     )
-    light_txt = light_line(entry)
-    if light_txt:
-        figures_html += (
-            '\n      <p class="share-light"><span class="share-light-ico" aria-hidden="true">'
-            f'&#10022;</span>{t(light_txt)}</p>'
-        )
     if is_video_entry:
         figures_html += (
             '\n      <p class="share-date">Stills from the time-lapse videos - '
@@ -981,27 +829,8 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 
     # ── prev / next ──
     slides_script = ""
-    if sky_tools:
-        slides_script += (
-            "      <script>\n"
-            "        (function(){\n"
-            "          var fig = document.querySelector('.share-figure');\n"
-            "          if (!fig) return;\n"
-            "          fig.querySelectorAll('.sky-btn').forEach(function(btn){\n"
-            "            btn.addEventListener('click', function(){\n"
-            "              var key = btn.getAttribute('data-sky');\n"
-            "              var on = btn.getAttribute('aria-pressed') !== 'true';\n"
-            "              btn.setAttribute('aria-pressed', on ? 'true' : 'false');\n"
-            "              fig.classList.toggle('show-' + key, on);\n"
-            "              var note = fig.querySelector('.sky-note[data-for=\"' + key + '\"]');\n"
-            "              if (note) note.hidden = !on;\n"
-            "            });\n"
-            "          });\n"
-            "        })();\n"
-            "      </script>\n"
-        )
     if compare:
-        slides_script += (
+        slides_script = (
             "      <script>\n"
             "        (function(){\n"
             "          var box = document.querySelector('.share-compare');\n"
@@ -1027,7 +856,7 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             "      </script>\n"
         )
     elif multi:
-        slides_script += (
+        slides_script = (
             "      <script>\n"
             "        (function(){\n"
             "          var box = document.querySelector('.share-slides');\n"
@@ -1091,16 +920,6 @@ def build_page(entry, prev_link, next_link, all_photos=None,
             "            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;\n"
             "            if (e.key === 'ArrowLeft'  && prev) location.href = prev;\n"
             "            if (e.key === 'ArrowRight' && next) location.href = next;\n"
-            "          });\n"
-            "          /* A tapped peek card hands the picture name over, so its\n"
-            "             thumbnail grows into the next page's main picture. */\n"
-            "          document.querySelectorAll('.share-peek').forEach(function(card){\n"
-            "            card.addEventListener('click', function(){\n"
-            "              var main = document.querySelector('.share-slide.is-active > .share-open > img');\n"
-            "              var img = card.querySelector('img');\n"
-            "              if (main) main.style.viewTransitionName = 'none';\n"
-            "              if (img) img.style.viewTransitionName = 'share-pic';\n"
-            "            });\n"
             "          });\n"
             "        })();\n"
             "      </script>\n"
