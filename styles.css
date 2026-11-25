@@ -940,6 +940,22 @@ input::placeholder, textarea::placeholder{ color: rgba(200,195,235,0.32); }
   .layer-a, .layer-b{ animation:none !important; }
 }
 
+/* Page transitions. Browsers that support cross-page view transitions
+   fade from one page to the next instead of jumping; the rest simply load
+   the page as before. A picture named share-pic (the gallery viewer's
+   picture, a share page's main picture or the peek card that was tapped)
+   grows into the main picture of the next page. */
+@view-transition{ navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root){ animation-duration: 260ms; }
+::view-transition-group(share-pic){
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-reduced-motion: reduce){
+  @view-transition{ navigation: none; }
+}
+
 /* Gallery */
 .section-head.gallery-head{ display: block; margin-bottom: 24px; }
 .gallery-topline{ display: flex; align-items: baseline; justify-content: flex-start; gap: 12px; }
@@ -8693,6 +8709,73 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
         background-size: 10px;
       }
     }
+    /* The main picture is the one that carries over between pages. */
+    .share-slide.is-active > .share-open > img:first-child{ view-transition-name: share-pic; }
+
+    /* ── Moon for scale and labels ──
+       Built by generate-share-pages.py from content/sky-overlays.json. The
+       overlay covers the picture exactly (the link shrink-wraps the image)
+       and every position is a fraction of the picture, so it lines up at any
+       size. Nothing shows until its button is pressed. */
+    .sky-ov{
+      position: absolute; inset: 0; pointer-events: none;
+      border-radius: 14px; overflow: hidden;
+    }
+    .sky-moon{
+      position: absolute;
+      left: calc(var(--x) * 100%); top: calc(var(--y) * 100%);
+      width: calc(var(--d) * 100%); aspect-ratio: 1;
+      transform: translate(-50%, -50%) scale(.92);
+      background-size: cover; border-radius: 50%;
+      box-shadow: 0 0 26px rgba(255,255,255,0.16);
+      opacity: 0; transition: opacity .35s ease, transform .35s ease;
+    }
+    .share-figure.show-moon .sky-moon{ opacity: .94; transform: translate(-50%, -50%) scale(1); }
+    .sky-lbl{
+      position: absolute;
+      left: calc(var(--x) * 100%); top: calc(var(--y) * 100%);
+      transform: translate(10px, -50%);
+      font-size: 11.5px; font-weight: 500; line-height: 1; white-space: nowrap;
+      color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.75);
+      opacity: 0; transition: opacity .3s ease;
+    }
+    /* The ring is centred on the object itself; the name sits beside it. */
+    .sky-lbl::before{
+      content: ""; position: absolute; left: -16px; top: 50%;
+      width: 12px; height: 12px; margin-top: -6px;
+      border: 1.5px solid var(--accent); border-radius: 50%;
+      box-shadow: 0 0 6px rgba(0,0,0,0.6);
+    }
+    .sky-left{ transform: translate(calc(-100% - 10px), -50%); }
+    .sky-left::before{ left: auto; right: -16px; }
+    .sky-dso{ color: #c9f5e4; }
+    .sky-dso::before{ border-color: var(--accent3); border-style: dashed; }
+    .share-figure.show-labels .sky-lbl{ opacity: 1; }
+    .sky-tools{
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+      margin-top: 12px;
+    }
+    .sky-btn{
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 14px; border-radius: 999px; cursor: pointer;
+      font: inherit; font-size: 13px; color: var(--text);
+      border: 1px solid var(--line); background: var(--soft);
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .sky-btn svg{ width: 15px; height: 15px; color: var(--accent); }
+    .sky-btn:hover, .sky-btn:focus-visible{ border-color: var(--accent); }
+    .sky-btn[aria-pressed="true"]{ border-color: var(--accent); background: var(--glow2); }
+    .sky-note{ margin: 8px 0 0; text-align: center; color: var(--muted); font-size: 13px; }
+
+    /* When this light left: one line under the picture. */
+    .share-light{
+      display: flex; gap: 10px; align-items: baseline;
+      margin: 0 0 22px; padding: 12px 16px;
+      border-left: 2px solid var(--accent); border-radius: 0 10px 10px 0;
+      background: var(--soft); color: var(--text); font-size: 15px;
+    }
+    .share-light-ico{ flex: 0 0 auto; color: var(--accent); }
+
     /* Capture-specs panel — mirrors the viewer's info popup tiles */
     .share-specs{
       margin: 28px 0; padding: 16px 14px;
