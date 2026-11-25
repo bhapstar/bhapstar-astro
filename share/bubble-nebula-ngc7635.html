@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Bubble Nebula set off around 7,100 years ago, before writing was invented.</p>
 
       <div class="share-body">
         <p>The Bubble lies about 7,100 light-years away in Cassiopeia. The bubble itself is about 7 light-years across, more than one and a half times the distance from the Sun to the nearest other star. It sits inside a much bigger cloud of glowing gas, which fills the rest of the picture. William Herschel found it in 1787.</p>
@@ -150,16 +149,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

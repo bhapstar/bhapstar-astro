@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Monkey Head Nebula set off around 6,400 years ago, before writing was invented.</p>
 
       <div class="share-body">
         <p>The Monkey Head Nebula sits around 6,400 light-years away on the outskirts of the Orion constellation. It is an <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-3" data-gl-term="HII region" data-gl-href="/share/monkey-head-nebula-ngc2174.html">HII region</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-3" hidden>A cloud of hydrogen gas lit up by hot young stars inside it, so it glows pink-red. HII means hydrogen that has been ionised, and Ha is the red light it gives off. In other galaxies these clouds show up as small pink knots along the spiral arms.</span>, a cloud of <span class="gl" role="button" tabindex="0" aria-describedby="gl-monkey-head-nebula-ngc2174-4" data-gl-term="ionised" data-gl-href="/share/orion-nebula-m42.html">ionised</span><span class="gl-def" id="gl-monkey-head-nebula-ngc2174-4" hidden>Gas whose atoms have had an electron knocked off by strong light from hot stars. As the electrons are caught again the gas glows, which is what makes many nebulae shine.</span> hydrogen energised by a cluster of hot young stars embedded within it. The interaction between the stellar radiation and the surrounding gas and dust creates the pillars, arcs and dark intrusions that define its distinctive appearance.</p>
@@ -148,16 +147,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

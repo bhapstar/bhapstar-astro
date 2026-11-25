@@ -107,16 +107,12 @@
 
       <figure class="share-figure">
         <div class="share-slides">
-          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="7" href="/gallery.html#rosette-nebula-ngc2244" aria-label="Open The Rosette Nebula (NGC 2244) full screen"><img src="/images/rosette-nebula-ngc2244.webp" alt="Rosette Nebula NGC 2244 astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="sky-ov" aria-hidden="true"><span class="sky-moon" style="--x:0.7388;--y:0.1633;--d:0.4025;background-image:url(/images/overlays/moon-scale.webp)"></span><span class="sky-lbl sky-dso" style="--x:0.3619;--y:0.4806">NGC 2246</span><span class="sky-lbl sky-dso" style="--x:0.664;--y:0.5504">NGC 2237</span></span><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
+          <div class="share-slide is-active" data-cap=""><a class="share-open" data-idx="7" href="/gallery.html#rosette-nebula-ngc2244" aria-label="Open The Rosette Nebula (NGC 2244) full screen"><img src="/images/rosette-nebula-ngc2244.webp" alt="Rosette Nebula NGC 2244 astrophotography" loading="eager" fetchpriority="high" decoding="async" draggable="false"><span class="share-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 2.4H2.4v3.8"/><path d="M9.8 2.4h3.8v3.8"/><path d="M13.6 9.8v3.8H9.8"/><path d="M2.4 9.8v3.8h3.8"/></svg><span class="sh-lbl" data-tap="Tap to view full screen" data-click="Click to view full screen"></span></span></a></div>
           <a class="share-peek share-peek-prev" href="/share/the-milky-way.html" aria-label="Previous item: The Milky Way" title="The Milky Way"><img src="/images/thumbs/the_milky_way.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8249;</span></a>
           <a class="share-peek share-peek-next" href="/share/eagle-nebula-m16.html" aria-label="Next item: The Eagle Nebula (M16)" title="The Eagle Nebula (M16)"><img src="/images/thumbs/eagle-nebula-m16-2.webp" alt="" loading="lazy" decoding="async" draggable="false"><span class="share-peek-arrow" aria-hidden="true">&#8250;</span></a>
         </div>
-        <div class="sky-tools" role="group" aria-label="Picture overlays"><button type="button" class="sky-btn" data-sky="moon" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" fill="currentColor"/></svg>Moon for scale</button><button type="button" class="sky-btn" data-sky="labels" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="9" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7.4 7.2 9.8 4.8H15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Labels</button></div>
-        <p class="sky-note" data-for="moon" hidden>The full Moon at the same scale. This picture is about 4½ Moons tall.</p>
-        <p class="sky-note" data-for="labels" hidden>Labelled: NGC 2246, NGC 2237.</p>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Rosette Nebula set off around 5,000 years ago, before the pyramids of Egypt were built.</p>
 
       <div class="share-body">
         <p>The Rosette Nebula (<span class="gl" role="button" tabindex="0" aria-describedby="gl-rosette-nebula-ngc2244-3" data-gl-term="NGC" data-gl-href="/share/rosette-nebula-ngc2244.html">NGC</span><span class="gl-def" id="gl-rosette-nebula-ngc2244-3" hidden>The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.</span> 2237–2244) sits around 5,000 light-years away in the constellation Monoceros, and spans roughly 130 light-years across, making it one of the largest star-forming regions visible from Earth. The cluster of young, hot stars at its core (NGC 2244) is only a few million years old, yet the intense ultraviolet radiation they pour out is already carving enormous cavities into the surrounding gas and dust.</p>
@@ -144,22 +140,6 @@
 
       <script>
         (function(){
-          var fig = document.querySelector('.share-figure');
-          if (!fig) return;
-          fig.querySelectorAll('.sky-btn').forEach(function(btn){
-            btn.addEventListener('click', function(){
-              var key = btn.getAttribute('data-sky');
-              var on = btn.getAttribute('aria-pressed') !== 'true';
-              btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-              fig.classList.toggle('show-' + key, on);
-              var note = fig.querySelector('.sky-note[data-for="' + key + '"]');
-              if (note) note.hidden = !on;
-            });
-          });
-        })();
-      </script>
-      <script>
-        (function(){
           var prev = "/share/the-milky-way.html", next = "/share/eagle-nebula-m16.html";
           document.addEventListener('keydown', function(e){
             if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -167,16 +147,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

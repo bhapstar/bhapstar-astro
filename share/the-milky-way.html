@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the centre of the Milky Way set off around 26,000 years ago, during the last Ice Age, when woolly mammoths roamed.</p>
 
       <div class="share-body">
         <p>This is the view toward the heart of the Milky Way. The bright, textured band running through the frame is not a nebula or a cluster but the accumulated light of hundreds of millions of stars too distant and too tightly packed to resolve individually, the galactic disc seen edge-on, from our position roughly 26,000 light-years out along the Orion Arm.</p>
@@ -148,16 +147,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

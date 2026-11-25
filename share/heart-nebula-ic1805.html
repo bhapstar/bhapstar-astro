@@ -111,7 +111,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Heart Nebula set off around 7,500 years ago, before writing was invented.</p>
 
       <div class="share-body">
         <p>The Heart Nebula lies around 7,500 light-years away in Cassiopeia. The whole cloud spans almost two degrees of sky, about four times the width of the full moon, so this frame shows only its middle. Its brightest knot, on the western edge, was the first part to be found, by William Herschel in 1787.</p>
@@ -146,16 +145,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

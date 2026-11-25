@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Leo Triplet set off around 35 million years ago, after the dinosaurs had died out, and long before the first humans.</p>
 
       <div class="share-body">
         <p>The Leo Triplet sits around 35 million light-years away in Leo. M65 and M66 are a classic interacting pair whose mutual gravity has subtly distorted both structures over billions of years. <span class="gl" role="button" tabindex="0" aria-describedby="gl-leo-triplet-m65-m66-ngc3628-1" data-gl-term="NGC" data-gl-href="/share/rosette-nebula-ngc2244.html">NGC</span><span class="gl-def" id="gl-leo-triplet-m65-m66-ngc3628-1" hidden>The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.</span> 3628, the third member, presents almost perfectly edge-on, its disk bisected by a prominent dust lane and its outer arms slightly warped by the same gravitational interaction.</p>
@@ -148,16 +147,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

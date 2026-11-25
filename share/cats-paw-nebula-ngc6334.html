@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Cat's Paw Nebula set off around 5,500 years ago, before the pyramids of Egypt were built.</p>
 
       <div class="share-body">
         <p>The Cat's Paw Nebula (<span class="gl" role="button" tabindex="0" aria-describedby="gl-cats-paw-nebula-ngc6334-3" data-gl-term="NGC" data-gl-href="/share/rosette-nebula-ngc2244.html">NGC</span><span class="gl-def" id="gl-cats-paw-nebula-ngc6334-3" hidden>The New General Catalogue, a list of nearly 8,000 nebulae, star clusters and galaxies published in 1888. NGC 2244 means number 2244 on that list.</span> 6334) lies roughly 5,500 light-years away in the constellation Scorpius, low in the southern sky. It is one of the most prolific stellar nurseries in the galaxy - its glowing lobes mark regions where tens of thousands of stars have formed over the past few million years, including some of the most massive stars known in the Milky Way. The nebula spans around 50 light-years and was first catalogued by John Herschel in 1837.</p>
@@ -147,16 +146,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>

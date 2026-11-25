@@ -113,7 +113,6 @@
         </div>
         <figcaption class="share-slide-cap"></figcaption>
       </figure>
-      <p class="share-light"><span class="share-light-ico" aria-hidden="true">&#10022;</span>The light from the Whirlpool Galaxy set off around 30 million years ago, after the dinosaurs had died out, and long before the first humans.</p>
 
       <div class="share-body">
         <p>The Whirlpool lies around 30 million light-years away in Canes Venatici, near the end of the Big Dipper's handle. It is a little smaller than our own Milky Way. Charles <span class="gl" role="button" tabindex="0" aria-describedby="gl-whirlpool-galaxy-m51-2" data-gl-term="Messier" data-gl-href="/share/orion-nebula-m42.html">Messier</span><span class="gl-def" id="gl-whirlpool-galaxy-m51-2" hidden>A list of 110 fuzzy objects in the sky, started by the French astronomer Charles Messier in the 1700s so he would not mistake them for comets. M42 means number 42 on his list.</span> found it in 1773, and Pierre Méchain spotted the small companion in 1781. In 1845 Lord Rosse looked at it through what was then the biggest telescope in the world and saw its spiral shape. It was the first galaxy ever seen to have one.</p>
@@ -150,16 +149,6 @@
             if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
             if (e.key === 'ArrowLeft'  && prev) location.href = prev;
             if (e.key === 'ArrowRight' && next) location.href = next;
-          });
-          /* A tapped peek card hands the picture name over, so its
-             thumbnail grows into the next page's main picture. */
-          document.querySelectorAll('.share-peek').forEach(function(card){
-            card.addEventListener('click', function(){
-              var main = document.querySelector('.share-slide.is-active > .share-open > img');
-              var img = card.querySelector('img');
-              if (main) main.style.viewTransitionName = 'none';
-              if (img) img.style.viewTransitionName = 'share-pic';
-            });
           });
         })();
       </script>
