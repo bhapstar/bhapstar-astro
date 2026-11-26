@@ -3948,24 +3948,27 @@ body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
 /* ── Caption toggle ──
    Pulled out of the view-mode group and restyled as a labelled pill so
    it reads as an independent on/off switch, not a fourth view mode.
-   A divider separates it from the Grid/List/Chaos picker. */
+   It sits between Slideshow and the Grid/List/Chaos picker and takes
+   half the free width, sharing it equally with Slideshow (same padding
+   and border as .slideshow-btn, so the split is exact). A divider on
+   its right separates it from the picker. */
 .page-gallery .caption-toggle {
-  display: inline-flex; align-items: center; gap: 7px;
-  height: 34px; padding: 0 13px 0 11px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 34px; padding: 0 16px;
   border-radius: 8px;
   border: 1px solid rgba(167,139,250,0.30);
   background: rgba(167,139,250,0.06);
   color: rgba(220,216,245,0.92);
-  font: inherit; font-size: 13px; font-weight: 600;
+  font: inherit; font-size: 14px; font-weight: 600;
   letter-spacing: 0.02em; line-height: 1;
   cursor: pointer; white-space: nowrap;
-  position: relative; flex-shrink: 0;
-  margin-left: 4px;
+  position: relative; flex: 1 1 0; min-width: 0;
+  margin: 0 4px 0 0;
   transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
 }
-/* Divider between the view picker and the caption toggle */
+/* Divider between the caption toggle and the view picker */
 .page-gallery .caption-toggle::before {
-  content: ""; position: absolute; left: -7px; top: 7px; bottom: 7px;
+  content: ""; position: absolute; left: auto; right: -7px; top: 7px; bottom: 7px;
   width: 1px; background: rgba(167,139,250,0.20);
 }
 .page-gallery .caption-toggle:hover {
@@ -3991,8 +3994,8 @@ body.detail-open #siteHeader { opacity: 0.4; pointer-events: none; }
 .page-gallery .caption-toggle[aria-pressed="false"] .cap-icon-off { display: block; }
 
 @media (max-width: 720px) {
-  /* Keep the label — it's the whole point of the change — but tighten it */
-  .page-gallery .caption-toggle { padding: 0 11px 0 9px; font-size: 12px; }
+  /* Keep the label, but tighten it (matches .slideshow-btn) */
+  .page-gallery .caption-toggle { padding: 0 10px; font-size: 12px; }
 }
 
 /* ── Filter dropdown ──
@@ -11073,9 +11076,10 @@ html[data-theme="light"] .request-title-icon{
    The link to slideshow.html, first in the controls row. It carries
    .btn-cta, so the gradient fill, glow and hover lift are the same
    as the homepage buttons. Here it is cut to the row's 34px height
-   and grows to fill the space up to the view buttons. On the
-   narrowest phones the gaps and padding tighten so the row still
-   fits on one line.
+   and shares the space left of the view buttons equally with
+   Captions (see "Caption toggle"; keep the two paddings in step).
+   On the narrowest phones the gaps and padding tighten so the row
+   still fits on one line.
    ============================================================ */
 .page-gallery .slideshow-btn{
   flex:1 1 0; width:auto; min-width:0;
@@ -11093,7 +11097,7 @@ html[data-theme="light"] .request-title-icon{
 @media (max-width:380px){
   .page-gallery .gallery-controls{ gap:6px; }
   .page-gallery .slideshow-btn{ padding:0 8px; gap:5px; }
-  .page-gallery .caption-toggle{ padding:0 9px 0 8px; gap:5px; }
+  .page-gallery .caption-toggle{ padding:0 8px; gap:5px; }
 }
 
 /* ============================================================

@@ -845,10 +845,11 @@
         </div>
 
         <div class="gallery-controls" role="group" aria-label="Gallery controls">
-          <!-- Slideshow, on the left of the controls row. The nav has no
-               Gallery dropdown, so this is how the slideshow is reached from
-               here. .btn-cta gives it the homepage's gradient button look.
-               Styles: GALLERY: SLIDESHOW BUTTON in styles.css -->
+          <!-- Controls row: Slideshow, Captions, then the view buttons on the
+               right. Slideshow and Captions share the rest of the row equally.
+               The nav has no Gallery dropdown, so this is how the slideshow
+               is reached from here. .btn-cta gives it the homepage's gradient
+               button look. Styles: GALLERY: SLIDESHOW BUTTON in styles.css -->
           <a class="btn-cta slideshow-btn" href="slideshow.html">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <rect x="1.5" y="2.5" width="13" height="11" rx="1.6" stroke="currentColor" stroke-width="1.4"/>
@@ -856,6 +857,19 @@
             </svg>
             <span>Slideshow</span>
           </a>
+
+          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle image titles, descriptions & likes">
+            <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" fill="currentColor"/>
+            </svg>
+            <svg class="cap-icon-off" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
+            </svg>
+            <span class="caption-toggle-label">Captions</span>
+          </button>
 
           <div class="view-buttons" role="group" aria-label="View mode selection">
             <button id="viewBtnGrid" class="view-btn active" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
@@ -882,19 +896,6 @@
               </svg>
             </button>
           </div>
-
-          <button id="viewBtnDesc" class="caption-toggle" type="button" aria-pressed="true" aria-label="Hide captions" title="Toggle image titles, descriptions & likes">
-            <svg class="cap-icon-on"  width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="8" cy="8" r="2" fill="currentColor"/>
-            </svg>
-            <svg class="cap-icon-off" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8Z" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
-              <line x1="2" y1="14" x2="14" y2="2" stroke="currentColor" stroke-width="1.4"/>
-            </svg>
-            <span class="caption-toggle-label">Captions</span>
-          </button>
         </div>
       </div>
 
