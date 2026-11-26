@@ -171,9 +171,16 @@
 
       <div class="actions">
         <a class="btn primary" href="/gallery.html">Back to gallery</a>
+        <a class="btn" id="slideshowBtn" href="/slideshow.html#the-moon">Start slideshow</a>
         <a class="btn" href="/prints.html">Order a print</a>
         <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
+      <script>
+        // The slideshow opens these pages in a frame when a title is tapped.
+        // It is already running there, so drop the button rather than start
+        // a second slideshow inside the frame.
+        if (window.self !== window.top) document.getElementById('slideshowBtn').remove();
+      </script>
 
       <script>
         (function(){
