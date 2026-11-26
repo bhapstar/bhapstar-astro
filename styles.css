@@ -11070,47 +11070,30 @@ html[data-theme="light"] .request-title-icon{
 
 /* ============================================================
    GALLERY: SLIDESHOW BUTTON
-   The link to slideshow.html, first in the controls row and pushed
-   to the left, with the view buttons and Captions on the right.
-   Styled to match the Captions button. On the narrowest phones the
-   gaps and padding tighten so the row still fits on one line.
+   The link to slideshow.html, first in the controls row. It carries
+   .btn-cta, so the gradient fill, glow and hover lift are the same
+   as the homepage buttons. Here it is cut to the row's 34px height
+   and grows to fill the space up to the view buttons. On the
+   narrowest phones the gaps and padding tighten so the row still
+   fits on one line.
    ============================================================ */
 .page-gallery .slideshow-btn{
-  display:inline-flex; align-items:center; gap:7px;
-  height:34px; padding:0 13px 0 11px; margin-right:auto;
+  flex:1 1 0; width:auto; min-width:0;
+  height:34px; padding:0 16px; gap:8px;
   border-radius:8px;
-  border:1px solid rgba(167,139,250,0.30);
-  background:rgba(167,139,250,0.06);
-  color:rgba(220,216,245,0.92); text-decoration:none;
-  font-size:13px; font-weight:600; letter-spacing:0.02em; line-height:1;
-  white-space:nowrap; flex-shrink:0;
-  transition:background 140ms ease, border-color 140ms ease, color 140ms ease;
+  font-size:14px; line-height:1; white-space:nowrap;
+  box-shadow:0 4px 16px rgba(167,139,250,0.24);
 }
-.page-gallery .slideshow-btn svg{ flex-shrink:0; }
-.page-gallery .slideshow-btn:hover{
-  background:rgba(167,139,250,0.13);
-  border-color:rgba(167,139,250,0.45);
-  color:#fff;
-}
-.page-gallery .slideshow-btn:active{ transform:translateY(1px); }
-.page-gallery .slideshow-btn:focus-visible{ outline:2px solid rgba(167,139,250,0.6); outline-offset:2px; }
+.page-gallery .slideshow-btn:hover,
+.page-gallery .slideshow-btn:focus-visible{ box-shadow:0 6px 22px rgba(167,139,250,0.40); }
+.page-gallery .slideshow-btn svg{ width:16px; height:16px; }
 @media (max-width:720px){
-  .page-gallery .slideshow-btn{ padding:0 11px 0 9px; font-size:12px; }
+  .page-gallery .slideshow-btn{ padding:0 10px; gap:7px; font-size:12px; }
 }
 @media (max-width:380px){
   .page-gallery .gallery-controls{ gap:6px; }
-  .page-gallery .slideshow-btn,
+  .page-gallery .slideshow-btn{ padding:0 8px; gap:5px; }
   .page-gallery .caption-toggle{ padding:0 9px 0 8px; gap:5px; }
-}
-html[data-theme="light"] .page-gallery .slideshow-btn{
-  background:rgba(124,92,246,0.08);
-  border-color:rgba(124,92,246,0.32);
-  color:rgba(26,23,48,0.90);
-}
-html[data-theme="light"] .page-gallery .slideshow-btn:hover{
-  background:rgba(124,92,246,0.14);
-  border-color:rgba(124,92,246,0.48);
-  color:rgba(26,23,48,0.96);
 }
 
 /* ============================================================
