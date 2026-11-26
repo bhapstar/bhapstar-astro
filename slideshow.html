@@ -856,8 +856,20 @@
     setSpeed(secs);
     randBtn.setAttribute('aria-pressed', String(random));
     cineBtn.setAttribute('aria-pressed', String(cinema));
-    order = random ? shuffledOrder(Math.floor(Math.random() * slides.length)) : naturalOrder();
-    pos = 0;
+    // slideshow.html#<slug> (Start slideshow on a picture's page) opens on
+    // that picture and carries on from there. Any other hash starts as usual.
+    let first = -1;
+    try {
+      const want = decodeURIComponent(location.hash.slice(1));
+      if (want) first = slides.findIndex(s => s.slug === want);
+    } catch (e) {}
+    if (random) {
+      order = shuffledOrder(first >= 0 ? first : Math.floor(Math.random() * slides.length));
+      pos = 0;
+    } else {
+      order = naturalOrder();
+      pos = first >= 0 ? first : 0;
+    }
     setPlaying(true);
     show();
   }

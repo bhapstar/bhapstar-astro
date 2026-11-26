@@ -463,6 +463,12 @@ def build_page(entry, prev_link, next_link, all_photos=None,
     share_url = f"{DOMAIN}/{OUT_DIR}/{slug}.html"
     viewer_url_base = "/gallery.html"
     viewer_url = f"{viewer_url_base}#{slug}"
+    # Start slideshow button: opens slideshow.html on this picture and
+    # carries on through the gallery from there. A hash rather than a query
+    # string, so the service worker's cached copy still matches offline.
+    # The star trails videos are not in the slideshow, so that page opens
+    # it from its usual start.
+    slideshow_url = "/slideshow.html" if is_video_entry else f"/slideshow.html#{slug}"
     iso_date = to_iso(entry.get("date"))
     nice_date = display_date(entry.get("date"))
 
@@ -1291,9 +1297,16 @@ def build_page(entry, prev_link, next_link, all_photos=None,
 {specs_html}{footnote_html}
       <div class="actions">
         <a class="btn primary" href="/gallery.html">Back to gallery</a>
+        <a class="btn" id="slideshowBtn" href="{a(slideshow_url)}">Start slideshow</a>
         <a class="btn" href="/prints.html">Order a print</a>
         <button class="btn" id="shareBtn" type="button">Share</button>
       </div>
+      <script>
+        // The slideshow opens these pages in a frame when a title is tapped.
+        // It is already running there, so drop the button rather than start
+        // a second slideshow inside the frame.
+        if (window.self !== window.top) document.getElementById('slideshowBtn').remove();
+      </script>
 
 {slides_script}{nav_html}
     </div>

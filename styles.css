@@ -8770,6 +8770,15 @@ html[data-theme="light"] .cell.revealed .n8 { color: #9d174d; }
       .page-share .gn-title { font-size: 12px; }
       .page-share .gear-nav-link { padding: 9px 11px; }
     }
+    /* Back to gallery, Start slideshow, Order a print and Share. On phones
+       they sit in two even columns rather than wrapping unevenly. Inside the
+       slideshow's frame Start slideshow is removed, and the odd one out
+       (Share) spans the row. */
+    @media (max-width: 560px){
+      .page-share .actions{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .page-share .actions .btn{ padding-left: 12px; padding-right: 12px; }
+      .page-share .actions .btn:last-child:nth-child(odd){ grid-column: 1 / -1; }
+    }
     .share-nav{
       display: flex; justify-content: space-between; gap: 16px;
       margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line);
